@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('taxes', function (Blueprint $table) {
+        Schema::create('stock_transfers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->decimal('rate', 10, 2)->default(0)->comment('Rate in percentage');
-            $table->boolean('active')->default(true)->comment('Indicates if the tax is currently active');
+            $table->unsignedBigInteger('from_branch_id')->index();
+            $table->unsignedBigInteger('to_branch_id')->index();
+            $table->date('transfer_date')->nullable();
+            $table->unsignedBigInteger('product_id')->index();
+            $table->decimal('quantity', 10, 2);
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('taxes');
+        Schema::dropIfExists('stock_transfers');
     }
 };

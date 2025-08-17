@@ -10,12 +10,12 @@ class Sale extends Model
         'customer_id','branch_id','ref_no','order_date'
     ];
 
-    public function saleVariables() {
-        return $this->hasMany(SaleVariable::class);
+    public function saleItems() {
+        return $this->hasMany(SaleItem::class);
     }
 
     public function customer() {
-        return $this->belongsTo(Contact::class,'customer_id');
+        return $this->belongsTo(User::class,'user_id');
     }
 
     public function branch() {

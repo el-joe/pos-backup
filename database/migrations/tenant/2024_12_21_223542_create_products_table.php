@@ -25,7 +25,6 @@ return new class extends Migration
             $table->enum('type',['single','multiple'])->default('single');
             $table->unsignedBigInteger('tax_id')->nullable();
             $table->decimal('tax_rate', 10, 2)->default(0)->comment('In percentage');
-            $table->enum('price_type',['inc_tax','ex_tax'])->default('inc_tax');
             $table->timestamps();
         });
     }

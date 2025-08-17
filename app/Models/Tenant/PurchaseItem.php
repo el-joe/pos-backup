@@ -6,9 +6,15 @@ use App\Models\Tenant\ProductVariable;
 use App\Models\Tenant\Unit;
 use Illuminate\Database\Eloquent\Model;
 
-class Stoke extends Model
+class PurchaseItem extends Model
 {
-    protected $fillable = ['product_id','unit_id','qty'];
+    protected $fillable = [
+        'purchase_id','product_id','unit_id','qty','purchase_price','x_margin','sale_price','returned','returned_at'
+    ];
+
+    function purchase() {
+        return $this->belongsTo(Purchase::class,'purchase_id');
+    }
 
     function product() {
         return $this->belongsTo(Product::class,'product_id');

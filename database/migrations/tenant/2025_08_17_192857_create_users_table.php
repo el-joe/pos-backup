@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('taxes', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('rate', 10, 2)->default(0)->comment('Rate in percentage');
-            $table->boolean('active')->default(true)->comment('Indicates if the tax is currently active');
+            $table->string('email')->index();
+            $table->string('phone')->index();
+            $table->string('address')->nullable();
+            $table->boolean('active')->default(true);
+            $table->enum('type',['customer','supplier'])->default('customer');
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('taxes');
+        Schema::dropIfExists('users');
     }
 };

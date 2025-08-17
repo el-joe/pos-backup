@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_variables', function (Blueprint $table) {
+        Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sale_id')->index();
-            $table->unsignedBigInteger('product_variable_id')->index();
+            $table->unsignedBigInteger('product_id')->index();
             $table->unsignedBigInteger('unit_id')->index();
             $table->integer('qty')->default(0);
             $table->decimal('sale_price');
-            $table->enum('discount_type',['amount','percentage'])->nullable();
+            $table->enum('discount_type',['fixed','percentage'])->nullable();
             $table->decimal('discount')->default(0);
             $table->integer('refunded')->default(0);
             $table->timestamp('refunded_at')->nullable();

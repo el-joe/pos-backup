@@ -1,0 +1,36 @@
+-tenants
+	- branches
+	- POS page
+	- products
+		- list
+		- create
+	- purchases
+		- orders
+		- suppliers
+	- sales
+		- orders
+		- customers
+	- shipping companies
+	- expenses
+		- list
+		- categories
+	- reports
+		- profit
+		- purchases
+		- sales
+		- refunds
+		- taxes
+		- stock
+		- expenses
+	- managers
+		- managers list
+		- roles
+	- stock transfer
+	- stocktaking
+	- taxes
+		- list
+		- create
+	- settings
+		- categories
+		- brands
+		- units

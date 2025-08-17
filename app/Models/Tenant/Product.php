@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'name','description','sku','unit_id','category_id','brand_id','weight','alert_qty','active','tax_id','tax_rate','price_type'
+        'name','description','sku','unit_id','category_id','brand_id','weight','alert_qty','active','tax_id','tax_rate'
     ];
 
     protected $casts = [
@@ -39,14 +39,14 @@ class Product extends Model
         return $this->belongsTo(Tax::class);
     }
 
-    public function productVariables()
-    {
-        return $this->hasMany(ProductVariable::class);
-    }
-
     function image() {
         return $this->morphOne(File::class, 'model')->where('key', 'image');
     }
+
+    function gallery() {
+        return $this->morphMany(File::class, 'model')->where('key', 'gallery');
+    }
+
 
     // Scopes
 
@@ -60,16 +60,16 @@ class Product extends Model
         return $query->where('active', 0);
     }
 
-    public function scopePriceType($query, $type)
-    {
-        return $query->where('price_type', $type);
-    }
-
     // Accessors
 
     function getImagePathAttribute() {
         return $this->image ? $this->image->full_path : null;
     }
+
+    function getGalleryPathAttribute() {
+        return $this->gallery ? $this->gallery->pluck('full_path') : null;
+    }
+
 
     function units() {
         $this->getUnitAndChildUnitRecursion($this->unit,$output);

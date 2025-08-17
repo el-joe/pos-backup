@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('taxes', function (Blueprint $table) {
+        Schema::create('stock_taking_products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->decimal('rate', 10, 2)->default(0)->comment('Rate in percentage');
-            $table->boolean('active')->default(true)->comment('Indicates if the tax is currently active');
+            $table->unsignedBigInteger('stock_taking_id')->index();
+            $table->unsignedBigInteger('product_id')->index();
+            $table->decimal('counted_qty', 10, 2)->default(0);
+            $table->decimal('system_qty', 10, 2)->default(0);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('taxes');
+        Schema::dropIfExists('stock_taking_products');
     }
 };

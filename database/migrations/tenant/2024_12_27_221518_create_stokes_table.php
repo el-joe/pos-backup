@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('stokes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_variable_id')->index();
+            $table->unsignedBigInteger('product_id')->index();
             $table->unsignedBigInteger('unit_id')->index();
             $table->decimal('qty')->default(0);
             $table->timestamps();
