@@ -1,0 +1,23 @@
+<!-- ==============================
+    Required JS Files
+=============================== -->
+<!-- ===== jQuery ===== -->
+<script src="{{ asset('adminBoard') }}/plugins/components/jquery/dist/jquery.min.js"></script>
+<!-- ===== Bootstrap JavaScript ===== -->
+<script src="{{ asset('adminBoard/cubic-html') }}/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- ===== Slimscroll JavaScript ===== -->
+<script src="{{ asset('adminBoard/cubic-html') }}/js/jquery.slimscroll.js"></script>
+<!-- ===== Wave Effects JavaScript ===== -->
+<script src="{{ asset('adminBoard/cubic-html') }}/js/waves.js"></script>
+<!-- ===== Menu Plugin JavaScript ===== -->
+<script src="{{ asset('adminBoard/cubic-html') }}/js/sidebarmenu.js"></script>
+<!-- ===== Custom JavaScript ===== -->
+<script src="{{ asset('adminBoard/cubic-html') }}/js/custom.js"></script>
+<!-- ===== Plugin JS ===== -->
+<script src="{{ asset('adminBoard') }}/plugins/components/chartist-js/dist/chartist.min.js"></script>
+<script src="{{ asset('adminBoard') }}/plugins/components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+<script src='{{ asset('adminBoard') }}/plugins/components/moment/moment.js'></script>
+<script src='{{ asset('adminBoard') }}/plugins/components/fullcalendar/fullcalendar.js'></script>
+<script src="{{ asset('adminBoard/cubic-html') }}/js/db2.js"></script>
+<!-- ===== Style Switcher JS ===== -->
+<script src="{{ asset('adminBoard') }}/plugins/components/styleswitcher/jQuery.style.switcher.js"></script>
