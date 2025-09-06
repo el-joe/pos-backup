@@ -3,11 +3,14 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'name','parent_id','active'
+        'name','parent_id','active','deleted_at'
     ];
 
     function children() {

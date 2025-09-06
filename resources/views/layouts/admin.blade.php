@@ -16,7 +16,6 @@
 </head>
 
 <body class="mini-sidebar">
-    <!-- ===== Main-Wrapper ===== -->
     <div id="wrapper">
         <div class="preloader">
             <div class="cssload-speeding-wheel"></div>
@@ -29,10 +28,11 @@
             </div>
         </div>
     </div>
-    <!-- ===== Main-Wrapper-End ===== -->
+    <footer class="footer t-a-c">
+        © POS
+    </footer>
 
     @include('layouts.admin.partials.scripts')
-
     @livewireScripts
     @stack('scripts')
     @livewire('operations')

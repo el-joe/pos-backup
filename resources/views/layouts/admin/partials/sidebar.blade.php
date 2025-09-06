@@ -3,7 +3,7 @@
         <div class="user-profile">
             <div class="dropdown user-pro-body">
                 <div class="profile-image">
-                    <img src="{{ asset('adminBoard') }}/plugins/images/users/hanna.jpg" alt="user-img" class="img-circle">
+                    <img src="{{ admin()->image_path }}" alt="user-img" class="img-circle">
                     <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <span class="badge badge-danger">
                             <i class="fa fa-angle-down"></i>
@@ -23,20 +23,89 @@
         </div>
         <nav class="sidebar-nav">
             <ul id="side-menu">
+
                 <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-basket fa-fw"></i> <span class="hide-menu"> eCommerce </span></a>
+                    <a href="widgets.html" aria-expanded="false"><i class="fa fa-dashboard fa-fw"></i> <span class="hide-menu"> Dashboard </span></a>
+                </li>
+
+                <li>
+                    <a href="widgets.html" aria-expanded="false"><i class="fa fa-credit-card fa-fw"></i> <span class="hide-menu"> POS </span></a>
+                </li>
+
+                <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-sitemap fa-fw"></i> <span class="hide-menu"> Branches </span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <li> <a href="index4.html">Dashboard</a> </li>
-                        <li> <a href="products.html">Products</a> </li>
-                        <li> <a href="product-detail.html">Product Detail</a> </li>
-                        <li> <a href="product-edit.html">Product Edit</a> </li>
-                        <li> <a href="product-orders.html">Product Orders</a> </li>
-                        <li> <a href="product-cart.html">Product Cart</a> </li>
-                        <li> <a href="product-checkout.html">Product Checkout</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-sitemap fa-fw"></i> Branches List</a> </li>
                     </ul>
                 </li>
+
                 <li>
-                    <a href="widgets.html" aria-expanded="false"><i class="icon-settings fa-fw"></i> <span class="hide-menu"> Widgets </span></a>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-cube fa-fw"></i> <span class="hide-menu"> Products </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html">  <i class="fa fa-cube fa-fw"></i> Products List</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-th-list fa-fw"></i> Categories List</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-tags fa-fw"></i> Brands List</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-cube fa-fw"></i> Units List</a> </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-cubes fa-fw"></i> <span class="hide-menu"> Inventory </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html"> <i class="fa fa-cubes fa-fw"></i> Stock Levels</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-exchange fa-fw"></i> Stock Transfers</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-check-square fa-fw"></i> Stock Taking</a> </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-line-chart fa-fw"></i> <span class="hide-menu"> Sales </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html"> <i class="fa fa-line-chart fa-fw"></i> Sales List</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-cog fa-fw"></i> Sales Configuration</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-users fa-fw"></i> Customers</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-money fa-fw"></i> Taxes</a> </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hide-menu"> Purchases </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html"> <i class="fa fa-shopping-cart fa-fw"></i> Purchase Orders</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-truck fa-fw"></i> Suppliers</a> </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-money fa-fw"></i> <span class="hide-menu"> Expenses </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html"> <i class="fa fa-money fa-fw"></i> Expense Categories</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-list fa-fw"></i> Expenses List</a> </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-users fa-fw"></i> <span class="hide-menu"> Administrator </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html"><i class="fa fa-user fa-fw"></i> User Management</a> </li>
+                        <li> <a href="index4.html"><i class="fa fa-shield fa-fw"></i> Role Management</a> </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Reports </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Sales Report</a> </li>
+                        <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Inventory Report</a> </li>
+                        <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Expenses Report</a> </li>
+                        <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Customers Report</a> </li>
+                        <li> <a href="index4.html"><i class="fa fa-truck fa-fw"></i> Suppliers Report</a> </li>
+                        <li> <a href="index4.html"><i class="fa  fa-dollar fa-fw"></i> Netprofit Report</a> </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="widgets.html" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i> <span class="hide-menu"> Settings </span></a>
                 </li>
             </ul>
         </nav>

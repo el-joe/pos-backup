@@ -3,11 +3,14 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Branch extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'name','email','address','phone','active'
+        'name','email','address','phone','active','deleted_at','website'
     ];
 
     public function scopeActive($q) {

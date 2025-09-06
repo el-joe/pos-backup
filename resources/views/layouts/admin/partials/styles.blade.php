@@ -16,3 +16,55 @@
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
+<style>
+    /* Hide default checkbox */
+    .custom-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Custom checkmark box */
+    .custom-checkbox .checkmark {
+        height: 18px;
+        width: 18px;
+        background-color: #fff;
+        border: 2px solid #007bff;
+        /* Bootstrap blue */
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 6px;
+        border-radius: 4px;
+        transition: 0.2s;
+    }
+
+    /* When checked → fill blue */
+    .custom-checkbox input:checked~.checkmark {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    /* Checkmark tick */
+    .custom-checkbox .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .custom-checkbox input:checked~.checkmark:after {
+        display: block;
+    }
+
+    /* Tick style */
+    .custom-checkbox .checkmark:after {
+        left: 6px;
+        top: 2px;
+        width: 4px;
+        height: 8px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        position: relative;
+    }
+
+</style>

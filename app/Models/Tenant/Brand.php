@@ -3,11 +3,14 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Brand extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'name','active'
+        'name','active','deleted_at'
     ];
 
     public function scopeActive($query) {

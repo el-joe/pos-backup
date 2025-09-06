@@ -73,4 +73,13 @@ class Admin extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    function image()
+    {
+        return $this->morphOne(File::class, 'model')->where('key','image');
+    }
+
+    function getImagePathAttribute() {
+        return $this->image?->full_path ?? asset('adminBoard/plugins/images/defaultUser.svg');
+    }
 }

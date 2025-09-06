@@ -1,6 +1,4 @@
-<div class="page-wrapper">
-    <!-- ===== Page-Container ===== -->
-    <div class="container-fluid">
+<div>
         <div class="row colorbox-group-widget">
             <div class="col-md-3 col-sm-6 info-color-box">
                 <div class="white-box">
@@ -420,8 +418,3 @@
         </div>
         <!-- ===== Right-Sidebar-End ===== -->
     </div>
-    <!-- ===== Page-Container-End ===== -->
-    <footer class="footer t-a-c">
-        © POS
-    </footer>
-</div>

@@ -21,7 +21,7 @@ trait LivewireOperations {
     }
 
     function deleteSwal() {
-        $this->alert('success','تم الحذف بنجاح');
+        $this->alert('success','Deleted successfully');
     }
 
     function alert($type,$title,$position = 'top-end') {
@@ -37,8 +37,9 @@ trait LivewireOperations {
         ->show();
     }
 
-    function confirm($confirmEvent,$type = 'success',$title,$confirmBtnText,$cancelBtnText = 'الغاء') {
+    function confirm($confirmEvent,$type = 'success',$title,$text = '',$confirmBtnText,$cancelBtnText = 'Cancel') {
         LivewireAlert::title($title)
+        ->text($text)
         ->asConfirm()
         ->{$type}()
         ->withConfirmButton($confirmBtnText)
@@ -48,16 +49,16 @@ trait LivewireOperations {
     }
 
     function deleteAlert($confirmEvent = 'delete') {
-        LivewireAlert::title('هل انت متاكد انك تريد المسح؟')
+        LivewireAlert::title('Are you sure you want to delete?')
         ->asConfirm()
-        ->withConfirmButton('مسح')
-        ->withDenyButton('الغاء')
+        ->withConfirmButton('Delete')
+        ->withDenyButton('Cancel')
         ->onConfirm($confirmEvent)
         ->show();
     }
 
     function updateSwal() {
-        $this->alert('success','تم الحفظ بنجاح');
+        $this->alert('success','Updated successfully');
     }
 
     function dismiss() {
