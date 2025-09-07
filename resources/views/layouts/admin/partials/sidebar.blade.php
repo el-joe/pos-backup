@@ -64,7 +64,6 @@
                         <li> <a href="index4.html"> <i class="fa fa-line-chart fa-fw"></i> Sales List</a> </li>
                         <li> <a href="index4.html"> <i class="fa fa-cog fa-fw"></i> Sales Configuration</a> </li>
                         <li> <a href="index4.html"> <i class="fa fa-users fa-fw"></i> Customers</a> </li>
-                        <li> <a href="index4.html"> <i class="fa fa-money fa-fw"></i> Taxes</a> </li>
                     </ul>
                 </li>
 
@@ -115,7 +114,12 @@
                 </li>
 
                 <li>
-                    <a href="widgets.html" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i> <span class="hide-menu"> Settings </span></a>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i> <span class="hide-menu"> Settings </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html"><i class="fa fa-percent fa-fw"></i> Discounts</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-money fa-fw"></i> Taxes</a> </li>
+                        <li> <a href="index4.html"><i class="fa fa-cog fa-fw"></i> General Settings</a> </li>
+                    </ul>
                 </li>
             </ul>
         </nav>
