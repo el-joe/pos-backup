@@ -8,6 +8,7 @@ use App\Http\Middleware\Tenant\AdminAuthMiddleware;
 use App\Livewire\Admin\Branches\BranchesList;
 use App\Livewire\Admin\Brands\BrandsList;
 use App\Livewire\Admin\Categories\CategoriesList;
+use App\Livewire\Admin\Discounts\DiscountsList;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Taxes\TaxesList;
@@ -47,7 +48,8 @@ Route::middleware([
             Route::get('brands', BrandsList::class)->name('brands.list');
             Route::get('units',UnitsList::class)->name('units.list');
             Route::get('taxes',TaxesList::class)->name('taxes.list');
-            Route::get('pos',PosPage::class)->name('pos.list');
+            Route::get('pos',PosPage::class)->name('pos'); // TODO
+            Route::get('discounts', DiscountsList::class)->name('discounts.list');
         });
     });
 });

@@ -85,6 +85,16 @@
                 </li>
 
                 <li>
+                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-calculator fa-fw"></i> <span class="hide-menu"> Accounting </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li> <a href="index4.html">  <i class="fa fa-cube fa-fw"></i> Payment Methods</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-th-list fa-fw"></i> Shipping Companies</a> </li>
+                        <li> <a href="index4.html"> <i class="fa fa-tags fa-fw"></i> Transactions</a> </li>
+                    </ul>
+                </li>
+
+
+                <li>
                     <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-users fa-fw"></i> <span class="hide-menu"> Administrator </span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li> <a href="index4.html"><i class="fa fa-user fa-fw"></i> User Management</a> </li>

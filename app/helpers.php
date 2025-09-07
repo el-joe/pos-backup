@@ -31,3 +31,7 @@ function carbon($date) {
     return Carbon::parse($date);
 }
 
+function formattedDate($date): string {
+    return carbon($date)->translatedFormat('l , d-M-Y');
+}
+
