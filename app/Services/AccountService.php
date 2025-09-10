@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Repositories\BranchRepository;
+use App\Repositories\AccountRepository;
 
-class BranchService
+class AccountService
 {
-    public function __construct(private BranchRepository $repo) {}
+    public function __construct(private AccountRepository $repo) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {

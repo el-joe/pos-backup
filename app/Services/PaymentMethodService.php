@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Repositories\BranchRepository;
+use App\Repositories\PaymentMethodRepository;
 
-class BranchService
+class PaymentMethodService
 {
-    public function __construct(private BranchRepository $repo) {}
+    public function __construct(private PaymentMethodRepository $repo) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {
@@ -21,29 +21,25 @@ class BranchService
     }
 
 
-    function find($id = null, $relations = [])
+    function find($id, $relations = [], $filter = [])
     {
-        return $this->repo->find($id, $relations);
+        return $this->repo->find($id, $relations, $filter);
+    }
+
+    function delete($id)
+    {
+        return $this->repo->delete($id);
     }
 
     function save($id = null,$data) {
         if($id) {
-            $branch = $this->repo->find($id);
-            if($branch) {
-                $branch->update($data);
-                return $branch;
+            $paymentMethod = $this->repo->find($id);
+            if($paymentMethod) {
+                $paymentMethod->update($data);
+                return $paymentMethod;
             }
         }
 
         return $this->repo->create($data);
-    }
-
-    function delete($id) {
-        $branch = $this->repo->find($id);
-        if($branch) {
-            return $branch->delete();
-        }
-
-        return false;
     }
 }

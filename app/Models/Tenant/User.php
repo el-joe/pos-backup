@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
@@ -17,5 +18,6 @@ class User extends Model
 
     protected $casts = [
         'active' => 'boolean',
+        'type' => UserTypeEnum::class,
     ];
 }
