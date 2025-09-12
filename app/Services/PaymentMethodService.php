@@ -42,4 +42,23 @@ class PaymentMethodService
 
         return $this->repo->create($data);
     }
+
+    function defaultPaymentMethod() {
+        $default = $this->repo->first([],[
+            'active' => 1,
+            'slug' => 'cash'
+        ]);
+
+        if(!$default) {
+            $default = $this->repo->first([],[
+                'active' => 1
+            ]);
+        }
+
+        if(!$default) {
+            $default = $this->repo->first();
+        }
+
+        return $default;
+    }
 }

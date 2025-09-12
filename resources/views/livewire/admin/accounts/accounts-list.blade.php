@@ -79,17 +79,18 @@
                             <label for="branchCode">Code</label>
                             <input type="text" class="form-control" wire:model="data.code" id="branchCode" placeholder="Enter branch code">
                         </div>
-                        {{-- select branch --}}
-                        <div class="form-group">
-                            <label for="branchSelect">Branch</label>
-                            <select class="form-control" wire:model.live="data.branch_id" id="branchSelect">
-                                <option value="">Select Branch</option>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}" {{ $branch->id === ($data['branch_id']??false) ? 'selected' : '' }}>{{ $branch->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
+                        @if(!(($filters['model_type'] ?? false) == \App\Models\Tenant\User::class && ($filters['model_id'] ?? false)))
+                            {{-- select branch --}}
+                            <div class="form-group">
+                                <label for="branchSelect">Branch</label>
+                                <select class="form-control" wire:model.live="data.branch_id" id="branchSelect">
+                                    <option value="">Select Branch</option>
+                                    @foreach($branches as $branch)
+                                        <option value="{{ $branch->id }}" {{ $branch->id === ($data['branch_id']??false) ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         {{-- select payment method --}}
                         <div class="form-group">
                             <label for="paymentMethodSelect">Payment Method</label>
@@ -100,15 +101,17 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="branchType">Type</label>
-                            <select class="form-control" wire:model="data.type" id="branchType">
-                                <option value="">Select Type</option>
-                                @foreach($accountTypes as $type)
-                                    <option value="{{ $type->value }}" {{ $type->value === ($data['type']??false) ? 'selected' : '' }} {{ $type->isInvalided() ? 'disabled' : '' }}>{{ $type->label() }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if(!(($filters['model_type'] ?? false) == \App\Models\Tenant\User::class && ($filters['model_id'] ?? false)))
+                            <div class="form-group">
+                                <label for="branchType">Type</label>
+                                <select class="form-control" wire:model="data.type" id="branchType">
+                                    <option value="">Select Type</option>
+                                    @foreach($accountTypes as $type)
+                                        <option value="{{ $type->value }}" {{ $type->value === ($data['type']??false) ? 'selected' : '' }} {{ $type->isInvalided() ? 'disabled' : '' }}>{{ $type->label() }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         <div class="form-group">
                             <label class="custom-checkbox">
                                 <input type="checkbox" id="branchActive" wire:model="data.active">

@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
+use App\Enums\AccountTypeEnum;
+use App\Models\Tenant\User;
 use App\Repositories\AccountRepository;
+use Str;
 
 class AccountService
 {
-    public function __construct(private AccountRepository $repo) {}
+    public function __construct(private AccountRepository $repo,private PaymentMethodService $paymentMethodService) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {
@@ -45,5 +48,20 @@ class AccountService
         }
 
         return false;
+    }
+
+    function createAccountForUser($user) {
+        $paymentMethod = $this->paymentMethodService->defaultPaymentMethod();
+        $data = [
+            'name' => $user->name,
+            'code' => Str::slug($user->id . '-' .$user->name),
+            'model_type' => User::class,
+            'model_id' => $user->id,
+            'type' => AccountTypeEnum::{strtoupper($user->type->value)}->value,
+            // 'branch_id' => $user->branch_id,
+            'payment_method_id' => $paymentMethod->id
+        ];
+
+        return $this->save(null,$data);
     }
 }

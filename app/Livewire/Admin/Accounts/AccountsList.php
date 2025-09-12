@@ -11,13 +11,14 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class AccountsList extends Component
 {
     use LivewireOperations,WithPagination;
     private $accountService,$branchService,$paymentMethodService;
     public $current;
+    public $subPage = false;
     public $data = [];
+    public $filters = [];
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -64,9 +65,23 @@ class AccountsList extends Component
     }
 
     function save() {
+        if($this->subPage && !isset($this->data['type'])){
+            unset($this->rules['type']);
+        }
         if(!$this->validator())return;
 
-        $this->accountService->save($this->current?->id,$this->data);
+        $data = $this->data;
+
+        if($this->filters['model_id'] ?? null) {
+            $data['model_type'] = $this->filters['model_type'];
+            $data['model_id'] = $this->filters['model_id'];
+        }
+
+        if(!isset($this->data['type'])){
+            $data['type'] = ($this->filters['model_type'])::find($this->filters['model_id'])->type->value;
+        }
+
+        $this->accountService->save($this->current?->id,$data);
 
         $this->popup('success','Account saved successfully');
 
@@ -76,10 +91,10 @@ class AccountsList extends Component
     }
     public function render()
     {
-        $accounts = $this->accountService->list(['branch'],[],10,'id');
+        $accounts = $this->accountService->list(['branch'],[...$this->filters],10,'id');
         $accountTypes = AccountTypeEnum::cases();
         $branches = $this->branchService->activeList();
         $paymenthMethods = $this->paymentMethodService->activeList(filter : ['branch_id'=>$this->data['branch_id'] ?? null]);
-        return view('livewire.admin.accounts.accounts-list', get_defined_vars());
+        return view('livewire.admin.accounts.accounts-list', get_defined_vars())->layout($this->subPage ? null : 'layouts.admin');
     }
 }

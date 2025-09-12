@@ -33,4 +33,12 @@ class Account extends Model
     function paymentMethod() {
         return $this->belongsTo(PaymentMethod::class);
     }
+
+    function scopeFilter($q,$filters = []) {
+        return $q->when(isset($filters['model_type']) && $filters['model_type'], function($q) use ($filters) {
+            $q->where('model_type', $filters['model_type']);
+        })->when(isset($filters['model_id']) && $filters['model_id'], function($q) use ($filters) {
+            $q->where('model_id', $filters['model_id']);
+        });
+    }
 }

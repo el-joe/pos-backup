@@ -17,6 +17,8 @@ use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Units\UnitsList;
+use App\Livewire\Admin\Users\UserDetails;
+use App\Livewire\Admin\Users\UsersList;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -62,11 +64,16 @@ Route::middleware([
 
 
             // Users (Customer,Supplier)
+            Route::get('users/{type?}', UsersList::class)->name('users.list');
+            Route::get('users/{id}/details', UserDetails::class)->name('users.details');
+
             // Products
-            // Shipping Companies
+            // Purchases
+            // Stocks
+            // Sales
             // Transactions
             // Transaction Lines
-            //
+            // Shipping Companies
         });
     });
 });

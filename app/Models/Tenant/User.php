@@ -4,9 +4,12 @@ namespace App\Models\Tenant;
 
 use App\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'email',
@@ -14,10 +17,16 @@ class User extends Model
         'address',
         'active',
         'type',
+        'deleted_at'
     ];
 
     protected $casts = [
         'active' => 'boolean',
         'type' => UserTypeEnum::class,
     ];
+
+    function scopeFilter($q,$filters = []) {
+        return $q->when($filters['type'] ?? null, fn($q,$type) => $q->where('type',$type))
+            ->when(isset($filters['active']), fn($q,$active) => $q->where('active',$filters['active']));
+    }
 }

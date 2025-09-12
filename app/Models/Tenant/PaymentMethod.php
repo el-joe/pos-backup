@@ -19,6 +19,8 @@ class PaymentMethod extends Model
             $q->where('active',$filters['active']);
         })->when(isset($filters['branch_id']), function($q) use ($filters) {
             $q->where(fn($qq)=>$qq->where('branch_id',$filters['branch_id'])->orWhereNull('branch_id'));
+        })->when(isset($filters['slug']), function($q) use ($filters) {
+            $q->where('slug',$filters['slug']);
         });
     }
 }
