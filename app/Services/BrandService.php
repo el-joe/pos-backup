@@ -13,6 +13,14 @@ class BrandService
         return $this->repo->list($relations, $filter, $perPage, $orderByDesc);
     }
 
+    function activeList($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
+    {
+        return $this->repo->list($relations, $filter + [
+            'active' => 1
+        ], $perPage, $orderByDesc);
+    }
+
+
     function find($id = null, $relations = [])
     {
         return $this->repo->find($id, $relations);

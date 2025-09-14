@@ -16,4 +16,11 @@ class Brand extends Model
     public function scopeActive($query) {
         return $query->where('active',1);
     }
+
+    function scopeFilter($q,$filters) {
+        return $q->when(isset($filters['active']), function($q,$active) {
+            $q->where('active',$active);
+        });
+    }
+
 }

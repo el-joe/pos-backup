@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('weight', 10, 2)->default(0);
             $table->integer('alert_qty')->default(0);
             $table->boolean('active')->default(true);
-            $table->enum('type',['single','multiple'])->default('single');
+            // $table->enum('type',['single','multiple'])->default('single');
             $table->unsignedBigInteger('tax_id')->nullable();
             $table->decimal('tax_rate', 10, 2)->default(0)->comment('In percentage');
             $table->timestamps();

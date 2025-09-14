@@ -17,7 +17,12 @@ class File extends Model
             $model = $file->model_type;
 
             $getTableName = (new $model)->getTable();
-            $fullPath = $getTableName;
+            // add tenant id to path
+            if(!tenant('id')) {
+                $fullPath = $getTableName;
+            }else{
+                $fullPath = tenant('id') . '/' . $getTableName;
+            }
 
             $file->path =  Storage::disk($file->storage_type ?? 'public')->putFile($fullPath, $file->path);
         });

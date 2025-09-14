@@ -12,7 +12,7 @@ function admin() {
     return auth(TENANT_ADMINS_GUARD)->user();
 }
 
-function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$isLastChildCheck = true) {
+function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$isLastChildCheck = true,$selectedId = null) {
     $arrayOfDashes = array_fill(0,$number,'-- ');
     $dashes = implode('',$arrayOfDashes);
 
@@ -21,8 +21,8 @@ function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$i
     }else{
         $isLastChild = $model->{$relationName}->count() == 0;
     }
-
-    echo '<option value="'. $model->{$key} .'" '. ($isLastChildCheck ? ($isLastChild ? '' : 'disabled') : '') .'>'. $dashes . $model->{$value} .'</option>';
+    // add
+    echo '<option value="'. $model->{$key} .'" '. ($isLastChildCheck ? ($isLastChild ? '' : 'disabled') : '') . ($selectedId == $model->{$key} ? 'selected' : '') .'>'. $dashes . $model->{$value} .'</option>';
 
     $model->{$relationName}->map(fn($model1)=> recursiveChildrenForOptions($model1,$relationName,$key,$value,$number+1,$isLastChildCheck));
 }

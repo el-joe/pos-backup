@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('code')->nullable()->after('sku');
-            $table->boolean('taxable')->default(true)->after('type');
+            $table->decimal('sale_price', 10, 2)->default(0)
+                ->after('tax_rate')
+                ->comment('Inclusive of tax if taxable is true');
+            $table->unsignedBigInteger('branch_id')->nullable()->after('id')->index();
+            $table->softDeletes();
         });
     }
 

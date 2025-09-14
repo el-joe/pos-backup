@@ -29,4 +29,13 @@ class Category extends Model
         return $query->where('parent_id',0);
     }
 
+    function scopeFilter($q,$filters) {
+        return $q->when(isset($filters['active']), function($q,$active) {
+            $q->where('active',$active);
+        })
+        ->when(isset($filters['parent_id']), function($q,$parent_id) {
+            $q->where('parent_id',$parent_id);
+        });
+    }
+
 }

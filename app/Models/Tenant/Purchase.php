@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Purchase extends Model
 {
-    protected $fillable = ['supplier_id','branch_id','ref_no','order_date','status'];
+    protected $fillable = [
+        'supplier_id','branch_id','ref_no','order_date','status','discount_percentage','tax_percentage'
+    ];
 
     const STATUS = ['requested','pending','received'];
 

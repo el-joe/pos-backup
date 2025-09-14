@@ -3,19 +3,22 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'name','description','sku','code','unit_id','category_id','brand_id','weight','alert_qty','active','taxable','tax_id','tax_rate'
+        'name','description','sku','code','unit_id','branch_id','category_id','brand_id','weight','alert_qty','active','taxable','tax_id','tax_rate','sale_price'
     ];
 
     protected $casts = [
         'active' => 'boolean'
     ];
 
-    protected $appends = ['image_path'];
-    protected $with = ['image'];
+    protected $appends = ['image_path','gallery_path'];
+    protected $with = ['image','gallery'];
 
     // Relationships
 

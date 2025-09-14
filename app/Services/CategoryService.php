@@ -13,6 +13,15 @@ class CategoryService
         return $this->repo->list($relations, $filter, $perPage, $orderByDesc);
     }
 
+    function activeList($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
+    {
+        return $this->repo->list($relations, $filter + [
+            'active' => 1,
+            'parent_id' => 0
+        ], $perPage, $orderByDesc);
+    }
+
+
     function find($id, $relations = [], $filter = [])
     {
         return $this->repo->find($id, $relations, $filter);
