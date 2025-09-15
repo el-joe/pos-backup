@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('qty')->default(0);
             $table->decimal('purchase_price');
             $table->integer('x_margin')->default(0);
-            $table->decimal('sale_price')->comment('purchase price x xMargin');
+            $table->decimal('sell_price')->comment('purchase price x xMargin');
             $table->timestamps();
         });
     }

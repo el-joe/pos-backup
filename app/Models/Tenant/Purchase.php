@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\PurchaseStatusEnum;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Contact;
 use Illuminate\Database\Eloquent\Model;
@@ -9,21 +10,31 @@ use Illuminate\Database\Eloquent\Model;
 class Purchase extends Model
 {
     protected $fillable = [
-        'supplier_id','branch_id','ref_no','order_date','status','discount_percentage','tax_percentage'
+        'supplier_id','branch_id','ref_no','order_date','status'
     ];
 
-    const STATUS = ['requested','pending','received'];
+    protected $casts = [
+        'status' => PurchaseStatusEnum::class,
+    ];
 
     function supplier(){
-        return $this->belongsTo(Contact::class,'supplier_id')
-            ->where('contacts.type','supplier');
+        return $this->belongsTo(User::class,'supplier_id')
+            ->where('users.type','supplier');
     }
 
     function branch() {
         return $this->belongsTo(Branch::class,'branch_id');
     }
 
-    function purchaseVariables() {
-        return $this->hasMany(PurchaseVariable::class,'purchase_id');
+    function purchaseItems() {
+        return $this->hasMany(PurchaseItem::class,'purchase_id');
+    }
+
+    function transaction() {
+        return $this->morphOne(Transaction::class,'reference');
+    }
+
+    function getTotalAmountAttribute() {
+        return $this->transaction?->total_amount ?? 0;
     }
 }

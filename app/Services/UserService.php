@@ -13,6 +13,26 @@ class UserService
         return $this->repo->list($relations, $filter, $perPage, $orderByDesc);
     }
 
+    function suppliersList($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
+    {
+        $filter = array_merge($filter, [
+            'type' => 'supplier',
+            'active' => true,
+        ]);
+
+        return $this->repo->list($relations, $filter , $perPage, $orderByDesc);
+    }
+
+    function customersList($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
+    {
+        $filter = array_merge($filter, [
+            'type' => 'customer',
+            'active' => true,
+        ]);
+        
+        return $this->repo->list($relations, $filter, $perPage, $orderByDesc);
+    }
+
     function find($id = null, $relations = [])
     {
         return $this->repo->find($id, $relations);

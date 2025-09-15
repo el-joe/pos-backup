@@ -110,12 +110,12 @@
                         </select>
                     </div>
                 @endif
-                {{-- sale_price --}}
+                {{-- sell_price --}}
                 <div class="form-group col-sm-4">
-                    <label for="sale_price">Sale Price</label>
+                    <label for="sell_price">Sell Price</label>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-tag"></i></div>
-                        <input type="number" step="any" id="sale_price" wire:model="data.sale_price" class="form-control" placeholder="0.00">
+                        <input type="number" step="any" id="sell_price" wire:model="data.sell_price" class="form-control" placeholder="0.00">
                     </div>
                 </div>
                 <div class="form-group col-sm-12">

@@ -49,4 +49,18 @@ class ProductRepository extends BaseRepository
             $image->delete();
         }
     }
+
+    function search($term) {
+        $query = $this->instance->newQuery();
+
+        if ($term) {
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', '%' . $term . '%')
+                    ->orWhere('code', 'like', '%' . $term . '%')
+                    ->orWhere('sku', 'like', '%' . $term . '%');
+            });
+        }
+
+        return $query->first();
+    }
 }

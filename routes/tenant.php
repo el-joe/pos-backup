@@ -16,6 +16,8 @@ use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\AddEditProduct;
 use App\Livewire\Admin\Products\ProductsList;
+use App\Livewire\Admin\Purchases\AddPurchase;
+use App\Livewire\Admin\Purchases\PurchasesList;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Units\UnitsList;
@@ -73,6 +75,8 @@ Route::middleware([
             Route::get('products',ProductsList::class)->name('products.list');
             Route::get('products/{id}',AddEditProduct::class)->name('products.add-edit');
             // Purchases
+            Route::get('purchases',PurchasesList::class)->name('purchases.list');
+            Route::get('purchases/create',AddPurchase::class)->name('purchases.add');
             // Stocks
             // Sales
             // Transactions

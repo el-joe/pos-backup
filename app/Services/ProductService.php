@@ -27,6 +27,11 @@ class ProductService
         return $this->repo->find($id, $relations);
     }
 
+    function search($term)
+    {
+        return $this->repo->search($term);
+    }
+
     function save($id = null,$data) {
         if(isset($data['tax_id'])){
             $tax = Tax::find($data['tax_id']);
