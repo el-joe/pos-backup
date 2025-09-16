@@ -82,14 +82,15 @@
                                 <th>Product</th>
                                 <th>Unit</th>
                                 <th>Qty</th>
-                                <th>Unit Cost (before discount)</th>
-                                <th>Discount %</th>
-                                <th>Unit Cost (before tax)</th>
-                                <th>Tax %</th>
-                                <th>Sub Total</th>
-                                <th>X Margin %</th>
-                                <th>Sell Price</th>
-                                <th>Total</th>
+                                <th>Unit Price</th>
+                                <th>Discount (%)</th>
+                                <th>Net Unit Cost</th>
+                                <th>Total Net Cost</th>
+                                <th>Tax (%)</th>
+                                <th>Subtotal (Incl. Tax)</th>
+                                <th>Extra Margin (%)</th>
+                                <th>Selling Price</th>
+                                <th>Grand Total (Incl. Tax & Profit)</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -118,6 +119,9 @@
                                         {{ number_format($product['unit_cost_after_discount'], 2) }}
                                     </td>
                                     <td>
+                                        {{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}
+                                    </td>
+                                    <td>
                                         <select name="tax_percentage" id="tax_percentage" wire:model.change="orderProducts.{{ $product['id'] }}.tax_percentage" class="form-control">
                                             <option value="">Select Tax</option>
                                             @foreach ($taxes as $tax)
@@ -138,18 +142,13 @@
                                         {{ number_format($product['total'], 2) }}
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger" wire:click="return({{ $product['id'] }})">Return</button>
+                                        <button class="btn btn-danger" wire:click="delete({{ $product['id'] }})">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="3" class="text-right">Net Total</th>
-                                <th>{{ number_format($netTotalAmount??0, 2) }}</th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>

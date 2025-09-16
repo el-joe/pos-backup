@@ -11,6 +11,26 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+// TODO
+
+/**
+    * لما تيجي تسجل فاتورة شراء لازم تحفظ:
+
+    *   تكلفة البضاعة نفسها (Product Cost).
+
+    *   المصروفات التشغيلية المرتبطة بالشراء (Operational Expenses) زي:
+
+    *   شحن (Freight / Transportation)
+
+    *   جمارك (Customs Duties)
+
+    *   تأمين (Insurance)
+
+    *   تفريغ ومناولة (Handling Charges)
+
+    *  📌 كل ده بيزود تكلفة البضاعة في المخزون (Inventory).
+ */
+
 #[Layout('layouts.admin')]
 class AddPurchase extends Component
 {
@@ -84,12 +104,16 @@ class AddPurchase extends Component
         return $newArr;
     }
 
+    function delete($productId) {
+        unset($this->orderProducts[$productId]);
+        $this->alert('success','Product removed from the list');
+    }
+
     public function render()
     {
         $suppliers = $this->userService->suppliersList([],[],null,'name');
         $branches = $this->branchService->activeList([],[],null,'name');
         $purchaseStatuses = PurchaseStatusEnum::cases();
-        $netTotalAmount = array_sum(array_column($this->orderProducts ?? [],'sub_total'));
         $taxes = $this->taxService->activeList([],[],null,'name');
         return view('livewire.admin.purchases.add-purchase',get_defined_vars());
     }
