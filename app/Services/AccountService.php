@@ -23,6 +23,14 @@ class AccountService
         ], $perPage, $orderByDesc);
     }
 
+    function getSupplierAccounts($supplierId) {
+        return $this->repo->list([], [
+            'model_type' => User::class,
+            'model_id' => $supplierId,
+            'type' => AccountTypeEnum::SUPPLIER->value,
+            'active' => 1,
+        ], null, 'name');
+    }
 
     function find($id = null, $relations = [])
     {

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class PurchaseItem extends Model
 {
     protected $fillable = [
-        'purchase_id','product_id','unit_id','qty','purchase_price','discount_percentage','tax_percentage','x_margin','sell_price','returned','returned_at'
+        'purchase_id','product_id','unit_id','qty','purchase_price','discount_percentage','tax_percentage','x_margin','sell_price','refunded_qty','refunded_at',
     ];
 
     function purchase() {

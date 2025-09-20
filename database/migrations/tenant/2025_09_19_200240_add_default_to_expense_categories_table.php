@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('purchase_items', function (Blueprint $table) {
-            $table->boolean('returned')->default(0);
-            $table->timestamp('returned_at')->nullable();
+        Schema::table('expense_categories', function (Blueprint $table) {
+            $table->boolean('default')->default(false)->after('name');
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('purchase_items', function (Blueprint $table) {
+        Schema::table('expense_categories', function (Blueprint $table) {
             //
         });
     }

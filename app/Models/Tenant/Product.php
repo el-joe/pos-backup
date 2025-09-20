@@ -32,6 +32,10 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    function stocks() {
+        return $this->hasMany(Stock::class,'product_id');
+    }
+
     public function brand()
     {
         return $this->belongsTo(Brand::class);
@@ -73,16 +77,26 @@ class Product extends Model
         return $this->gallery ? $this->gallery->pluck('full_path') : null;
     }
 
-
-    function units() {
-        $this->getUnitAndChildUnitRecursion($this->unit,$output);
-        return $output;
+    public function units()
+    {
+        $unit = $this->unit;
+        $units = collect();
+        if ($unit) {
+            $units->push($unit);
+            $units = $units->merge($this->collectChildrenRecursively($unit));
+        }
+        return $units;
     }
 
-    function getUnitAndChildUnitRecursion($unit,&$units = []) {
-        $units[] = $unit;
-        if($unit->child) {
-            $this->getUnitAndChildUnitRecursion($unit->child,$units);
+    protected function collectChildrenRecursively($unit)
+    {
+        $all = collect();
+        if ($unit->children && $unit->children->count()) {
+            foreach ($unit->children as $child) {
+                $all->push($child);
+                $all = $all->merge($this->collectChildrenRecursively($child));
+            }
         }
+        return $all;
     }
 }

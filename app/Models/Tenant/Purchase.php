@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Purchase extends Model
 {
     protected $fillable = [
-        'supplier_id','branch_id','ref_no','order_date','status'
+        'supplier_id','branch_id','ref_no','order_date','paid_amount','status'
     ];
 
     protected $casts = [
@@ -20,6 +20,10 @@ class Purchase extends Model
     function supplier(){
         return $this->belongsTo(User::class,'supplier_id')
             ->where('users.type','supplier');
+    }
+
+    function expenses() {
+        return $this->morphMany(Expense::class, 'model');
     }
 
     function branch() {
@@ -36,5 +40,17 @@ class Purchase extends Model
 
     function getTotalAmountAttribute() {
         return $this->transaction?->total_amount ?? 0;
+    }
+
+    function getRefundedStatusAttribute() {
+        $refundedQty = $this->purchaseItems->sum('refunded_qty');
+        $totalQty = $this->purchaseItems->sum('qty');
+        if($refundedQty <= 0) {
+            return 'not_refunded';
+        } elseif($refundedQty > 0 && $refundedQty < $totalQty) {
+            return 'partial_refunded';
+        } elseif($refundedQty == $totalQty) {
+            return 'full_refunded';
+        }
     }
 }

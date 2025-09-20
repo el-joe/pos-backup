@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stocks', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('product_id')->index();
-            $table->unsignedBigInteger('unit_id')->index();
-            $table->decimal('qty')->default(0);
-            $table->timestamps();
+        Schema::table('stocks', function (Blueprint $table) {
+            $table->decimal('sell_price', 15, 4)->default(0)->after('qty');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        Schema::table('stocks', function (Blueprint $table) {
+            //
+        });
     }
 };

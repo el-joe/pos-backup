@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stocks', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('product_id')->index();
-            $table->unsignedBigInteger('unit_id')->index();
-            $table->decimal('qty')->default(0);
-            $table->timestamps();
+        Schema::table('purchases', function (Blueprint $table) {
+            $table->enum('discount_type', ['fixed', 'percentage'])->default('fixed');
+            $table->decimal('discount_value', 15, 4)->default(0);
+            $table->unsignedBigInteger('tax_id')->nullable()->index();
+            $table->decimal('tax_percentage', 15, 4)->default(0);
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        //
     }
 };

@@ -4,16 +4,20 @@ namespace App\Enums;
 
 enum PurchaseStatusEnum : string
 {
-    // const STATUS = ['requested','pending','received'];
-    case REQUESTED = 'requested';
     case PENDING = 'pending';
-    case RECEIVED = 'received';
+    case PARTIAL_PAID = 'partial_paid';
+    case FULL_PAID = 'full_paid';
+    case REFUNDED = 'refunded';
+    case CANCELED = 'canceled';
 
-    function label(): string {
+    function label(): string
+    {
         return match($this) {
-            PurchaseStatusEnum::REQUESTED => 'Requested',
-            PurchaseStatusEnum::PENDING => 'Pending',
-            PurchaseStatusEnum::RECEIVED => 'Received',
+            self::PENDING => 'Pending',
+            self::PARTIAL_PAID => 'Partial Paid',
+            self::FULL_PAID => 'Full Paid',
+            self::REFUNDED => 'Refunded',
+            self::CANCELED => 'Canceled',
         };
     }
 }

@@ -19,8 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('branch_id')->index();
             $table->string('ref_no');
             $table->timestamp('order_date')->nullable();
-            $table->enum('status',['requested','pending','received'])->default('requested');
-            // Doc File from Files
             $table->timestamps();
         });
     }

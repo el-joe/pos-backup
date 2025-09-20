@@ -34,4 +34,11 @@ class ExpenseCategoryService
 
         return $this->repo->create($data);
     }
+
+    function getDefaultCategory($name) {
+        return $this->repo->first([],[
+            'default' => 1,
+            'name' => $name
+        ]);
+    }
 }
