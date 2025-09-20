@@ -110,32 +110,41 @@ class PurchaseService
 
     function purchaseLines($data,$event = 'create') {
         // -------------------------- Purchase entry --------------------------------
+
+        // Debit Inventory (for goods purchased)
         $inventoryLine = $this->createInventoryLine($data);
 
+        // Debit Expense (for additional purchase-related expenses like shipping, handling, etc.)
         $expenseLine = $this->createExpenseLine($data);
 
+        // Debit VAT Receivable (input tax you can claim from tax authority)
         $vatReceivableLine = $this->createVatReceivableLine($data);
 
+        // Credit Purchase Discount (reduces cost if supplier gave discount)
         $purchaseDiscountLine = $this->createPurchaseDiscountLine($data);
 
+        // Credit Supplier (record liability to supplier for total amount owed)
         $supplierCreditLine = $this->createSupplierCreditLine($data);
 
         // -------------------------- Payment entry --------------------------------
 
+        // Credit Branch Cash (if you paid now – reduce your cash balance)
         $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid');
 
+        // Debit Supplier (reduce liability when you make payment to supplier)
         $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid');
 
         return [
             // Purchase entry --------------------------------
-            $inventoryLine,
-            $expenseLine,
-            $vatReceivableLine,
-            $purchaseDiscountLine,
-            $supplierCreditLine,
+            $inventoryLine,         // DR Inventory (record goods in stock)
+            $expenseLine,           // DR Expense (record additional expenses)
+            $vatReceivableLine,     // DR VAT Receivable (input tax asset)
+            $purchaseDiscountLine,  // CR Purchase Discount (contra expense)
+            $supplierCreditLine,    // CR Supplier (accounts payable)
+
             // Payment entry --------------------------------
-            $branchCashLine,
-            $supplierDebitLine,
+            $branchCashLine,        // CR Branch Cash (if payment is made)
+            $supplierDebitLine,     // DR Supplier (reduce payable by paid amount)
         ];
     }
 
