@@ -25,7 +25,7 @@ class PurchasesList extends Component
     }
     public function render()
     {
-        $purchases = $this->purchaseService->list([],[],10,'order_date');
+        $purchases = $this->purchaseService->list([],[],10,'id');
         return view('livewire.admin.purchases.purchases-list',get_defined_vars());
     }
 }

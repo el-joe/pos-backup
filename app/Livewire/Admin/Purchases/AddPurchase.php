@@ -70,9 +70,9 @@ class AddPurchase extends Component
         'expenses.*.amount' => 'required|numeric',
         'expenses.*.expense_date' => 'nullable|date',
         // Payment Section
-        'payment_status' => 'required|in:paid,due,partial',
-        'payment_account' => 'required_if:payment_status,paid,partial|integer',
-        'payment_amount' => 'required_if:payment_status,partial|numeric',
+        'payment_status' => 'required|in:pending,partial_paid,full_paid',
+        'payment_account' => 'required_if:payment_status,partial_paid,full_paid|integer',
+        'payment_amount' => 'required_if:payment_status,partial_paid|numeric',
         'payment_note' => 'nullable|string',
     ];
 
@@ -165,8 +165,8 @@ class AddPurchase extends Component
     }
 
     function calcOrderProductsTotal() : float {
-        return array_sum(array_column($this->orderProducts,'total'));
-
+        $products = collect($this->orderProducts);
+        return $products->sum(fn($q)=>$q['sub_total'] * $q['qty']);
     }
 
     function calcExpensesTotal() : float {
@@ -177,7 +177,7 @@ class AddPurchase extends Component
         $orderSubTotal = PurchaseHelper::calcSubtotal($this->calcOrderProductsTotal(),$this->calcExpensesTotal());
         $orderDiscountAmount = PurchaseHelper::calcDiscount($orderSubTotal,$this->data['discount_type'] ?? null,$this->data['discount_value'] ?? 0);
         $orderTotalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($orderSubTotal,$orderDiscountAmount);
-        $orderTaxAmount = PurchaseHelper::calcTax($orderSubTotal,$orderDiscountAmount,$this->data['tax_rate'] ?? 0);
+        $orderTaxAmount = PurchaseHelper::calcTax($orderTotalAfterDiscount,$this->data['tax_rate'] ?? 0);
         $orderGrandTotal = PurchaseHelper::calcGrandTotal($orderTotalAfterDiscount,$orderTaxAmount);
 
         return [
@@ -200,7 +200,8 @@ class AddPurchase extends Component
         // save purchase
         $this->purchaseService->save(null,[
             ...$this->data,
-            'order_products' => $this->orderProducts,
+            'tax_percentage'=> $this->data['tax_rate'] ?? 0,
+            'orderProducts' => $this->orderProducts,
             'total' => $this->calcOrderProductsTotal(),
             'expenses_total' => $this->calcExpensesTotal(),
             'sub_total' => $calcDetails['orderSubTotal'],
@@ -210,7 +211,9 @@ class AddPurchase extends Component
             'grand_total' => $calcDetails['orderGrandTotal'] ?? 0,
         ]);
         // alert success
+        $this->alert('success','Purchase created successfully');
         // redirect to purchases list
+        return $this->redirectWithTimeout(route('admin.purchases.list'),1000);
     }
 
     public function render()

@@ -121,7 +121,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        {{ number_format($product['sub_total'], 2) }}
+                                        {{ number_format($product['sub_total'] * $product['qty'], 2) }}
                                     </td>
                                     <td>
                                         <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.x_margin" step="0.01" min="0" placeholder="0.00">
@@ -332,7 +332,7 @@
                         </div>
 
                         {{-- make select to choose payment account from selected Supplier when payment_status is partial or paid --}}
-                        @if(in_array($data['payment_status']??false, ['partial', 'paid']))
+                        @if(in_array($data['payment_status']??false, ['partial_paid', 'full_paid']))
                             <div class="form-group">
                                 <label class="control-label">Payment Account</label>
                                 <select class="form-control" wire:model="data.payment_account">
@@ -344,7 +344,7 @@
                             </div>
                         @endif
 
-                        @if(($data['payment_status'] ?? '') === 'partial')
+                        @if(($data['payment_status'] ?? '') === 'partial_paid')
                             <div class="form-group">
                                 <label class="control-label">Paid Amount</label>
                                 <div class="input-group">

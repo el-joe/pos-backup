@@ -24,8 +24,8 @@ class PurchaseHelper
         return $subTotal - $discountAmount;
     }
 
-    static function calcTax($subTotal = 0, $discountAmount = 0, $taxRate = 0) {
-        $total = $subTotal - ($discountAmount ?? 0);
+    static function calcTax($totalAfterDiscount = 0, $taxRate = 0) {
+        $total = $totalAfterDiscount;
         return ($total * ($taxRate ?? 0) / 100);
     }
 

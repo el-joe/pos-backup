@@ -39,6 +39,7 @@ class PurchaseService
         }
 
         // fill purchase data
+        $status = PurchaseStatusEnum::from($data['payment_status'] ?? 'pending')->value;
         $purchase->fill([
             'supplier_id' => $data['supplier_id'],
             'branch_id' => $data['branch_id'],
@@ -48,8 +49,8 @@ class PurchaseService
             'discount_value' => $data['discount_value'],
             'tax_id' => $data['tax_id'],
             'tax_percentage' => $data['tax_rate'] ?? $data['tax_percentage'] ?? 0,
-            'paid_amount' => $data['payment_amount'] ?? $data['paid_amount'] ?? 0,
-            'status' => PurchaseStatusEnum::from($data['payment_status'] ?? 'pending')->value,
+            'paid_amount' => $status == 'full_paid' ? $data['grand_total'] : ($data['payment_amount'] ?? $data['paid_amount'] ?? 0),
+            'status' => $status,
         ])->save();
 
         // fill purchase items data
@@ -127,12 +128,15 @@ class PurchaseService
         $supplierCreditLine = $this->createSupplierCreditLine($data);
 
         // -------------------------- Payment entry --------------------------------
+        if(($data['payment_status'] ?? 'pending') == 'pending'){
+            // TODO:
+        }else{
+            // Credit Branch Cash (if you paid now – reduce your cash balance)
+            $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid');
 
-        // Credit Branch Cash (if you paid now – reduce your cash balance)
-        $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid');
-
-        // Debit Supplier (reduce liability when you make payment to supplier)
-        $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid');
+            // Debit Supplier (reduce liability when you make payment to supplier)
+            $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid');
+        }
 
         return [
             // Purchase entry --------------------------------

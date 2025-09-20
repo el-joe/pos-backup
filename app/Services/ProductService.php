@@ -32,6 +32,10 @@ class ProductService
         return $this->repo->search($term);
     }
 
+    function create($data) {
+        return $this->repo->create($data);
+    }
+
     function save($id = null,$data) {
         if(isset($data['tax_id'])){
             $tax = Tax::find($data['tax_id']);
@@ -41,13 +45,14 @@ class ProductService
                 $data['tax_rate'] = 0;
             }
         }
+
         if($id) {
-            $product = $this->repo->find($id);
+            $product = $this->find($id);
             if($product) {
                 $product->update($data);
             }
         }else{
-            $product = $this->repo->create($data);
+            $product = $this->create($data);
         }
 
 

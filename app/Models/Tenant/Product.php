@@ -99,4 +99,8 @@ class Product extends Model
         }
         return $all;
     }
+
+    function scopeFilter($query,$filter = []) {
+        return $query;
+    }
 }

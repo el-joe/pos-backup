@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Enums\PurchaseStatusEnum;
+use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Contact;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 class Purchase extends Model
 {
     protected $fillable = [
-        'supplier_id','branch_id','ref_no','order_date','paid_amount','status'
+        'supplier_id','branch_id','ref_no','order_date','paid_amount','status',
+        'discount_type' , 'discount_value' , 'tax_id' , 'tax_percentage'
     ];
 
     protected $casts = [
@@ -35,11 +37,17 @@ class Purchase extends Model
     }
 
     function transaction() {
-        return $this->morphOne(Transaction::class,'reference');
+        return $this->morphMany(Transaction::class,'reference');
     }
 
     function getTotalAmountAttribute() {
-        return $this->transaction?->total_amount ?? 0;
+        $totalItems = $this->purchaseItems->sum(fn($q)=>$q->total_after_tax);
+        $subTotal = PurchaseHelper::calcSubTotal($totalItems, $this->expenses->sum('amount'));
+        $discountAmount = PurchaseHelper::calcDiscount($subTotal,$this->discount_type,$this->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($subTotal,$discountAmount);
+        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount,$this->tax_percentage);
+
+        return PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
     }
 
     function getRefundedStatusAttribute() {

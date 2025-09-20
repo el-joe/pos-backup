@@ -40,6 +40,7 @@ class StockService
 
     function addStock($productId, $unitId, $qty,$sellPrice = 0) {
         $product = $this->productService->find($productId, ['units']);
+
         if($product) {
             $unitStock = $product->stocks()->firstWhere('unit_id', $unitId);
             if($unitStock) {

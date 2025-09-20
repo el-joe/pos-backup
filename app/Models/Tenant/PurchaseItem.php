@@ -23,4 +23,13 @@ class PurchaseItem extends Model
     function unit() {
         return $this->belongsTo(Unit::class,'unit_id');
     }
+
+    function getTotalAfterTaxAttribute() {
+        $total = $this->qty * $this->purchase_price;
+        $discountAmount = ($total * ($this->discount_percentage ?? 0) / 100);
+        $totalAfterDiscount = $total - $discountAmount;
+        $taxAmount = ($totalAfterDiscount * ($this->tax_percentage ?? 0) / 100);
+
+        return $totalAfterDiscount + $taxAmount;
+    }
 }
