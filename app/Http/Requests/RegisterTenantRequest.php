@@ -21,12 +21,20 @@ class RegisterTenantRequest extends FormRequest
      */
     public function rules(): array
     {
+        // i want check if domain is valid domain name or subdomain to current domain
         return [
-            'id'=>'required|string|unique:tenants',
+            'id'=>'required|string|unique:tenants|regex:/^[a-zA-Z0-9_]+$/',
             'phone'=>'required|string',
             'email'=>'required|email',
             'password'=>'required|string|confirmed|min:8',
-            'domain'=>'required|string|unique:domains,domain'
+            'domain'=>'required|string|unique:domains,domain|regex:/^(?!-)(?:[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,}$/' // Validate domain name
+        ];
+    }
+
+    function messages() {
+        return [
+            'id.regex'=>'The id may only contain letters, numbers, and underscores.',
+            'domain.regex'=>'The domain format is invalid.'
         ];
     }
 }

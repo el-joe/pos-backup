@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('code')->nullable()->after('sku');
-            $table->boolean('taxable')->default(true)->after('tax_rate');
+        Schema::table('stocks', function (Blueprint $table) {
+            $table->decimal('unit_cost', 10, 2)->default(0)->after('qty');
+            $table->unsignedBigInteger('branch_id')->after('unit_id');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
+        Schema::table('stocks', function (Blueprint $table) {
             //
         });
     }

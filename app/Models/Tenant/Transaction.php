@@ -2,12 +2,17 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\TransactionTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
     protected $fillable = [
-        'date','description','reference_type','reference_id','branch_id','note'
+        'date','description','reference_type','reference_id','branch_id','note','type','amount'
+    ];
+
+    protected $casts = [
+        'type' => TransactionTypeEnum::class
     ];
 
     function reference() {

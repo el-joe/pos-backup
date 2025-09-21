@@ -15,8 +15,11 @@ class RegisterController extends Controller
     }
 
     function postRegister(RegisterTenantRequest $request) {
+        // make request id is valid for database name
+        $id = preg_replace('/[^a-zA-Z0-9_]/', '_', $request->id);
         $tenant = Tenant::create([
-            'id'=>$request->id,
+            'id'=>$id,
+            'name'=> $request->id,
             'phone'=>$request->phone,
             'email'=>$request->email,
             'active'=>false,

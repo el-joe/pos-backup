@@ -17,7 +17,7 @@ class CategoryService
     {
         return $this->repo->list($relations, $filter + [
             'active' => 1,
-            'parent_id' => 0
+            'empty_parent_id' => true
         ], $perPage, $orderByDesc);
     }
 

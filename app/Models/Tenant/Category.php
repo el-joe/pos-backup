@@ -35,6 +35,11 @@ class Category extends Model
         })
         ->when(isset($filters['parent_id']), function($q,$parent_id) {
             $q->where('parent_id',$parent_id);
+        })
+        ->when($filters['empty_parent_id'] ?? null, function($q) {
+            $q->where(function ($q) {
+                $q->where('parent_id',0)->orWhereNull('parent_id');
+            });
         });
     }
 

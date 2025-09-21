@@ -64,7 +64,7 @@ class UsersList extends Component
     }
 
     function save() {
-        if($this->userService->checkIfUserExistsIntoSameType($this->data['email'],$this->type) || $this->userService->checkIfUserExistsIntoSameType($this->data['phone'],$this->type)) {
+        if($this->userService->checkIfUserExistsIntoSameType($this->data['email'] ?? '',$this->type) || $this->userService->checkIfUserExistsIntoSameType($this->data['phone'] ?? '',$this->type)) {
             $this->alert('error', 'User with this email or phone already exists');
             return;
         }

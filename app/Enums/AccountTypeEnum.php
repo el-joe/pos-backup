@@ -15,7 +15,7 @@ enum AccountTypeEnum : string
     case INVENTORY_SHORTAGE = 'inventory_shortage'; // inventory loss adjustments
     case FIXED_ASSET = 'fixed_asset'; // fixed asset transactions && depreciation
     case CURRENT_ASSET = 'current_asset'; // sales credits , bank transactions
-    case CURRENT_LIABILITY = 'current_liability'; // purchase credits , expenses due within a year
+    // case CURRENT_LIABILITY = 'current_liability'; // purchase credits , expenses due within a year
     case LONGTERM_LIABILITY = 'longterm_liability'; // Long-term debts and liabilities
     case VAT_PAYABLE = 'vat_payable'; // on sales
     case VAT_RECEIVABLE = 'vat_receivable'; // VAT on purchases

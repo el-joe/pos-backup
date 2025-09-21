@@ -29,7 +29,7 @@ class UserService
             'type' => 'customer',
             'active' => true,
         ]);
-        
+
         return $this->repo->list($relations, $filter, $perPage, $orderByDesc);
     }
 

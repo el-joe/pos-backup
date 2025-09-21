@@ -25,7 +25,7 @@ class PurchaseItem extends Model
     }
 
     function getTotalAfterTaxAttribute() {
-        $total = $this->qty * $this->purchase_price;
+        $total = ($this->qty - $this->refunded_qty) * $this->purchase_price;
         $discountAmount = ($total * ($this->discount_percentage ?? 0) / 100);
         $totalAfterDiscount = $total - $discountAmount;
         $taxAmount = ($totalAfterDiscount * ($this->tax_percentage ?? 0) / 100);

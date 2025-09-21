@@ -34,7 +34,7 @@
                 <div class="form-group col-sm-4">
                     <label for="branch_id">Branch</label>
                     <select id="branch_id" wire:model.change="data.branch_id" class="form-control">
-                        <option value="" selected disabled>Select Branch</option>
+                        <option value="">Select Branch</option>
                         @foreach ($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                         @endforeach
@@ -44,7 +44,7 @@
                 <div class="form-group col-sm-4">
                     <label for="brand_id">Brand</label>
                     <select id="brand_id" wire:model.change="data.brand_id" class="form-control">
-                        <option value="" selected disabled>Select Brand</option>
+                        <option value="">Select Brand</option>
                         @foreach ($brands as $brand)
                             <option value="{{ $brand->id }}" {{ ($this->data['brand_id']??false) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                         @endforeach

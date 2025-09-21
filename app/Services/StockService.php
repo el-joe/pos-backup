@@ -38,15 +38,23 @@ class StockService
         return $this->repo->create($data);
     }
 
-    function addStock($productId, $unitId, $qty,$sellPrice = 0) {
+    function addStock($productId, $unitId, $qty,$sellPrice = 0,$unitCost = 0, $branchId = null) {
         $product = $this->productService->find($productId, ['units']);
 
         if($product) {
-            $unitStock = $product->stocks()->firstWhere('unit_id', $unitId);
+            $unitStock = $product->stocks()->when($branchId, function($q) use ($branchId) {
+                $q->where('branch_id', $branchId);
+            },function ($q) {
+                $q->where(function($q) {
+                    $q->whereNull('branch_id')->orWhere('branch_id', 0);
+                });
+            })->firstWhere('unit_id', $unitId);
+
             if($unitStock) {
                 $unitStock->update([
                     'qty' => $unitStock->qty + $qty,
-                    'sell_price' => $sellPrice
+                    'sell_price' => $sellPrice,
+                    'unit_cost' => $unitCost,
                 ]);
                 return $unitStock;
             }else{
@@ -54,7 +62,9 @@ class StockService
                     'product_id' => $productId,
                     'unit_id' => $unitId,
                     'qty' => $qty,
-                    'sell_price' => $sellPrice
+                    'sell_price' => $sellPrice,
+                    'unit_cost' => $unitCost,
+                    'branch_id' => $branchId,
                 ]);
             }
         }

@@ -50,6 +50,10 @@ class Purchase extends Model
         return PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
     }
 
+    function getDueAmountAttribute() {
+        return $this->total_amount - $this->paid_amount;
+    }
+
     function getRefundedStatusAttribute() {
         $refundedQty = $this->purchaseItems->sum('refunded_qty');
         $totalQty = $this->purchaseItems->sum('qty');

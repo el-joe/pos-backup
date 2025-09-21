@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\AccountTypeEnum;
 use App\Enums\PurchaseStatusEnum;
+use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Purchase;
@@ -56,7 +57,6 @@ class PurchaseService
         // fill purchase items data
         $purchase->purchaseItems()->delete();
         foreach ($data['orderProducts'] as $item) {
-            //`purchase_id`, `product_id`, `unit_id`, `qty`, `purchase_price`, `discount_percentage`, `tax_percentage`, `x_margin`, `sell_price`
             $purchase->purchaseItems()->create([
                 'purchase_id' => $purchase->id,
                 'product_id' => $item['id'],
@@ -79,7 +79,6 @@ class PurchaseService
             ]);
         }
         foreach ($data['expenses'] as $item) {
-            // `branch_id`, `model_type`, `model_id`, `expense_category_id`, `description`, `amount`, `expense_date`
             $purchase->expenses()->create([
                 'branch_id' => $data['branch_id'],
                 'model_type' => Purchase::class,
@@ -93,23 +92,41 @@ class PurchaseService
 
         // fill stock data
         foreach ($data['orderProducts'] as $item) {
-            $this->stockService->addStock($item['id'],$item['unit_id'],$item['qty'],$item['sell_price']);
+            // add Stock
+            $this->stockService->addStock(productId: $item['id'],unitId: $item['unit_id'],qty: $item['qty'],sellPrice: $item['sell_price'],unitCost: $item['purchase_price'],branchId: $data['branch_id']);
         }
         // fill purchase payments data
-        // create payment then payment lines
+        // Grouped by type = Purchase Invoice
         $transactionData = [
             'description' => 'Purchase Payment for #'.$purchase->ref_no,
+            'type' => TransactionTypeEnum::PURCHASE_INVOICE->value,
             'reference_type' => Purchase::class,
             'reference_id' => $purchase->id,
             'branch_id' => $purchase->branch_id,
             'note' => $data['payment_note'] ?? '',
-            'lines' => $this->purchaseLines($data,'create')
+            'amount' => $data['grand_total'] ?? 0,
+            'lines' => $this->purchaseInvoiceLines($data,'create')
         ];
 
         $this->transactionService->create($transactionData);
+
+        // Grouped by type = Payments
+        $transactionData = [
+            'description' => 'Purchase Payment for #'.$purchase->ref_no,
+            'type' => TransactionTypeEnum::PURCHASE_PAYMENT->value,
+            'reference_type' => Purchase::class,
+            'reference_id' => $purchase->id,
+            'branch_id' => $purchase->branch_id,
+            'note' => $data['payment_note'] ?? '',
+            'amount' => $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0),
+            'lines' => $this->purchasePaymentLines($data,'create')
+        ];
+
+        $this->transactionService->create($transactionData);
+
     }
 
-    function purchaseLines($data,$event = 'create') {
+    function purchaseInvoiceLines($data,$event = 'create') {
         // -------------------------- Purchase entry --------------------------------
 
         // Debit Inventory (for goods purchased)
@@ -127,7 +144,20 @@ class PurchaseService
         // Credit Supplier (record liability to supplier for total amount owed)
         $supplierCreditLine = $this->createSupplierCreditLine($data);
 
-        // -------------------------- Payment entry --------------------------------
+
+        return [
+            // Purchase entry --------------------------------
+            $inventoryLine,         // DR Inventory (record goods in stock)
+            $expenseLine,           // DR Expense (record additional expenses)
+            $vatReceivableLine,     // DR VAT Receivable (input tax asset)
+            $purchaseDiscountLine,  // CR Purchase Discount (contra expense)
+            $supplierCreditLine,    // CR Supplier (accounts payable)
+        ];
+    }
+
+    function purchasePaymentLines($data,$event = 'create') {
+        // ------------------------- Payment entry --------------------------------
+        // 3 status (pending, partial_paid, full_paid)
         if(($data['payment_status'] ?? 'pending') == 'pending'){
             // TODO:
         }else{
@@ -139,13 +169,6 @@ class PurchaseService
         }
 
         return [
-            // Purchase entry --------------------------------
-            $inventoryLine,         // DR Inventory (record goods in stock)
-            $expenseLine,           // DR Expense (record additional expenses)
-            $vatReceivableLine,     // DR VAT Receivable (input tax asset)
-            $purchaseDiscountLine,  // CR Purchase Discount (contra expense)
-            $supplierCreditLine,    // CR Supplier (accounts payable)
-
             // Payment entry --------------------------------
             $branchCashLine,        // CR Branch Cash (if payment is made)
             $supplierDebitLine,     // DR Supplier (reduce payable by paid amount)

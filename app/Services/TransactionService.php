@@ -31,6 +31,7 @@ class TransactionService
         $transaction = $this->repo->create([
             'date' => now(),
             'description' => $data['description'],
+            'type' => $data['type'] ?? null,
             'reference_type' => $data['reference_type'] ?? null,
             'reference_id' => $data['reference_id'] ?? null,
             'branch_id' => $data['branch_id'] ?? null,
@@ -38,7 +39,6 @@ class TransactionService
         ]);
 
         foreach ($data['lines'] as $line) {
-            // `transaction_id`, `account_id`, `type`, `amount`
             $transaction->lines()->create([
                 'account_id' => $line['account_id'],
                 'type' => $line['type'] ?? 'debit',

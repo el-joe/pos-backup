@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
-    protected $fillable = ['product_id','unit_id','qty','sell_price'];
+    protected $fillable = ['product_id','unit_id','branch_id','unit_cost','qty','sell_price'];
 
     function product() {
         return $this->belongsTo(Product::class,'product_id');
@@ -16,5 +16,9 @@ class Stock extends Model
 
     function unit() {
         return $this->belongsTo(Unit::class,'unit_id');
+    }
+
+    function branch() {
+        return $this->belongsTo(Branch::class,'branch_id');
     }
 }

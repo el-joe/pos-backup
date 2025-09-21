@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('reference_type')->nullable();
             $table->unsignedBigInteger('reference_id')->nullable();
             $table->unsignedBigInteger('branch_id')->nullable();
+            $table->decimal('amount',15,2)->default(0);
             $table->timestamps();
         });
     }

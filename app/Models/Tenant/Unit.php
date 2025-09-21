@@ -46,9 +46,9 @@ class Unit extends Model
     }
 
     function scopeFilter($q,$filters) {
-        return $q->when($filters['empty_parent_id'] ?? null, function($q,$parent_id) {
-            $q->where(function ($q) use ($parent_id) {
-                $q->where('parent_id',$parent_id)->orWhereNull('parent_id');
+        return $q->when($filters['empty_parent_id'] ?? null, function($q) {
+            $q->where(function ($q) {
+                $q->where('parent_id',0)->orWhereNull('parent_id');
             });
         });
     }
