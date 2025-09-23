@@ -36,7 +36,7 @@ class Purchase extends Model
         return $this->hasMany(PurchaseItem::class,'purchase_id');
     }
 
-    function transaction() {
+    function transactions() {
         return $this->morphMany(Transaction::class,'reference');
     }
 
