@@ -40,14 +40,22 @@ class Purchase extends Model
         return $this->morphMany(Transaction::class,'reference');
     }
 
+    function getItemsTotalAmountAttribute() {
+        return $this->purchaseItems->sum(fn($q)=>$q->total_after_tax);
+    }
+
     function getTotalAmountAttribute() {
-        $totalItems = $this->purchaseItems->sum(fn($q)=>$q->total_after_tax);
-        $subTotal = PurchaseHelper::calcSubTotal($totalItems, $this->expenses->sum('amount'));
+        $totalItems = $this->items_total_amount;
+        $subTotal = PurchaseHelper::calcSubTotal($totalItems, $this->expenses_total_amount);
         $discountAmount = PurchaseHelper::calcDiscount($subTotal,$this->discount_type,$this->discount_value);
         $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($subTotal,$discountAmount);
         $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount,$this->tax_percentage);
 
         return PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
+    }
+
+    function getExpensesTotalAmountAttribute() {
+        return $this->expenses->sum('amount');
     }
 
     function getDueAmountAttribute() {

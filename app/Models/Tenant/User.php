@@ -25,6 +25,10 @@ class User extends Model
         'type' => UserTypeEnum::class,
     ];
 
+    function accounts() {
+        return $this->morphMany(Account::class, 'model');
+    }
+
     function scopeFilter($q,$filters = []) {
         return $q->when($filters['type'] ?? null, fn($q,$type) => $q->where('type',$type))
             ->when(isset($filters['active']), fn($q,$active) => $q->where('active',$filters['active']))

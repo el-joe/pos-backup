@@ -8,6 +8,7 @@ use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Purchase;
+use App\Models\Tenant\User;
 use App\Repositories\PurchaseRepository;
 
 class PurchaseService
@@ -110,7 +111,29 @@ class PurchaseService
 
         $this->transactionService->create($transactionData);
 
+        if(($data['payment_status'] ?? 'pending') == 'pending'){
+            return $purchase;
+        }
         // Grouped by type = Payments
+        $this->addPayment($purchase->id, $data);
+
+        $purchase->refresh();
+
+        $purchseDue = $purchase->due_amount;
+        $total = $purchase->total_amount;
+
+        if($purchseDue <= 0){
+            $purchase->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
+        }elseif($purchseDue > 0 && $purchseDue < $total){
+            $purchase->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
+        }elseif($purchseDue == $total){
+            $purchase->update(['status' => PurchaseStatusEnum::PENDING->value]);
+        }
+    }
+
+    function addPayment($purchaseId, $data) {
+        $purchase = $this->repo->find($purchaseId);
+        if(!$purchase) return;
         $transactionData = [
             'description' => 'Purchase Payment for #'.$purchase->ref_no,
             'type' => TransactionTypeEnum::PURCHASE_PAYMENT->value,
@@ -124,6 +147,7 @@ class PurchaseService
 
         $this->transactionService->create($transactionData);
 
+        $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
     }
 
     function purchaseInvoiceLines($data,$event = 'create') {
@@ -159,7 +183,7 @@ class PurchaseService
         // ------------------------- Payment entry --------------------------------
         // 3 status (pending, partial_paid, full_paid)
         if(($data['payment_status'] ?? 'pending') == 'pending'){
-            // TODO:
+            return;
         }else{
             // Credit Branch Cash (if you paid now – reduce your cash balance)
             $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid');
@@ -286,7 +310,12 @@ class PurchaseService
     }
 
     function createSupplierCreditLine($data) {
-        $getSupplierAccount = Account::find($data['payment_account']);
+        if(!isset($data['payment_account'])){
+            $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
+        }else{
+            $getSupplierAccount = Account::find($data['payment_account']);
+        }
+
         // get grand total from data
         $grandTotal = $data['grand_total'] ?? 0;
 
@@ -299,7 +328,12 @@ class PurchaseService
     }
 
     function createSupplierDebitLine($data,$type = 'full_paid') {
-        $getSupplierAccount = Account::find($data['payment_account']);
+        if(!isset($data['payment_account'])){
+            $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
+        }else{
+            $getSupplierAccount = Account::find($data['payment_account']);
+        }
+
         // get paid amount from data
         if($type == 'full_paid'){
             $paidAmount = $data['grand_total'] ?? 0;

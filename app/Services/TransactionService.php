@@ -36,6 +36,7 @@ class TransactionService
             'reference_id' => $data['reference_id'] ?? null,
             'branch_id' => $data['branch_id'] ?? null,
             'note' => $data['note'] ?? '',
+            'amount' => $data['amount'] ?? 0,
         ]);
 
         foreach ($data['lines'] as $line) {

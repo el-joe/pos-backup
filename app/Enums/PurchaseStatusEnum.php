@@ -20,4 +20,14 @@ enum PurchaseStatusEnum : string
             self::CANCELED => 'Canceled',
         };
     }
+
+    function colorClass() {
+        return match($this) {
+            self::PENDING => 'warning',
+            self::PARTIAL_PAID => 'info',
+            self::FULL_PAID => 'success',
+            self::REFUNDED => 'primary',
+            self::CANCELED => 'danger',
+        };
+    }
 }

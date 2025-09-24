@@ -24,12 +24,33 @@ class PurchaseItem extends Model
         return $this->belongsTo(Unit::class,'unit_id');
     }
 
-    function getTotalAfterTaxAttribute() {
-        $total = ($this->qty - $this->refunded_qty) * $this->purchase_price;
-        $discountAmount = ($total * ($this->discount_percentage ?? 0) / 100);
-        $totalAfterDiscount = $total - $discountAmount;
+    function getActualQtyAttribute() {
+        return $this->qty - $this->refunded_qty;
+    }
+
+    function getUnitCostAfterDiscountAttribute() : float {
+        $discountAmount = ($this->purchase_price * ($this->discount_percentage ?? 0) / 100);
+        return $this->purchase_price - $discountAmount;
+    }
+
+    function getTotalAfterDiscountAttribute() : float {
+        return $this->unit_cost_after_discount * $this->actual_qty;
+    }
+
+    function getUnitAmountAfterTaxAttribute() : float {
+        $totalAfterDiscount = $this->unit_cost_after_discount;
         $taxAmount = ($totalAfterDiscount * ($this->tax_percentage ?? 0) / 100);
 
         return $totalAfterDiscount + $taxAmount;
+    }
+
+    function getTotalAfterTaxAttribute() : float {
+
+        return $this->unit_amount_after_tax * $this->actual_qty;
+    }
+
+    function getTotalAfterXMarginAttribute() : float {
+        $totalAfterTax = $this->unit_amount_after_tax;
+        return $totalAfterTax * (1 + (($this->x_margin ?? 0) / 100));
     }
 }

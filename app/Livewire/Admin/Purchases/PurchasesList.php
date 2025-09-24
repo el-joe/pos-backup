@@ -16,13 +16,39 @@ class PurchasesList extends Component
     private $purchaseService;
     public $current;
 
+    public $payment = [];
+
     function boot() {
         $this->purchaseService = app(PurchaseService::class);
     }
 
     function setCurrent($id) {
-        $this->current = $this->purchaseService->find($id);
+        $this->current = $this->purchaseService->find($id,[
+            'transactions' => fn($q)=> $q->where('type','purchase_payment')
+        ]);
     }
+
+    function savePayment() {
+        $this->validate([
+            'payment.account_id' => 'required|exists:accounts,id',
+            'payment.amount' => 'required|numeric|min:0.01|max:'.$this->current->due_amount,
+            'payment.note' => 'nullable|string|max:255',
+        ]);
+
+        $this->purchaseService->addPayment($this->current->id, [
+            'payment_note' => $this->payment['note'] ?? null,
+            'payment_status' => 'partial_paid',
+            'payment_amount' => $this->payment['amount'],
+            'branch_id' => $this->current->branch_id,
+            'payment_account' => $this->payment['account_id'],
+        ]);
+
+        $this->alert('success','Payment added successfully!');
+        $this->reset('payment');
+
+        $this->setCurrent(id: $this->current->id);
+    }
+
     public function render()
     {
         $purchases = $this->purchaseService->list([],[],10,'id');

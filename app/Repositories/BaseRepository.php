@@ -37,7 +37,10 @@ class BaseRepository implements BaseInterface {
     }
 
     function find(string|int|null $id,$relations = [],$filter = []) {
-        return $this->instance->find($id);
+        return $this->instance
+            ->with($relations)
+            ->when(count($filter) > 0, fn($q) => $q->filter($filter))
+            ->find($id);
     }
 
     function first($relations = [],$filter = []) {

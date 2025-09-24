@@ -13,4 +13,8 @@ class TransactionLine extends Model
     function transaction() {
         return $this->belongsTo(Transaction::class,'transaction_id');
     }
+
+    function account() {
+        return $this->belongsTo(Account::class,'account_id');
+    }
 }
