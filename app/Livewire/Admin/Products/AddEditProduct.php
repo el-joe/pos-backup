@@ -18,6 +18,7 @@ class AddEditProduct extends Component
     use LivewireOperations;
 
     public $id, $product;
+
     private $productService, $branchService, $categoryService, $brandService, $taxService, $unitService;
 
     public $data = [];
@@ -72,7 +73,7 @@ class AddEditProduct extends Component
 
     function save() {
         $rules = $this->rules;
-
+        // dd($this->data);
         if(!$this->product) {
             $rules['image'] = str_replace('nullable','required',$rules['image'] ?? '');
             $rules['gallery'] = str_replace('nullable','required',$rules['gallery'] ?? '');

@@ -14,25 +14,6 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-// TODO
-
-/**
-    * لما تيجي تسجل فاتورة شراء لازم تحفظ:
-
-    *   تكلفة البضاعة نفسها (Product Cost).
-
-    *   المصروفات التشغيلية المرتبطة بالشراء (Operational Expenses) زي:
-
-    *   شحن (Freight / Transportation)
-
-    *   جمارك (Customs Duties)
-
-    *   تأمين (Insurance)
-
-    *   تفريغ ومناولة (Handling Charges)
-
-    *  📌 كل ده بيزود تكلفة البضاعة في المخزون (Inventory).
- */
 
 #[Layout('layouts.admin')]
 class AddPurchase extends Component

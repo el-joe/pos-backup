@@ -60,12 +60,13 @@ class AccountService
 
     function createAccountForUser($user) {
         $paymentMethod = $this->paymentMethodService->defaultPaymentMethod();
+        $type =  constant(AccountTypeEnum::class . '::' . strtoupper($user->type->value))->value;
         $data = [
             'name' => $user->name,
             'code' => Str::slug($user->id . '-' .$user->name),
             'model_type' => User::class,
             'model_id' => $user->id,
-            'type' => AccountTypeEnum::{strtoupper($user->type->value)}->value,
+            'type' => $type,
             // 'branch_id' => $user->branch_id,
             'payment_method_id' => $paymentMethod->id
         ];

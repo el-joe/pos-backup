@@ -33,6 +33,14 @@ class PurchaseService
         return $this->repo->find($id, $relations);
     }
 
+    function first($id = null, $relations = [])
+    {
+        return $this->repo->first($relations,[
+            'id' => $id
+        ]);
+    }
+
+
     function save($id = null,$data) {
         if($id) {
             $purchase = $this->repo->find($id);

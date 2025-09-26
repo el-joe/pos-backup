@@ -73,4 +73,8 @@ class Purchase extends Model
             return 'full_refunded';
         }
     }
+
+    function scopeFilter($q, array $filters = []) {
+        return $q->when($filters['id'] ?? false , fn($q,$id) => $q->where('id',$id) );
+    }
 }

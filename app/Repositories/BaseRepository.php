@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interface\BaseInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class BaseRepository implements BaseInterface {
 
@@ -38,7 +39,7 @@ class BaseRepository implements BaseInterface {
 
     function find(string|int|null $id,$relations = [],$filter = []) {
         return $this->instance
-            ->with($relations)
+            // ->when(count($relations) > 0, fn($q) => $q->with($relations))
             ->when(count($filter) > 0, fn($q) => $q->filter($filter))
             ->find($id);
     }

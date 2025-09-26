@@ -67,30 +67,31 @@
         <div class="row">
             <div class="col-sm-12 col-xs-12">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <div class="responsive-table-wrapper" style="overflow-x:auto;">
+                        <table class="table table-bordered order-products-table" style="min-width:1200px;">
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>Unit</th>
-                                <th>Qty</th>
-                                <th>Unit Price</th>
-                                <th>Discount (%)</th>
-                                <th>Net Unit Cost</th>
-                                <th>Total Net Cost</th>
-                                <th>Tax (%)</th>
-                                <th>Subtotal (Incl. Tax)</th>
-                                <th>Extra Margin (%)</th>
-                                <th>Selling Price</th>
-                                <th>Grand Total (Incl. Tax & Profit)</th>
-                                <th>Action</th>
+                                <th style="min-width:140px;">Product</th>
+                                <th style="min-width:100px;">Unit</th>
+                                <th style="min-width:80px;">Qty</th>
+                                <th style="min-width:110px;">Unit Price</th>
+                                <th style="min-width:110px;">Discount (%)</th>
+                                <th style="min-width:130px;">Net Unit Cost</th>
+                                <th style="min-width:130px;">Total Net Cost</th>
+                                <th style="min-width:110px;">Tax (%)</th>
+                                <th style="min-width:150px;">Subtotal (Incl. Tax)</th>
+                                <th style="min-width:130px;">Extra Margin (%)</th>
+                                <th style="min-width:120px;">Selling Price</th>
+                                <th style="min-width:180px;">Grand Total (Incl. Tax & Profit)</th>
+                                <th style="min-width:90px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($orderProducts??[] as $product)
                                 <tr>
-                                    <td>{{ $product['name'] }}</td>
+                                    <td style="vertical-align:middle; font-weight:500; color:#444;">{{ $product['name'] }}</td>
                                     <td>
-                                        <select name="unit_id" id="unit_id" wire:model.change="orderProducts.{{ $product['id'] }}.unit_id" class="form-control">
+                                        <select name="unit_id" id="unit_id" wire:model.change="orderProducts.{{ $product['id'] }}.unit_id" class="form-control" style="min-width:90px;">
                                             <option value="">Select Unit</option>
                                             @foreach ($product['units'] as $unit)
                                                 <option value="{{ $unit['id'] }}">{{ $unit['name'] }}</option>
@@ -98,42 +99,32 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.qty" min="1" placeholder="0.00">
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.qty" min="1" placeholder="0.00" style="min-width:70px;">
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.purchase_price" step="0.01" min="0" placeholder="0.00">
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.purchase_price" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.discount_percentage" step="0.01" min="0" placeholder="0.00">
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.discount_percentage" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
                                     </td>
+                                    <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['unit_cost_after_discount'], 2) }}</td>
+                                    <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}</td>
                                     <td>
-                                        {{ number_format($product['unit_cost_after_discount'], 2) }}
-                                    </td>
-                                    <td>
-                                        {{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}
-                                    </td>
-                                    <td>
-                                        <select name="tax_percentage" id="tax_percentage" wire:model.change="orderProducts.{{ $product['id'] }}.tax_percentage" class="form-control">
+                                        <select name="tax_percentage" id="tax_percentage" wire:model.change="orderProducts.{{ $product['id'] }}.tax_percentage" class="form-control" style="min-width:90px;">
                                             <option value="">Select Tax</option>
                                             @foreach ($taxes as $tax)
                                                 <option value="{{ $tax->rate }}" {{ $product['tax_percentage'] == $tax->rate ? 'selected' : '' }}>{{ $tax->name }} - {{ $tax->rate }}%</option>
                                             @endforeach
                                         </select>
                                     </td>
+                                    <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['sub_total'] * $product['qty'], 2) }}</td>
                                     <td>
-                                        {{ number_format($product['sub_total'] * $product['qty'], 2) }}
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.x_margin" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
                                     </td>
+                                    <td style="vertical-align:middle; color:#2c3e50; font-weight:600;">{{ number_format($product['sell_price'], 2) }}</td>
+                                    <td style="vertical-align:middle; color:#2c3e50; font-weight:600;">{{ number_format($product['total'], 2) }}</td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.x_margin" step="0.01" min="0" placeholder="0.00">
-                                    </td>
-                                    <td>
-                                        {{ number_format($product['sell_price'], 2) }}
-                                    </td>
-                                    <td>
-                                        {{ number_format($product['total'], 2) }}
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger" wire:click="delete({{ $product['id'] }})">
+                                        <button class="btn btn-danger" wire:click="delete({{ $product['id'] }})" style="border-radius:6px; padding:6px 12px;">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -141,7 +132,45 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 </div>
+<style>
+    .order-products-table th, .order-products-table td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    .responsive-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .order-products-table {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+        margin-bottom: 0;
+    }
+    .order-products-table thead th {
+        background: #f7f7f7;
+        font-weight: 600;
+        color: #2c3e50;
+        border-bottom: 2px solid #e1e1e1;
+    }
+    .order-products-table tbody tr:hover {
+        background: #f0f8ff;
+        transition: background 0.2s;
+    }
+    @media (max-width: 900px) {
+        .order-products-table {
+            min-width: 900px;
+        }
+    }
+    @media (max-width: 600px) {
+        .order-products-table {
+            min-width: 600px;
+        }
+    }
+</style>
             </div>
         </div>
     </div>

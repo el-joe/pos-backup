@@ -23,7 +23,7 @@ class PurchasesList extends Component
     }
 
     function setCurrent($id) {
-        $this->current = $this->purchaseService->find($id,[
+        $this->current = $this->purchaseService->first($id,[
             'transactions' => fn($q)=> $q->where('type','purchase_payment')
         ]);
     }
