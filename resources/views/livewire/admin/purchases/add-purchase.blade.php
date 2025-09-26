@@ -354,6 +354,7 @@
                         <div class="form-group">
                             <label class="control-label">Payment Status</label>
                             <select class="form-control" wire:model.live="data.payment_status">
+                                <option value="">Choose One...</option>
                                 <option value="pending">Pending</option>
                                 <option value="partial_paid">Partial Payment</option>
                                 <option value="full_paid">Fully Paid</option>

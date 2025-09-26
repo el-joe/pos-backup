@@ -126,17 +126,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($current->transactions ?? [] as $payment)
-                                <tr>
-                                    <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
-                                    <td><span class="label label-success">{{ $payment->amount }}</span></td>
-                                    <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name .' - '. $payment->account()->name) : 'N/A' }}</td>
-                                    <td>{{ $payment->note }}</td>
-                                </tr>
+
+                                <?php
+                                    $payments = $current?->transactions ? $current?->transactions->where('type', App\Enums\TransactionTypeEnum::PURCHASE_PAYMENT) : [];
+                                ?>
+                                @forelse($payments as $payment)
+                                    <tr>
+                                        <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
+                                        <td><span class="label label-success">{{ $payment->amount }}</span></td>
+                                        <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name .' - '. $payment->account()->name) : 'N/A' }}</td>
+                                        <td>{{ $payment->note }}</td>
+                                    </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted">No payments recorded yet.</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No payments recorded yet.</td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>

@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Purchases;
 
 use App\Helpers\PurchaseHelper;
 use App\Services\PurchaseService;
+use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -11,7 +12,10 @@ use Livewire\Component;
 #[Layout('layouts.admin')]
 class PurchaseDetails extends Component
 {
+    use LivewireOperations;
+
     public $id,$purchase;
+    public $refundedQty = 0;
 
     #[Url]
     public $activeTab = 'details';
@@ -50,6 +54,23 @@ class PurchaseDetails extends Component
         ];
     }
 
+    function refundPurchaseItem() {
+        if(!$this->validator([
+            'refundedQty' => $this->refundedQty
+        ],[
+            'refundedQty' => 'required|numeric|min:1|max:'.$this->currentItem->actual_qty
+        ])) return;
+
+        $this->purchaseService->refundPurchaseItem($this->currentItem?->id,$this->refundedQty); // TODO : if all products with qty is refunded then change purchase status to refunded and add badge of purchase list order and details page
+
+        $this->mount();
+
+        $this->dismiss();
+
+        $this->popup('success','Purchase item refunded successfully.');
+
+        $this->reset('refundedQty','currentItem');
+    }
 
     public function render()
     {

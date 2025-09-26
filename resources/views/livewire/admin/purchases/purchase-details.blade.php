@@ -244,14 +244,14 @@
                     </div>
                     <div class="form-group mt-3">
                         <label for="refundQty"><strong>Quantity to Refund</strong></label>
-                        <input type="number" class="form-control refund-input" id="refundQty" min="1" max="{{ $currentItem?->actual_qty ?? 1 }}" wire:model="refundQty">
+                        <input type="number" class="form-control refund-input" id="refundQty" min="1" max="{{ $currentItem?->actual_qty ?? 1 }}" wire:model="refundedQty">
                         <small class="form-text text-muted">Max refundable quantity: {{ $currentItem?->actual_qty ?? 1 }}</small>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-end">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
                     @if ($currentItem)
-                    <button type="button" class="btn btn-danger" wire:click="processRefund">
+                    <button type="button" class="btn btn-danger" wire:click="refundPurchaseItem">
                         <i class="fa fa-check"></i> Confirm Refund
                     </button>
                     @endif

@@ -45,8 +45,6 @@ class PurchasesList extends Component
 
         $this->alert('success','Payment added successfully!');
         $this->reset('payment');
-
-        $this->setCurrent(id: $this->current->id);
     }
 
     public function render()

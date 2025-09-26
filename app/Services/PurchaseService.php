@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Enums\AccountTypeEnum;
 use App\Enums\PurchaseStatusEnum;
 use App\Enums\TransactionTypeEnum;
+use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Purchase;
+use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\User;
 use App\Repositories\PurchaseRepository;
 
@@ -94,7 +96,7 @@ class PurchaseService
                 'model_id' => $purchase->id,
                 'expense_category_id' => $defaultExpenseCategory?->id,
                 'amount' => $item['amount'],
-                'description' => $item['description'],
+                'note' => $item['description'],
                 'expense_date' => $item['expense_date'],
             ]);
         }
@@ -139,42 +141,43 @@ class PurchaseService
         }
     }
 
-    function addPayment($purchaseId, $data) {
+    function addPayment($purchaseId, $data , $reverse = false) {
         $purchase = $this->repo->find($purchaseId);
         if(!$purchase) return;
         $transactionData = [
-            'description' => 'Purchase Payment for #'.$purchase->ref_no,
-            'type' => TransactionTypeEnum::PURCHASE_PAYMENT->value,
+            'description' => 'Refund Purchase Payment for #'.$purchase->ref_no,
+            'type' => $reverse ? TransactionTypeEnum::PURCHASE_REFUND->value : TransactionTypeEnum::PURCHASE_PAYMENT->value,
             'reference_type' => Purchase::class,
             'reference_id' => $purchase->id,
             'branch_id' => $purchase->branch_id,
             'note' => $data['payment_note'] ?? '',
             'amount' => $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0),
-            'lines' => $this->purchasePaymentLines($data,'create')
+            'lines' => $this->purchasePaymentLines($data,'create',$reverse)
         ];
 
         $this->transactionService->create($transactionData);
-
-        $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
+        if(!$reverse){
+            $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
+        }
     }
 
-    function purchaseInvoiceLines($data,$event = 'create') {
+    function purchaseInvoiceLines($data,$event = 'create',$reverse = false) { // $reverse mean refund
         // -------------------------- Purchase entry --------------------------------
 
         // Debit Inventory (for goods purchased)
-        $inventoryLine = $this->createInventoryLine($data);
+        $inventoryLine = $this->createInventoryLine($data , $reverse);
 
         // Debit Expense (for additional purchase-related expenses like shipping, handling, etc.)
-        $expenseLine = $this->createExpenseLine($data);
+        $expenseLine = $this->createExpenseLine($data, $reverse);
 
         // Debit VAT Receivable (input tax you can claim from tax authority)
-        $vatReceivableLine = $this->createVatReceivableLine($data);
+        $vatReceivableLine = $this->createVatReceivableLine($data, $reverse);
 
         // Credit Purchase Discount (reduces cost if supplier gave discount)
-        $purchaseDiscountLine = $this->createPurchaseDiscountLine($data);
+        $purchaseDiscountLine = $this->createPurchaseDiscountLine($data, $reverse);
 
         // Credit Supplier (record liability to supplier for total amount owed)
-        $supplierCreditLine = $this->createSupplierCreditLine($data);
+        $supplierCreditLine = $this->createSupplierCreditLine($data, $reverse);
 
 
         return [
@@ -187,17 +190,17 @@ class PurchaseService
         ];
     }
 
-    function purchasePaymentLines($data,$event = 'create') {
+    function purchasePaymentLines($data,$event = 'create' ,$reverse = false) {
         // ------------------------- Payment entry --------------------------------
         // 3 status (pending, partial_paid, full_paid)
         if(($data['payment_status'] ?? 'pending') == 'pending'){
             return;
         }else{
             // Credit Branch Cash (if you paid now – reduce your cash balance)
-            $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid');
+            $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid', $reverse);
 
             // Debit Supplier (reduce liability when you make payment to supplier)
-            $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid');
+            $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid', $reverse);
         }
 
         return [
@@ -207,7 +210,7 @@ class PurchaseService
         ];
     }
 
-    function createInventoryLine($data) {
+    function createInventoryLine($data,$reverse = false) {
         $getInventoryAccount = Account::firstOrCreate([
             'name' => 'Inventory',
             'code' => 'inventory',
@@ -219,18 +222,18 @@ class PurchaseService
         ]);
         // get sub total from order products = product qty * purchase price
         $subTotal = array_sum(array_map(function($item) {
-            return $item['qty'] * $item['purchase_price'];
+            return (float)$item['qty'] * (float)$item['purchase_price'];
         }, $data['orderProducts']));
 
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getInventoryAccount->id,
-            'type' => 'debit',
+            'type' => $reverse ? 'credit' : 'debit',
             'amount' => $subTotal,
         ];
     }
 
-    function createBranchCashLine($data,$type = 'full_paid') {
+    function createBranchCashLine($data,$type = 'full_paid' ,$reverse = false) {
         $getBranchCashAccount = Account::firstOrCreate([
             'name' => 'Branch Cash',
             'code' => 'Branch Cash',
@@ -251,12 +254,12 @@ class PurchaseService
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getBranchCashAccount->id,
-            'type' => 'credit',
+            'type' => $reverse ? 'debit' : 'credit',
             'amount' => $paidAmount,
         ];
     }
 
-    function createExpenseLine($data) {
+    function createExpenseLine($data,$reverse = false) {
         $getExpenseAccount = Account::firstOrCreate([
             'name' => 'Expense',
             'code' => 'Expense',
@@ -272,12 +275,12 @@ class PurchaseService
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getExpenseAccount->id,
-            'type' => 'debit',
-            'amount' => $totalExpenses,
+            'type' => $reverse ? 'credit' : 'debit',
+            'amount' => $totalExpenses ?? 0,
         ];
     }
 
-    function createVatReceivableLine($data) {
+    function createVatReceivableLine($data,$reverse = false) {
         $getVatReceivableAccount = Account::firstOrCreate([
             'name' => 'Vat Receivable',
             'code' => 'Vat Receivable',
@@ -292,12 +295,12 @@ class PurchaseService
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getVatReceivableAccount->id,
-            'type' => 'debit',
+            'type' => $reverse ? 'credit' : 'debit',
             'amount' => $taxAmount,
         ];
     }
 
-    function createPurchaseDiscountLine($data) {
+    function createPurchaseDiscountLine($data,$reverse = false) {
         $getPurchaseDiscountAccount = Account::firstOrCreate([
             'name' => 'Purchase Discount',
             'code' => 'Purchase Discount',
@@ -312,12 +315,12 @@ class PurchaseService
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getPurchaseDiscountAccount->id,
-            'type' => 'credit',
+            'type' => $reverse ? 'debit' : 'credit',
             'amount' => $discountAmount,
         ];
     }
 
-    function createSupplierCreditLine($data) {
+    function createSupplierCreditLine($data,$reverse = false) {
         if(!isset($data['payment_account'])){
             $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
         }else{
@@ -330,12 +333,12 @@ class PurchaseService
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getSupplierAccount->id,
-            'type' => 'credit',
+            'type' => $reverse ? 'debit' : 'credit',
             'amount' => $grandTotal,
         ];
     }
 
-    function createSupplierDebitLine($data,$type = 'full_paid') {
+    function createSupplierDebitLine($data,$type = 'full_paid', $reverse = false) {
         if(!isset($data['payment_account'])){
             $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
         }else{
@@ -352,9 +355,85 @@ class PurchaseService
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getSupplierAccount->id,
-            'type' => 'debit',
+            'type' => $reverse ? 'credit' : 'debit',
             'amount' => $paidAmount,
         ];
+    }
+
+    function refundPurchaseItem($id,$qty) {
+        $purchaseItem = PurchaseItem::findOrFail($id);
+        $purchaseOrder = $purchaseItem->purchase;
+        $refundedQtyAmount = $purchaseItem->unit_amount_after_tax * $qty;
+        $discountAmount = PurchaseHelper::calcDiscount($refundedQtyAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($refundedQtyAmount, $discountAmount);
+        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
+        // -----------------------------------
+        $grandTotalFromRefundedQty = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
+        $purchaseDueAmount = $purchaseOrder->due_amount;
+        $totalRefunded = $grandTotalFromRefundedQty - $purchaseDueAmount;
+
+        // reverse purchase invoice type transaction
+        $refundInvoiceData = [
+            'branch_id' => $purchaseOrder->branch_id,
+            'orderProducts' => [
+                [
+                    'qty' => (float)$qty,
+                    'purchase_price' => (float)$purchaseItem->unit_amount_after_tax
+                ]
+            ],
+            'tax_amount' => $taxAmount,
+            'discount_amount' => $discountAmount,
+            'supplier_id' => $purchaseOrder->supplier_id,
+            'grand_total' => $grandTotalFromRefundedQty
+
+        ];
+
+        $transactionData = [
+            'description' => 'Purchase Refund for #'.$purchaseOrder->ref_no,
+            'type' => TransactionTypeEnum::PURCHASE_REFUND->value,
+            'reference_type' => Purchase::class,
+            'reference_id' => $purchaseOrder->id,
+            'branch_id' => $purchaseOrder->branch_id,
+            'note' => 'Refunded for purchase item #'. ($purchaseItem->product?->name ?? 'N/A'),
+            'amount' => $grandTotalFromRefundedQty ?? 0,
+            'lines' => $this->purchaseInvoiceLines($refundInvoiceData,'create',true)
+        ];
+
+        $this->transactionService->create($transactionData);
+
+
+        // refund purchase payments
+        $totalRefunded = $grandTotalFromRefundedQty - $purchaseDueAmount;
+        if($totalRefunded <= 0){
+            return;
+        }
+        $refundPaymentData = [
+            'grand_total' => $totalRefunded,
+            'payment_note' => 'Refund for purchase item #'. ($purchaseItem->product?->name ?? 'N/A'),
+            'payment_status' => 'refunded',
+            'payment_amount' => $totalRefunded,
+            'branch_id' => $purchaseOrder->branch_id,
+            'supplier_id' => $purchaseOrder->supplier_id,
+        ];
+
+        $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
+
+        // refund purchase items qty
+        $purchaseItem->increment('refunded_qty',$qty);
+        $purchaseOrder->decrement('paid_amount',$totalRefunded);
+
+        $purchaseOrder->refresh();
+
+        $purchaseDue = $purchaseOrder->due_amount;
+        $total = $purchaseOrder->total_amount;
+
+        if($purchaseDue <= 0){
+            $purchaseOrder->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
+        }elseif($purchaseDue > 0 && $purchaseDue < $total){
+            $purchaseOrder->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
+        }elseif($purchaseDue == $total){
+            $purchaseOrder->update(['status' => PurchaseStatusEnum::PENDING->value]);
+        }
     }
 
     function delete($id) {
