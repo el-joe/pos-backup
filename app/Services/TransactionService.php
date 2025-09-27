@@ -40,6 +40,7 @@ class TransactionService
         ]);
 
         foreach ($data['lines'] as $line) {
+            if(($line['amount'] ?? 0) == 0) continue;
             $transaction->lines()->create([
                 'account_id' => $line['account_id'],
                 'type' => $line['type'] ?? 'debit',

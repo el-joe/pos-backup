@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Purchases;
 
 use App\Helpers\PurchaseHelper;
+use App\Services\ExpenseService;
 use App\Services\PurchaseService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -20,12 +21,13 @@ class PurchaseDetails extends Component
     #[Url]
     public $activeTab = 'details';
 
-    private $purchaseService;
+    private $purchaseService, $expenseService;
 
-    public $currentItem;
+    public $currentItem,$currentExpense;
 
     function boot() {
         $this->purchaseService = app(PurchaseService::class);
+        $this->expenseService = app(ExpenseService::class);
     }
 
     function mount() {
@@ -34,6 +36,11 @@ class PurchaseDetails extends Component
 
     function setCurrentItem($itemId) {
         $this->currentItem = $this->purchase->purchaseItems()->find($itemId);
+    }
+
+    function setCurrentExpense($expenseId) {
+        $this->currentExpense = $this->purchase->expenses()->find($expenseId);
+
     }
 
     function purchaseCalculations() {
@@ -70,6 +77,31 @@ class PurchaseDetails extends Component
         $this->popup('success','Purchase item refunded successfully.');
 
         $this->reset('refundedQty','currentItem');
+    }
+
+    function deleteExpenseConfirm($id) {
+        $this->setCurrentExpense($id);
+        $this->confirm('deleteExpense','error','Delete Expense','Are you sure you want to delete this expense? This action cannot be undone.','Do it!' );
+    }
+
+    function deleteExpense() {
+        $expense = $this->currentExpense;
+        if(!$expense) {
+            $this->popup('error','Expense not found.');
+            return;
+        }
+
+        if($expense->refunded) {
+            $this->popup('error','Expense already refunded.');
+            return;
+        }
+
+        $this->purchaseService->deleteExpenseTransaction($expense->id);
+        $this->expenseService->delete($expense->id);
+
+        $this->mount();
+
+        $this->popup('success','Expense deleted successfully.');
     }
 
     public function render()

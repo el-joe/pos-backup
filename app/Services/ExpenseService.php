@@ -6,7 +6,7 @@ use App\Repositories\ExpenseRepository;
 
 class ExpenseService
 {
-    public function __construct(private ExpenseRepository $repo) {}
+    public function __construct(private ExpenseRepository $repo,private PurchaseService $purchaseService) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {

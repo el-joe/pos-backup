@@ -209,8 +209,8 @@
                                         {{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger" wire:click="refundExpense({{ $expense->id }})">
-                                            <i class="fa fa-undo"></i>
+                                        <button class="btn btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>

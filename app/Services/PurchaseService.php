@@ -8,6 +8,7 @@ use App\Enums\TransactionTypeEnum;
 use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
+use App\Models\Tenant\Expense;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\User;
@@ -220,6 +221,9 @@ class PurchaseService
             'branch_id' => $data['branch_id'],
             'active' => 1,
         ]);
+        if(!isset($data['orderProducts']) || !is_array($data['orderProducts'])) {
+            return false;
+        }
         // get sub total from order products = product qty * purchase price
         $subTotal = array_sum(array_map(function($item) {
             return (float)$item['qty'] * (float)$item['purchase_price'];
@@ -257,6 +261,76 @@ class PurchaseService
             'type' => $reverse ? 'debit' : 'credit',
             'amount' => $paidAmount,
         ];
+    }
+
+    function deleteExpenseTransaction($id) {
+        // -------------------------- Purchase entry --------------------------------
+
+        $expense = Expense::find($id);
+        $purchaseOrder = $expense?->model;
+
+        $discountAmount = PurchaseHelper::calcDiscount($expense->amount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($expense->amount, $discountAmount);
+        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
+        $grandTotal = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
+
+        // reverse purchase invoice type transaction
+        $refundInvoiceData = [
+            'branch_id' => $purchaseOrder->branch_id,
+            'tax_amount' => $taxAmount,
+            'discount_amount' => $discountAmount,
+            'supplier_id' => $purchaseOrder->supplier_id,
+            'grand_total' => $grandTotal,
+            'expenses' => [
+                [
+                    'amount' => $expense->amount,
+                ]
+            ]
+        ];
+
+        $transactionData = [
+            'description' => 'Purchase Refund Expense for #'.$purchaseOrder->ref_no,
+            'type' => TransactionTypeEnum::PURCHASE_REFUND->value,
+            'reference_type' => Purchase::class,
+            'reference_id' => $purchaseOrder->id,
+            'branch_id' => $purchaseOrder->branch_id,
+            'note' => 'Refunded for purchase Expense #'. $expense->id,
+            'amount' => $expense->amount ?? 0,
+            'lines' => $this->purchaseInvoiceLines($refundInvoiceData,'create',true)
+        ];
+
+        $this->transactionService->create($transactionData);
+
+        // refund purchase payments
+        $purchaseDueAmount = $purchaseOrder->due_amount;
+        $totalRefunded = $grandTotal - $purchaseDueAmount;
+        if($totalRefunded > 0){
+            $refundPaymentData = [
+                'grand_total' => $totalRefunded,
+                'payment_note' => 'Refund Purchase Expense #'. $expense->id,
+                'payment_status' => 'refunded',
+                'payment_amount' => $totalRefunded,
+                'branch_id' => $purchaseOrder->branch_id,
+                'supplier_id' => $purchaseOrder->supplier_id,
+            ];
+
+            $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
+
+            $purchaseOrder->decrement('paid_amount', $totalRefunded);
+        }
+
+        $purchaseOrder->refresh();
+
+        $purchaseDue = $purchaseOrder->due_amount;
+        $total = $purchaseOrder->total_amount;
+
+        if($purchaseDue <= 0){
+            $purchaseOrder->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
+        }elseif($purchaseDue > 0 && $purchaseDue < $total){
+            $purchaseOrder->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
+        }elseif($purchaseDue == $total){
+            $purchaseOrder->update(['status' => PurchaseStatusEnum::PENDING->value]);
+        }
     }
 
     function createExpenseLine($data,$reverse = false) {
@@ -421,6 +495,9 @@ class PurchaseService
         // refund purchase items qty
         $purchaseItem->increment('refunded_qty',$qty);
         $purchaseOrder->decrement('paid_amount',$totalRefunded);
+
+        // Refund Qty from stock
+        $this->stockService->reduceStock(productId: $purchaseItem->product_id,unitId: $purchaseItem->unit_id,qty: $qty,branchId: $purchaseOrder->branch_id);
 
         $purchaseOrder->refresh();
 
