@@ -67,6 +67,11 @@ class Product extends Model
         return $query->where('active', 0);
     }
 
+    function scopeFilter($query,$filter = []) {
+        return $query;
+    }
+
+
     // Accessors
 
     function getImagePathAttribute() {
@@ -100,7 +105,19 @@ class Product extends Model
         return $all;
     }
 
-    function scopeFilter($query,$filter = []) {
-        return $query;
+    function getBranchStockAttribute() {
+        $branchId = $this->branch_id ?? Branch::active()->first()?->id ?? null;
+        $stock = $this->stocks()->when($branchId, fn($query) => $query->where('branch_id', $branchId))->first();
+        return $stock ? $stock->qty : 0;
+    }
+
+    function getAllStockAttribute() {
+        return $this->stocks()->sum('qty');
+    }
+
+    function getStockSellPriceAttribute() {
+        $branchId = $this->branch_id ?? Branch::active()->first()?->id ?? null;
+        $stock = $this->stocks()->when($branchId, fn($query) => $query->where('branch_id', $branchId))->first();
+        return $stock ? number_format($stock->sell_price, 2) : 0;
     }
 }

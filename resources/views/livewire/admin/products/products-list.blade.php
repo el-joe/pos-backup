@@ -23,6 +23,8 @@
                         <th>Brand</th>
                         <th>Category</th>
                         <th>Sell Price</th>
+                        <th>Branch Stock</th>
+                        <th>All Stock</th>
                         <th>Status</th>
                         <th class="text-nowrap">Action</th>
                     </tr>
@@ -33,10 +35,12 @@
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->sku }}</td>
                             <td>{{ $product->name }}</td>
-                            <td>{{ $product->branch?->name }}</td>
+                            <td>{{ $product->branch?->name ?? 'All' }}</td>
                             <td>{{ $product->brand?->name }}</td>
                             <td>{{ $product->category?->name }}</td>
-                            <td>{{ $product->sell_price }}</td>
+                            <td>{{ $product->stock_sell_price }}</td>
+                            <td>{{ $product->branch_stock }}</td>
+                            <td>{{ $product->all_stock }}</td>
                             <td>
                                 <span class="badge badge-{{ $product->active ? 'success' : 'danger' }}">
                                     {{ $product->active ? 'Active' : 'Inactive' }}
