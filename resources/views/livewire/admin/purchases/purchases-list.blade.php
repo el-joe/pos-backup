@@ -128,13 +128,16 @@
                             <tbody>
 
                                 <?php
-                                    $payments = $current?->transactions ? $current?->transactions->where('type', App\Enums\TransactionTypeEnum::PURCHASE_PAYMENT) : [];
+                                    $payments = $current?->transactions ? $current?->transactions->whereIn('type', [
+                                        App\Enums\TransactionTypeEnum::PURCHASE_PAYMENT,
+                                        App\Enums\TransactionTypeEnum::PURCHASE_REFUND,
+                                    ])->load('lines') : [];
                                 ?>
                                 @forelse($payments as $payment)
                                     <tr>
                                         <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
                                         <td><span class="label label-success">{{ $payment->amount }}</span></td>
-                                        <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name .' - '. $payment->account()->name) : 'N/A' }}</td>
+                                        <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name ? $payment->account()->paymentMethod?->name .' - '  : '' ) . $payment->account()->name : 'N/A' }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>
                                 @empty

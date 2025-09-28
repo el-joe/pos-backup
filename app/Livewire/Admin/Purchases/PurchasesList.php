@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Purchases;
 
+use App\Enums\TransactionTypeEnum;
 use App\Services\PurchaseService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -24,7 +25,10 @@ class PurchasesList extends Component
 
     function setCurrent($id) {
         $this->current = $this->purchaseService->first($id,[
-            'transactions' => fn($q)=> $q->where('type','purchase_payment')
+            'transactions' => fn($q)=> $q->whereIn('type',[
+                TransactionTypeEnum::PURCHASE_PAYMENT,
+                TransactionTypeEnum::PURCHASE_REFUND,
+            ])
         ]);
     }
 

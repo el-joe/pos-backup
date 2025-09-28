@@ -62,7 +62,8 @@ class PurchaseService
             'discount_value' => $data['discount_value'],
             'tax_id' => $data['tax_id'],
             'tax_percentage' => $data['tax_rate'] ?? $data['tax_percentage'] ?? 0,
-            'paid_amount' => $status == 'full_paid' ? $data['grand_total'] : ($data['payment_amount'] ?? $data['paid_amount'] ?? 0),
+            // 'paid_amount' => $status == 'full_paid' ? $data['grand_total'] : ($data['payment_amount'] ?? $data['paid_amount'] ?? 0),
+            'paid_amount' => 0,
             'status' => $status,
         ])->save();
 
@@ -127,19 +128,6 @@ class PurchaseService
         }
         // Grouped by type = Payments
         $this->addPayment($purchase->id, $data);
-
-        $purchase->refresh();
-
-        $purchseDue = $purchase->due_amount;
-        $total = $purchase->total_amount;
-
-        if($purchseDue <= 0){
-            $purchase->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
-        }elseif($purchseDue > 0 && $purchseDue < $total){
-            $purchase->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
-        }elseif($purchseDue == $total){
-            $purchase->update(['status' => PurchaseStatusEnum::PENDING->value]);
-        }
     }
 
     function addPayment($purchaseId, $data , $reverse = false) {
@@ -159,6 +147,19 @@ class PurchaseService
         $this->transactionService->create($transactionData);
         if(!$reverse){
             $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
+        }
+
+        $purchase->refresh();
+
+        $purchaseDue = $purchase->due_amount;
+        $total = $purchase->total_amount;
+
+        if($purchaseDue <= 0){
+            $purchase->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
+        }elseif($purchaseDue > 0 && $purchaseDue < $total){
+            $purchase->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
+        }elseif($purchaseDue == $total){
+            $purchase->update(['status' => PurchaseStatusEnum::PENDING->value]);
         }
     }
 
