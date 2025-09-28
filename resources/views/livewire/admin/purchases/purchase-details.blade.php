@@ -217,9 +217,9 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <button class="btn btn-primary" wire:click="addExpense">
+                        {{-- <button class="btn btn-primary" wire:click="addExpense">
                             <i class="fa fa-plus"></i> Add New Expense
-                        </button>
+                        </button> --}}
                     </div>
                 </div>
             </div>
