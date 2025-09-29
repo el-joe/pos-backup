@@ -68,7 +68,11 @@ class Product extends Model
     }
 
     function scopeFilter($query,$filter = []) {
-        return $query;
+        return $query->when($filter['has_stocks'] ?? null, function($q) {
+            $q->whereHas('stocks', function($q2) {
+                $q2->where('qty','>',0);
+            });
+        });
     }
 
 

@@ -101,4 +101,14 @@ class ProductService
 
         return false;
     }
+
+    function getAllProductWhereHasStock($relations = [] , $filter = []) {
+        return $this->repo->list([
+            'stocks',
+            ...$relations
+        ],[
+            'has_stocks' => true,
+            ...$filter
+        ]);
+    }
 }

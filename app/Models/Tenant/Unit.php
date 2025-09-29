@@ -45,6 +45,17 @@ class Unit extends Model
         return $acualQty;
     }
 
+    function stock($productId) {
+        $stock = Stock::where('product_id', $productId)
+            ->where('unit_id', $this->id)
+            ->when(admin()->branch_id, function($q) {
+                $q->where('branch_id', admin()->branch_id);
+            })
+            ->first();
+
+        return number_format($stock ? $stock->sell_price : 0, 2, '.', '');
+    }
+
     function scopeFilter($q,$filters) {
         return $q->when($filters['empty_parent_id'] ?? null, function($q) {
             $q->where(function ($q) {
