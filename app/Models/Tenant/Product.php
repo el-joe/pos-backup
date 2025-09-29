@@ -107,12 +107,73 @@ class Product extends Model
 
     function getBranchStockAttribute() {
         $branchId = $this->branch_id ?? Branch::active()->first()?->id ?? null;
-        $stock = $this->stocks()->when($branchId, fn($query) => $query->where('branch_id', $branchId))->first();
-        return $stock ? $stock->qty : 0;
+        $unit = $this->unit;
+        if(!$unit) return 0;
+        $numbers = $this->childUnitFromParent($unit,$branchId);
+        return round($numbers->sum(),3);
     }
 
+
     function getAllStockAttribute() {
-        return $this->stocks()->sum('qty');
+        $unit = $this->unit;
+        if(!$unit) return 0;
+        $numbers = $this->childUnitFromParent($unit,null);
+        return round($numbers->sum(),3);
+    }
+
+
+    function childUnitFromParent($unit, $branchId = null) {
+        $all = collect();
+
+        // Get stock for this unit
+        $stock = $this->stocks()
+            ->when($branchId, fn($query) => $query->where('branch_id', $branchId))
+            ->where('unit_id', $unit->id)
+            ->first();
+
+        // Only calculate if stock exists
+        if ($stock) {
+            // Get the conversion factor from parent unit to this unit
+            $conversionFactor = $this->getUnitConversionFactor($unit);
+
+            if ($conversionFactor > 0) {
+                // Calculate equivalent quantity in parent unit terms
+                $equivalentQty = $stock->qty / $conversionFactor;
+                $all->push($equivalentQty);
+            }
+        }
+
+        // Process children recursively
+        if ($unit->children && $unit->children->count()) {
+            foreach ($unit->children as $child) {
+                $all = $all->merge($this->childUnitFromParent($child, $branchId));
+            }
+        }
+
+        return $all;
+    }
+
+    function getUnitConversionFactor($unit) {
+        $factor = 1;
+        $currentUnit = $unit;
+
+        // Traverse up to the root unit, multiplying counts
+        while ($currentUnit->parent) {
+            $factor *= $currentUnit->count;
+            $currentUnit = $currentUnit->parent;
+        }
+
+        return $factor;
+    }
+
+    function parentUnitFromChild($child, $multiplier = 1) {
+        // This method should return the conversion factor, not stock
+        if (!$child->parent) {
+            return $multiplier;
+        }
+
+        $newMultiplier = $multiplier * $child->count;
+        return $this->parentUnitFromChild($child->parent, $newMultiplier);
     }
 
     function getStockSellPriceAttribute() {

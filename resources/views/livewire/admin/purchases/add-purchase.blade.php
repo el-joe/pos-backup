@@ -87,11 +87,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($orderProducts??[] as $product)
+                            @foreach ($orderProducts??[] as $index=>$product)
                                 <tr>
                                     <td style="vertical-align:middle; font-weight:500; color:#444;">{{ $product['name'] }}</td>
                                     <td>
-                                        <select name="unit_id" id="unit_id" wire:model.change="orderProducts.{{ $product['id'] }}.unit_id" class="form-control" style="min-width:90px;">
+                                        <select name="unit_id" id="unit_id" wire:model.change="orderProducts.{{ $index }}.unit_id" class="form-control" style="min-width:90px;">
                                             <option value="">Select Unit</option>
                                             @foreach ($product['units'] as $unit)
                                                 <option value="{{ $unit['id'] }}">{{ $unit['name'] }}</option>
@@ -99,18 +99,18 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.qty" min="1" placeholder="0.00" style="min-width:70px;">
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.qty" min="1" placeholder="0.00" style="min-width:70px;">
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.purchase_price" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.purchase_price" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.discount_percentage" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.discount_percentage" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
                                     </td>
                                     <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['unit_cost_after_discount'], 2) }}</td>
                                     <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}</td>
                                     <td>
-                                        <select name="tax_percentage" id="tax_percentage" wire:model.change="orderProducts.{{ $product['id'] }}.tax_percentage" class="form-control" style="min-width:90px;">
+                                        <select name="tax_percentage" id="tax_percentage" wire:model.change="orderProducts.{{ $index }}.tax_percentage" class="form-control" style="min-width:90px;">
                                             <option value="">Select Tax</option>
                                             @foreach ($taxes as $tax)
                                                 <option value="{{ $tax->rate }}" {{ $product['tax_percentage'] == $tax->rate ? 'selected' : '' }}>{{ $tax->name }} - {{ $tax->rate }}%</option>
@@ -119,12 +119,12 @@
                                     </td>
                                     <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['sub_total'] * $product['qty'], 2) }}</td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $product['id'] }}.x_margin" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
+                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.x_margin" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
                                     </td>
                                     <td style="vertical-align:middle; color:#2c3e50; font-weight:600;">{{ number_format($product['sell_price'], 2) }}</td>
                                     <td style="vertical-align:middle; color:#2c3e50; font-weight:600;">{{ number_format($product['total'], 2) }}</td>
                                     <td>
-                                        <button class="btn btn-danger" wire:click="delete({{ $product['id'] }})" style="border-radius:6px; padding:6px 12px;">
+                                        <button class="btn btn-danger" wire:click="delete({{ $index }})" style="border-radius:6px; padding:6px 12px;">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>

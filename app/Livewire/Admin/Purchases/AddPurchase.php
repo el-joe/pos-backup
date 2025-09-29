@@ -77,12 +77,13 @@ class AddPurchase extends Component
         }
 
         $productDetails = $this->refactorProduct($product);
-        if(isset($this->orderProducts[$product->id])) {
-            $this->alert('info','Product already added in the list');
-            return;
-        }
-        $this->orderProducts[$product->id] = $productDetails;
+        // if(isset($this->orderProducts[$product->id])) {
+        //     $this->alert('info','Product already added in the list');
+        //     return;
+        // }
+        $this->orderProducts[] = $productDetails;
 
+        $this->reset('product_search');
         $this->dispatch('reset-search-input');
     }
 
@@ -93,10 +94,12 @@ class AddPurchase extends Component
     function updatingOrderProducts($value,$key){
         $parts = explode('.',$key);
         if(count($parts) != 2) return;
-        $productId = $parts[0];
+        $index = $parts[0];
+        $productId = $this->orderProducts[$index]['id'] ?? null;
+        if(!$productId) return;
         $product = $this->productService->find($productId);
         $key = $parts[1];
-        $this->orderProducts[$productId] = $this->refactorProduct($product,$productId,$key,$value);
+        $this->orderProducts[$index] = $this->refactorProduct($product,$index,$key,$value);
     }
 
     function refactorProduct($product,$index = null,$key = null,$value = null) : array {
@@ -123,8 +126,9 @@ class AddPurchase extends Component
         return $newArr;
     }
 
-    function delete($productId) {
-        unset($this->orderProducts[$productId]);
+    function delete($index) {
+        unset($this->orderProducts[$index]);
+        $this->orderProducts = array_values($this->orderProducts);
         $this->alert('success','Product removed from the list');
     }
 

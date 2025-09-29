@@ -149,7 +149,7 @@ class PurchaseService
             $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
         }
 
-        $purchase->refresh();
+        $purchase = $purchase->refresh();
 
         $purchaseDue = $purchase->due_amount;
         $total = $purchase->total_amount;

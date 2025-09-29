@@ -4,12 +4,16 @@ use Carbon\Carbon;
 
 const TENANT_ADMINS_GUARD = 'tenant_admin';
 
-function settings($key) {
-    return null;
+if(!function_exists('settings')) {
+    function settings($key) {
+        return null;
+    }
 }
 
-function admin() {
-    return auth(TENANT_ADMINS_GUARD)->user();
+if(!function_exists('admin')) {
+    function admin() {
+        return auth(TENANT_ADMINS_GUARD)->user();
+    }
 }
 
 function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$isLastChildCheck = true,$selectedId = null) {
