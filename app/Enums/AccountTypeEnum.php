@@ -33,7 +33,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::EXPENSE => 'Expense', // expense transactions
             AccountTypeEnum::FIXED_ASSET => 'Fixed Asset', // fixed asset transactions && depreciation
             AccountTypeEnum::CURRENT_ASSET => 'Current Asset', // purchase cash transactions && bank transactions
-            AccountTypeEnum::CURRENT_LIABILITY => 'Current Liability', // Current liabilities transactions
+            // AccountTypeEnum::CURRENT_LIABILITY => 'Current Liability', // Current liabilities transactions
             AccountTypeEnum::LONGTERM_LIABILITY => 'Long-term Liability', // Long-term liabilities transactions
             AccountTypeEnum::BRANCH_CASH => 'Branch Cash',
             AccountTypeEnum::OWNER_ACCOUNT => 'Owner Account',
@@ -58,7 +58,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::EXPENSE => 'danger',
             AccountTypeEnum::FIXED_ASSET => 'info',
             AccountTypeEnum::CURRENT_ASSET => 'secondary',
-            AccountTypeEnum::CURRENT_LIABILITY => 'dark',
+            // AccountTypeEnum::CURRENT_LIABILITY => 'dark',
             AccountTypeEnum::LONGTERM_LIABILITY => 'dark',
             AccountTypeEnum::BRANCH_CASH => 'success',
             AccountTypeEnum::OWNER_ACCOUNT => 'success',

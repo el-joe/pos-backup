@@ -16,6 +16,10 @@ if(!function_exists('admin')) {
     }
 }
 
+function branch() {
+    return auth(TENANT_ADMINS_GUARD)->user()->branch;
+}
+
 function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$isLastChildCheck = true,$selectedId = null) {
     $arrayOfDashes = array_fill(0,$number,'-- ');
     $dashes = implode('',$arrayOfDashes);

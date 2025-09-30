@@ -19,4 +19,21 @@ class Discount extends Model
         'usage_limit',
         'active',
     ];
+
+    function history() {
+        return $this->hasMany(DiscountHistory::class,'discount_id');
+    }
+
+
+    function scopeValid($q) {
+        $q->where('active', 1)
+            ->where(function($q) {
+                $q->whereNull('start_date')
+                    ->orWhereDate('start_date', '<=', date('Y-m-d'));
+            })
+            ->where(function($q) {
+                $q->whereNull('end_date')
+                    ->orWhereDate('end_date', '>=', date('Y-m-d'));
+            });
+    }
 }

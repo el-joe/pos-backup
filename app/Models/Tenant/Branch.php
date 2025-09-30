@@ -10,8 +10,12 @@ class Branch extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name','email','address','phone','active','deleted_at','website'
+        'name','email','address','phone','active','deleted_at','website','tax_id'
     ];
+
+    function tax() {
+        return $this->belongsTo(Tax::class);
+    }
 
     public function scopeActive($q) {
         return $q->where('active',1);

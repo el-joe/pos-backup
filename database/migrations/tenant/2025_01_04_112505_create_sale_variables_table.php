@@ -17,10 +17,10 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->index();
             $table->unsignedBigInteger('unit_id')->index();
             $table->integer('qty')->default(0);
-            $table->decimal('sell_price');
-            $table->enum('discount_type',['fixed','percentage'])->nullable();
-            $table->decimal('discount')->default(0);
-            $table->integer('refunded')->default(0);
+            $table->boolean('taxable')->default(true);
+            $table->decimal('unit_cost', 10, 2);
+            $table->decimal('sell_price', 10, 2);
+            $table->integer('refunded_qty')->default(0);
             $table->timestamp('refunded_at')->nullable();
             $table->timestamps();
         });

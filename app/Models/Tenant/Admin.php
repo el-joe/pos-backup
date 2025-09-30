@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Admin extends Authenticatable
 {
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'type','active'
+        'name', 'email', 'phone', 'password', 'type','active','branch_id'
     ];
 
     const TYPE = [
@@ -78,6 +78,12 @@ class Admin extends Authenticatable
     {
         return $this->morphOne(File::class, 'model')->where('key','image');
     }
+
+
+    function branch() {
+        return $this->belongsTo(Branch::class);
+    }
+
 
     function getImagePathAttribute() {
         return $this->image?->full_path ?? asset('adminBoard/plugins/images/defaultUser.svg');

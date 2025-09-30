@@ -81,6 +81,8 @@ Route::middleware([
             Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
             // Stocks
             // Sales
+            Route::get('sales',AddEditProduct::class)->name('sales.index');
+            Route::get('sales/{id}',AddEditProduct::class)->name('sales.details');
             // Transactions
             // Transaction Lines
             // Shipping Companies

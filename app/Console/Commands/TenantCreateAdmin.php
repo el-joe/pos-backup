@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Tenant\Admin;
 use App\Models\Tenant\Branch;
+use App\Models\Tenant\Setting;
 use App\Services\PaymentMethodService;
 use Illuminate\Console\Command;
 
@@ -40,6 +41,7 @@ class TenantCreateAdmin extends Command
         // }
 
         $this->defaultPaymentMethods();
+        $this->defaultSettings();
     }
 
     function defaultPaymentMethods() {
@@ -53,5 +55,9 @@ class TenantCreateAdmin extends Command
         foreach ($paymentMethods as $method) {
             $paymentMethodService->save(null, $method);
         }
+    }
+
+    function defaultSettings() {
+
     }
 }

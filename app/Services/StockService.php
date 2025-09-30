@@ -72,6 +72,28 @@ class StockService
         return null;
     }
 
+    function removeFromStock($productId, $unitId, $qty, $branchId = null) {
+        $product = $this->productService->find($productId, ['units']);
+
+        if($product) {
+            $unitStock = $product->stocks()->when($branchId, function($q) use ($branchId) {
+                $q->where('branch_id', $branchId);
+            },function ($q) {
+                $q->where(function($q) {
+                    $q->whereNull('branch_id')->orWhere('branch_id', 0);
+                });
+            })->firstWhere('unit_id', $unitId);
+
+            if($unitStock) {
+                // decrease stock qty
+                $unitStock->decrement('qty', $qty);
+                return $unitStock;
+            }
+        }
+
+        return null;
+    }
+
     function reduceStock($productId, $unitId, $qty, $branchId = null) {
         $product = $this->productService->find($productId, ['units']);
 

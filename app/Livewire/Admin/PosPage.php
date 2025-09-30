@@ -2,8 +2,14 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Tenant\Discount;
+use App\Models\Tenant\Sale;
+use App\Models\Tenant\Setting;
 use App\Models\Tenant\Stock;
+use App\Models\Tenant\User;
 use App\Services\ProductService;
+use App\Services\SellService;
+use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -13,12 +19,15 @@ class PosPage extends Component
 {
     use LivewireOperations;
 
-    private $productService;
-    public $currentProduct,$selectedUnitId,$selectedQuantity,$maxQuantity;
+    private $productService, $userService, $sellService;
+    public $currentProduct,$selectedUnitId,$selectedQuantity,$maxQuantity,$discountCode,$selectedCustomerId;
     public $data = [];
+    public $payments = [];
 
     function boot() {
         $this->productService = app(ProductService::class);
+        $this->userService = app(UserService::class);
+        $this->sellService = app(SellService::class);
     }
 
     function updatingSelectedUnitId($value) {
@@ -36,13 +45,67 @@ class PosPage extends Component
 
     function addToCart($productId = null) {
         if($productId){
-            $this->refactorProductData($productId);
+            $responseStatus = $this->refactorProductData($productId);
         }else{
-            $this->refactorProductData($this->currentProduct->id,$this->selectedUnitId,$this->selectedQuantity);
+            $responseStatus = $this->refactorProductData($this->currentProduct->id,$this->selectedUnitId,$this->selectedQuantity);
+        }
+
+        if(!$responseStatus) {
+            return;
         }
 
         $this->dismiss();
         $this->reset(['selectedUnitId','selectedQuantity','maxQuantity']);
+    }
+
+    function validateDiscountCode() {
+        if(!$this->discountCode) {
+            $this->alert('error', 'Please enter a discount code');
+            return;
+        }
+
+        $discount = Discount::where('code', $this->discountCode)
+            ->valid()
+            ->first();
+
+        if(!$discount) {
+            $this->alert('error', 'Invalid or expired discount code');
+            $this->data['discount'] = null;
+            return;
+        }
+
+        if($this->selectedCustomerId){
+            $history = $discount->history()->where('target_type',User::class)
+            ->where('target_id',$this->selectedCustomerId)
+            ->count();
+
+            if($discount->usage_limit && $history >= $discount->usage_limit) {
+                $this->alert('error', 'Coupon usage limit has been reached');
+                $this->data['discount'] = null;
+                return;
+            }
+        }else{
+            $this->alert('error', 'Please select a customer to apply this coupon');
+            $this->data['discount'] = null;
+            return;
+        }
+
+        $this->data['discount'] = [
+            'id' => $discount->id,
+            'name' => $discount->name,
+            'type' => $discount->type,
+            'code' => $discount->code,
+            'value' => $discount->value,
+            'max_discount_amount' => $discount->max_discount_amount ?? 99999999,
+        ];
+
+        $this->alert('success', 'Discount code applied');
+        $this->reset('discountCode');
+    }
+
+    function removeCoupon() {
+        $this->data['discount'] = null;
+        $this->alert('success', 'Discount removed');
     }
 
     function refactorProductData($productId,$unitId = null,$quantity = 1) {
@@ -60,8 +123,14 @@ class PosPage extends Component
             ->where('unit_id', $unit->id)
             ->first();
 
+        $quantity = ($quantity ?? 1) + ($dataProduct['quantity'] ?? 0);
+
+        if($stock->qty < $quantity) {
+            $this->alert('error', 'Maximum available quantity is ' . $stock->qty);
+            return false;
+        }
+
         if($dataProduct) {
-            $quantity = ($quantity ?? 1) + $dataProduct['quantity'];
 
             // get index of existing product in cart to update
             $index = collect($this->data['products'])->search(function ($item) use ($product, $unit) {
@@ -72,32 +141,153 @@ class PosPage extends Component
                 ...$this->data['products'][$index],
                 'quantity' => $quantity,
                 'subtotal' => $quantity * $stock->sell_price,
+                'stock_qty' => $stock->qty,
+                'stock_id' => $stock->id,
+                'sell_price' => $stock->sell_price,
+                'unit_cost' => $stock->unit_cost,
+                'taxable' => $product->taxable,
             ];
         }else{
-            $quantity = $quantity ?? 1;
+            // $quantity = $quantity ?? 1;
             $this->data['products'][] = [
                 'id' => $product->id,
                 'name' => $product->name . ' - ' . $unit->name,
                 'unit_id' => $unit->id,
                 'unit_name' => $unit->name,
                 'quantity' => $quantity,
-                'sell_price' => $stock->sell_price,
                 'subtotal' => $quantity * $stock->sell_price,
+                'stock_qty' => $stock->qty,
+                'stock_id' => $stock->id,
+                'sell_price' => $stock->sell_price,
+                'unit_cost' => $stock->unit_cost,
+                'taxable' => $product->taxable,
             ];
         }
+
+        return true;
+    }
+
+    function addPayment() {
+        $this->payments[] = [
+            'account_id' => null,
+            'amount' => 0,
+        ];
+    }
+
+    function removePayment($index) {
+        unset($this->payments[$index]);
+        $this->payments = array_values($this->payments);
     }
 
     function calculateTotals() : array {
         $subTotal = collect($this->data['products'] ?? [])->sum('subtotal');
-        $tax = 0;
         $discount = 0;
+        if($this->data['discount']['value'] ?? false){
+            if($this->data['discount']['type'] == 'rate'){
+                $discount = ($subTotal * $this->data['discount']['value']) / 100;
+            }else{
+                $discount = $this->data['discount']['value'];
+            }
+
+            if($discount > ($this->data['discount']['max_discount_amount'] ?? 0)){
+                $discount = $this->data['discount']['max_discount_amount'];
+            }
+        }
+        $totalAfterDiscount = $subTotal - $discount;
+        $taxPercentage = branch()?->tax?->rate ?? 0;
+        $tax = $totalAfterDiscount * ($taxPercentage / 100);
         $total = $subTotal + $tax - $discount;
         return get_defined_vars();
+    }
+
+    function confirmPayment() {
+        extract($this->calculateTotals());
+        $products = $this->data['products'] ?? [];
+        $customerId = $this->selectedCustomerId ?? null;
+        $payments = $this->payments ?? [];
+
+        // validate payments
+        $validation = $this->validation();
+        if(!$validation)return;
+        // store order
+        $dataToSave = [
+            "customer_id" => $customerId,
+            "branch_id" => branch()?->id,
+            "invoice_number" => $this->data['invoice_number'] ?? null,
+            "order_date" => $this->data['order_date'] ?? now(),
+            "tax_id" => branch()?->tax_id ?? null,
+            "tax_percentage" => $taxPercentage ?? 0,
+            "discount_id" => $this->data['discount']['id'] ?? null,
+            "discount_type" => $this->data['discount']['type'] ?? null,
+            "discount_value" => $this->data['discount']['value'] ?? 0,
+            "payment_note" => $this->data['payment_note'] ?? null,
+            "payment_amount" => $total ?? 0,
+            'payments' => $payments ?? []
+        ];
+
+        foreach ($products as $product) {
+            $dataToSave['products'][] = [
+                'id' => $product['id'],
+                'unit_id' => $product['unit_id'],
+                'quantity' => $product['quantity'],
+                'unit_cost' => $product['unit_cost'],
+                'sell_price' => $product['sell_price'],
+                'subtotal' => $product['subtotal'],
+                'taxable' => $product['taxable'] ?? false,
+            ];
+        }
+        $this->sellService->save(null,$dataToSave);
+        $this->dismiss();
+        $this->popup('success', 'Order placed successfully');
+        $this->reset(['data','payments','selectedCustomerId']);
+
+        $this->redirectWithTimeout(route('admin.sales.index'), 1000);
+    }
+
+    function validation() {
+        if(!($this->data['invoice_number']??false)){
+            // auto generate invoice number
+            $this->data['invoice_number'] = Sale::generateInvoiceNumber();
+        }
+        if(empty($this->data['products'] ?? [])) {
+            $this->alert('error', 'Please add products to the cart');
+            return false;
+        }
+
+        foreach ($this->data['products'] as $key => $value) {
+            $stock = Stock::find($value['stock_id'] ?? 0);
+            if($value['quantity'] > $stock->qty) {
+                $this->alert('error', 'Product ' . $value['name'] . ' is out of stock');
+                return false;
+            }
+        }
+
+        extract($this->calculateTotals());
+
+        if(!$this->selectedCustomerId) {
+            $this->alert('error', 'Please select a customer');
+            return false;
+        }
+
+        foreach ($this->payments as $payment) {
+            if(!$payment['account_id']) {
+                $this->alert('error', 'Please select payment method for all payments');
+                return false;
+            }
+            if($payment['amount'] <= 0) {
+                $this->alert('error', 'Please enter valid amount for all payments');
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function render()
     {
         $products = $this->productService->getAllProductWhereHasStock();
+        $customers = $this->userService->customersList();
+        $selectedCustomer = $customers->firstWhere('id',$this->selectedCustomerId);
         extract($this->calculateTotals());
         return view('livewire.admin.pos-page',get_defined_vars());
     }
