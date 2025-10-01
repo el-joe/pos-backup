@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Branches;
 
 use App\Services\BranchService;
+use App\Services\TaxService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -12,7 +13,7 @@ use Livewire\WithPagination;
 class BranchesList extends Component
 {
     use LivewireOperations,WithPagination;
-    private $branchService;
+    private $branchService, $taxService;
     public $current;
     public $data = [];
 
@@ -22,10 +23,12 @@ class BranchesList extends Component
         'phone' => 'nullable|string|max:50',
         'address' => 'nullable|string|max:500',
         'website' => 'nullable|url|max:255',
+        'tax_id' => 'nullable|exists:taxes,id',
     ];
 
     function boot() {
         $this->branchService = app(BranchService::class);
+        $this->taxService = app(TaxService::class);
     }
 
     function setCurrent($id) {
@@ -78,6 +81,8 @@ class BranchesList extends Component
             perPage : 10,
             orderByDesc : 'branches.created_at'
         );
+
+        $taxes = $this->taxService->list();
 
         return view('livewire.admin.branches.branches-list', get_defined_vars());
     }

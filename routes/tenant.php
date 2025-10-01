@@ -19,6 +19,8 @@ use App\Livewire\Admin\Products\ProductsList;
 use App\Livewire\Admin\Purchases\AddPurchase;
 use App\Livewire\Admin\Purchases\PurchaseDetails;
 use App\Livewire\Admin\Purchases\PurchasesList;
+use App\Livewire\Admin\Sales\SaleDetails;
+use App\Livewire\Admin\Sales\SalesList;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Units\UnitsList;
@@ -59,7 +61,7 @@ Route::middleware([
             Route::get('brands', BrandsList::class)->name('brands.list');
             Route::get('units',UnitsList::class)->name('units.list');
             Route::get('taxes',TaxesList::class)->name('taxes.list'); /// Need to add Branch Relation
-            Route::get('pos',PosPage::class)->name('pos'); // TODO
+            Route::get('pos',PosPage::class)->name('pos');
             Route::get('discounts', DiscountsList::class)->name('discounts.list'); // Need to add Branch Relation
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
             Route::get('expenses',ExpensesList::class)->name('expenses.list'); // TODO -> Add Branch Relation
@@ -81,11 +83,12 @@ Route::middleware([
             Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
             // Stocks
             // Sales
-            Route::get('sales',AddEditProduct::class)->name('sales.index');
-            Route::get('sales/{id}',AddEditProduct::class)->name('sales.details');
+            Route::get('sales',SalesList::class)->name('sales.index');
+            Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
             // Transactions
-            // Transaction Lines
             // Shipping Companies
+            // Admininstrators (User|Role)
+            // Reports
         });
     });
 });

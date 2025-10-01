@@ -10,4 +10,16 @@ enum TransactionTypeEnum : string
     case SALE_INVOICE = 'sale_invoice';
     case SALE_PAYMENT = 'sale_payment';
     case SALE_REFUND = 'sale_refund';
+
+    public function label(): string
+    {
+        return match($this) {
+            self::PURCHASE_INVOICE => 'Purchase Invoice',
+            self::PURCHASE_PAYMENT => 'Purchase Payment',
+            self::PURCHASE_REFUND => 'Purchase Refund',
+            self::SALE_INVOICE => 'Sale Invoice',
+            self::SALE_PAYMENT => 'Sale Payment',
+            self::SALE_REFUND => 'Sale Refund',
+        };
+    }
 }

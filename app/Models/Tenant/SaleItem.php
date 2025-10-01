@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Helpers\SaleHelper;
 use Illuminate\Database\Eloquent\Model;
 
 class SaleItem extends Model
@@ -18,5 +19,14 @@ class SaleItem extends Model
 
     public function unit() {
         return $this->belongsTo(Unit::class);
+    }
+
+    function getActualQtyAttribute() : int {
+        return $this->qty - $this->refunded_qty;
+
+    }
+
+    function getTotalAttribute()  {
+        return SaleHelper::itemTotal($this);
     }
 }

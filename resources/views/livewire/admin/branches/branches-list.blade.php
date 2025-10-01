@@ -21,6 +21,7 @@
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Address</th>
+                        <th>Tax</th>
                         <th>Active</th>
                         <th class="text-nowrap">Action</th>
                     </tr>
@@ -33,6 +34,13 @@
                             <td>{{ $branch->phone }}</td>
                             <td>{{ $branch->email }}</td>
                             <td>{{ $branch->address }}</td>
+                            <td>
+                                @if($branch->tax)
+                                    {{ $branch->tax?->name }} ({{ $branch->tax?->rate??0 }}%)
+                                @else
+                                    N/A
+                                @endif
+                            </td>
                             <td>
                                 <span class="badge badge-{{ $branch->active ? 'success' : 'danger' }}">
                                     {{ $branch->active ? 'Active' : 'Inactive' }}
@@ -88,6 +96,15 @@
                         <div class="form-group">
                             <label for="branchWebsite">Website</label>
                             <input type="text" class="form-control" wire:model="data.website" id="branchWebsite" placeholder="Enter branch website">
+                        </div>
+                        <div class="form-group">
+                            <label for="branchTax">Tax</label>
+                            <select class="form-control" wire:model="data.tax_id" id="branchTax">
+                                <option value="">Select Tax</option>
+                                @foreach ($taxes as $tax)
+                                    <option value="{{ $tax->id }}">{{ $tax->name }} ({{ $tax->rate }}%)</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="custom-checkbox">

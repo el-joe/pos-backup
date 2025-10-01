@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Helpers\SaleHelper;
 use App\Models\Tenant\Discount;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\Setting;
@@ -180,22 +181,11 @@ class PosPage extends Component
     }
 
     function calculateTotals() : array {
-        $subTotal = collect($this->data['products'] ?? [])->sum('subtotal');
-        $discount = 0;
-        if($this->data['discount']['value'] ?? false){
-            if($this->data['discount']['type'] == 'rate'){
-                $discount = ($subTotal * $this->data['discount']['value']) / 100;
-            }else{
-                $discount = $this->data['discount']['value'];
-            }
-
-            if($discount > ($this->data['discount']['max_discount_amount'] ?? 0)){
-                $discount = $this->data['discount']['max_discount_amount'];
-            }
-        }
+        $subTotal = SaleHelper::subTotal($this->data['products'] ?? []);
+        $discount = SaleHelper::discountAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0);
         $totalAfterDiscount = $subTotal - $discount;
         $taxPercentage = branch()?->tax?->rate ?? 0;
-        $tax = $totalAfterDiscount * ($taxPercentage / 100);
+        $tax = SaleHelper::taxAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $taxPercentage);
         $total = $subTotal + $tax - $discount;
         return get_defined_vars();
     }
@@ -222,7 +212,10 @@ class PosPage extends Component
             "discount_value" => $this->data['discount']['value'] ?? 0,
             "payment_note" => $this->data['payment_note'] ?? null,
             "payment_amount" => $total ?? 0,
-            'payments' => $payments ?? []
+            'payments' => $payments ?? [],
+            'paid_amount' => array_sum(array_column($payments ?? [], 'amount')),
+            'tax_amount'=> $tax ?? 0,
+            'discount_amount'=> $discount ?? 0,
         ];
 
         foreach ($products as $product) {

@@ -37,14 +37,6 @@ class ProductService
     }
 
     function save($id = null,$data) {
-        if(isset($data['tax_id'])){
-            $tax = Tax::find($data['tax_id']);
-            if($tax){
-                $data['tax_rate'] = $tax->rate;
-            }else{
-                $data['tax_rate'] = 0;
-            }
-        }
 
         if($id) {
             $product = $this->find($id);

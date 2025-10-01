@@ -43,7 +43,6 @@ class SellService
         }else{
             $sell = new Sale();
         }
-
         // fill purchase data
         $sell->fill([
             'customer_id' => $data['customer_id'],
@@ -92,7 +91,7 @@ class SellService
 
         $this->transactionService->create($transactionData);
 
-        if(count($data['payments']??[])){
+        if(count($data['payments']??[]) == 0){
             return $sell;
         }
         // Grouped by type = Payments
@@ -115,7 +114,7 @@ class SellService
 
         $this->transactionService->create($transactionData);
         if(!$reverse){
-            $sell->increment('paid_amount', $data['payment_amount'] ?? 0);
+            $sell->increment('paid_amount', $data['paid_amount'] ?? $data['payment_amount'] ?? 0);
         }
 
         return $sell->refresh();
@@ -203,7 +202,7 @@ class SellService
             'active' => 1,
         ]);
 
-        $paidAmount = $data['amount'] ?? 0;
+        $paidAmount = $data['payment_amount'] ?? $data['amount'] ?? 0;
 
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
@@ -263,7 +262,7 @@ class SellService
         }
 
         // get grand total from data
-        $grandTotal = $data['grand_total'] ?? 0;
+        $grandTotal = $data['payment_amount'] ?? 0;
 
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
@@ -274,7 +273,7 @@ class SellService
     }
 
     function createCustomerCreditLine($data,$type = 'full_paid', $reverse = false) {
-        $getCustomerAccount = Account::find($data['account_id']);
+        $getCustomerAccount = Account::find($data['account_id'] ?? null);
 
         $paidAmount = $data['amount'] ?? 0;
 

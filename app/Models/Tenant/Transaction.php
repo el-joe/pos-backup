@@ -23,8 +23,8 @@ class Transaction extends Model
         return $this->hasMany(TransactionLine::class,'transaction_id');
     }
 
-    function account(){
-        $line = $this->lines()->where('type','debit')->first();
+    function account($type = 'debit'){
+        $line = $this->lines()->where('type',$type)->first();
         return $line ? $line->account : null;
     }
 }

@@ -95,29 +95,18 @@
                 {{-- taxable --}}
                 <div class="form-group col-sm-4">
                     <label class="custom-checkbox">
-                        <input type="checkbox" id="taxable" wire:model.live="data.taxable">
+                        <input type="checkbox" id="taxable" wire:model="data.taxable">
                         <span class="checkmark"></span> Is Taxable
                     </label>
                 </div>
-                @if($this->data['taxable'] ?? false)
-                    <div class="form-group col-sm-4">
-                        <label for="tax_id">Tax</label>
-                        <select id="tax_id" wire:model="data.tax_id" class="form-control">
-                            <option value="">Select Tax</option>
-                            @foreach ($taxes as $tax)
-                                <option value="{{ $tax->id }}" {{ ($this->data['tax_id'] ?? null) == $tax->id ? 'selected' : '' }}>{{ $tax->name }} - {{ $tax->rate }}%</option>
-                            @endforeach
-                        </select>
-                    </div>
-                @endif
                 {{-- sell_price --}}
-                <div class="form-group col-sm-4">
+                {{-- <div class="form-group col-sm-4">
                     <label for="sell_price">Sell Price</label>
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-tag"></i></div>
                         <input type="number" step="any" id="sell_price" wire:model="data.sell_price" class="form-control" placeholder="0.00">
                     </div>
-                </div>
+                </div> --}}
                 <div class="form-group col-sm-12">
                     <label for="image">Main Image</label>
                     <div>

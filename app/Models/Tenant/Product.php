@@ -10,7 +10,7 @@ class Product extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name','description','sku','code','unit_id','branch_id','category_id','brand_id','weight','alert_qty','active','taxable','tax_id','tax_rate','sell_price'
+        'name','description','sku','code','unit_id','branch_id','category_id','brand_id','weight','alert_qty','active','taxable'
     ];
 
     protected $casts = [
@@ -39,11 +39,6 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
-    }
-
-    public function tax()
-    {
-        return $this->belongsTo(Tax::class);
     }
 
     function image() {

@@ -19,7 +19,7 @@ class AddEditProduct extends Component
 
     public $id, $product;
 
-    private $productService, $branchService, $categoryService, $brandService, $taxService, $unitService;
+    private $productService, $branchService, $categoryService, $brandService, $unitService;
 
     public $data = [];
 
@@ -35,9 +35,9 @@ class AddEditProduct extends Component
         'alert_qty' => 'required|integer',
         'active' => 'boolean',
         'taxable' => 'boolean',
-        'tax_id' => 'required_if:taxable,true|exists:taxes,id',
+        // 'tax_id' => 'required_if:taxable,true|exists:taxes,id',
         'code' => 'required|string|max:100',
-        'sell_price' => 'required|numeric',
+        // 'sell_price' => 'required|numeric',
         'image' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
         'gallery' => 'nullable|array',
         'gallery.*' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
@@ -48,7 +48,7 @@ class AddEditProduct extends Component
         $this->branchService = app(BranchService::class);
         $this->categoryService = app(CategoryService::class);
         $this->brandService = app(BrandService::class);
-        $this->taxService = app(TaxService::class);
+        // $this->taxService = app(TaxService::class);
         $this->unitService = app(UnitService::class);
     }
 
@@ -122,7 +122,7 @@ class AddEditProduct extends Component
         $branches = $this->branchService->activeList();
         $categories = $this->categoryService->activeList();
         $brands = $this->brandService->activeList();
-        $taxes = $this->taxService->list();
+        // $taxes = $this->taxService->list();
         $units = $this->unitService->parentUnitsOnly();
         // if($this->data['image'] ?? false){
         //     dd($this->data['image']);
