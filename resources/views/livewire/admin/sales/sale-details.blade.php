@@ -197,7 +197,7 @@
                                         <td>#{{ $transaction->id }}</td>
                                         <td>{{ $transaction->type->label() }}</td>
                                         <td>{{ number_format($transaction->amount, 2) }}</td>
-                                        <td>{{ carbon($transaction->created_at)->format('d M Y, H:i') }}</td>
+                                        <td>{{ carbon($transaction->created_at)->format('d M Y, h:i A') }}</td>
                                         {{-- <td>
                                             <button class="btn btn-danger" wire:click="deleteTransactionConfirm({{ $transaction->id }})">
                                                 <i class="fa fa-trash"></i>
