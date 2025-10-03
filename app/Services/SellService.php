@@ -6,12 +6,14 @@ use App\Enums\AccountTypeEnum;
 use App\Enums\PurchaseStatusEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Helpers\PurchaseHelper;
+use App\Helpers\SaleHelper;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Expense;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\Sale;
+use App\Models\Tenant\SaleItem;
 use App\Models\Tenant\User;
 use App\Repositories\SellRepository;
 
@@ -115,6 +117,8 @@ class SellService
         $this->transactionService->create($transactionData);
         if(!$reverse){
             $sell->increment('paid_amount', $data['paid_amount'] ?? $data['payment_amount'] ?? 0);
+        }else{
+            $sell->decrement('paid_amount',$data['paid_amount'] ?? $data['payment_amount'] ?? 0);
         }
 
         return $sell->refresh();
@@ -286,83 +290,84 @@ class SellService
     }
 
     // TODO
-    function refundPurchaseItem($id,$qty) {
-        $purchaseItem = PurchaseItem::findOrFail($id);
-        $purchaseOrder = $purchaseItem->purchase;
-        $refundedQtyAmount = $purchaseItem->unit_amount_after_tax * $qty;
-        $discountAmount = PurchaseHelper::calcDiscount($refundedQtyAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
-        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($refundedQtyAmount, $discountAmount);
-        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
+    function refundSaleItem($id,$qty) {
+        $saleItem = SaleItem::findOrFail($id);
+        $saleOrder = $saleItem->sale;
+        $product = $saleItem->toArray();
+        $product['qty'] = $qty;
+        $discountAmount = SaleHelper::discountAmount([$product], $saleOrder->discount_type, $saleOrder->discount_value);
+        $taxAmount = SaleHelper::taxAmount([$product], $saleOrder->tax_percentage ?? 0);
         // -----------------------------------
-        $grandTotalFromRefundedQty = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
-        $purchaseDueAmount = $purchaseOrder->due_amount;
-        $totalRefunded = $grandTotalFromRefundedQty - $purchaseDueAmount;
+        $grandTotalFromRefundedQty = SaleHelper::grandTotal([$product], $saleOrder->discount_type, $saleOrder->discount_value, $saleOrder->tax_percentage ?? 0);
+        $dueAmount = $saleOrder->due_amount;
+        $totalRefunded = $grandTotalFromRefundedQty - $dueAmount;
 
-        // reverse purchase invoice type transaction
+        // reverse sale invoice type transaction
         $refundInvoiceData = [
-            'branch_id' => $purchaseOrder->branch_id,
-            'orderProducts' => [
+            'branch_id' => $saleOrder->branch_id,
+            'products' => [
                 [
                     'qty' => (float)$qty,
-                    'purchase_price' => (float)$purchaseItem->unit_amount_after_tax
+                    'sell_price' => (float)$saleItem->sell_price,
+                    'unit_cost' => (float)$saleItem->unit_cost,
                 ]
             ],
             'tax_amount' => $taxAmount,
             'discount_amount' => $discountAmount,
-            'supplier_id' => $purchaseOrder->supplier_id,
+            'customer_id' => $saleOrder->customer_id,
             'grand_total' => $grandTotalFromRefundedQty
 
         ];
 
         $transactionData = [
-            'description' => 'Purchase Refund for #'.$purchaseOrder->ref_no,
-            'type' => TransactionTypeEnum::PURCHASE_REFUND->value,
-            'reference_type' => Purchase::class,
-            'reference_id' => $purchaseOrder->id,
-            'branch_id' => $purchaseOrder->branch_id,
-            'note' => 'Refunded for purchase item #'. ($purchaseItem->product?->name ?? 'N/A'),
+            'description' => 'Sale Refund for #'.$saleOrder->invoice_number,
+            'type' => TransactionTypeEnum::SALE_REFUND->value,
+            'reference_type' => Sale::class,
+            'reference_id' => $saleOrder->id,
+            'branch_id' => $saleOrder->branch_id,
+            'note' => 'Refunded for sale item #'. ($saleItem->product?->name ?? 'N/A'),
             'amount' => $grandTotalFromRefundedQty ?? 0,
-            'lines' => $this->purchaseInvoiceLines($refundInvoiceData,'create',true)
+            'lines' => $this->saleInvoiceLines($refundInvoiceData,'create',true)
         ];
 
         $this->transactionService->create($transactionData);
 
 
-        // refund purchase payments
-        $totalRefunded = $grandTotalFromRefundedQty - $purchaseDueAmount;
+        // refund sale payments
+        $totalRefunded = $grandTotalFromRefundedQty - $dueAmount;
         if($totalRefunded <= 0){
             return;
         }
         $refundPaymentData = [
             'grand_total' => $totalRefunded,
-            'payment_note' => 'Refund for purchase item #'. ($purchaseItem->product?->name ?? 'N/A'),
+            'payment_note' => 'Refund for sale item #'. ($saleItem->product?->name ?? 'N/A'),
             'payment_status' => 'refunded',
             'payment_amount' => $totalRefunded,
-            'branch_id' => $purchaseOrder->branch_id,
-            'supplier_id' => $purchaseOrder->supplier_id,
+            'branch_id' => $saleOrder->branch_id,
+            'customer_id' => $saleOrder->customer_id,
         ];
 
-        $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
+        $this->addPayment($saleOrder->id, $refundPaymentData , true);
 
-        // refund purchase items qty
-        $purchaseItem->increment('refunded_qty',$qty);
-        $purchaseOrder->decrement('paid_amount',$totalRefunded);
+        // refund sale items qty
+        $saleItem->increment('refunded_qty',$qty);
 
         // Refund Qty from stock
-        $this->stockService->reduceStock(productId: $purchaseItem->product_id,unitId: $purchaseItem->unit_id,qty: $qty,branchId: $purchaseOrder->branch_id);
+        $this->stockService->addStock(productId: $saleItem->product_id,unitId: $saleItem->unit_id,qty: $qty,branchId: $saleOrder->branch_id);
 
-        $purchaseOrder->refresh();
+        $saleOrder->refresh();
 
-        $purchaseDue = $purchaseOrder->due_amount;
-        $total = $purchaseOrder->total_amount;
+        // $saleDue = $saleOrder->due_amount;
+        // $total = $saleOrder->grand_total_amount;
 
-        if($purchaseDue <= 0){
-            $purchaseOrder->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
-        }elseif($purchaseDue > 0 && $purchaseDue < $total){
-            $purchaseOrder->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
-        }elseif($purchaseDue == $total){
-            $purchaseOrder->update(['status' => PurchaseStatusEnum::PENDING->value]);
-        }
+        // if($saleDue <= 0){
+        //     $saleOrder->update(['status' => SaleStatusEnum::FULL_PAID->value]);
+        // }elseif($saleDue > 0 && $saleDue < $total){
+        //     $saleOrder->update(['status' => SaleStatusEnum::PARTIAL_PAID->value]);
+        // }elseif($saleDue == $total){
+        //     $saleOrder->update(['status' => SaleStatusEnum::PENDING->value]);
+        // }
+        return $saleOrder;
     }
 
     function delete($id) {

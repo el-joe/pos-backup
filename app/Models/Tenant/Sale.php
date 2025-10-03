@@ -45,7 +45,6 @@ class Sale extends Model
     }
 
     function getDiscountAmountAttribute() {
-        $subTotal = $this->sub_total;
         return SaleHelper::discountAmount($this->saleItems, $this->discount_type, $this->discount_value);
     }
 

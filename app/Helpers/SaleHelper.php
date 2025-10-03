@@ -6,7 +6,7 @@ class SaleHelper
 {
     static function itemTotal($product) : float {
         $qty = $product['qty'] ?? $product['quantity'] ?? 0;
-        $refunded_qty = $product['returned_qty'] ?? 0;
+        $refunded_qty = $product['refunded_qty'] ?? 0;
         $sell_price = $product['sell_price'] ?? $product['price'] ?? 0;
         return ($qty - $refunded_qty) * $sell_price;
 
