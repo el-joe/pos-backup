@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Sales;
 use App\Helpers\SaleHelper;
 use App\Models\Tenant\SaleItem;
 use App\Services\SellService;
+use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -12,6 +13,8 @@ use Livewire\Component;
 #[Layout('layouts.admin')]
 class SaleDetails extends Component
 {
+    use LivewireOperations;
+
     public $id,$currentItem,$order,$refundedQty = 1;
 
     private $sellService;
@@ -34,7 +37,21 @@ class SaleDetails extends Component
     }
 
     function refundSaleItem() {
+        if(!$this->validator([
+            'refundedQty' => $this->refundedQty
+        ],[
+            'refundedQty' => 'required|numeric|min:1|max:'.$this->currentItem->actual_qty
+        ])) return;
 
+        $this->sellService->refundSaleItem($this->currentItem?->id,$this->refundedQty);
+
+        $this->mount();
+
+        $this->dismiss();
+
+        $this->popup('success','Purchase item refunded successfully.');
+
+        $this->reset('refundedQty','currentItem');
     }
 
     function calcTotals() {
