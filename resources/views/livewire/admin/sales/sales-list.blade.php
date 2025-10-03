@@ -23,6 +23,7 @@
                         {{-- <th>Status</th> --}}
                         <th>Total Amount</th>
                         <th>Due Amount</th>
+                        <th>Refund Status</th>
                         <th class="text-nowrap">Action</th>
                     </tr>
                 </thead>
@@ -42,6 +43,11 @@
                         <td>
                             <span class="label label-danger">
                                 {{ number_format($sale->due_amount ?? 0, 2) }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="label label-{{ $sale->refund_status->colorClass() }}">
+                                {{ $sale->refund_status->label() }}
                             </span>
                         </td>
                         <td class="text-nowrap">
@@ -131,7 +137,7 @@
                                 <?php
                                     $payments = $current?->transactions ? $current?->transactions->whereIn('type', [
                                         App\Enums\TransactionTypeEnum::SALE_PAYMENT,
-                                        App\Enums\TransactionTypeEnum::SALE_REFUND,
+                                        App\Enums\TransactionTypeEnum::SALE_PAYMENT_REFUND,
                                     ])->load('lines') : [];
                                 ?>
                                 @forelse($payments as $payment)

@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Enums\PurchaseStatusEnum;
+use App\Enums\RefundStatusEnum;
 use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Contact;
@@ -62,15 +63,16 @@ class Purchase extends Model
         return $this->total_amount - $this->paid_amount;
     }
 
-    function getRefundedStatusAttribute() {
+    function getRefundStatusAttribute() {
         $refundedQty = $this->purchaseItems->sum('refunded_qty');
         $totalQty = $this->purchaseItems->sum('qty');
-        if($refundedQty <= 0) {
-            return 'not_refunded';
-        } elseif($refundedQty > 0 && $refundedQty < $totalQty) {
-            return 'partial_refunded';
-        } elseif($refundedQty == $totalQty) {
-            return 'full_refunded';
+
+        if ($refundedQty === 0) {
+            return RefundStatusEnum::NO_REFUND;
+        } elseif ($refundedQty < $totalQty) {
+            return RefundStatusEnum::PARTIAL_REFUND;
+        } else {
+            return RefundStatusEnum::FULL_REFUND;
         }
     }
 

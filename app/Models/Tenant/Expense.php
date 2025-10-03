@@ -23,4 +23,19 @@ class Expense extends Model
     public function model() {
         return $this->morphTo();
     }
+
+    function scopeFilter($query,$filter = []) {
+        return $query->when(isset($filter['branch_id']) && $filter['branch_id'], function($q) use ($filter) {
+            $q->where('branch_id', $filter['branch_id']);
+        })->when(isset($filter['expense_category_id']) && $filter['expense_category_id'], function($q) use ($filter) {
+            $q->where('expense_category_id', $filter['expense_category_id']);
+        })->when(isset($filter['date_from']) && $filter['date_from'], function($q) use ($filter) {
+            $q->whereDate('expense_date', '>=', $filter['date_from']);
+        })->when(isset($filter['date_to']) && $filter['date_to'], function($q) use ($filter) {
+            $q->whereDate('expense_date', '<=', $filter['date_to']);
+        })
+        ->when(isset($filter['with_trashed']) && $filter['with_trashed'], function($q) {
+            $q->withTrashed();
+        });
+    }
 }

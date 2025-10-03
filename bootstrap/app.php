@@ -12,10 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except : ['livewire/*']);
-        $middleware->web([
-            \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
-            \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
-        ]);
+        // $middleware->web([
+        //     \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
+        //     \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

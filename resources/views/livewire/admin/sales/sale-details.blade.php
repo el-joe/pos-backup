@@ -148,8 +148,10 @@
                                     <tr>
                                         <th>Product</th>
                                         <th>Quantity</th>
+                                        <th>Refunded Quantity</th>
                                         <th>Unit Price</th>
                                         <th>Total</th>
+                                        <th>Refund Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -158,13 +160,29 @@
                                         <tr>
                                             <td><strong>{{ $item->product?->name }} - {{ $item->unit?->name }}</strong></td>
                                             <td>{{ $item->qty }}</td>
+                                            <td>{{ $item->refunded_qty }}</td>
                                             <td>{{ number_format($item->sell_price, 2) }}</td>
                                             <td>{{ number_format($item->total, 2) }}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-danger refund-btn" wire:click="setCurrentItem({{ $item->id }})" data-toggle="modal" data-target="#refundModal">
-                                                    <i class="fa fa-undo"></i> Refund
-                                                </button>
+                                                @if($item->actual_qty <= 0)
+                                                    <span class="badge badge-success">Fully Refunded</span>
+                                                @elseif($item->actual_qty < $item->qty)
+                                                    <span class="badge badge-warning">Partially Refunded</span>
+                                                @else
+                                                    <span class="badge badge-primary">Not Refunded</span>
+                                                @endif
                                             </td>
+                                            <td>
+                                                @if($item->actual_qty <= 0)
+                                                    <button class="btn btn-sm btn-secondary" disabled>
+                                                        <i class="fa fa-undo"></i> Refund
+                                                    </button>
+                                                @else
+                                                    <button class="btn btn-sm btn-danger refund-btn" wire:click="setCurrentItem({{ $item->id }})" data-toggle="modal" data-target="#refundModal">
+                                                        <i class="fa fa-undo"></i> Refund
+                                                    </button>
+                                                @endif
+                                                </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -191,7 +209,7 @@
                             <tbody>
                                 @foreach($order->transactions->whereIn('type',[
                                     App\Enums\TransactionTypeEnum::SALE_PAYMENT,
-                                    App\Enums\TransactionTypeEnum::SALE_REFUND
+                                    App\Enums\TransactionTypeEnum::SALE_PAYMENT_REFUND
                                 ]) as $transaction)
                                     <tr>
                                         <td>#{{ $transaction->id }}</td>

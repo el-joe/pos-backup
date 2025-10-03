@@ -89,6 +89,8 @@ Route::middleware([
             // Shipping Companies
             // Admininstrators (User|Role)
             // Reports
+            // Stock Adjustments
+            // Stock Transfers
         });
     });
 });

@@ -9,7 +9,7 @@ class ExpenseCategory extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'name','active','is_default','name'
+        'name','active','default','name'
     ];
 
 

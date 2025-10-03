@@ -27,7 +27,7 @@ class SalesList extends Component
         $this->current = $this->sellService->first($id,[
             'transactions' => fn($q)=> $q->whereIn('type',[
                 TransactionTypeEnum::SALE_PAYMENT,
-                TransactionTypeEnum::SALE_REFUND,
+                TransactionTypeEnum::SALE_PAYMENT_REFUND,
             ])
         ]);
     }

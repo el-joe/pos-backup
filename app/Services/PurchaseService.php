@@ -134,8 +134,8 @@ class PurchaseService
         $purchase = $this->repo->find($purchaseId);
         if(!$purchase) return;
         $transactionData = [
-            'description' => 'Refund Purchase Payment for #'.$purchase->ref_no,
-            'type' => $reverse ? TransactionTypeEnum::PURCHASE_REFUND->value : TransactionTypeEnum::PURCHASE_PAYMENT->value,
+            'description' => ($reverse ? 'Refund ' : '').'Purchase Payment for #'.$purchase->ref_no,
+            'type' => $reverse ? TransactionTypeEnum::PURCHASE_PAYMENT_REFUND->value : TransactionTypeEnum::PURCHASE_PAYMENT->value,
             'reference_type' => Purchase::class,
             'reference_id' => $purchase->id,
             'branch_id' => $purchase->branch_id,
@@ -239,22 +239,10 @@ class PurchaseService
     }
 
     function createBranchCashLine($data,$type = 'full_paid' ,$reverse = false) {
-        $getBranchCashAccount = Account::firstOrCreate([
-            'name' => 'Branch Cash',
-            'code' => 'Branch Cash',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::BRANCH_CASH->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);
+        $getBranchCashAccount = Account::default('Branch Cash',AccountTypeEnum::BRANCH_CASH->value,$data['branch_id']);
 
         // get paid amount from data
-        if($type == 'full_paid'){
-            $paidAmount = $data['grand_total'] ?? 0;
-        }else{
-            $paidAmount = $data['payment_amount'] ?? 0;
-        }
+        $paidAmount = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
 
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
@@ -291,7 +279,7 @@ class PurchaseService
 
         $transactionData = [
             'description' => 'Purchase Refund Expense for #'.$purchaseOrder->ref_no,
-            'type' => TransactionTypeEnum::PURCHASE_REFUND->value,
+            'type' => TransactionTypeEnum::PURCHASE_INVOICE_REFUND->value,
             'reference_type' => Purchase::class,
             'reference_id' => $purchaseOrder->id,
             'branch_id' => $purchaseOrder->branch_id,
@@ -335,15 +323,7 @@ class PurchaseService
     }
 
     function createExpenseLine($data,$reverse = false) {
-        $getExpenseAccount = Account::firstOrCreate([
-            'name' => 'Expense',
-            'code' => 'Expense',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::EXPENSE->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);
+        $getExpenseAccount = Account::default('Expense',AccountTypeEnum::EXPENSE->value,$data['branch_id']);
         // get total expenses from data
         $totalExpenses = array_sum(array_column($data['expenses'] ?? [],'amount'));
 
@@ -465,7 +445,7 @@ class PurchaseService
 
         $transactionData = [
             'description' => 'Purchase Refund for #'.$purchaseOrder->ref_no,
-            'type' => TransactionTypeEnum::PURCHASE_REFUND->value,
+            'type' => TransactionTypeEnum::PURCHASE_INVOICE_REFUND->value,
             'reference_type' => Purchase::class,
             'reference_id' => $purchaseOrder->id,
             'branch_id' => $purchaseOrder->branch_id,

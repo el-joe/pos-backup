@@ -30,7 +30,7 @@ class TransactionService
         // create transaction
         $transaction = $this->repo->create([
             'date' => now(),
-            'description' => $data['description'],
+            'description' => $data['description'] ?? $data['note'] ?? '',
             'type' => $data['type'] ?? null,
             'reference_type' => $data['reference_type'] ?? null,
             'reference_id' => $data['reference_id'] ?? null,

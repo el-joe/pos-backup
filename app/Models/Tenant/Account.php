@@ -41,4 +41,20 @@ class Account extends Model
             $q->where('model_id', $filters['model_id']);
         });
     }
+
+    static function default($name,$type,$branch_id) {
+        return self::firstOrCreate([
+            'code' => $name,
+            'type' => $type,
+            'branch_id' => $branch_id,
+        ],[
+            'name' => $name,
+            'code' => $name,
+            'model_type' => Branch::class,
+            'model_id' => $branch_id,
+            'type' => $type,
+            'branch_id' => $branch_id,
+            'active' => 1,
+        ]);
+    }
 }

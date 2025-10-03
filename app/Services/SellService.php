@@ -105,7 +105,7 @@ class SellService
         if(!$sell) return;
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
-            'type' => $reverse ? TransactionTypeEnum::SALE_REFUND->value : TransactionTypeEnum::SALE_PAYMENT->value,
+            'type' => $reverse ? TransactionTypeEnum::SALE_PAYMENT_REFUND->value : TransactionTypeEnum::SALE_PAYMENT->value,
             'reference_type' => Sale::class,
             'reference_id' => $sell->id,
             'branch_id' => $sell->branch_id,
@@ -277,7 +277,11 @@ class SellService
     }
 
     function createCustomerCreditLine($data,$type = 'full_paid', $reverse = false) {
-        $getCustomerAccount = Account::find($data['account_id'] ?? null);
+        if(isset($data['customer_id'])){
+            $getCustomerAccount = User::find($data['customer_id'])->accounts->first();
+        }else{
+            $getCustomerAccount = Account::find($data['account_id'] ?? null);
+        }
 
         $paidAmount = $data['amount'] ?? 0;
 
@@ -289,7 +293,6 @@ class SellService
         ];
     }
 
-    // TODO
     function refundSaleItem($id,$qty) {
         $saleItem = SaleItem::findOrFail($id);
         $saleOrder = $saleItem->sale;
@@ -321,7 +324,7 @@ class SellService
 
         $transactionData = [
             'description' => 'Sale Refund for #'.$saleOrder->invoice_number,
-            'type' => TransactionTypeEnum::SALE_REFUND->value,
+            'type' => TransactionTypeEnum::SALE_INVOICE_REFUND->value,
             'reference_type' => Sale::class,
             'reference_id' => $saleOrder->id,
             'branch_id' => $saleOrder->branch_id,
@@ -347,7 +350,11 @@ class SellService
             'customer_id' => $saleOrder->customer_id,
         ];
 
-        $this->addPayment($saleOrder->id, $refundPaymentData , true);
+        $refundPaymentData['payments'] = [
+            $refundPaymentData
+        ];
+
+        $this->addPayment($saleOrder->id, $refundPaymentData, true);
 
         // refund sale items qty
         $saleItem->increment('refunded_qty',$qty);

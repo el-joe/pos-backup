@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\RefundStatusEnum;
 use App\Helpers\SaleHelper;
 use Illuminate\Database\Eloquent\Model;
 
@@ -72,5 +73,19 @@ class Sale extends Model
                 });
             })
             ->when($filters['id'] ?? null, fn($q,$v)=> $q->where('id',$v));
+    }
+
+    function getRefundStatusAttribute() {
+        $totalItems = $this->saleItems->sum('qty');
+        $refundedItems = $this->saleItems->sum('refunded_qty');
+
+        if ($refundedItems === 0) {
+            return RefundStatusEnum::NO_REFUND;
+        } elseif ($refundedItems < $totalItems) {
+            return RefundStatusEnum::PARTIAL_REFUND;
+        } else {
+            return RefundStatusEnum::FULL_REFUND;
+        }
+
     }
 }

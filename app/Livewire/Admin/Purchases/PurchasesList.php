@@ -27,7 +27,7 @@ class PurchasesList extends Component
         $this->current = $this->purchaseService->first($id,[
             'transactions' => fn($q)=> $q->whereIn('type',[
                 TransactionTypeEnum::PURCHASE_PAYMENT,
-                TransactionTypeEnum::PURCHASE_REFUND,
+                TransactionTypeEnum::PURCHASE_PAYMENT_REFUND,
             ])
         ]);
     }

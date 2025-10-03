@@ -23,6 +23,7 @@
                         <th>Status</th>
                         <th>Total Amount</th>
                         <th>Due Amount</th>
+                        <th>Refund Status</th>
                         <th class="text-nowrap">Action</th>
                     </tr>
                 </thead>
@@ -40,13 +41,18 @@
                         </td>
                         <td>{{ $purchase->total_amount ?? 0 }}</td>
                         <td>
-                            <span class="label label-danger">
+                            <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
                                 {{ number_format($purchase->due_amount ?? 0, 2) }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-{{ $purchase->refund_status->colorClass() }}">
+                                {{ $purchase->refund_status->label() }}
                             </span>
                         </td>
                         <td class="text-nowrap">
                             <a href="{{ route('admin.purchases.details', $purchase->id) }}" data-toggle="tooltip" data-original-title="Details">
-                                <i class="fa fa-pencil text-primary m-r-10"></i>
+                                <i class="fa fa-eye text-primary m-r-10"></i>
                             </a>
                             <a href="#" wire:click="setCurrent({{ $purchase->id }})" data-toggle="modal" data-target="#paymentModal" data-id="{{ $purchase->id }}">
                                 <i class="fa fa-credit-card text-success"></i>
@@ -130,7 +136,7 @@
                                 <?php
                                     $payments = $current?->transactions ? $current?->transactions->whereIn('type', [
                                         App\Enums\TransactionTypeEnum::PURCHASE_PAYMENT,
-                                        App\Enums\TransactionTypeEnum::PURCHASE_REFUND,
+                                        App\Enums\TransactionTypeEnum::PURCHASE_PAYMENT_REFUND,
                                     ])->load('lines') : [];
                                 ?>
                                 @forelse($payments as $payment)
