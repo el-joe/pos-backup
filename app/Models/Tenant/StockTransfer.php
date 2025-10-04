@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\StockTransferStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class StockTransfer extends Model
@@ -10,8 +11,12 @@ class StockTransfer extends Model
         'from_branch_id',
         'to_branch_id',
         'transfer_date',
-        'product_id',
-        'quantity',
+        'ref_no',
+        'status',
+    ];
+
+    protected $casts = [
+        'status' => StockTransferStatusEnum::class
     ];
 
     // Relationships and other model methods can be defined here
@@ -22,9 +27,5 @@ class StockTransfer extends Model
 
     function toBranch() {
         return $this->belongsTo(Branch::class, 'to_branch_id');
-    }
-
-    function product() {
-        return $this->belongsTo(Product::class, 'product_id');
     }
 }

@@ -23,6 +23,7 @@ use App\Livewire\Admin\Sales\SaleDetails;
 use App\Livewire\Admin\Sales\SalesList;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Taxes\TaxesList;
+use App\Livewire\Admin\Transactions\TransactionList;
 use App\Livewire\Admin\Units\UnitsList;
 use App\Livewire\Admin\Users\UserDetails;
 use App\Livewire\Admin\Users\UsersList;
@@ -64,7 +65,7 @@ Route::middleware([
             Route::get('pos',PosPage::class)->name('pos');
             Route::get('discounts', DiscountsList::class)->name('discounts.list'); // Need to add Branch Relation
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
-            Route::get('expenses',ExpensesList::class)->name('expenses.list'); // TODO -> Add Branch Relation
+            Route::get('expenses',action: ExpensesList::class)->name('expenses.list'); // TODO -> Add Branch Relation
 
             Route::get('payment-methods',PaymentMethodsList::class)->name('payment-methods.list');
             Route::get('accounts',AccountsList::class)->name('accounts.list');
@@ -75,17 +76,17 @@ Route::middleware([
             Route::get('users/{id}/details', UserDetails::class)->name('users.details');
 
             // Products
-            Route::get('products',ProductsList::class)->name('products.list');
+            Route::get('products',ProductsList::class)->name('products.list'); // TODO -> Add Product Details Page contains Stock info , Purchases , Sales , Stock Transfers , Adjustments
             Route::get('products/{id}',AddEditProduct::class)->name('products.add-edit');
             // Purchases
             Route::get('purchases',PurchasesList::class)->name('purchases.list');
             Route::get('purchases/create',AddPurchase::class)->name('purchases.add');
             Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
-            // Stocks
             // Sales
             Route::get('sales',SalesList::class)->name('sales.index');
             Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
             // Transactions
+            Route::get('transactions',TransactionList::class)->name('transactions.list');
             // Shipping Companies
             // Admininstrators (User|Role)
             // Reports

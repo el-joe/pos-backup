@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('from_branch_id')->index();
             $table->unsignedBigInteger('to_branch_id')->index();
             $table->date('transfer_date')->nullable();
-            $table->unsignedBigInteger('product_id')->index();
-            $table->decimal('quantity', 10, 2);
+            $table->string('ref_no')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

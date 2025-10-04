@@ -23,6 +23,10 @@ class Transaction extends Model
         return $this->hasMany(TransactionLine::class,'transaction_id');
     }
 
+    function branch() {
+        return $this->belongsTo(Branch::class,'branch_id');
+    }
+
     function account($type = 'debit'){
         $line = $this->lines()->where('type',$type)->first();
         return $line ? $line->account : null;

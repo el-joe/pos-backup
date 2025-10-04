@@ -17,4 +17,8 @@ class TransactionLine extends Model
     function account() {
         return $this->belongsTo(Account::class,'account_id');
     }
+
+    function getRefAttribute(){
+        return $this->transaction?->reference_type ? (new $this->transaction?->reference_type)->getTable() : 'N/A';
+    }
 }

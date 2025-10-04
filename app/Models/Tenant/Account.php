@@ -31,7 +31,7 @@ class Account extends Model
     }
 
     function paymentMethod() {
-        return $this->belongsTo(PaymentMethod::class);
+        return $this->belongsTo(PaymentMethod::class,'payment_method_id');
     }
 
     function scopeFilter($q,$filters = []) {
@@ -43,10 +43,15 @@ class Account extends Model
     }
 
     static function default($name,$type,$branch_id) {
+        $method = PaymentMethod::whereSlug('cash')
+            ->when(branch()?->id,fn($q) => $q->where('branch_id',branch()?->id))
+            ->first();
+
         return self::firstOrCreate([
             'code' => $name,
             'type' => $type,
             'branch_id' => $branch_id,
+            'payment_method_id' => $method?->id
         ],[
             'name' => $name,
             'code' => $name,

@@ -213,15 +213,8 @@ class PurchaseService
     }
 
     function createInventoryLine($data,$reverse = false) {
-        $getInventoryAccount = Account::firstOrCreate([
-            'name' => 'Inventory',
-            'code' => 'inventory',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::INVENTORY->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);
+        $getInventoryAccount = Account::default('Inventory',AccountTypeEnum::INVENTORY->value,$data['branch_id']);
+
         if(!isset($data['orderProducts']) || !is_array($data['orderProducts'])) {
             return false;
         }

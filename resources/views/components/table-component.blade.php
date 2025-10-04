@@ -26,10 +26,31 @@
                             <td>{{ carbon($value)->format('l ,d M Y') }}</td>
                         @elseif($columns[$key]['type'] == 'datetime')
                             <td>{{ carbon($value)->format('l ,d M Y H:i A') }}</td>
+                        @elseif($columns[$key]['type'] == 'badge')
+                            @php
+                                $badgeClass = $columns[$key]['class'] ?? 'badge-secondary';
+                                if (is_callable($badgeClass)) {
+                                    $badgeClass = $badgeClass($value);
+                                }
+
+                                $iconClass = $columns[$key]['icon'] ?? null;
+                                if (is_callable($iconClass)) {
+                                    $iconClass = $iconClass($value);
+                                }
+                                $icon = '';
+                                if ($iconClass) {
+                                    $icon = '<i class="fa ' . $iconClass . '"></i> ';
+                                }
+                            @endphp
+                            <td style="vertical-align: middle;display: flex;align-items: center;gap: 5px;">
+                                {!! $icon !!}
+                                <span class="badge {{ $badgeClass }}">{{ $value }}</span>
+                            </td>
                         @else
                             <td>-----</td>
                         @endif
                     @endforeach
+                    @isset($columns['actions'])
                     <td>
                         @foreach ($columns['actions']['actions'] ?? [] as $action)
                             @php
@@ -62,6 +83,7 @@
                             @endif
                         @endforeach
                     </td>
+                    @endisset
                 </tr>
             @endforeach
         </tbody>
@@ -71,3 +93,12 @@
         {{ $rows->links() }}
     </div>
 </div>
+
+@push('styles')
+    <style>
+        /* make font size smaller for every td */
+        td {
+            font-size: 1.4rem!important;
+        }
+    </style>
+@endpush

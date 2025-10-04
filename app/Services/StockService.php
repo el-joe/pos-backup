@@ -26,6 +26,11 @@ class StockService
         return $this->repo->find($id, $relations);
     }
 
+    function first($relations = [], $filter = [])
+    {
+        return $this->repo->first($relations, $filter);
+    }
+
     function save($id = null,$data) {
         if($id) {
             $branch = $this->repo->find($id);
