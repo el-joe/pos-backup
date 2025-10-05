@@ -10,32 +10,32 @@
         <tbody>
             @foreach ($rows as $row)
                 <tr>
-                    @foreach ($row as $key=>$value)
-                        @continue(!isset($columns[$key]))
-                        @if($columns[$key]['type'] == 'text' || $columns[$key]['type'] == 'number')
+                    @foreach ($columns as $key => $column)
+                        @php $value = $row[$key] ?? null; @endphp
+                        @if($column['type'] == 'text' || $column['type'] == 'number')
                             <td>{{ $value }}</td>
-                        @elseif($columns[$key]['type'] == 'decimal')
+                        @elseif($column['type'] == 'decimal')
                             <td>{{ number_format($value, 2) }}</td>
-                        @elseif($columns[$key]['type'] == 'boolean')
+                        @elseif($column['type'] == 'boolean')
                             <td>
                                 <span class="badge badge-{{ $value ? 'success' : 'danger' }}">
                                     {{ $value ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
-                        @elseif($columns[$key]['type'] == 'date')
+                        @elseif($column['type'] == 'date')
                             <td>{{ carbon($value)->format('l ,d M Y') }}</td>
-                        @elseif($columns[$key]['type'] == 'datetime')
+                        @elseif($column['type'] == 'datetime')
                             <td>{{ carbon($value)->format('l ,d M Y H:i A') }}</td>
-                        @elseif($columns[$key]['type'] == 'badge')
+                        @elseif($column['type'] == 'badge')
                             @php
-                                $badgeClass = $columns[$key]['class'] ?? 'badge-secondary';
+                                $badgeClass = $column['class'] ?? 'badge-secondary';
                                 if (is_callable($badgeClass)) {
-                                    $badgeClass = $badgeClass($value);
+                                    $badgeClass = $badgeClass($row);
                                 }
 
-                                $iconClass = $columns[$key]['icon'] ?? null;
+                                $iconClass = $column['icon'] ?? null;
                                 if (is_callable($iconClass)) {
-                                    $iconClass = $iconClass($value);
+                                    $iconClass = $iconClass($row);
                                 }
                                 $icon = '';
                                 if ($iconClass) {
@@ -46,44 +46,49 @@
                                 {!! $icon !!}
                                 <span class="badge {{ $badgeClass }}">{{ $value }}</span>
                             </td>
+                        @elseif($column['type'] == 'actions')
+                            <td>
+                                @foreach ($column['actions'] ?? [] as $action)
+                                    @php
+                                        $params = collect($action['params'] ?? [])->map(fn($p)=> $row[$p])->implode('\', \'');
+                                        $params = count($action['params'] ?? []) > 0 ? "'$params'" : '';
+
+                                        // Check if action should be hidden
+                                        $shouldHide = false;
+                                        if (isset($action['hide']) && is_callable($action['hide'])) {
+                                            $shouldHide = $action['hide']($row);
+                                        }
+                                    @endphp
+
+                                    @if(!$shouldHide)
+                                        @php
+                                            $route = $action['route'] ?? '#';
+                                            if (is_callable($route)) {
+                                                $route = $route($row);
+                                            }
+                                        @endphp
+                                        <a
+                                            href="{{ $route }}"
+                                            @if($action['wire:click']??false)
+                                            @if((isset($action['disabled']) && is_callable($action['disabled']) && !$action['disabled']($row) || !isset($action['disabled'])))
+                                            wire:click="{{ ($action['wire:click'])($row) }}"
+                                            @endif
+                                            @endif
+                                            class="{{ $action['class'] ?? '' }} text-nowrap"
+                                            @if(isset($action['disabled']) && is_callable($action['disabled']) && $action['disabled']($row)) disabled  @endif
+                                            @foreach($action['attributes'] ?? [] as $attr => $val)
+                                                {{ $attr }}="{{ is_callable($val) ? ($val)($row) : $val }}"
+                                            @endforeach
+                                        >
+                                            <i class="{{ $action['icon'] ?? '' }}"></i>
+                                        </a>
+                                    @endif
+                                @endforeach
+                            </td>
                         @else
                             <td>-----</td>
                         @endif
                     @endforeach
-                    @isset($columns['actions'])
-                    <td>
-                        @foreach ($columns['actions']['actions'] ?? [] as $action)
-                            @php
-                                $params = collect($action['params'] ?? [])->map(fn($p)=> $row[$p])->implode('\', \'');
-                                $params = count($action['params'] ?? []) > 0 ? "'$params'" : '';
-
-                                // Check if action should be hidden
-                                $shouldHide = false;
-                                if (isset($action['hide']) && is_callable($action['hide'])) {
-                                    $shouldHide = $action['hide']($row);
-                                }
-                            @endphp
-
-                            @if(!$shouldHide)
-                                <a
-                                    href="{{ $action['route'] ?? '#' }}"
-                                    @if($action['wire:click'])
-                                    @if((isset($action['disabled']) && is_callable($action['disabled']) && !$action['disabled']($row) || !isset($action['disabled'])))
-                                    wire:click="{{ ($action['wire:click'])($row) }}"
-                                    @endif
-                                    @endif
-                                    class="{{ $action['class'] ?? '' }} text-nowrap"
-                                    @if(isset($action['disabled']) && is_callable($action['disabled']) && $action['disabled']($row)) disabled  @endif
-                                    @foreach($action['attributes'] ?? [] as $attr => $val)
-                                        {{ $attr }}="{{ is_callable($val) ? ($val)($row) : $val }}"
-                                    @endforeach
-                                >
-                                    <i class="{{ $action['icon'] ?? '' }}"></i>
-                                </a>
-                            @endif
-                        @endforeach
-                    </td>
-                    @endisset
                 </tr>
             @endforeach
         </tbody>

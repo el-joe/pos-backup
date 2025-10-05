@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->index();
             $table->unsignedBigInteger('unit_id')->index();
             $table->decimal('qty', 10, 2);
+            $table->decimal('unit_cost', 15, 4);
+            $table->decimal('sell_price', 15, 4);
             $table->boolean('update_prices')->default(false);
             $table->timestamps();
         });

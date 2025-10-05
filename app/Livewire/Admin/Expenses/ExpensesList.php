@@ -93,8 +93,8 @@ class ExpensesList extends Component
         ];
         $columns = [
             'id' => [ 'type' => 'number'],
-            'target' => [ 'type' => 'text'],
             'branch' => [ 'type' => 'text'],
+            'target' => [ 'type' => 'text'],
             'category' => [ 'type' => 'text'],
             'amount' => [ 'type' => 'decimal'],
             'date' => [ 'type' => 'date'],

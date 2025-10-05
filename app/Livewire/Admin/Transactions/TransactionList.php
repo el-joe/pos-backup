@@ -16,13 +16,15 @@ class TransactionList extends Component
     public function render()
     {
         $transactionLines = TransactionLine::with(['transaction','account','transaction.branch'])
-        ->orderBy('created_at','desc')->paginate(10)->withQueryString()
+        ->orderByDesc('transaction_id')
+        ->orderByDesc('id')
+        ->paginate(10)->withQueryString()
         ->through(function($line) {
             return [
                 'id' => $line->id,
                 'transaction_id' => $line->transaction_id,
                 'type' => $line->transaction?->type?->label(),
-                'branch' => $line->transaction?->branch?->name ?? 'N/A',
+                'branch' => $line->account?->branch?->name ?? 'N/A',
                 'reference' => $line->ref,
                 'note' => $line->transaction?->note,
                 'date' => $line->transaction?->date,
@@ -46,11 +48,11 @@ class TransactionList extends Component
             'note' => [ 'type' => 'text'],
             'date' => [ 'type' => 'date'],
             'account' => [ 'type' => 'text'],
-            'line_type' => [ 'type' => 'badge', 'class' => function($value) {
-                return $value === 'debit' ? 'badge-success' : 'badge-danger';
-            },'icon' => function($value) {
+            'line_type' => [ 'type' => 'badge', 'class' => function($row) {
+                return $row['line_type'] === 'debit' ? 'badge-success' : 'badge-danger';
+            },'icon' => function($row) {
                 // i want make up/down with color green/red arrow
-                return $value === 'debit' ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger';
+                return $row['line_type'] === 'debit' ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger';
             }],
             'amount' => [ 'type' => 'decimal'],
             'created_at' => [ 'type' => 'datetime'],

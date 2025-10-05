@@ -18,4 +18,14 @@ enum StockTransferStatusEnum : string
             self::CANCELLED => 'Cancelled',
         };
     }
+
+    function colorClass(): string
+    {
+        return match($this) {
+            self::PENDING => 'badge-warning',
+            self::IN_TRANSIT => 'badge-info',
+            self::COMPLETED => 'badge-success',
+            self::CANCELLED => 'badge-danger',
+        };
+    }
 }

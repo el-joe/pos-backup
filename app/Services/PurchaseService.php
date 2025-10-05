@@ -220,7 +220,7 @@ class PurchaseService
         }
         // get sub total from order products = product qty * purchase price
         $subTotal = array_sum(array_map(function($item) {
-            return (float)$item['qty'] * (float)$item['purchase_price'];
+            return (float)$item['qty'] * (float)($item['purchase_price']);
         }, $data['orderProducts']));
 
         //`transaction_id`, `account_id`, `type`, `amount`

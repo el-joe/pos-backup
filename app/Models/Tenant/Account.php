@@ -47,6 +47,8 @@ class Account extends Model
             ->when(branch()?->id,fn($q) => $q->where('branch_id',branch()?->id))
             ->first();
 
+        $code = self::generateCodeRecursive($name);
+
         return self::firstOrCreate([
             'code' => $name,
             'type' => $type,
@@ -54,12 +56,22 @@ class Account extends Model
             'payment_method_id' => $method?->id
         ],[
             'name' => $name,
-            'code' => $name,
+            'code' => $code,
             'model_type' => Branch::class,
             'model_id' => $branch_id,
             'type' => $type,
             'branch_id' => $branch_id,
+            'payment_method_id' => $method?->id,
             'active' => 1,
         ]);
+    }
+
+    static function generateCodeRecursive($code) {
+        $exists = self::where('code',$code)->exists();
+        if($exists) {
+            $newCode = $code .'-'. rand(10,99);
+            return self::generateCodeRecursive($newCode);
+        }
+        return $code;
     }
 }

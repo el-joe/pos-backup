@@ -12,7 +12,7 @@ class StockTransfer extends Model
         'to_branch_id',
         'transfer_date',
         'ref_no',
-        'status',
+        'status'
     ];
 
     protected $casts = [
@@ -27,5 +27,9 @@ class StockTransfer extends Model
 
     function toBranch() {
         return $this->belongsTo(Branch::class, 'to_branch_id');
+    }
+
+    function items() {
+        return $this->hasMany(StockTransferItem::class, 'stock_transfer_id');
     }
 }

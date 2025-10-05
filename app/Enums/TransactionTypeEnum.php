@@ -29,6 +29,7 @@ enum TransactionTypeEnum : string
             self::SALE_PAYMENT_REFUND => 'Sale Payment Refund',
             self::EXPENSE => 'Expense',
             self::EXPENSE_REFUND => 'Expense Refund',
+            self::STOCK_TRANSFER => 'Stock Transfer',
         };
     }
 }

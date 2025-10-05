@@ -6,7 +6,7 @@ use App\Models\Tenant\StockTransfer;
 
 class StockTransferRepository extends BaseRepository
 {
-        function __construct(StockTransfer $stock)
+    function __construct(StockTransfer $stock)
     {
         $this->setInstance($stock);
     }

@@ -105,8 +105,15 @@ class Product extends Model
     }
 
     function getBranchStockAttribute() {
-        $branchId = $this->branch_id ?? Branch::active()->first()?->id ?? null;
+        $branchId = $this->branch_id ?? branch()?->id ?? null;
         $unit = $this->unit;
+        if(!$unit) return 0;
+        $numbers = $this->childUnitFromParent($unit,$branchId);
+        return round($numbers->sum(),3);
+    }
+
+    function branchStock($unitId,$branchId) : float {
+        $unit = Unit::find($unitId);
         if(!$unit) return 0;
         $numbers = $this->childUnitFromParent($unit,$branchId);
         return round($numbers->sum(),3);

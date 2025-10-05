@@ -21,4 +21,14 @@ class Stock extends Model
     function branch() {
         return $this->belongsTo(Branch::class,'branch_id');
     }
+
+    function scopeFilter($query, $filters = []) {
+        return $query->when($filters['branch_id'] ?? null, function($q) use ($filters) {
+            $q->where('branch_id', $filters['branch_id']);
+        })->when($filters['product_id'] ?? null, function($q) use ($filters) {
+            $q->where('product_id', $filters['product_id']);
+        })->when($filters['unit_id'] ?? null, function($q) use ($filters) {
+            $q->where('unit_id', $filters['unit_id']);
+        });
+    }
 }
