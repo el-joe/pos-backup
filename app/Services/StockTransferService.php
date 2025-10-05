@@ -143,17 +143,17 @@ class StockTransferService
         $this->transactionService->create($transactionData);
     }
 
-    function saveExpenses($data, $expenseBranchId) {
+    function saveExpenses($data, $expenseBranchId , $reverse = false) {
         if(isset($data['expenses']) && is_array($data['expenses'])) {
             $expenseLine = $this->purchaseService->createExpenseLine([
                 'expenses' => $data['expenses'],
                 'branch_id' => $expenseBranchId
-            ]);
+            ], $reverse);
 
             $branchCashLine = $this->purchaseService->createBranchCashLine([
                 'payment_amount' => array_sum(array_column($data['expenses'], 'amount')),
                 'branch_id' => $expenseBranchId
-            ]);
+            ],$reverse);
         }
 
         $this->transactionService->create([
