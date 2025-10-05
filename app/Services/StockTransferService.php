@@ -157,7 +157,7 @@ class StockTransferService
         }
 
         $this->transactionService->create([
-            'description' => "Expenses for Stock Transfer",
+            'description' => "Expenses ". ($reverse ? 'Refund' : '') ." for Stock Transfer",
             'type' => TransactionTypeEnum::EXPENSE->value,
             'reference_type' => StockTransfer::class,
             'reference_id' => $data['stock_transfer_id'] ?? null,
