@@ -15,6 +15,7 @@ enum TransactionTypeEnum : string
     case EXPENSE = 'expense';
     case EXPENSE_REFUND = 'expense_refund';
     case STOCK_TRANSFER = 'stock_transfer';
+    case STOCK_TRANSFER_REFUND = 'stock_transfer_refund';
 
     public function label(): string
     {

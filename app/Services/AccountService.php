@@ -67,7 +67,7 @@ class AccountService
             'model_type' => User::class,
             'model_id' => $user->id,
             'type' => $type,
-            // 'branch_id' => $user->branch_id,
+            // 'branch_id' => branch()?->id,
             'payment_method_id' => $paymentMethod->id
         ];
 

@@ -93,6 +93,20 @@ class SellService
 
         $this->transactionService->create($transactionData);
 
+        $transactionData = [
+            'description' => 'Sale Payment Inventory for #'.$sell->invoice_number,
+            'type' => TransactionTypeEnum::SALE_INVOICE->value,
+            'reference_type' => Sale::class,
+            'reference_id' => $sell->id,
+            'branch_id' => $sell->branch_id,
+            'note' => $data['payment_note'] ?? '',
+            'amount' => $data['payment_amount'] ?? 0,
+            'lines' => $this->saleInventoryLines($data,'create')
+        ];
+
+        $this->transactionService->create($transactionData);
+
+
         if(count($data['payments']??[]) == 0){
             return $sell;
         }
@@ -127,9 +141,8 @@ class SellService
     function saleInvoiceLines($data,$event = 'create',$reverse = false) { // $reverse mean refund
         // -------------------------- Purchase entry --------------------------------
 
-        // Debit Inventory (for goods purchased)
-        $inventoryLine = $this->createInventoryLine($data , $reverse);
-
+        // Debit Sales
+        $salesLine = $this->createSalesLine($data, $reverse);
         // Debit Expense (for additional purchase-related expenses like shipping, handling, etc.)
         // $expenseLine = $this->createExpenseLine($data, $reverse);
 
@@ -140,12 +153,12 @@ class SellService
         $saleDiscountLine = $this->createSaleDiscountLine($data, $reverse);
 
         // Credit Customer (record liability to customer for total amount owed)
-        $customerCreditLine = $this->createCustomerDebitLine($data, $reverse);
+        $customerCreditLine = $this->createCustomerLine($data,'debit', $reverse);
 
 
         return [
             // Purchase entry --------------------------------
-            $inventoryLine,         // DR Inventory (record goods in stock)
+            $salesLine,         // DR Inventory (record goods in stock)
             // $expenseLine,           // DR Expense (record additional expenses)
             $vatReceivableLine,     // DR VAT Receivable (input tax asset)
             $saleDiscountLine,      // CR Sale Discount (contra expense)
@@ -153,13 +166,43 @@ class SellService
         ];
     }
 
+    function createSalesLine($data, $reverse = false) {
+        $getSalesAccount = Account::default('Sales', AccountTypeEnum::SALES->value,  $data['branch_id']);
+        // get tax amount from data
+        $sellPrice = array_sum(array_map(function($item) {
+            return (float)($item['qty']??$item['quantity']) * (float)$item['sell_price'];
+        }, $data['products']));
+
+        //`transaction_id`, `account_id`, `type`, `amount`
+        return [
+            'account_id' => $getSalesAccount->id,
+            'type' => $reverse ? 'debit' : 'credit',
+            'amount' => $sellPrice,
+        ];
+    }
+
+    function saleInventoryLines($data,$event = 'create' ,$reverse = false){
+        // Credit Inventory (for goods purchased)
+        $inventoryLine = $this->createInventoryLine($data , $reverse);
+        // TODO : COGS
+        $cogsLine = $this->createCogsLine($data , $reverse);
+
+        return [
+            // Inventory entry --------------------------------
+            $inventoryLine,        // CR Inventory (if payment is made)
+            $cogsLine,             // DR COGS (cost of goods sold expense)
+        ];
+    }
+
     function salePaymentLines($data,$event = 'create' ,$reverse = false) {
         // ------------------------- Payment entry --------------------------------
         foreach ($data['payments'] as $payment) {
             $payment['branch_id'] = $data['branch_id'];
+            $payment['customer_id'] = $data['customer_id'];
+            $payment['payment_amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
             $branchCashLine = $this->createBranchCashLine($payment,'partial_paid', $reverse);
 
-            $customerCreditLine = $this->createCustomerCreditLine($payment,'partial_paid', $reverse);
+            $customerCreditLine = $this->createCustomerLine($payment,'credit', $reverse);
         }
 
         return [
@@ -170,15 +213,8 @@ class SellService
     }
 
     function createInventoryLine($data,$reverse = false) {
-        $getInventoryAccount = Account::firstOrCreate([
-            'name' => 'Inventory',
-            'code' => 'inventory',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::INVENTORY->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);
+        $getInventoryAccount = Account::default('inventory', AccountTypeEnum::INVENTORY->value,  $data['branch_id']);
+
         if(!isset($data['products']) || !is_array($data['products'])) {
             return false;
         }
@@ -195,16 +231,28 @@ class SellService
         ];
     }
 
+    function createCogsLine($data,$reverse = false) {
+        $getCogsAccount = Account::default('cogs', AccountTypeEnum::COGS->value,  $data['branch_id']);
+
+        if(!isset($data['products']) || !is_array($data['products'])) {
+            return false;
+        }
+        // get sub total from order products = product qty * unit cost
+        $subTotal = array_sum(array_map(function($item) {
+            return (float)($item['qty']??$item['quantity']) * (float)$item['unit_cost'];
+        }, $data['products']));
+
+        //`transaction_id`, `account_id`, `type`, `amount`
+        return [
+            'account_id' => $getCogsAccount->id,
+            'type' => $reverse ? 'credit' : 'debit',
+            'amount' => $subTotal,
+        ];
+    }
+
+
     function createBranchCashLine($data,$type = 'full_paid' ,$reverse = false) {
-        $getBranchCashAccount = Account::firstOrCreate([
-            'name' => 'Branch Cash',
-            'code' => 'Branch Cash',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::BRANCH_CASH->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);
+        $getBranchCashAccount = Account::default('branch_cash', AccountTypeEnum::BRANCH_CASH->value,  $data['branch_id']);
 
         $paidAmount = $data['payment_amount'] ?? $data['amount'] ?? 0;
 
@@ -217,15 +265,8 @@ class SellService
     }
 
     function createVatReceivableLine($data,$reverse = false) {
-        $getVatReceivableAccount = Account::firstOrCreate([
-            'name' => 'Vat Receivable',
-            'code' => 'Vat Receivable',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::VAT_RECEIVABLE->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);
+        $getVatReceivableAccount = Account::default('vat_receivable', AccountTypeEnum::VAT_RECEIVABLE->value,  $data['branch_id']);
+
         // get tax amount from data
         $taxAmount = $data['tax_amount'] ?? 0;
 
@@ -238,15 +279,8 @@ class SellService
     }
 
     function createSaleDiscountLine($data,$reverse = false) {
-        $getSaleDiscountAccount = Account::firstOrCreate([
-            'name' => 'Sale Discount',
-            'code' => 'Sale Discount',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::SALES_DISCOUNT->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);
+        $getSaleDiscountAccount = Account::default('sale_discount', AccountTypeEnum::SALES_DISCOUNT->value,  $data['branch_id']);
+
         // get discount amount from data
         $discountAmount = $data['discount_amount'] ?? 0;
 
@@ -258,38 +292,27 @@ class SellService
         ];
     }
 
-    function createCustomerDebitLine($data,$reverse = false) {
+    function createCustomerLine($data,$type = 'debit',$reverse = false) {
         if(!isset($data['payment_account'])){
             $getCustomerAccount = User::find($data['customer_id'])->accounts->first();
         }else{
             $getCustomerAccount = Account::find($data['payment_account']);
         }
-
         // get grand total from data
-        $grandTotal = $data['payment_amount'] ?? 0;
+        $grandTotal = $data['payment_amount'] ?? $data['grand_total'] ?? 0;
 
         //`transaction_id`, `account_id`, `type`, `amount`
-        return [
-            'account_id' => $getCustomerAccount->id,
-            'type' => $reverse ? 'credit' : 'debit',
-            'amount' => $grandTotal,
-        ];
-    }
 
-    function createCustomerCreditLine($data,$type = 'full_paid', $reverse = false) {
-        if(isset($data['customer_id'])){
-            $getCustomerAccount = User::find($data['customer_id'])->accounts->first();
-        }else{
-            $getCustomerAccount = Account::find($data['account_id'] ?? null);
+        if($reverse && $type == 'debit'){
+            $type = 'credit';
+        }elseif($reverse && $type == 'credit'){
+            $type = 'debit';
         }
 
-        $paidAmount = $data['amount'] ?? 0;
-
-        //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getCustomerAccount->id,
-            'type' => $reverse ? 'debit' : 'credit',
-            'amount' => $paidAmount,
+            'type' => $type,
+            'amount' => $grandTotal,
         ];
     }
 
@@ -299,7 +322,8 @@ class SellService
         $product = $saleItem->toArray();
         $product['qty'] = $qty;
         $discountAmount = SaleHelper::discountAmount([$product], $saleOrder->discount_type, $saleOrder->discount_value);
-        $taxAmount = SaleHelper::taxAmount([$product], $saleOrder->tax_percentage ?? 0);
+        $taxPercentage = $saleItem->taxable == 1 ? ($saleOrder->tax_percentage ?? 0) : 0;
+        $taxAmount = SaleHelper::taxAmount([$product], $saleOrder->discount_type, $saleOrder->discount_value,$taxPercentage);
         // -----------------------------------
         $grandTotalFromRefundedQty = SaleHelper::grandTotal([$product], $saleOrder->discount_type, $saleOrder->discount_value, $saleOrder->tax_percentage ?? 0);
         $dueAmount = $saleOrder->due_amount;
@@ -318,6 +342,7 @@ class SellService
             'tax_amount' => $taxAmount,
             'discount_amount' => $discountAmount,
             'customer_id' => $saleOrder->customer_id,
+            'sell_price' => (float)$saleItem->sell_price * (float)$qty,
             'grand_total' => $grandTotalFromRefundedQty
 
         ];
@@ -335,9 +360,22 @@ class SellService
 
         $this->transactionService->create($transactionData);
 
+        $transactionData = [
+            'description' => 'Sale Refund Inventory for #'.$saleOrder->invoice_number,
+            'type' => TransactionTypeEnum::SALE_INVOICE_REFUND->value,
+            'reference_type' => Sale::class,
+            'reference_id' => $saleOrder->id,
+            'branch_id' => $saleOrder->branch_id,
+            'note' => 'Refunded for sale item #'. ($saleItem->product?->name ?? 'N/A'),
+            'amount' => $grandTotalFromRefundedQty ?? 0,
+            'lines' => $this->saleInventoryLines($refundInvoiceData,'create',true)
+        ];
+
+        $this->transactionService->create($transactionData);
+
+
 
         // refund sale payments
-        $totalRefunded = $grandTotalFromRefundedQty - $dueAmount;
         if($totalRefunded <= 0){
             return;
         }

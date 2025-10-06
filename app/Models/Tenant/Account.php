@@ -44,7 +44,7 @@ class Account extends Model
 
     static function default($name,$type,$branch_id) {
         $method = PaymentMethod::whereSlug('cash')
-            ->when(branch()?->id,fn($q) => $q->where('branch_id',branch()?->id))
+            ->when(branch()?->id,fn($q) => $q->where('branch_id',branch()?->id)->orWhereNull('branch_id'))
             ->first();
 
         $code = self::generateCodeRecursive($name);

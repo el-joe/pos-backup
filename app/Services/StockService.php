@@ -58,8 +58,8 @@ class StockService
             if($unitStock) {
                 $unitStock->update([
                     'qty' => $unitStock->qty + $qty,
-                    'sell_price' => $sellPrice,
-                    'unit_cost' => $unitCost,
+                    'sell_price' => $sellPrice == 0 ? $unitStock->sell_price : $sellPrice,
+                    'unit_cost' => $unitCost == 0 ? $unitStock->unit_cost : $unitCost,
                 ]);
                 return $unitStock;
             }else{

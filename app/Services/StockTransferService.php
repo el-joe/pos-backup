@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\TransactionTypeEnum;
+use App\Models\Tenant\Expense;
 use App\Models\Tenant\StockTransfer;
 use App\Repositories\StockTransferRepository;
 
@@ -14,7 +15,8 @@ class StockTransferService
         private TransactionService $transactionService,
         private BranchService $branchService,
         private PurchaseService $purchaseService,
-        private ProductService $productService
+        private ProductService $productService,
+        private ExpenseCategoryService $expenseCategoryService
     ) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
@@ -26,6 +28,11 @@ class StockTransferService
     function find($id = null, $relations = [])
     {
         return $this->repo->find($id, $relations);
+    }
+
+    function first($id = null, $relations = [])
+    {
+        return $this->repo->first($relations, ['id' => $id]);
     }
 
     function save($data) {
@@ -144,32 +151,59 @@ class StockTransferService
     }
 
     function saveExpenses($data, $expenseBranchId , $reverse = false) {
+
         if(isset($data['expenses']) && is_array($data['expenses'])) {
+            $amount = array_sum(array_column($data['expenses'], 'amount'));
+
+            $defaultExpenseCategory = $this->expenseCategoryService->getDefaultCategory('purchase');
+            if(!$defaultExpenseCategory){
+                $defaultExpenseCategory = $this->expenseCategoryService->save(null,[
+                    'name' => 'stock transfer expenses',
+                    'default' => 1,
+                ]);
+            }
+
+            $stockTransfer = $this->find($data['stock_transfer_id'] ?? null);
+            if(!$reverse){
+                foreach ($data['expenses'] as $item) {
+                    $stockTransfer->expenses()->create([
+                        'branch_id' => $expenseBranchId,
+                        'model_type' => StockTransfer::class,
+                        'model_id' => $stockTransfer->id,
+                        'expense_category_id' => $defaultExpenseCategory?->id,
+                        'amount' => $item['amount'],
+                        'note' => $item['description'] ?? $item['note'],
+                        'expense_date' => $item['expense_date'],
+                    ]);
+                }
+            }
+
             $expenseLine = $this->purchaseService->createExpenseLine([
                 'expenses' => $data['expenses'],
                 'branch_id' => $expenseBranchId
             ], $reverse);
 
             $branchCashLine = $this->purchaseService->createBranchCashLine([
-                'payment_amount' => array_sum(array_column($data['expenses'], 'amount')),
+                'payment_amount' => $amount ?? 0,
                 'branch_id' => $expenseBranchId
             ],$reverse);
-        }
 
-        $this->transactionService->create([
-            'description' => "Expenses ". ($reverse ? 'Refund' : '') ." for Stock Transfer",
-            'type' => TransactionTypeEnum::EXPENSE->value,
-            'reference_type' => StockTransfer::class,
-            'reference_id' => $data['stock_transfer_id'] ?? null,
-            'branch_id' => $expenseBranchId,
-            'note' => 'Expenses recorded for stock transfer',
-            'amount' => array_sum(array_column($data['expenses'] ?? [], 'amount')) ?? 0,
-            'lines' => [
-                $expenseLine,
-                $branchCashLine
-            ]
-        ]);
+            $this->transactionService->create([
+                'description' => "Expenses ". ($reverse ? 'Refund' : '') ." for Stock Transfer",
+                'type' => TransactionTypeEnum::EXPENSE->value,
+                'reference_type' => StockTransfer::class,
+                'reference_id' => $data['stock_transfer_id'] ?? null,
+                'branch_id' => $expenseBranchId,
+                'note' => 'Expenses recorded for stock transfer',
+                'amount' => $amount ?? 0,
+                'lines' => [
+                    $expenseLine,
+                    $branchCashLine
+                ]
+            ]);
+        }
     }
+
 
     function delete($id) {
         $branch = $this->repo->find($id);

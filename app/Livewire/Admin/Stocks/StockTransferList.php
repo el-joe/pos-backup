@@ -39,12 +39,12 @@ class StockTransferList extends Component
 
         $columns = [
             'id' => ['type'=>'number'],
+            'ref_no' => ['type'=>'text'],
             'from_branch' => ['type'=>'text'],
             'to_branch' => ['type'=>'text'],
             'items_count' => ['type'=>'number'],
             'total_quantity' => ['type'=>'number'],
             'transfer_date' => ['type'=>'date'],
-            'ref_no' => ['type'=>'text'],
             'status' => [
                 'type'=>'badge' , 'class' => fn($row) => $row['status_class']
             ],

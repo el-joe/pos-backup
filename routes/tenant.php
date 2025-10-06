@@ -23,6 +23,7 @@ use App\Livewire\Admin\Sales\SaleDetails;
 use App\Livewire\Admin\Sales\SalesList;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Stocks\AddStockTransfer;
+use App\Livewire\Admin\Stocks\StockTransferDetails;
 use App\Livewire\Admin\Stocks\StockTransferList;
 use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Transactions\TransactionList;
@@ -96,7 +97,7 @@ Route::middleware([
             // Stock Transfers
             Route::get('stock-transfers', StockTransferList::class)->name('stocks.transfers.list');
             Route::get('stock-transfers/create', AddStockTransfer::class)->name('stocks.transfers.create');
-            Route::get('stock-transfers/{id}/details', AddStockTransfer::class)->name('stocks.transfers.details');
+            Route::get('stock-transfers/{id}/details', StockTransferDetails::class)->name('stocks.transfers.details');
         });
     });
 });

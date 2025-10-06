@@ -24,7 +24,7 @@ class TransactionList extends Component
                 'id' => $line->id,
                 'transaction_id' => $line->transaction_id,
                 'type' => $line->transaction?->type?->label(),
-                'branch' => $line->account?->branch?->name ?? 'N/A',
+                'branch' => $line->transaction?->branch?->name ?? 'N/A',
                 'reference' => $line->ref,
                 'note' => $line->transaction?->note,
                 'date' => $line->transaction?->date,

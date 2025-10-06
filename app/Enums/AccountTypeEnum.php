@@ -9,7 +9,7 @@ enum AccountTypeEnum : string
     case CUSTOMER = 'customer';
     case SUPPLIER = 'supplier';
     case EXPENSE = 'expense';
-    case SALES = 'sales'; // revenue from sales
+    case SALES = 'sales'; // revenue from sales -> sell price for product stock
     case INVENTORY = 'inventory'; // inventory purchases
     case COGS = 'cogs'; // cost of goods sold
     case INVENTORY_SHORTAGE = 'inventory_shortage'; // inventory loss adjustments

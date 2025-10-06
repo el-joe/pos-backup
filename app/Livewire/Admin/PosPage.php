@@ -216,6 +216,7 @@ class PosPage extends Component
             'paid_amount' => array_sum(array_column($payments ?? [], 'amount')),
             'tax_amount'=> $tax ?? 0,
             'discount_amount'=> $discount ?? 0,
+            'sell_price' => $subTotal ?? 0
         ];
 
         foreach ($products as $product) {
