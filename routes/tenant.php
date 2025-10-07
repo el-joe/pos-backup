@@ -68,7 +68,7 @@ Route::middleware([
             Route::get('pos',PosPage::class)->name('pos');
             Route::get('discounts', DiscountsList::class)->name('discounts.list'); // Need to add Branch Relation
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
-            Route::get('expenses',action: ExpensesList::class)->name('expenses.list'); // TODO -> Add Branch Relation
+            Route::get('expenses',action: ExpensesList::class)->name('expenses.list');
 
             Route::get('payment-methods',PaymentMethodsList::class)->name('payment-methods.list');
             Route::get('accounts',AccountsList::class)->name('accounts.list');

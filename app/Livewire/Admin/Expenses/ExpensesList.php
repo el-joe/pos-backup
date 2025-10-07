@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Expenses;
 
+use App\Services\BranchService;
 use App\Services\ExpenseCategoryService;
 use App\Services\ExpenseService;
 use App\Traits\LivewireOperations;
@@ -13,7 +14,7 @@ use Livewire\WithPagination;
 class ExpensesList extends Component
 {
     use LivewireOperations,WithPagination;
-    private $expenseService, $expenseCategoryService;
+    private $expenseService, $expenseCategoryService , $branchService;
 
     public $current;
     public $data = [];
@@ -28,6 +29,7 @@ class ExpensesList extends Component
     function boot() {
         $this->expenseService = app(ExpenseService::class);
         $this->expenseCategoryService = app(ExpenseCategoryService::class);
+        $this->branchService = app(BranchService::class);
     }
 
     function setCurrent($id) {
@@ -59,9 +61,7 @@ class ExpensesList extends Component
     function save()  {
         if (!$this->validator()) return;
 
-        $this->expenseService->save($this->current?->id, $this->data + [
-            'branch_id' => branch()?->id
-        ]);
+        $this->expenseService->save($this->current?->id, $this->data);
 
         $this->popup('success', 'Expense saved successfully');
 
@@ -120,6 +120,8 @@ class ExpensesList extends Component
         ];
 
         $expenseCategories = $this->expenseCategoryService->list([],['active'=>true]);
+
+        $branches = $this->branchService->activeList();
 
         return view('livewire.admin.expenses.expenses-list', get_defined_vars());
     }

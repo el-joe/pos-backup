@@ -26,6 +26,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group col-6">
+                        <label for="expenseCategoryName">Branch</label>
+                        <select name="branch" id="expenseCategoryName" wire:model="data.branch_id" class="form-control">
+                            <option value="">Select Branch</option>
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group col-6">
                         <label for="expenseCategoryName">Category</label>
                         <select name="category" id="expenseCategoryName" wire:model="data.expense_category_id" class="form-control">
                             <option value="">Select Category</option>

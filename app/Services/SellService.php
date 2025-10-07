@@ -265,7 +265,7 @@ class SellService
     }
 
     function createVatReceivableLine($data,$reverse = false) {
-        $getVatReceivableAccount = Account::default('vat_receivable', AccountTypeEnum::VAT_RECEIVABLE->value,  $data['branch_id']);
+        $getVatReceivableAccount = Account::default('vat_receivable', AccountTypeEnum::VAT_PAYABLE->value,  $data['branch_id']);
 
         // get tax amount from data
         $taxAmount = $data['tax_amount'] ?? 0;
