@@ -18,4 +18,9 @@ class StockTakingProduct extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function stockTaking()
+    {
+        return $this->belongsTo(StockTaking::class);
+    }
 }

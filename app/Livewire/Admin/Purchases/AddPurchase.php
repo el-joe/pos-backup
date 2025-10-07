@@ -76,6 +76,8 @@ class AddPurchase extends Component
             return;
         }
 
+        if(empty($value))return;
+
         $productDetails = $this->refactorProduct($product);
         // if(isset($this->orderProducts[$product->id])) {
         //     $this->alert('info','Product already added in the list');

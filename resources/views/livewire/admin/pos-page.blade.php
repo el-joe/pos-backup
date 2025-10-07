@@ -263,7 +263,7 @@
                                 <option value="">-- Select Unit --</option>
                                 @foreach($currentProduct->units() as $unit)
                                     <option value="{{ $unit->id }}">
-                                        {{ $unit->name }} ({{ $unit->stock($currentProduct->id) ?? 0 }} $)
+                                        {{ $unit->name }} ({{ number_format($unit->stock($currentProduct->id)?->sell_price ?? 0, 3) }} $)
                                     </option>
                                 @endforeach
                             </select>

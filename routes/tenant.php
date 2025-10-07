@@ -25,6 +25,9 @@ use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Stocks\AddStockTransfer;
 use App\Livewire\Admin\Stocks\StockTransferDetails;
 use App\Livewire\Admin\Stocks\StockTransferList;
+use App\Livewire\Admin\StockTaking\AddStockTaking;
+use App\Livewire\Admin\StockTaking\StockTakingDetails;
+use App\Livewire\Admin\StockTaking\StockTakingList;
 use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Transactions\TransactionList;
 use App\Livewire\Admin\Units\UnitsList;
@@ -94,6 +97,9 @@ Route::middleware([
             // Admininstrators (User|Role)
             // Reports
             // Stock Adjustments
+            Route::get('stock-adjustments', StockTakingList::class)->name('stocks.adjustments.list');
+            Route::get('stock-adjustments/create', AddStockTaking::class)->name('stocks.adjustments.create');
+            Route::get('stock-adjustments/{id}/details', StockTakingDetails::class)->name('stocks.adjustments.details');
             // Stock Transfers
             Route::get('stock-transfers', StockTransferList::class)->name('stocks.transfers.list');
             Route::get('stock-transfers/create', AddStockTransfer::class)->name('stocks.transfers.create');

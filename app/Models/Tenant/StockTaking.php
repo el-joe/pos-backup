@@ -17,4 +17,14 @@ class StockTaking extends Model
     {
         return $this->hasMany(StockTakingProduct::class);
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

@@ -427,3 +427,15 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        window.addEventListener('reset-search-input', event => {
+            const input = document.getElementById('product_search');
+            if (input) {
+                input.value = '';
+            }
+        });
+    </script>
+
+@endpush
