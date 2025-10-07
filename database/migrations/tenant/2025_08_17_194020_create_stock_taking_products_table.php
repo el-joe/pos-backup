@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('stock_taking_id')->index();
             $table->unsignedBigInteger('product_id')->index();
-            $table->decimal('counted_qty', 10, 2)->default(0);
-            $table->decimal('system_qty', 10, 2)->default(0);
+            $table->decimal('current_qty', 10, 2)->default(0);
+            $table->decimal('actual_qty', 10, 2)->default(0);
             $table->timestamps();
         });
     }
