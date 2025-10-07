@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid white-box">
     <h3 class="box-title" style="margin-bottom:32px;">Add Stock Take</h3>
 
     <div class="row">
@@ -65,6 +65,7 @@
                                             <th>Current Stock</th>
                                             <th>Actual Stock</th>
                                             <th>Difference</th>
+                                            <th>Total Cost</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -102,6 +103,8 @@
                                                         {{ $sign }}{{ $difference }}
                                                     </td>
                                                     <td>
+                                                        {{ number_format($unit['unit_cost'] * $difference , 2) }}
+                                                    <td>
                                                         <span class="badge {{ $badgeClass }}">{{ $status }}</span>
                                                     </td>
                                                     <td>
@@ -122,19 +125,16 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <button type="button" class="btn btn-primary btn-lg" wire:click="save">
-                <i class="fa fa-save"></i> Save
+        <div class="col-sm-12 text-center">
+            <button class="btn btn-primary save-stock-btn" wire:click="save" @if(!($data['branch_id'] ?? false) || count($stocks) == 0) disabled @endif>
+                <i class="fa fa-save"></i> Save Stock Take
             </button>
         </div>
     </div>
-
 </div>
 
 @push('scripts')
-        <script>
+    <script>
         window.addEventListener('reset-search-input', event => {
             const input = document.getElementById('product_search');
             if (input) {
@@ -193,11 +193,16 @@
             .products-container {
                 margin-top: 10px;
             }
-            .btn-primary.btn-lg {
-                padding: 12px 40px;
-                font-size: 18px;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(33,150,243,0.08);
+            .save-stock-btn {
+                display: inline-block;
+                min-width: 220px;
+                max-width: 320px;
+                padding: 14px 0;
+                font-size: 20px;
+                font-weight: 600;
+                border-radius: 10px;
+                color: #fff;
+                margin: 24px auto 0 auto;
             }
         </style>
     @endpush

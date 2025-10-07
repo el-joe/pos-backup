@@ -25,7 +25,7 @@ class StockTakingList extends Component
                 'date' => $st->date,
                 'note' => $st->note,
                 'created_by' => $st->user?->name ?? 'N/A',
-                'products_count' => $st->products?->count() ?? 0,
+                'products_count' => $st->products->unique('product_id')?->count() ?? 0,
                 'created_at' => $st->created_at,
             ];
         });
@@ -47,7 +47,7 @@ class StockTakingList extends Component
                     'title' => 'Details',
                     'icon' => 'fa fa-eye',
                     'class' => 'btn btn-info btn-sm',
-                    'route' => fn($row) => route('admin.stocks.takings.details', $row['id']),
+                    'route' => fn($row) => route('admin.stocks.adjustments.details', $row['id']),
                     'attributes' => [
                         'data-toggle' => 'tooltip',
                         'data-placement' => 'top',

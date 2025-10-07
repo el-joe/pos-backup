@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\AccountTypeEnum;
+use App\Models\Tenant\Account;
 use App\Repositories\TransactionRepository;
 
 class TransactionService
@@ -50,6 +52,23 @@ class TransactionService
 
         return $transaction;
     }
+
+
+    function createInventoryShortageLine($data,$reverse = false) {
+        $getInventoryShortageAccount = Account::default('inventory_shortage', AccountTypeEnum::INVENTORY_SHORTAGE->value,  $data['branch_id']);
+        // get sub total from order products = product qty * unit cost
+        $subTotal = array_sum(array_map(function($item) {
+            return ($item['difference'] * -1) * (float)$item['unit_cost'];
+        }, $data['products']));
+
+        //`transaction_id`, `account_id`, `type`, `amount`
+        return [
+            'account_id' => $getInventoryShortageAccount->id,
+            'type' => $reverse ? 'credit' : 'debit',
+            'amount' => $subTotal,
+        ];
+    }
+
 
     function delete($id) {
         $transaction = $this->repo->find($id);

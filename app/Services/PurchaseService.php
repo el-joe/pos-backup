@@ -231,6 +231,26 @@ class PurchaseService
         ];
     }
 
+        function createCogsLine($data,$reverse = false) {
+            $getInventoryAccount = Account::default('Inventory',AccountTypeEnum::INVENTORY->value,$data['branch_id']);
+
+            if(!isset($data['orderProducts']) || !is_array($data['orderProducts'])) {
+                return false;
+            }
+            // get sub total from order products = product qty * purchase price
+            $subTotal = array_sum(array_map(function($item) {
+                return (float)$item['qty'] * (float)($item['purchase_price']);
+            }, $data['orderProducts']));
+
+            //`transaction_id`, `account_id`, `type`, `amount`
+            return [
+                'account_id' => $getInventoryAccount->id,
+                'type' => $reverse ? 'credit' : 'debit',
+                'amount' => $subTotal,
+            ];
+        }
+
+
     function createBranchCashLine($data,$type = 'full_paid' ,$reverse = false) {
         $getBranchCashAccount = Account::default('Branch Cash',AccountTypeEnum::BRANCH_CASH->value,$data['branch_id']);
 

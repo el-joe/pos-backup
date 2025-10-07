@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\StockTaking;
 
 use App\Services\BranchService;
 use App\Services\ProductService;
+use App\Services\StockTakingService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -14,15 +15,25 @@ class AddStockTaking extends Component
 {
     use LivewireOperations,WithPagination;
 
-    private $branchService, $productService;
+    private $branchService, $productService , $stockTakingService;
 
     public $data = [];
     public $stocks = [];
     public $product_search = '';
 
+    public $rules = [
+        'branch_id' => 'required|integer|exists:branches,id',
+        'date' => 'required|date',
+        'note' => 'nullable|string|max:255',
+        'countedStock' => 'array',
+        'countedStock.*' => 'array',
+        'countedStock.*.*' => 'integer|min:0',
+    ];
+
     function boot() {
         $this->branchService = app(BranchService::class);
         $this->productService = app(ProductService::class);
+        $this->stockTakingService = app(StockTakingService::class);
     }
 
     function updatingDataBranchId($value) {
@@ -33,6 +44,12 @@ class AddStockTaking extends Component
 
     function refactorProductStock($product) {
         foreach ($product->units() as $unit) {
+            $stock = $unit->stock($product->id,$this->data['branch_id']);
+            if(!$stock){
+                $this->alert('warning','No stock found for '.$product->name.' in '.$unit->name);
+                continue;
+            }
+
             if(!isset($this->data['countedStock'])){
                 $this->data['countedStock'] = [];
             }
@@ -40,7 +57,7 @@ class AddStockTaking extends Component
                 $this->data['countedStock'][$product->id] = [];
             }
             if(!isset($this->data['countedStock'][$product->id][$unit->id])){
-                $this->data['countedStock'][$product->id][$unit->id] = $unit->stock($product->id,$this->data['branch_id'])?->qty ?? 0;
+                $this->data['countedStock'][$product->id][$unit->id] = $stock?->qty ?? 0;
             }
             if(!isset($this->stocks)){
                 $this->stocks = [];
@@ -60,6 +77,8 @@ class AddStockTaking extends Component
                 'unit_name' => $unit->name,
                 'current_stock' => $this->data['countedStock'][$product->id][$unit->id],
                 'actual_stock' => $this->data['countedStock'][$product->id][$unit->id],
+                'stock_id' => $stock?->id ?? null,
+                'unit_cost' => $stock?->unit_cost ?? 0,
             ];
         }
     }
@@ -99,6 +118,21 @@ class AddStockTaking extends Component
         }
     }
 
+    function save() {
+        if (!$this->validator()) return;
+
+        // Save logic to be implemented
+        $data = $this->data;
+        $data['stocks'] = collect($this->stocks ?? [])->flatten(1)->values()->toArray();
+
+        $st = $this->stockTakingService->save(null,$data);
+
+        $this->popup('success', 'Stock Take saved successfully');
+
+        $this->reset('data', 'stocks');
+
+        return $this->redirectWithTimeout(route('admin.stocks.adjustments.details', $st->id), 2000);
+    }
     public function render()
     {
         $branches = $this->branchService->activeList();

@@ -29,6 +29,8 @@ class Stock extends Model
             $q->where('product_id', $filters['product_id']);
         })->when($filters['unit_id'] ?? null, function($q) use ($filters) {
             $q->where('unit_id', $filters['unit_id']);
+        })->when($filters['id'] ?? null, function($q) use ($filters) {
+            $q->where('id', $filters['id']);
         });
     }
 }
