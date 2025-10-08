@@ -3,11 +3,13 @@
 namespace App\Livewire\Admin;
 
 use App\Helpers\SaleHelper;
+use App\Models\Tenant\Branch;
 use App\Models\Tenant\Discount;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\Setting;
 use App\Models\Tenant\Stock;
 use App\Models\Tenant\User;
+use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\SellService;
 use App\Services\UserService;
@@ -20,15 +22,17 @@ class PosPage extends Component
 {
     use LivewireOperations;
 
-    private $productService, $userService, $sellService;
+    private $productService, $userService, $sellService, $branchService;
     public $currentProduct,$selectedUnitId,$selectedQuantity,$maxQuantity,$discountCode,$selectedCustomerId;
     public $data = [];
     public $payments = [];
+    public $branch;
 
     function boot() {
         $this->productService = app(ProductService::class);
         $this->userService = app(UserService::class);
         $this->sellService = app(SellService::class);
+        $this->branchService = app(BranchService::class);
     }
 
     function updatingSelectedUnitId($value) {
@@ -38,6 +42,10 @@ class PosPage extends Component
                 $q->where('branch_id', admin()->branch_id);
             })
             ->sum('qty');
+    }
+
+    function updatingDataBranchId($value) {
+        $this->branch = $this->branchService->find($value);
     }
 
     function setCurrentProduct($id) {
@@ -98,6 +106,8 @@ class PosPage extends Component
             'code' => $discount->code,
             'value' => $discount->value,
             'max_discount_amount' => $discount->max_discount_amount ?? 99999999,
+            'sales_threshold' => $discount->sales_threshold ?? 0,
+            'max' => $discount->type == 'fixed' ? ($discount->sales_threshold ?? 0) : ($discount->max_discount_amount ?? 0),
         ];
 
         $this->alert('success', 'Discount code applied');
@@ -114,8 +124,8 @@ class PosPage extends Component
         $unit = $product->units()->firstWhere('id',$unitId ?? $product->unit_id);
         $stock = Stock::where('product_id', $product->id)
             ->where('unit_id', $unit->id)
-            ->when(admin()->branch_id, function($q) {
-                $q->where('branch_id', admin()->branch_id);
+            ->when($this->data['branch_id'] ?? false, function($q) {
+                $q->where('branch_id', $this->data['branch_id']);
             })
             ->first();
 
@@ -182,9 +192,9 @@ class PosPage extends Component
 
     function calculateTotals() : array {
         $subTotal = SaleHelper::subTotal($this->data['products'] ?? []);
-        $discount = SaleHelper::discountAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0);
+        $discount = SaleHelper::discountAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0,$this->data['discount']['max'] ?? 0);
         $totalAfterDiscount = $subTotal - $discount;
-        $taxPercentage = branch()?->tax?->rate ?? 0;
+        $taxPercentage = $this->branch?->tax?->rate ?? 0;
         $tax = SaleHelper::taxAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $taxPercentage);
         $total = $subTotal + $tax - $discount;
         return get_defined_vars();
@@ -202,10 +212,10 @@ class PosPage extends Component
         // store order
         $dataToSave = [
             "customer_id" => $customerId,
-            "branch_id" => branch()?->id,
+            "branch_id" => $this->branch?->id,
             "invoice_number" => $this->data['invoice_number'] ?? null,
             "order_date" => $this->data['order_date'] ?? now(),
-            "tax_id" => branch()?->tax_id ?? null,
+            "tax_id" => $this->branch?->tax_id ?? null,
             "tax_percentage" => $taxPercentage ?? 0,
             "discount_id" => $this->data['discount']['id'] ?? null,
             "discount_type" => $this->data['discount']['type'] ?? null,
@@ -239,6 +249,10 @@ class PosPage extends Component
     }
 
     function validation() {
+        if(!($this->data['branch_id']??false)){
+            $this->alert('error', 'Please select a branch');
+            return false;
+        }
         if(!($this->data['invoice_number']??false)){
             // auto generate invoice number
             $this->data['invoice_number'] = Sale::generateInvoiceNumber();
@@ -282,6 +296,7 @@ class PosPage extends Component
         $products = $this->productService->getAllProductWhereHasStock();
         $customers = $this->userService->customersList();
         $selectedCustomer = $customers->firstWhere('id',$this->selectedCustomerId);
+        $branches = $this->branchService->activeList();
         extract($this->calculateTotals());
         return view('livewire.admin.pos-page',get_defined_vars());
     }

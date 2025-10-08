@@ -18,6 +18,8 @@ class Discount extends Model
         'end_date',
         'usage_limit',
         'active',
+        'branch_id',
+        'sales_threshold'
     ];
 
     function history() {

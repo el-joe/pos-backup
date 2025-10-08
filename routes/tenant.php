@@ -67,9 +67,9 @@ Route::middleware([
             Route::get('categories', CategoriesList::class)->name('categories.list');
             Route::get('brands', BrandsList::class)->name('brands.list');
             Route::get('units',UnitsList::class)->name('units.list');
-            Route::get('taxes',TaxesList::class)->name('taxes.list'); /// Need to add Branch Relation
+            Route::get('taxes',TaxesList::class)->name('taxes.list');
             Route::get('pos',PosPage::class)->name('pos');
-            Route::get('discounts', DiscountsList::class)->name('discounts.list'); // Need to add Branch Relation
+            Route::get('discounts', DiscountsList::class)->name('discounts.list'); //TODO : Need to add sales threshold when type is fixed
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
             Route::get('expenses',action: ExpensesList::class)->name('expenses.list');
 
@@ -82,7 +82,7 @@ Route::middleware([
             Route::get('users/{id}/details', UserDetails::class)->name('users.details');
 
             // Products
-            Route::get('products',ProductsList::class)->name('products.list'); // TODO -> Add Product Details Page contains Stock info , Purchases , Sales , Stock Transfers , Adjustments
+            Route::get('products',ProductsList::class)->name('products.list'); // TODO : -> Add Product Details Page contains Stock info , Purchases , Sales , Stock Transfers , Adjustments
             Route::get('products/{id}',AddEditProduct::class)->name('products.add-edit');
             // Purchases
             Route::get('purchases',PurchasesList::class)->name('purchases.list');
@@ -107,27 +107,3 @@ Route::middleware([
         });
     });
 });
-
-/**
- * Transactions Table :
- * id              (PK)
- * date            (date/datetime)
- * description     (string / text) -- e.g., "Sale Invoice #123"
- * reference_id    (nullable, polymorphic) -- link to sales, purchases, etc.
- * reference_type  (nullable, e.g., 'Sale', 'Purchase', 'Expense')
- * branch_id       (nullable FK -> branches.id)
- * total_amount    (decimal 15,2)
- * created_at
- * updated_at
- */
-
-/**
- * Transaction Lines Table :
- * id              (PK)
- * transaction_id  (FK -> transactions.id)
- * account_id      (FK -> accounts.id)
- * type            (enum: 'debit','credit')
- * amount          (decimal 15,2)
- * created_at
- * updated_at
- */

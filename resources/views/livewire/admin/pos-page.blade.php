@@ -6,7 +6,23 @@
                 <h4 class="panel-title">Select Customer</h4>
             </div>
             <div class="panel-body">
-                <div class="form-group col-sm-4" style="margin-bottom:0;">
+                {{-- branch_id --}}
+                <div class="form-group col-sm-3" style="margin-bottom:0;">
+                    <label for="branchSelect" style="font-weight:600;">Branch:</label>
+                    <select class="form-control" id="branchSelect" wire:model.live="data.branch_id">
+                        <option value="">-- Choose Branch --</option>
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch->id }}">
+                                {{ $branch->name }} @if($branch->phone) - {{ $branch->phone }} @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('data.branch_id')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                {{-- customer_id --}}
+                <div class="form-group col-sm-3" style="margin-bottom:0;">
                     <label for="customerSelect" style="font-weight:600;">Customer:</label>
                     <select class="form-control customer-select" id="customerSelect" wire:model="selectedCustomerId">
                         <option value="">-- Choose Customer --</option>
@@ -21,7 +37,7 @@
                     @enderror
                 </div>
                 {{-- order_date --}}
-                <div class="form-group col-sm-4" style="margin-bottom:0;">
+                <div class="form-group col-sm-3" style="margin-bottom:0;">
                     <label for="orderDate" style="font-weight:600;">Order Date:</label>
                     <input type="date" class="form-control" id="orderDate" wire:model="data.order_date">
                     @error('data.order_date')
@@ -29,7 +45,7 @@
                     @enderror
                 </div>
                 {{-- invoice_number --}}
-                <div class="form-group col-sm-4" style="margin-bottom:0;">
+                <div class="form-group col-sm-3" style="margin-bottom:0;">
                     <label for="invoiceNumber" style="font-weight:600;">Invoice Number:</label>
                     <input type="text" class="form-control" id="invoiceNumber" wire:model="data.invoice_number">
                     <small class="text-primary">Leave blank for auto-generated</small>

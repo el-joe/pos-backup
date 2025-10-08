@@ -59,7 +59,7 @@ class SaleDetails extends Component
         $itemsCount = $this->order->saleItems->count();
         $totalQty = $this->order->saleItems->sum(fn($q)=>$q->qty - $q->refunded_qty) ;
         $subTotal = SaleHelper::subTotal($this->order->saleItems);
-        $totalDiscount = SaleHelper::discountAmount($this->order->saleItems,$this->order->discount_type,$this->order->discount_value);
+        $totalDiscount = SaleHelper::discountAmount($this->order->saleItems,$this->order->discount_type,$this->order->discount_value,$this->order->max_discount_amount);
         $totalTax = SaleHelper::taxAmount($this->order->saleItems,$this->order->discount_type,$this->order->discount_value,$this->order->tax_percentage);
         $grandTotal = SaleHelper::grandTotal($this->order->saleItems,$this->order->discount_type,$this->order->discount_value,$this->order->tax_percentage);
         $paid = $this->order->paid_amount;

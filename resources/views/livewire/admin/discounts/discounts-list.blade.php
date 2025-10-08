@@ -82,8 +82,18 @@
                         <input type="text" class="form-control" wire:model="data.code" id="discountCode" placeholder="Enter discount code">
                     </div>
                     <div class="form-group col-6">
+                        <label for="discountBranch">Branch</label>
+                        <select class="form-control" wire:model.live="data.branch_id" id="discountBranch">
+                            <option value="">All Branches</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
                         <label for="discountType">Type</label>
                         <select class="form-control" wire:model.live="data.type" id="discountType">
+                            <option value="">Select Type</option>
                             <option value="rate">Rate</option>
                             <option value="fixed">Fixed</option>
                         </select>
@@ -107,10 +117,22 @@
                         <label for="discountEndDate">End Date</label>
                         <input type="date" class="form-control" wire:model="data.end_date" id="discountEndDate">
                     </div>
-                    <div class="form-group col-6">
-                        <label for="discountMaxAmount">Max Discount Amount</label>
-                        <input type="number" class="form-control" wire:model="data.max_discount_amount" id="discountMaxAmount" placeholder="Enter max discount amount">
-                    </div>
+                    @isset($data['type'])
+                        @if($data['type'] == 'rate')
+                            <div class="form-group col-6">
+                                <label for="discountMaxAmount">Max Discount Amount</label>
+                                <input type="number" class="form-control" wire:model="data.max_discount_amount" id="discountMaxAmount" placeholder="Enter max discount amount">
+                            </div>
+                        @else
+                            {{-- sales threshold --}}
+                            {{-- add description for sales threshold --}}
+                            <div class="form-group col-6">
+                                <label for="discountSalesThreshold">Sales Threshold </label>
+                                <input type="number" class="form-control" wire:model="data.sales_threshold" id="discountSalesThreshold" placeholder="Enter sales threshold amount">
+                                <small class="form-text text-danger">Set a sales threshold for this discount to be applicable.</small>
+                            </div>
+                        @endif
+                    @endisset
                     {{-- usage limit --}}
                     <div class="form-group col-6">
                         <label for="discountUsageLimit">Usage Limit</label>

@@ -232,7 +232,7 @@ class PurchaseService
     }
 
         function createCogsLine($data,$reverse = false) {
-            $getInventoryAccount = Account::default('Inventory',AccountTypeEnum::INVENTORY->value,$data['branch_id']);
+            $getInventoryAccount = Account::default('COGS',AccountTypeEnum::INVENTORY->value,$data['branch_id']);
 
             if(!isset($data['orderProducts']) || !is_array($data['orderProducts'])) {
                 return false;

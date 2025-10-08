@@ -17,6 +17,7 @@ enum TransactionTypeEnum : string
     case STOCK_TRANSFER = 'stock_transfer';
     case STOCK_TRANSFER_REFUND = 'stock_transfer_refund';
     case STOCK_ADJUSTMENT = 'stock_adjustment';
+    case STOCK_ADJUSTMENT_REFUND = 'stock_adjustment_refund';
 
     public function label(): string
     {
@@ -32,6 +33,9 @@ enum TransactionTypeEnum : string
             self::EXPENSE => 'Expense',
             self::EXPENSE_REFUND => 'Expense Refund',
             self::STOCK_TRANSFER => 'Stock Transfer',
+            self::STOCK_TRANSFER_REFUND => 'Stock Transfer Refund',
+            self::STOCK_ADJUSTMENT => 'Stock Adjustment',
+            self::STOCK_ADJUSTMENT_REFUND => 'Stock Adjustment Refund',
         };
     }
 }

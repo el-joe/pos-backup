@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\StockTaking;
+use App\Models\Tenant\StockTakingProduct;
 use App\Repositories\StockTakingRepository;
 
 class StockTakingService
@@ -49,7 +50,8 @@ class StockTakingService
                 'product_id' => $product['product_id'],
                 'current_qty' => $product['current_stock'],
                 'actual_qty' => $data['countedStock'][$product['product_id']][$product['unit_id']] ?? 0,
-                'stock_id' => $product['stock_id'] ?? null
+                'stock_id' => $product['stock_id'] ?? null,
+                'unit_cost' => $product['unit_cost'] ?? 0,
             ]);
 
             $difference = ($data['countedStock'][$product['product_id']][$product['unit_id']] ?? 0) - $product['current_stock'];
@@ -68,70 +70,122 @@ class StockTakingService
             }
         }
 
+        $this->shortageTransaction($st,$shortageProducts);
 
-        // shortage transaction
-        $transactionData = [
-            'description' => 'Stock Shortage for #'.$st->id,
-            'type' => TransactionTypeEnum::STOCK_ADJUSTMENT->value,
-            'reference_type' => StockTaking::class,
-            'reference_id' => $st->id,
-            'branch_id' => $st->branch_id,
-            'note' => $data['note'] ?? '',
-            'amount' => array_sum(array_column($shortageProducts, 'total')) * -1,
-            'lines' => $this->stockShortageLines([
-                'products' => $shortageProducts,
-                'branch_id' => $st->branch_id,
-                'note' => $data['note'] ?? '',
-                'orderProducts' => collect($shortageProducts)->map(function ($item){
-                    return [
-                        'qty' => $item['difference'] * -1,
-                        'purchase_price' => $item['unit_cost'] ?? 0,
-                    ];
-                })->toArray()
-            ])
-        ];
-
-        $this->transactionService->create($transactionData);
-
-        // surplus transaction
-        $transactionData = [
-            'description' => 'Stock Surplus for #'.$st->id,
-            'type' => TransactionTypeEnum::STOCK_ADJUSTMENT->value,
-            'reference_type' => StockTaking::class,
-            'reference_id' => $st->id,
-            'branch_id' => $st->branch_id,
-            'note' => $data['note'] ?? '',
-            'amount' => array_sum(array_column($surplusProducts, 'total')),
-            'lines' => $this->stockSurplusLines([
-                'branch_id' => $st->branch_id,
-                'products' => $surplusProducts,
-                'orderProducts' => collect($surplusProducts)->map(function ($item){
-                    return [
-                        'qty' => $item['difference'],
-                        'purchase_price' => $item['unit_cost'] ?? 0,
-                    ];
-                })->toArray()
-            ])
-        ];
-
-        $this->transactionService->create($transactionData);
+        $this->surplusTransaction($st,$surplusProducts);
 
         return $st;
     }
 
-    function stockShortageLines($data) {
+    function shortageTransaction($st,$shortageProducts, $reverse = false) {
+        if(!count($shortageProducts) == 0){
+            // shortage transaction
+            $description = 'Stock Shortage for #'.$st->id;
+            if($reverse){
+                $description = 'Return Stock Shortage for '.$st->stock?->product?->name . " - " . $st->stock?->unit?->name;
+            }
+            $transactionData = [
+                'description' => $description,
+                'type' => $reverse ? TransactionTypeEnum::STOCK_ADJUSTMENT_REFUND->value : TransactionTypeEnum::STOCK_ADJUSTMENT->value,
+                'reference_type' => StockTaking::class,
+                'reference_id' => $st->id,
+                'branch_id' => $st->branch_id,
+                'note' => $st->note ?? '',
+                'amount' => array_sum(array_column($shortageProducts, 'total')) * -1,
+                'lines' => $this->stockShortageLines([
+                    'products' => $shortageProducts,
+                    'branch_id' => $st->branch_id,
+                    'note' => $st->note ?? '',
+                    'orderProducts' => collect($shortageProducts)->map(function ($item){
+                        return [
+                            'qty' => $item['difference'] * -1,
+                            'purchase_price' => $item['unit_cost'] ?? 0,
+                        ];
+                    })->toArray()
+                ], $reverse)
+            ];
+
+            $this->transactionService->create($transactionData);
+        }
+    }
+
+    function surplusTransaction($st,$surplusProducts,$reverse = false) {
+        if(!count($surplusProducts) == 0){
+            // surplus transaction
+            $description = 'Stock Shortage for #'.$st->id;
+            if($reverse){
+                $description = 'Return Stock Shortage for '.$st->stock?->product?->name . " - " . $st->stock?->unit?->name;
+            }
+            $transactionData = [
+                'description' => $description,
+                'type' => $reverse ? TransactionTypeEnum::STOCK_ADJUSTMENT_REFUND->value : TransactionTypeEnum::STOCK_ADJUSTMENT->value,
+                'reference_type' => StockTaking::class,
+                'reference_id' => $st->id,
+                'branch_id' => $st->branch_id,
+                'note' => $st->note ?? '',
+                'amount' => array_sum(array_column($surplusProducts, 'total')),
+                'lines' => $this->stockSurplusLines([
+                    'branch_id' => $st->branch_id,
+                    'products' => $surplusProducts,
+                    'orderProducts' => collect($surplusProducts)->map(function ($item){
+                        return [
+                            'qty' => $item['difference'],
+                            'purchase_price' => $item['unit_cost'] ?? 0,
+                        ];
+                    })->toArray()
+                ], $reverse)
+            ];
+
+            $this->transactionService->create($transactionData);
+        }
+    }
+
+    function returnStock($id) {
+        $stProduct = StockTakingProduct::find($id);
+        $unitCost = $stProduct->stock?->unit_cost ?? 0;
+
+        if($stProduct->difference < 0){
+            $qty = $stProduct->difference * -1;
+            $this->shortageTransaction($stProduct->stockTaking, [
+                [
+                    'difference' => $qty,
+                    'unit_cost' => $unitCost,
+                    'total' => $qty * $unitCost
+                ]
+            ], true);
+        }else{
+            $qty = $stProduct->difference;
+            $this->surplusTransaction($stProduct->stockTaking, [
+                [
+                    'difference' => $qty,
+                    'unit_cost' => $unitCost,
+                    'total' => $qty * $unitCost
+                ]
+            ], true);
+        }
+
+        $stProduct->stock->increment('qty', $stProduct->difference * -1);
+
+        $stProduct->update([
+            'returned' => true
+        ]);
+
+        return true;
+    }
+
+    function stockShortageLines($data, $reverse = false) {
         // Shortage line
-        $lines[] = $this->transactionService->createInventoryShortageLine($data);
-        $lines[] = $this->purchaseService->createInventoryLine($data,true);
+        $lines[] = $this->transactionService->createInventoryShortageLine($data, $reverse);
+        $lines[] = $this->purchaseService->createInventoryLine($data,!$reverse);
 
         return $lines;
     }
 
-    function stockSurplusLines($data)
+    function stockSurplusLines($data, $reverse = false)
     {
         // Surplus line
-        $lines[] = $this->purchaseService->createCogsLine($data,true);
-        $lines[] = $this->purchaseService->createInventoryLine($data);
+        $lines[] = $this->purchaseService->createCogsLine($data,!$reverse);
+        $lines[] = $this->purchaseService->createInventoryLine($data, $reverse);
 
         return $lines;
     }

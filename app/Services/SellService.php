@@ -19,7 +19,7 @@ use App\Repositories\SellRepository;
 
 class SellService
 {
-    public function __construct(private SellRepository $repo,private StockService $stockService,private TransactionService $transactionService) {}
+    public function __construct(private SellRepository $repo,private StockService $stockService,private TransactionService $transactionService,private DiscountService $discountService) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {
@@ -78,6 +78,15 @@ class SellService
             // add Stock
             $this->stockService->removeFromStock(productId: $item['id'],unitId: $item['unit_id'],qty: ($item['qty']??$item['quantity']),branchId: $data['branch_id']);
         }
+
+        // Save history of discount if applied
+        if(isset($data['discount_id']) && $data['discount_id']){
+            $discount = $this->discountService->find($data['discount_id']);
+            if($discount){
+                $this->discountService->saveHistory($discount, $sell);
+            }
+        }
+
         // fill purchase payments data
         // Grouped by type = Purchase Invoice
         $transactionData = [
@@ -321,7 +330,7 @@ class SellService
         $saleOrder = $saleItem->sale;
         $product = $saleItem->toArray();
         $product['qty'] = $qty;
-        $discountAmount = SaleHelper::discountAmount([$product], $saleOrder->discount_type, $saleOrder->discount_value);
+        $discountAmount = SaleHelper::discountAmount([$product], $saleOrder->discount_type, $saleOrder->discount_value, $saleOrder->max_discount_amount ?? 0);
         $taxPercentage = $saleItem->taxable == 1 ? ($saleOrder->tax_percentage ?? 0) : 0;
         $taxAmount = SaleHelper::taxAmount([$product], $saleOrder->discount_type, $saleOrder->discount_value,$taxPercentage);
         // -----------------------------------

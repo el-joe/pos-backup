@@ -11,7 +11,8 @@ class StockTakingProduct extends Model
         'product_id',
         'current_qty',
         'actual_qty',
-        'stock_id'
+        'stock_id',
+        'returned'
     ];
 
     public function product()
@@ -22,5 +23,14 @@ class StockTakingProduct extends Model
     public function stockTaking()
     {
         return $this->belongsTo(StockTaking::class);
+    }
+
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class);
+    }
+
+    function getDifferenceAttribute() {
+        return $this->actual_qty - $this->current_qty;
     }
 }

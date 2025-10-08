@@ -18,13 +18,23 @@ class SaleHelper
         });
     }
 
-    static function discountAmount($products, $discount_type = null, $discount_value = 0) {
+    static function discountAmount($products, $discount_type = null, $discount_value = 0,$max = 0) {
         $subTotal = self::subTotal($products);
         if($discount_type && $discount_value) {
             if($discount_type == 'fixed') {
-                return $discount_value;
+                $amount = $discount_value;
+                if($subTotal > $max) {
+                    return $amount;
+                }
+                return 0;
             } else {
-                return ($subTotal * $discount_value / 100);
+                $amount = ($subTotal * $discount_value / 100);
+                if($max == 0) {
+                    return $amount;
+                }
+                if($amount > $max) {
+                    return $max;
+                }
             }
         }
         return 0;

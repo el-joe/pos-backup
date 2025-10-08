@@ -27,4 +27,16 @@ class StockTaking extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    function scopeFilter($q,$filter = []) {
+        return $q->when($filter['branch_id'] ?? null, function($q) use ($filter) {
+            $q->where('branch_id', $filter['branch_id']);
+        })->when($filter['date_from'] ?? null, function($q) use ($filter) {
+            $q->whereDate('date', '>=', $filter['date_from']);
+        })->when($filter['date_to'] ?? null, function($q) use ($filter) {
+            $q->whereDate('date', '<=', $filter['date_to']);
+        })->when($filter['id'] ?? null, function($q) use ($filter) {
+            $q->where('id', $filter['id']);
+        });
+    }
 }

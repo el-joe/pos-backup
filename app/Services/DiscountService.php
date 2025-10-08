@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Tenant\Discount;
 use App\Repositories\DiscountRepository;
 
 class DiscountService
@@ -21,6 +22,14 @@ class DiscountService
     function delete($id)
     {
         return $this->repo->delete($id);
+    }
+
+    function saveHistory(Discount $discount,$sale) {
+        $discount->history()->create([
+            'target_type' => get_class($sale),
+            'target_id' => $sale->id
+        ]);
+        return $discount;
     }
 
     function save($id = null,$data) {

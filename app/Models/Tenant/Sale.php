@@ -10,8 +10,25 @@ class Sale extends Model
 {
     protected $fillable = [
         'customer_id','branch_id','invoice_number','order_date',
-        'tax_id','tax_percentage','discount_id','discount_type','discount_value','paid_amount'
+        'tax_id','tax_percentage','discount_id','discount_type','discount_value','paid_amount','max_discount_amount'
     ];
+
+    // boot method to update discount max value to 0 if null
+    protected static function booted()
+    {
+        static::creating(function ($sale) {
+            if(!empty($sale->discount_id)){
+                $discount = Discount::find($sale->discount_id);
+                if($discount) {
+                    if($discount->type == 'fixed'){
+                        $sale->max_discount_amount = $discount->sales_threshold ?? 0;
+                    }else{
+                        $sale->max_discount_amount = $discount->max_discount_amount ?? 0;
+                    }
+                }
+            }
+        });
+    }
 
     public function saleItems() {
         return $this->hasMany(SaleItem::class);
@@ -46,7 +63,7 @@ class Sale extends Model
     }
 
     function getDiscountAmountAttribute() {
-        return SaleHelper::discountAmount($this->saleItems, $this->discount_type, $this->discount_value);
+        return SaleHelper::discountAmount($this->saleItems, $this->discount_type, $this->discount_value, $this->max_discount_amount);
     }
 
     function getTaxAmountAttribute() {

@@ -43,3 +43,8 @@ function formattedDate($date): string {
     return carbon($date)->translatedFormat('l , d-M-Y');
 }
 
+function formattedDateTime($date): string {
+    return carbon($date)->translatedFormat('l , d-M-Y h:i A');
+}
+
+

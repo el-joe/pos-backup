@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Discounts;
 
+use App\Services\BranchService;
 use App\Services\DiscountService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -13,7 +14,7 @@ class DiscountsList extends Component
 {
 
     use LivewireOperations, WithPagination;
-    private $discountService;
+    private $discountService, $branchService;
     public $current;
     public $data = [];
 
@@ -26,10 +27,13 @@ class DiscountsList extends Component
         'start_date' => 'nullable|date',
         'end_date' => 'nullable|date',
         'usage_limit' => 'nullable|integer',
+        'branch_id' => 'nullable|exists:branches,id',
+        'sales_threshold' => 'nullable|numeric',
     ];
 
     function boot() {
         $this->discountService = app(DiscountService::class);
+        $this->branchService = app(BranchService::class);
     }
 
     function setCurrent($id) {
@@ -77,6 +81,7 @@ class DiscountsList extends Component
     public function render()
     {
         $discounts = $this->discountService->list(perPage : 10 , orderByDesc: 'id');
+        $branches = $this->branchService->activeList();
         return view('livewire.admin.discounts.discounts-list', get_defined_vars());
     }
 }
