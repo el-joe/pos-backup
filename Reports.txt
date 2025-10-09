@@ -1,0 +1,43 @@
+- Financial Reports :
+	- Trail Balance : Lists all debit/credit balances to ensure books are balanced
+	- Income Statement (Profit & Loss) : Shows profit by subtracting expenses and COGS from revenue
+	- Cash Flow Statement : Tracks inflows/outflows of cash ---- branch_cash, bank, current_asset
+	- General Ledger : all transactions
+- Sales Report :
+	- Sales Summary : total Summary
+	- Sales by Product / Category
+	- Sales by Branch
+	- Sales by Payment Method
+	- Sales by Customer
+	- Sales Profit Report : Sales revenue - COGS per item
+	- Sales Return Report
+	- VAT on Sales (VAT Payable)
+	- Discount On Sales
+- Purchase Report :
+	- Purchase Summary
+	- Purchase by Supplier
+	- Purchase by Category
+	- Purchase Return Report
+	- Purchase Discount Report
+	- VAT on Purchases (VAT Receivable)
+- Inventory & COGS Reports :
+	- Stock Valuation Report : Shows current stock value ----> Quantity × cost
+	- Stock Movement Report : Purchase & Sales & Adjustments
+	- COGS Report
+	- Inventory Shortage Report
+- Performance & Analysis Reports :
+	- Profit Margin by Product : (Sales - COGS) / Sales
+	- Customer Outstanding Report : Who owes you money
+	- Supplier Payable Report : Who you owe money to
+	- Expense Breakdown : Track company spending
+	- Revenue Breakdown : Analyze income sources
+	- Discount Impact Report : Measure impact of discounts ---> Discount % vs total revenue
+	- Sales Threshold (Discount Trigger) Report : Who reached the discount limit ---> Compare sales totals vs sales_threshold
+- Tax & Compliance Reports :
+	- VAT Summary : Summarize vat_payable - vat_receivable
+	- Withholding Tax Report : If applicable for suppliers/customers
+	- Audit Trail Report : Transaction history with user logs
+- Branch / User / Cash Reports :
+	- Cash Register Summary : Track cash movements per day
+	- Branch Profitability : Compare net profits per branch
+	- User / Cashier Performance : Sales per user, refunds, discounts

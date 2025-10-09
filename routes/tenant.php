@@ -71,7 +71,8 @@ Route::middleware([
             Route::get('pos',PosPage::class)->name('pos');
             Route::get('discounts', DiscountsList::class)->name('discounts.list'); //TODO : Need to add sales threshold when type is fixed
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
-            Route::get('expenses',action: ExpensesList::class)->name('expenses.list');
+            // TODO : expenses will be saved without payments and we can add payments later
+            Route::get('expenses',ExpensesList::class)->name('expenses.list');
 
             Route::get('payment-methods',PaymentMethodsList::class)->name('payment-methods.list');
             Route::get('accounts',AccountsList::class)->name('accounts.list');
@@ -95,7 +96,32 @@ Route::middleware([
             Route::get('transactions',TransactionList::class)->name('transactions.list');
             // Shipping Companies
             // Admininstrators (User|Role)
-            // Reports
+
+
+            // Financial Report -> transactions with filters for (date range,accounts,transaction types,payment methods,users(type))
+            // Profit/Loss Report -> filters for (date range,branch,product,category,brand,user)
+            // Sales Report - filters (date range,customer,product,category,brand,branch,user)
+            // Purchase Report - filters (date range,supplier,product,category,brand,branch,user)
+            // Expense Report - filters (date range,account,category,branch,user)
+            // Tax Report - filters (date range, tax)
+            // Customer Report - filters (date range, customer, total spent, total paid, total due)
+            // Supplier Report - filters (date range, supplier, total purchased, total paid, total due)
+            // Product Report - filters (date range, product, category, brand, branch, total sold, total purchased, current stock)
+            // User Report - filters (date range, user, total sales, total purchases, total expenses, total transactions)
+            // Stock Report - filters (branch, product, category, brand, stock less than alert quantity)
+            // Admin Activity Log - filters (date range, user, activity type)
+            // Sales Discount Report - filters (date range, discount)
+            // Purchase Discount Report - filters (date range, discount)
+            // Sales Return Report - filters (date range, customer, product, category, brand, branch, user)
+            // Purchase Return Report - filters (date range, supplier, product, category, brand,
+            // Sales Tax Report - filters (date range, tax)
+            // Purchase Tax Report - filters (date range, tax)
+            // Expense Tax Report (happened on purchase) - filters (date range, tax)
+            // Sales Due Report - filters (date range, customer/supplier, due type (sales/purchase))
+            // Payment Method Report - filters (date range, payment method)
+            // Shortage/Surplus Report - filters (date range, branch, product, category, brand)
+            // Stock Expiry Report - filters (date range, branch, product, category, brand)
+
             // Stock Adjustments
             Route::get('stock-adjustments', StockTakingList::class)->name('stocks.adjustments.list');
             Route::get('stock-adjustments/create', AddStockTaking::class)->name('stocks.adjustments.create');
@@ -107,3 +133,17 @@ Route::middleware([
         });
     });
 });
+
+
+// Features to add later
+// Export/Import Excel,CSV,PDF
+// Invoice Customization (Logo,Color,Text)
+// Barcode/QR Code Generation
+// Add Currency & City to branch
+// Filters into all list pages
+
+// TODO : E-Invoice Coming Soon
+// Email & Notification system
+// whatsapp notification
+// SMS notification
+// tenant balance
