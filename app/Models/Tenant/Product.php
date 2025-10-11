@@ -67,6 +67,24 @@ class Product extends Model
             $q->whereHas('stocks', function($q2) {
                 $q2->where('qty','>',0);
             });
+        })->when($filter['active'] ?? null, function($q) {
+            $q->where('active', 1);
+        })->when($filter['inactive'] ?? null, function($q) {
+            $q->where('active', 0);
+        })->when($filter['category_id'] ?? null, function($q,$categoryId) {
+            $q->where('category_id', $categoryId);
+        })->when($filter['brand_id'] ?? null, function($q,$brandId) {
+            $q->where('brand_id', $brandId);
+        })->when($filter['branch_id'] ?? null, function($q,$branchId) {
+            $q->whereHas('stocks', function($q2) use ($branchId) {
+                $q2->where('branch_id', $branchId);
+            });
+        })->when($filter['search'] ?? null, function($q,$term) {
+            $q->where(function($q2) use ($term) {
+                $q2->where('name','like','%'.$term.'%')
+                    ->orWhere('sku','like','%'.$term.'%')
+                    ->orWhere('code','like','%'.$term.'%');
+            });
         });
     }
 
@@ -184,6 +202,12 @@ class Product extends Model
 
     function getStockSellPriceAttribute() {
         $branchId = $this->branch_id ?? Branch::active()->first()?->id ?? null;
+        $stock = $this->stocks()->when($branchId, fn($query) => $query->where('branch_id', $branchId))->first();
+        return $stock ? number_format($stock->sell_price, 2) : 0;
+    }
+
+    function stockSellPrice($branchId = null) {
+        $branchId = $branchId ?? Branch::active()->first()?->id ?? null;
         $stock = $this->stocks()->when($branchId, fn($query) => $query->where('branch_id', $branchId))->first();
         return $stock ? number_format($stock->sell_price, 2) : 0;
     }

@@ -13,8 +13,8 @@ enum AccountTypeEnum : string
     case INVENTORY = 'inventory'; // inventory purchases
     case COGS = 'cogs'; // cost of goods sold
     case INVENTORY_SHORTAGE = 'inventory_shortage'; // inventory loss adjustments
-    case FIXED_ASSET = 'fixed_asset'; // fixed asset transactions && depreciation
-    case CURRENT_ASSET = 'current_asset'; // sales credits , bank transactions
+    // case FIXED_ASSET = 'fixed_asset'; // fixed asset transactions && depreciation
+    // case CURRENT_ASSET = 'current_asset'; // sales credits , bank transactions
     // case CURRENT_LIABILITY = 'current_liability'; // purchase credits , expenses due within a year
     case LONGTERM_LIABILITY = 'longterm_liability'; // Long-term debts and liabilities
     case VAT_PAYABLE = 'vat_payable'; // on sales
@@ -31,8 +31,8 @@ enum AccountTypeEnum : string
             AccountTypeEnum::CUSTOMER => 'Customer', // customer transactions
             AccountTypeEnum::SUPPLIER => 'Supplier', // supplier transactions
             AccountTypeEnum::EXPENSE => 'Expense', // expense transactions
-            AccountTypeEnum::FIXED_ASSET => 'Fixed Asset', // fixed asset transactions && depreciation
-            AccountTypeEnum::CURRENT_ASSET => 'Current Asset', // purchase cash transactions && bank transactions
+            // AccountTypeEnum::FIXED_ASSET => 'Fixed Asset', // fixed asset transactions && depreciation
+            // AccountTypeEnum::CURRENT_ASSET => 'Current Asset', // purchase cash transactions && bank transactions
             // AccountTypeEnum::CURRENT_LIABILITY => 'Current Liability', // Current liabilities transactions
             AccountTypeEnum::LONGTERM_LIABILITY => 'Long-term Liability', // Long-term liabilities transactions
             AccountTypeEnum::BRANCH_CASH => 'Branch Cash',
@@ -56,8 +56,8 @@ enum AccountTypeEnum : string
             AccountTypeEnum::CUSTOMER => 'primary',
             AccountTypeEnum::SUPPLIER => 'warning',
             AccountTypeEnum::EXPENSE => 'danger',
-            AccountTypeEnum::FIXED_ASSET => 'info',
-            AccountTypeEnum::CURRENT_ASSET => 'secondary',
+            // AccountTypeEnum::FIXED_ASSET => 'info',
+            // AccountTypeEnum::CURRENT_ASSET => 'secondary',
             // AccountTypeEnum::CURRENT_LIABILITY => 'dark',
             AccountTypeEnum::LONGTERM_LIABILITY => 'dark',
             AccountTypeEnum::BRANCH_CASH => 'success',

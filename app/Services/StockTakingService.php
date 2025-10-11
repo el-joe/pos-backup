@@ -144,8 +144,8 @@ class StockTakingService
         $stProduct = StockTakingProduct::find($id);
         $unitCost = $stProduct->stock?->unit_cost ?? 0;
 
+        $qty = $stProduct->difference > 0 ? $stProduct->difference : ($stProduct->difference * -1);
         if($stProduct->difference < 0){
-            $qty = $stProduct->difference * -1;
             $this->shortageTransaction($stProduct->stockTaking, [
                 [
                     'difference' => $qty,
@@ -153,8 +153,7 @@ class StockTakingService
                     'total' => $qty * $unitCost
                 ]
             ], true);
-        }else{
-            $qty = $stProduct->difference;
+        }elseif($stProduct->difference > 0){
             $this->surplusTransaction($stProduct->stockTaking, [
                 [
                     'difference' => $qty,

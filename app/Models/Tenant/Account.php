@@ -35,6 +35,7 @@ class Account extends Model
     }
 
     function scopeFilter($q,$filters = []) {
+
         return $q->when(isset($filters['model_type']) && $filters['model_type'], function($q) use ($filters) {
             $q->where('model_type', $filters['model_type']);
         })->when(isset($filters['model_id']) && $filters['model_id'], function($q) use ($filters) {
@@ -44,13 +45,17 @@ class Account extends Model
 
     static function default($name,$type,$branch_id) {
         $method = PaymentMethod::whereSlug('cash')
-            ->when(branch()?->id,fn($q) => $q->where('branch_id',branch()?->id)->orWhereNull('branch_id'))
+            ->where(function ($q) use ($branch_id) {
+                $q->where('branch_id',$branch_id)->orWhereNull('branch_id');
+            })
             ->first();
 
-        $code = self::generateCodeRecursive($name);
+        $codeFromName = strtolower(str_replace(' ','_',$name));
+
+        $code = self::generateCodeRecursive($codeFromName);
 
         return self::firstOrCreate([
-            'code' => $name,
+            'code' => $codeFromName,
             'type' => $type,
             'branch_id' => $branch_id,
             'payment_method_id' => $method?->id

@@ -349,15 +349,10 @@ class PurchaseService
     }
 
     function createVatReceivableLine($data,$reverse = false) {
-        $getVatReceivableAccount = Account::firstOrCreate([
-            'name' => 'Vat Receivable',
-            'code' => 'Vat Receivable',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::VAT_RECEIVABLE->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);        // get tax amount from data
+        $getVatReceivableAccount = Account::default('Vat Receivable',AccountTypeEnum::VAT_RECEIVABLE->value,$data['branch_id']);
+
+
+        // get tax amount from data
         $taxAmount = $data['tax_amount'] ?? 0;
 
         //`transaction_id`, `account_id`, `type`, `amount`
@@ -369,15 +364,9 @@ class PurchaseService
     }
 
     function createPurchaseDiscountLine($data,$reverse = false) {
-        $getPurchaseDiscountAccount = Account::firstOrCreate([
-            'name' => 'Purchase Discount',
-            'code' => 'Purchase Discount',
-            'model_type' => Branch::class,
-            'model_id' => $data['branch_id'],
-            'type' => AccountTypeEnum::PURCHASE_DISCOUNT->value,
-            'branch_id' => $data['branch_id'],
-            'active' => 1,
-        ]);        // get discount amount from data
+        $getPurchaseDiscountAccount = Account::default('Purchase Discount',AccountTypeEnum::PURCHASE_DISCOUNT->value,$data['branch_id']);
+
+        // get discount amount from data
         $discountAmount = $data['discount_amount'] ?? 0;
 
         //`transaction_id`, `account_id`, `type`, `amount`

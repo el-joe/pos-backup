@@ -19,6 +19,7 @@ use App\Livewire\Admin\Products\ProductsList;
 use App\Livewire\Admin\Purchases\AddPurchase;
 use App\Livewire\Admin\Purchases\PurchaseDetails;
 use App\Livewire\Admin\Purchases\PurchasesList;
+use App\Livewire\Admin\Reports\Financial\TrailBalanceReport;
 use App\Livewire\Admin\Sales\SaleDetails;
 use App\Livewire\Admin\Sales\SalesList;
 use App\Livewire\Admin\Statistics;
@@ -97,30 +98,21 @@ Route::middleware([
             // Shipping Companies
             // Admininstrators (User|Role)
 
+            // Reports
+            Route::group([
+                'prefix'=> 'reports',
+                'as'=> 'reports.',
+            ],function () {
 
-            // Financial Report -> transactions with filters for (date range,accounts,transaction types,payment methods,users(type))
-            // Profit/Loss Report -> filters for (date range,branch,product,category,brand,user)
-            // Sales Report - filters (date range,customer,product,category,brand,branch,user)
-            // Purchase Report - filters (date range,supplier,product,category,brand,branch,user)
-            // Expense Report - filters (date range,account,category,branch,user)
-            // Tax Report - filters (date range, tax)
-            // Customer Report - filters (date range, customer, total spent, total paid, total due)
-            // Supplier Report - filters (date range, supplier, total purchased, total paid, total due)
-            // Product Report - filters (date range, product, category, brand, branch, total sold, total purchased, current stock)
-            // User Report - filters (date range, user, total sales, total purchases, total expenses, total transactions)
-            // Stock Report - filters (branch, product, category, brand, stock less than alert quantity)
-            // Admin Activity Log - filters (date range, user, activity type)
-            // Sales Discount Report - filters (date range, discount)
-            // Purchase Discount Report - filters (date range, discount)
-            // Sales Return Report - filters (date range, customer, product, category, brand, branch, user)
-            // Purchase Return Report - filters (date range, supplier, product, category, brand,
-            // Sales Tax Report - filters (date range, tax)
-            // Purchase Tax Report - filters (date range, tax)
-            // Expense Tax Report (happened on purchase) - filters (date range, tax)
-            // Sales Due Report - filters (date range, customer/supplier, due type (sales/purchase))
-            // Payment Method Report - filters (date range, payment method)
-            // Shortage/Surplus Report - filters (date range, branch, product, category, brand)
-            // Stock Expiry Report - filters (date range, branch, product, category, brand)
+                Route::group([
+                    'prefix' => 'financial',
+                    'as' => 'financial.',
+                ], function () {
+                    Route::get('trail-balance', TrailBalanceReport::class)->name('trail-balance');
+                });
+
+
+            });
 
             // Stock Adjustments
             Route::get('stock-adjustments', StockTakingList::class)->name('stocks.adjustments.list');

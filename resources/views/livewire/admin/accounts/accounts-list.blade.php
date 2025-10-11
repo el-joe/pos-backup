@@ -33,7 +33,7 @@
                             <td>{{ $account->name }}</td>
                             <td>{{ $account->code }}</td>
                             <td><p class="badge badge-{{ $account->type->color() }}">{{ $account->type->label() }}</p></td>
-                            <td>{{ $account->branch?->name ?? '----' }}</td>
+                            <td>{{ $account->branch?->name ?? 'All' }}</td>
                             <td>{{ $account->paymentMethod?->name ?? '----' }}</td>
                             <td>
                                 <span class="badge badge-{{ $account->active ? 'success' : 'danger' }}">

@@ -9,26 +9,26 @@ Version:    1.0
 
 01. Necessary File Imports (e.g. Fonts, Icon-Fonts, Third Party CSS Plugins)
 02. Preloader CSS
-03. CSS Compiled From "common.less" 
+03. CSS Compiled From "common.less"
     => (includes all the common/global styles which are applicable throughout the project)
-04. CSS Compiled From "widgets.less" 
+04. CSS Compiled From "widgets.less"
     => (includes the styles of all the inner page widgets)
-05. CSS Compiled From "app.less" 
+05. CSS Compiled From "app.less"
     => (includes the styles of all the dashboard widgets)
-06. CSS Compiled From "sidebar-nav.less" 
+06. CSS Compiled From "sidebar-nav.less"
     => (includes the styles of sidebar navigation)
 07. Simple Line Icons
 08. Themify Icons
 09. Font Awesome Icons
-10. CSS Compiled From "pages.less" 
+10. CSS Compiled From "pages.less"
     => (includes the styles of inner pages)
-11. CSS Compiled From "responsive.less" 
+11. CSS Compiled From "responsive.less"
     => (includes the styles for responsiveness of the template)
 
 ------------------------------
 [Default Color Codes Used In The Project]
 
-# topbar-gradient:      #0078bc; & #00beda;                         
+# topbar-gradient:      #0078bc; & #00beda;
 # sidebar:              #ffffff;
 # bodycolor:            #f4f8f9;
 # headingtext:          #333b3f;
@@ -51,12 +51,12 @@ Version:    1.0
 # extralight:           #f7fafc;
 # red:                  #d93c17;
 # purple:               #4a23ad;
- 
+
 # white:                #ffffff;
 # muted:                #8d9498;
 # blue:                 #0078bc;
 # border:               rgba(255,255,255,0.2);
-# common:               #e5ebec; 
+# common:               #e5ebec;
 
 ============================================================ */
 
@@ -7126,7 +7126,7 @@ ul.list-icons li i {
 .sidebar {
     z-index: 10;
     position: absolute;
-    width: 265px;
+    width: 350px;
     padding-top: 60px;
     height: 100%;
     top: 0;
@@ -15797,7 +15797,7 @@ ul.pro-amenities li span i {
 
 @media (min-width:1024px) {
     .page-wrapper {
-        margin-left: 265px
+        margin-left: 350px
     }
     .footer {
         left: 265px

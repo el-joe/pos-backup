@@ -28,6 +28,9 @@
                             <td>{{ carbon($value)->format('l ,d M Y H:i A') }}</td>
                         @elseif($column['type'] == 'badge')
                             @php
+                                // if($key != 'debit') {
+                                //     dd($key,$column,$value,$row);
+                                // }
                                 $badgeClass = $column['class'] ?? 'badge-secondary';
                                 if (is_callable($badgeClass)) {
                                     $badgeClass = $badgeClass($row);
@@ -41,8 +44,18 @@
                                 if ($iconClass) {
                                     $icon = '<i class="fa ' . $iconClass . '"></i> ';
                                 }
+
+                                if(isset($column['value'])) {
+                                    if(is_callable($column['value'])) {
+                                        $value = $column['value']($row);
+                                    } else {
+                                        $value = $column['value'];
+                                    }
+                                }else{
+                                    $value = '-----';
+                                }
                             @endphp
-                            <td style="vertical-align: middle;display: flex;align-items: center;gap: 5px;">
+                            <td style="text-align: center;">
                                 {!! $icon !!}
                                 <span class="badge {{ $badgeClass }}">{{ $value }}</span>
                             </td>
@@ -91,6 +104,27 @@
                     @endforeach
                 </tr>
             @endforeach
+            @if(isset($totals))
+                <tr>
+                    @if(isset($totals['total']))
+                        <td colspan="{{ $totals['total']['colspan'] ?? count($columns) }}" class="{{ $totals['total']['class'] ?? '' }}">
+                            {{ $totals['total']['label'] ?? 'Totals' }}
+                        </td>
+                    @endif
+                    @foreach ($columns as $key => $column)
+                        @if(isset($totals[$key]))
+                            @if(is_callable($totals[$key]))
+                                @php $value = $totals[$key]($rows); @endphp
+                            @else
+                                @php $value = $totals[$key]; @endphp
+                            @endif
+                            <td>{{ is_numeric($value) ? number_format($value, 2) : $value }}</td>
+                        @elseif(($loop->iteration) > (isset($totals['total']['colspan']) ? ($totals['total']['colspan'] + count($totals) -1) : 0))
+                            <td></td>
+                        @endif
+                    @endforeach
+                </tr>
+            @endif
         </tbody>
     </table>
     {{-- center pagination --}}

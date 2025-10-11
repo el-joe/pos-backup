@@ -38,8 +38,8 @@ class PosPage extends Component
     function updatingSelectedUnitId($value) {
         $this->maxQuantity = Stock::where('product_id', $this->currentProduct->id)
             ->where('unit_id', $value)
-            ->when(admin()->branch_id, function($q) {
-                $q->where('branch_id', admin()->branch_id);
+            ->when($this->data['branch_id'], function($q) {
+                $q->where('branch_id', $this->data['branch_id']);
             })
             ->sum('qty');
     }
@@ -293,7 +293,10 @@ class PosPage extends Component
 
     public function render()
     {
-        $products = $this->productService->getAllProductWhereHasStock();
+        $products = $this->productService->getAllProductWhereHasStock([],[
+            'branch_id' => $this->data['branch_id'] ?? null,
+            'active' => true,
+        ]);
         $customers = $this->userService->customersList();
         $selectedCustomer = $customers->firstWhere('id',$this->selectedCustomerId);
         $branches = $this->branchService->activeList();

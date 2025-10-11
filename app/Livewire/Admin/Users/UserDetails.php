@@ -34,6 +34,7 @@ class UserDetails extends Component
             'model_id' => $this->user->id
         ],10,'id');
 
+
         return view('livewire.admin.users.user-details',get_defined_vars());
     }
 }

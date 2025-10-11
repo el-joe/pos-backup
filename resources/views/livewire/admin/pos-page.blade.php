@@ -76,7 +76,7 @@
                                 <img src="{{ $product->image_path }}" alt="Product Image" class="img-responsive product-img">
                                 <div class="caption text-center">
                                     <h5>{{ $product->name }}</h5>
-                                    <p class="text-muted">${{ $product->stock_sell_price }}</p>
+                                    <p class="text-muted">${{ $product->stockSellPrice($this->data['branch_id'] ?? null) }}</p>
                                     <p>
                                         @if($product->unit->children->count() > 0)
                                             <button class="btn btn-primary btn-sm btn-block"
@@ -279,7 +279,7 @@
                                 <option value="">-- Select Unit --</option>
                                 @foreach($currentProduct->units() as $unit)
                                     <option value="{{ $unit->id }}">
-                                        {{ $unit->name }} ({{ number_format($unit->stock($currentProduct->id)?->sell_price ?? 0, 3) }} $)
+                                        {{ $unit->name }} ({{ number_format($unit->stock($currentProduct->id,$this->data['branch_id']??null)?->sell_price ?? 0, 3) }} $)
                                     </option>
                                 @endforeach
                             </select>

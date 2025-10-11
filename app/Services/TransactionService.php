@@ -58,7 +58,7 @@ class TransactionService
         $getInventoryShortageAccount = Account::default('inventory_shortage', AccountTypeEnum::INVENTORY_SHORTAGE->value,  $data['branch_id']);
         // get sub total from order products = product qty * unit cost
         $subTotal = array_sum(array_map(function($item) {
-            return ($item['difference'] * -1) * (float)$item['unit_cost'];
+            return $item['difference'] * (float)$item['unit_cost'];
         }, $data['products']));
 
         //`transaction_id`, `account_id`, `type`, `amount`

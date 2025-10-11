@@ -81,7 +81,7 @@
                                 <th style="min-width:110px;">Tax (%)</th>
                                 <th style="min-width:150px;">Subtotal (Incl. Tax)</th>
                                 <th style="min-width:130px;">Extra Margin (%)</th>
-                                <th style="min-width:120px;">Selling Price</th>
+                                <th style="min-width:120px;">Selling Price/Unit</th>
                                 <th style="min-width:180px;">Grand Total (Incl. Tax & Profit)</th>
                                 <th style="min-width:90px;">Action</th>
                             </tr>

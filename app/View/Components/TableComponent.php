@@ -11,7 +11,7 @@ class TableComponent extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public $columns, public $headers, public $rows = []) {}
+    public function __construct(public $columns, public $headers, public $rows = [],public $totals = null) {}
 
     /**
      * Get the view / contents that represent the component.

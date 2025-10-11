@@ -104,12 +104,79 @@
                 <li>
                     <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Reports </span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Sales Report</a> </li>
-                        <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Inventory Report</a> </li>
-                        <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Expenses Report</a> </li>
-                        <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Customers Report</a> </li>
-                        <li> <a href="index4.html"><i class="fa fa-truck fa-fw"></i> Suppliers Report</a> </li>
-                        <li> <a href="index4.html"><i class="fa  fa-dollar fa-fw"></i> Netprofit Report</a> </li>
+                        <li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Financial Reports </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Trial Balance</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Income Statement</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Cash Flow Statement</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> General Ledger</a> </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Sales Reports </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Sales Summary</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Sales by Product</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Sales by Category</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Sales by Branch</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales by Payment Method</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales by Customer</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales Profit Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> VAT on Sales (VAT Payable)</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales Return Report</a> </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Purchase Reports </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Purchase Summary</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Purchase by Supplier</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Purchase by Category</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Purchase Return Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Purchase Discount Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> VAT on Purchases (VAT Receivable)</a> </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Inventory & COGS Reports </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li> <a href="index4.html"><i class="fa fa-cubes fa-fw"></i> Stock Valuation Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-exchange fa-fw"></i> Stock Movement Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-calculator fa-fw"></i> COGS Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-warning fa-fw"></i> Inventory Shortage Report</a> </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Performance & Analysis Reports </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Profit Margin by Product</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Customer Outstanding Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Supplier Payable Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Expense Breakdown</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Revenue Breakdown</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-percent fa-fw"></i> Discount Impact Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-trophy fa-fw"></i> Sales Threshold (Discount Trigger) Report</a> </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Tax & Compliance Reports </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li> <a href="index4.html"><i class="fa fa-percent fa-fw"></i> VAT Summary</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-file-text fa-fw"></i> Withholding Tax Report</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-book fa-fw"></i> Audit Trail Report</a> </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Branch / User / Cash Reports </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Cash Register Summary</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-building fa-fw"></i> Branch Profitability</a> </li>
+                                <li> <a href="index4.html"><i class="fa fa-user fa-fw"></i> User / Cashier Performance</a> </li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </li>
 
