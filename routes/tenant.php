@@ -101,6 +101,7 @@ Route::middleware([
             Route::get('transactions',TransactionList::class)->name('transactions.list');
             // Shipping Companies
             // Admininstrators (User|Role)
+            // Opening Balance page
 
             // Reports
             Route::group([
