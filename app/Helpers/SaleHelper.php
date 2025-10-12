@@ -53,9 +53,9 @@ class SaleHelper
         });
     }
 
-    static function grandTotal($products, $discount_type = null, $discount_value = 0, $tax_percentage = 0) {
+    static function grandTotal($products, $discount_type = null, $discount_value = 0, $tax_percentage = 0, $max_discount_amount = 0) : float {
         $subTotal = self::subTotal($products);
-        $discount = self::discountAmount($products, $discount_type, $discount_value);
+        $discount = self::discountAmount($products, $discount_type, $discount_value, $max_discount_amount);
         $tax = self::taxAmount($products, $discount_type, $discount_value, $tax_percentage);
 
         return ($subTotal - $discount) + $tax;

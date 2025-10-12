@@ -19,7 +19,7 @@ use App\Repositories\SellRepository;
 
 class SellService
 {
-    public function __construct(private SellRepository $repo,private StockService $stockService,private TransactionService $transactionService,private DiscountService $discountService) {}
+    public function __construct(private SellRepository $repo,private StockService $stockService,private TransactionService $transactionService,private DiscountService $discountService,private AccountService $accountService) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {
@@ -126,6 +126,7 @@ class SellService
     function addPayment($sellId, $data , $reverse = false) {
         $sell = $this->repo->find($sellId);
         if(!$sell) return;
+
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
             'type' => $reverse ? TransactionTypeEnum::SALE_PAYMENT_REFUND->value : TransactionTypeEnum::SALE_PAYMENT->value,
@@ -207,7 +208,8 @@ class SellService
         // ------------------------- Payment entry --------------------------------
         foreach ($data['payments'] as $payment) {
             $payment['branch_id'] = $data['branch_id'];
-            $payment['customer_id'] = $data['customer_id'];
+            $payment['customer_id'] = $data['customer_id'] ?? null;
+            $payment['payment_account'] = $payment['account_id'] ?? null;
             $payment['payment_amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
             $branchCashLine = $this->createBranchCashLine($payment,'partial_paid', $reverse);
 
@@ -222,7 +224,7 @@ class SellService
     }
 
     function createInventoryLine($data,$reverse = false) {
-        $getInventoryAccount = Account::default('inventory', AccountTypeEnum::INVENTORY->value,  $data['branch_id']);
+        $getInventoryAccount = Account::default('Inventory', AccountTypeEnum::INVENTORY->value,  $data['branch_id']);
 
         if(!isset($data['products']) || !is_array($data['products'])) {
             return false;
@@ -241,7 +243,7 @@ class SellService
     }
 
     function createCogsLine($data,$reverse = false) {
-        $getCogsAccount = Account::default('cogs', AccountTypeEnum::COGS->value,  $data['branch_id']);
+        $getCogsAccount = Account::default('Cogs', AccountTypeEnum::COGS->value,  $data['branch_id']);
 
         if(!isset($data['products']) || !is_array($data['products'])) {
             return false;
@@ -261,7 +263,7 @@ class SellService
 
 
     function createBranchCashLine($data,$type = 'full_paid' ,$reverse = false) {
-        $getBranchCashAccount = Account::default('branch_cash', AccountTypeEnum::BRANCH_CASH->value,  $data['branch_id']);
+        $getBranchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value,  $data['branch_id']);
 
         $paidAmount = $data['payment_amount'] ?? $data['amount'] ?? 0;
 
@@ -274,7 +276,7 @@ class SellService
     }
 
     function createVatReceivableLine($data,$reverse = false) {
-        $getVatReceivableAccount = Account::default('vat_receivable', AccountTypeEnum::VAT_PAYABLE->value,  $data['branch_id']);
+        $getVatReceivableAccount = Account::default('Vat Payable', AccountTypeEnum::VAT_PAYABLE->value,  $data['branch_id']);
 
         // get tax amount from data
         $taxAmount = $data['tax_amount'] ?? 0;
@@ -288,7 +290,7 @@ class SellService
     }
 
     function createSaleDiscountLine($data,$reverse = false) {
-        $getSaleDiscountAccount = Account::default('sale_discount', AccountTypeEnum::SALES_DISCOUNT->value,  $data['branch_id']);
+        $getSaleDiscountAccount = Account::default('Sale Discount', AccountTypeEnum::SALES_DISCOUNT->value,  $data['branch_id']);
 
         // get discount amount from data
         $discountAmount = $data['discount_amount'] ?? 0;
@@ -303,13 +305,18 @@ class SellService
 
     function createCustomerLine($data,$type = 'debit',$reverse = false) {
         if(!isset($data['payment_account'])){
-            $getCustomerAccount = User::find($data['customer_id'])->accounts->first();
+            $user = User::find($data['customer_id']);
+            $getCustomerAccount = $user->accounts->first();
+            if(!$getCustomerAccount){
+                // create default customer account
+                $getCustomerAccount = $this->accountService->createAccountForUser($user);
+            }
         }else{
             $getCustomerAccount = Account::find($data['payment_account']);
         }
+
         // get grand total from data
         $grandTotal = $data['payment_amount'] ?? $data['grand_total'] ?? 0;
-
         //`transaction_id`, `account_id`, `type`, `amount`
 
         if($reverse && $type == 'debit'){

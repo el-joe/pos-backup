@@ -24,6 +24,7 @@ class ExpensesList extends Component
         'amount' => 'required|numeric',
         'expense_date' => 'required|date',
         'note' => 'nullable|string',
+        'tax_percentage' => 'nullable|numeric|min:0|max:100',
     ];
 
     function boot() {
@@ -81,6 +82,8 @@ class ExpensesList extends Component
                 'target' => $expense->model_type ? (new $expense->model_type)->getTable() : 'N/A',
                 'category' => $expense->category?->name ?? 'N/A',
                 'amount' => $expense->amount,
+                'tax_percentage' => $expense->tax_percentage,
+                'total' => $expense->total,
                 'date' => $expense->expense_date,
                 'note' => $expense->note ?? 'N/A',
                 'created_at' => $expense->created_at,
@@ -89,7 +92,7 @@ class ExpensesList extends Component
         });
 
         $headers = [
-            '#' , 'Branch' ,'Target' , 'Category' , 'Amount' , 'Date' , 'Note' , 'Created At' , 'Actions'
+            '#' , 'Branch' ,'Target' , 'Category' , 'Amount' , 'Tax Percentage' , 'Total' , 'Date' , 'Note' , 'Created At' , 'Actions'
         ];
         $columns = [
             'id' => [ 'type' => 'number'],
@@ -97,6 +100,8 @@ class ExpensesList extends Component
             'target' => [ 'type' => 'text'],
             'category' => [ 'type' => 'text'],
             'amount' => [ 'type' => 'decimal'],
+            'tax_percentage' => [ 'type' => 'decimal'],
+            'total' => [ 'type' => 'decimal'],
             'date' => [ 'type' => 'date'],
             'note' => [ 'type' => 'text'],
             'created_at' => [ 'type' => 'datetime'],

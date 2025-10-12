@@ -29,6 +29,7 @@ class TrailBalanceReport extends Component
                     'branch' => $line->transaction?->branch?->name ?? 'N/A',
                     'reference' => $line->ref,
                     'note' => $line->transaction?->note,
+                    'description' => $line->transaction?->description,
                     'date' => $line->transaction?->date,
                     'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
                     'debit' => $line->type == 'debit' ? $line->amount : 0,
@@ -39,7 +40,7 @@ class TrailBalanceReport extends Component
 
         // Refactor the headers by columns
         $headers = [
-            '#' , 'Transaction ID' , 'Transaction Type' , 'Branch' , 'Reference' , 'Note' , 'Date' , 'Account' ,'Debit' , 'Credit' , 'Created At'
+            '#' , 'Transaction ID' , 'Transaction Type' , 'Branch' , 'Reference' , 'Note' , 'Description' , 'Date' , 'Account' ,'Debit' , 'Credit' , 'Created At'
         ];
 
         $columns = [
@@ -49,6 +50,7 @@ class TrailBalanceReport extends Component
             'branch' => [ 'type' => 'text'],
             'reference' => [ 'type' => 'text'],
             'note' => [ 'type' => 'text'],
+            'description' => [ 'type' => 'text'],
             'date' => [ 'type' => 'date'],
             'account' => [ 'type' => 'text'],
             'debit' => [

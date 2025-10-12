@@ -50,6 +50,12 @@
                         <input type="number" step="any" class="form-control" wire:model="data.amount" id="expenseAmount" placeholder="Enter amount">
                     </div>
 
+                    {{-- tax percentage --}}
+                    <div class="form-group">
+                        <label for="taxPercentage">Tax Percentage (%)</label>
+                        <input type="number" step="any" class="form-control" wire:model="data.tax_percentage" id="taxPercentage" placeholder="Enter tax percentage">
+                    </div>
+
                     {{-- expense date --}}
                     <div class="form-group">
                         <label for="expenseDate">Date</label>

@@ -19,6 +19,10 @@ use App\Livewire\Admin\Products\ProductsList;
 use App\Livewire\Admin\Purchases\AddPurchase;
 use App\Livewire\Admin\Purchases\PurchaseDetails;
 use App\Livewire\Admin\Purchases\PurchasesList;
+use App\Livewire\Admin\Reports\Financial\BalanceSheetReport;
+use App\Livewire\Admin\Reports\Financial\CashFlowStatementReport;
+use App\Livewire\Admin\Reports\Financial\GeneralLedgerReport;
+use App\Livewire\Admin\Reports\Financial\IncomeStatmentReport;
 use App\Livewire\Admin\Reports\Financial\TrailBalanceReport;
 use App\Livewire\Admin\Sales\SaleDetails;
 use App\Livewire\Admin\Sales\SalesList;
@@ -109,6 +113,10 @@ Route::middleware([
                     'as' => 'financial.',
                 ], function () {
                     Route::get('trail-balance', TrailBalanceReport::class)->name('trail-balance');
+                    Route::get('income-statement', IncomeStatmentReport::class)->name('income-statement');
+                    Route::get('balance-sheet', BalanceSheetReport::class)->name('balance-sheet');
+                    Route::get('cash-flow-statement', CashFlowStatementReport::class)->name('cash-flow-statement');
+                    Route::get('general-ledger', GeneralLedgerReport::class)->name('general-ledger');
                 });
 
 

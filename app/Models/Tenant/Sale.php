@@ -71,7 +71,7 @@ class Sale extends Model
     }
 
     function getGrandTotalAmountAttribute() {
-        return SaleHelper::grandTotal($this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage);
+        return SaleHelper::grandTotal($this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
     }
 
     function getDueAmountAttribute() {

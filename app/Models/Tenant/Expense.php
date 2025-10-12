@@ -9,7 +9,7 @@ class Expense extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'branch_id','expense_category_id','amount','expense_date','note','created_by','model_type','model_id'
+        'branch_id','expense_category_id','amount','expense_date','note','created_by','model_type','model_id','tax_percentage'
     ];
 
     public function category() {
@@ -37,5 +37,9 @@ class Expense extends Model
         ->when(isset($filter['with_trashed']) && $filter['with_trashed'], function($q) {
             $q->withTrashed();
         });
+    }
+
+    function getTotalAttribute() {
+        return $this->amount + ($this->amount * $this->tax_percentage / 100);
     }
 }

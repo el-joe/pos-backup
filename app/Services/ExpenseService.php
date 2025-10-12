@@ -46,10 +46,12 @@ class ExpenseService
             'reference_type' => Expense::class,
             'reference_id' => $expense->id,
             'branch_id' => $expense->branch_id,
-            'amount' => $expense->amount,
+            'amount' => $expense->total,
             'lines' => $this->expenseLines([
                 'branch_id' => $expense->branch_id,
-                'amount'=> $expense->amount
+                'amount'=> $expense->amount,
+                'tax_percentage' => $expense->tax_percentage,
+                'total' => $expense->total,
             ])
         ];
 
@@ -82,16 +84,28 @@ class ExpenseService
     }
 
     function expenseLines($data,$reverse = false) {
+        $total = $data['amount'];
+
         $lines[] = $this->purchaseService->createExpenseLine([
             'branch_id' => $data['branch_id'],
             'expenses'=> [
-                ['amount'=> $data['amount']]
+                ['amount'=> $total]
             ]
         ],$reverse);
 
+        if(isset($data['tax_percentage']) && $data['tax_percentage'] > 0) {
+            $taxAmount = ($data['amount'] * $data['tax_percentage']) / 100;
+            $lines[] = $this->purchaseService->createVatReceivableLine([
+                'branch_id' => $data['branch_id'],
+                'tax_amount'=> $taxAmount
+            ],$reverse);
+
+            $total += $taxAmount;
+        }
+
         $lines[] = $this->purchaseService->createBranchCashLine([
             'branch_id' => $data['branch_id'],
-            'grand_total'=> $data['amount']
+            'grand_total'=> $total
         ],'full_paid',$reverse);
 
         return $lines;
