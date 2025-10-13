@@ -17,6 +17,10 @@ class Branch extends Model
         return $this->belongsTo(Tax::class);
     }
 
+    function sales() {
+        return $this->hasMany(Sale::class,'branch_id');
+    }
+
     public function scopeActive($q) {
         return $q->where('active',1);
     }

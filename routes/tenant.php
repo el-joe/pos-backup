@@ -24,6 +24,9 @@ use App\Livewire\Admin\Reports\Financial\CashFlowStatementReport;
 use App\Livewire\Admin\Reports\Financial\GeneralLedgerReport;
 use App\Livewire\Admin\Reports\Financial\IncomeStatmentReport;
 use App\Livewire\Admin\Reports\Financial\TrailBalanceReport;
+use App\Livewire\Admin\Reports\Sales\BranchSalesReport;
+use App\Livewire\Admin\Reports\Sales\ProductSalesReport;
+use App\Livewire\Admin\Reports\Sales\SalesSummaryReport;
 use App\Livewire\Admin\Sales\SaleDetails;
 use App\Livewire\Admin\Sales\SalesList;
 use App\Livewire\Admin\Statistics;
@@ -121,6 +124,14 @@ Route::middleware([
                 });
 
 
+                Route::group([
+                    'prefix' => 'sales',
+                    'as' => 'sales.',
+                ], function () {
+                    Route::get('sales-summary', SalesSummaryReport::class)->name('sales.summary');
+                    Route::get('product-sales', ProductSalesReport::class)->name('sales.product');
+                    Route::get('branch-sales', BranchSalesReport::class)->name('sales.branch');
+                });
             });
 
             // Stock Adjustments

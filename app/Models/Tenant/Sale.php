@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Enums\RefundStatusEnum;
 use App\Helpers\SaleHelper;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Sale extends Model
 {
@@ -61,6 +62,7 @@ class Sale extends Model
             return $total;
         });
     }
+
 
     function getDiscountAmountAttribute() {
         return SaleHelper::discountAmount($this->saleItems, $this->discount_type, $this->discount_value, $this->max_discount_amount);

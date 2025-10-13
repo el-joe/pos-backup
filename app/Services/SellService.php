@@ -16,6 +16,7 @@ use App\Models\Tenant\Sale;
 use App\Models\Tenant\SaleItem;
 use App\Models\Tenant\User;
 use App\Repositories\SellRepository;
+use Illuminate\Support\Facades\DB;
 
 class SellService
 {
@@ -430,6 +431,7 @@ class SellService
         // }
         return $saleOrder;
     }
+
 
     function delete($id) {
         $purchase = $this->repo->find($id);
