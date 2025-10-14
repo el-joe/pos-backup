@@ -74,7 +74,7 @@
                                 <div class="card-icon" style="background: #ffc107;"><i class="fa fa-calculator"></i></div>
                                 <div class="card-content">
                                     <h5 style="color:#ffc107;">Subtotal</h5>
-                                    <h2 style="color:#ff6f00;">{{ number_format($subTotal, 2) }}</h2>
+                                    <h2 style="color:#ff6f00;">{{ $subTotal }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                                 <div class="card-icon" style="background: #f44336;"><i class="fa fa-tag"></i></div>
                                 <div class="card-content">
                                     <h5 style="color:#f44336;">Discount @if($order->discount_type == 'rate') ({{ round($order->discount_value,1) }}%)  @endif</h5>
-                                    <h2 style="color:#c62828;">{{ number_format($totalDiscount, 2) }}</h2>
+                                    <h2 style="color:#c62828;">{{ $totalDiscount }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                 <div class="card-icon" style="background: #9c27b0;"><i class="fa fa-percent"></i></div>
                                 <div class="card-content">
                                     <h5 style="color:#9c27b0;">Tax Amount @if($order->tax_percentage) ({{ round($order->tax_percentage,1) }}%)  @endif</h5>
-                                    <h2 style="color:#7b1fa2;">{{ number_format($totalTax,2) }}</h2>
+                                    <h2 style="color:#7b1fa2;">{{ $totalTax }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                                 <div class="card-icon" style="background: #2196f3;"><i class="fa fa-money"></i></div>
                                 <div class="card-content">
                                     <h5 style="color:#fff;">Grand Total</h5>
-                                    <h2 style="color:#fff;">{{ number_format($grandTotal, 2) }}</h2>
+                                    <h2 style="color:#fff;">{{ $grandTotal }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +118,7 @@
                                 <div class="card-icon" style="background: #4caf50;"><i class="fa fa-check-circle"></i></div>
                                 <div class="card-content">
                                     <h5 style="color:#4caf50;">Paid Amount</h5>
-                                    <h2 style="color:#2e7d32;">{{ number_format($order->paid_amount ?? 0, 2) }}</h2>
+                                    <h2 style="color:#2e7d32;">{{ $paid }}</h2>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                                 <div class="card-icon" style="background: #ff9800;"><i class="fa fa-clock-o"></i></div>
                                 <div class="card-content">
                                     <h5 style="color:#ff9800;">Due Amount</h5>
-                                    <h2 style="color:#f57c00;">{{ number_format(($grandTotal - ($order->paid_amount ?? 0)), 2) }}</h2>
+                                    <h2 style="color:#f57c00;">{{ number_format(($grandTotal - $paid), 2) }}</h2>
                                 </div>
                             </div>
                         </div>

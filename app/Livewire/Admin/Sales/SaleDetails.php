@@ -57,12 +57,12 @@ class SaleDetails extends Component
     function calcTotals() {
 
         $itemsCount = $this->order->saleItems->count();
-        $totalQty = $this->order->saleItems->sum(fn($q)=>$q->qty - $q->refunded_qty) ;
-        $subTotal = SaleHelper::subTotal($this->order->saleItems);
-        $totalDiscount = SaleHelper::discountAmount($this->order->saleItems,$this->order->discount_type,$this->order->discount_value,$this->order->max_discount_amount);
-        $totalTax = SaleHelper::taxAmount($this->order->saleItems,$this->order->discount_type,$this->order->discount_value,$this->order->tax_percentage);
-        $grandTotal = SaleHelper::grandTotal($this->order->saleItems,$this->order->discount_type,$this->order->discount_value,$this->order->tax_percentage, $this->order->max_discount_amount);
-        $paid = $this->order->paid_amount;
+        $totalQty = $this->order->saleItems->sum(fn($q)=>$q->qty - $q->refunded_qty);
+        $subTotal = $this->order->subTotal;
+        $totalDiscount = $this->order->discountAmount;
+        $totalTax = $this->order->taxAmount;
+        $grandTotal = numFormat($this->order->grandTotalAmount, 1);
+        $paid = numFormat($this->order->paid_amount, 1);
         $due = $grandTotal - $paid;
         return get_defined_vars();
     }

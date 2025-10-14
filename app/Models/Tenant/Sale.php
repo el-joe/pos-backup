@@ -94,7 +94,9 @@ class Sale extends Model
     }
 
     function getDueAmountAttribute() {
-        return numFormat(numFormat($this->grand_total_amount,2) - $this->paid_amount, 3);
+        $dueAmount = $this->grand_total_amount - $this->paid_amount;
+        if($dueAmount < .01) $dueAmount = 0;
+        return numFormat($dueAmount, 3);
     }
 
     function scopeFilter($q,$filters = []) {
