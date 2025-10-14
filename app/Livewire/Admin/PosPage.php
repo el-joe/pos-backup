@@ -195,7 +195,7 @@ class PosPage extends Component
         $discount = SaleHelper::discountAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0,$this->data['discount']['max'] ?? 0);
         $totalAfterDiscount = $subTotal - $discount;
         $taxPercentage = $this->branch?->tax?->rate ?? 0;
-        $tax = SaleHelper::taxAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $taxPercentage);
+        $tax = SaleHelper::taxAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $taxPercentage,$this->data['discount']['max'] ?? 0);
         $total = $subTotal + $tax - $discount;
         return get_defined_vars();
     }

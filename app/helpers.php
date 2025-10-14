@@ -16,6 +16,11 @@ if(!function_exists('admin')) {
     }
 }
 
+function numFormat($number, $decimals = 2) {
+    return number_format((float)$number, $decimals, '.', '');
+
+}
+
 function branch() {
     return auth(TENANT_ADMINS_GUARD)->user()->branch;
 }

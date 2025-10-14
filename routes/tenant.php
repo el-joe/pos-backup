@@ -25,8 +25,12 @@ use App\Livewire\Admin\Reports\Financial\GeneralLedgerReport;
 use App\Livewire\Admin\Reports\Financial\IncomeStatmentReport;
 use App\Livewire\Admin\Reports\Financial\TrailBalanceReport;
 use App\Livewire\Admin\Reports\Sales\BranchSalesReport;
+use App\Livewire\Admin\Reports\Sales\CustomerSalesReport;
 use App\Livewire\Admin\Reports\Sales\ProductSalesReport;
+use App\Livewire\Admin\Reports\Sales\SalesProfitReport;
+use App\Livewire\Admin\Reports\Sales\SalesReturnReport;
 use App\Livewire\Admin\Reports\Sales\SalesSummaryReport;
+use App\Livewire\Admin\Reports\Sales\SalesVatReport;
 use App\Livewire\Admin\Sales\SaleDetails;
 use App\Livewire\Admin\Sales\SalesList;
 use App\Livewire\Admin\Statistics;
@@ -131,6 +135,10 @@ Route::middleware([
                     Route::get('sales-summary', SalesSummaryReport::class)->name('sales.summary');
                     Route::get('product-sales', ProductSalesReport::class)->name('sales.product');
                     Route::get('branch-sales', BranchSalesReport::class)->name('sales.branch');
+                    Route::get('customer-sales', CustomerSalesReport::class)->name('sales.customer');
+                    Route::get('profit-loss', SalesProfitReport::class)->name('sales.profit-loss');
+                    Route::get('returns', SalesReturnReport::class)->name('sales.returns');
+                    Route::get('vat-report', SalesVatReport::class)->name('sales.vat-report');
                 });
             });
 

@@ -65,19 +65,36 @@ class Sale extends Model
 
 
     function getDiscountAmountAttribute() {
-        return SaleHelper::discountAmount($this->saleItems, $this->discount_type, $this->discount_value, $this->max_discount_amount);
+        $discount = (clone $this->saleItems)->map(function($item){
+            return SaleHelper::singleDiscountAmount($item, $this->saleItems, $this->discount_type, $this->discount_value, $this->max_discount_amount);
+        })->sum();
+        return $discount;
+
+        // return SaleHelper::discountAmount($this->saleItems, $this->discount_type, $this->discount_value, $this->max_discount_amount);
     }
 
     function getTaxAmountAttribute() {
-        return SaleHelper::taxAmount($this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage);
+        $tax = (clone $this->saleItems)->map(function($item){
+            return SaleHelper::singleTaxAmount($item, $this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+        })->sum();
+
+        return $tax;
+
+        // return SaleHelper::taxAmount($this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage);
     }
 
     function getGrandTotalAmountAttribute() {
-        return SaleHelper::grandTotal($this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+        $grandTotal = (clone $this->saleItems)->map(function($item){
+            return SaleHelper::singleGrandTotal($item, $this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+        })->sum();
+
+        return $grandTotal;
+
+        // return SaleHelper::grandTotal($this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
     }
 
     function getDueAmountAttribute() {
-        return $this->grand_total_amount - $this->paid_amount;
+        return numFormat(numFormat($this->grand_total_amount,2) - $this->paid_amount, 3);
     }
 
     function scopeFilter($q,$filters = []) {

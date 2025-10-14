@@ -4,17 +4,16 @@ namespace App\Helpers;
 
 class SaleHelper
 {
-    static function itemTotal($product) : float {
+    static function itemTotal($product, $withRefund = true) {
         $qty = $product['qty'] ?? $product['quantity'] ?? 0;
-        $refunded_qty = $product['refunded_qty'] ?? 0;
+        $refunded_qty = $withRefund ? ($product['refunded_qty'] ?? 0) : 0;
         $sell_price = $product['sell_price'] ?? $product['price'] ?? 0;
-        return ($qty - $refunded_qty) * $sell_price;
-
+        return numFormat((($qty - $refunded_qty) * $sell_price),3);
     }
 
-    static function subTotal($products){
-        return collect($products)->sum(function($product){
-            return self::itemTotal($product);
+    static function subTotal($products, $withRefund = true) {
+        return collect($products)->sum(function($product) use ($withRefund) {
+            return numFormat(self::itemTotal($product, $withRefund),3);
         });
     }
 
@@ -24,18 +23,36 @@ class SaleHelper
             if($discount_type == 'fixed') {
                 $amount = $discount_value;
                 if($subTotal > $max) {
-                    return $amount;
+                    return numFormat($amount, 3);
                 }
-                return 0;
             } else {
                 $amount = ($subTotal * $discount_value / 100);
+
                 if($max == 0) {
-                    return $amount;
+                    return numFormat($amount, 3);
                 }
                 if($amount > $max) {
-                    return $max;
+                    return numFormat($max, 3);
                 }
+
+                return numFormat($amount, 3);
             }
+        }
+        return 0;
+    }
+
+    static function singleDiscountAmount($product,$products, $discount_type = null, $discount_value = 0,$max = 0) {
+        $subTotal = self::subTotal($products,false);
+        if($discount_type && $discount_value) {
+            $total = self::itemTotal($product);
+            $percentageItemFromTotal = $subTotal ? ($total / $subTotal) : 0;
+            $allProducts = collect($products->toArray())->map(function($item){
+                $item['refunded_qty'] = 0;
+                return $item;
+            });
+
+            $totalDiscount = self::discountAmount($allProducts, $discount_type, $discount_value,$max);
+            return numFormat($totalDiscount * $percentageItemFromTotal,3);
         }
         return 0;
     }
@@ -43,29 +60,55 @@ class SaleHelper
     static function taxAmount($products, $discount_type = null, $discount_value = 0, $tax_percentage = 0,$max = 0) : float {
         $totalItems = collect($products)->sum(fn($q)=> self::itemTotal($q) );
         $totalDiscount = self::discountAmount($products, $discount_type, $discount_value,$max);
-        return collect($products)->sum(function($product) use ($products,$discount_type, $discount_value, $tax_percentage,$max,$totalItems,$totalDiscount) {
+
+        return collect($products)->sum(function($product) use ($tax_percentage,$totalItems,$totalDiscount) {
             $total = self::itemTotal($product);
 
             $percentageItemFromTotal = $totalItems ? ($total / $totalItems) : 0;
 
-            $totalDiscount = $totalDiscount * ($percentageItemFromTotal / 100);
+            $totalDiscount = $totalDiscount * $percentageItemFromTotal;
 
             $total = $total - $totalDiscount;
 
 
             if(($product['taxable'] ?? 0) == 1 && $tax_percentage) {
-                return ($total * $tax_percentage / 100);
+                return numFormat($total * $tax_percentage / 100,3);
             }
             return 0;
         });
     }
 
-    static function grandTotal($products, $discount_type = null, $discount_value = 0, $tax_percentage = 0, $max_discount_amount = 0) : float {
+    static function singleTaxAmount($product,$products, $discount_type = null, $discount_value = 0, $tax_percentage = 0,$max = 0) {
+        $allProducts = collect($products->toArray())->map(function($item){
+            $item['refunded_qty'] = 0;
+            return $item;
+        });
+        $totalItems = collect($allProducts)->sum(fn($q)=> self::itemTotal($q,false) );
+        $totalDiscount = self::discountAmount($allProducts, $discount_type, $discount_value,$max);
+
+        $total = self::itemTotal($product);
+
+        $percentageItemFromTotal = $totalItems ? ($total / $totalItems) : 0;
+
+        $totalDiscount = $totalDiscount * $percentageItemFromTotal;
+
+        $total = $total - $totalDiscount;
+
+        return numFormat($total * $tax_percentage / 100,3);
+    }
+
+    static function grandTotal($products, $discount_type = null, $discount_value = 0, $tax_percentage = 0, $max_discount_amount = 0)  {
         $subTotal = self::subTotal($products);
         $discount = self::discountAmount($products, $discount_type, $discount_value, $max_discount_amount);
         $tax = self::taxAmount($products, $discount_type, $discount_value, $tax_percentage,$max_discount_amount);
+        return numFormat(($subTotal - $discount) + $tax,3);
+    }
 
-        return ($subTotal - $discount) + $tax;
+    static function singleGrandTotal($product,$products, $discount_type = null, $discount_value = 0, $tax_percentage = 0, $max_discount_amount = 0)  {
+        $subTotal = self::subTotal([$product]);
+        $discount = self::singleDiscountAmount($product,$products, $discount_type, $discount_value, $max_discount_amount);
+        $tax = self::singleTaxAmount($product,$products, $discount_type, $discount_value, $tax_percentage,$max_discount_amount);
+        return numFormat(($subTotal - $discount) + $tax,3);
     }
 
     static function getGrandTotalQuery(){
