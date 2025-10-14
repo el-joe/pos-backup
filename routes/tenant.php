@@ -24,6 +24,13 @@ use App\Livewire\Admin\Reports\Financial\CashFlowStatementReport;
 use App\Livewire\Admin\Reports\Financial\GeneralLedgerReport;
 use App\Livewire\Admin\Reports\Financial\IncomeStatmentReport;
 use App\Livewire\Admin\Reports\Financial\TrailBalanceReport;
+use App\Livewire\Admin\Reports\Purchases\BranchPurchasesReport;
+use App\Livewire\Admin\Reports\Purchases\ProductPurchasesReport;
+use App\Livewire\Admin\Reports\Purchases\PurchasesDiscountReport;
+use App\Livewire\Admin\Reports\Purchases\PurchasesReturnReport;
+use App\Livewire\Admin\Reports\Purchases\PurchasesSummaryReport;
+use App\Livewire\Admin\Reports\Purchases\PurchasesVatReport;
+use App\Livewire\Admin\Reports\Purchases\SupplierPurchasesReport;
 use App\Livewire\Admin\Reports\Sales\BranchSalesReport;
 use App\Livewire\Admin\Reports\Sales\CustomerSalesReport;
 use App\Livewire\Admin\Reports\Sales\ProductSalesReport;
@@ -140,8 +147,20 @@ Route::middleware([
                     Route::get('returns', SalesReturnReport::class)->name('sales.returns');
                     Route::get('vat-report', SalesVatReport::class)->name('sales.vat-report');
                 });
-            });
 
+                Route::group([
+                    'prefix' => 'purchases',
+                    'as' => 'purchases.',
+                ], function () {
+                    Route::get('purchases-summary', PurchasesSummaryReport::class)->name('purchases.summary');
+                    Route::get('product-purchases', ProductPurchasesReport::class)->name('purchases.product');
+                    Route::get('branch-purchases', BranchPurchasesReport::class)->name('purchases.branch');
+                    Route::get('supplier-purchases', SupplierPurchasesReport::class)->name('purchases.supplier');
+                    Route::get('returns', PurchasesReturnReport::class)->name('purchases.returns');
+                    Route::get('discounts', PurchasesDiscountReport::class)->name('purchases.discounts');
+                    Route::get('vat-report', PurchasesVatReport::class)->name('purchases.vat-report');
+                });
+            });
             // Stock Adjustments
             Route::get('stock-adjustments', StockTakingList::class)->name('stocks.adjustments.list');
             Route::get('stock-adjustments/create', AddStockTaking::class)->name('stocks.adjustments.create');
