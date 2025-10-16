@@ -24,6 +24,10 @@ use App\Livewire\Admin\Reports\Financial\CashFlowStatementReport;
 use App\Livewire\Admin\Reports\Financial\GeneralLedgerReport;
 use App\Livewire\Admin\Reports\Financial\IncomeStatmentReport;
 use App\Livewire\Admin\Reports\Financial\TrailBalanceReport;
+use App\Livewire\Admin\Reports\Inventory\CogsReport;
+use App\Livewire\Admin\Reports\Inventory\ShortageReport;
+use App\Livewire\Admin\Reports\Inventory\StockMovementReport;
+use App\Livewire\Admin\Reports\Inventory\StockValuationReport;
 use App\Livewire\Admin\Reports\Purchases\BranchPurchasesReport;
 use App\Livewire\Admin\Reports\Purchases\ProductPurchasesReport;
 use App\Livewire\Admin\Reports\Purchases\PurchasesDiscountReport;
@@ -160,6 +164,17 @@ Route::middleware([
                     Route::get('discounts', PurchasesDiscountReport::class)->name('purchases.discounts');
                     Route::get('vat-report', PurchasesVatReport::class)->name('purchases.vat-report');
                 });
+
+                Route::group([
+                    'prefix' => 'inventory',
+                    'as' => 'inventory.',
+                ], function () {
+                    Route::get('stock-valuation', StockValuationReport::class)->name('stock-valuation');
+                    Route::get('stock-movement', StockMovementReport::class)->name('stock-movement');
+                    Route::get('cogs-report', CogsReport::class)->name('cogs-report');
+                    Route::get('shortage-report', ShortageReport::class)->name('shortage-report');
+                });
+
             });
             // Stock Adjustments
             Route::get('stock-adjustments', StockTakingList::class)->name('stocks.adjustments.list');
