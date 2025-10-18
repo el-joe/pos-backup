@@ -10,14 +10,17 @@ use Illuminate\Support\Facades\DB;
 class Sale extends Model
 {
     protected $fillable = [
-        'customer_id','branch_id','invoice_number','order_date',
-        'tax_id','tax_percentage','discount_id','discount_type','discount_value','paid_amount','max_discount_amount'
+        'customer_id','branch_id','invoice_number','order_date','created_by',
+        'tax_id','tax_percentage','discount_id','discount_type','discount_value',
+        'paid_amount','max_discount_amount'
     ];
 
     // boot method to update discount max value to 0 if null
     protected static function booted()
     {
         static::creating(function ($sale) {
+            $sale->created_by = admin()->id ?? null;
+
             if(!empty($sale->discount_id)){
                 $discount = Discount::find($sale->discount_id);
                 if($discount) {

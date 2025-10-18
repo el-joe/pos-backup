@@ -27,7 +27,9 @@
                 <li>
                     <a href="widgets.html" aria-expanded="false"><i class="fa fa-dashboard fa-fw"></i> <span class="hide-menu"> Dashboard </span></a>
                 </li>
-
+                <li>
+                    <a href="widgets.html" aria-expanded="false"><i class="fa fa-credit-card fa-fw"></i> <span class="hide-menu"> Cash Register </span></a>
+                </li>
                 <li>
                     <a href="widgets.html" aria-expanded="false"><i class="fa fa-credit-card fa-fw"></i> <span class="hide-menu"> POS </span></a>
                 </li>

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\BranchService;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportFileUploads\FilePreviewController;
 use Livewire\Livewire;
@@ -116,6 +118,16 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+
+
+        View::composer('*', function ($view) {
+            if(tenant()){
+                $branchesService = app(BranchService::class);
+                $branches = $branchesService->activeList();
+                $view->with('__branches', $branches);
+            }
+        });
+
     }
 
     protected function bootEvents()

@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Enums\AccountTypeEnum;
+use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
+use App\Models\Tenant\Branch;
 use App\Repositories\TransactionRepository;
 
 class TransactionService
@@ -49,6 +51,35 @@ class TransactionService
                 'amount' => $line['amount'] ?? 0,
             ]);
         }
+
+        return $transaction;
+    }
+
+    function createOpenBalanceTransaction($data,$reverse = false) {
+        $ownerAccount = Account::default('owner_account', AccountTypeEnum::OWNER_ACCOUNT->value);
+        $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $data['branch_id']);
+
+        $transaction = $this->create([
+            'date' => $data['date'] ?? now(),
+            'description' => $reverse ? 'Closing Balance' : 'Opening Balance',
+            'type' => $reverse ? TransactionTypeEnum::CLOSING_BALANCE->value : TransactionTypeEnum::OPENING_BALANCE->value,
+            'branch_id' => $data['branch_id'] ?? null,
+            'amount' => $data['amount'] ?? 0,
+            'reference_type' => Branch::class,
+            'reference_id' => $data['branch_id'] ?? null,
+            'lines' => [
+                [
+                    'account_id' => $branchCashAccount->id,
+                    'type' => $reverse ? 'credit' : 'debit',
+                    'amount' => $data['amount'] ?? 0,
+                ],
+                [
+                    'account_id' => $ownerAccount->id,
+                    'type' => $reverse ? 'debit' : 'credit',
+                    'amount' => $data['amount'] ?? 0,
+                ],
+            ],
+        ]);
 
         return $transaction;
     }

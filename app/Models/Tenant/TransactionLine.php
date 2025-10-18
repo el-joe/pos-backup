@@ -7,8 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionLine extends Model
 {
     protected $fillable = [
-        'transaction_id','account_id','type','amount'
+        'transaction_id','account_id','type','amount','created_by'
     ];
+
+    static function boot() : void {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = admin()->id;
+        });
+    }
 
     function transaction() {
         return $this->belongsTo(Transaction::class,'transaction_id');

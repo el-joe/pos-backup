@@ -53,7 +53,7 @@ Rely on inventory, cogs, and inventory_shortage accounts:
 | **Inventory Shortage Report** | Detect losses                | `inventory_shortage` entries   |
 
 
-📈 5. Performance & Analysis Reports
+📈 5. Performance & Analysis Reports  // TODO
 
 Derived from data relationships (sales, profit, expenses):
 
@@ -74,13 +74,13 @@ Derived from data relationships (sales, profit, expenses):
 | -------------------------- | ------------------------------------------ |
 | **VAT Summary**            | Summarize `vat_payable` - `vat_receivable` |
 | **Withholding Tax Report** | If applicable for suppliers/customers      |
-| **Audit Trail Report**     | Transaction history with user logs         |
+| **Audit Trail Report**     | Transaction history with user logs         | // TODO
 
 
 ⚙️ 7. Branch / User / Cash Reports
 
 | Report                         | Purpose                            |
 | ------------------------------ | ---------------------------------- |
-| **Cash Register Summary**      | Track cash movements per day       |
-| **Branch Profitability**       | Compare net profits per branch     |
+| **Cash Register Summary**      | Track cash movements per day       | // TODO
+| **Branch Profitability**       | Compare net profits per branch     | // TODO
 | **User / Cashier Performance** | Sales per user, refunds, discounts |

@@ -8,6 +8,7 @@ use App\Http\Middleware\Tenant\AdminAuthMiddleware;
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Branches\BranchesList;
 use App\Livewire\Admin\Brands\BrandsList;
+use App\Livewire\Admin\CashRegister\CashRegisterPage;
 use App\Livewire\Admin\Categories\CategoriesList;
 use App\Livewire\Admin\Discounts\DiscountsList;
 use App\Livewire\Admin\Expenses\ExpenseCategoriesList;
@@ -19,6 +20,7 @@ use App\Livewire\Admin\Products\ProductsList;
 use App\Livewire\Admin\Purchases\AddPurchase;
 use App\Livewire\Admin\Purchases\PurchaseDetails;
 use App\Livewire\Admin\Purchases\PurchasesList;
+use App\Livewire\Admin\Reports\Admins\CashierReport;
 use App\Livewire\Admin\Reports\Financial\BalanceSheetReport;
 use App\Livewire\Admin\Reports\Financial\CashFlowStatementReport;
 use App\Livewire\Admin\Reports\Financial\GeneralLedgerReport;
@@ -42,6 +44,8 @@ use App\Livewire\Admin\Reports\Sales\SalesProfitReport;
 use App\Livewire\Admin\Reports\Sales\SalesReturnReport;
 use App\Livewire\Admin\Reports\Sales\SalesSummaryReport;
 use App\Livewire\Admin\Reports\Sales\SalesVatReport;
+use App\Livewire\Admin\Reports\Tax\VatSummaryReport;
+use App\Livewire\Admin\Reports\Tax\WithholdingTaxReport;
 use App\Livewire\Admin\Sales\SaleDetails;
 use App\Livewire\Admin\Sales\SalesList;
 use App\Livewire\Admin\Statistics;
@@ -86,6 +90,9 @@ Route::middleware([
 
         Route::middleware([AdminAuthMiddleware::class])->group(function () {
             Route::get('/',Statistics::class)->name('statistics');
+            Route::get('cash-register',CashRegisterPage::class)->name('cash.register.open');
+            // TODO : Cash Register Save Data for everything related like (sales,purchases,expenses)
+            Route::get('switch-branch/{branch?}', [AuthController::class, 'switchBranch'])->name('switch.branch');
             Route::get('branches',BranchesList::class)->name('branches.list');
             Route::get('categories', CategoriesList::class)->name('categories.list');
             Route::get('brands', BrandsList::class)->name('brands.list');
@@ -174,6 +181,16 @@ Route::middleware([
                     Route::get('cogs-report', CogsReport::class)->name('cogs-report');
                     Route::get('shortage-report', ShortageReport::class)->name('shortage-report');
                 });
+
+                Route::group([
+                    'prefix' => 'taxes',
+                    'as' => 'taxes.',
+                ], function () {
+                    Route::get('vat-summary', VatSummaryReport::class)->name('vat-summary');
+                    Route::get('withholding-tax', WithholdingTaxReport::class)->name('withholding-tax');
+                });
+
+                Route::get('cashier-report', CashierReport::class)->name('cashier.report');
 
             });
             // Stock Adjustments

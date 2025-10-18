@@ -18,6 +18,8 @@ enum TransactionTypeEnum : string
     case STOCK_TRANSFER_REFUND = 'stock_transfer_refund';
     case STOCK_ADJUSTMENT = 'stock_adjustment';
     case STOCK_ADJUSTMENT_REFUND = 'stock_adjustment_refund';
+    case OPENING_BALANCE = 'opening_balance';
+    case CLOSING_BALANCE = 'closing_balance';
 
     public function label(): string
     {

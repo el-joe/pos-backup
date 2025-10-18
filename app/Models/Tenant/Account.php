@@ -43,7 +43,7 @@ class Account extends Model
         });
     }
 
-    static function default($name,$type,$branch_id) {
+    static function default($name,$type,$branch_id = null) {
         $method = PaymentMethod::whereSlug('cash')
             ->where(function ($q) use ($branch_id) {
                 $q->where('branch_id',$branch_id)->orWhereNull('branch_id');

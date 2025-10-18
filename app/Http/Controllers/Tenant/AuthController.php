@@ -23,4 +23,10 @@ class AuthController extends Controller
 
         return redirect('admin');
     }
+
+    function switchBranch($branch = null) {
+        admin()->update(['branch_id' => $branch]);
+
+        return redirect()->back();
+    }
 }

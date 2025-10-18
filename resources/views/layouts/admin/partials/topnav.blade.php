@@ -24,5 +24,33 @@
                 </form>
             </li>
         </ul>
+
+        {{-- Branch selector on right side of top nav --}}
+        @php
+            $currentBranch = admin()->branch_id;
+        @endphp
+        <ul class="nav navbar-top-links navbar-right hidden-xs">
+            <li class="dropdown">
+                <div style="padding:8px 12px;">
+                    {{-- <label class="control-label" style="margin-right:8px; color:#666; font-weight:600;">Branch:</label> --}}
+                    <select id="branch-switcher" class="form-control" style="display:inline-block; width:auto; min-width:180px;">
+                        <option value="">All Branches</option>
+                        @foreach($__branches as $b)
+                            <option value="{{ $b->id }}" @if($currentBranch == $b->id) selected @endif>{{ $b->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </li>
+        </ul>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function(){
+                var sel = document.getElementById('branch-switcher');
+                if (!sel) return;
+                sel.addEventListener('change', function(){
+                    window.location.href = '/admin/switch-branch/' + this.value;
+                });
+            });
+        </script>
     </div>
 </nav>
