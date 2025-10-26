@@ -10,6 +10,7 @@ use App\Models\Tenant\Setting;
 use App\Models\Tenant\Stock;
 use App\Models\Tenant\User;
 use App\Services\BranchService;
+use App\Services\CashRegisterService;
 use App\Services\ProductService;
 use App\Services\SellService;
 use App\Services\UserService;
@@ -22,7 +23,7 @@ class PosPage extends Component
 {
     use LivewireOperations;
 
-    private $productService, $userService, $sellService, $branchService;
+    private $productService, $userService, $sellService, $branchService, $cashRegisterService;
     public $currentProduct,$selectedUnitId,$selectedQuantity,$maxQuantity,$discountCode,$selectedCustomerId;
     public $data = [];
     public $payments = [];
@@ -33,6 +34,7 @@ class PosPage extends Component
         $this->userService = app(UserService::class);
         $this->sellService = app(SellService::class);
         $this->branchService = app(BranchService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     function updatingSelectedUnitId($value) {
@@ -240,7 +242,15 @@ class PosPage extends Component
                 'taxable' => $product['taxable'] ?? false,
             ];
         }
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister && ($dataToSave['paid_amount']??0) > 0){
+            $this->cashRegisterService->increment($cashRegister->id,'total_sales',$dataToSave['paid_amount']);
+        }
+
         $this->sellService->save(null,$dataToSave);
+
         $this->dismiss();
         $this->popup('success', 'Order placed successfully');
         $this->reset(['data','payments','selectedCustomerId']);

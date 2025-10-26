@@ -3,6 +3,9 @@
 namespace App\Livewire\Admin\Purchases;
 
 use App\Helpers\PurchaseHelper;
+use App\Models\Tenant\Expense;
+use App\Models\Tenant\PurchaseItem;
+use App\Services\CashRegisterService;
 use App\Services\ExpenseService;
 use App\Services\PurchaseService;
 use App\Traits\LivewireOperations;
@@ -21,13 +24,14 @@ class PurchaseDetails extends Component
     #[Url]
     public $activeTab = 'details';
 
-    private $purchaseService, $expenseService;
+    private $purchaseService, $expenseService, $cashRegisterService;
 
     public $currentItem,$currentExpense;
 
     function boot() {
         $this->purchaseService = app(PurchaseService::class);
         $this->expenseService = app(ExpenseService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     function mount() {
@@ -68,6 +72,14 @@ class PurchaseDetails extends Component
             'refundedQty' => 'required|numeric|min:1|max:'.$this->currentItem->actual_qty
         ])) return;
 
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $getTotalRefunded = $this->getTotalRefunded($this->currentItem->id, $this->refundedQty);
+            $this->cashRegisterService->increment($cashRegister->id, 'total_purchase_refunds', $getTotalRefunded);
+        }
+
+
         $this->purchaseService->refundPurchaseItem($this->currentItem?->id,$this->refundedQty); // TODO : if all products with qty is refunded then change purchase status to refunded and add badge of purchase list order and details page
 
         $this->mount();
@@ -77,6 +89,20 @@ class PurchaseDetails extends Component
         $this->popup('success','Purchase item refunded successfully.');
 
         $this->reset('refundedQty','currentItem');
+    }
+
+    function getTotalRefunded($purchaseItemId, $qty) {
+        $purchaseItem = PurchaseItem::findOrFail($purchaseItemId);
+        $purchaseOrder = $purchaseItem->purchase;
+        $refundedQtyAmount = $purchaseItem->unit_amount_after_tax * $qty;
+        $discountAmount = PurchaseHelper::calcDiscount($refundedQtyAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($refundedQtyAmount, $discountAmount);
+        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
+        // -----------------------------------
+        $grandTotalFromRefundedQty = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
+        $purchaseDueAmount = $purchaseOrder->due_amount;
+        $totalRefunded = $grandTotalFromRefundedQty - $purchaseDueAmount;
+        return $totalRefunded;
     }
 
     function deleteExpenseConfirm($id) {
@@ -96,12 +122,49 @@ class PurchaseDetails extends Component
             return;
         }
 
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $getTotalRefunded = $this->getTotalExpenseRefunded($expense->id);
+            $this->cashRegisterService->increment($cashRegister->id, 'total_purchase_refunds', $getTotalRefunded);
+        }
+
         $this->purchaseService->deleteExpenseTransaction($expense->id);
         $this->expenseService->delete($expense->id);
 
         $this->mount();
 
         $this->popup('success','Expense deleted successfully.');
+    }
+
+    function getTotalExpenseRefunded($id){
+        $expense = Expense::find($id);
+        $purchaseOrder = $expense?->model;
+
+        $discountAmount = PurchaseHelper::calcDiscount($expense->amount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($expense->amount, $discountAmount);
+        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
+        $grandTotal = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
+
+        // reverse purchase invoice type transaction
+        $refundInvoiceData = [
+            'branch_id' => $purchaseOrder->branch_id,
+            'tax_amount' => $taxAmount,
+            'discount_amount' => $discountAmount,
+            'supplier_id' => $purchaseOrder->supplier_id,
+            'grand_total' => $grandTotal,
+            'expenses' => [
+                [
+                    'amount' => $expense->amount,
+                ]
+            ]
+        ];
+
+        // refund purchase payments
+        $purchaseDueAmount = $purchaseOrder->due_amount;
+        $totalRefunded = $grandTotal - $purchaseDueAmount;
+
+        return $totalRefunded;
     }
 
     public function render()

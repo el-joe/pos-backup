@@ -56,6 +56,8 @@ class ExpenseService
         ];
 
         $this->transactionService->create($paymentData);
+
+        return $expense;
     }
 
     function delete($id) {
@@ -67,10 +69,10 @@ class ExpenseService
                 'reference_type' => Expense::class,
                 'reference_id' => $expense->id,
                 'branch_id' => $expense->branch_id,
-                'amount' => $expense->amount,
+                'amount' => $expense->total,
                 'lines' => $this->expenseLines([
                     'branch_id' => $expense->branch_id,
-                    'amount'=> $expense->amount
+                    'amount'=> $expense->total
                 ],true)
             ];
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use App\Models\Tenant\CashRegister;
 use App\Services\BranchService;
+use App\Services\CashRegisterService;
 use App\Services\TransactionService;
 
 #[Layout('layouts.admin')]
@@ -32,7 +33,7 @@ class CashRegisterPage extends Component
     }
     public $aggregates = [];
     public $currentRegister;
-    private $branchService,$transactionService;
+    private $branchService,$transactionService,$cashRegisterService;
 
     // Open/close form fields
     public $opening_balance_input;
@@ -43,6 +44,7 @@ class CashRegisterPage extends Component
     function boot() {
         $this->branchService = app(BranchService::class);
         $this->transactionService = app(TransactionService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     public function mount()
@@ -53,10 +55,7 @@ class CashRegisterPage extends Component
     public function loadData()
     {
         // find latest open register
-        $this->currentRegister = CashRegister::where('status', 'open')
-            ->where('branch_id', admin()->branch_id ?? $this->branchId ?? null)
-            ->where('admin_id', admin()->id ?? null)
-            ->first();
+        $this->currentRegister = $this->cashRegisterService->getOpenedCashRegister();
 
         // compute sums for numeric fillable fields
         $row = DB::table('cash_registers')
@@ -113,10 +112,7 @@ class CashRegisterPage extends Component
             'closing_balance_input' => 'required|numeric',
         ])) return;
 
-        $reg = CashRegister::where('status', 'open')
-            ->where('branch_id', admin()->branch_id ?? $this->branchId ?? null)
-            ->where('admin_id', admin()->id ?? null)
-            ->first();
+        $reg = $this->cashRegisterService->getOpenedCashRegister();
 
         if (! $reg) {
             $this->alert('error', 'No open register found.');

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Expenses;
 
 use App\Services\BranchService;
+use App\Services\CashRegisterService;
 use App\Services\ExpenseCategoryService;
 use App\Services\ExpenseService;
 use App\Traits\LivewireOperations;
@@ -14,7 +15,7 @@ use Livewire\WithPagination;
 class ExpensesList extends Component
 {
     use LivewireOperations,WithPagination;
-    private $expenseService, $expenseCategoryService , $branchService;
+    private $expenseService, $expenseCategoryService , $branchService, $cashRegisterService;
 
     public $current;
     public $data = [];
@@ -31,6 +32,7 @@ class ExpensesList extends Component
         $this->expenseService = app(ExpenseService::class);
         $this->expenseCategoryService = app(ExpenseCategoryService::class);
         $this->branchService = app(BranchService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     function setCurrent($id) {
@@ -50,6 +52,14 @@ class ExpensesList extends Component
             return;
         }
 
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $getTotalRefunded = $this->current->total;
+            $this->cashRegisterService->increment($cashRegister->id, 'total_expense_refunds', $getTotalRefunded);
+        }
+
+
         $this->expenseService->delete($this->current->id);
 
         $this->popup('success', 'Expense deleted successfully');
@@ -62,7 +72,14 @@ class ExpensesList extends Component
     function save()  {
         if (!$this->validator()) return;
 
-        $this->expenseService->save($this->current?->id, $this->data);
+        $expense = $this->expenseService->save($this->current?->id, $this->data);
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $getTotalRefunded = $expense->total;
+            $this->cashRegisterService->increment($cashRegister->id, 'total_expenses', $getTotalRefunded);
+        }
 
         $this->popup('success', 'Expense saved successfully');
 

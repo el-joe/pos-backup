@@ -3,6 +3,7 @@
 namespace App\Http\Middleware\Tenant;
 
 use App\Models\Tenant\CashRegister;
+use App\Services\CashRegisterService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,13 +21,17 @@ class AdminAuthMiddleware
             return redirect()->route('admin.login');
         }
 
-        $cashRegister = CashRegister::where('status', 'open')
-            ->where('branch_id', admin()->branch_id ?? null)
-            ->where('admin_id', admin()->id ?? null)
-            ->first();
+        $cashRegisterService = app()->make(CashRegisterService::class);
+
+        $cashRegister = $cashRegisterService->getOpenedCashRegister();
 
         $currentRoute = $request->route()->getName();
         $isOnOpenRoute = $currentRoute === 'admin.cash.register.open';
+        $isOnOpenRoute = ($isOnOpenRoute || $currentRoute === 'admin.switch.branch');
+
+        if($request->is('admin/reports*')){
+            $isOnOpenRoute = true;
+        }
 
         if (!$cashRegister && !$isOnOpenRoute) {
             return redirect()->route('admin.cash.register.open')->with('warning', 'You must open a cash register before proceeding.');

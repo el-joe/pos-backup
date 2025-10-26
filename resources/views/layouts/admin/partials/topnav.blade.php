@@ -34,7 +34,7 @@
                 <div style="padding:8px 12px;">
                     {{-- <label class="control-label" style="margin-right:8px; color:#666; font-weight:600;">Branch:</label> --}}
                     <select id="branch-switcher" class="form-control" style="display:inline-block; width:auto; min-width:180px;">
-                        <option value="">All Branches</option>
+                        {{-- <option value="">All Branches</option> --}}
                         @foreach($__branches as $b)
                             <option value="{{ $b->id }}" @if($currentBranch == $b->id) selected @endif>{{ $b->name }}</option>
                         @endforeach

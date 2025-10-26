@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Sales;
 
 use App\Enums\TransactionTypeEnum;
+use App\Services\CashRegisterService;
 use App\Services\SellService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -14,13 +15,14 @@ class SalesList extends Component
 {
 
     use LivewireOperations,WithPagination;
-    private $sellService;
+    private $sellService,$cashRegisterService;
     public $current;
 
     public $payment = [];
 
     function boot() {
         $this->sellService = app(SellService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     function setCurrent($id) {
@@ -38,6 +40,12 @@ class SalesList extends Component
             'payment.amount' => 'required|numeric|min:0.01|max:'.$this->current->due_amount,
             'payment.note' => 'nullable|string|max:255',
         ]);
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $this->payment['amount']);
+        }
 
         $this->sellService->addPayment($this->current->id, [
             'payment_note' => $this->payment['note'] ?? null,

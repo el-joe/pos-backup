@@ -21,6 +21,8 @@ use App\Livewire\Admin\Purchases\AddPurchase;
 use App\Livewire\Admin\Purchases\PurchaseDetails;
 use App\Livewire\Admin\Purchases\PurchasesList;
 use App\Livewire\Admin\Reports\Admins\CashierReport;
+use App\Livewire\Admin\Reports\BranchProfitability;
+use App\Livewire\Admin\Reports\CashRegisterReport;
 use App\Livewire\Admin\Reports\Financial\BalanceSheetReport;
 use App\Livewire\Admin\Reports\Financial\CashFlowStatementReport;
 use App\Livewire\Admin\Reports\Financial\GeneralLedgerReport;
@@ -191,6 +193,8 @@ Route::middleware([
                 });
 
                 Route::get('cashier-report', CashierReport::class)->name('cashier.report');
+                Route::get('cash-register-report', CashRegisterReport::class)->name('cash.register.report');
+                Route::get('branch-profitability', BranchProfitability::class)->name('branch.profitability');
 
             });
             // Stock Adjustments

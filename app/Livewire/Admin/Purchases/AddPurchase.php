@@ -6,6 +6,7 @@ use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\Product;
 use App\Services\AccountService;
 use App\Services\BranchService;
+use App\Services\CashRegisterService;
 use App\Services\ProductService;
 use App\Services\PurchaseService;
 use App\Services\TaxService;
@@ -20,7 +21,7 @@ class AddPurchase extends Component
 {
     use LivewireOperations;
 
-    private $userService , $branchService , $productService , $taxService , $accountService , $purchaseService;
+    private $userService , $branchService , $productService , $taxService , $accountService , $purchaseService , $cashRegisterService;
 
     public $data = [];
 
@@ -66,6 +67,7 @@ class AddPurchase extends Component
         $this->productService = app(ProductService::class);
         $this->taxService = app(TaxService::class);
         $this->accountService = app(AccountService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     public function updatingProductSearch($value)
@@ -184,6 +186,13 @@ class AddPurchase extends Component
         ]))return;
         // save purchase
         $calcDetails = $this->purchaseCalculations();
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $this->calcDetails['orderGrandTotal']);
+        }
+
         // save purchase
         $this->purchaseService->save(null,[
             ...$this->data,
