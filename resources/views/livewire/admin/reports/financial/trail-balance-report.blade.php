@@ -1,13 +1,10 @@
-<div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Transactions List</h3>
-            </div>
+<div class="container-fluid">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title"><i class="glyphicon glyphicon-list"></i> Transactions List</h4>
         </div>
-
-        <x-table-component :rows="$transactionLines" :columns="$columns" :headers="$headers" :totals="$totals" />
+        <div class="panel-body">
+            <x-table-component :rows="$transactionLines" :columns="$columns" :headers="$headers" :totals="$totals" />
+        </div>
     </div>
 </div>
-@push('styles')
-@endpush

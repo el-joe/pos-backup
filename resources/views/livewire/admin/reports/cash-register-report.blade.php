@@ -1,18 +1,21 @@
-<div class="white-box">
-    <div class="card mb-3">
-        <div class="card-body">
-            <form wire:submit.prevent="applyFilter" class="row g-2 align-items-end">
+<div class="container-fluid">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
+        </div>
+        <div class="panel-body">
+            <form wire:submit.prevent="applyFilter" class="form-horizontal">
                 <div class="col-md-3">
-                    <label for="from_date" class="form-label">From Date</label>
-                    <input type="date" id="from_date" wire:model.defer="from_date" class="form-control">
+                    <label for="from_date" class="control-label">From Date</label>
+                    <input type="date" id="from_date" wire:model.defer="from_date" class="form-control input-sm">
                 </div>
                 <div class="col-md-3">
-                    <label for="to_date" class="form-label">To Date</label>
-                    <input type="date" id="to_date" wire:model.defer="to_date" class="form-control">
+                    <label for="to_date" class="control-label">To Date</label>
+                    <input type="date" id="to_date" wire:model.defer="to_date" class="form-control input-sm">
                 </div>
                 <div class="col-md-3">
-                    <label for="branch_id" class="form-label">Branch</label>
-                    <select id="branch_id" wire:model.defer="branch_id" class="form-control">
+                    <label for="branch_id" class="control-label">Branch</label>
+                    <select id="branch_id" wire:model.defer="branch_id" class="form-control input-sm">
                         <option value="">All Branches</option>
                         {{-- Optionally populate with branches if available --}}
                         @if(function_exists('branches'))
@@ -23,8 +26,8 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="admin_id" class="form-label">Admin/Cashier</label>
-                    <select id="admin_id" wire:model.defer="admin_id" class="form-control">
+                    <label for="admin_id" class="control-label">Admin/Cashier</label>
+                    <select id="admin_id" wire:model.defer="admin_id" class="form-control input-sm">
                         <option value="">All Admins</option>
                         {{-- Optionally populate with admins if available --}}
                         @if(function_exists('admins'))
@@ -34,22 +37,22 @@
                         @endif
                     </select>
                 </div>
-                <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Apply</button>
-                    <button type="button" wire:click="resetFilters" class="btn btn-secondary">Reset</button>
+                <div class="col-md-3" style="margin-top:25px;">
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-ok-circle"></i> Apply</button>
+                    <button type="button" wire:click="resetFilters" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> Reset</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Cash Register Summary</h5>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Cash Register Summary</h4>
         </div>
-        <div class="card-body p-0">
+        <div class="panel-body" style="padding:0;">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover mb-0">
-                    <thead class="table-light">
+                <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
+                    <thead class="active">
                         <tr>
                             <th>Opened At</th>
                             <th>Closed At</th>
@@ -86,7 +89,7 @@
                                 <td>{{ number_format($register->total_deposits, 2) }}</td>
                                 <td>{{ number_format($register->total_withdrawals, 2) }}</td>
                                 <td>{{ number_format($register->closing_balance, 2) }}</td>
-                                <td><span class="badge badge-{{ $register->status == 'open' ? 'success' : 'danger' }}">{{ ucfirst($register->status) }}</span></td>
+                                <td><span class="label label-{{ $register->status == 'open' ? 'success' : 'danger' }}">{{ ucfirst($register->status) }}</span></td>
                                 <td>{{ $register->notes }}</td>
                             </tr>
                         @empty

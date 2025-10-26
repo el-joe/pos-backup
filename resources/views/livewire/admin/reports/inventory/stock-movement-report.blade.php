@@ -1,12 +1,11 @@
-
-<div class="white-box">
-    <h3 class="box-title">Stock Movement Report</h3>
-
-    <div class="card section-card">
-        <div class="card-body">
-            <h4 class="section-title"><i class="fa fa-exchange"></i> Item Inflow / Outflow / Adjustments</h4>
-
-            <table class="table table-bordered table-hover">
+<div class="container-fluid">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title"><i class="glyphicon glyphicon-transfer"></i> Item Inflow / Outflow / Adjustments</h4>
+        </div>
+        <div class="panel-body" style="padding:0;">
+            <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
                 <thead>
                     <tr style="background:#e3f2fd;">
                         <th>Product</th>
@@ -48,31 +47,7 @@
                     @endif
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>
-
-@push('styles')
-<style>
-.white-box {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    padding: 30px 28px;
-    margin-top: 20px;
-}
-.section-title {
-    font-size: 22px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    border-bottom: 2px solid #f1f1f1;
-    padding-bottom: 10px;
-}
-.section-card {
-    border-radius: 16px;
-    margin-top: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    background: #fff;
-}
-</style>
-@endpush
