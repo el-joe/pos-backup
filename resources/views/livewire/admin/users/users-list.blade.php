@@ -21,6 +21,9 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
+                        @if($type == 'customer')
+                        <th>Sales Threshold</th>
+                        @endif
                         <th>Active</th>
                         <th class="text-nowrap">Action</th>
                     </tr>
@@ -33,6 +36,9 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->address }}</td>
+                            @if($type == 'customer')
+                            <td>{{ $user->sales_threshold }}</td>
+                            @endif
                             <td>
                                 <span class="badge badge-{{ $user->active ? 'success' : 'danger' }}">
                                     {{ $user->active ? 'Active' : 'Inactive' }}
@@ -88,6 +94,12 @@
                             <label for="userAddress">Address</label>
                             <input type="text" class="form-control" wire:model="data.address" id="userAddress" placeholder="Enter user address" required>
                         </div>
+                        @if($type == 'customer')
+                        <div class="form-group">
+                            <label for="userSalesThreshold">Sales Threshold</label>
+                            <input type="number" class="form-control" wire:model="data.sales_threshold" id="userSalesThreshold" placeholder="Enter sales threshold" min="0" step="0.01" required>
+                        </div>
+                        @endif
                         <div class="form-group">
                             <label class="custom-checkbox">
                                 <input type="checkbox" id="userActive" wire:model="data.active">

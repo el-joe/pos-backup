@@ -49,6 +49,10 @@ class Product extends Model
         return $this->morphMany(File::class, 'model')->where('key', 'gallery');
     }
 
+    function saleItems() {
+        return $this->hasMany(SaleItem::class,'product_id');
+    }
+
 
     // Scopes
 

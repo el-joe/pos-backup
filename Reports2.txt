@@ -53,7 +53,7 @@ Rely on inventory, cogs, and inventory_shortage accounts:
 | **Inventory Shortage Report** | Detect losses                | `inventory_shortage` entries   |
 
 
-📈 5. Performance & Analysis Reports  // TODO
+📈 5. Performance & Analysis Reports
 
 Derived from data relationships (sales, profit, expenses):
 
@@ -63,9 +63,11 @@ Derived from data relationships (sales, profit, expenses):
 | **Customer Outstanding Report**               | Who owes you money             | `customer` account balances               |
 | **Supplier Payable Report**                   | Who you owe money to           | `supplier` account balances               |
 | **Expense Breakdown**                         | Track company spending         | Expense type totals                       |
-| **Revenue Breakdown**                         | Analyze income sources         | By branch, category, or customer          |
+| **Revenue Breakdown**                         | Analyze income sources         | By branch, category, or customer          | // TODO : by customer
 | **Discount Impact Report**                    | Measure impact of discounts    | Discount % vs total revenue               |
 | **Sales Threshold (Discount Trigger) Report** | Who reached the discount limit | Compare sales totals vs `sales_threshold` |
+
+
 
 
 🧮 6. Tax & Compliance Reports
@@ -81,6 +83,6 @@ Derived from data relationships (sales, profit, expenses):
 
 | Report                         | Purpose                            |
 | ------------------------------ | ---------------------------------- |
-| **Cash Register Summary**      | Track cash movements per day       | // TODO
-| **Branch Profitability**       | Compare net profits per branch     | // TODO
+| **Cash Register Summary**      | Track cash movements per day       |
+| **Branch Profitability**       | Compare net profits per branch     |
 | **User / Cashier Performance** | Sales per user, refunds, discounts |

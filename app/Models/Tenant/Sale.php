@@ -69,7 +69,7 @@ class Sale extends Model
 
     function getDiscountAmountAttribute() {
         $discount = (clone $this->saleItems)->map(function($item){
-            return SaleHelper::singleDiscountAmount($item, $this->saleItems, $this->discount_type, $this->discount_value, $this->max_discount_amount);
+            return $item->total_discount_amount;
         })->sum();
         return $discount;
 

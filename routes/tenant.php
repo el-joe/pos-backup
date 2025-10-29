@@ -32,6 +32,13 @@ use App\Livewire\Admin\Reports\Inventory\CogsReport;
 use App\Livewire\Admin\Reports\Inventory\ShortageReport;
 use App\Livewire\Admin\Reports\Inventory\StockMovementReport;
 use App\Livewire\Admin\Reports\Inventory\StockValuationReport;
+use App\Livewire\Admin\Reports\Performance\CustomerOutstandingReport;
+use App\Livewire\Admin\Reports\Performance\DiscountImpactReport;
+use App\Livewire\Admin\Reports\Performance\ExpenseBreakdownReport;
+use App\Livewire\Admin\Reports\Performance\ProductProfitMarginReport;
+use App\Livewire\Admin\Reports\Performance\RevenueBreakdownByBranchReport;
+use App\Livewire\Admin\Reports\Performance\SalesThresholdReport;
+use App\Livewire\Admin\Reports\Performance\SupplierPayableReport;
 use App\Livewire\Admin\Reports\Purchases\BranchPurchasesReport;
 use App\Livewire\Admin\Reports\Purchases\ProductPurchasesReport;
 use App\Livewire\Admin\Reports\Purchases\PurchasesDiscountReport;
@@ -190,6 +197,19 @@ Route::middleware([
                 ], function () {
                     Route::get('vat-summary', VatSummaryReport::class)->name('vat-summary');
                     Route::get('withholding-tax', WithholdingTaxReport::class)->name('withholding-tax');
+                });
+
+                Route::group([
+                    'prefix' => 'performance',
+                    'as' => 'performance.',
+                ], function () {
+                    Route::get('product-profit-margin',ProductProfitMarginReport::class)->name('product-profit-margin');
+                    Route::get('customer-outstanding',CustomerOutstandingReport::class)->name('customer-outstanding');
+                    Route::get('supplier-payable',SupplierPayableReport::class)->name('supplier-payable');
+                    Route::get('expense-breakdown',ExpenseBreakdownReport::class)->name('expense-breakdown');
+                    Route::get('revenue-breakdown-by-branch',RevenueBreakdownByBranchReport::class)->name('revenue-breakdown-by-branch');
+                    Route::get('discount-impact',DiscountImpactReport::class)->name('discount-impact');
+                    Route::get('sales-threshold',SalesThresholdReport::class)->name('sales-threshold');
                 });
 
                 Route::get('cashier-report', CashierReport::class)->name('cashier.report');

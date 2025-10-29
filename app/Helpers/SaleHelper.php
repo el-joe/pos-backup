@@ -80,18 +80,15 @@ class SaleHelper
 
     static function singleTaxAmount($product,$products, $discount_type = null, $discount_value = 0, $tax_percentage = 0,$max = 0) {
         if(($product['taxable'] ?? 0) != 1 || !$tax_percentage) return 0;
+
         $allProducts = collect($products->toArray())->map(function($item){
             $item['refunded_qty'] = 0;
             return $item;
         });
-        $totalItems = collect($allProducts)->sum(fn($q)=> self::itemTotal($q,false) );
-        $totalDiscount = self::discountAmount($allProducts, $discount_type, $discount_value,$max);
 
         $total = self::itemTotal($product);
 
-        $percentageItemFromTotal = $totalItems ? ($total / $totalItems) : 0;
-
-        $totalDiscount = $totalDiscount * $percentageItemFromTotal;
+        $totalDiscount = self::singleDiscountAmount($product,$allProducts, $discount_type, $discount_value,$max);
 
         $total = $total - $totalDiscount;
 

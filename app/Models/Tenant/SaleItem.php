@@ -26,7 +26,28 @@ class SaleItem extends Model
 
     }
 
+    function getTotalCostAttribute()  {
+        return numFormat($this->unit_cost * $this->actual_qty,3);
+    }
+
     function getTotalAttribute()  {
         return SaleHelper::itemTotal($this);
+    }
+
+    function getGrandTotalAttribute()  {
+        $total = $this->total;
+        $discount = $this->total_discount_amount;
+        $taxAmount = $this->total_tax_amount;
+        return numFormat($total - $discount + $taxAmount,3);
+    }
+
+    function getTotalDiscountAmountAttribute() {
+        $sale = $this->sale;
+        return SaleHelper::singleDiscountAmount($this, $sale->saleItems, $sale->discount_type, $sale->discount_value, $sale->max_discount_amount);
+    }
+
+    function getTotalTaxAmountAttribute() {
+        $sale = $this->sale;
+        return SaleHelper::singleTaxAmount($this, $sale->saleItems, $sale->discount_type, $sale->discount_value, $sale->tax_percentage, $sale->max_discount_amount);
     }
 }

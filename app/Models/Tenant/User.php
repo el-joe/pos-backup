@@ -17,7 +17,8 @@ class User extends Model
         'address',
         'active',
         'type',
-        'deleted_at'
+        'deleted_at',
+        'sales_threshold'
     ];
 
     protected $casts = [
@@ -27,6 +28,10 @@ class User extends Model
 
     function accounts() {
         return $this->morphMany(Account::class, 'model');
+    }
+
+    function sales() {
+        return $this->hasMany(Sale::class, 'customer_id');
     }
 
     function scopeFilter($q,$filters = []) {

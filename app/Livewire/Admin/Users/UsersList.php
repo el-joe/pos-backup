@@ -26,7 +26,8 @@ class UsersList extends Component
         'phone' => 'required|string|max:255',
         'address' => 'required|string|max:255',
         'active' => 'boolean',
-        'type' => 'in:customer,supplier'
+        'type' => 'in:customer,supplier',
+        'sales_threshold' => 'required_if:type,customer|numeric|min:0',
     ];
 
     function boot() {
@@ -35,9 +36,12 @@ class UsersList extends Component
 
     function setCurrent($id) {
         $this->current = $this->userService->find($id);
+
         if ($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
+        }else{
+            $this->data = [];
         }
     }
 
