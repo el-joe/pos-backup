@@ -52,4 +52,6 @@ function formattedDateTime($date): string {
     return carbon($date)->translatedFormat('l , d-M-Y h:i A');
 }
 
-
+function defaultPermissionsList() {
+    return json_decode(file_get_contents(base_path('tenant-permissions.json')),true);
+}

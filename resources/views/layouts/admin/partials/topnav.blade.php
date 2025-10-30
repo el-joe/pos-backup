@@ -4,7 +4,7 @@
             <i class="fa fa-bars"></i>
         </a>
         <div class="top-left-part">
-            <a class="logo" href="index.html">
+            <a class="logo" href="{{ route('admin.statistics') }}">
                 <b>
                     <img src="{{ asset('adminBoard') }}/plugins/images/logo.png" alt="home" />
                 </b>

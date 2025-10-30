@@ -6,6 +6,9 @@ use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\GeneralController;
 use App\Http\Middleware\Tenant\AdminAuthMiddleware;
 use App\Livewire\Admin\Accounts\AccountsList;
+use App\Livewire\Admin\Admins\AdminsList;
+use App\Livewire\Admin\Admins\RoleDetails;
+use App\Livewire\Admin\Admins\RolesList;
 use App\Livewire\Admin\Branches\BranchesList;
 use App\Livewire\Admin\Brands\BrandsList;
 use App\Livewire\Admin\CashRegister\CashRegisterPage;
@@ -225,6 +228,10 @@ Route::middleware([
             Route::get('stock-transfers', StockTransferList::class)->name('stocks.transfers.list');
             Route::get('stock-transfers/create', AddStockTransfer::class)->name('stocks.transfers.create');
             Route::get('stock-transfers/{id}/details', StockTransferDetails::class)->name('stocks.transfers.details');
+
+            Route::get('admins',AdminsList::class)->name('admins.list');
+            Route::get('roles',RolesList::class)->name('roles.list');
+            Route::get('roles/{id?}',RoleDetails::class)->name('roles.show');
         });
     });
 });
