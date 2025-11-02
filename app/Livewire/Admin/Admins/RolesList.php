@@ -24,19 +24,19 @@ class RolesList extends Component
     function setCurrent($id)
     {
         if (!$id) return;
-        $this->current = Role::find($id);
+        $this->current = Role::withCount('users')->find($id);
     }
 
     function deleteAlert($id)
     {
         $this->setCurrent($id);
-        $this->confirm('delete', 'error', 'Do you want to delete this feature?', '', 'Cancel');
+        $this->confirm('delete', 'error', 'Do you want to delete this Role?', '', 'Cancel');
     }
 
     function delete()
     {
         $this->current->delete();
-        $this->popup('success', 'Feature deleted successfully', 'center');
+        $this->popup('success', 'Role deleted successfully', 'center');
     }
     public function render()
     {

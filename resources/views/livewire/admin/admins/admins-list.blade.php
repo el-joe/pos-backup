@@ -87,13 +87,26 @@
                             <label for="adminPassword">Password</label>
                             <input type="password" class="form-control" wire:model="data.password" id="adminPassword" placeholder="Enter admin password">
                         </div>
-                        <div class="form-group">
-                            <label for="adminType">Type</label>
-                            <select class="form-control" wire:model="data.type" id="adminType">
-                                <option value="">Select Type</option>
-                                <option value="super_admin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                            </select>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="adminType">Type</label>
+                                <select class="form-control" wire:model.live="data.type" id="adminType">
+                                    <option value="">Select Type</option>
+                                    <option value="super_admin">Super Admin</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            @if(($data['type']??false) == 'admin')
+                                <div class="form-group col-sm-6">
+                                    <label for="adminRole">Role</label>
+                                    <select class="form-control" wire:model="data.role_id" id="adminRole">
+                                        <option value="">Select Role</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                         </div>
                         {{-- branches list --}}
                         <div class="form-group">

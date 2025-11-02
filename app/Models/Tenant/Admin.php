@@ -3,9 +3,12 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
+    use HasRoles;
+
     protected $fillable = [
         'name', 'email', 'phone', 'password', 'type','active','branch_id'
     ];

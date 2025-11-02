@@ -8,6 +8,7 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Spatie\Permission\Models\Role;
 
 #[Layout('layouts.admin')]
 class AdminsList extends Component
@@ -37,6 +38,7 @@ class AdminsList extends Component
             $this->data = $this->current->toArray();
             unset($this->data['password']);
             $this->data['active'] = (bool)$this->data['active'];
+            $this->data['role_id'] = $this->current->roles->first()?->id;
         }
 
         $this->dispatch('iCheck-load');
@@ -73,7 +75,12 @@ class AdminsList extends Component
 
         if(!$this->validator())return;
 
-        $this->adminService->save($this->current?->id,$this->data);
+        $admin = $this->adminService->save($this->current?->id,$this->data);
+
+        if($this->data['role_id']??false){
+            $role = Role::find($this->data['role_id']);
+            $admin->syncRoles([$role->name]);
+        }
 
         $this->popup('success','Admin saved successfully');
 
@@ -86,6 +93,7 @@ class AdminsList extends Component
     {
         $admins = $this->adminService->activeList();
         $branches = $this->branchService->activeList();
+        $roles = Role::whereActive(1)->get();
         return view('livewire.admin.admins.admins-list',get_defined_vars());
     }
 }

@@ -22,7 +22,7 @@
                                        class="form-control input-sm"
                                        id="roleName"
                                        name="roleName"
-                                       wire:model.lazy="roleName"
+                                       wire:model.lazy="data.roleName"
                                        placeholder="Enter role name">
                             </div>
                         </div>
@@ -50,6 +50,7 @@
                                             <a data-toggle="collapse"
                                                data-parent="#permissionsAccordion"
                                                href="#{{ $collapseId }}"
+                                               wire:click.prevent="toggleCollapse('{{ $key }}')"
                                                aria-expanded="true"
                                                style="display:block; text-decoration:none; color:#222; font-weight:600;">
                                                 {{ __(ucwords(str_replace('_', ' ', $key))) }}
@@ -58,16 +59,16 @@
                                     </div>
 
                                     <!-- Panel Body -->
-                                    <div id="{{ $collapseId }}" class="panel-collapse collapse">
+                                    <div id="{{ $collapseId }}" class="panel-collapse collapse {{ ($collapses[$key] ?? false) ? 'in' : '' }}">
                                         <div class="panel-body" style="padding:15px 25px;">
                                             <div class="row">
                                                 @foreach ($list as $per)
                                                 <div class="col-sm-6 col-md-4">
                                                     <label style="font-weight:normal;">
                                                         <input type="checkbox"
-                                                               wire:click="setPermission('{{ $per }}', $event.target.checked)"
+                                                               wire:click="setPermission('{{ $key }}','{{ $per }}', $event.target.checked)"
                                                                id="{{ $per }}"
-                                                               {{ ($permissions[$per] ?? false) ? 'checked' : '' }}>
+                                                               {{ ($permissions["$key.$per"] ?? false) ? 'checked' : '' }}>
                                                         {{ __(ucwords(str_replace(['_', $key], [' ', ''], $per))) }}
                                                     </label>
                                                 </div>
@@ -114,3 +115,4 @@
 }
 </style>
 @endpush
+

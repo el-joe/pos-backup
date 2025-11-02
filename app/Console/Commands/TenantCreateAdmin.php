@@ -7,6 +7,7 @@ use App\Models\Tenant\Branch;
 use App\Models\Tenant\Setting;
 use App\Services\PaymentMethodService;
 use Illuminate\Console\Command;
+use Spatie\Permission\Models\Permission;
 
 class TenantCreateAdmin extends Command
 {
@@ -32,13 +33,14 @@ class TenantCreateAdmin extends Command
         // get arguments
         $admin = Admin::create(json_decode($this->argument('request'),true));
 
-        // $permissions = Admin::PERMISSIONS;
+        $permissions = defaultPermissionsList();
 
-        // foreach ($permissions as $key => $value) {
-        //     foreach($value as $permission){
-        //         $admin->givePermissionTo($key.'.'.$permission);
-        //     }
-        // }
+        foreach ($permissions as $key => $value) {
+            foreach($value as $permission){
+                Permission::firstOrCreate(['name' => $key.'.'.$permission, 'guard_name' => 'admin']);
+                $admin->givePermissionTo($key.'.'.$permission);
+            }
+        }
 
         $this->defaultPaymentMethods();
         $this->defaultSettings();
