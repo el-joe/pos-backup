@@ -48,12 +48,18 @@ class TransactionList extends Component
             'note' => [ 'type' => 'text'],
             'date' => [ 'type' => 'date'],
             'account' => [ 'type' => 'text'],
-            'line_type' => [ 'type' => 'badge', 'class' => function($row) {
-                return $row['line_type'] === 'debit' ? 'badge-success' : 'badge-danger';
-            },'icon' => function($row) {
-                // i want make up/down with color green/red arrow
-                return $row['line_type'] === 'debit' ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger';
-            }],
+            'line_type' => [
+                'type' => 'badge', 'class' => function($row) {
+                    return $row['line_type'] === 'debit' ? 'badge-success' : 'badge-danger';
+                },
+                'icon' => function($row) {
+                    // i want make up/down with color green/red arrow
+                    return $row['line_type'] === 'debit' ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger';
+                },
+                'value' => function($row) {
+                    return ucfirst($row['line_type']);
+                }
+            ],
             'amount' => [ 'type' => 'decimal'],
             'created_at' => [ 'type' => 'datetime'],
         ];

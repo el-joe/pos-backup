@@ -38,6 +38,8 @@ enum TransactionTypeEnum : string
             self::STOCK_TRANSFER_REFUND => 'Stock Transfer Refund',
             self::STOCK_ADJUSTMENT => 'Stock Adjustment',
             self::STOCK_ADJUSTMENT_REFUND => 'Stock Adjustment Refund',
+            self::OPENING_BALANCE => 'Opening Balance',
+            self::CLOSING_BALANCE => 'Closing Balance',
         };
     }
 }
