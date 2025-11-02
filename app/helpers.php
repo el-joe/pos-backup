@@ -16,42 +16,55 @@ if(!function_exists('admin')) {
     }
 }
 
-function numFormat($number, $decimals = 2) {
-    return number_format((float)$number, $decimals, '.', '');
+if(!function_exists('numFormat')) {
+    function numFormat($number, $decimals = 2) {
+        return number_format((float)$number, $decimals, '.', '');
 
-}
-
-function branch() {
-    return auth(TENANT_ADMINS_GUARD)->user()->branch;
-}
-
-function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$isLastChildCheck = true,$selectedId = null) {
-    $arrayOfDashes = array_fill(0,$number,'-- ');
-    $dashes = implode('',$arrayOfDashes);
-
-    if(method_exists($model,'isLastChild')){
-        $isLastChild = $model->isLastChild();
-    }else{
-        $isLastChild = $model->{$relationName}->count() == 0;
     }
-    // add
-    echo '<option value="'. $model->{$key} .'" '. ($isLastChildCheck ? ($isLastChild ? '' : 'disabled') : '') . ($selectedId == $model->{$key} ? 'selected' : '') .'>'. $dashes . $model->{$value} .'</option>';
-
-    $model->{$relationName}->map(fn($model1)=> recursiveChildrenForOptions($model1,$relationName,$key,$value,$number+1,$isLastChildCheck));
 }
 
-function carbon($date) {
-    return Carbon::parse($date);
+if(!function_exists('branch')) {
+    function branch() {
+        return auth(TENANT_ADMINS_GUARD)->user()->branch;
+    }
 }
 
-function formattedDate($date): string {
-    return carbon($date)->translatedFormat('l , d-M-Y');
+if(!function_exists('recursiveChildrenForOptions')) {
+    function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$isLastChildCheck = true,$selectedId = null) {
+        $arrayOfDashes = array_fill(0,$number,'-- ');
+        $dashes = implode('',$arrayOfDashes);
+
+        if(method_exists($model,'isLastChild')){
+            $isLastChild = $model->isLastChild();
+        }else{
+            $isLastChild = $model->{$relationName}->count() == 0;
+        }
+        // add
+        echo '<option value="'. $model->{$key} .'" '. ($isLastChildCheck ? ($isLastChild ? '' : 'disabled') : '') . ($selectedId == $model->{$key} ? 'selected' : '') .'>'. $dashes . $model->{$value} .'</option>';
+
+        $model->{$relationName}->map(fn($model1)=> recursiveChildrenForOptions($model1,$relationName,$key,$value,$number+1,$isLastChildCheck));
+    }
 }
 
-function formattedDateTime($date): string {
-    return carbon($date)->translatedFormat('l , d-M-Y h:i A');
+if(!function_exists('carbon')) {
+    function carbon($date) {
+        return Carbon::parse($date);
+    }
 }
 
-function defaultPermissionsList() {
-    return json_decode(file_get_contents(base_path('tenant-permissions.json')),true);
+if(!function_exists('formattedDate')) {
+    function formattedDate($date): string {
+        return carbon($date)->translatedFormat('l , d-M-Y');
+    }
+}
+
+if(!function_exists('formattedDateTime')) {
+    function formattedDateTime($date): string {
+        return carbon($date)->translatedFormat('l , d-M-Y h:i A');
+    }
+}
+if(!function_exists('defaultPermissionsList')) {
+    function defaultPermissionsList() {
+        return json_decode(file_get_contents(base_path('tenant-permissions.json')),true);
+    }
 }
