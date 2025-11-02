@@ -2,9 +2,7 @@
 
 use Carbon\Carbon;
 
-if(!defined('TENANT_ADMINS_GUARD')) {
-    const TENANT_ADMINS_GUARD = 'tenant_admin';
-}
+const TENANT_ADMINS_GUARD = 'tenant_admin';
 
 if(!function_exists('settings')) {
     function settings($key) {
