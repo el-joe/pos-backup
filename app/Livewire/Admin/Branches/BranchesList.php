@@ -9,7 +9,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class BranchesList extends Component
 {
     use LivewireOperations,WithPagination;
@@ -84,6 +83,7 @@ class BranchesList extends Component
 
         $taxes = $this->taxService->list();
 
-        return view('livewire.admin.branches.branches-list', get_defined_vars());
+        return layoutView('branches.branches-list', get_defined_vars())
+            ->title(__('general.titles.branches'));
     }
 }

@@ -9,7 +9,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class PaymentMethodsList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -73,6 +72,8 @@ class PaymentMethodsList extends Component
     {
         $paymentMethods = $this->paymentMethodService->list([], [], 10, 'id');
         $branches = $this->branchService->activeList();
-        return view('livewire.admin.payment-methods.payment-methods-list',get_defined_vars());
+
+        return layoutView('payment-methods.payment-methods-list', get_defined_vars())
+            ->title(__( 'general.titles.payment-methods' ));
     }
 }

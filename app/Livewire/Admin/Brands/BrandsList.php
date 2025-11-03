@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class BrandsList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -70,6 +69,8 @@ class BrandsList extends Component
     public function render()
     {
         $brands = $this->brandService->list([], [], 10, 'id');
-        return view('livewire.admin.brands.brands-list',get_defined_vars());
+
+        return layoutView('brands.brands-list', get_defined_vars())
+            ->title(__('general.titles.brands'));
     }
 }

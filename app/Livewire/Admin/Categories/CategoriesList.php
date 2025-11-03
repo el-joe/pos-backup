@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class CategoriesList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -79,6 +78,7 @@ class CategoriesList extends Component
 
         $allCategories = $this->categoryService->list();
 
-        return view('livewire.admin.categories.categories-list', get_defined_vars());
+        return layoutView('categories.categories-list', get_defined_vars())
+            ->title(__('general.titles.categories'));
     }
 }

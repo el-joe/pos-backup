@@ -9,7 +9,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class DiscountsList extends Component
 {
 
@@ -82,6 +81,8 @@ class DiscountsList extends Component
     {
         $discounts = $this->discountService->list(perPage : 10 , orderByDesc: 'id');
         $branches = $this->branchService->activeList();
-        return view('livewire.admin.discounts.discounts-list', get_defined_vars());
+
+        return layoutView('discounts.discounts-list', get_defined_vars())
+            ->title(__('general.titles.discounts'));
     }
 }

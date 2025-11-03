@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class TaxesList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -71,6 +70,8 @@ class TaxesList extends Component
     public function render()
     {
         $taxes = $this->taxService->list(perPage: 10, orderByDesc: 'id');
-        return view('livewire.admin.taxes.taxes-list', get_defined_vars());
+
+        return layoutView('taxes.taxes-list', get_defined_vars())
+            ->title(__('general.titles.taxes'));
     }
 }

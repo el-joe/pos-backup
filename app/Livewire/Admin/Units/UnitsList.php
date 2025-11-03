@@ -8,7 +8,6 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class UnitsList extends Component
 {
     use LivewireOperations;
@@ -94,6 +93,7 @@ class UnitsList extends Component
             ->orWhereNull('parent_id')
             ->get();
 
-        return view('livewire.admin.units.units-list', get_defined_vars());
+        return layoutView('units.units-list', get_defined_vars())
+            ->title(__('general.titles.units'));
     }
 }

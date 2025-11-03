@@ -10,6 +10,17 @@ if(!function_exists('settings')) {
     }
 }
 
+function defaultLayout(){
+    return 'hud';
+}
+
+function layoutView($pageName,$with = [],$isSubPage = false){
+    $defaultView = "livewire." . defaultLayout();
+    $defaultLayout = 'layouts.' . defaultLayout();
+    return view("$defaultView.$pageName", $with)
+            ->layout($isSubPage ? null : $defaultLayout);
+}
+
 if(!function_exists('admin')) {
     function admin() {
         return auth(TENANT_ADMINS_GUARD)->user();

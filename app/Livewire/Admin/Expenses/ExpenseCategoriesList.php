@@ -9,7 +9,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class ExpenseCategoriesList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -70,6 +69,8 @@ class ExpenseCategoriesList extends Component
     public function render()
     {
         $expenseCategories = $this->expenseCategoryService->list(perPage : 10 , orderByDesc : 'id');
-        return view('livewire.admin.expenses.expense-categories-list',get_defined_vars());
+
+        return layoutView('expenses.expense-categories-list', get_defined_vars())
+            ->title(__( 'general.titles.categories'));
     }
 }

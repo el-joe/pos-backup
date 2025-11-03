@@ -11,7 +11,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class ExpensesList extends Component
 {
     use LivewireOperations,WithPagination;
@@ -145,6 +144,7 @@ class ExpensesList extends Component
 
         $branches = $this->branchService->activeList();
 
-        return view('livewire.admin.expenses.expenses-list', get_defined_vars());
+        return layoutView('expenses.expenses-list', get_defined_vars())
+            ->title(__( 'general.titles.expenses'));
     }
 }

@@ -11,7 +11,6 @@ use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\TransactionService;
 
-#[Layout('layouts.admin')]
 
 class CashRegisterPage extends Component
 {
@@ -25,11 +24,12 @@ class CashRegisterPage extends Component
         }
 
         $branches = $this->branchService->activeList();
-        return view('livewire.admin.cash-register.cash-register-page', [
+
+        return layoutView('cash-register.cash-register-page', [
             'aggregates' => $this->aggregates,
             'currentRegister' => $this->currentRegister,
             'branches' => $branches,
-        ]);
+        ])->title(__('general.titles.cash-register'));
     }
     public $aggregates = [];
     public $currentRegister;
