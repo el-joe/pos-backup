@@ -1,143 +1,191 @@
 <div>
-    <div class="white-box">
-        <h3 class="box-title">Purchase Order Details #{{ $id }}</h3>
-        <!-- Nav tabs -->
-        <ul class="nav customtab nav-tabs" role="tablist">
-            <li role="presentation" class="{{ $activeTab === 'details' ? 'active' : '' }}"><a wire:click="$set('activeTab', 'details')" href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><span class="visible-xs"><i class="ti-home"></i></span><span class="hidden-xs"> Details</span></a></li>
-            <li role="presentation" class="{{ $activeTab === 'products' ? 'active' : '' }}"><a wire:click="$set('activeTab', 'products')" href="#profile1" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="ti-user"></i></span> <span class="hidden-xs">Products</span></a></li>
-            <li role="presentation" class="{{ $activeTab === 'expenses' ? 'active' : '' }}"><a wire:click="$set('activeTab', 'expenses')" href="#messages1" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false"><span class="visible-xs"><i class="ti-exchange-horizontal"></i></span> <span class="hidden-xs">Expenses</span></a></li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade {{ $activeTab === 'details' ? 'in active' : '' }}" id="home1">
-                <div class="purchase-details-container">
-                    <h3 class="section-title"><i class="fa fa-info-circle"></i> Purchase Details</h3>
-
-                    <!-- Basic Purchase Info -->
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div class="detail-box">
-                                <h4><i class="fa fa-building"></i> Branch</h4>
-                                <p>{{ $purchase->branch?->name ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="detail-box">
-                                <h4><i class="fa fa-truck"></i> Supplier</h4>
-                                <p>{{ $purchase->supplier?->name ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="detail-box">
-                                <h4><i class="fa fa-hashtag"></i> Ref NO.</h4>
-                                <p>{{ $purchase->ref_no ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="detail-box">
-                                <h4><i class="fa fa-calendar"></i> Order Date</h4>
-                                <p>{{ carbon($purchase->order_date)->format('F j, Y') ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="section-divider">
-
-                    <!-- Purchase Summary Cards -->
-                    <h3 class="section-title"><i class="fa fa-list-alt"></i> Purchase Summary</h3>
-                    <div class="row g-3">
-                        <!-- Items Count -->
-                        <div class="col-md-3 col-sm-6" style="margin-bottom:24px;">
-                            <div class="summary-card modern-card" style="background: #e3f2fd;">
-                                <div class="card-icon" style="background: #2196f3;"><i class="fa fa-cube"></i></div>
-                                <div class="card-content">
-                                    <h5 style="color:#2196f3;">Items Count</h5>
-                                    <h2 style="color:#1565c0;">{{ $purchase->purchaseItems->count() }}</h2>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Total Quantity -->
-                        <div class="col-md-3 col-sm-6" style="margin-bottom:24px;">
-                            <div class="summary-card modern-card" style="background: #e0f7fa;">
-                                <div class="card-icon" style="background: #00bcd4;"><i class="fa fa-plus"></i></div>
-                                <div class="card-content">
-                                    <h5 style="color:#00bcd4;">Total Quantity</h5>
-                                    <h2 style="color:#00838f;">{{ $actualQty }}</h2>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Expenses Total -->
-                        <div class="col-md-3 col-sm-6" style="margin-bottom:24px;">
-                            <div class="summary-card modern-card" style="background: #ffebee;">
-                                <div class="card-icon" style="background: #e53935;">
-                                    <i class="fa fa-credit-card"></i>
-                                </div>
-                                <div class="card-content">
-                                    <h5 style="color:#e53935;">Expenses Total</h5>
-                                    <h2 style="color:#b71c1c;">{{ number_format($purchase->expenses->sum('amount') ?? 0, 2) }}</h2>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Subtotal -->
-                        <div class="col-md-3 col-sm-6" style="margin-bottom:24px;">
-                            <div class="summary-card modern-card" style="background: #fffde7;">
-                                <div class="card-icon" style="background: #ffc107;"><i class="fa fa-calculator"></i></div>
-                                <div class="card-content">
-                                    <h5 style="color:#ffc107;">Subtotal</h5>
-                                    <h2 style="color:#ff6f00;">{{ number_format($orderSubTotal ?? 0, 2) }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mt-3">
-                        <!-- After Discount -->
-                        <div class="col-md-4 col-sm-6" style="margin-bottom:24px;">
-                            <div class="summary-card modern-card" style="background: #eceff1;">
-                                <div class="card-icon" style="background: #607d8b;"><i class="fa fa-minus-circle"></i></div>
-                                <div class="card-content">
-                                    <h5 style="color:#607d8b;">After Discount</h5>
-                                    <h2 style="color:#263238;">{{ number_format($orderTotalAfterDiscount ?? 0, 2) }}</h2>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tax Amount -->
-                        <div class="col-md-4 col-sm-6" style="margin-bottom:24px;">
-                            <div class="summary-card modern-card" style="background: #e8f5e9;">
-                                <div class="card-icon" style="background: #43a047;"><i class="fa fa-percent"></i></div>
-                                <div class="card-content">
-                                    <h5 style="color:#43a047;">Tax Amount</h5>
-                                    <h2 style="color:#1b5e20;">{{ number_format($orderTaxAmount ?? 0, 2) }}</h2>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Grand Total -->
-                        <div class="col-md-4 col-sm-6" style="margin-bottom:24px;">
-                            <div class="summary-card modern-card grand-total-card" style="background: linear-gradient(135deg, #2196f3, #00c6ff); color: #fff;">
-                                <div class="card-icon" style="background: #2196f3;"><i class="fa fa-money"></i></div>
-                                <div class="card-content">
-                                    <h5 style="color:#fff;">Grand Total</h5>
-                                    <h2 style="color:#fff;">{{ number_format($orderGrandTotal ?? 0, 2) }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Purchase Order Details #{{ $id }}</h5>
             </div>
+            <div class="card-body">
 
-            <div role="tabpanel" class="tab-pane fade {{ $activeTab === 'products' ? 'in active' : '' }}" id="profile1">
-                <div class="products-container">
-                    <h3 class="section-title"><i class="fa fa-cubes"></i> Order Products</h3>
+                <!-- Nav Tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link {{ $activeTab === 'details' ? 'active' : '' }}"
+                            wire:click="$set('activeTab', 'details')" data-bs-toggle="tab"
+                            data-bs-target="#detailsTab" type="button" role="tab">
+                            <i class="fa fa-info-circle me-1"></i> Details
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link {{ $activeTab === 'products' ? 'active' : '' }}"
+                            wire:click="$set('activeTab', 'products')" data-bs-toggle="tab"
+                            data-bs-target="#productsTab" type="button" role="tab">
+                            <i class="fa fa-cubes me-1"></i> Products
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link {{ $activeTab === 'expenses' ? 'active' : '' }}"
+                            wire:click="$set('activeTab', 'expenses')" data-bs-toggle="tab"
+                            data-bs-target="#expensesTab" type="button" role="tab">
+                            <i class="fa fa-credit-card me-1"></i> Expenses
+                        </button>
+                    </li>
+                </ul>
 
-                    <div class="table-card">
+                <!-- Tab Content -->
+                <div class="tab-content mt-4">
+
+                    {{-- Details Tab --}}
+                    <div class="tab-pane fade {{ $activeTab === 'details' ? 'show active' : '' }}" id="detailsTab" role="tabpanel">
+                        <h5 class="mb-3"><i class="fa fa-info-circle me-1"></i> Purchase Details</h5>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <strong><i class="fa fa-building me-1"></i> Branch:</strong>
+                                    <div>{{ $purchase->branch?->name ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <strong><i class="fa fa-truck me-1"></i> Supplier:</strong>
+                                    <div>{{ $purchase->supplier?->name ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <strong><i class="fa fa-hashtag me-1"></i> Ref No.:</strong>
+                                    <div>{{ $purchase->ref_no ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-3">
+                                    <strong><i class="fa fa-calendar me-1"></i> Order Date:</strong>
+                                    <div>{{ carbon($purchase->order_date)->format('F j, Y') ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <h5 class="mb-3"><i class="fa fa-list-alt me-1"></i> Purchase Summary</h5>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <div class="card text-center border-1 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="fs-1 text-primary"><i class="fa fa-cube"></i></div>
+                                        <h6>Items Count</h6>
+                                        <h3>{{ $purchase->purchaseItems->count() }}</h3>
+                                    </div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-1 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="fs-1 text-info"><i class="fa fa-plus"></i></div>
+                                        <h6>Total Quantity</h6>
+                                        <h3>{{ $actualQty }}</h3>
+                                    </div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-1 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="fs-1 text-danger"><i class="fa fa-credit-card"></i></div>
+                                        <h6>Expenses Total</h6>
+                                        <h3>{{ number_format($purchase->expenses->sum('amount') ?? 0, 2) }}</h3>
+                                    </div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-1 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="fs-1 text-warning"><i class="fa fa-calculator"></i></div>
+                                        <h6>Subtotal</h6>
+                                        <h3>{{ number_format($orderSubTotal ?? 0, 2) }}</h3>
+                                    </div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-3">
+                            <div class="col-md-4">
+                                <div class="card text-center border-1 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="fs-1 text-secondary"><i class="fa fa-minus-circle"></i></div>
+                                        <h6>After Discount</h6>
+                                        <h3>{{ number_format($orderTotalAfterDiscount ?? 0, 2) }}</h3>
+                                    </div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-center border-1 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="fs-1 text-success"><i class="fa fa-percent"></i></div>
+                                        <h6>Tax Amount</h6>
+                                        <h3>{{ number_format($orderTaxAmount ?? 0, 2) }}</h3>
+                                    </div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-center border-1 shadow-sm text-white">
+                                    <div class="card-body">
+                                        <div class="fs-1 text-info"><i class="fa fa-dollar-sign"></i></div>
+                                        <h6>Grand Total</h6>
+                                        <h3>{{ number_format($orderGrandTotal ?? 0, 2) }}</h3>
+                                    </div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Products Tab --}}
+                    <div class="tab-pane fade {{ $activeTab === 'products' ? 'show active' : '' }}" id="productsTab" role="tabpanel">
+                        <h5 class="mb-3"><i class="fa fa-cubes me-1"></i> Order Products</h5>
                         <div class="table-responsive">
-                            <table class="table table-hover table-striped product-table">
-                                <thead>
+                            <table class="table table-hover table-bordered align-middle">
+                                <thead class="table-light">
                                     <tr>
                                         <th>Product</th>
                                         <th>Unit</th>
@@ -156,72 +204,70 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($purchase->purchaseItems as $item)
-                                    <tr>
-                                        <td><strong>{{ $item?->product?->name }}</strong></td>
-                                        <td>{{ $item?->unit?->name ?? 'N/A' }}</td>
-                                        <td>{{ $item->actual_qty }}</td>
-                                        <td>{{ number_format($item->purchase_price, 2) }}</td>
-                                        <td>{{ number_format($item->discount_percentage, 2) }}%</td>
-                                        <td>{{ number_format($item->unit_cost_after_discount, 2) }}</td>
-                                        <td>{{ number_format($item->total_after_discount, 2) }}</td>
-                                        <td>{{ $item->tax_percentage ? number_format($item->tax_percentage, 2) : 'N/A' }}%</td>
-                                        <td>{{ number_format($item->unit_amount_after_tax, 2) }}</td>
-                                        <td>{{ number_format($item->x_margin, 2) }}%</td>
-                                        <td>{{ number_format($item->total_after_x_margin, 2) }}</td>
-                                        <td>{{ number_format($item->total_after_x_margin * $item->actual_qty, 2) }}</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-danger refund-btn" wire:click="setCurrentItem({{ $item->id }})" data-toggle="modal" data-target="#refundModal">
-                                                <i class="fa fa-undo"></i> Refund
-                                            </button>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td><strong>{{ $item?->product?->name }}</strong></td>
+                                            <td>{{ $item?->unit?->name ?? 'N/A' }}</td>
+                                            <td>{{ $item->actual_qty }}</td>
+                                            <td>{{ number_format($item->purchase_price, 2) }}</td>
+                                            <td>{{ number_format($item->discount_percentage, 2) }}%</td>
+                                            <td>{{ number_format($item->unit_cost_after_discount, 2) }}</td>
+                                            <td>{{ number_format($item->total_after_discount, 2) }}</td>
+                                            <td>{{ $item->tax_percentage ? number_format($item->tax_percentage, 2) : 'N/A' }}%</td>
+                                            <td>{{ number_format($item->unit_amount_after_tax, 2) }}</td>
+                                            <td>{{ number_format($item->x_margin, 2) }}%</td>
+                                            <td>{{ number_format($item->total_after_x_margin, 2) }}</td>
+                                            <td>{{ number_format($item->total_after_x_margin * $item->actual_qty, 2) }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" wire:click="setCurrentItem({{ $item->id }})" data-bs-toggle="modal" data-bs-target="#refundModal">
+                                                    <i class="fa fa-undo"></i> Refund
+                                                </button>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+                    {{-- Expenses Tab --}}
+                    <div class="tab-pane fade {{ $activeTab === 'expenses' ? 'show active' : '' }}" id="expensesTab" role="tabpanel">
+                        <h5 class="mb-3"><i class="fa fa-credit-card me-1"></i> Order Expenses</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Expense Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($purchase->expenses ?? [] as $expense)
+                                        <tr>
+                                            <td>{{ $expense->description ?? 'N/A' }}</td>
+                                            <td>{{ number_format($expense->amount ?? 0, 2) }}</td>
+                                            <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <div role="tabpanel" class="tab-pane fade {{ $activeTab === 'expenses' ? 'in active' : '' }}" id="messages1">
-                <h3 class="box-title m-b-0">Order Expenses</h3>
-                <div class="row">
-                    <div class="col-sm-12 col-xs-12">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Expense Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($purchase->expenses ?? [] as $index => $expense)
-                                <tr>
-                                    <td>
-                                        {{ $expense->description ?? 'N/A' }}
-                                    </td>
-                                    <td>
-                                        {{ number_format($expense->amount ?? 0, 2) }}
-                                    </td>
-                                    <td>
-                                        {{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        {{-- <button class="btn btn-primary" wire:click="addExpense">
-                            <i class="fa fa-plus"></i> Add New Expense
-                        </button> --}}
-                    </div>
-                </div>
+            <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
             </div>
         </div>
     </div>

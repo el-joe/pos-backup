@@ -1,22 +1,24 @@
 <div>
-    <div class="white-box">
-        <h3 class="box-title m-b-0">Purchase Details</h3>
-        <p class="text-muted m-b-30 font-13"></p>
-        <div class="row">
-            <div class="col-sm-12 col-xs-12">
-                <div class="form-group col-sm-4">
-                    <label for="branch_id">Branch</label>
-                    <select id="branch_id" wire:model.change="data.branch_id" class="form-control">
+   <div class="col-12">
+    <div class="card shadow-sm  mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Purchase Details</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="branch_id" class="form-label">Branch</label>
+                    <select id="branch_id" wire:model.change="data.branch_id" class="form-select">
                         <option value="">Select Branch</option>
                         @foreach ($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                {{-- supplier then category --}}
-                <div class="form-group col-sm-4">
-                    <label for="supplier_id">Supplier</label>
-                    <select id="supplier_id" wire:model.change="data.supplier_id" class="form-control">
+
+                <div class="col-md-4">
+                    <label for="supplier_id" class="form-label">Supplier</label>
+                    <select id="supplier_id" wire:model.change="data.supplier_id" class="form-select">
                         <option value="">Select Supplier</option>
                         @foreach ($suppliers as $supplier)
                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -24,168 +26,170 @@
                     </select>
                 </div>
 
-                <div class="form-group col-sm-4">
-                    <label for="ref_no">Ref NO.</label>
+                <div class="col-md-4">
+                    <label for="ref_no" class="form-label">Ref No.</label>
                     <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-product-hunt"></i></div>
-                        <input type="text" class="form-control" id="ref_no" placeholder="Ref NO." wire:model="data.ref_no">
+                        <span class="input-group-text"><i class="fa fa-product-hunt"></i></span>
+                        <input type="text" id="ref_no" class="form-control" placeholder="Ref No." wire:model="data.ref_no">
                     </div>
                 </div>
-                <div class="form-group col-sm-4">
-                    <label for="order_date">Order Date</label>
+
+                <div class="col-md-4">
+                    <label for="order_date" class="form-label">Order Date</label>
                     <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-barcode"></i></div>
-                        <input type="date" class="form-control" id="order_date" placeholder="Order Date" wire:model="data.order_date">
+                        <span class="input-group-text"><i class="fa fa-barcode"></i></span>
+                        <input type="date" id="order_date" class="form-control" placeholder="Order Date" wire:model="data.order_date">
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
+        </div>
     </div>
+</div>
+
     {{-- new white-box for order products --}}
+    <div class="col-12">
+        <div class="card shadow-sm  mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Order Products</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            <input
+                                type="text"
+                                id="product_search"
+                                class="form-control"
+                                placeholder="Search Product by name/code"
+                                wire:model.live.debounce.1000ms="product_search"
+                                x-data
+                                @reset-search-input.window="$el.value=''"
+                            >
+                        </div>
+                    </div>
+                </div>
 
-    <div class="white-box">
-        <h3 class="box-title m-b-0">Order Products</h3>
-        <p class="text-muted m-b-30 font-13"></p>
-        <div class="row">
-            <div class="col-sm-12 col-xs-12">
-                <div class="form-group col-sm-4">
-                    {{-- <label for="product_search">Search Product</label> --}}
-                    <div class="input-group">
-                        <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                        <input
-                            type="text" class="form-control" id="product_search"
-                            placeholder="Search Product by name/code"
-                            wire:model.live.debounce.1000ms="product_search"
-                            x-data
-                            @reset-search-input.window="$el.value=''"
-                        >
+                <!-- Products Table -->
+                <div class="table-responsive">
+                    <div class="responsive-table-wrapper">
+                        <table class="table table-bordered align-middle order-products-table" style="min-width:1200px;">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Unit</th>
+                                    <th>Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Discount (%)</th>
+                                    <th>Net Unit Cost</th>
+                                    <th>Total Net Cost</th>
+                                    <th>Tax (%)</th>
+                                    <th>Subtotal (Incl. Tax)</th>
+                                    <th>Extra Margin (%)</th>
+                                    <th>Selling Price/Unit</th>
+                                    <th>Grand Total (Incl. Tax & Profit)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($orderProducts ?? [] as $index => $product)
+                                    <tr>
+                                        <td class="fw-semibold">{{ $product['name'] }}</td>
+                                        <td>
+                                            <select name="unit_id"
+                                                id="unit_id"
+                                                wire:model.change="orderProducts.{{ $index }}.unit_id"
+                                                class="form-select">
+                                                <option value="">Select Unit</option>
+                                                @foreach ($product['units'] as $unit)
+                                                    <option value="{{ $unit['id'] }}">{{ $unit['name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control"
+                                                wire:model.blur="orderProducts.{{ $index }}.qty"
+                                                min="1" placeholder="0.00">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control"
+                                                wire:model.blur="orderProducts.{{ $index }}.purchase_price"
+                                                step="0.01" min="0" placeholder="0.00">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control"
+                                                wire:model.blur="orderProducts.{{ $index }}.discount_percentage"
+                                                step="0.01" min="0" placeholder="0.00">
+                                        </td>
+                                        <td class="text-muted">{{ number_format($product['unit_cost_after_discount'], 2) }}</td>
+                                        <td class="text-muted">{{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}</td>
+                                        <td>
+                                            <select name="tax_percentage"
+                                                id="tax_percentage"
+                                                wire:model.change="orderProducts.{{ $index }}.tax_percentage"
+                                                class="form-select">
+                                                <option value="">Select Tax</option>
+                                                @foreach ($taxes as $tax)
+                                                    <option value="{{ $tax->rate }}" {{ $product['tax_percentage'] == $tax->rate ? 'selected' : '' }}>
+                                                        {{ $tax->name }} - {{ $tax->rate }}%
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="text-muted">{{ number_format($product['sub_total'] * $product['qty'], 2) }}</td>
+                                        <td>
+                                            <input type="number" class="form-control"
+                                                wire:model.blur="orderProducts.{{ $index }}.x_margin"
+                                                step="0.01" min="0" placeholder="0.00">
+                                        </td>
+                                        <td class="fw-semibold">{{ number_format($product['sell_price'], 2) }}</td>
+                                        <td class="fw-semibold">{{ number_format($product['total'], 2) }}</td>
+                                        <td>
+                                            <button type="button"
+                                                class="btn btn-sm btn-danger rounded-2"
+                                                wire:click="delete({{ $index }})">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-        {{-- products table --}}
-        <div class="row">
-            <div class="col-sm-12 col-xs-12">
-                <div class="table-responsive">
-                    <div class="responsive-table-wrapper" style="overflow-x:auto;">
-                        <table class="table table-bordered order-products-table" style="min-width:1200px;">
-                        <thead>
-                            <tr>
-                                <th style="min-width:140px;">Product</th>
-                                <th style="min-width:100px;">Unit</th>
-                                <th style="min-width:80px;">Qty</th>
-                                <th style="min-width:110px;">Unit Price</th>
-                                <th style="min-width:110px;">Discount (%)</th>
-                                <th style="min-width:130px;">Net Unit Cost</th>
-                                <th style="min-width:130px;">Total Net Cost</th>
-                                <th style="min-width:110px;">Tax (%)</th>
-                                <th style="min-width:150px;">Subtotal (Incl. Tax)</th>
-                                <th style="min-width:130px;">Extra Margin (%)</th>
-                                <th style="min-width:120px;">Selling Price/Unit</th>
-                                <th style="min-width:180px;">Grand Total (Incl. Tax & Profit)</th>
-                                <th style="min-width:90px;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($orderProducts??[] as $index=>$product)
-                                <tr>
-                                    <td style="vertical-align:middle; font-weight:500; color:#444;">{{ $product['name'] }}</td>
-                                    <td>
-                                        <select name="unit_id" id="unit_id" wire:model.change="orderProducts.{{ $index }}.unit_id" class="form-control" style="min-width:90px;">
-                                            <option value="">Select Unit</option>
-                                            @foreach ($product['units'] as $unit)
-                                                <option value="{{ $unit['id'] }}">{{ $unit['name'] }}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.qty" min="1" placeholder="0.00" style="min-width:70px;">
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.purchase_price" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.discount_percentage" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
-                                    </td>
-                                    <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['unit_cost_after_discount'], 2) }}</td>
-                                    <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}</td>
-                                    <td>
-                                        <select name="tax_percentage" id="tax_percentage" wire:model.change="orderProducts.{{ $index }}.tax_percentage" class="form-control" style="min-width:90px;">
-                                            <option value="">Select Tax</option>
-                                            @foreach ($taxes as $tax)
-                                                <option value="{{ $tax->rate }}" {{ $product['tax_percentage'] == $tax->rate ? 'selected' : '' }}>{{ $tax->name }} - {{ $tax->rate }}%</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td style="vertical-align:middle; color:#888; font-size:15px;">{{ number_format($product['sub_total'] * $product['qty'], 2) }}</td>
-                                    <td>
-                                        <input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.x_margin" step="0.01" min="0" placeholder="0.00" style="min-width:90px;">
-                                    </td>
-                                    <td style="vertical-align:middle; color:#2c3e50; font-weight:600;">{{ number_format($product['sell_price'], 2) }}</td>
-                                    <td style="vertical-align:middle; color:#2c3e50; font-weight:600;">{{ number_format($product['total'], 2) }}</td>
-                                    <td>
-                                        <button class="btn btn-danger" wire:click="delete({{ $index }})" style="border-radius:6px; padding:6px 12px;">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    </div>
-                </div>
-<style>
-    .order-products-table th, .order-products-table td {
-        white-space: nowrap;
-        vertical-align: middle;
-    }
-    .responsive-table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .order-products-table {
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(44,62,80,0.07);
-        margin-bottom: 0;
-    }
-    .order-products-table thead th {
-        background: #f7f7f7;
-        font-weight: 600;
-        color: #2c3e50;
-        border-bottom: 2px solid #e1e1e1;
-    }
-    .order-products-table tbody tr:hover {
-        background: #f0f8ff;
-        transition: background 0.2s;
-    }
-    @media (max-width: 900px) {
-        .order-products-table {
-            min-width: 900px;
-        }
-    }
-    @media (max-width: 600px) {
-        .order-products-table {
-            min-width: 600px;
-        }
-    }
-</style>
+
+            <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
             </div>
         </div>
     </div>
 
-    <div class="white-box">
-        <h3 class="box-title m-b-0">Order Expenses</h3>
-        <div class="row">
-            <div class="col-sm-12 col-xs-12">
-                <table class="table table-bordered">
-                    <thead>
+<div class="col-12">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Order Expenses</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
                         <tr>
                             <th>Description</th>
                             <th>Amount</th>
                             <th>Expense Date</th>
-                            <th>Action</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -200,8 +204,8 @@
                                 <td>
                                     <input type="date" class="form-control" wire:model="data.expenses.{{ $index }}.expense_date">
                                 </td>
-                                <td>
-                                    <button class="btn btn-danger" wire:click="removeExpense({{ $index }})">
+                                <td class="text-center">
+                                    <button class="btn btn-danger btn-sm" wire:click="removeExpense({{ $index }})" title="Remove">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -209,42 +213,59 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+
+            <div class="mt-3">
                 <button class="btn btn-primary" wire:click="addExpense">
                     <i class="fa fa-plus"></i> Add New Expense
                 </button>
             </div>
         </div>
-    </div>
 
-    <div class="white-box">
-        <h3 class="box-title m-b-0">Order Adjustments</h3>
-        <div class="row">
-            <div class="col-sm-12 col-xs-12">
-                <div class="form-group col-sm-4">
-                    <label for="discount_type">Discount Type</label>
-                    <select id="discount_type" wire:model.live="data.discount_type" class="form-control">
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Order Adjustments</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="discount_type" class="form-label">Discount Type</label>
+                    <select id="discount_type" wire:model.live="data.discount_type" class="form-select">
                         <option value="">Select Discount Type</option>
                         <option value="fixed">Fixed</option>
                         <option value="percentage">Percentage</option>
                     </select>
                 </div>
-                @if($data['discount_type']??false)
-                    <div class="form-group col-sm-4">
-                        <label for="discount_value">Discount Value</label>
+
+                @if($data['discount_type'] ?? false)
+                    <div class="col-md-4">
+                        <label for="discount_value" class="form-label">Discount Value</label>
                         <div class="input-group">
                             @if ($data['discount_type'] === 'percentage')
-                                <div class="input-group-addon"><i class="fa fa-percent"></i></div>
+                                <span class="input-group-text"><i class="fa fa-percent"></i></span>
                             @elseif ($data['discount_type'] === 'fixed')
-                                <div class="input-group-addon"><i class="fa fa-dollar"></i></div>
+                                <span class="input-group-text"><i class="fa fa-dollar"></i></span>
                             @endif
-                            <input type="number" class="form-control" id="discount_value" placeholder="Discount Value" wire:model.blur="data.discount_value" step="any" min="0">
+                            <input type="number" class="form-control" id="discount_value" placeholder="Discount Value"
+                                wire:model.blur="data.discount_value" step="any" min="0">
                         </div>
                     </div>
                 @endif
 
-                <div class="form-group col-sm-4">
-                    <label for="tax">Tax</label>
-                    <select id="tax" wire:model.live="data.tax_id" class="form-control">
+                <div class="col-md-4">
+                    <label for="tax" class="form-label">Tax</label>
+                    <select id="tax" wire:model.live="data.tax_id" class="form-select">
                         <option value="">Select Tax</option>
                         @foreach ($taxes as $tax)
                             <option value="{{ $tax->id }}">{{ $tax->name }} - {{ $tax->rate }}%</option>
@@ -253,179 +274,192 @@
                 </div>
             </div>
         </div>
+
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
+        </div>
     </div>
+</div>
 
     {{-- Purchase Summary & Totals --}}
-    <div class="white-box">
-        <h3 class="box-title m-b-0">Purchase Summary</h3>
-        <p class="text-muted m-b-30 font-13">Review your purchase totals and finalize the order</p>
+<div class="col-12">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Purchase Summary</h5>
+            <p class="text-muted small mb-0">Review your purchase totals and finalize the order</p>
+        </div>
 
-        <div class="row">
-            {{-- Left side - Calculation breakdown --}}
-            <div class="col-md-8">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Order Breakdown</h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label">Items Count</label>
+        <div class="card-body">
+            <div class="row">
+                {{-- Left side - Calculation breakdown --}}
+                <div class="col-lg-8 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-light">
+                            <h6 class="card-title mb-0">Order Breakdown</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Items Count</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon"><i class="fa fa-cube"></i></div>
+                                        <span class="input-group-text"><i class="fa fa-cube"></i></span>
                                         <input type="text" class="form-control" value="{{ count($orderProducts ?? []) }}" readonly>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label">Total Quantity</label>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Total Quantity</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon"><i class="fa fa-plus"></i></div>
+                                        <span class="input-group-text"><i class="fa fa-plus"></i></span>
                                         <input type="text" class="form-control" value="{{ $totalQuantity ?? 0 }}" readonly>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label">Subtotal (Before Discount)</label>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Subtotal (Before Discount)</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon"><i class="fa fa-calculator"></i></div>
+                                        <span class="input-group-text"><i class="fa fa-calculator"></i></span>
                                         <input type="text" class="form-control" value="{{ number_format($orderSubTotal ?? 0, 2) }}" readonly>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label">Discount Amount</label>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-4">
+                                    <label class="form-label">Discount Amount</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon"><i class="fa fa-minus"></i></div>
+                                        <span class="input-group-text"><i class="fa fa-minus"></i></span>
                                         <input type="text" class="form-control" value="{{ number_format($orderDiscountAmount ?? 0, 2) }}" readonly>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label">After Discount</label>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">After Discount</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon"><i class="fa fa-minus-circle"></i></div>
+                                        <span class="input-group-text"><i class="fa fa-minus-circle"></i></span>
                                         <input type="text" class="form-control" value="{{ number_format($orderTotalAfterDiscount ?? 0, 2) }}" readonly>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="control-label">Tax Amount</label>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Tax Amount</label>
                                     <div class="input-group">
-                                        <div class="input-group-addon"><i class="fa fa-percent"></i></div>
+                                        <span class="input-group-text"><i class="fa fa-percent"></i></span>
                                         <input type="text" class="form-control" value="{{ number_format($orderTaxAmount ?? 0, 2) }}" readonly>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Right side - Final totals and actions --}}
-            <div class="col-md-4">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Final Totals</h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="control-label text-primary">Grand Total</label>
-                            <div class="input-group">
-                                <div class="input-group-addon bg-primary"><i class="fa fa-money text-white"></i></div>
-                                <input type="text" class="form-control input-lg text-center font-weight-bold"
-                                       value="{{ number_format($orderGrandTotal ?? 0, 2) }}" readonly
-                                       style="font-size: 18px; font-weight: bold; color: #2c3e50;">
-                            </div>
+                {{-- Right side - Final totals and actions --}}
+                <div class="col-lg-4">
+                    <div class="card border-primary shadow-sm mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="card-title mb-0">Final Totals</h6>
                         </div>
-
-                        <div class="form-group">
-                            <label class="control-label">Payment Status</label>
-                            <select class="form-control" wire:model.live="data.payment_status">
-                                <option value="">Choose One...</option>
-                                <option value="pending">Pending</option>
-                                <option value="partial_paid">Partial Payment</option>
-                                <option value="full_paid">Fully Paid</option>
-                            </select>
-                        </div>
-
-                        {{-- make select to choose payment account from selected Supplier when payment_status is partial or paid --}}
-                        @if(in_array($data['payment_status']??false, ['partial_paid', 'full_paid']))
-                            <div class="form-group">
-                                <label class="control-label">Payment Account</label>
-                                <select class="form-control" wire:model="data.payment_account">
-                                    <option value="">Select Payment Account</option>
-                                    @foreach($paymentAccounts as $account)
-                                        <option value="{{ $account->id }}">{{ $account->paymentMethod->name }} - {{ $account->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-
-                        @if(($data['payment_status'] ?? '') === 'partial_paid')
-                            <div class="form-group">
-                                <label class="control-label">Paid Amount</label>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-primary fw-bold">Grand Total</label>
                                 <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-credit-card"></i></div>
-                                    <input type="number" class="form-control" wire:model="data.payment_amount"
-                                           step="0.01" min="0" max="{{ $grandTotal ?? 0 }}" placeholder="0.00">
+                                    <span class="input-group-text bg-primary text-white"><i class="fa fa-money"></i></span>
+                                    <input type="text"
+                                           class="form-control text-center fw-bold"
+                                           value="{{ number_format($orderGrandTotal ?? 0, 2) }}"
+                                           readonly>
                                 </div>
                             </div>
-                        @endif
 
-                        <div class="form-group">
-                            <label class="control-label">Notes</label>
-                            <textarea class="form-control" wire:model="data.payment_note" rows="3"
-                                      placeholder="Add any additional notes..."></textarea>
-                        </div>
-
-                        <hr>
-
-                        <div class="text-center">
-                            <button type="button" class="btn btn-success btn-lg btn-block waves-effect waves-light"
-                                    wire:click="savePurchase" {{ count($orderProducts ?? []) === 0 ? 'disabled' : '' }}>
-                                <i class="fa fa-save"></i> Save Purchase Order
-                            </button>
-                            <button type="button" class="btn btn-default btn-block waves-effect waves-light m-t-10">
-                                <i class="fa fa-times"></i> Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Quick Stats --}}
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Quick Stats</h4>
-                    </div>
-                    <div class="panel-body p-10">
-                        <div class="row">
-                            <div class="col-xs-6 text-center">
-                                <h4 class="text-info m-0">{{ count($orderProducts ?? []) }}</h4>
-                                <small class="text-muted">Items</small>
+                            <div class="mb-3">
+                                <label class="form-label">Payment Status</label>
+                                <select class="form-select" wire:model.live="data.payment_status">
+                                    <option value="">Choose One...</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="partial_paid">Partial Payment</option>
+                                    <option value="full_paid">Fully Paid</option>
+                                </select>
                             </div>
-                            <div class="col-xs-6 text-center">
-                                <h4 class="text-success m-0">{{ number_format($grandTotal ?? 0, 0) }}</h4>
-                                <small class="text-muted">Total</small>
+
+                            @if(in_array($data['payment_status'] ?? false, ['partial_paid', 'full_paid']))
+                                <div class="mb-3">
+                                    <label class="form-label">Payment Account</label>
+                                    <select class="form-select" wire:model="data.payment_account">
+                                        <option value="">Select Payment Account</option>
+                                        @foreach($paymentAccounts as $account)
+                                            <option value="{{ $account->id }}">
+                                                {{ $account->paymentMethod->name }} - {{ $account->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
+                            @if(($data['payment_status'] ?? '') === 'partial_paid')
+                                <div class="mb-3">
+                                    <label class="form-label">Paid Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa fa-credit-card"></i></span>
+                                        <input type="number" class="form-control" wire:model="data.payment_amount"
+                                               step="0.01" min="0" max="{{ $grandTotal ?? 0 }}" placeholder="0.00">
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" wire:model="data.payment_note" rows="3"
+                                          placeholder="Add any additional notes..."></textarea>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-success btn-lg"
+                                        wire:click="savePurchase"
+                                        {{ count($orderProducts ?? []) === 0 ? 'disabled' : '' }}>
+                                    <i class="fa fa-save"></i> Save Purchase Order
+                                </button>
+                                <button type="button" class="btn btn-secondary">
+                                    <i class="fa fa-times"></i> Cancel
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+
+                    {{-- Quick Stats --}}
+                    <div class="card border-info shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="card-title mb-0">Quick Stats</h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h4 class="text-info mb-0">{{ count($orderProducts ?? []) }}</h4>
+                                    <small class="text-muted">Items</small>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="text-success mb-0">{{ number_format($grandTotal ?? 0, 0) }}</h4>
+                                    <small class="text-muted">Total</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> {{-- /Right Side --}}
+            </div> {{-- /Row --}}
+        </div> {{-- /Card Body --}}
+
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
+</div>
 </div>
 
 @push('scripts')

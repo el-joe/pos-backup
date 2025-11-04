@@ -9,7 +9,6 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class UsersList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -85,6 +84,8 @@ class UsersList extends Component
     public function render()
     {
         $users = $this->userService->list(perPage : 10 , orderByDesc: 'id',filter : ['type' => $this->type]);
-        return view('livewire.admin.users.users-list',get_defined_vars());
+
+        return layoutView('users.users-list', get_defined_vars())
+            ->title(__('general.titles.' . $this->type . 's'));
     }
 }

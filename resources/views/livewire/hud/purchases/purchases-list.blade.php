@@ -1,129 +1,129 @@
-<div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Purchase Orders</h3>
-            </div>
-            <div class="col-xs-6 text-right">
-                {{-- add toggle for edit branch --}}
-                <a class="btn btn-primary" href="#">
-                    <i class="fa fa-plus"></i> New Purchase Order
-                </a>
+<div class="col-12">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Purchase Orders</h5>
+            <a href="#" class="btn btn-primary">
+                <i class="fa fa-plus"></i> New Purchase Order
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Ref No.</th>
+                            <th>Supplier</th>
+                            <th>Branch</th>
+                            <th>Status</th>
+                            <th>Total Amount</th>
+                            <th>Due Amount</th>
+                            <th>Refund Status</th>
+                            <th class="text-nowrap">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($purchases as $purchase)
+                        <tr>
+                            <td>{{ $purchase->id }}</td>
+                            <td>{{ $purchase->ref_no }}</td>
+                            <td>{{ $purchase->supplier->name }}</td>
+                            <td>{{ $purchase->branch->name }}</td>
+                            <td>
+                                <span class="badge bg-{{ $purchase->status->colorClass() }}">
+                                    {{ $purchase->status->label() }}
+                                </span>
+                            </td>
+                            <td>{{ $purchase->total_amount ?? 0 }}</td>
+                            <td>
+                                <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
+                                    {{ number_format($purchase->due_amount ?? 0, 2) }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-{{ $purchase->refund_status->colorClass() }}">
+                                    {{ $purchase->refund_status->label() }}
+                                </span>
+                            </td>
+                            <td class="text-nowrap">
+                                <a href="{{ route('admin.purchases.details', $purchase->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Details">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-success" wire:click="setCurrent({{ $purchase->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal" data-id="{{ $purchase->id }}">
+                                    <i class="fa fa-credit-card"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-center">
+                    {{ $purchases->links() }}
+                </div>
             </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Ref No.</th>
-                        <th>Supplier</th>
-                        <th>Branch</th>
-                        <th>Status</th>
-                        <th>Total Amount</th>
-                        <th>Due Amount</th>
-                        <th>Refund Status</th>
-                        <th class="text-nowrap">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($purchases as $purchase)
-                    <tr>
-                        <td>{{ $purchase->id }}</td>
-                        <td>{{ $purchase->ref_no }}</td>
-                        <td>{{ $purchase->supplier->name }}</td>
-                        <td>{{ $purchase->branch->name }}</td>
-                        <td>
-                            <span class="label label-{{ $purchase->status->colorClass() }}">
-                                {{ $purchase->status->label() }}
-                            </span>
-                        </td>
-                        <td>{{ $purchase->total_amount ?? 0 }}</td>
-                        <td>
-                            <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
-                                {{ number_format($purchase->due_amount ?? 0, 2) }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="text-{{ $purchase->refund_status->colorClass() }}">
-                                {{ $purchase->refund_status->label() }}
-                            </span>
-                        </td>
-                        <td class="text-nowrap">
-                            <a href="{{ route('admin.purchases.details', $purchase->id) }}" data-toggle="tooltip" data-original-title="Details">
-                                <i class="fa fa-eye text-primary m-r-10"></i>
-                            </a>
-                            <a href="#" wire:click="setCurrent({{ $purchase->id }})" data-toggle="modal" data-target="#paymentModal" data-id="{{ $purchase->id }}">
-                                <i class="fa fa-credit-card text-success"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {{-- center pagination --}}
-            <div class="pagination-wrapper t-a-c">
-                {{ $purchases->links() }}
-            </div>
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
-    <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <!-- wider modal -->
-            <div class="modal-content">
+
+    <!-- Payment Modal -->
+    <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow-lg">
                 <div class="modal-header bg-primary text-white">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" class="text-white">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="paymentModalLabel">💰 Add Payment</h4>
+                    <h5 class="modal-title" id="paymentModalLabel">💰 Add Payment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="form-group col-sm-6">
-                            <label for="paymentAmount" class="control-label">Amount</label>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="paymentAmount" class="form-label">Amount</label>
                             <div class="input-group">
-                                <span class="input-group-addon">$</span>
+                                <span class="input-group-text">$</span>
                                 <input type="number" class="form-control" id="paymentAmount" wire:model="payment.amount" placeholder="Enter amount">
-                                <span class="input-group-addon">
-                                    Due:
-                                    <strong class="text-danger">
-                                        {{ number_format($current->due_amount ?? 0, 2) }}
-                                    </strong>
+                                <span class="input-group-text">
+                                    Due: <strong class="text-danger ms-1">{{ number_format($current->due_amount ?? 0, 2) }}</strong>
                                 </span>
                             </div>
                             @error('payment.amount') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
 
-                        <div class="form-group col-sm-6">
-                            <label for="paymentMethod" class="control-label">Supplier Account</label>
-                            <select class="form-control" id="paymentMethod" wire:model="payment.account_id">
+                        <div class="col-md-6">
+                            <label for="paymentMethod" class="form-label">Supplier Account</label>
+                            <select class="form-select" id="paymentMethod" wire:model="payment.account_id">
                                 <option value="">-- Select Account --</option>
-                                @foreach (($current?->supplier?->accounts??[]) as $acc)
+                                @foreach (($current?->supplier?->accounts ?? []) as $acc)
                                     <option value="{{ $acc->id }}">{{ $acc->paymentMethod?->name }} - {{ $acc->name }}</option>
                                 @endforeach
                             </select>
                             @error('payment.account_id') <span class="text-danger small">{{ $message }}</span> @enderror
                         </div>
+
+                        <div class="col-12">
+                            <label for="paymentNote" class="form-label">Note</label>
+                            <textarea class="form-control" id="paymentNote" wire:model="payment.note" rows="3" placeholder="Optional notes..."></textarea>
+                            @error('payment.note') <span class="text-danger small">{{ $message }}</span> @enderror
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="paymentNote" class="control-label">Note</label>
-                        <textarea class="form-control" id="paymentNote" wire:model="payment.note" rows="3" placeholder="Optional notes..."></textarea>
-                        @error('payment.note') <span class="text-danger small">{{ $message }}</span> @enderror
-                    </div>
-
-                    <button type="button" class="btn btn-success btn-block" wire:click="savePayment">
-                        <i class="glyphicon glyphicon-ok"></i> Save Payment
+                    <button type="button" class="btn btn-success w-100 mt-3" wire:click="savePayment">
+                        <i class="fa fa-check"></i> Save Payment
                     </button>
 
-                    <hr />
+                    <hr>
 
-                    <h4 class="text-primary">Recent Payments</h4>
+                    <h5 class="text-primary mb-3">Recent Payments</h5>
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover table-bordered">
-                            <thead class="bg-info">
+                        <table class="table table-bordered table-striped table-hover align-middle">
+                            <thead class="table-info">
                                 <tr>
                                     <th>Date</th>
                                     <th>Amount</th>
@@ -132,7 +132,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-
                                 <?php
                                     $payments = $current?->transactions ? $current?->transactions->whereIn('type', [
                                         App\Enums\TransactionTypeEnum::PURCHASE_PAYMENT,
@@ -142,7 +141,7 @@
                                 @forelse($payments as $payment)
                                     <tr>
                                         <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
-                                        <td><span class="label label-success">{{ $payment->amount }}</span></td>
+                                        <td><span class="badge bg-success">{{ $payment->amount }}</span></td>
                                         <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name ? $payment->account()->paymentMethod?->name .' - '  : '' ) . $payment->account()->name : 'N/A' }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>
@@ -157,13 +156,16 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        <i class="glyphicon glyphicon-remove"></i> Close
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times"></i> Close
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+
+
 @push('styles')
 @endpush

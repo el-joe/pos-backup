@@ -10,7 +10,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class PurchasesList extends Component
 {
 
@@ -63,6 +62,8 @@ class PurchasesList extends Component
     public function render()
     {
         $purchases = $this->purchaseService->list([],[],10,'id');
-        return view('livewire.admin.purchases.purchases-list',get_defined_vars());
+
+        return layoutView('purchases.purchases-list', get_defined_vars())
+            ->title(__('general.titles.purchases'));
     }
 }

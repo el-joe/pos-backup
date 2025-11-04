@@ -12,7 +12,6 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class AddEditProduct extends Component
 {
     use LivewireOperations;
@@ -127,6 +126,8 @@ class AddEditProduct extends Component
         // if($this->data['image'] ?? false){
         //     dd($this->data['image']);
         // }
-        return view('livewire.admin.products.add-edit-product',get_defined_vars());
+
+        return layoutView('products.add-edit-product', get_defined_vars())
+            ->title(__('general.titles.'.($this->product ? 'edit' : 'add').'_product'));
     }
 }
