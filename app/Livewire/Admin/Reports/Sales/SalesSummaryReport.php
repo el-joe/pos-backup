@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class SalesSummaryReport extends Component
 {
     public $period = 'day'; // day, week, month
@@ -92,7 +91,8 @@ class SalesSummaryReport extends Component
 
     public function render()
     {
-        return view('livewire.admin.reports.sales.sales-summary-report', [
+
+        return layoutView('reports.sales.sales-summary-report', [
             'report' => $this->report,
             'period' => $this->period,
             'from_date' => $this->from_date,

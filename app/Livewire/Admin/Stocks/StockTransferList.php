@@ -6,7 +6,6 @@ use App\Services\StockTransferService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class StockTransferList extends Component
 {
     private $stockTransferService;
@@ -64,6 +63,6 @@ class StockTransferList extends Component
             ]],
         ];
 
-        return view('livewire.admin.stocks.stock-transfer-list',get_defined_vars());
+        return layoutView('stocks.stock-transfer-list', get_defined_vars());
     }
 }

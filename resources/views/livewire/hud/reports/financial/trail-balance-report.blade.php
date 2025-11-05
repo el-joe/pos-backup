@@ -4,7 +4,12 @@
             <h4 class="panel-title"><i class="glyphicon glyphicon-list"></i> Transactions List</h4>
         </div>
         <div class="panel-body">
-            <x-table-component :rows="$transactionLines" :columns="$columns" :headers="$headers" :totals="$totals" />
+            @include('admin.partials.tableHandler',[
+                'rows' => $transactionLines,
+                'columns' => $columns,
+                'headers' => $headers,
+                'totals' => $totals,
+            ])
         </div>
     </div>
 </div>

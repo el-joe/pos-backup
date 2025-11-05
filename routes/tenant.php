@@ -110,7 +110,7 @@ Route::middleware([
             Route::get('brands', BrandsList::class)->name('brands.list');
             Route::get('units',UnitsList::class)->name('units.list');
             Route::get('taxes',TaxesList::class)->name('taxes.list');
-            Route::get('pos',PosPage::class)->name('pos');
+            Route::get('pos',PosPage::class)->name('pos'); // TODO : Convert to Hud Template
             Route::get('discounts', DiscountsList::class)->name('discounts.list'); //TODO : Need to add sales threshold when type is fixed
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
             // TODO : expenses will be saved without payments and we can add payments later
@@ -133,7 +133,7 @@ Route::middleware([
             Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
             // Sales
             Route::get('sales',SalesList::class)->name('sales.index');
-            Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
+            Route::get('sales/{id}',SaleDetails::class)->name('sales.details'); // TODO : Convert to Hud Template
             // Transactions
             Route::get('transactions',TransactionList::class)->name('transactions.list');
             // Shipping Companies
@@ -223,11 +223,11 @@ Route::middleware([
             // Stock Adjustments
             Route::get('stock-adjustments', StockTakingList::class)->name('stocks.adjustments.list');
             Route::get('stock-adjustments/create', AddStockTaking::class)->name('stocks.adjustments.create');
-            Route::get('stock-adjustments/{id}/details', StockTakingDetails::class)->name('stocks.adjustments.details');
+            Route::get('stock-adjustments/{id}/details', StockTakingDetails::class)->name('stocks.adjustments.details'); // TODO : Convert to Hud Template
             // Stock Transfers
             Route::get('stock-transfers', StockTransferList::class)->name('stocks.transfers.list');
             Route::get('stock-transfers/create', AddStockTransfer::class)->name('stocks.transfers.create');
-            Route::get('stock-transfers/{id}/details', StockTransferDetails::class)->name('stocks.transfers.details');
+            Route::get('stock-transfers/{id}/details', StockTransferDetails::class)->name('stocks.transfers.details'); // TODO : Convert to Hud Template
 
             Route::get('admins',AdminsList::class)->name('admins.list');
             Route::get('roles',RolesList::class)->name('roles.list');

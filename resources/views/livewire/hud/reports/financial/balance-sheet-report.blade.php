@@ -1,77 +1,95 @@
-<div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
+<div class="col-12">
+    <!-- Filter Options Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light d-flex align-items-center">
+            <h5 class="mb-0">
+                <i class="fa fa-filter me-2"></i> Filter Options
+            </h5>
         </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-3 form-group">
-                    <label>From Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="from_date">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">From Date</label>
+                    <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
                 </div>
-                <div class="col-md-3 form-group">
-                    <label>To Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="to_date">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">To Date</label>
+                    <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
                 </div>
             </div>
+        </div>
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-scale"></i> Balance Sheet</h4>
+    <!-- Balance Sheet Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <h5 class="mb-0">
+                <i class="fa fa-balance-scale me-2"></i> Balance Sheet
+            </h5>
         </div>
-        <div class="panel-body" style="padding:0;">
+        <div class="card-body p-0">
             <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
-                <tbody>
-                    {{-- ================= Assets ================= --}}
-                    <tr style="background:#e3f2fd;">
-                        <th colspan="2">Assets</th>
-                    </tr>
-                    @foreach($report['assets'] as $label => $amount)
-                    <tr>
-                        <td>{{ $label }}</td>
-                        <td>{{ number_format($amount, 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr style="background:#bbdefb; font-weight:600;">
-                        <td>Total Assets</td>
-                        <td>{{ number_format($report['total_assets'] ?? 0, 2) }}</td>
-                    </tr>
+                <table class="table table-bordered table-hover table-striped mb-0 align-middle">
+                    <tbody>
+                        {{-- ================= Assets ================= --}}
+                        <tr class="bg-light">
+                            <th colspan="2" class="text-uppercase text-primary">Assets</th>
+                        </tr>
+                        @foreach($report['assets'] as $label => $amount)
+                        <tr>
+                            <td>{{ $label }}</td>
+                            <td>{{ number_format($amount, 2) }}</td>
+                        </tr>
+                        @endforeach
+                        <tr class="fw-bold bg-primary-subtle">
+                            <td>Total Assets</td>
+                            <td>{{ number_format($report['total_assets'] ?? 0, 2) }}</td>
+                        </tr>
 
-                    {{-- ================= Liabilities ================= --}}
-                    <tr style="background:#f3e5f5;">
-                        <th colspan="2">Liabilities</th>
-                    </tr>
-                    @foreach($report['liabilities'] as $label => $amount)
-                    <tr>
-                        <td>{{ $label }}</td>
-                        <td>{{ number_format($amount, 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr style="background:#e1bee7; font-weight:600;">
-                        <td>Total Liabilities</td>
-                        <td>{{ number_format($report['total_liabilities'] ?? 0, 2) }}</td>
-                    </tr>
+                        {{-- ================= Liabilities ================= --}}
+                        <tr class="bg-light">
+                            <th colspan="2" class="text-uppercase text-danger">Liabilities</th>
+                        </tr>
+                        @foreach($report['liabilities'] as $label => $amount)
+                        <tr>
+                            <td>{{ $label }}</td>
+                            <td>{{ number_format($amount, 2) }}</td>
+                        </tr>
+                        @endforeach
+                        <tr class="fw-bold bg-danger-subtle">
+                            <td>Total Liabilities</td>
+                            <td>{{ number_format($report['total_liabilities'] ?? 0, 2) }}</td>
+                        </tr>
 
-                    {{-- ================= Equity ================= --}}
-                    <tr style="background:#e8f5e8;">
-                        <th colspan="2">Equity</th>
-                    </tr>
-                    @foreach($report['equity'] as $label => $amount)
-                    <tr>
-                        <td>{{ $label }}</td>
-                        <td>{{ number_format($amount, 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr style="background:#c8e6c9; font-weight:600;">
-                        <td>Total Equity</td>
-                        <td>{{ number_format($report['total_equity'] ?? 0, 2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                        {{-- ================= Equity ================= --}}
+                        <tr class="bg-light">
+                            <th colspan="2" class="text-uppercase text-success">Equity</th>
+                        </tr>
+                        @foreach($report['equity'] as $label => $amount)
+                        <tr>
+                            <td>{{ $label }}</td>
+                            <td>{{ number_format($amount, 2) }}</td>
+                        </tr>
+                        @endforeach
+                        <tr class="fw-bold bg-success-subtle">
+                            <td>Total Equity</td>
+                            <td>{{ number_format($report['total_equity'] ?? 0, 2) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
 </div>

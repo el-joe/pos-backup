@@ -6,7 +6,6 @@ use App\Services\StockTakingService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class StockTakingList extends Component
 {
     private $stockTakingService;
@@ -56,6 +55,7 @@ class StockTakingList extends Component
                 ],
             ]]
         ];
-        return view('livewire.admin.stock-taking.stock-taking-list',get_defined_vars());
+
+        return layoutView('stock-taking.stock-taking-list',get_defined_vars());
     }
 }

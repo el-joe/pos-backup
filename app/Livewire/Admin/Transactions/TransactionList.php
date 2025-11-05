@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class TransactionList extends Component
 {
     use WithPagination;
@@ -64,6 +63,6 @@ class TransactionList extends Component
             'created_at' => [ 'type' => 'datetime'],
         ];
 
-        return view('livewire.admin.transactions.transaction-list',get_defined_vars());
+        return layoutView('transactions.transaction-list',get_defined_vars());
     }
 }

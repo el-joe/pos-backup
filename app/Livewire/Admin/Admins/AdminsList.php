@@ -10,7 +10,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
-#[Layout('layouts.admin')]
 class AdminsList extends Component
 {
     use LivewireOperations,WithPagination;
@@ -94,6 +93,7 @@ class AdminsList extends Component
         $admins = $this->adminService->activeList();
         $branches = $this->branchService->activeList();
         $roles = Role::whereActive(1)->get();
-        return view('livewire.admin.admins.admins-list',get_defined_vars());
+
+        return layoutView('admins.admins-list', get_defined_vars());
     }
 }

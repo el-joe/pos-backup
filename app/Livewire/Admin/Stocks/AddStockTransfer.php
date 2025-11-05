@@ -11,7 +11,6 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class AddStockTransfer extends Component
 {
     use LivewireOperations;
@@ -165,6 +164,7 @@ class AddStockTransfer extends Component
         $branches = $this->branchService->activeList();
         $statuses = StockTransferStatusEnum::cases();
         $selectedBranches = $branches->whereIn('id',[$this->data['from_branch_id']??0,$this->data['to_branch_id']??0]);
-        return view('livewire.admin.stocks.add-stock-transfer',get_defined_vars());
+
+        return layoutView('stocks.add-stock-transfer', get_defined_vars());
     }
 }

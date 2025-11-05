@@ -8,7 +8,6 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 
-#[Layout('layouts.admin')]
 class RolesList extends Component
 {
     use LivewireOperations;
@@ -41,6 +40,7 @@ class RolesList extends Component
     public function render()
     {
         $roles = Role::all();
-        return view('livewire.admin.admins.roles-list',get_defined_vars());
+
+        return layoutView('admins.roles-list', get_defined_vars());
     }
 }

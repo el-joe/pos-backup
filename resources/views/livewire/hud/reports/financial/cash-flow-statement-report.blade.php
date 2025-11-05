@@ -1,55 +1,73 @@
-<div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
+<div class="col-12">
+    <!-- Filter Options Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light d-flex align-items-center">
+            <h5 class="mb-0">
+                <i class="fa fa-filter me-2"></i> Filter Options
+            </h5>
         </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-3 form-group">
-                    <label>From Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="from_date">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">From Date</label>
+                    <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
                 </div>
-                <div class="col-md-3 form-group">
-                    <label>To Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="to_date">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">To Date</label>
+                    <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
                 </div>
             </div>
+        </div>
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-usd"></i> Cash Flow Statement</h4>
+    <!-- Cash Flow Statement Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <h5 class="mb-0">
+                <i class="fa fa-usd me-2"></i> Cash Flow Statement
+            </h5>
         </div>
-        <div class="panel-body" style="padding:0;">
+        <div class="card-body p-0">
             <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
-                <thead>
-                    <tr style="background:#e3f2fd;">
-                        <th>Account</th>
-                        <th>Inflow</th>
-                        <th>Outflow</th>
-                        <th>Net Cash Flow</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($report['cash_flows'] ?? [] as $type => $flow)
-                    <tr>
-                        <td>{{ ucfirst(str_replace('_', ' ', $type)) }}</td>
-                        <td>{{ number_format($flow['inflow'], 2) }}</td>
-                        <td>{{ number_format($flow['outflow'], 2) }}</td>
-                        <td>{{ number_format($flow['net'], 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr style="background:#bbdefb; font-weight:600;">
-                        <td>Total</td>
-                        <td>{{ number_format($report['total_inflow'] ?? 0, 2) }}</td>
-                        <td>{{ number_format($report['total_outflow'] ?? 0, 2) }}</td>
-                        <td>{{ number_format($report['net_cash_flow'] ?? 0, 2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <table class="table table-bordered table-hover table-striped mb-0 align-middle">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>Account</th>
+                            <th>Inflow</th>
+                            <th>Outflow</th>
+                            <th>Net Cash Flow</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($report['cash_flows'] ?? [] as $type => $flow)
+                        <tr>
+                            <td>{{ ucfirst(str_replace('_', ' ', $type)) }}</td>
+                            <td>{{ number_format($flow['inflow'], 2) }}</td>
+                            <td>{{ number_format($flow['outflow'], 2) }}</td>
+                            <td>{{ number_format($flow['net'], 2) }}</td>
+                        </tr>
+                        @endforeach
+                        <tr class="fw-bold bg-primary-subtle">
+                            <td>Total</td>
+                            <td>{{ number_format($report['total_inflow'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($report['total_outflow'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($report['net_cash_flow'] ?? 0, 2) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
 </div>

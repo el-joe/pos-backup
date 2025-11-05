@@ -10,7 +10,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class SalesList extends Component
 {
 
@@ -69,6 +68,7 @@ class SalesList extends Component
     public function render()
     {
         $sales = $this->sellService->list([],[],10,'id');
-        return view('livewire.admin.sales.sales-list',get_defined_vars());
+
+        return layoutView('sales.sales-list',get_defined_vars());
     }
 }

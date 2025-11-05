@@ -8,7 +8,6 @@ use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-#[Layout('layouts.admin')]
 
 class RoleDetails extends Component
 {
@@ -75,6 +74,7 @@ class RoleDetails extends Component
     public function render()
     {
         // read $permissions from /tenant-permissions.json
-        return view('livewire.admin.admins.role-details');
+
+        return layoutView('admins.role-details');
     }
 }

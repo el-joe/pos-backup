@@ -10,7 +10,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class AddStockTaking extends Component
 {
     use LivewireOperations,WithPagination;
@@ -138,6 +137,6 @@ class AddStockTaking extends Component
         $branches = $this->branchService->activeList();
         $stocks = $this->stocks;
 
-        return view('livewire.admin.stock-taking.add-stock-taking',get_defined_vars());
+        return layoutView('stock-taking.add-stock-taking', get_defined_vars());
     }
 }
