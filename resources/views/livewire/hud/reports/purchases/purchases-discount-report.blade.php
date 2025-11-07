@@ -1,60 +1,81 @@
 <div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-3 form-group">
-                    <label>From Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="from_date">
+    <!-- Filter Options -->
+    <div class="col-12 mb-4">
+        <div class="card shadow-sm border-0 bg-dark text-light">
+            <div class="card-header d-flex align-items-center">
+                <i class="fa fa-filter me-2 text-info"></i>
+                <strong>Filter Options</strong>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">From Date</label>
+                        <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="from_date">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">To Date</label>
+                        <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="to_date">
+                    </div>
                 </div>
-                <div class="col-md-3 form-group">
-                    <label>To Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="to_date">
-                </div>
+            </div>
+            <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
             </div>
         </div>
     </div>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-tag"></i> Purchase Discounts</h4>
-        </div>
-        <div class="panel-body" style="padding:0;">
-            <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
-                <thead>
-                    <tr style="background:#e3f2fd;">
-                        <th>Date</th>
-                        <th>Discount Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $total_discount = 0;
-                    @endphp
-                    @forelse($report as $row)
-                    @php
-                        $total_discount += $row->discount_amount;
-                    @endphp
-                    <tr>
-                        <td>{{ $row->discount_date }}</td>
-                        <td>{{ number_format($row->discount_amount, 2) }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="2" class="text-center">No purchase discounts found for selected period.</td>
-                    </tr>
-                    @endforelse
-                    @if(count($report))
-                    <tr style="background:#f1f8e9; font-weight:600;">
-                        <td>Total</td>
-                        <td>{{ number_format($total_discount, 2) }}</td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
+    <!-- Purchase Discounts Report -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0 bg-dark text-light">
+            <div class="card-header d-flex align-items-center">
+                <i class="fa fa-tag me-2 text-warning"></i>
+                <h5 class="mb-0">Purchase Discounts</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover table-striped align-middle mb-0">
+                        <thead class="table-light text-dark">
+                            <tr>
+                                <th>Date</th>
+                                <th>Discount Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $total_discount = 0;
+                            @endphp
+                            @forelse($report as $row)
+                                @php
+                                    $total_discount += $row->discount_amount;
+                                @endphp
+                                <tr>
+                                    <td>{{ $row->discount_date }}</td>
+                                    <td>{{ number_format($row->discount_amount, 2) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">No purchase discounts found for selected period.</td>
+                                </tr>
+                            @endforelse
+
+                            @if(count($report))
+                                <tr class="fw-semibold bg-success bg-opacity-25">
+                                    <td>Total</td>
+                                    <td>{{ number_format($total_discount, 2) }}</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
             </div>
         </div>
     </div>

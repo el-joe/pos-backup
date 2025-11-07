@@ -7,7 +7,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 
-#[Layout('layouts.admin')]
 class ShortageReport extends Component
 {
     public $report = [];
@@ -15,7 +14,8 @@ class ShortageReport extends Component
     public function render()
     {
         $this->report = $this->getShortageReport();
-        return view('livewire.admin.reports.inventory.shortage-report', [
+
+        return layoutView('reports.inventory.shortage-report', [
             'report' => $this->report,
         ]);
     }

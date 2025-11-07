@@ -8,7 +8,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-#[Layout('layouts.admin')]
 class ProductProfitMarginReport extends Component
 {
     public $from_date;
@@ -61,6 +60,11 @@ class ProductProfitMarginReport extends Component
         if (empty($this->report)) {
             $this->loadReport();
         }
-        return view('livewire.admin.reports.performance.product-profit-margin-report');
+
+        return layoutView('reports.performance.product-profit-margin-report', [
+            'report' => $this->report,
+            'from_date' => $this->from_date,
+            'to_date' => $this->to_date,
+        ]);
     }
 }

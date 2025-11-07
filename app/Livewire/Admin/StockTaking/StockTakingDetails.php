@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class StockTakingDetails extends Component
 {
     use LivewireOperations;
@@ -49,6 +48,6 @@ class StockTakingDetails extends Component
 
     public function render()
     {
-        return view('livewire.admin.stock-taking.stock-taking-details');
+        return layoutView('stock-taking.stock-taking-details');
     }
 }

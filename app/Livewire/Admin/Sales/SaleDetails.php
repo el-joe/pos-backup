@@ -11,7 +11,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class SaleDetails extends Component
 {
     use LivewireOperations;
@@ -101,6 +100,6 @@ class SaleDetails extends Component
 
         extract($this->calcTotals());
 
-        return view('livewire.admin.sales.sale-details',get_defined_vars());
+        return layoutView('sales.sale-details',get_defined_vars());
     }
 }

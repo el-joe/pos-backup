@@ -1,71 +1,90 @@
-<div class="container-fluid">
-    <!-- Filter Panel -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
+<div class="col-12">
+    <!-- Filter Options Card -->
+    <div class="card shadow-sm border-0 bg-dark text-light mb-4">
+        <div class="card-header">
+            <strong><i class="fa fa-filter me-2"></i> Filter Options</strong>
         </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-4">
-                    <label class="control-label">From</label>
-                    <input type="date" class="form-control input-sm" wire:model.defer="from_date">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">From</label>
+                    <input type="date" class="form-control form-control-sm bg-secondary text-light border-0" wire:model.defer="from_date">
                 </div>
-                <div class="col-sm-4">
-                    <label class="control-label">To</label>
-                    <input type="date" class="form-control input-sm" wire:model.defer="to_date">
+                <div class="col-md-4">
+                    <label class="form-label">To</label>
+                    <input type="date" class="form-control form-control-sm bg-secondary text-light border-0" wire:model.defer="to_date">
                 </div>
-                <div class="col-sm-4 d-flex align-items-end justify-content-end" style="padding-top: 25px">
-                    <button wire:click="resetDates" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> Reset</button>
+                <div class="col-md-4 d-flex align-items-end justify-content-end">
+                    <button wire:click="resetDates" class="btn btn-outline-light btn-sm">
+                        <i class="fa fa-refresh me-1"></i> Reset
+                    </button>
                 </div>
             </div>
+        </div>
+
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
 
-    <!-- Report Panel -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Withholding Tax</h4>
+    <!-- Withholding Tax Card -->
+    <div class="card shadow-sm border-0 bg-dark text-light mb-4">
+        <div class="card-header d-flex align-items-center">
+            <h4 class="mb-0">
+                <i class="fa fa-list-alt me-2"></i> Withholding Tax
+            </h4>
         </div>
-        <div class="panel-body" style="padding:0;">
-            <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
-                <thead>
-                    <tr style="background:#e3f2fd;">
-                        <th>#</th>
-                        <th>Account</th>
-                        <th>Type</th>
-                        <th>Supplier / Customer</th>
-                        <th class="text-right">Withholding Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $total = 0;
-                    @endphp
-                    @forelse($report as $row)
-                        @php $total += $row->withholding_amount; @endphp
-                        <tr>
-                            <td>{{ $row->id }}</td>
-                            <td>{{ $row->account_name }}</td>
-                            <td>{{ $row->party_type }}</td>
-                            <td>{{ $row->party_name ?? 'N/A' }}</td>
-                            <td class="text-right">{{ number_format($row->withholding_amount, 2) }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No withholding tax data found for selected dates.</td>
-                        </tr>
-                    @endforelse
 
-                    @if(count($report))
-                        <tr style="font-weight:600; background:#f1f8e9;">
-                            <td colspan="3">Total</td>
-                            <td colspan="2" class="text-right">{{ number_format($total, 2) }}</td>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
+                    <thead class="table-primary text-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Account</th>
+                            <th>Type</th>
+                            <th>Supplier / Customer</th>
+                            <th class="text-end">Withholding Amount</th>
                         </tr>
-                    @endif
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @php
+                            $total = 0;
+                        @endphp
+                        @forelse($report as $row)
+                            @php $total += $row->withholding_amount; @endphp
+                            <tr>
+                                <td>{{ $row->id }}</td>
+                                <td>{{ $row->account_name }}</td>
+                                <td>{{ $row->party_type }}</td>
+                                <td>{{ $row->party_name ?? 'N/A' }}</td>
+                                <td class="text-end">{{ number_format($row->withholding_amount, 2) }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">No withholding tax data found for selected dates.</td>
+                            </tr>
+                        @endforelse
+
+                        @if(count($report))
+                            <tr class="bg-success bg-opacity-25 fw-semibold">
+                                <td colspan="3">Total</td>
+                                <td colspan="2" class="text-end">{{ number_format($total, 2) }}</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
+        </div>
+
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
 </div>

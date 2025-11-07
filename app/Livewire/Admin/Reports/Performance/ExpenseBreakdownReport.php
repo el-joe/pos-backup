@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class ExpenseBreakdownReport extends Component
 {
     public $report = [];
@@ -65,6 +64,11 @@ class ExpenseBreakdownReport extends Component
         if (empty($this->report)) {
             $this->loadReport();
         }
-        return view('livewire.admin.reports.performance.expense-breakdown-report');
+
+        return layoutView('reports.performance.expense-breakdown-report', [
+            'report' => $this->report,
+            'from_date' => $this->from_date,
+            'to_date' => $this->to_date,
+        ]);
     }
 }

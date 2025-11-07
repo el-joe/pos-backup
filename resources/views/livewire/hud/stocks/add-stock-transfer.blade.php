@@ -94,7 +94,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered order-products-table align-middle">
+                <table class="table table-bordered align-middle">
                     <thead>
                         <tr>
                             <th>Product</th>
@@ -108,7 +108,7 @@
                     <tbody>
                         @foreach (($items ?? []) as $index => $product)
                             <tr>
-                                <td class="fw-semibold text-dark">{{ $product['name'] }}</td>
+                                <td class="fw-semibold">{{ $product['name'] }}</td>
                                 <td>
                                     <select wire:model.change="items.{{ $index }}.unit_id" class="form-select">
                                         <option value="">Select Unit</option>

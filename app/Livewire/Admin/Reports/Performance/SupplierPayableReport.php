@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 
-#[Layout('layouts.admin')]
 class SupplierPayableReport extends Component
 {
     public $report = [];
@@ -71,6 +70,11 @@ class SupplierPayableReport extends Component
         if (empty($this->report)) {
             $this->loadReport();
         }
-        return view('livewire.admin.reports.performance.supplier-payable-report');
+
+        return layoutView('reports.performance.supplier-payable-report', [
+            'report' => $this->report,
+            'from_date' => $this->from_date,
+            'to_date' => $this->to_date,
+        ]);
     }
 }

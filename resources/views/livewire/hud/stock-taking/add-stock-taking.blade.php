@@ -75,7 +75,7 @@
                                 <div class="products-container mt-3">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover align-middle">
-                                            <thead class="table-light">
+                                            <thead class="">
                                                 <tr>
                                                     <th>Product</th>
                                                     <th>Unit</th>

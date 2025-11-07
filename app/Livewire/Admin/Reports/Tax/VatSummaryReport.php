@@ -7,7 +7,6 @@ use App\Enums\AccountTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 
-#[Layout('layouts.admin')]
 class VatSummaryReport extends Component
 {
     public $from_date;
@@ -23,7 +22,8 @@ class VatSummaryReport extends Component
     public function render()
     {
         $this->report = $this->getVatSummary();
-        return view('livewire.admin.reports.tax.vat-summary-report', [
+
+        return layoutView('reports.tax.vat-summary-report', [
             'report' => $this->report,
             'from_date' => $this->from_date,
             'to_date' => $this->to_date,

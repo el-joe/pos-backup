@@ -133,7 +133,7 @@ Route::middleware([
             Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
             // Sales
             Route::get('sales',SalesList::class)->name('sales.index');
-            Route::get('sales/{id}',SaleDetails::class)->name('sales.details'); // TODO : Convert to Hud Template
+            Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
             // Transactions
             Route::get('transactions',TransactionList::class)->name('transactions.list');
             // Shipping Companies
@@ -218,16 +218,17 @@ Route::middleware([
                 Route::get('cashier-report', CashierReport::class)->name('cashier.report');
                 Route::get('cash-register-report', CashRegisterReport::class)->name('cash.register.report');
                 Route::get('branch-profitability', BranchProfitability::class)->name('branch.profitability');
+                // TODO : audit report
 
             });
             // Stock Adjustments
             Route::get('stock-adjustments', StockTakingList::class)->name('stocks.adjustments.list');
             Route::get('stock-adjustments/create', AddStockTaking::class)->name('stocks.adjustments.create');
-            Route::get('stock-adjustments/{id}/details', StockTakingDetails::class)->name('stocks.adjustments.details'); // TODO : Convert to Hud Template
+            Route::get('stock-adjustments/{id}/details', StockTakingDetails::class)->name('stocks.adjustments.details');
             // Stock Transfers
             Route::get('stock-transfers', StockTransferList::class)->name('stocks.transfers.list');
             Route::get('stock-transfers/create', AddStockTransfer::class)->name('stocks.transfers.create');
-            Route::get('stock-transfers/{id}/details', StockTransferDetails::class)->name('stocks.transfers.details'); // TODO : Convert to Hud Template
+            Route::get('stock-transfers/{id}/details', StockTransferDetails::class)->name('stocks.transfers.details');
 
             Route::get('admins',AdminsList::class)->name('admins.list');
             Route::get('roles',RolesList::class)->name('roles.list');

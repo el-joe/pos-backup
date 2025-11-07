@@ -1,65 +1,87 @@
 <div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-3 form-group">
-                    <label>From Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="from_date">
+    <!-- Filter Options -->
+    <div class="col-12 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white d-flex align-items-center">
+                <i class="fa fa-filter me-2"></i>
+                <strong>Filter Options</strong>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">From Date</label>
+                        <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">To Date</label>
+                        <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
+                    </div>
                 </div>
-                <div class="col-md-3 form-group">
-                    <label>To Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="to_date">
-                </div>
+            </div>
+            <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
             </div>
         </div>
     </div>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-th-large"></i> Product Purchases</h4>
-        </div>
-        <div class="panel-body" style="padding:0;">
-            <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
-                <thead>
-                    <tr style="background:#e3f2fd;">
-                        <th>Product</th>
-                        <th>Total Quantity</th>
-                        <th>Total Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $total_qty = 0;
-                        $total_value = 0;
-                    @endphp
-                    @forelse($report as $row)
-                    @php
-                        $total_qty += $row->total_qty;
-                        $total_value += $row->total_value;
-                    @endphp
-                    <tr>
-                        <td>{{ $row->product_name }}</td>
-                        <td>{{ $row->total_qty }}</td>
-                        <td>{{ number_format($row->total_value, 2) }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="3" class="text-center">No product purchases found for selected period.</td>
-                    </tr>
-                    @endforelse
-                    @if(count($report))
-                    <tr style="background:#f1f8e9; font-weight:600;">
-                        <td>Total</td>
-                        <td>{{ $total_qty }}</td>
-                        <td>{{ number_format($total_value, 2) }}</td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
+    <!-- Product Purchases -->
+    <div class="col-12">
+        <div class="card shadow-sm border-primary">
+            <div class="card-header bg-primary text-white d-flex align-items-center">
+                <i class="fa fa-th-large me-2"></i>
+                <h5 class="mb-0">Product Purchases</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>Total Quantity</th>
+                                <th>Total Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $total_qty = 0;
+                                $total_value = 0;
+                            @endphp
+                            @forelse($report as $row)
+                                @php
+                                    $total_qty += $row->total_qty;
+                                    $total_value += $row->total_value;
+                                @endphp
+                                <tr>
+                                    <td>{{ $row->product_name }}</td>
+                                    <td>{{ $row->total_qty }}</td>
+                                    <td>{{ number_format($row->total_value, 2) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">
+                                        No product purchases found for selected period.
+                                    </td>
+                                </tr>
+                            @endforelse
+                            @if(count($report))
+                                <tr class="fw-semibold table-success">
+                                    <td>Total</td>
+                                    <td>{{ $total_qty }}</td>
+                                    <td>{{ number_format($total_value, 2) }}</td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-arrow">
+                <div class="card-arrow-top-left"></div>
+                <div class="card-arrow-top-right"></div>
+                <div class="card-arrow-bottom-left"></div>
+                <div class="card-arrow-bottom-right"></div>
             </div>
         </div>
     </div>

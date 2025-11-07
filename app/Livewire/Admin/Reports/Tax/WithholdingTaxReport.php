@@ -9,7 +9,6 @@ use Livewire\Attributes\Layout;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Sale;
 
-#[Layout('layouts.admin')]
 class WithholdingTaxReport extends Component
 {
     public $from_date;
@@ -25,7 +24,8 @@ class WithholdingTaxReport extends Component
     public function render()
     {
         $this->report = $this->getWithholdingReport();
-        return view('livewire.admin.reports.tax.withholding-tax-report', [
+
+        return layoutView('reports.tax.withholding-tax-report', [
             'report' => $this->report,
             'from_date' => $this->from_date,
             'to_date' => $this->to_date,

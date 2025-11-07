@@ -13,7 +13,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-#[Layout('layouts.admin')]
 class CustomerOutstandingReport extends Component
 {
     public $report = [];
@@ -70,6 +69,11 @@ class CustomerOutstandingReport extends Component
         if (empty($this->report)) {
             $this->loadReport();
         }
-        return view('livewire.admin.reports.performance.customer-outstanding-report');
+
+        return layoutView('reports.performance.customer-outstanding-report', [
+            'report' => $this->report,
+            'from_date' => $this->from_date,
+            'to_date' => $this->to_date,
+        ]);
     }
 }
