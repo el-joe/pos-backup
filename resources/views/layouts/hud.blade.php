@@ -13,11 +13,13 @@
 </head>
 <body>
 	<!-- BEGIN #app -->
-	<div id="app" class="app">
+	<div id="app" class="app {{ isset($withoutSidebar) ? 'app-content-full-height app-without-sidebar app-without-header' : ''  }}">
+        @if(!isset($withoutSidebar))
         @include('layouts.hud.partials.header')
         @include('layouts.hud.partials.sidebar')
+        @endif
 		<!-- BEGIN #content -->
-		<div id="content" class="app-content">
+		<div id="content" class="app-content {{ isset($withoutSidebar) ? 'p-1 ps-xl-4 pe-xl-4 pt-xl-3 pb-xl-3' : '' }}">
             {{ $slot }}
 		</div>
 		<!-- END #content -->

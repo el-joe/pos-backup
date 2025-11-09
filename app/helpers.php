@@ -17,8 +17,9 @@ function defaultLayout(){
 function layoutView($pageName,$with = [],$isSubPage = false){
     $defaultView = "livewire." . defaultLayout();
     $defaultLayout = 'layouts.' . defaultLayout();
+    $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
     return view("$defaultView.$pageName", $with)
-            ->layout($isSubPage ? null : $defaultLayout);
+            ->layout($isSubPage ? null : $defaultLayout, $layoutData);
 }
 
 if(!function_exists('admin')) {

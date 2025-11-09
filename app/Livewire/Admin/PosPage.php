@@ -18,7 +18,6 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class PosPage extends Component
 {
     use LivewireOperations;
@@ -28,6 +27,8 @@ class PosPage extends Component
     public $data = [];
     public $payments = [];
     public $branch;
+
+    public $step = 2;
 
     function boot() {
         $this->productService = app(ProductService::class);
@@ -311,6 +312,9 @@ class PosPage extends Component
         $selectedCustomer = $customers->firstWhere('id',$this->selectedCustomerId);
         $branches = $this->branchService->activeList();
         extract($this->calculateTotals());
-        return view('livewire.admin.pos-page',get_defined_vars());
+
+        $withoutSidebar = true;
+
+        return layoutView('pos-page', get_defined_vars());
     }
 }
