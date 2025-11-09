@@ -11,6 +11,7 @@ use App\Models\Tenant\Stock;
 use App\Models\Tenant\User;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
+use App\Services\CategoryService;
 use App\Services\ProductService;
 use App\Services\SellService;
 use App\Services\UserService;
@@ -22,13 +23,13 @@ class PosPage extends Component
 {
     use LivewireOperations;
 
-    private $productService, $userService, $sellService, $branchService, $cashRegisterService;
+    private $productService, $userService, $sellService, $branchService, $cashRegisterService, $categoryService;
     public $currentProduct,$selectedUnitId,$selectedQuantity,$maxQuantity,$discountCode,$selectedCustomerId;
     public $data = [];
     public $payments = [];
     public $branch;
 
-    public $step = 2;
+    public $step = 1;
 
     function boot() {
         $this->productService = app(ProductService::class);
@@ -36,6 +37,7 @@ class PosPage extends Component
         $this->sellService = app(SellService::class);
         $this->branchService = app(BranchService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+        $this->categoryService = app(CategoryService::class);
     }
 
     function updatingSelectedUnitId($value) {
@@ -314,6 +316,8 @@ class PosPage extends Component
         extract($this->calculateTotals());
 
         $withoutSidebar = true;
+
+        $categories = $this->categoryService->activeList();
 
         return layoutView('pos-page', get_defined_vars());
     }

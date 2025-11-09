@@ -40,4 +40,8 @@ class File extends Model
     function getFullPathAttribute() {
         return url(Storage::url($this->path));
     }
+
+    function scopeKey($q,$key) {
+        return $q->where('key',$key);
+    }
 }

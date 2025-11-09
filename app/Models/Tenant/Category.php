@@ -10,7 +10,7 @@ class Category extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name','parent_id','active','deleted_at'
+        'name','parent_id','active','deleted_at','icon'
     ];
 
     function children() {
@@ -43,4 +43,7 @@ class Category extends Model
         });
     }
 
+    function icon(){
+        return $this->morphOne(File::class,'model')->key('icon');
+    }
 }

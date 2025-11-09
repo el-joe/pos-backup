@@ -15,6 +15,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Parent Category</th>
+                            <th>Icon</th>
                             <th>Status</th>
                             <th class="text-nowrap text-end">Action</th>
                         </tr>
@@ -25,6 +26,12 @@
                                 <td>{{ $category->id }}</td>
                                 <td>{{ $category->name }}</td>
                                 <td>{{ $category->parent ? $category->parent->name : 'N/A' }}</td>
+                                <td>
+                                    @if($category->icon)
+                                        <i class="{{ $category->icon }}"></i> {{ $category->icon }}
+                                    @else
+                                        N/A
+                                    @endif
                                 <td>
                                     <span class="badge bg-{{ $category->active ? 'success' : 'danger' }}">
                                         {{ $category->active ? 'Active' : 'Inactive' }}
@@ -93,6 +100,17 @@
                             </select>
                         </div>
 
+                        <div class="mb-3" wire:ignore>
+                            <label for="categoryIcon" class="form-label">Icon</label>
+                            <select class="selectpicker form-control" name="data.icon" id="categoryIcon" data-live-search="true" title="Select Icon">
+                                @foreach ($bootstrapIcons as $icon)
+                                    <option value="{{ $icon }}" data-content="<i class='{{ $icon }}'></i> {{ $icon }}">
+                                        {{ $icon }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="categoryActive" wire:model="data.active">
                             <label class="form-check-label" for="categoryActive">Is Active</label>
@@ -108,3 +126,22 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+    <script>
+        $('.selectpicker').selectpicker({});
+
+        $('.selectpicker').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            @this.set($(this).attr('name'), $(this).val());
+        });
+
+        // add livewire event
+        Livewire.on('changeSelect', (data) => {
+
+            $('.selectpicker').selectpicker('val',data[0]);
+        });
+    </script>
+@endpush

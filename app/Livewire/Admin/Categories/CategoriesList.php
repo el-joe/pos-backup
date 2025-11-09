@@ -18,6 +18,7 @@ class CategoriesList extends Component
     public $rules = [
         'name' => 'required|string|max:255',
         'parent_id' => 'nullable|integer',
+        'icon' => 'nullable|string|max:255',
         'active' => 'boolean',
     ];
 
@@ -30,9 +31,12 @@ class CategoriesList extends Component
         if ($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
+        }else{
+            $this->data = [];
         }
 
         $this->dispatch('iCheck-load');
+        $this->dispatch('changeSelect', $this->data['icon'] ?? null);
     }
 
     function deleteAlert($id)
@@ -77,6 +81,8 @@ class CategoriesList extends Component
         );
 
         $allCategories = $this->categoryService->list();
+
+        $bootstrapIcons = config('icons.fontawesome_icons');
 
         return layoutView('categories.categories-list', get_defined_vars())
             ->title(__('general.titles.categories'));
