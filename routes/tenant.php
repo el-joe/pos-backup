@@ -103,7 +103,6 @@ Route::middleware([
         Route::middleware([AdminAuthMiddleware::class])->group(function () {
             Route::get('/',Statistics::class)->name('statistics');
             Route::get('cash-register',CashRegisterPage::class)->name('cash.register.open');
-            // TODO : Cash Register Save Data for everything related like (sales,purchases,expenses)
             Route::get('switch-branch/{branch?}', [AuthController::class, 'switchBranch'])->name('switch.branch');
             Route::get('branches',BranchesList::class)->name('branches.list');
             Route::get('categories', CategoriesList::class)->name('categories.list');
