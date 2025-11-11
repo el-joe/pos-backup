@@ -24,7 +24,7 @@ class PosPage extends Component
     use LivewireOperations;
 
     private $productService, $userService, $sellService, $branchService, $cashRegisterService, $categoryService;
-    public $currentProduct,$selectedUnitId,$selectedQuantity,$maxQuantity,$discountCode,$selectedCustomerId;
+    public $currentProduct,$selectedUnitId,$selectedQuantity = 1,$maxQuantity,$discountCode,$selectedCustomerId;
     public $data = [];
     public $payments = [];
     public $branch;
@@ -40,9 +40,17 @@ class PosPage extends Component
         $this->categoryService = app(CategoryService::class);
     }
 
+    function mount() {
+        $this->data['order_date'] = now()->format('Y-m-d');
+    }
+
     function updatingSelectedUnitId($value) {
-        $this->maxQuantity = Stock::where('product_id', $this->currentProduct->id)
-            ->where('unit_id', $value)
+        $this->maxQuantity = $this->selectedUnit($value);
+    }
+
+    function selectedUnit($id){
+        return Stock::where('product_id', $this->currentProduct->id)
+            ->where('unit_id', $id)
             ->when($this->data['branch_id'], function($q) {
                 $q->where('branch_id', $this->data['branch_id']);
             })
@@ -55,6 +63,8 @@ class PosPage extends Component
 
     function setCurrentProduct($id) {
         $this->currentProduct = $this->productService->find($id);
+        $this->selectedUnitId = $this->currentProduct->unit_id;
+        $this->maxQuantity = $this->selectedUnit($this->selectedUnitId);
     }
 
     function addToCart($productId = null) {
@@ -163,11 +173,18 @@ class PosPage extends Component
                 'unit_cost' => $stock->unit_cost,
                 'taxable' => $product->taxable,
             ];
+            // dd($this->data['products'][$index]);
+            if($this->data['products'][$index]['quantity'] <= 0){
+                // remove product from cart
+                unset($this->data['products'][$index]);
+                $this->data['products'] = array_values($this->data['products']);
+            }
         }else{
             // $quantity = $quantity ?? 1;
             $this->data['products'][] = [
                 'id' => $product->id,
                 'name' => $product->name . ' - ' . $unit->name,
+                'product_name' => $product->name,
                 'unit_id' => $unit->id,
                 'unit_name' => $unit->name,
                 'quantity' => $quantity,
@@ -177,6 +194,7 @@ class PosPage extends Component
                 'sell_price' => $stock->sell_price,
                 'unit_cost' => $stock->unit_cost,
                 'taxable' => $product->taxable,
+                'image' => $product->image_path,
             ];
         }
 
@@ -203,6 +221,10 @@ class PosPage extends Component
         $tax = SaleHelper::taxAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $taxPercentage,$this->data['discount']['max'] ?? 0);
         $total = $subTotal + $tax - $discount;
         return get_defined_vars();
+    }
+
+    function updateQty($index, $quantity) {
+        $this->refactorProductData($this->data['products'][$index]['id'], $this->data['products'][$index]['unit_id'], $quantity);
     }
 
     function confirmPayment() {
