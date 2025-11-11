@@ -55,6 +55,22 @@ class Purchase extends Model
         return PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
     }
 
+    // ---- Refunded Functions
+
+    function getRefundedItemsTotalAmountAttribute() {
+        return $this->purchaseItems->sum(fn($q)=>$q->refunded_total_after_tax);
+    }
+
+    function getRefundedTotalAmountAttribute() {
+        $totalItems = $this->refunded_items_total_amount;
+        $subTotal = PurchaseHelper::calcSubTotal($totalItems, 0);
+        $discountAmount = PurchaseHelper::calcDiscount($subTotal,$this->discount_type,$this->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($subTotal,$discountAmount);
+        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount,$this->tax_percentage);
+
+        return PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
+    }
+
     function getExpensesTotalAmountAttribute() {
         return $this->expenses->sum('amount');
     }

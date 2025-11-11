@@ -50,6 +50,10 @@ class Sale extends Model
         return $this->morphMany(Transaction::class, 'reference');
     }
 
+    function expenses() {
+        return $this->morphMany(Expense::class, 'model');
+    }
+
     static function generateInvoiceNumber() {
         $last = self::latest()->first();
         if($last) {
@@ -59,13 +63,12 @@ class Sale extends Model
     }
 
     function getSubTotalAttribute() : float {
-        return $this->saleItems->sum(function($item) {
+        return (clone $this->saleItems)->sum(function($item) {
             $total = SaleHelper::itemTotal($item);
 
             return $total;
         });
     }
-
 
     function getDiscountAmountAttribute() {
         $discount = (clone $this->saleItems)->map(function($item){
@@ -78,7 +81,7 @@ class Sale extends Model
 
     function getTaxAmountAttribute() {
         $tax = (clone $this->saleItems)->map(function($item){
-            return SaleHelper::singleTaxAmount($item, $this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+            return SaleHelper::singleTaxAmount($item, (clone $this->saleItems), $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
         })->sum();
 
         return $tax;
@@ -88,12 +91,16 @@ class Sale extends Model
 
     function getGrandTotalAmountAttribute() {
         $grandTotal = (clone $this->saleItems)->map(function($item){
-            return SaleHelper::singleGrandTotal($item, $this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+            return SaleHelper::singleGrandTotal($item, (clone $this->saleItems), $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
         })->sum();
 
         return $grandTotal;
+    }
 
-        // return SaleHelper::grandTotal($this->saleItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+    function getNetTotalAmountAttribute() {
+        $netTotal = $this->grand_total_amount - $this->due_amount - $this->expenses->sum('amount');
+
+        return $netTotal;
     }
 
     function getDueAmountAttribute() {
@@ -117,8 +124,8 @@ class Sale extends Model
     }
 
     function getRefundStatusAttribute() {
-        $totalItems = $this->saleItems->sum('qty');
-        $refundedItems = $this->saleItems->sum('refunded_qty');
+        $totalItems = (clone $this->saleItems)->sum('qty');
+        $refundedItems = (clone $this->saleItems)->sum('refunded_qty');
 
         if ($refundedItems === 0) {
             return RefundStatusEnum::NO_REFUND;
@@ -127,6 +134,54 @@ class Sale extends Model
         } else {
             return RefundStatusEnum::FULL_REFUND;
         }
+    }
 
+    // ---- Refund Functions ---- //
+    function salesItemsRefunded(){
+        $saleItems = clone $this->saleItems;
+        return $saleItems->filter(fn($q)=>$q->refunded_qty > 0)->map(function($item){
+            $item = $item->toArray();
+            return [
+                ...$item,
+                'qty' => $item['refunded_qty'],
+                'refunded_qty' => 0,
+            ];
+        });
+    }
+    function getRefundedSubTotalAttribute() : float {
+        $refundedItems = $this->salesItemsRefunded();
+        $subTotal = (clone $refundedItems)->sum(function($item) {
+            $total = SaleHelper::itemTotal($item);
+
+            return $total;
+        });
+
+        return $subTotal;
+    }
+
+    function getRefundedDiscountAmountAttribute() {
+        $discount = (clone $this->saleItems)->map(function($item){
+            return $item->refunded_total_discount_amount;
+        })->sum();
+
+        return $discount;
+    }
+
+    function getRefundedTaxAmountAttribute() {
+        $refundedItems = $this->salesItemsRefunded();
+        $tax = (clone $refundedItems)->map(function($item) use ($refundedItems) {
+            return SaleHelper::singleTaxAmount($item, clone $refundedItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+        })->sum();
+
+        return $tax;
+    }
+
+    function getRefundedGrandTotalAmountAttribute() {
+        $refundedItems = $this->salesItemsRefunded();
+        $grandTotal = (clone $refundedItems)->map(function($item) use ($refundedItems) {
+            return SaleHelper::singleGrandTotal($item, clone $refundedItems, $this->discount_type, $this->discount_value, $this->tax_percentage, $this->max_discount_amount);
+        })->sum();
+
+        return $grandTotal;
     }
 }

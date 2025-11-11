@@ -110,8 +110,8 @@ Route::middleware([
             Route::get('brands', BrandsList::class)->name('brands.list');
             Route::get('units',UnitsList::class)->name('units.list');
             Route::get('taxes',TaxesList::class)->name('taxes.list');
-            Route::get('pos',PosPage::class)->name('pos'); // TODO : Convert to Hud Template
-            Route::get('discounts', DiscountsList::class)->name('discounts.list'); //TODO : Need to add sales threshold when type is fixed
+            Route::get('pos',PosPage::class)->name('pos');
+            Route::get('discounts', DiscountsList::class)->name('discounts.list');
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
             // TODO : expenses will be saved without payments and we can add payments later
             Route::get('expenses',ExpensesList::class)->name('expenses.list');
@@ -136,9 +136,7 @@ Route::middleware([
             Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
             // Transactions
             Route::get('transactions',TransactionList::class)->name('transactions.list');
-            // Shipping Companies
-            // Admininstrators (User|Role)
-            // Opening Balance page
+            // TODO : Shipping Companies
 
             // Reports
             Route::group([

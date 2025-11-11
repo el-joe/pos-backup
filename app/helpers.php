@@ -75,6 +75,21 @@ if(!function_exists('formattedDateTime')) {
         return carbon($date)->translatedFormat('l , d-M-Y h:i A');
     }
 }
+
+function getMonthsBetween($from, $to)
+{
+    $from = Carbon::parse($from)->startOfMonth();
+    $to = Carbon::parse($to)->startOfMonth();
+
+    $months = [];
+
+    while ($from <= $to) {
+        $months[] = $from->copy();
+        $from->addMonth();
+    }
+
+    return $months;
+}
 if(!function_exists('defaultPermissionsList')) {
     function defaultPermissionsList() {
         return json_decode(file_get_contents(base_path('tenant-permissions.json')),true);

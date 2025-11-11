@@ -99,8 +99,9 @@ class PosPage extends Component
         }
 
         if($this->selectedCustomerId){
-            $history = $discount->history()->where('target_type',User::class)
-            ->where('target_id',$this->selectedCustomerId)
+            $history = $discount->history()
+            // ->where('target_type',User::class)
+            // ->where('target_id',$this->selectedCustomerId)
             ->count();
 
             if($discount->usage_limit && $history >= $discount->usage_limit) {
