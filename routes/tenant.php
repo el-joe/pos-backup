@@ -236,6 +236,7 @@ Route::middleware([
 
 
 // Features to add later
+// Every Cashier Has Branch Restriction
 // Export/Import Excel,CSV,PDF
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
