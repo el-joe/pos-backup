@@ -1,196 +1,400 @@
-<aside class="sidebar">
-    <div class="scroll-sidebar">
-        <div class="user-profile">
-            <div class="dropdown user-pro-body">
-                <div class="profile-image">
-                    <img src="{{ admin()->image_path }}" alt="user-img" class="rounded-circle">
-                    <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <span class="badge bg-danger">
-                            <i class="fa fa-angle-down"></i>
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu animated flipInY">
-                        {{-- <li><a href="javascript:void(0);"><i class="fa fa-user"></i> Profile</a></li>
-                        <li><a href="javascript:void(0);"><i class="fa fa-inbox"></i> Inbox</a></li> --}}
-                        {{-- <li role="separator" class="divider"></li> --}}
-                        {{-- <li><a href="javascript:void(0);"><i class="fa fa-cog"></i> Account Settings</a></li> --}}
-                        {{-- <li role="separator" class="divider"></li> --}}
-                        <li><a href="/logout"><i class="fa fa-power-off"></i> Logout</a></li>
-                    </ul>
+<!-- BEGIN #sidebar -->
+<div id="sidebar" class="app-sidebar">
+    <!-- BEGIN scrollbar -->
+    <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+        <!-- BEGIN menu -->
+        <div class="menu">
+            <div class="menu-header">Navigation</div>
+            <div class="menu-item active">
+                <a href="index.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-cpu"></i></span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="analytics.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-bar-chart"></i></span>
+                    <span class="menu-text">Analytics</span>
+                </a>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link">
+                    <span class="menu-icon">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+                    <span class="menu-text">Email</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="email_inbox.html" class="menu-link">
+                            <span class="menu-text">Inbox</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="email_compose.html" class="menu-link">
+                            <span class="menu-text">Compose</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="email_detail.html" class="menu-link">
+                            <span class="menu-text">Detail</span>
+                        </a>
+                    </div>
                 </div>
-                <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"> {{ admin()->name }}</a></p>
+            </div>
+            <div class="menu-header">Components</div>
+            <div class="menu-item">
+                <a href="widgets.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-columns-gap"></i></span>
+                    <span class="menu-text">Widgets</span>
+                </a>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon"><i class="bi bi-stars"></i></div>
+                    <div class="menu-text">AI Studio</div>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="ai_chat.html" class="menu-link">
+                            <div class="menu-text">AI Chat</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="ai_image_generator.html" class="menu-link">
+                            <div class="menu-text">AI Image Generator</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="bi bi-bag-check"></i>
+                        <span class="w-5px h-5px rounded-3 bg-theme position-absolute top-0 end-0 mt-3px me-3px"></span>
+                    </div>
+                    <div class="menu-text d-flex align-items-center">POS System</div>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="pos_customer_order.html" target="_blank" class="menu-link">
+                            <div class="menu-text">Customer Order</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="pos_kitchen_order.html" target="_blank" class="menu-link">
+                            <div class="menu-text">Kitchen Order</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="pos_counter_checkout.html" target="_blank" class="menu-link">
+                            <div class="menu-text">Counter Checkout</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="pos_table_booking.html" target="_blank" class="menu-link">
+                            <div class="menu-text">Table Booking</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="pos_menu_stock.html" target="_blank" class="menu-link">
+                            <div class="menu-text">Menu Stock</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-controller"></i></span>
+                    <span class="menu-text">UI Kits</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="ui_bootstrap.html" class="menu-link">
+                            <span class="menu-text">Bootstrap</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="ui_buttons.html" class="menu-link">
+                            <span class="menu-text">Buttons</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="ui_card.html" class="menu-link">
+                            <span class="menu-text">Card</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="ui_icons.html" class="menu-link">
+                            <span class="menu-text">Icons</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="ui_modal_notification.html" class="menu-link">
+                            <span class="menu-text">Modal & Notification</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="ui_typography.html" class="menu-link">
+                            <span class="menu-text">Typography</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="ui_tabs_accordions.html" class="menu-link">
+                            <span class="menu-text">Tabs & Accordions</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-pen"></i></span>
+                    <span class="menu-text">Forms</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="form_elements.html" class="menu-link">
+                            <span class="menu-text">Form Elements</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="form_plugins.html" class="menu-link">
+                            <span class="menu-text">Form Plugins</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="form_wizards.html" class="menu-link">
+                            <span class="menu-text">Wizards</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-grid-3x3"></i></span>
+                    <span class="menu-text">Tables</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="table_elements.html" class="menu-link">
+                            <span class="menu-text">Table Elements</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="table_plugins.html" class="menu-link">
+                            <span class="menu-text">Table Plugins</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-pie-chart"></i></span>
+                    <span class="menu-text">Charts</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="chart_js.html" class="menu-link">
+                            <span class="menu-text">Chart.js</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="chart_apex.html" class="menu-link">
+                            <span class="menu-text">Apexcharts.js</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <a href="map.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-compass"></i></span>
+                    <span class="menu-text">Map</span>
+                </a>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-layout-sidebar"></i></span>
+                    <span class="menu-text">Layout</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="layout_starter.html" class="menu-link">
+                            <span class="menu-text">Starter Page</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_fixed_footer.html" class="menu-link">
+                            <span class="menu-text">Fixed Footer</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_full_height.html" class="menu-link">
+                            <span class="menu-text">Full Height</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_full_width.html" class="menu-link">
+                            <span class="menu-text">Full Width</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_boxed_layout.html" class="menu-link">
+                            <span class="menu-text">Boxed Layout</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_collapsed_sidebar.html" class="menu-link">
+                            <span class="menu-text">Collapsed Sidebar</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_top_nav.html" class="menu-link">
+                            <span class="menu-text">Top Nav</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_mixed_nav.html" class="menu-link">
+                            <span class="menu-text">Mixed Nav</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="layout_mixed_nav_boxed_layout.html" class="menu-link">
+                            <span class="menu-text">Mixed Nav Boxed Layout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-collection"></i></span>
+                    <span class="menu-text">Pages</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="page_scrum_board.html" class="menu-link">
+                            <span class="menu-text">Scrum Board</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_products.html" class="menu-link">
+                            <span class="menu-text">Products</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_product_details.html" class="menu-link">
+                            <span class="menu-text">Product Details</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_orders.html" class="menu-link">
+                            <span class="menu-text">Orders</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_order_details.html" class="menu-link">
+                            <span class="menu-text">Order Details</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_gallery.html" class="menu-link">
+                            <span class="menu-text">Gallery</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_search_results.html" class="menu-link">
+                            <span class="menu-text">Search Results</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_coming_soon.html" class="menu-link">
+                            <span class="menu-text">Coming Soon Page</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_404_error.html" class="menu-link">
+                            <span class="menu-text">404 Error Page</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_login.html" class="menu-link">
+                            <span class="menu-text">Login</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_register.html" class="menu-link">
+                            <span class="menu-text">Register</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_messenger.html" class="menu-link">
+                            <span class="menu-text">Messenger</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_data_management.html" class="menu-link">
+                            <span class="menu-text">Data Management</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_file_manager.html" class="menu-link">
+                            <span class="menu-text">File Manager</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="page_pricing_page.html" class="menu-link">
+                            <span class="menu-text">Pricing Page</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-item">
+                <a href="landing.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-diagram-3"></i></span>
+                    <span class="menu-text">Landing Page</span>
+                </a>
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-header">Users</div>
+            <div class="menu-item">
+                <a href="profile.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-people"></i></span>
+                    <span class="menu-text">Profile</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="calendar.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-calendar4"></i></span>
+                    <span class="menu-text">Calendar</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="settings.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-gear"></i></span>
+                    <span class="menu-text">Settings</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="helper.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-gem"></i></span>
+                    <span class="menu-text">Helper</span>
+                </a>
             </div>
         </div>
-        <nav class="sidebar-nav">
-            <ul id="side-menu">
-
-                <li>
-                    <a href="{{ route('admin.statistics') }}" aria-expanded="false"><i class="fa fa-dashboard fa-fw"></i> <span class="hide-menu"> Dashboard </span></a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.cash.register.open') }}" aria-expanded="false"><i class="fa fa-credit-card fa-fw"></i> <span class="hide-menu"> Cash Register </span></a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.pos') }}" aria-expanded="false"><i class="fa fa-credit-card fa-fw"></i> <span class="hide-menu"> POS </span></a>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-sitemap fa-fw"></i> <span class="hide-menu"> Branches </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.branches.list') }}"> <i class="fa fa-sitemap fa-fw"></i> Branches List</a> </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-cube fa-fw"></i> <span class="hide-menu"> Products </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.products.list') }}">  <i class="fa fa-cube fa-fw"></i> Products List</a> </li>
-                        <li> <a href="{{ route('admin.categories.list') }}"> <i class="fa fa-th-list fa-fw"></i> Categories List</a> </li>
-                        <li> <a href="{{ route('admin.brands.list') }}"> <i class="fa fa-tags fa-fw"></i> Brands List</a> </li>
-                        <li> <a href="{{ route('admin.units.list') }}"> <i class="fa fa-cube fa-fw"></i> Units List</a> </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-cubes fa-fw"></i> <span class="hide-menu"> Inventory </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        {{-- <li> <a href="index4.html"> <i class="fa fa-cubes fa-fw"></i> Stock Levels</a> </li> --}}
-                        <li> <a href="{{ route('admin.stocks.transfers.list') }}"> <i class="fa fa-exchange fa-fw"></i> Stock Transfers</a> </li>
-                        <li> <a href="{{ route('admin.stocks.adjustments.list') }}"> <i class="fa fa-check-square fa-fw"></i> Stock Taking</a> </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-line-chart fa-fw"></i> <span class="hide-menu"> Sales </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.sales.index') }}"> <i class="fa fa-line-chart fa-fw"></i> Sales List</a> </li>
-                        <li> <a href="{{ route('admin.users.list','customer') }}"> <i class="fa fa-users fa-fw"></i> Customers</a> </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hide-menu"> Purchases </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.purchases.list') }}"> <i class="fa fa-shopping-cart fa-fw"></i> Purchase Orders</a> </li>
-                        <li> <a href="{{ route('admin.users.list','supplier') }}"> <i class="fa fa-truck fa-fw"></i> Suppliers</a> </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-money fa-fw"></i> <span class="hide-menu"> Expenses </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.expense-categories.list') }}"> <i class="fa fa-money fa-fw"></i> Expense Categories</a> </li>
-                        <li> <a href="{{ route('admin.expenses.list') }}"> <i class="fa fa-list fa-fw"></i> Expenses List</a> </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-calculator fa-fw"></i> <span class="hide-menu"> Accounting </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.payment-methods.list') }}">  <i class="fa fa-cube fa-fw"></i> Payment Methods</a> </li>
-                        <li> <a href="#"> <i class="fa fa-th-list fa-fw"></i> Shipping Companies (SOON)</a> </li>
-                        <li> <a href="{{ route('admin.transactions.list') }}"> <i class="fa fa-tags fa-fw"></i> Transactions</a> </li>
-                    </ul>
-                </li>
-
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-users fa-fw"></i> <span class="hide-menu"> Administrator </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.admins.list') }}"><i class="fa fa-user fa-fw"></i> User Management</a> </li>
-                        <li> <a href="{{ route('admin.roles.list') }}"><i class="fa fa-shield fa-fw"></i> Role Management</a> </li>
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Reports </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Financial Reports </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li> <a href="{{ route('admin.reports.financial.trail-balance') }}"><i class="fa fa-line-chart fa-fw"></i> Trial Balance</a> </li>
-                                <li> <a href="{{ route('admin.reports.financial.income-statement') }}"><i class="fa fa-bar-chart fa-fw"></i> Income Statement</a> </li>
-                                <li> <a href="{{ route('admin.reports.financial.cash-flow-statement') }}"><i class="fa fa-money fa-fw"></i> Cash Flow Statement</a> </li>
-                                <li> <a href="{{ route('admin.reports.financial.general-ledger') }}"><i class="fa fa-users fa-fw"></i> General Ledger</a> </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Sales Reports </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li> <a href="{{ route('admin.reports.sales.sales.summary') }}"><i class="fa fa-line-chart fa-fw"></i> Sales Summary</a> </li>
-                                <li> <a href="{{ route('admin.reports.sales.sales.product') }}"><i class="fa fa-line-chart fa-fw"></i> Sales by Product</a> </li>
-                                {{-- <li> <a href="{{ route('admin.reports.sales.sales.by-category') }}"><i class="fa fa-bar-chart fa-fw"></i> Sales by Category</a> </li> --}}
-                                <li> <a href="{{ route('admin.reports.sales.sales.branch') }}"><i class="fa fa-money fa-fw"></i> Sales by Branch</a> </li>
-                                {{-- <li> <a href="{{ route('admin.reports.sales.sales.by-payment-method') }}"><i class="fa fa-users fa-fw"></i> Sales by Payment Method</a> </li> --}}
-                                <li> <a href="{{ route('admin.reports.sales.sales.customer') }}"><i class="fa fa-users fa-fw"></i> Sales by Customer</a> </li>
-                                <li> <a href="{{ route('admin.reports.sales.sales.profit-loss') }}"><i class="fa fa-users fa-fw"></i> Sales Profit Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.sales.sales.vat-report') }}"><i class="fa fa-users fa-fw"></i> VAT on Sales (VAT Payable)</a> </li>
-                                <li> <a href="{{ route('admin.reports.sales.sales.returns') }}"><i class="fa fa-users fa-fw"></i> Sales Return Report</a> </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Purchase Reports </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li> <a href="{{ route('admin.reports.purchases.purchases.summary') }}"><i class="fa fa-line-chart fa-fw"></i> Purchase Summary</a> </li>
-                                <li> <a href="{{ route('admin.reports.purchases.purchases.supplier') }}"><i class="fa fa-line-chart fa-fw"></i> Purchase by Supplier</a> </li>
-                                <li> <a href="{{ route('admin.reports.purchases.purchases.product') }}"><i class="fa fa-bar-chart fa-fw"></i> Purchase by Product</a> </li>
-                                <li> <a href="{{ route('admin.reports.purchases.purchases.branch') }}"><i class="fa fa-bar-chart fa-fw"></i> Purchase by Branch</a> </li>
-                                <li> <a href="{{ route('admin.reports.purchases.purchases.returns') }}"><i class="fa fa-users fa-fw"></i> Purchase Return Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.purchases.purchases.discounts') }}"><i class="fa fa-users fa-fw"></i> Purchase Discount Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.purchases.purchases.vat-report') }}"><i class="fa fa-users fa-fw"></i> VAT on Purchases (VAT Receivable)</a> </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Inventory & COGS Reports </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li> <a href="{{ route('admin.reports.inventory.stock-valuation') }}"><i class="fa fa-cubes fa-fw"></i> Stock Valuation Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.inventory.stock-movement') }}"><i class="fa fa-exchange fa-fw"></i> Stock Movement Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.inventory.cogs-report') }}"><i class="fa fa-calculator fa-fw"></i> COGS Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.inventory.shortage-report') }}"><i class="fa fa-warning fa-fw"></i> Inventory Shortage Report</a> </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Performance & Analysis Reports </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li> <a href="{{ route('admin.reports.performance.product-profit-margin') }}"><i class="fa fa-line-chart fa-fw"></i> Profit Margin by Product</a> </li>
-                                <li> <a href="{{ route('admin.reports.performance.customer-outstanding') }}"><i class="fa fa-users fa-fw"></i> Customer Outstanding Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.performance.supplier-payable') }}"><i class="fa fa-users fa-fw"></i> Supplier Payable Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.performance.expense-breakdown') }}"><i class="fa fa-money fa-fw"></i> Expense Breakdown</a> </li>
-                                <li> <a href="{{ route('admin.reports.performance.revenue-breakdown-by-branch') }}"><i class="fa fa-money fa-fw"></i> Revenue Breakdown</a> </li>
-                                <li> <a href="{{ route('admin.reports.performance.discount-impact') }}"><i class="fa fa-percent fa-fw"></i> Discount Impact Report</a> </li>
-                                <li> <a href="{{ route('admin.reports.performance.sales-threshold') }}"><i class="fa fa-trophy fa-fw"></i> Sales Threshold (Discount Trigger) Report</a> </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Tax & Compliance Reports </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li> <a href="{{ route('admin.reports.taxes.vat-summary') }}"><i class="fa fa-percent fa-fw"></i> VAT Summary</a> </li>
-                                <li> <a href="{{ route('admin.reports.taxes.withholding-tax') }}"><i class="fa fa-file-text fa-fw"></i> Withholding Tax Report</a> </li>
-                                <li> <a href="#"><i class="fa fa-book fa-fw"></i> Audit Trail Report (Soon)</a> </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Branch / User / Cash Reports </span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li> <a href="{{ route('admin.reports.cash.register.report') }}"><i class="fa fa-money fa-fw"></i> Cash Register Summary</a> </li>
-                                <li> <a href="{{ route('admin.reports.branch.profitability') }}"><i class="fa fa-building fa-fw"></i> Branch Profitability</a> </li>
-                                <li> <a href="{{ route('admin.reports.cashier.report') }}"><i class="fa fa-user fa-fw"></i> User / Cashier Performance</a> </li>
-                            </ul>
-                        </li>
-
-                    </ul>
-                </li>
-
-                <li>
-                    <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-sliders fa-fw"></i> <span class="hide-menu"> Settings </span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li> <a href="{{ route('admin.discounts.list') }}"><i class="fa fa-percent fa-fw"></i> Discounts</a> </li>
-                        <li> <a href="{{ route('admin.taxes.list') }}"> <i class="fa fa-money fa-fw"></i> Taxes</a> </li>
-                        <li> <a href="#"><i class="fa fa-cog fa-fw"></i> General Settings</a> </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
+        <!-- END menu -->
     </div>
-</aside>
+    <!-- END scrollbar -->
+</div>
+<!-- END #sidebar -->
+
+<!-- BEGIN mobile-sidebar-backdrop -->
+<button class="app-sidebar-mobile-backdrop" data-toggle-target=".app" data-toggle-class="app-sidebar-mobile-toggled"></button>
+<!-- END mobile-sidebar-backdrop -->
