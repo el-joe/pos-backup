@@ -99,3 +99,20 @@ if(!function_exists('defaultPermissionsList')) {
 function sidebarHud($data){
     return view('layouts.hud.partials.sidebar-ul',get_defined_vars())->render();
 }
+
+function extractRoutes(array $items): array
+{
+    $routes = [];
+
+    foreach ($items as $item) {
+        if (!empty($item['route']) && $item['route'] !== '#') {
+            $routes[] = $item['route'];
+        }
+
+        if (!empty($item['children'])) {
+            $routes = array_merge($routes, extractRoutes($item['children']));
+        }
+    }
+
+    return $routes;
+}
