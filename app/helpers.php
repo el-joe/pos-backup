@@ -95,3 +95,7 @@ if(!function_exists('defaultPermissionsList')) {
         return json_decode(file_get_contents(base_path('tenant-permissions.json')),true);
     }
 }
+
+function sidebarHud($data){
+    return view('layouts.hud.partials.sidebar-ul',get_defined_vars())->render();
+}
