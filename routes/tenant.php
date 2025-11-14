@@ -239,12 +239,12 @@ Route::middleware([
 
 
 // Features to add later
-// Every Cashier Has Branch Restriction
+// Every Cashier Has Branch Restriction --------- #Done
+// Filters into all list pages
 // Export/Import Excel,CSV,PDF
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
 // Add Currency & City to branch
-// Filters into all list pages
 
 // TODO : E-Invoice Coming Soon
 // Email & Notification system
