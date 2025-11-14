@@ -35,6 +35,13 @@ class AddStockTaking extends Component
         $this->stockTakingService = app(StockTakingService::class);
     }
 
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['branch_id'] = admin()->branch_id;
+            $this->updatingDataBranchId(admin()->branch_id);
+        }
+    }
+
     function updatingDataBranchId($value) {
         if($this->data['countedStock'] ?? false){
             $this->data['countedStock'] = [];

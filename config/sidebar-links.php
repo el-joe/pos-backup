@@ -78,7 +78,7 @@ return [
             [
                 "title" => "Customers",
                 "route" => 'admin.users.list',
-                'route_params' => 'customer',
+                'route_params' => ['type'=>'customer'],
                 "icon"  => "fa fa-user-friends fa-fw"
             ],
         ],
@@ -96,7 +96,7 @@ return [
             [
                 "title" => "Suppliers",
                 "route" => 'admin.users.list',
-                'route_params' => 'supplier',
+                'route_params' => ['type'=>'supplier'],
                 "icon"  => "fa fa-shipping-fast fa-fw"
             ],
         ],

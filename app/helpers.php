@@ -116,3 +116,19 @@ function extractRoutes(array $items): array
 
     return $routes;
 }
+
+
+function checkRouteParams($routeParams = []){
+    foreach ($routeParams as $key => $value) {
+        $route = request()->route($key);
+        if($route == null){
+            return true;
+        }
+
+        if($route == $value) {
+            return true;
+        }
+    }
+
+    return false;
+}

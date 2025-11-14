@@ -29,4 +29,9 @@ class AuthController extends Controller
 
         return redirect()->back();
     }
+
+    function logout() {
+        auth(TENANT_ADMINS_GUARD)->logout();
+        return redirect()->route('admin.login');
+    }
 }

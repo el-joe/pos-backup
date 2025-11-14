@@ -17,7 +17,7 @@ class TransactionList extends Component
         $transactionLines = TransactionLine::with(['transaction','account','transaction.branch'])
         ->orderByDesc('transaction_id')
         ->orderByDesc('id')
-        ->paginate(10)->withQueryString()
+        ->paginate(20)->withQueryString()
         ->through(function($line) {
             return [
                 'id' => $line->id,

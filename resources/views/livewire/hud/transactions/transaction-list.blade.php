@@ -5,7 +5,11 @@
         </div>
 
         <div class="card-body">
-            @include('admin.partials.tableHandler')
+            @include('admin.partials.tableHandler',[
+                'rows'=> $transactionLines,
+                'columns' => $columns,
+                'headers' => $headers,
+            ])
         </div>
 
         <div class="card-arrow">

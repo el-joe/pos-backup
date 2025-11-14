@@ -42,6 +42,10 @@ class PosPage extends Component
 
     function mount() {
         $this->data['order_date'] = now()->format('Y-m-d');
+        if(admin()->branch_id){
+            $this->data['branch_id'] = admin()->branch_id;
+            $this->updatingDataBranchId(admin()->branch_id);
+        }
     }
 
     function updatingSelectedUnitId($value) {

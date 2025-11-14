@@ -81,12 +81,16 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="branch_id" class="form-label">Branch</label>
+                        @if(admin()->branch_id == null)
                         <select class="form-select" id="branch_id" wire:model="data.branch_id">
                             <option value="">All Branches</option>
                             @foreach($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
                         </select>
+                        @else
+                        <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
+                        @endif
                     </div>
 
                     <div class="col-12">

@@ -93,7 +93,6 @@
                     <label class="form-label">Opening Balance</label>
                     <input type="number" class="form-control" wire:model="opening_balance_input">
                 </div>
-
                 @if(admin()->branch_id === null)
                 <div class="mb-3">
                     <label class="form-label">Select Branch</label>

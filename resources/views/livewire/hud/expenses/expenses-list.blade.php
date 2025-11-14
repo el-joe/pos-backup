@@ -8,7 +8,11 @@
         </div>
 
         <div class="card-body">
-            <x-table-component :rows="$expenses" :columns="$columns" :headers="$headers" />
+            @include('admin.partials.tableHandler',[
+                'rows'=>$expenses,
+                'columns'=>$columns,
+                'headers'=>$headers
+            ])
         </div>
 
         <div class="card-arrow">
@@ -32,12 +36,16 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="expenseBranch" class="form-label">Branch</label>
+                            @if(admin()->branch_id == null)
                             <select id="expenseBranch" wire:model="data.branch_id" class="form-select">
                                 <option value="">Select Branch</option>
                                 @foreach($branches as $branch)
                                     <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                 @endforeach
                             </select>
+                            @else
+                            <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
+                            @endif
                         </div>
 
                         <div class="col-md-6">

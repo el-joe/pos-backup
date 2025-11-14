@@ -17,12 +17,16 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="branch_id" class="form-label">Branch</label>
+                                        @if(admin()->branch_id == null)
                                         <select id="branch_id" class="form-select" wire:model.live="data.branch_id">
                                             <option value="">Select Branch</option>
                                             @foreach($branches as $branch)
                                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                             @endforeach
                                         </select>
+                                        @else
+                                        <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
+                                        @endif
                                     </div>
                                 </div>
 

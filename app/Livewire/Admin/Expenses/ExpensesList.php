@@ -25,6 +25,7 @@ class ExpensesList extends Component
         'expense_date' => 'required|date',
         'note' => 'nullable|string',
         'tax_percentage' => 'nullable|numeric|min:0|max:100',
+        'branch_id' => 'required|integer|exists:branches,id',
     ];
 
     function boot() {
@@ -32,6 +33,12 @@ class ExpensesList extends Component
         $this->expenseCategoryService = app(ExpenseCategoryService::class);
         $this->branchService = app(BranchService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+    }
+
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['branch_id'] = admin()->branch_id;
+        }
     }
 
     function setCurrent($id) {

@@ -69,6 +69,12 @@ class AddPurchase extends Component
         $this->cashRegisterService = app(CashRegisterService::class);
     }
 
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['branch_id'] = admin()->branch_id;
+        }
+    }
+
     public function updatingProductSearch($value)
     {
         $product = $this->productService->search($value);

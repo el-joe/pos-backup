@@ -101,6 +101,9 @@ Route::middleware([
         Route::post('login',[AuthController::class,'postLogin'])->name('postLogin');
 
         Route::middleware([AdminAuthMiddleware::class])->group(function () {
+
+            Route::get('logout',[AuthController::class,'logout'])->name('logout');
+
             Route::get('/',Statistics::class)->name('statistics');
             Route::get('cash-register',CashRegisterPage::class)->name('cash.register.open');
             Route::get('switch-branch/{branch?}', [AuthController::class, 'switchBranch'])->name('switch.branch');

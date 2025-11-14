@@ -41,7 +41,7 @@
                 <div class="menu-icon"><i class="bi bi-search nav-icon"></i></div>
             </a>
         </div>
-        <div class="menu-item dropdown dropdown-mobile-full">
+        {{-- <div class="menu-item dropdown dropdown-mobile-full">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-icon"><i class="bi bi-grid-3x3-gap nav-icon"></i></div>
             </a>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="menu-item dropdown dropdown-mobile-full">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
@@ -168,22 +168,33 @@
                 </div>
             </div>
         </div>
+        @php
+            $currentBranch = admin()->branch_id;
+        @endphp
+
+        <select id="branch-switcher" class="" style="display:inline-block; width:auto; min-width:180px;">
+            <option value="">All Branches</option>
+            @foreach($__branches as $b)
+                <option value="{{ $b->id }}" @if($currentBranch == $b->id) selected @endif>{{ $b->name }}</option>
+            @endforeach
+        </select>
         <div class="menu-item dropdown dropdown-mobile-full">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-img online">
                     <img src="{{ asset('hud/assets/img/user/profile.jpg') }}" alt="Profile" height="60">
                 </div>
-                <div class="menu-text d-sm-block d-none w-170px">username@account.com</div>
+                <div class="menu-text d-sm-block d-none w-100px">{{ admin()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-end me-lg-3 fs-11px mt-1">
-                <a class="dropdown-item d-flex align-items-center" href="profile.html">PROFILE <i class="bi bi-person-circle ms-auto text-theme fs-16px my-n1"></i></a>
+                {{-- <a class="dropdown-item d-flex align-items-center" href="profile.html">PROFILE <i class="bi bi-person-circle ms-auto text-theme fs-16px my-n1"></i></a>
                 <a class="dropdown-item d-flex align-items-center" href="email_inbox.html">INBOX <i class="bi bi-envelope ms-auto text-theme fs-16px my-n1"></i></a>
                 <a class="dropdown-item d-flex align-items-center" href="calendar.html">CALENDAR <i class="bi bi-calendar ms-auto text-theme fs-16px my-n1"></i></a>
                 <a class="dropdown-item d-flex align-items-center" href="settings.html">SETTINGS <i class="bi bi-gear ms-auto text-theme fs-16px my-n1"></i></a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item d-flex align-items-center" href="page_login.html">LOGOUT <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
+                <div class="dropdown-divider"></div> --}}
+                <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">LOGOUT <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
             </div>
         </div>
+
     </div>
     <!-- END menu -->
 
@@ -202,3 +213,14 @@
     <!-- END menu-search -->
 </div>
 <!-- END #header -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        var sel = document.getElementById('branch-switcher');
+        if (!sel) return;
+        sel.addEventListener('change', function(){
+            window.location.href = '/admin/switch-branch/' + this.value;
+        });
+    });
+</script>
+

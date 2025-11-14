@@ -26,6 +26,12 @@ class PaymentMethodsList extends Component
         $this->branchService = app(BranchService::class);
     }
 
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['branch_id'] = admin()->branch_id;
+        }
+    }
+
     function setCurrent($id) {
         $this->current = $this->paymentMethodService->find($id);
         if ($this->current) {

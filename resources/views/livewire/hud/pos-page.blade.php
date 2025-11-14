@@ -23,17 +23,21 @@
                 <div class="card-body row g-3">
                     <div class="col-sm-3">
                         <label for="branchSelect" class="fw-semibold">Branch:</label>
-                        <select class="form-select" id="branchSelect" wire:model.live="data.branch_id">
-                            <option value="">-- Choose Branch --</option>
-                            @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">
-                                    {{ $branch->name }} @if($branch->phone) - {{ $branch->phone }} @endif
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('data.branch_id')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
+                        @if(admin()->branch_id == null)
+                            <select class="form-select" id="branchSelect" wire:model.live="data.branch_id">
+                                <option value="">-- Choose Branch --</option>
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->id }}">
+                                        {{ $branch->name }} @if($branch->phone) - {{ $branch->phone }} @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('data.branch_id')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        @else
+                            <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
+                        @endif
                     </div>
 
                     <div class="col-sm-3">

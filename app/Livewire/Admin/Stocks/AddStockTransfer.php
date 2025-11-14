@@ -42,6 +42,12 @@ class AddStockTransfer extends Component
         $this->stockService = app(StockService::class);
     }
 
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['from_branch_id'] = admin()->branch_id;
+        }
+    }
+
     function resetSearchInput() {
         $this->dispatch('reset-search-input');
         $this->product_search = '';

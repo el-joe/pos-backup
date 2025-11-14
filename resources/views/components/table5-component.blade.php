@@ -115,7 +115,7 @@
 
     {{-- Pagination Centered --}}
     <div class="d-flex justify-content-center mt-3">
-        {{ $rows->links() }}
+        {{ $rows->links('pagination::default5') }}
     </div>
 </div>
 
