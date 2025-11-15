@@ -18,6 +18,10 @@ class UnitsList extends Component
         'parent_id'=>0
     ];
 
+    public $export = null;
+    public $filters = [];
+    public $collapseFilters = false;
+
     public $rules = [
         'name' => 'required',
         'active' => 'nullable',
@@ -86,11 +90,43 @@ class UnitsList extends Component
 
     public function render()
     {
-        $units = Unit::paginate(10);
+        $units = Unit::filter($this->filters);
+
+        if ($this->export == 'excel') {
+
+                            //             <th>#</th>
+                            // <th>Name</th>
+                            // <th>Parent</th>
+                            // <th>Count</th>
+                            // <th>Status</th>
+
+            $data = $units->get()->map(function ($unit, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $unit->name,
+                    'parent' => $unit->parent?->name ?? 'N/A',
+                    'count' => $unit->count,
+                    'active' => $unit->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'parent', 'count', 'active'];
+            $headers = ['#', 'Name', 'Parent', 'Count', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'units');
+
+            $this->redirectToDownload($fullPath);
+
+            $this->export = null;
+        }
+
+        $units = $units->paginate(10);
 
         $parents = Unit::with('children')
             ->where('parent_id', 0)
             ->orWhereNull('parent_id')
+            ->get();
+
+        $filterUnits = Unit::with('children')
             ->get();
 
         return layoutView('units.units-list', get_defined_vars())

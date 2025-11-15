@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 const TENANT_ADMINS_GUARD = 'tenant_admin';
 
@@ -131,4 +132,19 @@ function checkRouteParams($routeParams = []){
     }
 
     return false;
+}
+
+function exportToExcel($data, $columns, $headers, $fileName) {
+    $filePath = "exports/{$fileName}-" . now()->format('Y-m-d_H-i-s') . ".xlsx";
+    Excel::store(
+        new \App\Exports\GeneralExport(
+            data: $data,
+            columns: $columns,
+            headers: $headers
+        ),
+        $filePath,
+        'public'
+    );
+
+    return public_path("storage/{$filePath}");
 }

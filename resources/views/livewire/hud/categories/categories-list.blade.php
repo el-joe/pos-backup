@@ -1,10 +1,84 @@
 <div class="col-12">
+    <div class="card shadow-sm mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Filters</h5>
+
+            <button class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="collapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                    wire:click="$toggle('collapseFilters')"
+                    data-bs-target="#branchFilterCollapse">
+                <i class="fa fa-filter me-1"></i> Show / Hide
+            </button>
+        </div>
+
+        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
+            <div class="card-body">
+                <div class="row g-3">
+
+                    <!-- Filter by Name -->
+                    <div class="col-md-4">
+                        <label class="form-label">Search By Name</label>
+                        <input type="text" class="form-control"
+                            placeholder="Search ..."
+                            wire:model.blur="filters.search">
+                    </div>
+
+                    {{-- Parent Categories --}}
+                    <div class="col-md-4">
+                        <label class="form-label">Parent Category</label>
+                        <select class="form-select" wire:model.live="filters.parent_id">
+                            <option value="all">All</option>
+                            @foreach ($allCategories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Filter by Status -->
+                    <div class="col-md-4">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" wire:model.live="filters.active">
+                            <option value="all">All</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+
+                    <!-- Reset -->
+                    <div class="col-12 d-flex justify-content-end">
+                        <button class="btn btn-secondary btn-sm"
+                                wire:click="resetFilters">
+                            <i class="fa fa-undo me-1"></i> Reset
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
+        </div>
+    </div>
+
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.titles.categories') }}</h5>
-            <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editCategoryModal" wire:click="setCurrent(null)">
-                <i class="fa fa-plus me-1"></i> New Category
-            </button>
+
+            <div class="d-flex align-items-center gap-2">
+                <!-- Export Button -->
+                <button class="btn btn-outline-success"
+                        wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel me-1"></i> Export
+                </button>
+                <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editCategoryModal" wire:click="setCurrent(null)">
+                    <i class="fa fa-plus me-1"></i> New Category
+                </button>
+            </div>
         </div>
 
         <div class="card-body">

@@ -237,6 +237,15 @@ Route::middleware([
     });
 });
 
+Route::get('download-file', function () {
+    $file = request()->get('file');
+    if (file_exists($file)) {
+        return response()->download($file);
+    } else {
+        return "File does not exist.";
+    }
+})->name('admin.export.download');
+
 
 // Features to add later
 // Every Cashier Has Branch Restriction --------- #Done

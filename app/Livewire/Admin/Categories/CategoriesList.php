@@ -22,6 +22,10 @@ class CategoriesList extends Component
         'active' => 'boolean',
     ];
 
+    public $export = null;
+    public $collapseFilters = false;
+    public $filters = [];
+
     function boot() {
         $this->categoryService = app(CategoryService::class);
     }
@@ -75,9 +79,33 @@ class CategoriesList extends Component
 
     public function render()
     {
+
+        if ($this->export == 'excel') {
+            $qData = $this->categoryService->list(
+                orderByDesc: 'categories.created_at',
+                filter: $this->filters
+            );
+
+            $data = $qData->map(function ($category, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $category->name,
+                    'parent_category' => $category->parent ? $category->parent->name : 'N/A',
+                    'active' => $category->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'parent_category', 'active'];
+            $headers = ['#', 'Name', 'Parent Category', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'categories');
+
+            $this->redirectToDownload($fullPath);
+        }
+
         $categories = $this->categoryService->list(
             perPage: 10,
-            orderByDesc: 'categories.created_at'
+            orderByDesc: 'categories.created_at',
+            filter: $this->filters
         );
 
         $allCategories = $this->categoryService->list();

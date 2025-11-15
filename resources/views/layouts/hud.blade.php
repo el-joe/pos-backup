@@ -33,5 +33,12 @@
     @livewireScripts
     @stack('scripts')
     @livewire('operations')
+
+    <script>
+        window.addEventListener('download-file', event => {
+            window.open(event.detail[0].url, '_blank');
+        });
+    </script>
+
 </body>
 </html>

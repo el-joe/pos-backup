@@ -125,4 +125,12 @@ trait LivewireOperations {
         $this->js('window.setTimeout(function(){ window.location = "'.url($url).'"; },'.$timeout.');');
     }
 
+    function redirectToDownload($url) {
+
+        $this->export = null;
+        $this->dispatch('download-file', [
+            'url' => route('admin.export.download', ['file' => $url]),
+        ]);
+    }
+
 }

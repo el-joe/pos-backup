@@ -30,16 +30,23 @@ class Category extends Model
     }
 
     function scopeFilter($q,$filters) {
-        return $q->when(isset($filters['active']), function($q,$active) {
-            $q->where('active',$active);
+        return $q->when(isset($filters['active']), function($q)  use($filters) {
+            if($filters['active'] != 'all'){
+                $q->where('active',$filters['active']);
+            }
         })
-        ->when(isset($filters['parent_id']), function($q,$parent_id) {
-            $q->where('parent_id',$parent_id);
+        ->when($filters['parent_id'] ?? null, function($q,$parent_id) {
+            if($parent_id != 'all'){
+                $q->where('parent_id',$parent_id);
+            }
         })
         ->when($filters['empty_parent_id'] ?? null, function($q) {
             $q->where(function ($q) {
                 $q->where('parent_id',0)->orWhereNull('parent_id');
             });
+        })
+        ->when($filters['search'] ?? null, function($q,$search) {
+            $q->where('name','like',"%$search%");
         });
     }
 
