@@ -252,6 +252,7 @@ Route::get('download-file', function () {
 // Filters into all list pages
 // Export/Import Excel,CSV,PDF
 // Translation System
+// Notification System
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
 // Add Currency & City to branch
