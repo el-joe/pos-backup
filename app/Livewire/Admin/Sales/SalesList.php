@@ -3,8 +3,10 @@
 namespace App\Livewire\Admin\Sales;
 
 use App\Enums\TransactionTypeEnum;
+use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\SellService;
+use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -14,14 +16,21 @@ class SalesList extends Component
 {
 
     use LivewireOperations,WithPagination;
-    private $sellService,$cashRegisterService;
+    private $sellService,$cashRegisterService,$branchService,$userService;
     public $current;
 
     public $payment = [];
 
+    public $collapseFilters = false;
+    public $export = null;
+
+    public $filters = [];
+
     function boot() {
         $this->sellService = app(SellService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+        $this->branchService = app(BranchService::class);
+        $this->userService = app(UserService::class);
     }
 
     function setCurrent($id) {
@@ -67,7 +76,33 @@ class SalesList extends Component
 
     public function render()
     {
-        $sales = $this->sellService->list([],[],10,'id');
+        if ($this->export == 'excel') {
+            $sales = $this->sellService->list(filter: $this->filters,orderByDesc: 'id');
+
+            $data = $sales->map(function ($sale, $loop) {
+                #	Invoice No.	Customer	Branch	Total Amount	Due Amount	Refund Status
+                return [
+                    'loop' => $loop + 1,
+                    'invoice_number' => $sale->invoice_number,
+                    'customer' => $sale->customer?->name,
+                    'branch' => $sale->branch?->name,
+                    'total_amount' => $sale->grand_total_amount,
+                    'due_amount' => $sale->due_amount,
+                    'refund_status' => $sale->refund_status->label()
+                ];
+            })->toArray();
+            $columns = ['loop', 'invoice_number', 'customer', 'branch', 'total_amount', 'due_amount', 'refund_status'];
+            $headers = ['#', 'Invoice No.', 'Customer', 'Branch', 'Total Amount', 'Due Amount', 'Refund Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'sales');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $sales = $this->sellService->list(relations: [],filter: $this->filters,perPage: 10,orderByDesc: 'id');
+
+        $branches = $this->branchService->activeList();
+        $customers = $this->userService->customersList();
 
         return layoutView('sales.sales-list',get_defined_vars());
     }

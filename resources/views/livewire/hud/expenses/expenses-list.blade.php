@@ -1,10 +1,83 @@
 <div class="col-12">
+    <div class="card shadow-sm mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Filters</h5>
+
+            <button class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="collapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                    wire:click="$toggle('collapseFilters')"
+                    data-bs-target="#branchFilterCollapse">
+                <i class="fa fa-filter me-1"></i> Show / Hide
+            </button>
+        </div>
+
+        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
+            <div class="card-body">
+                <div class="row g-3">
+
+                    <!-- Filter by Branch -->
+                    <div class="col-md-4">
+                        <label class="form-label">Branch</label>
+                        <select class="form-select"
+                                wire:model="filters.branch_id">
+                            <option value="">All Branches</option>
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Filter by Category -->
+                    <div class="col-md-4">
+                        <label class="form-label">Category</label>
+                        <select class="form-select"
+                                wire:model="filters.expense_category_id">
+                            <option value="">All Categories</option>
+                            @foreach($expenseCategories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Filter by Date -->
+                    <div class="col-md-4">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control"
+                               wire:model="filters.date" />
+                    </div>
+                    <!-- Reset -->
+                    <div class="col-12 d-flex justify-content-end">
+                        <button class="btn btn-secondary btn-sm"
+                                wire:click="resetFilters">
+                            <i class="fa fa-undo me-1"></i> Reset
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
+        </div>
+    </div>
+
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">{{ __('general.titles.expenses') }}</h3>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal" wire:click="setCurrent(null)">
-                <i class="fa fa-plus"></i> New Expense
-            </button>
+            <div class="d-flex align-items-center gap-2">
+                <!-- Export Button -->
+                <button class="btn btn-outline-success"
+                        wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel me-1"></i> Export
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal" wire:click="setCurrent(null)">
+                    <i class="fa fa-plus"></i> New Expense
+                </button>
+            </div>
         </div>
 
         <div class="card-body">

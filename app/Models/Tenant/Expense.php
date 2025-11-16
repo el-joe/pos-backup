@@ -36,6 +36,9 @@ class Expense extends Model
         })
         ->when(isset($filter['with_trashed']) && $filter['with_trashed'], function($q) {
             $q->withTrashed();
+        })
+        ->when(isset($filter['date']) && $filter['date'], function($q) use ($filter) {
+            $q->whereDate('expense_date', $filter['date']);
         });
     }
 

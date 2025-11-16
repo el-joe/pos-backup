@@ -3,8 +3,10 @@
 namespace App\Livewire\Admin\Purchases;
 
 use App\Enums\TransactionTypeEnum;
+use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\PurchaseService;
+use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -14,14 +16,20 @@ class PurchasesList extends Component
 {
 
     use LivewireOperations,WithPagination;
-    private $purchaseService, $cashRegisterService;
+    private $purchaseService, $cashRegisterService,$branchService,$userService;
     public $current;
+
+    public $filters = [];
+    public $collapseFilters = false;
+    public $export = null;
 
     public $payment = [];
 
     function boot() {
         $this->purchaseService = app(PurchaseService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+        $this->branchService = app(BranchService::class);
+        $this->userService = app(UserService::class);
     }
 
     function setCurrent($id) {
@@ -61,7 +69,32 @@ class PurchasesList extends Component
 
     public function render()
     {
-        $purchases = $this->purchaseService->list([],[],10,'id');
+        if ($this->export == 'excel') {
+            $purchases = $this->purchaseService->list(relations: [],filter: $this->filters,orderByDesc: 'id');
+
+            $data = $purchases->map(function ($purchase, $loop) {
+                #	Ref No.	Supplier	Branch	Status	Total Amount	Due Amount	Refund Status
+                return [
+                    'loop' => $loop + 1,
+                    'ref_no' => $purchase->ref_no,
+                    'supplier' => $purchase->supplier?->name,
+                    'branch' => $purchase->branch?->name,
+                    'status' => $purchase->status->label(),
+                    'total_amount' => $purchase->total_amount,
+                    'due_amount' => number_format($purchase->due_amount ?? 0, 2),
+                    'refund_status' => $purchase->refund_status->label(),
+                ];
+            })->toArray();
+            $columns = ['loop', 'ref_no', 'supplier', 'branch', 'status', 'total_amount', 'due_amount', 'refund_status'];
+            $headers = ['#', 'Ref No.', 'Supplier', 'Branch', 'Status', 'Total Amount', 'Due Amount', 'Refund Status'];
+            $fullPath = exportToExcel($data, $columns, $headers, 'purchases');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $purchases = $this->purchaseService->list(relations: [],filter: $this->filters,perPage: 10,orderByDesc: 'id');
+        $branches = $this->branchService->activeList();
+        $suppliers = $this->userService->suppliersList();
 
         return layoutView('purchases.purchases-list', get_defined_vars())
             ->title(__('general.titles.purchases'));

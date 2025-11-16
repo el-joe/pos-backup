@@ -21,6 +21,10 @@ class PaymentMethodsList extends Component
         'branch_id' => 'nullable',
     ];
 
+    public $collapseFilters = false;
+    public $filters = [];
+    public $export;
+
     function boot() {
         $this->paymentMethodService = app(PaymentMethodService::class);
         $this->branchService = app(BranchService::class);
@@ -76,7 +80,27 @@ class PaymentMethodsList extends Component
 
     public function render()
     {
-        $paymentMethods = $this->paymentMethodService->list([], [], 10, 'id');
+        if ($this->export == 'excel') {
+            $paymentMethods = $this->paymentMethodService->list(relations: [], filter: $this->filters, orderByDesc: 'id');
+
+            $data = $paymentMethods->map(function ($paymentMethod, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $paymentMethod->name,
+                    'branch' => $paymentMethod->branch?->name,
+                    'active' => $paymentMethod->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+
+            $columns = ['loop', 'name', 'branch', 'active'];
+            $headers = ['#', 'Name', 'Branch', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'payment-methods');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $paymentMethods = $this->paymentMethodService->list(relations: [], filter: $this->filters, perPage: 10, orderByDesc: 'id');
         $branches = $this->branchService->activeList();
 
         return layoutView('payment-methods.payment-methods-list', get_defined_vars())

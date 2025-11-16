@@ -133,4 +133,7 @@ trait LivewireOperations {
         ]);
     }
 
+    function resetFilters() {
+        $this->reset('filters');
+    }
 }

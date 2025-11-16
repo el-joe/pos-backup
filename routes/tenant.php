@@ -251,9 +251,11 @@ Route::get('download-file', function () {
 // Every Cashier Has Branch Restriction --------- #Done
 // Filters into all list pages
 // Export/Import Excel,CSV,PDF
+// Translation System
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
 // Add Currency & City to branch
+// Audit Logs
 
 // TODO : E-Invoice Coming Soon
 // Email & Notification system

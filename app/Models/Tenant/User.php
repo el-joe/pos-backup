@@ -36,9 +36,12 @@ class User extends Model
 
     function scopeFilter($q,$filters = []) {
         return $q->when($filters['type'] ?? null, fn($q,$type) => $q->where('type',$type))
-            ->when(isset($filters['active']), fn($q,$active) => $q->where('active',$filters['active']))
+            ->when(isset($filters['active']), fn($q) => $filters['active'] != 'all' ? $q->where('active',$filters['active']) : $q)
             ->when($filters['email'] ?? null, fn($q,$email) => $q->where('email',$email))
             ->when($filters['phone'] ?? null, fn($q,$phone) => $q->where('phone',$phone))
-            ->when(isset($filters['is_deleted']) && $filters['is_deleted'] == true, fn($q) => $q->onlyTrashed());
+            ->when(isset($filters['is_deleted']) && $filters['is_deleted'] == true, fn($q) => $q->onlyTrashed())
+            ->when($filters['search'] ?? null, function($q,$search) {
+                $q->whereAny(['name','email','phone','address'], 'like', "%$search%");
+            });
     }
 }

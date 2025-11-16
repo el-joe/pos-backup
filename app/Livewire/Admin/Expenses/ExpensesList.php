@@ -28,6 +28,10 @@ class ExpensesList extends Component
         'branch_id' => 'required|integer|exists:branches,id',
     ];
 
+    public $collapseFilters = false;
+    public $filters = [];
+    public $export;
+
     function boot() {
         $this->expenseService = app(ExpenseService::class);
         $this->expenseCategoryService = app(ExpenseCategoryService::class);
@@ -96,8 +100,38 @@ class ExpensesList extends Component
 
     public function render()
     {
+
+        if ($this->export == 'excel') {
+            $expenses = $this->expenseService->list(relations: ['category'],filter: [
+                'with_trashed' => true,
+                ... $this->filters
+            ],orderByDesc: 'id');
+
+            $data = $expenses->map(function ($expense, $loop) {
+                #	Branch	Target	Category	Amount	Tax Percentage	Total	Date	Note	Created At
+                return [
+                    'loop' => $loop + 1,
+                    'branch' => $expense->branch?->name ?? 'N/A',
+                    'target' => $expense->model_type ? (new $expense->model_type)->getTable() : 'N/A',
+                    'category' => $expense->category?->name ?? 'N/A',
+                    'amount' => $expense->amount,
+                    'tax_percentage' => $expense->tax_percentage,
+                    'total' => $expense->total,
+                    'date' => $expense->expense_date,
+                    'note' => $expense->note ?? 'N/A',
+                    'created_at' => $expense->created_at,
+                ];
+            })->toArray();
+            $columns = ['loop', 'branch', 'target', 'category', 'amount', 'tax_percentage', 'total', 'date', 'note', 'created_at'];
+            $headers = ['#', 'Branch', 'Target', 'Category', 'Amount', 'Tax Percentage', 'Total', 'Date', 'Note', 'Created At'];
+            $fullPath = exportToExcel($data, $columns, $headers, 'expenses');
+
+            $this->redirectToDownload($fullPath);
+        }
+
         $expenses = $this->expenseService->list(['category'],[
-            'with_trashed' => true
+            'with_trashed' => true,
+            ... $this->filters
         ],10,'id')->through(function($expense) {
             return [
                 'id' => $expense->id,

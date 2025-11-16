@@ -93,6 +93,12 @@ class Purchase extends Model
     }
 
     function scopeFilter($q, array $filters = []) {
-        return $q->when($filters['id'] ?? false , fn($q,$id) => $q->where('id',$id) );
+        return $q->when($filters['id'] ?? false , fn($q,$id) => $q->where('id',$id) )
+            ->when($filters['ref_no'] ?? false , fn($q,$ref_no) => $q->where('ref_no','like', '%'.$ref_no.'%') )
+            ->when($filters['supplier_id'] ?? false , fn($q,$supplier_id) => $q->where('supplier_id',$supplier_id) )
+            ->when($filters['branch_id'] ?? false , fn($q,$branch_id) => $q->where('branch_id',$branch_id) )
+            ->when($filters['status'] ?? false , fn($q,$status) => $q->where('status',$status) )
+            ->when($filters['date_from'] ?? false , fn($q,$date_from) => $q->whereDate('order_date','>=',$date_from) )
+            ->when($filters['date_to'] ?? false , fn($q,$date_to) => $q->whereDate('order_date','<=',$date_to) );
     }
 }
