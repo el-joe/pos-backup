@@ -261,9 +261,9 @@ Route::get('download-file', function () {
 
 // Features to add later
 // Every Cashier Has Branch Restriction --------- #Done
-// Filters into all list pages --------- #Done
-// Export/Import Excel,CSV,PDF --------- #Done
-// Translation System
+// Filters into all list pages --------- #Done Except Reports
+// Export/Import Excel,CSV,PDF --------- #Done Except Reports
+// Translation System --------- #Done
 // Notification System
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
