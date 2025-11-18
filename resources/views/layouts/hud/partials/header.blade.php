@@ -27,20 +27,20 @@
     <div class="brand">
         <a href="{{ route('admin.statistics') }}" class="brand-logo">
             <span class="brand-img">
-                <span class="brand-img-text text-theme">H</span>
+                <span class="brand-img-text text-theme">{{ ucfirst(substr(tenant()->name, 0, 1)) }}</span>
             </span>
-            <span class="brand-text">HUD ADMIN</span>
+            <span class="brand-text">{{ tenant()->name }}</span>
         </a>
     </div>
     <!-- END brand -->
 
     <!-- BEGIN menu -->
     <div class="menu">
-        <div class="menu-item dropdown">
+        {{-- <div class="menu-item dropdown">
             <a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app" class="menu-link">
                 <div class="menu-icon"><i class="bi bi-search nav-icon"></i></div>
             </a>
-        </div>
+        </div> --}}
         {{-- <div class="menu-item dropdown dropdown-mobile-full">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-icon"><i class="bi bi-grid-3x3-gap nav-icon"></i></div>
@@ -94,6 +94,18 @@
                 </div>
             </div>
         </div> --}}
+
+        @php
+            $currentBranch = admin()->branch_id;
+        @endphp
+
+        <select id="branch-switcher" class="" style="display:inline-block; width:auto; min-width:180px;">
+            <option value="">{{ __('general.layout.all_branches') }}</option>
+            @foreach($__branches as $b)
+                <option value="{{ $b->id }}" @if($currentBranch == $b->id) selected @endif>{{ $b->name }}</option>
+            @endforeach
+        </select>
+
         <div class="menu-item dropdown dropdown-mobile-full">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
@@ -168,31 +180,23 @@
                 </div>
             </div>
         </div>
-        @php
-            $currentBranch = admin()->branch_id;
-        @endphp
-
-        <select id="branch-switcher" class="" style="display:inline-block; width:auto; min-width:180px;">
-            <option value="">{{ __('general.layout.all_branches') }}</option>
-            @foreach($__branches as $b)
-                <option value="{{ $b->id }}" @if($currentBranch == $b->id) selected @endif>{{ $b->name }}</option>
-            @endforeach
-        </select>
         <div class="menu-item dropdown dropdown-mobile-full">
-            <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
-                <div class="menu-img online">
-                    <img src="{{ asset('hud/assets/img/user/profile.jpg') }}" alt="Profile" height="60">
+                <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
+                    <div class="menu-img online">
+                        <img src="{{ asset('hud/assets/img/user/profile.jpg') }}" alt="Profile" height="60">
+                    </div>
+                    {{-- <div class="menu-text d-sm-block d-none w-100px"></div> --}}
+                </a>
+                <div class="dropdown-menu  me-lg-3 fs-11px mt-1 dropdown-menu-end dropdown-menu-lg-{{ session('locale') == 'en' ? 'end' : 'start' }}">
+                    <h6 class="dropdown-header"> {{ __('general.pages.admins.name') }} : {{ admin()->name }}</h6>
+                    <div class="dropdown-divider"></div>
+                    {{-- <a class="dropdown-item d-flex align-items-center" href="profile.html">PROFILE <i class="bi bi-person-circle ms-auto text-theme fs-16px my-n1"></i></a>
+                    <a class="dropdown-item d-flex align-items-center" href="email_inbox.html">INBOX <i class="bi bi-envelope ms-auto text-theme fs-16px my-n1"></i></a>
+                    <a class="dropdown-item d-flex align-items-center" href="calendar.html">CALENDAR <i class="bi bi-calendar ms-auto text-theme fs-16px my-n1"></i></a>
+                    <a class="dropdown-item d-flex align-items-center" href="settings.html">SETTINGS <i class="bi bi-gear ms-auto text-theme fs-16px my-n1"></i></a>
+                    <div class="dropdown-divider"></div> --}}
+                    <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">{{ __('general.layout.logout') }} <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
                 </div>
-                <div class="menu-text d-sm-block d-none w-100px">{{ admin()->name }}</div>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end me-lg-3 fs-11px mt-1">
-                {{-- <a class="dropdown-item d-flex align-items-center" href="profile.html">PROFILE <i class="bi bi-person-circle ms-auto text-theme fs-16px my-n1"></i></a>
-                <a class="dropdown-item d-flex align-items-center" href="email_inbox.html">INBOX <i class="bi bi-envelope ms-auto text-theme fs-16px my-n1"></i></a>
-                <a class="dropdown-item d-flex align-items-center" href="calendar.html">CALENDAR <i class="bi bi-calendar ms-auto text-theme fs-16px my-n1"></i></a>
-                <a class="dropdown-item d-flex align-items-center" href="settings.html">SETTINGS <i class="bi bi-gear ms-auto text-theme fs-16px my-n1"></i></a>
-                <div class="dropdown-divider"></div> --}}
-                <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">{{ __('general.layout.logout') }} <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
-            </div>
         </div>
 
     </div>
