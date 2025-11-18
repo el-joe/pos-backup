@@ -17,6 +17,10 @@ class DiscountsList extends Component
     public $current;
     public $data = [];
 
+    public $export;
+    public $filters = [];
+    public $collapseFilters = false;
+
     public $rules = [
         'name' => 'required|string|max:255',
         'code' => 'required|string|max:255',
@@ -79,7 +83,30 @@ class DiscountsList extends Component
 
     public function render()
     {
-        $discounts = $this->discountService->list(perPage : 10 , orderByDesc: 'id');
+        if ($this->export == 'excel') {
+            $discounts = $this->discountService->list(filter : $this->filters , orderByDesc: 'id');
+
+            $data = $discounts->map(function ($discount, $loop) {
+                #	Name	Code	Value	Start Date	End Date	Status
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $discount->name,
+                    'code' => $discount->code,
+                    'value' => $discount->type == 'fixed' ? number_format($discount->value, 2) : (number_format($discount->value, 2) . '%'),
+                    'start_date' => $discount->start_date ? carbon($discount->start_date)->format('Y-m-d') : 'N/A',
+                    'end_date' => $discount->end_date ? carbon($discount->end_date)->format('Y-m-d') : 'N/A',
+                    'status' => $discount->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'code', 'value', 'start_date', 'end_date', 'status'];
+            $headers = ['#', 'Name', 'Code', 'Value', 'Start Date', 'End Date', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'discounts');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $discounts = $this->discountService->list(perPage : 10 , orderByDesc: 'id', filter : $this->filters);
         $branches = $this->branchService->activeList();
 
         return layoutView('discounts.discounts-list', get_defined_vars())

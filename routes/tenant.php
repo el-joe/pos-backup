@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\GeneralController;
+use App\Http\Middleware\AdminTranslationMiddleware;
 use App\Http\Middleware\Tenant\AdminAuthMiddleware;
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Admins\AdminsList;
@@ -92,6 +93,7 @@ Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
+    AdminTranslationMiddleware::class,
 ])->group(function () {
 
     Route::redirect('/','admin/login');
@@ -235,6 +237,16 @@ Route::middleware([
             Route::get('roles/{id?}',RoleDetails::class)->name('roles.show');
         });
     });
+
+
+    Route::get('change-language/{lang}', function($lang){
+        if($lang == 'ar'){
+            session()->put('locale','ar');
+        } else {
+            session()->put('locale','en');
+        }
+    })->name('change.language');
+
 });
 
 Route::get('download-file', function () {
@@ -249,8 +261,8 @@ Route::get('download-file', function () {
 
 // Features to add later
 // Every Cashier Has Branch Restriction --------- #Done
-// Filters into all list pages
-// Export/Import Excel,CSV,PDF
+// Filters into all list pages --------- #Done
+// Export/Import Excel,CSV,PDF --------- #Done
 // Translation System
 // Notification System
 // Invoice Customization (Logo,Color,Text)

@@ -2,7 +2,7 @@
     <div class="card shadow-sm border-0 bg-dark text-light mb-4">
         <div class="card-header d-flex align-items-center justify-content-between">
             <h4 class="mb-0">
-                <i class="fa fa-warning me-2"></i> Inventory Losses
+                <i class="fa fa-warning me-2"></i> {{ __('general.pages.reports.inventory.shortage.title') }}
             </h4>
         </div>
 
@@ -11,10 +11,10 @@
                 <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
                     <thead class="table-primary text-dark">
                         <tr>
-                            <th>Product</th>
-                            <th>Branch</th>
-                            <th>Shortage Quantity</th>
-                            <th>Shortage Value</th>
+                            <th>{{ __('general.pages.reports.inventory.shortage.product') }}</th>
+                            <th>{{ __('general.pages.reports.inventory.shortage.branch') }}</th>
+                            <th>{{ __('general.pages.reports.inventory.shortage.shortage_quantity') }}</th>
+                            <th>{{ __('general.pages.reports.inventory.shortage.shortage_value') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,12 +35,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center text-muted">No inventory shortage data found.</td>
+                                <td colspan="4" class="text-center text-muted">{{ __('general.pages.reports.inventory.shortage.no_data') }}</td>
                             </tr>
                         @endforelse
                         @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-semibold">
-                                <td>Total</td>
+                                <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td></td>
                                 <td>{{ $total_qty }}</td>
                                 <td>{{ number_format($total_value, 2) }}</td>

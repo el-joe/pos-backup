@@ -1,9 +1,9 @@
 <div class="col-12">
     <div class="card shadow-sm mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">Roles</h3>
+            <h3 class="card-title mb-0">{{ __('general.pages.roles.roles') }}</h3>
             <a class="btn btn-primary" href="{{ route('admin.roles.show','create') }}">
-                <i class="fa fa-plus"></i> New Role
+                <i class="fa fa-plus"></i> {{ __('general.pages.roles.new_role') }}
             </a>
         </div>
 
@@ -12,12 +12,12 @@
                 <table class="table table-striped table-bordered align-middle mb-0">
                     <thead class="table-dark">
                         <tr>
-                            <th>#</th>
-                            <th>Role</th>
-                            <th>Members</th>
-                            <th>Created At</th>
-                            <th>Status</th>
-                            <th class="text-center" style="width: 80px;">Actions</th>
+                            <th>{{ __('general.pages.roles.id') }}</th>
+                            <th>{{ __('general.pages.roles.role') }}</th>
+                            <th>{{ __('general.pages.roles.members') }}</th>
+                            <th>{{ __('general.pages.roles.created_at') }}</th>
+                            <th>{{ __('general.pages.roles.status') }}</th>
+                            <th class="text-center" style="width: 80px;">{{ __('general.pages.roles.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,14 +29,14 @@
                             <td>{{ $role->created_at->format('D, d M Y - h:i A') }}</td>
                             <td>
                                 <span class="badge bg-{{ $role->active == 1 ? 'success' : 'danger' }}">
-                                    {{ $role->active == 1 ? 'Active' : 'Inactive' }}
+                                    {{ $role->active == 1 ? __('general.pages.roles.active') : __('general.pages.roles.inactive') }}
                                 </span>
                             </td>
                             <td class="text-center">
-                                <a href="{{ route('admin.roles.show', $role->id) }}" class="btn btn-sm btn-primary" title="Edit">
+                                <a href="{{ route('admin.roles.show', $role->id) }}" class="btn btn-sm btn-primary" title="{{ __('general.pages.admins.edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <button type="button" class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $role->id }})" title="Delete">
+                                <button type="button" class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $role->id }})" title="{{ __('general.pages.admins.delete') }}">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>

@@ -100,7 +100,7 @@
                 <div class="menu-badge bg-theme"></div>
             </a>
             <div class="dropdown-menu dropdown-menu-end mt-1 w-300px fs-11px pt-1">
-                <h6 class="dropdown-header fs-10px mb-1">NOTIFICATIONS</h6>
+                <h6 class="dropdown-header fs-10px mb-1">{{ __('general.layout.notifications') }}</h6>
                 <div class="dropdown-divider mt-1"></div>
                 <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
                     <div class="fs-20px">
@@ -173,7 +173,7 @@
         @endphp
 
         <select id="branch-switcher" class="" style="display:inline-block; width:auto; min-width:180px;">
-            <option value="">All Branches</option>
+            <option value="">{{ __('general.layout.all_branches') }}</option>
             @foreach($__branches as $b)
                 <option value="{{ $b->id }}" @if($currentBranch == $b->id) selected @endif>{{ $b->name }}</option>
             @endforeach
@@ -191,7 +191,7 @@
                 <a class="dropdown-item d-flex align-items-center" href="calendar.html">CALENDAR <i class="bi bi-calendar ms-auto text-theme fs-16px my-n1"></i></a>
                 <a class="dropdown-item d-flex align-items-center" href="settings.html">SETTINGS <i class="bi bi-gear ms-auto text-theme fs-16px my-n1"></i></a>
                 <div class="dropdown-divider"></div> --}}
-                <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">LOGOUT <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
+                <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.logout') }}">{{ __('general.layout.logout') }} <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
             </div>
         </div>
 
@@ -203,7 +203,7 @@
         <div class="menu-search-container">
             <div class="menu-search-icon"><i class="bi bi-search"></i></div>
             <div class="menu-search-input">
-                <input type="text" class="form-control form-control-lg" placeholder="Search menu...">
+                <input type="text" class="form-control form-control-lg" placeholder="{{ __('general.layout.search') }} ...">
             </div>
             <div class="menu-search-icon">
                 <a href="#" data-toggle-class="app-header-menu-search-toggled" data-toggle-target=".app"><i class="bi bi-x-lg"></i></a>

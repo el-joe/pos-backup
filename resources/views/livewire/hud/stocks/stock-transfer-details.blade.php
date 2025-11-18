@@ -2,64 +2,64 @@
 <div class="col-12">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fa fa-exchange-alt me-2"></i> Stock Transfer #{{ $id }}</h5>
+            <h5 class="mb-0"><i class="fa fa-exchange-alt me-2"></i> {{ __('general.titles.stock-transfers') }} #{{ $id }}</h5>
         </div>
         <div class="card-body">
 
-            <!-- Nav Tabs -->
+            <!-- Refund Modal -->
             <ul class="nav nav-tabs mb-4" role="tablist">
                 <li class="nav-item">
                     <button class="nav-link {{ $activeTab === 'details' ? 'active' : '' }}" wire:click="$set('activeTab', 'details')" data-bs-toggle="tab" data-bs-target="#detailsTab" type="button" role="tab">
-                        <i class="fa fa-info-circle me-1"></i> Details
-                    </button>
+                        <i class="fa fa-info-circle me-1"></i> {{ __('general.pages.stock-transfers.details_tab') }}
+                            <h5 class="modal-title mx-auto"><i class="fa fa-undo"></i> {{ __('general.pages.purchases.refund_item') }}</h5>
                 </li>
                 <li class="nav-item">
                     <button class="nav-link {{ $activeTab === 'products' ? 'active' : '' }}" wire:click="$set('activeTab', 'products')" data-bs-toggle="tab" data-bs-target="#productsTab" type="button" role="tab">
-                        <i class="fa fa-cubes me-1"></i> Products
+                        <i class="fa fa-cubes me-1"></i> {{ __('general.pages.stock-transfers.products_tab') }}
                     </button>
                 </li>
-                <li class="nav-item">
-                    <button class="nav-link {{ $activeTab === 'expenses' ? 'active' : '' }}" wire:click="$set('activeTab', 'expenses')" data-bs-toggle="tab" data-bs-target="#expensesTab" type="button" role="tab">
-                        <i class="fa fa-money-bill-wave me-1"></i> Expenses
+                                    <p class="mb-1">{{ __('general.pages.purchases.about_to_refund') }}</p>
+                                    <strong class="refund-product-name">{{ $currentItem?->product?->name }}</strong>
+                        <i class="fa fa-money-bill-wave me-1"></i> {{ __('general.pages.stock-transfers.expenses_tab') }}
                     </button>
                 </li>
-            </ul>
+                                <label for="refundQty"><strong>{{ __('general.pages.purchases.quantity_to_refund') }}</strong></label>
 
-            <!-- Tab Content -->
+                                <small class="form-text text-muted">{{ __('general.pages.purchases.max_refundable') }} {{ $currentItem?->actual_qty ?? 1 }}</small>
             <div class="tab-content">
 
                 <!-- Details Tab -->
-                <div class="tab-pane fade {{ $activeTab === 'details' ? 'show active' : '' }}" id="detailsTab" role="tabpanel">
-                    <h5 class="mb-3"><i class="fa fa-info-circle me-2"></i> Stock Transfer Details</h5>
-
-                    <div class="row g-3">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('general.pages.stock-transfers.cancel') }}</button>
+                    <h5 class="mb-3"><i class="fa fa-info-circle me-2"></i> {{ __('general.pages.stock-transfers.stock_transfer_details') }}</h5>
+                            <button type="button" class="btn btn-danger" wire:click="refundPurchaseItem">
+                                <i class="fa fa-check"></i> {{ __('general.pages.purchases.confirm_refund') }}
                         <div class="col-md-3">
                             <div class="border rounded p-3 bg-dark text-light">
-                                <h6><i class="fa fa-building me-2"></i>From Branch</h6>
+                                <h6><i class="fa fa-building me-2"></i>{{ __('general.pages.stock-transfers.from_branch') }}</h6>
                                 <p class="mb-0">{{ $stockTransfer->fromBranch?->name ?? 'N/A' }}</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="border rounded p-3 bg-dark text-light">
-                                <h6><i class="fa fa-building me-2"></i>To Branch</h6>
+                                <h6><i class="fa fa-building me-2"></i>{{ __('general.pages.stock-transfers.to_branch') }}</h6>
                                 <p class="mb-0">{{ $stockTransfer->toBranch?->name ?? 'N/A' }}</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="border rounded p-3 bg-dark text-light">
-                                <h6><i class="fa fa-hashtag me-2"></i>Ref No.</h6>
+                                <h6><i class="fa fa-hashtag me-2"></i>{{ __('general.pages.stock-transfers.ref_no') }}</h6>
                                 <p class="mb-0">{{ $stockTransfer->ref_no ?? 'N/A' }}</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="border rounded p-3 bg-dark text-light">
-                                <h6><i class="fa fa-calendar me-2"></i>Transfer Date</h6>
+                                <h6><i class="fa fa-calendar me-2"></i>{{ __('general.pages.stock-transfers.transfer_date') }}</h6>
                                 <p class="mb-0">{{ carbon($stockTransfer->transfer_date)->format('F j, Y') ?? 'N/A' }}</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="border rounded p-3 bg-dark text-light">
-                                <h6><i class="fa fa-info-circle me-2"></i>Status</h6>
+                                <h6><i class="fa fa-info-circle me-2"></i>{{ __('general.pages.stock-transfers.status') }}</h6>
                                 <p class="mb-0">{{ $stockTransfer->status->label() ?? 'N/A' }}</p>
                             </div>
                         </div>
@@ -68,17 +68,17 @@
 
                 <!-- Products Tab -->
                 <div class="tab-pane fade {{ $activeTab === 'products' ? 'show active' : '' }}" id="productsTab" role="tabpanel">
-                    <h5 class="mb-3"><i class="fa fa-cubes me-2"></i> Transferred Products</h5>
+                    <h5 class="mb-3"><i class="fa fa-cubes me-2"></i> {{ __('general.pages.stock-transfers.transferred_products') }}</h5>
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Unit</th>
-                                    <th>Qty</th>
-                                    <th>Unit Price</th>
-                                    <th>Selling Price</th>
+                                    <th>{{ __('general.pages.stock-transfers.product') }}</th>
+                                    <th>{{ __('general.pages.stock-transfers.unit') }}</th>
+                                    <th>{{ __('general.pages.stock-transfers.qty') }}</th>
+                                    <th>{{ __('general.pages.stock-transfers.unit_price') }}</th>
+                                    <th>{{ __('general.pages.stock-transfers.selling_price') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,16 +98,16 @@
 
                 <!-- Expenses Tab -->
                 <div class="tab-pane fade {{ $activeTab === 'expenses' ? 'show active' : '' }}" id="expensesTab" role="tabpanel">
-                    <h5 class="mb-3"><i class="fa fa-money-bill-wave me-2"></i> Stock Transfer Expenses</h5>
+                    <h5 class="mb-3"><i class="fa fa-money-bill-wave me-2"></i> {{ __('general.pages.stock-transfers.stock_transfer_expenses') }}</h5>
 
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Expense Date</th>
-                                    <th class="text-center">Action</th>
+                                    <th>{{ __('general.pages.stock-transfers.description') }}</th>
+                                    <th>{{ __('general.pages.stock-transfers.amount') }}</th>
+                                    <th>{{ __('general.pages.stock-transfers.expense_date') }}</th>
+                                    <th class="text-center">{{ __('general.pages.stock-transfers.action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>

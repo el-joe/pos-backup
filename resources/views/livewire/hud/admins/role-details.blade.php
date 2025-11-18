@@ -6,20 +6,20 @@
             <div class="card shadow-sm mb-4 border-primary">
                 <div class="card-header bg-primary text-white text-center">
                     <h3 class="card-title mb-0">
-                        <i class="fa fa-lock"></i> Role Details
+                        <i class="fa fa-lock"></i> {{ __('general.pages.roles.role_details') }}
                     </h3>
                 </div>
 
                 <div class="card-body">
                     <!-- Role Name -->
                     <div class="mb-4">
-                        <label for="roleName" class="form-label fw-semibold">Role Name</label>
+                        <label for="roleName" class="form-label fw-semibold">{{ __('general.pages.roles.role_name') }}</label>
                         <input type="text"
                                class="form-control"
                                id="roleName"
                                name="roleName"
                                wire:model.lazy="data.roleName"
-                               placeholder="Enter role name">
+                               placeholder="{{ __('general.pages.roles.enter_role_name') }}">
                     </div>
 
                     <hr class="my-4">
@@ -28,7 +28,7 @@
                     <div class="card border-0 shadow-sm bg-light mb-4">
                         <div class="card-header bg-secondary">
                             <h4 class="card-title mb-0">
-                                <i class="fa fa-list-ul"></i> Permissions List
+                                <i class="fa fa-list-ul"></i> {{ __('general.pages.roles.permissions_list') }}
                             </h4>
                         </div>
 
@@ -84,10 +84,10 @@
                     <!-- Action Buttons -->
                     <div class="text-center mt-4">
                         <button class="btn btn-success me-2" wire:click="save">
-                            <i class="fa fa-save"></i> Save Role
+                            <i class="fa fa-save"></i> {{ __('general.pages.roles.save_role') }}
                         </button>
                         <button type="reset" class="btn btn-secondary">
-                            <i class="fa fa-times"></i> Cancel
+                            <i class="fa fa-times"></i> {{ __('general.pages.roles.cancel') }}
                         </button>
                     </div>
                 </div>

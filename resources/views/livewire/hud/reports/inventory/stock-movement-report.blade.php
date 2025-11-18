@@ -3,7 +3,7 @@
         <div class="card shadow-sm border-0 bg-dark text-light">
             <div class="card-header d-flex align-items-center">
                 <i class="fa fa-exchange me-2 text-info"></i>
-                <h5 class="mb-0">Item Inflow / Outflow / Adjustments</h5>
+                <h5 class="mb-0">{{ __('general.pages.reports.inventory.stock_movement.title') }}</h5>
             </div>
 
             <div class="card-body p-0">
@@ -11,10 +11,10 @@
                     <table class="table table-dark table-hover table-striped align-middle mb-0">
                         <thead class="table-light text-dark">
                             <tr>
-                                <th>Product</th>
-                                <th>Inflow (Purchases)</th>
-                                <th>Outflow (Sales)</th>
-                                <th>Adjustments</th>
+                                <th>{{ __('general.pages.reports.inventory.stock_movement.product') }}</th>
+                                <th>{{ __('general.pages.reports.inventory.stock_movement.inflow_purchases') }}</th>
+                                <th>{{ __('general.pages.reports.inventory.stock_movement.outflow_sales') }}</th>
+                                <th>{{ __('general.pages.reports.inventory.stock_movement.adjustments') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,12 +37,12 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted">No stock movement found.</td>
+                                    <td colspan="4" class="text-center text-muted">{{ __('general.pages.reports.inventory.stock_movement.no_data') }}</td>
                                 </tr>
                             @endforelse
                             @if(count($report))
                                 <tr class="fw-semibold bg-success bg-opacity-25">
-                                    <td>Total</td>
+                                    <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_inflow }}</td>
                                     <td>{{ $total_outflow }}</td>
                                     <td>{{ $total_adjustment }}</td>

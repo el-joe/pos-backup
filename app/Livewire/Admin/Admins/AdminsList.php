@@ -18,6 +18,10 @@ class AdminsList extends Component
     public $current;
     public $data = [];
 
+    public $collapseFilters = false;
+    public $filters = [];
+    public $export = null;
+
     public $rules = [
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:admins,email|max:255',
@@ -90,7 +94,29 @@ class AdminsList extends Component
 
     public function render()
     {
-        $admins = $this->adminService->activeList();
+        $admins = $this->adminService->activeList(filter : $this->filters);
+
+        if ($this->export == 'excel') {
+            #	Name	Phone	Email	Type	Branch	Active
+            $data = $admins->map(function ($admin, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $admin->name,
+                    'phone' => $admin->phone,
+                    'email' => $admin->email,
+                    'type' => ucfirst(str_replace('_', ' ', $admin->type)),
+                    'branch' => $admin->branch?->name ?? 'N/A',
+                    'active' => $admin->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'phone', 'email','type', 'branch', 'active'];
+            $headers = ['#', 'Name', 'Phone', 'Email', 'Type', 'Branch', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'branches');
+
+            $this->redirectToDownload($fullPath);
+        }
+
         $branches = $this->branchService->activeList();
         $roles = Role::whereActive(1)->get();
 

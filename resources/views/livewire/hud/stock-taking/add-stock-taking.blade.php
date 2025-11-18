@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="card shadow-sm mb-4">
         <div class="card-header">
-            <h3 class="card-title mb-0">Add Stock Take</h3>
+            <h3 class="card-title mb-0">{{ __('general.pages.stock-taking.add_stock_take') }}</h3>
         </div>
 
         <div class="card-body">
@@ -11,15 +11,15 @@
                     <div class="card section-card">
                         <div class="card-body">
                             <h4 class="section-title">
-                                <i class="fa fa-info-circle text-primary me-2"></i> Details
+                                <i class="fa fa-info-circle text-primary me-2"></i> {{ __('general.pages.stock-taking.details') }}
                             </h4>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="branch_id" class="form-label">Branch</label>
+                                        <label for="branch_id" class="form-label">{{ __('general.pages.stock-taking.branch') }}</label>
                                         @if(admin()->branch_id == null)
                                         <select id="branch_id" class="form-select" wire:model.live="data.branch_id">
-                                            <option value="">Select Branch</option>
+                                            <option value="">{{ __('general.pages.stock-taking.select_branch') }}</option>
                                             @foreach($branches as $branch)
                                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                             @endforeach
@@ -32,15 +32,15 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="date" class="form-label">Date</label>
+                                        <label for="date" class="form-label">{{ __('general.pages.stock-taking.date') }}</label>
                                         <input type="date" id="date" class="form-control" wire:model="data.date">
                                     </div>
                                 </div>
 
                                 <div class="col-12">
                                     <div class="mb-3">
-                                        <label for="note" class="form-label">Note</label>
-                                        <textarea id="note" class="form-control" wire:model="data.note" placeholder="Optional note"></textarea>
+                                        <label for="note" class="form-label">{{ __('general.pages.stock-taking.note') }}</label>
+                                        <textarea id="note" class="form-control" wire:model="data.note" placeholder="{{ __('general.pages.stock-taking.optional_note') }}"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +59,7 @@
                     <div class="card section-card">
                         <div class="card-body">
                             <h4 class="section-title">
-                                <i class="fa fa-cubes text-success me-2"></i> Products
+                                <i class="fa fa-cubes text-success me-2"></i> {{ __('general.pages.stock-taking.products') }}
                             </h4>
 
                             @if($data['branch_id'] ?? false)
@@ -70,7 +70,7 @@
                                             type="text"
                                             class="form-control"
                                             id="product_search"
-                                            placeholder="Search Product by name/code/sku"
+                                            placeholder="{{ __('general.pages.stock-taking.search_product_placeholder') }}"
                                             onkeydown="productSearchEvent(event)"
                                         >
                                     </div>
@@ -81,14 +81,14 @@
                                         <table class="table table-bordered table-hover align-middle">
                                             <thead class="">
                                                 <tr>
-                                                    <th>Product</th>
-                                                    <th>Unit</th>
-                                                    <th>Current Stock</th>
-                                                    <th>Actual Stock</th>
-                                                    <th>Difference</th>
-                                                    <th>Total Cost</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th>{{ __('general.pages.stock-taking.product') }}</th>
+                                                    <th>{{ __('general.pages.stock-taking.unit') }}</th>
+                                                    <th>{{ __('general.pages.stock-taking.current_stock') }}</th>
+                                                    <th>{{ __('general.pages.stock-taking.actual_stock') }}</th>
+                                                    <th>{{ __('general.pages.stock-taking.difference') }}</th>
+                                                    <th>{{ __('general.pages.stock-taking.total_cost') }}</th>
+                                                    <th>{{ __('general.pages.stock-taking.status') }}</th>
+                                                    <th>{{ __('general.pages.stock-taking.action') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -109,15 +109,15 @@
 
                                                                     if($difference > 0) {
                                                                         $badgeClass = 'bg-success';
-                                                                        $status = 'Surplus';
+                                                                        $status = __('general.pages.stock-taking.surplus');
                                                                         $sign = '+';
                                                                     } elseif($difference < 0) {
                                                                         $badgeClass = 'bg-danger';
-                                                                        $status = 'Shortage';
+                                                                        $status = __('general.pages.stock-taking.shortage');
                                                                         $sign = '';
                                                                     } else {
                                                                         $badgeClass = 'bg-secondary';
-                                                                        $status = 'No Change';
+                                                                        $status = __('general.pages.stock-taking.no_change');
                                                                         $sign = '';
                                                                     }
                                                                 @endphp
@@ -129,7 +129,7 @@
                                                             </td>
                                                             <td>
                                                                 <button class="btn btn-sm btn-danger" wire:click="removeProductStock({{ $unit['product_id'] }}, {{ $unit['unit_id'] }})">
-                                                                    <i class="fa fa-trash"></i> Remove
+                                                                    <i class="fa fa-trash"></i> {{ __('general.pages.stock-taking.remove') }}
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -140,7 +140,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="alert alert-info">Select a branch to view products.</div>
+                                <div class="alert alert-info">{{ __('general.pages.stock-taking.select_branch_to_view_products') }}</div>
                             @endif
                         </div>
                         <div class="card-arrow">
@@ -157,7 +157,7 @@
                     <button class="btn btn-primary save-stock-btn"
                         wire:click="save"
                         @if(!($data['branch_id'] ?? false) || count($stocks) == 0) disabled @endif>
-                        <i class="fa fa-save"></i> Save Stock Take
+                        <i class="fa fa-save"></i> {{ __('general.pages.stock-taking.save_stock_take') }}
                     </button>
                 </div>
             </div>

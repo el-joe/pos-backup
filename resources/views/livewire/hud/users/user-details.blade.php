@@ -1,13 +1,13 @@
 <div class="col-12">
     <div class="card shadow-sm position-relative">
         @if(!!$user->active)
-            <span class="badge bg-success position-absolute top-0 end-0 m-3">Active</span>
+            <span class="badge bg-success position-absolute top-0 end-0 m-3">{{ __('general.pages.users.active') }}</span>
         @else
-            <span class="badge bg-danger position-absolute top-0 end-0 m-3">Not Active</span>
+            <span class="badge bg-danger position-absolute top-0 end-0 m-3">{{ __('general.pages.users.not_active') }}</span>
         @endif
 
         <div class="card-header">
-            <h5 class="mb-0">{{ $user->name }}'s Profile</h5>
+            <h5 class="mb-0">{{ $user->name }} - {{ __('general.pages.users.profile') }}</h5>
         </div>
 
         <div class="card-body">
@@ -22,7 +22,7 @@
                         role="tab"
                         aria-controls="details"
                         aria-selected="{{ $activeTab === 'details' ? 'true' : 'false' }}">
-                        <i class="fa fa-user me-1"></i> Details
+                        <i class="fa fa-user me-1"></i> {{ __('general.pages.users.details_tab') }}
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -34,7 +34,7 @@
                         role="tab"
                         aria-controls="accounts"
                         aria-selected="{{ $activeTab === 'accounts' ? 'true' : 'false' }}">
-                        <i class="fa fa-credit-card me-1"></i> Accounts
+                        <i class="fa fa-credit-card me-1"></i> {{ __('general.pages.users.accounts_tab') }}
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -46,7 +46,7 @@
                         role="tab"
                         aria-controls="transactions"
                         aria-selected="{{ $activeTab === 'transactions' ? 'true' : 'false' }}">
-                        <i class="fa fa-exchange me-1"></i> Transactions
+                        <i class="fa fa-exchange me-1"></i> {{ __('general.pages.users.transactions_tab') }}
                     </button>
                 </li>
             </ul>
@@ -57,19 +57,19 @@
                 <div class="tab-pane fade {{ $activeTab === 'details' ? 'show active' : '' }}" id="details" role="tabpanel" aria-labelledby="details-tab">
                     <div class="row g-3">
                         <div class="col-md-3 col-6 border-end">
-                            <strong>Full Name</strong>
+                            <strong>{{ __('general.pages.users.full_name') }}</strong>
                             <p class="text-muted mb-0">{{ $user->name }}</p>
                         </div>
                         <div class="col-md-3 col-6 border-end">
-                            <strong>Mobile</strong>
+                            <strong>{{ __('general.pages.users.mobile') }}</strong>
                             <p class="text-muted mb-0">{{ $user->phone }}</p>
                         </div>
                         <div class="col-md-3 col-6 border-end">
-                            <strong>Email</strong>
+                            <strong>{{ __('general.pages.users.email') }}</strong>
                             <p class="text-muted mb-0">{{ $user->email }}</p>
                         </div>
                         <div class="col-md-3 col-6">
-                            <strong>Address</strong>
+                            <strong>{{ __('general.pages.users.address') }}</strong>
                             <p class="text-muted mb-0">{{ $user->address }}</p>
                         </div>
                     </div>
@@ -90,11 +90,11 @@
                 <div class="tab-pane fade {{ $activeTab === 'transactions' ? 'show active' : '' }}" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4>Come on, you have a lot of messages</h4>
-                            <p class="text-muted">You can use it with a small piece of code.</p>
+                            <h4>{{ __('general.pages.users.details_intro_title') }}</h4>
+                            <p class="text-muted">{{ __('general.pages.users.details_intro_text') }}</p>
                         </div>
                         <div class="col-md-6 text-end">
-                            <p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a.</p>
+                            <p>{{ __('general.pages.users.details_intro_side') }}</p>
                         </div>
                     </div>
                 </div>

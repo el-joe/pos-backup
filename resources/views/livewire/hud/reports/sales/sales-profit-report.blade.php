@@ -5,16 +5,16 @@
             <div class="card shadow-sm border-0 bg-dark text-light">
                 <div class="card-header d-flex align-items-center">
                     <i class="fa fa-filter me-2"></i>
-                    <strong>Filter Options</strong>
+                    <strong>{{ __('general.pages.reports.common.filter_options') }}</strong>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label text-light">From Date</label>
+                            <label class="form-label text-light">{{ __('general.pages.reports.common.from_date') }}</label>
                             <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="from_date">
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label text-light">To Date</label>
+                            <label class="form-label text-light">{{ __('general.pages.reports.common.to_date') }}</label>
                             <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="to_date">
                         </div>
                     </div>
@@ -33,18 +33,18 @@
             <div class="card shadow-sm border-0 bg-dark text-light">
                 <div class="card-header d-flex align-items-center">
                     <i class="fa fa-chart-line me-2"></i>
-                    <h5 class="mb-0">Sales Profit</h5>
+                    <h5 class="mb-0">{{ __('general.pages.reports.sales.profit.title') }}</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-dark table-striped table-hover mb-0 align-middle">
                             <thead class="table-light text-dark">
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Sales Revenue</th>
-                                    <th>COGS</th>
-                                    <th>Gross Profit</th>
-                                    <th>Margin (%)</th>
+                                    <th>{{ __('general.pages.reports.sales.product.product') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.sales_revenue') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.cogs') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.gross_profit') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.margin_percentage') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,13 +69,13 @@
                                 @empty
                                     <tr>
                                         <td colspan="5" class="text-center text-muted py-3">
-                                            No sales profit data found for selected period.
+                                            {{ __('general.pages.reports.sales.profit.no_data') }}
                                         </td>
                                     </tr>
                                 @endforelse
                                 @if(count($report))
                                     <tr class="bg-success text-dark fw-bold">
-                                        <td>Total</td>
+                                        <td>{{ __('general.pages.reports.common.total') }}</td>
                                         <td>{{ number_format($total_revenue, 2) }}</td>
                                         <td>{{ number_format($total_cogs, 2) }}</td>
                                         <td>{{ number_format($total_profit, 2) }}</td>

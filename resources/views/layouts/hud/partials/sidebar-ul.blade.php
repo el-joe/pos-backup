@@ -25,7 +25,7 @@
         <span class="menu-icon">
             <i class="{{$data['icon']}}"></i>
         </span>
-        <span class="menu-text">{{$data['title']}}</span>
+        <span class="menu-text">{{__($data['translated_title'])}}</span>
         <span class="menu-caret"><b class="caret"></b></span>
     </a>
     <div class="menu-submenu">
@@ -41,7 +41,7 @@
     <div class="menu-item {{ request()->routeIs($data['route']) && $checkRouteParams ? 'active' : '' }}  mb-1">
         <a href="{{ $data['route'] == "#" ? "#" : route($data['route'],$data['route_params']??null) }}" class="menu-link">
             <span class="menu-icon"><i class="{{$data['icon']}}"></i></span>
-            <span class="menu-text">{{$data['title']}}</span>
+            <span class="menu-text">{{__($data['translated_title'])}}</span>
         </a>
     </div>
 @endif

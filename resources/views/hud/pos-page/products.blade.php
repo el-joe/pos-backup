@@ -9,7 +9,7 @@
                         <a class="nav-link active" href="#" data-filter="all">
                             <div class="card">
                                 <div class="card-body">
-                                    <i class="fa fa-fw fa-hamburger"></i> All
+                                    <i class="fa fa-fw fa-hamburger"></i> {{ __('general.pages.pos-page.all') }}
                                 </div>
                                 <div class="card-arrow">
                                     <div class="card-arrow-top-left"></div>
@@ -85,7 +85,7 @@
                     <button type="button" data-toggle-class="pos-mobile-sidebar-toggled" data-toggle-target="#pos" class="btn">
                         <i class="bi bi-chevron-left"></i>
                     </button>
-					<div class="title">Cart</div>
+					<div class="title">{{ __('general.pages.pos-page.cart') }}</div>
                 </div>
             </div>
             <!-- BEGIN pos-sidebar-body -->
@@ -99,7 +99,7 @@
                                 <div class="flex-1">
                                     <div class="h6 mb-1">{{ $dataProduct['product_name'] }}</div>
                                     <div class="small">${{ $dataProduct['sell_price'] }}</div>
-                                    <div class="small mb-2">- unit: {{ $dataProduct['unit_name'] }}</div>
+                                    <div class="small mb-2">- {{ __('general.pages.pos-page.unit') }}: {{ $dataProduct['unit_name'] }}</div>
                                     <div class="d-flex">
                                         <a href="#" class="btn btn-outline-theme btn-sm" wire:click="updateQty({{ $key }} , -1)"><i class="fa fa-minus"></i></a>
                                         <input type="text" class="form-control w-50px form-control-sm mx-2 bg-white bg-opacity-25 text-center" wire:model="data.products.{{ $key }}.quantity" >
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="text-center text-danger">No items in cart</div>
+                        <div class="text-center text-danger">{{ __('general.pages.pos-page.no_items_in_cart') }}</div>
                     @endforelse
                 </div>
                 <!-- END #orderHistoryTab -->
@@ -122,7 +122,7 @@
             <!-- BEGIN pos-sidebar-footer -->
             <div class="pos-sidebar-footer">
                 <div class="d-flex align-items-center mb-2">
-                    <div>Subtotal</div>
+                    <div>{{ __('general.pages.pos-page.subtotal') }}</div>
                     <div class="flex-1 text-end h6 mb-0">${{ $subTotal }}</div>
                 </div>
                 @if(!$discount || $discount == 0)
@@ -130,11 +130,11 @@
                         <div class="card-body p-2">
                             <div class="d-flex align-items-center">
                                 <label class="me-2 mb-0 fw-semibold">
-                                    <i class="fa fa-percent me-1 text-theme"></i> Discount
+                                    <i class="fa fa-percent me-1 text-theme"></i> {{ __('general.pages.pos-page.discount') }}
                                 </label>
                                 <input type="text"
                                     class="form-control form-control-sm text-end me-2"
-                                    placeholder="Enter code or amount"
+                                    placeholder="{{ __('general.pages.pos-page.enter_code_or_amount') }}"
                                     wire:model="discountCode">
                                 <button class="btn btn-theme btn-sm" wire:click="validateDiscountCode">
                                     <i class="fa fa-check"></i>
@@ -154,13 +154,13 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <div class="fw-semibold text-success">
-                                        <i class="fa fa-tag me-1"></i> Discount Applied
+                                        <i class="fa fa-tag me-1"></i> {{ __('general.pages.pos-page.discount_applied') }}
                                     </div>
                                     <small class="text-muted">
-                                        Code: <strong>{{ $data['discount']['code'] ?? 'N/A' }}</strong> —
+                                        {{ __('general.pages.pos-page.code') }}: <strong>{{ $data['discount']['code'] ?? 'N/A' }}</strong> —
                                         <span class="text-success">{{ $data['discount']['value'] ?? 0 }}% Off</span>
                                         @if($data['discount']['max_discount_amount'] ?? 0)
-                                            <span class="text-muted">(Max: ${{ $data['discount']['max_discount_amount'] ?? 0 }})</span>
+                                            <span class="text-muted">({{ __('general.pages.pos-page.max') }}: ${{ $data['discount']['max_discount_amount'] ?? 0 }})</span>
                                         @endif
                                     </small>
                                 </div>
@@ -181,23 +181,23 @@
                     </div>
                 @endif
                 <div class="d-flex align-items-center">
-                    <div>Taxes ({{ $taxPercentage }}%)</div>
+                    <div>{{ __('general.pages.pos-page.taxes') }} ({{ $taxPercentage }}%)</div>
                     <div class="flex-1 text-end h6 mb-0">${{ $tax }}</div>
                 </div>
                 <hr>
                 <div class="d-flex align-items-center mb-2">
-                    <div>Total</div>
+                    <div>{{ __('general.pages.pos-page.total') }}</div>
                     <div class="flex-1 text-end h4 mb-0">${{ $total }}</div>
                 </div>
                 <div class="mt-3">
                     <div class="btn-group d-flex">
                         <a href="#" class="btn btn-outline-default rounded-0 w-80px" wire:click="$set('step', 1)">
                             <i class="bi bi-arrow-left-circle fa-lg"></i><br>
-                            <span class="small">Previous</span>
+                            <span class="small">{{ __('general.pages.pos-page.previous') }}</span>
                         </a>
                         <a href="#" class="btn btn-outline-theme rounded-0 w-150px" data-bs-toggle="modal" data-bs-target="#checkoutModal">
                             <i class="bi bi-send-check fa-lg"></i><br>
-                            <span class="small">Submit Order</span>
+                            <span class="small">{{ __('general.pages.pos-page.submit_order') }}</span>
                         </a>
                     </div>
                 </div>

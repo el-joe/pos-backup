@@ -38,4 +38,21 @@ class Discount extends Model
                     ->orWhereDate('end_date', '>=', date('Y-m-d'));
             });
     }
+
+    function scopeFilter($q,$filters = []){
+        return $q->when($filters['search'] ?? null, function($q,$search){
+            $q->whereAny(['name','code'], 'like', "%$search%");
+        })
+        ->when(isset($filters['active']), function($q) use ($filters){
+            if($filters['active'] == 'all') return $q;
+            $q->where('active', $filters['active']);
+        })->when(isset($filters['start_date']) || isset($filters['end_date']), function($q) use ($filters){
+            if(isset($filters['start_date'])) {
+                $q->whereDate('start_date', '>=', $filters['start_date']);
+            }
+            if(isset($filters['end_date'])) {
+                $q->whereDate('end_date', '<=', $filters['end_date']);
+            }
+        });
+    }
 }

@@ -43,6 +43,15 @@ class Admin extends Authenticatable
             $q->where('type',$filters['type']);
         })->when(isset($filters['active']), function($q) use ($filters) {
             $q->where('active',$filters['active']);
+        })
+        ->when(isset($filters['search']), function($q) use ($filters) {
+            $q->whereAny(['name','phone','email'], 'like', '%'.$filters['search'].'%');
+        })
+        ->when(isset($filters['branch_id']), function($q) use ($filters) {
+            if($filters['branch_id'] === 'all') {
+                return $q;
+            }
+            $q->where('branch_id',$filters['branch_id']);
         });
     }
 }

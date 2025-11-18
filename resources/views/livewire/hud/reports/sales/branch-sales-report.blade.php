@@ -3,16 +3,16 @@
     <div class="col-12 mb-4">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-light">
-                <strong><i class="fa fa-filter me-2"></i> Filter Options</strong>
+                <strong><i class="fa fa-filter me-2"></i> {{ __('general.pages.reports.common.filter_options') }}</strong>
             </div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label">From Date</label>
+                        <label class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
                         <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">To Date</label>
+                        <label class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
                         <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
                     </div>
                 </div>
@@ -31,7 +31,7 @@
     <div class="col-12">
         <div class="card shadow-sm border-primary">
             <div class="card-header bg-primary text-white d-flex align-items-center">
-                <h5 class="mb-0"><i class="fa fa-home me-2"></i> Branch Sales</h5>
+                <h5 class="mb-0"><i class="fa fa-home me-2"></i> {{ __('general.pages.reports.sales.branch.title') }}</h5>
             </div>
 
             <div class="card-body p-0">
@@ -39,10 +39,10 @@
                     <table class="table table-bordered table-striped table-hover mb-0 align-middle">
                         <thead class="table-primary">
                             <tr>
-                                <th>Branch</th>
-                                <th>Sale Count</th>
-                                <th>Total Sales</th>
-                                <th>Avg Ticket Size</th>
+                                <th>{{ __('general.pages.reports.sales.branch.branch') }}</th>
+                                <th>{{ __('general.pages.reports.sales.branch.sale_count') }}</th>
+                                <th>{{ __('general.pages.reports.sales.branch.total_sales') }}</th>
+                                <th>{{ __('general.pages.reports.sales.branch.avg_ticket_size') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,12 +69,12 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted">No branch sales found for selected period.</td>
+                                    <td colspan="4" class="text-center text-muted">{{ __('general.pages.reports.sales.branch.no_data') }}</td>
                                 </tr>
                             @endforelse
                             @if(count($report))
                                 <tr class="table-success fw-semibold">
-                                    <td>Total</td>
+                                    <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_count }}</td>
                                     <td>{{ number_format($total_sales, 2) }}</td>
                                     <td>{{ number_format($avg_ticket_size, 2) }}</td>

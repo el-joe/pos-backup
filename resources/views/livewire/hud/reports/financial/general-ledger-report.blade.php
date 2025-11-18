@@ -3,17 +3,17 @@
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light d-flex align-items-center">
             <h5 class="mb-0">
-                <i class="fa fa-filter me-2"></i> Filter Options
+                <i class="fa fa-filter me-2"></i> {{ __('general.pages.reports.common.filter_options') }}
             </h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label fw-semibold">From Date</label>
+                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.from_date') }}</label>
                     <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label fw-semibold">To Date</label>
+                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.to_date') }}</label>
                     <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
                 </div>
             </div>
@@ -30,7 +30,7 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex align-items-center">
             <h5 class="mb-0">
-                <i class="fa fa-book me-2"></i> General Ledger
+                <i class="fa fa-book me-2"></i> {{ __('general.pages.reports.financial.general_ledger.title') }}
             </h5>
         </div>
         <div class="card-body">
@@ -60,7 +60,7 @@
                                             <i class="fa fa-folder-open me-1 text-primary"></i> {{ $account }}
                                         </h5>
                                         <span class="badge bg-info">
-                                            {{ count($report['ledger'][$account] ?? []) }} transactions
+                                            {{ count($report['ledger'][$account] ?? []) }} {{ __('general.pages.reports.financial.general_ledger.transactions') }}
                                         </span>
                                     </div>
 
@@ -68,11 +68,11 @@
                                         <table class="table table-bordered table-hover table-striped mb-0 align-middle">
                                             <thead class="table-primary">
                                                 <tr>
-                                                    <th>Date</th>
-                                                    <th>Txn ID</th>
-                                                    <th>Type</th>
-                                                    <th>Amount</th>
-                                                    <th>Description</th>
+                                                    <th>{{ __('general.pages.reports.financial.general_ledger.date') }}</th>
+                                                    <th>{{ __('general.pages.reports.financial.general_ledger.txn_id') }}</th>
+                                                    <th>{{ __('general.pages.reports.financial.general_ledger.type') }}</th>
+                                                    <th>{{ __('general.pages.reports.financial.general_ledger.amount') }}</th>
+                                                    <th>{{ __('general.pages.reports.financial.general_ledger.description') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -99,7 +99,7 @@
                 </div>
             @else
                 <div class="alert alert-info mb-0">
-                    <i class="fa fa-info-circle me-1"></i> No transactions found for selected period.
+                    <i class="fa fa-info-circle me-1"></i> {{ __('general.pages.reports.financial.general_ledger.no_transactions') }}
                 </div>
             @endif
 

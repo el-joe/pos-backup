@@ -4,22 +4,22 @@
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white d-flex align-items-center">
                 <i class="fa fa-filter me-2"></i>
-                <strong>Filter Options</strong>
+                <strong>{{ __('general.pages.reports.common.filter_options') }}</strong>
             </div>
             <div class="card-body">
                 <form wire:submit.prevent="applyFilter" class="row g-3">
                     <div class="col-md-3">
-                        <label for="from_date" class="form-label">From Date</label>
+                        <label for="from_date" class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
                         <input type="date" id="from_date" wire:model.defer="from_date" class="form-control form-control-sm">
                     </div>
                     <div class="col-md-3">
-                        <label for="to_date" class="form-label">To Date</label>
+                        <label for="to_date" class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
                         <input type="date" id="to_date" wire:model.defer="to_date" class="form-control form-control-sm">
                     </div>
                     <div class="col-md-3">
-                        <label for="branch_id" class="form-label">Branch</label>
+                        <label for="branch_id" class="form-label">{{ __('general.pages.reports.branch_profitability.branch') }}</label>
                         <select id="branch_id" wire:model.defer="branch_id" class="form-select form-select-sm">
-                            <option value="">All Branches</option>
+                            <option value="">{{ __('general.pages.reports.branch_profitability.all_branches') }}</option>
                             @if(function_exists('branches'))
                                 @foreach(branches() as $branch)
                                     <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -29,10 +29,10 @@
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary btn-sm me-2">
-                            <i class="fa fa-check-circle"></i> Apply
+                            <i class="fa fa-check-circle"></i> {{ __('general.pages.reports.common.apply') }}
                         </button>
                         <button type="button" wire:click="resetFilters" class="btn btn-secondary btn-sm">
-                            <i class="fa fa-refresh"></i> Reset
+                            <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
                         </button>
                     </div>
                 </form>
@@ -52,10 +52,10 @@
             <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fa fa-line-chart me-2"></i>
-                    <h5 class="mb-0">Branch Profitability</h5>
+                    <h5 class="mb-0">{{ __('general.pages.reports.branch_profitability.title') }}</h5>
                 </div>
                 <small class="text-warning">
-                    <i class="fa fa-info-circle"></i> Other Income includes (Purchase Discounts)
+                    <i class="fa fa-info-circle"></i> {{ __('general.pages.reports.branch_profitability.filter_other_income_note') }}
                 </small>
             </div>
             <div class="card-body p-0">
@@ -63,12 +63,12 @@
                     <table class="table table-bordered table-striped table-hover mb-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>Branch</th>
-                                <th class="text-end">Sales Revenue</th>
-                                <th class="text-end">COGS</th>
-                                <th class="text-end">Expenses</th>
-                                <th class="text-end">Other Income</th>
-                                <th class="text-end">Net Profit</th>
+                                <th>{{ __('general.pages.reports.branch_profitability.branch') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.branch_profitability.sales_revenue') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.branch_profitability.cogs') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.branch_profitability.expenses') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.branch_profitability.other_income') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.branch_profitability.net_profit') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,14 +108,14 @@
                             @empty
                                 <tr>
                                     <td colspan="6" class="text-center text-muted">
-                                        <i class="fa fa-exclamation-circle"></i> No data found for the selected filters.
+                                        <i class="fa fa-exclamation-circle"></i> {{ __('general.pages.reports.branch_profitability.no_data') }}
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                         <tfoot class="table-light fw-bold">
                             <tr>
-                                <th class="">Totals:</th>
+                                <th class="">{{ __('general.pages.reports.branch_profitability.totals') }}</th>
                                 <th class="text-end">{{ number_format($totals['sales_revenue'], 2) }}</th>
                                 <th class="text-end">{{ number_format($totals['cogs'], 2) }}</th>
                                 <th class="text-end">{{ number_format($totals['expenses'], 2) }}</th>

@@ -3,7 +3,7 @@
     <div class="app-theme-panel-container">
         <a href="javascript:;" data-toggle="theme-panel-expand" class="app-theme-toggle-btn"><i class="bi bi-sliders"></i></a>
         <div class="app-theme-panel-content">
-            <div class="small fw-bold text-inverse mb-1">Display Mode</div>
+            <div class="small fw-bold text-inverse mb-1">{{ __('general.layout.display_mode') }}</div>
             <div class="card mb-3">
                 <!-- BEGIN card-body -->
                 <div class="card-body p-2">
@@ -11,13 +11,13 @@
                         <div class="col-6">
                             <a href="javascript:;" data-toggle="theme-mode-selector" data-theme-mode="dark" class="app-theme-mode-link active">
                                 <div class="img"><img src="{{ asset('hud/assets/img/mode/dark.jpg') }}" class="object-fit-cover" height="76" width="76" alt="Dark Mode"></div>
-                                <div class="text">Dark</div>
+                                <div class="text">{{ __('general.layout.dark_mode') }}</div>
                             </a>
                         </div>
                         <div class="col-6">
                             <a href="javascript:;" data-toggle="theme-mode-selector" data-theme-mode="light" class="app-theme-mode-link">
                                 <div class="img"><img src="{{ asset('hud/assets/img/mode/light.jpg') }}" class="object-fit-cover" height="76" width="76" alt="Light Mode"></div>
-                                <div class="text">Light</div>
+                                <div class="text">{{ __('general.layout.light_mode') }}</div>
                             </a>
                         </div>
                     </div>
@@ -34,19 +34,19 @@
                 <!-- END card-arrow -->
             </div>
 
-            <div class="small fw-bold text-inverse mb-1">Direction Mode</div>
+            <div class="small fw-bold text-inverse mb-1">{{ __('general.layout.language') }}</div>
             <div class="card mb-3">
                 <!-- BEGIN card-body -->
                 <div class="card-body p-2">
                     <div class="row gx-2">
                         <div class="col-6">
-                            <a href="#" class="btn active btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-toggle="theme-direction-selector" data-theme-direction="ltr">
-                                <i class="bi bi-text-left fs-16px my-n1 ms-n2"></i> LTR
+                            <a href="#" class="changeDirection btn active btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-toggle="theme-direction-selector" data-theme-direction="ltr">
+                                <i class="bi bi-text-left fs-16px my-n1 ms-n2"></i> EN
                             </a>
                         </div>
                         <div class="col-6">
-                            <a href="#" class="btn btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-toggle="theme-direction-selector" data-theme-direction="rtl">
-                                <i class="bi bi-text-right fs-16px my-n1 ms-n2"></i> RTL
+                            <a href="#" class="changeDirection btn btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-toggle="theme-direction-selector" data-theme-direction="rtl">
+                                <i class="bi bi-text-right fs-16px my-n1 ms-n2"></i> AR
                             </a>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                 <!-- END card-arrow -->
             </div>
 
-            <div class="small fw-bold text-inverse mb-1">Theme Color</div>
+            <div class="small fw-bold text-inverse mb-1">{{ __('general.layout.theme_color') }}</div>
             <div class="card mb-3">
                 <!-- BEGIN card-body -->
                 <div class="card-body p-2">
@@ -96,7 +96,7 @@
                 <!-- END card-arrow -->
             </div>
 
-            <div class="small fw-bold text-inverse mb-1">Theme Cover</div>
+            <div class="small fw-bold text-inverse mb-1">{{ __('general.layout.theme_cover') }}</div>
             <div class="card">
                 <!-- BEGIN card-body -->
                 <div class="card-body p-2">

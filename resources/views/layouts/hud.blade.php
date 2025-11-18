@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="dark">
 <head>
 	<meta charset="utf-8">
-	<title>HUD | {{ $title ?? '' }}</title>
+	<title>{{ tenant()?->name }} | {{ $title ?? '' }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -38,6 +38,35 @@
         window.addEventListener('download-file', event => {
             window.open(event.detail[0].url, '_blank');
         });
+
+        $(document).ready(function() {
+
+            $('.changeDirection').on('click', function(e) {
+                e.preventDefault();
+                var lang = $(this).data('theme-direction') === 'ltr' ? 'en' : 'ar';
+                changeLanguage(lang);
+            });
+
+            function changeLanguage(lang) {
+                fetch(`/change-language/${lang}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        console.error('Failed to change language');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+
     </script>
 
 </body>

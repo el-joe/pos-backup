@@ -6,13 +6,13 @@
                     <div class="nav-item col" wire:click="$set('step', 1)">
                         <a class="nav-link {{ $step > 0 ? 'completed' : '' }}" href="javascript:void(0);">
                             <div class="nav-no">1</div>
-                            <div class="nav-text">Order Details</div>
+                            <div class="nav-text">{{ __('general.pages.pos-page.order_details') }}</div>
                         </a>
                     </div>
                     <div class="nav-item col" wire:click="$set('step', 2)">
                         <a class="nav-link {{ $step > 1 ? 'completed' : '' }}" href="javascript:void(0);">
                             <div class="nav-no">2</div>
-                            <div class="nav-text">Order Products</div>
+                            <div class="nav-text">{{ __('general.pages.pos-page.order_products') }}</div>
                         </a>
                     </div>
                 </nav>
@@ -22,10 +22,10 @@
                 @if($step == 1)
                 <div class="card-body row g-3">
                     <div class="col-sm-3">
-                        <label for="branchSelect" class="fw-semibold">Branch:</label>
+                        <label for="branchSelect" class="fw-semibold">{{ __('general.pages.pos-page.branch') }}:</label>
                         @if(admin()->branch_id == null)
                             <select class="form-select" id="branchSelect" wire:model.live="data.branch_id">
-                                <option value="">-- Choose Branch --</option>
+                                <option value="">-- {{ __('general.pages.pos-page.branch') }} --</option>
                                 @foreach($branches as $branch)
                                     <option value="{{ $branch->id }}">
                                         {{ $branch->name }} @if($branch->phone) - {{ $branch->phone }} @endif
@@ -41,9 +41,9 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <label for="customerSelect" class="fw-semibold">Customer:</label>
+                        <label for="customerSelect" class="fw-semibold">{{ __('general.pages.pos-page.customer') }}:</label>
                         <select class="form-select" id="customerSelect" wire:model="selectedCustomerId">
-                            <option value="">-- Choose Customer --</option>
+                            <option value="">-- {{ __('general.pages.pos-page.customer') }} --</option>
                             @foreach($customers as $customer)
                                 <option value="{{ $customer->id }}">
                                     {{ $customer->name }} @if($customer->phone) - {{ $customer->phone }} @endif
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <label for="orderDate" class="fw-semibold">Order Date:</label>
+                        <label for="orderDate" class="fw-semibold">{{ __('general.pages.pos-page.order_date') }}:</label>
                         <input type="date" class="form-control" id="orderDate" wire:model="data.order_date">
                         @error('data.order_date')
                             <small class="text-danger">{{ $message }}</small>
@@ -64,13 +64,13 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <label for="invoiceNumber" class="fw-semibold">Invoice Number:</label>
+                        <label for="invoiceNumber" class="fw-semibold">{{ __('general.pages.pos-page.invoice_number') }}:</label>
                         <input type="text" class="form-control" id="invoiceNumber" wire:model="data.invoice_number">
-                        <small class="text-primary">Leave blank for auto-generated</small>
+                        <small class="text-primary">{{ __('general.pages.pos-page.leave_blank_for_auto_generated') }}</small>
                     </div>
 
                     <div class="col-12">
-                        <label for="paymentNote" class="fw-semibold">Payment Note:</label>
+                        <label for="paymentNote" class="fw-semibold">{{ __('general.pages.pos-page.payment_note') }}:</label>
                         <textarea class="form-control" id="paymentNote" wire:model="data.payment_note"></textarea>
                         @error('data.payment_note')
                             <small class="text-danger">{{ $message }}</small>
@@ -79,10 +79,10 @@
 
                     <div class="col-12 text-end">
                         <a onclick="redirectTo('{{ route('admin.sales.index') }}')" href="javascript:" class="btn btn-secondary">
-                            Orders List <i class="bi bi-list-ul fa-lg"></i>
+                            {{ __('general.pages.pos-page.orders_list') }} <i class="bi bi-list-ul fa-lg"></i>
                         </a>
                         <button type="button" class="btn btn-primary" wire:click="$set('step', 2)">
-                            Next <i class="bi bi-arrow-right-circle fa-lg"></i>
+                            {{ __('general.pages.pos-page.next') }} <i class="bi bi-arrow-right-circle fa-lg"></i>
                         </button>
                     </div>
                 </div>
@@ -126,23 +126,23 @@
                 <div class="card shadow-sm mb-0">
                     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 fw-bold" id="checkoutModalLabel">
-                            <i class="fa fa-credit-card me-2"></i> Complete Payment
+                            <i class="fa fa-credit-card me-2"></i> {{ __('general.pages.pos-page.complete_payment') }}
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
                     <div class="card-body">
                         <div class="alert alert-info mb-4">
-                            <strong><i class="fa fa-money-bill me-1"></i> Order Total:</strong> ${{ $total }}
+                            <strong><i class="fa fa-money-bill me-1"></i> {{ __('general.pages.pos-page.order_total') }}:</strong> ${{ $total }}
                         </div>
 
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover align-middle mb-3">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Payment Method</th>
-                                        <th>Amount</th>
-                                        <th class="text-center" style="width: 70px;">Action</th>
+                                        <th>{{ __('general.pages.pos-page.payment_method') }}</th>
+                                        <th>{{ __('general.pages.pos-page.amount') }}</th>
+                                        <th class="text-center" style="width: 70px;">{{ __('general.pages.pos-page.action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -150,7 +150,7 @@
                                         <tr>
                                             <td>
                                                 <select class="form-select" wire:model="payments.{{ $index }}.account_id">
-                                                    <option value="">-- Select Payment Method --</option>
+                                                    <option value="">-- {{ __('general.pages.pos-page.payment_method') }} --</option>
                                                     @foreach ($selectedCustomer?->accounts ?? [] as $account)
                                                         <option value="{{ $account->id }}">
                                                             {{ $account->paymentMethod?->name }} - {{ $account->name }}
@@ -159,7 +159,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control" placeholder="Amount"
+                                                <input type="number" class="form-control" placeholder="{{ __('general.pages.pos-page.amount') }}"
                                                     wire:model="payments.{{ $index }}.amount" step="any" min="0" max="{{ $total }}">
                                             </td>
                                             <td class="text-center">
@@ -171,7 +171,7 @@
                                     @empty
                                         <tr>
                                             <td colspan="3" class="text-center text-muted py-3">
-                                                <i class="fa fa-info-circle me-1"></i> Click <strong>+ Add Payment</strong> to get started.
+                                                <i class="fa fa-info-circle me-1"></i> {!! __('general.pages.pos-page.click_add_payment_to_get_started') !!}
                                             </td>
                                         </tr>
                                     @endforelse
@@ -180,16 +180,16 @@
                         </div>
 
                         <button type="button" class="btn btn-secondary" wire:click="addPayment">
-                            <i class="fa fa-plus"></i> Add Payment
+                            <i class="fa fa-plus"></i> {{ __('general.pages.pos-page.add_payment') }}
                         </button>
                     </div>
 
                     <div class="card-footer d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                            <i class="fa fa-times me-1"></i> Cancel
+                            <i class="fa fa-times me-1"></i> {{ __('general.pages.pos-page.cancel') }}
                         </button>
                         <button type="button" class="btn btn-success" wire:click="confirmPayment">
-                            <i class="fa fa-check me-1"></i> Confirm Payment
+                            <i class="fa fa-check me-1"></i> {{ __('general.pages.pos-page.confirm_payment') }}
                         </button>
                     </div>
 
@@ -221,7 +221,7 @@
                                         {{ $currentProduct->description }}
                                     </div>
                                     <div class="mb-2">
-                                        <div class="fw-bold">Unit:</div>
+                                        <div class="fw-bold">{{ __('general.pages.pos-page.unit') }}:</div>
                                         <div class="option-list">
                                             @foreach($currentProduct->units() as $unit)
                                                 <div class="option">
@@ -236,7 +236,7 @@
                                         </div>
                                     </div>
                                     <hr class="mx-n4">
-                                    <div class="h4 mb-3">Quantity</div>
+                                    <div class="h4 mb-3">{{ __('general.pages.pos-page.quantity') }}</div>
                                     <div class="d-flex mb-3">
                                         <a href="javascript:" @if($selectedQuantity > 1) wire:click="$set('selectedQuantity', {{ $selectedQuantity }} - 1)" @endif class="btn btn-outline-theme"><i class="fa fa-minus"></i></a>
                                         <input type="text" class="form-control w-50px fw-bold mx-2 bg-inverse bg-opacity-15 border-0 text-center" wire:model="selectedQuantity" max="{{ $maxQuantity }}" readonly>
@@ -246,10 +246,10 @@
                                     <hr class="mx-n4">
                                     <div class="row">
                                         <div class="col-4">
-                                            <a href="#" class="btn btn-default h4 mb-0 d-block rounded-0 py-3" data-bs-dismiss="modal">Cancel</a>
+                                            <a href="#" class="btn btn-default h4 mb-0 d-block rounded-0 py-3" data-bs-dismiss="modal">{{ __('general.pages.pos-page.cancel') }}</a>
                                         </div>
                                         <div class="col-8">
-                                            <a href="#" class="btn btn-theme d-flex justify-content-center align-items-center rounded-0 py-3 h4 m-0" wire:click="addToCart">Add to cart <i class="bi bi-plus fa-2x ms-2 my-n3"></i></a>
+                                            <a href="#" class="btn btn-theme d-flex justify-content-center align-items-center rounded-0 py-3 h4 m-0" wire:click="addToCart">{{ __('general.pages.pos-page.add_to_cart') }} <i class="bi bi-plus fa-2x ms-2 my-n3"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@
 <script>
     function redirectTo(url){
         // confirmation
-        if(confirm('Are you sure you want to leave this page? Unsaved changes will be lost.')){
+        if(confirm(@json(__('general.pages.pos-page.confirm_leave')))){
             window.location.href = url;
         }
     }

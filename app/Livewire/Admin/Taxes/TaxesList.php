@@ -15,6 +15,10 @@ class TaxesList extends Component
     public $current;
     public $data = [];
 
+    public $filters = [];
+    public $export;
+    public $collapseFilters = false;
+
     public $rules = [
         'name' => 'required|string|max:255',
         'rate' => 'required|numeric',
@@ -69,7 +73,27 @@ class TaxesList extends Component
 
     public function render()
     {
-        $taxes = $this->taxService->list(perPage: 10, orderByDesc: 'id');
+        if ($this->export == 'excel') {
+            $taxes = $this->taxService->list(filter: $this->filters, orderByDesc: 'id');
+
+            $data = $taxes->map(function ($tax, $loop) {
+                #	Name	Percentage	Status
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $tax->name,
+                    'rate' => $tax->rate,
+                    'active' => $tax->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'rate', 'active'];
+            $headers = ['#', 'Name', 'Percentage', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'taxes');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $taxes = $this->taxService->list(perPage: 10, orderByDesc: 'id', filter: $this->filters);
 
         return layoutView('taxes.taxes-list', get_defined_vars())
             ->title(__('general.titles.taxes'));

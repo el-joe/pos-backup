@@ -2,56 +2,56 @@
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-header border-bottom">
-                <h5 class="card-title mb-0">Cash Register Summary</h5>
-                <small class="text-muted">Aggregated totals across registers</small>
+                <h5 class="card-title mb-0">{{ __('general.pages.cash_register.summary') }}</h5>
+                <small class="text-muted">{{ __('general.pages.cash_register.aggregated_totals_across_registers') }}</small>
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>Field</th>
-                            <th class="text-end">Amount</th>
+                            <th>{{ __('general.pages.cash_register.field') }}</th>
+                            <th class="text-end">{{ __('general.pages.cash_register.amount') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="fw-semibold">
-                            <td>Opening Balance</td>
+                            <td>{{ __('general.pages.cash_register.opening_balance') }}</td>
                             <td class="text-end">{{ number_format($aggregates['opening_balance'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Sales</td>
+                            <td>{{ __('general.pages.cash_register.total_sales') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_sales'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Sale Refunds</td>
+                            <td>{{ __('general.pages.cash_register.total_sale_refunds') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_sale_refunds'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Purchases</td>
+                            <td>{{ __('general.pages.cash_register.total_purchases') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_purchases'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Purchase Refunds</td>
+                            <td>{{ __('general.pages.cash_register.total_purchase_refunds') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_purchase_refunds'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Expenses</td>
+                            <td>{{ __('general.pages.cash_register.total_expenses') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_expenses'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Expense Refunds</td>
+                            <td>{{ __('general.pages.cash_register.total_expense_refunds') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_expense_refunds'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Deposits</td>
+                            <td>{{ __('general.pages.cash_register.total_deposits') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_deposits'] ?? 0, 2) }}</td>
                         </tr>
                         <tr>
-                            <td>Total Withdrawals</td>
+                            <td>{{ __('general.pages.cash_register.total_withdrawals') }}</td>
                             <td class="text-end">{{ number_format($aggregates['total_withdrawals'] ?? 0, 2) }}</td>
                         </tr>
                         <tr class="fw-semibold table-light">
-                            <td>Closing Balance</td>
+                            <td>{{ __('general.pages.cash_register.closing_balance') }}</td>
                             <td class="text-end">{{ number_format($aggregates['closing_balance'] ?? 0, 2) }}</td>
                         </tr>
                     </tbody>
@@ -70,34 +70,34 @@
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-header border-bottom">
-                <h5 class="card-title mb-0">Open / Close Register</h5>
+                <h5 class="card-title mb-0">{{ __('general.pages.cash_register.open_close_register') }}</h5>
             </div>
             <div class="card-body">
                 @if($currentRegister)
-                <p><strong>Open since:</strong> {{ $currentRegister->opened_at }}</p>
-                <p><strong>Opening balance:</strong> {{ number_format($currentRegister->opening_balance, 2) }}</p>
+                <p><strong>{{ __('general.pages.cash_register.open_since') }}:</strong> {{ $currentRegister->opened_at }}</p>
+                <p><strong>{{ __('general.pages.cash_register.opening_balance') }}:</strong> {{ number_format($currentRegister->opening_balance, 2) }}</p>
 
                 <div class="mb-3">
-                    <label class="form-label">Closing Balance</label>
+                    <label class="form-label">{{ __('general.pages.cash_register.closing_balance') }}</label>
                     <input type="number" class="form-control" wire:model="closing_balance_input">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Notes</label>
+                    <label class="form-label">{{ __('general.pages.cash_register.notes') }}</label>
                     <textarea class="form-control" wire:model="closing_notes" rows="3"></textarea>
                 </div>
 
-                <button wire:click="closeRegister" class="btn btn-danger w-100">Close Register</button>
+                <button wire:click="closeRegister" class="btn btn-danger w-100">{{ __('general.pages.cash_register.close_register') }}</button>
                 @else
                 <div class="mb-3">
-                    <label class="form-label">Opening Balance</label>
+                    <label class="form-label">{{ __('general.pages.cash_register.opening_balance') }}</label>
                     <input type="number" class="form-control" wire:model="opening_balance_input">
                 </div>
                 @if(admin()->branch_id === null)
                 <div class="mb-3">
-                    <label class="form-label">Select Branch</label>
+                    <label class="form-label">{{ __('general.pages.cash_register.select_branch') }}</label>
                     <select class="form-select" wire:model="branchId">
-                        <option value="">-- Select Branch --</option>
+                        <option value="">-- {{ __('general.pages.cash_register.select_branch') }} --</option>
                         @foreach($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                         @endforeach
@@ -105,7 +105,7 @@
                 </div>
                 @endif
 
-                <button wire:click="openRegister" class="btn btn-success w-100">Open Register</button>
+                <button wire:click="openRegister" class="btn btn-success w-100">{{ __('general.pages.cash_register.open_register') }}</button>
                 @endif
             </div>
             <div class="card-arrow">

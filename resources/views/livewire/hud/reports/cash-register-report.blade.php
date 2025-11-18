@@ -4,22 +4,22 @@
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white d-flex align-items-center">
                 <i class="fa fa-filter me-2"></i>
-                <strong>Filter Options</strong>
+                <strong>{{ __('general.pages.reports.common.filter_options') }}</strong>
             </div>
             <div class="card-body">
                 <form wire:submit.prevent="applyFilter" class="row g-3">
                     <div class="col-md-3">
-                        <label for="from_date" class="form-label">From Date</label>
+                        <label for="from_date" class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
                         <input type="date" id="from_date" wire:model.defer="from_date" class="form-control form-control-sm">
                     </div>
                     <div class="col-md-3">
-                        <label for="to_date" class="form-label">To Date</label>
+                        <label for="to_date" class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
                         <input type="date" id="to_date" wire:model.defer="to_date" class="form-control form-control-sm">
                     </div>
                     <div class="col-md-3">
-                        <label for="branch_id" class="form-label">Branch</label>
+                        <label for="branch_id" class="form-label">{{ __('general.pages.reports.common.branch') }}</label>
                         <select id="branch_id" wire:model.defer="branch_id" class="form-select form-select-sm">
-                            <option value="">All Branches</option>
+                            <option value="">{{ __('general.pages.reports.common.all_branches') }}</option>
                             @if(function_exists('branches'))
                                 @foreach(branches() as $branch)
                                     <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -28,9 +28,9 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="admin_id" class="form-label">Admin/Cashier</label>
+                        <label for="admin_id" class="form-label">{{ __('general.pages.reports.cash_register_report.admin_cashier') }}</label>
                         <select id="admin_id" wire:model.defer="admin_id" class="form-select form-select-sm">
-                            <option value="">All Admins</option>
+                            <option value="">{{ __('general.pages.reports.cash_register_report.all_admins') }}</option>
                             @if(function_exists('admins'))
                                 @foreach(admins() as $admin)
                                     <option value="{{ $admin->id }}">{{ $admin->name }}</option>
@@ -40,10 +40,10 @@
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary btn-sm me-2">
-                            <i class="fa fa-check-circle"></i> Apply
+                            <i class="fa fa-check-circle"></i> {{ __('general.pages.reports.common.apply') }}
                         </button>
                         <button type="button" wire:click="resetFilters" class="btn btn-secondary btn-sm">
-                            <i class="fa fa-refresh"></i> Reset
+                            <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
                         </button>
                     </div>
                 </form>
@@ -62,29 +62,29 @@
         <div class="card shadow-sm">
             <div class="card-header bg-secondary text-white d-flex align-items-center">
                 <i class="fa fa-list-alt me-2"></i>
-                <h5 class="mb-0">Cash Register Summary</h5>
+                <h5 class="mb-0">{{ __('general.pages.reports.cash_register_report.title') }}</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Opened At</th>
-                                <th>Closed At</th>
-                                <th>Branch</th>
-                                <th>Admin</th>
-                                <th>Opening Balance</th>
-                                <th>Total Sales</th>
-                                <th>Total Sale Refunds</th>
-                                <th>Total Purchases</th>
-                                <th>Total Purchase Refunds</th>
-                                <th>Total Expenses</th>
-                                <th>Total Expense Refunds</th>
-                                <th>Total Deposits</th>
-                                <th>Total Withdrawals</th>
-                                <th>Closing Balance</th>
-                                <th>Status</th>
-                                <th>Notes</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.opened_at') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.closed_at') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.branch') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.admin') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.opening_balance') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_sales') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_sale_refunds') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_purchases') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_purchase_refunds') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_expenses') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_expense_refunds') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_deposits') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.total_withdrawals') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.closing_balance') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.status') }}</th>
+                                <th>{{ __('general.pages.reports.cash_register_report.notes') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,7 +113,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="16" class="text-center text-muted">No cash register records found for the selected period.</td>
+                                    <td colspan="16" class="text-center text-muted">{{ __('general.pages.reports.cash_register_report.no_data') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

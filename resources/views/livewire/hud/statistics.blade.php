@@ -5,7 +5,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Total Sales</div>
+                <div class="mb-1">{{ __('general.pages.statistics.total_sales') }}</div>
                 <h2>${{ $data['totalSales'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -29,7 +29,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Net</div>
+                <div class="mb-1">{{ __('general.pages.statistics.net_sales') }}</div>
                 <h2>${{ $data['netSales'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -53,7 +53,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Invoice due</div>
+                <div class="mb-1">{{ __('general.pages.statistics.due_amount') }}</div>
                 <h2>${{ $data['dueAmount'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -76,7 +76,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Total Sell Return</div>
+                <div class="mb-1">{{ __('general.pages.statistics.total_sales_return') }}</div>
                 <h2>${{ $data['totalSalesReturn'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -100,7 +100,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Total purchase</div>
+                <div class="mb-1">{{ __('general.pages.statistics.total_purchases') }}</div>
                 <h2>${{ $data['totalPurchases'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -125,7 +125,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Purchase due</div>
+                <div class="mb-1">{{ __('general.pages.statistics.purchase_due') }}</div>
                 <h2>${{ $data['purchaseDue'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -150,7 +150,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Total Purchase Return</div>
+                <div class="mb-1">{{ __('general.pages.statistics.total_purchase_return') }}</div>
                 <h2>${{ $data['totalPurchaseReturn'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -175,7 +175,7 @@
         <a href="#" class="card text-decoration-none">
             <div class="card-body d-flex align-items-center text-inverse m-5px bg-inverse bg-opacity-10">
                 <div class="flex-fill">
-                <div class="mb-1">Total Expense</div>
+                <div class="mb-1">{{ __('general.pages.statistics.total_expense') }}</div>
                 <h2>${{ $data['totalExpense'] }}</h2>
                 </div>
                 <div class="opacity-5">
@@ -197,7 +197,7 @@
     <div class="col-sm-12 mb-3">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Sales Overview Last 30 Days</h4>
+                <h4 class="card-title">{{ __('general.pages.statistics.sales_overview_last_30_days') }}</h4>
             </div>
             <div class="card-body">
                 <canvas id="lineChart"></canvas>
@@ -214,7 +214,7 @@
     <div class="col-sm-12 mb-3">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Sales Overview Last 12 Months</h4>
+                <h4 class="card-title">{{ __('general.pages.statistics.sales_overview_last_12_months') }}</h4>
             </div>
             <div class="card-body">
                 <canvas id="lineChart2"></canvas>
@@ -256,7 +256,7 @@
                 pointHoverBackgroundColor: app.color.theme,
                 pointHoverBorderColor: app.color.theme,
                 pointHoverRadius: 7,
-                label: 'Total Sales',
+                label: '{{ __('general.pages.statistics.total_sales') }}',
                 data: @json($saleOrdersPerDayData)
             }]
             }
@@ -280,7 +280,7 @@
                 pointHoverBackgroundColor: app.color.theme,
                 pointHoverBorderColor: app.color.theme,
                 pointHoverRadius: 7,
-                label: 'Total Sales',
+                label: '{{ __('general.pages.statistics.total_sales') }}',
                 data: @json($saleOrdersPerMonthData)
             }]
             }

@@ -4,21 +4,21 @@
         <div class="card shadow-sm border-0">
             <div class="card-header bg-secondary text-white d-flex align-items-center">
                 <i class="fa fa-filter me-2"></i>
-                <strong>Filter Options</strong>
+                <strong>{{ __('general.pages.reports.common.filter_options') }}</strong>
             </div>
             <div class="card-body">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
-                        <label class="form-label mb-1">From</label>
+                        <label class="form-label mb-1">{{ __('general.pages.reports.common.from') }}</label>
                         <input type="date" class="form-control form-control-sm" wire:model.live="from_date">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label mb-1">To</label>
+                        <label class="form-label mb-1">{{ __('general.pages.reports.common.to') }}</label>
                         <input type="date" class="form-control form-control-sm" wire:model.live="to_date">
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
                         <button wire:click="resetDates" class="btn btn-outline-secondary btn-sm w-100">
-                            <i class="fa fa-refresh me-1"></i> Reset
+                            <i class="fa fa-refresh me-1"></i> {{ __('general.pages.reports.common.reset') }}
                         </button>
                     </div>
                 </div>
@@ -37,18 +37,18 @@
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white d-flex align-items-center">
                 <i class="fa fa-user me-2"></i>
-                <h5 class="mb-0">Cashier Report</h5>
+                <h5 class="mb-0">{{ __('general.pages.reports.admins.cashier_report.title') }}</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-dark table-bordered table-hover table-striped mb-0 align-middle">
                         <thead class="table-secondary text-dark">
                             <tr>
-                                <th>Cashier</th>
-                                <th class="text-end">Total Sales</th>
-                                <th class="text-end">Total Refunds</th>
-                                <th class="text-end">Total Discounts</th>
-                                <th class="text-end">Net Sales</th>
+                                <th>{{ __('general.pages.reports.admins.cashier_report.cashier') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.admins.cashier_report.total_sales') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.admins.cashier_report.total_refunds') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.admins.cashier_report.total_discounts') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.admins.cashier_report.net_sales') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,9 +74,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted py-3">
-                                        No cashier data available.
-                                    </td>
+                                    <td colspan="5" class="text-center text-muted py-3">{{ __('general.pages.reports.admins.cashier_report.no_data') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -84,7 +82,7 @@
                         @if(count($report))
                         <tfoot class="bg-success bg-opacity-25 fw-bold">
                             <tr>
-                                <td>Total</td>
+                                <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td class="text-end">{{ number_format($sumSales, 2) }}</td>
                                 <td class="text-end">{{ number_format($sumRefunds, 2) }}</td>
                                 <td class="text-end">{{ number_format($sumDiscounts, 2) }}</td>

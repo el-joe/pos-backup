@@ -1,14 +1,14 @@
 <div class="col-12">
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Filters</h5>
+            <h5 class="mb-0">{{ __('general.pages.users.filters') }}</h5>
 
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                     wire:click="$toggle('collapseFilters')"
                     data-bs-target="#branchFilterCollapse">
-                <i class="fa fa-filter me-1"></i> Show / Hide
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.users.show_hide') }}
             </button>
         </div>
 
@@ -18,19 +18,19 @@
 
                     <!-- Filter by Name -->
                     <div class="col-md-4">
-                        <label class="form-label">Search (Name/Email/Phone/Address)</label>
+                        <label class="form-label">{{ __('general.pages.users.search_label') }}</label>
                         <input type="text" class="form-control"
-                            placeholder="Search ..."
+                            placeholder="{{ __('general.pages.users.search_placeholder') }}"
                             wire:model.blur="filters.search">
                     </div>
 
                     <!-- Filter by Status -->
                     <div class="col-md-4">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">{{ __('general.pages.users.status') }}</label>
                         <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">All</option>
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
+                            <option value="all">{{ __('general.pages.users.all') }}</option>
+                            <option value="1">{{ __('general.pages.users.active') }}</option>
+                            <option value="0">{{ __('general.pages.users.inactive') }}</option>
                         </select>
                     </div>
 
@@ -38,7 +38,7 @@
                     <div class="col-12 d-flex justify-content-end">
                         <button class="btn btn-secondary btn-sm"
                                 wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> Reset
+                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.users.reset') }}
                         </button>
                     </div>
 
@@ -56,15 +56,15 @@
 
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ $type != null ? ucfirst($type) : 'Users' }}</h5>
+            <h5 class="mb-0">{{ $type != null ? ucfirst($type) : __('general.pages.users.users') }}</h5>
             <div class="d-flex align-items-center gap-2">
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> Export
+                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.users.export') }}
                 </button>
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus"></i> New User
+                    <i class="fa fa-plus"></i> {{ __('general.pages.users.new_user') }}
                 </a>
             </div>
         </div>
@@ -74,16 +74,16 @@
                 <table class="table table-bordered table-hover table-striped align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Address</th>
+                            <th>{{ __('general.pages.users.id') }}</th>
+                            <th>{{ __('general.pages.users.name') }}</th>
+                            <th>{{ __('general.pages.users.email') }}</th>
+                            <th>{{ __('general.pages.users.phone') }}</th>
+                            <th>{{ __('general.pages.users.address') }}</th>
                             @if($type == 'customer')
-                            <th>Sales Threshold</th>
+                            <th>{{ __('general.pages.users.sales_threshold') }}</th>
                             @endif
-                            <th>Active</th>
-                            <th class="text-nowrap">Action</th>
+                            <th>{{ __('general.pages.users.active') }}</th>
+                            <th class="text-nowrap">{{ __('general.pages.users.action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,17 +99,17 @@
                                 @endif
                                 <td>
                                     <span class="badge bg-{{ $user->active ? 'success' : 'danger' }}">
-                                        {{ $user->active ? 'Active' : 'Inactive' }}
+                                        {{ $user->active ? __('general.pages.users.active') : __('general.pages.users.inactive') }}
                                     </span>
                                 </td>
                                 <td class="text-nowrap">
-                                    <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="setCurrent({{ $user->id }})" title="Edit">
+                                    <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="setCurrent({{ $user->id }})" title="{{ __('general.pages.users.edit') }}">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger me-1" wire:click="deleteAlert({{ $user->id }})" title="Delete">
+                                    <button class="btn btn-sm btn-danger me-1" wire:click="deleteAlert({{ $user->id }})" title="{{ __('general.pages.users.delete') }}">
                                         <i class="fa fa-trash"></i>
                                     </button>
-                                    <a href="{{ route('admin.users.details', $user->id) }}" class="btn btn-sm btn-info" title="View">
+                                    <a href="{{ route('admin.users.details', $user->id) }}" class="btn btn-sm btn-info" title="{{ __('general.pages.users.view') }}">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                 </td>
@@ -137,44 +137,44 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editUserModalLabel">{{ $current?->id ? 'Edit' : 'New' }} User</h5>
+                    <h5 class="modal-title" id="editUserModalLabel">{{ $current?->id ? __('general.pages.users.edit_user') : __('general.pages.users.create_user') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="userName" class="form-label">Name</label>
-                            <input type="text" class="form-control" wire:model="data.name" id="userName" placeholder="Enter user name" required>
+                            <label for="userName" class="form-label">{{ __('general.pages.users.name') }}</label>
+                            <input type="text" class="form-control" wire:model="data.name" id="userName" placeholder="{{ __('general.pages.users.enter_user_name') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="userEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" wire:model="data.email" id="userEmail" placeholder="Enter user email" required>
+                            <label for="userEmail" class="form-label">{{ __('general.pages.users.email') }}</label>
+                            <input type="email" class="form-control" wire:model="data.email" id="userEmail" placeholder="{{ __('general.pages.users.enter_user_email') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="userPhone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" wire:model="data.phone" id="userPhone" placeholder="Enter user phone" required>
+                            <label for="userPhone" class="form-label">{{ __('general.pages.users.phone') }}</label>
+                            <input type="text" class="form-control" wire:model="data.phone" id="userPhone" placeholder="{{ __('general.pages.users.enter_user_phone') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="userAddress" class="form-label">Address</label>
-                            <input type="text" class="form-control" wire:model="data.address" id="userAddress" placeholder="Enter user address" required>
+                            <label for="userAddress" class="form-label">{{ __('general.pages.users.address') }}</label>
+                            <input type="text" class="form-control" wire:model="data.address" id="userAddress" placeholder="{{ __('general.pages.users.enter_user_address') }}" required>
                         </div>
                         @if($type == 'customer')
                         <div class="mb-3">
-                            <label for="userSalesThreshold" class="form-label">Sales Threshold</label>
-                            <input type="number" class="form-control" wire:model="data.sales_threshold" id="userSalesThreshold" placeholder="Enter sales threshold" min="0" step="0.01" required>
+                            <label for="userSalesThreshold" class="form-label">{{ __('general.pages.users.sales_threshold') }}</label>
+                            <input type="number" class="form-control" wire:model="data.sales_threshold" id="userSalesThreshold" placeholder="{{ __('general.pages.users.enter_sales_threshold') }}" min="0" step="0.01" required>
                         </div>
                         @endif
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="userActive" wire:model="data.active">
-                            <label class="form-check-label" for="userActive">Is Active</label>
+                            <label class="form-check-label" for="userActive">{{ __('general.pages.users.is_active') }}</label>
                         </div>
                     </form>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" wire:click="save">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('general.pages.users.close') }}</button>
+                    <button type="button" class="btn btn-primary" wire:click="save">{{ __('general.pages.users.save') }}</button>
                 </div>
             </div>
         </div>

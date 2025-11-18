@@ -4,16 +4,16 @@
         <div class="card shadow-sm">
             <div class="card-header bg-secondary text-white d-flex align-items-center">
                 <i class="fa fa-filter me-2"></i>
-                <strong>Filter Options</strong>
+                <strong>{{ __('general.pages.reports.common.filter_options') }}</strong>
             </div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label">From Date</label>
+                        <label class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
                         <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">To Date</label>
+                        <label class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
                         <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
                     </div>
                 </div>
@@ -32,16 +32,16 @@
         <div class="card shadow-sm border-primary">
             <div class="card-header bg-primary text-white d-flex align-items-center">
                 <i class="fa fa-th-large me-2"></i>
-                <h5 class="mb-0">Product Purchases</h5>
+                <h5 class="mb-0">{{ __('general.pages.reports.purchases.product.title') }}</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover table-striped mb-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>Product</th>
-                                <th>Total Quantity</th>
-                                <th>Total Value</th>
+                                <th>{{ __('general.pages.reports.purchases.product.product') }}</th>
+                                <th>{{ __('general.pages.reports.purchases.product.total_quantity') }}</th>
+                                <th>{{ __('general.pages.reports.purchases.product.total_value') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,13 +62,13 @@
                             @empty
                                 <tr>
                                     <td colspan="3" class="text-center text-muted">
-                                        No product purchases found for selected period.
+                                        {{ __('general.pages.reports.purchases.product.no_data') }}
                                     </td>
                                 </tr>
                             @endforelse
                             @if(count($report))
                                 <tr class="fw-semibold table-success">
-                                    <td>Total</td>
+                                    <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_qty }}</td>
                                     <td>{{ number_format($total_value, 2) }}</td>
                                 </tr>

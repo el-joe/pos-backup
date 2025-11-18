@@ -1,14 +1,14 @@
 <div class="col-12">
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Filters</h5>
+            <h5 class="mb-0">{{ __('general.pages.sales.filters') }}</h5>
 
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                     wire:click="$toggle('collapseFilters')"
                     data-bs-target="#branchFilterCollapse">
-                <i class="fa fa-filter me-1"></i> Show / Hide
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.sales.show_hide') }}
             </button>
         </div>
 
@@ -16,19 +16,19 @@
             <div class="card-body">
                 <div class="row g-3">
 
-                    <!-- Filter by Name -->
+                    <!-- Filter by Invoice -->
                     <div class="col-md-4">
-                        <label class="form-label">Invoice No</label>
+                        <label class="form-label">{{ __('general.pages.sales.invoice_no') }}</label>
                         <input type="text" class="form-control"
-                            placeholder="Search ..."
+                            placeholder="{{ __('general.pages.sales.search_placeholder') }}"
                             wire:model.blur="filters.search">
                     </div>
 
                     <!-- Filter by Customer -->
                     <div class="col-md-4">
-                        <label class="form-label">Customer</label>
+                        <label class="form-label">{{ __('general.pages.sales.customer') }}</label>
                         <select class="form-select" wire:model.live="filters.customer_id">
-                            <option value="">-- All Customers --</option>
+                            <option value="">{{ __('general.pages.sales.all_customers') }}</option>
                             @foreach ($customers as $customer)
                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                             @endforeach
@@ -37,9 +37,9 @@
 
                     {{-- Filter by Branch --}}
                     <div class="col-md-4">
-                        <label class="form-label">Branch</label>
+                        <label class="form-label">{{ __('general.pages.sales.branch') }}</label>
                         <select class="form-select" wire:model.live="filters.branch_id">
-                            <option value="">-- All Branches --</option>
+                            <option value="">{{ __('general.pages.sales.all_branches_option') }}</option>
                             @foreach ($branches as $branch)
                                 <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
@@ -61,7 +61,7 @@
                     <div class="col-12 d-flex justify-content-end">
                         <button class="btn btn-secondary btn-sm"
                                 wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> Reset
+                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.sales.reset') }}
                         </button>
                     </div>
 
@@ -79,15 +79,15 @@
 
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">Selling Orders</h3>
+            <h3 class="card-title mb-0">{{ __('general.pages.sales.selling_orders') }}</h3>
             <div class="d-flex align-items-center gap-2">
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> Export
+                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.sales.export') }}
                 </button>
                 <a class="btn btn-primary btn-sm" href="{{ route('admin.pos') }}">
-                    <i class="fa fa-plus"></i> New Selling Order
+                    <i class="fa fa-plus"></i> {{ __('general.pages.sales.new_selling_order') }}
                 </a>
             </div>
         </div>
@@ -97,14 +97,14 @@
                 <table class="table table-bordered table-hover table-striped align-middle mb-0">
                     <thead class="table-dark">
                         <tr>
-                            <th>#</th>
-                            <th>Invoice No.</th>
-                            <th>Customer</th>
-                            <th>Branch</th>
-                            <th>Total Amount</th>
-                            <th>Due Amount</th>
-                            <th>Refund Status</th>
-                            <th class="text-nowrap text-center">Action</th>
+                            <th>{{ __('general.pages.sales.id') }}</th>
+                            <th>{{ __('general.pages.sales.invoice_no') }}</th>
+                            <th>{{ __('general.pages.sales.customer') }}</th>
+                            <th>{{ __('general.pages.sales.branch') }}</th>
+                            <th>{{ __('general.pages.sales.total_amount') }}</th>
+                            <th>{{ __('general.pages.sales.due_amount') }}</th>
+                            <th>{{ __('general.pages.sales.refund_status') }}</th>
+                            <th class="text-nowrap text-center">{{ __('general.pages.sales.action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,7 +128,7 @@
                                 <td class="text-center">
                                     <a href="{{ route('admin.sales.details', $sale->id) }}"
                                        class="btn btn-sm btn-primary me-1"
-                                       title="Details">
+                                       title="{{ __('general.pages.sales.details') }}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                     <button class="btn btn-sm btn-success"
@@ -162,19 +162,19 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="paymentModalLabel">💰 Add Payment</h5>
+                    <h5 class="modal-title" id="paymentModalLabel">💰 {{ __('general.pages.sales.payment_modal_title') }}</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="paymentAmount" class="form-label fw-bold">Amount</label>
+                            <label for="paymentAmount" class="form-label fw-bold">{{ __('general.pages.sales.amount') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
-                                <input type="number" class="form-control" id="paymentAmount" wire:model="payment.amount" placeholder="Enter amount">
+                                <input type="number" class="form-control" id="paymentAmount" wire:model="payment.amount" placeholder="{{ __('general.pages.sales.amount') }}">
                                 <span class="input-group-text">
-                                    Due:
+                                    {{ __('general.pages.sales.due') ?? 'Due' }}:
                                     <strong class="text-danger ms-1">
                                         {{ number_format($current->due_amount ?? 0, 2) }}
                                     </strong>
@@ -186,9 +186,9 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="paymentMethod" class="form-label fw-bold">Customer Account</label>
+                            <label for="paymentMethod" class="form-label fw-bold">{{ __('general.pages.sales.customer_account') }}</label>
                             <select class="form-select" id="paymentMethod" wire:model="payment.account_id">
-                                <option value="">-- Select Account --</option>
+                                <option value="">{{ __('general.pages.sales.select_account') }}</option>
                                 @foreach (($current?->customer?->accounts ?? []) as $acc)
                                     <option value="{{ $acc->id }}">
                                         {{ $acc->paymentMethod?->name }} - {{ $acc->name }}
@@ -202,28 +202,28 @@
                     </div>
 
                     <div class="mt-3">
-                        <label for="paymentNote" class="form-label fw-bold">Note</label>
-                        <textarea class="form-control" id="paymentNote" wire:model="payment.note" rows="3" placeholder="Optional notes..."></textarea>
+                        <label for="paymentNote" class="form-label fw-bold">{{ __('general.pages.sales.note') }}</label>
+                        <textarea class="form-control" id="paymentNote" wire:model="payment.note" rows="3" placeholder="{{ __('general.pages.sales.optional_notes') }}"></textarea>
                         @error('payment.note')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
 
                     <button type="button" class="btn btn-success w-100 mt-3" wire:click="savePayment">
-                        <i class="fa fa-check"></i> Save Payment
+                        <i class="fa fa-check"></i> {{ __('general.pages.sales.save_payment') }}
                     </button>
 
                     <hr class="my-4">
 
-                    <h5 class="text-primary fw-bold mb-3">Recent Payments</h5>
+                    <h5 class="text-primary fw-bold mb-3">{{ __('general.pages.sales.recent_payments') }}</h5>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-striped align-middle">
                             <thead class="table-secondary">
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                    <th>Method</th>
-                                    <th>Note</th>
+                                    <th>{{ __('general.pages.sales.date') }}</th>
+                                    <th>{{ __('general.pages.sales.amount') }}</th>
+                                    <th>{{ __('general.pages.sales.method') }}</th>
+                                    <th>{{ __('general.pages.sales.note') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -243,7 +243,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="text-center text-muted">No payments recorded yet.</td>
+                                        <td colspan="4" class="text-center text-muted">{{ __('general.pages.sales.no_payments') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -253,7 +253,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> Close
+                        <i class="fa fa-times"></i> {{ __('general.pages.sales.close') }}
                     </button>
                 </div>
             </div>

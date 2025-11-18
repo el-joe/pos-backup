@@ -1,14 +1,14 @@
 <div class="col-12">
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Filters</h5>
+            <h5 class="mb-0">{{ __('general.pages.categories.filters') }}</h5>
 
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                     wire:click="$toggle('collapseFilters')"
                     data-bs-target="#branchFilterCollapse">
-                <i class="fa fa-filter me-1"></i> Show / Hide
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.categories.show_hide') }}
             </button>
         </div>
 
@@ -18,17 +18,17 @@
 
                     <!-- Filter by Name -->
                     <div class="col-md-4">
-                        <label class="form-label">Search By Name</label>
+                        <label class="form-label">{{ __('general.pages.categories.search_by_name') }}</label>
                         <input type="text" class="form-control"
-                            placeholder="Search ..."
+                            placeholder="{{ __('general.pages.categories.search') }} ..."
                             wire:model.blur="filters.search">
                     </div>
 
                     {{-- Parent Categories --}}
                     <div class="col-md-4">
-                        <label class="form-label">Parent Category</label>
+                        <label class="form-label">{{ __('general.pages.categories.parent_category') }}</label>
                         <select class="form-select" wire:model.live="filters.parent_id">
-                            <option value="all">All</option>
+                            <option value="all">{{ __('general.pages.categories.all') }}</option>
                             @foreach ($allCategories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
@@ -37,11 +37,11 @@
 
                     <!-- Filter by Status -->
                     <div class="col-md-4">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">{{ __('general.pages.categories.status') }}</label>
                         <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">All</option>
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
+                            <option value="all">{{ __('general.pages.categories.all') }}</option>
+                            <option value="1">{{ __('general.pages.categories.active') }}</option>
+                            <option value="0">{{ __('general.pages.categories.inactive') }}</option>
                         </select>
                     </div>
 
@@ -49,7 +49,7 @@
                     <div class="col-12 d-flex justify-content-end">
                         <button class="btn btn-secondary btn-sm"
                                 wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> Reset
+                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.categories.reset') }}
                         </button>
                     </div>
 
@@ -67,16 +67,16 @@
 
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.titles.categories') }}</h5>
+            <h5 class="mb-0">{{ __('general.pages.categories.categories') }}</h5>
 
             <div class="d-flex align-items-center gap-2">
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> Export
+                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.categories.export') }}
                 </button>
                 <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editCategoryModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus me-1"></i> New Category
+                    <i class="fa fa-plus me-1"></i> {{ __('general.pages.categories.new_category') }}
                 </button>
             </div>
         </div>
@@ -87,11 +87,11 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Parent Category</th>
-                            <th>Icon</th>
-                            <th>Status</th>
-                            <th class="text-nowrap text-end">Action</th>
+                            <th>{{ __('general.pages.categories.name') }}</th>
+                            <th>{{ __('general.pages.categories.parent_category') }}</th>
+                            <th>{{ __('general.pages.categories.icon') }}</th>
+                            <th>{{ __('general.pages.categories.status') }}</th>
+                            <th class="text-nowrap text-end">{{ __('general.pages.categories.action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,16 +99,16 @@
                             <tr>
                                 <td>{{ $category->id }}</td>
                                 <td>{{ $category->name }}</td>
-                                <td>{{ $category->parent ? $category->parent->name : 'N/A' }}</td>
+                                <td>{{ $category->parent ? $category->parent->name : __('general.pages.categories.n_a') }}</td>
                                 <td>
                                     @if($category->icon)
                                         <i class="{{ $category->icon }}"></i> {{ $category->icon }}
                                     @else
-                                        N/A
+                                        {{ __('general.pages.categories.n_a') }}
                                     @endif
                                 <td>
                                     <span class="badge bg-{{ $category->active ? 'success' : 'danger' }}">
-                                        {{ $category->active ? 'Active' : 'Inactive' }}
+                                        {{ $category->active ? __('general.pages.categories.active') : __('general.pages.categories.inactive') }}
                                     </span>
                                 </td>
                                 <td class="text-end text-nowrap">
@@ -116,12 +116,12 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#editCategoryModal"
                                         wire:click="setCurrent({{ $category->id }})"
-                                        title="Edit">
+                                        title="{{ __('general.pages.categories.edit') }}">
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger"
                                         wire:click="deleteAlert({{ $category->id }})"
-                                        title="Delete">
+                                        title="{{ __('general.pages.categories.delete') }}">
                                         <i class="fa fa-times"></i>
                                     </button>
                                 </td>
@@ -150,7 +150,7 @@
             <div class="modal-content border-0 shadow">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editCategoryModalLabel">
-                        {{ $current?->id ? 'Edit' : 'New' }} Category
+                        {{ $current?->id ? __('general.pages.categories.edit_category') : __('general.pages.categories.new_category') }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -158,14 +158,14 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="categoryName" class="form-label">Name</label>
-                            <input type="text" class="form-control" wire:model="data.name" id="categoryName" placeholder="Enter category name">
+                            <label for="categoryName" class="form-label">{{ __('general.pages.categories.name') }}</label>
+                            <input type="text" class="form-control" wire:model="data.name" id="categoryName" placeholder="{{ __('general.pages.categories.name') }}">
                         </div>
 
                         <div class="mb-3">
-                            <label for="categoryParent" class="form-label">Parent Category</label>
+                            <label for="categoryParent" class="form-label">{{ __('general.pages.categories.parent_category') }}</label>
                             <select class="form-select" wire:model="data.parent_id" id="categoryParent">
-                                <option value="">N/A</option>
+                                <option value="">{{ __('general.pages.categories.n_a') }}</option>
                                 @foreach ($allCategories as $cat)
                                     @if ($current?->id !== $cat->id)
                                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -175,8 +175,8 @@
                         </div>
 
                         <div class="mb-3" wire:ignore>
-                            <label for="categoryIcon" class="form-label">Icon</label>
-                            <select class="selectpicker form-control" name="data.icon" id="categoryIcon" data-live-search="true" title="Select Icon">
+                            <label for="categoryIcon" class="form-label">{{ __('general.pages.categories.icon') }}</label>
+                            <select class="selectpicker form-control" name="data.icon" id="categoryIcon" data-live-search="true" title="{{ __('general.pages.categories.select_icon') }}">
                                 @foreach ($bootstrapIcons as $icon)
                                     <option value="{{ $icon }}" data-content="<i class='{{ $icon }}'></i> {{ $icon }}">
                                         {{ $icon }}
@@ -187,14 +187,14 @@
 
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="categoryActive" wire:model="data.active">
-                            <label class="form-check-label" for="categoryActive">Is Active</label>
+                            <label class="form-check-label" for="categoryActive">{{ __('general.pages.categories.is_active') }}</label>
                         </div>
                     </form>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" wire:click="save">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('general.pages.categories.close') }}</button>
+                    <button type="button" class="btn btn-primary" wire:click="save">{{ __('general.pages.categories.save') }}</button>
                 </div>
             </div>
         </div>

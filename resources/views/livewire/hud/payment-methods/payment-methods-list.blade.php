@@ -1,14 +1,14 @@
 <div class="col-12">
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Filters</h5>
+            <h5 class="mb-0">{{ __('general.pages.payment-methods.filters') }}</h5>
 
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                     wire:click="$toggle('collapseFilters')"
                     data-bs-target="#branchFilterCollapse">
-                <i class="fa fa-filter me-1"></i> Show / Hide
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.payment-methods.show_hide') }}
             </button>
         </div>
 
@@ -18,17 +18,17 @@
 
                     <!-- Filter by Name -->
                     <div class="col-md-4">
-                        <label class="form-label">Search</label>
+                        <label class="form-label">{{ __('general.pages.payment-methods.search') }}</label>
                         <input type="text" class="form-control"
-                            placeholder="Search ..."
+                            placeholder="{{ __('general.pages.payment-methods.search_placeholder') }}"
                             wire:model.blur="filters.name">
                     </div>
 
                     <!-- Filter by branch -->
                     <div class="col-md-4">
-                        <label class="form-label">Branch</label>
+                        <label class="form-label">{{ __('general.pages.payment-methods.branch') }}</label>
                         <select class="form-select" wire:model.live="filters.branch_id">
-                            <option value="all">All Branches</option>
+                            <option value="all">{{ __('general.layout.all_branches') }}</option>
                             @foreach($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
@@ -37,11 +37,11 @@
 
                     <!-- Filter by Status -->
                     <div class="col-md-4">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">{{ __('general.pages.payment-methods.status') }}</label>
                         <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">All</option>
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
+                            <option value="all">{{ __('general.pages.payment-methods.all') }}</option>
+                            <option value="1">{{ __('general.pages.payment-methods.active') }}</option>
+                            <option value="0">{{ __('general.pages.payment-methods.inactive') }}</option>
                         </select>
                     </div>
 
@@ -49,7 +49,7 @@
                     <div class="col-12 d-flex justify-content-end">
                         <button class="btn btn-secondary btn-sm"
                                 wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> Reset
+                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.payment-methods.reset') }}
                         </button>
                     </div>
 
@@ -67,15 +67,15 @@
 
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Payment Methods</h5>
+            <h5 class="mb-0">{{ __('general.titles.payment-methods') }}</h5>
             <div class="d-flex align-items-center gap-2">
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> Export
+                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.payment-methods.export') }}
                 </button>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPaymentMethodModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus me-1"></i> New Payment Method
+                    <i class="fa fa-plus me-1"></i> {{ __('general.pages.payment-methods.new_payment_method') }}
                 </button>
             </div>
         </div>
@@ -85,11 +85,11 @@
                 <table class="table table-bordered table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Branch</th>
-                            <th>Status</th>
-                            <th class="text-center">Actions</th>
+                            <th>{{ __('general.pages.payment-methods.id') }}</th>
+                            <th>{{ __('general.pages.payment-methods.name') }}</th>
+                            <th>{{ __('general.pages.payment-methods.branch_name') }}</th>
+                            <th>{{ __('general.pages.payment-methods.status') }}</th>
+                            <th class="text-center">{{ __('general.pages.payment-methods.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,24 +97,24 @@
                         <tr>
                             <td>{{ $paymentMethod->id }}</td>
                             <td>{{ $paymentMethod->name }}</td>
-                            <td>{{ $paymentMethod->branch?->name ?? 'All Branches' }}</td>
+                            <td>{{ $paymentMethod->branch?->name ?? __('general.layout.all_branches') }}</td>
                             <td>
                                 <span class="badge bg-{{ $paymentMethod->active ? 'success' : 'danger' }}">
-                                    {{ $paymentMethod->active ? 'Active' : 'Inactive' }}
+                                    {{ $paymentMethod->active ? __('general.pages.payment-methods.active') : __('general.pages.payment-methods.inactive') }}
                                 </span>
                             </td>
                             <td class="text-center">
                                 @if(!in_array($paymentMethod->slug, ['cash', 'bank-transfer']))
                                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal"
                                     data-bs-target="#editPaymentMethodModal"
-                                    wire:click="setCurrent({{ $paymentMethod->id }})" title="Edit">
+                                    wire:click="setCurrent({{ $paymentMethod->id }})" title="{{ __('general.pages.payment-methods.edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $paymentMethod->id }})" title="Delete">
+                                <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $paymentMethod->id }})" title="{{ __('general.pages.payment-methods.delete') }}">
                                     <i class="fa fa-trash"></i>
                                 </button>
                                 @else
-                                <i class="fa fa-lock text-muted" title="This payment method cannot be edited or deleted"></i>
+                                <i class="fa fa-lock text-muted" title="{{ __('general.pages.payment-methods.lock_tooltip') }}"></i>
                                 @endif
                             </td>
                         </tr>
@@ -142,21 +142,21 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ $current?->id ? 'Edit' : 'New' }} Payment Method</h5>
+                    <h5 class="modal-title">{{ $current?->id ? __('general.pages.payment-methods.edit_payment_method') : __('general.pages.payment-methods.new_payment_method') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body row">
                     <div class="col-md-6 mb-3">
-                        <label for="expenseCategoryName" class="form-label">Name</label>
-                        <input type="text" class="form-control" wire:model="data.name" id="expenseCategoryName" placeholder="Enter payment method name">
+                        <label for="expenseCategoryName" class="form-label">{{ __('general.pages.payment-methods.name') }}</label>
+                        <input type="text" class="form-control" wire:model="data.name" id="expenseCategoryName" placeholder="{{ __('general.pages.payment-methods.enter_payment_method_name') }}">
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="branch_id" class="form-label">Branch</label>
+                        <label for="branch_id" class="form-label">{{ __('general.pages.payment-methods.branch') }}</label>
                         @if(admin()->branch_id == null)
                         <select class="form-select" id="branch_id" wire:model="data.branch_id">
-                            <option value="">All Branches</option>
+                            <option value="">{{ __('general.layout.all_branches') }}</option>
                             @foreach($branches as $branch)
                             <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                             @endforeach
@@ -169,14 +169,14 @@
                     <div class="col-12">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="expenseCategoryActive" wire:model="data.active">
-                            <label class="form-check-label" for="expenseCategoryActive">Is Active</label>
+                            <label class="form-check-label" for="expenseCategoryActive">{{ __('general.pages.payment-methods.is_active') }}</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" wire:click="save">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('general.pages.payment-methods.close') }}</button>
+                    <button type="button" class="btn btn-primary" wire:click="save">{{ __('general.pages.payment-methods.save') }}</button>
                 </div>
             </div>
         </div>

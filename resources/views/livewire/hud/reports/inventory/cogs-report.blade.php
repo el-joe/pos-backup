@@ -2,7 +2,7 @@
     <div class="card shadow-sm border-0 bg-dark text-light mb-4">
         <div class="card-header d-flex align-items-center justify-content-between">
             <h4 class="mb-0">
-                <i class="fa fa-shopping-cart me-2"></i> Cost of Goods Sold
+                <i class="fa fa-shopping-cart me-2"></i> {{ __('general.pages.reports.inventory.cogs.title') }}
             </h4>
         </div>
         <div class="card-body p-0">
@@ -10,8 +10,8 @@
                 <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
                     <thead class="table-primary text-dark">
                         <tr>
-                            <th>Branch</th>
-                            <th>COGS Amount</th>
+                            <th>{{ __('general.pages.reports.inventory.cogs.branch') }}</th>
+                            <th>{{ __('general.pages.reports.inventory.cogs.cogs_amount') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,12 +28,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="2" class="text-center text-muted">No COGS data found.</td>
+                                <td colspan="2" class="text-center text-muted">{{ __('general.pages.reports.inventory.cogs.no_data') }}</td>
                             </tr>
                         @endforelse
                         @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-semibold">
-                                <td>Total</td>
+                                <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td>{{ number_format($total_cogs, 2) }}</td>
                             </tr>
                         @endif
