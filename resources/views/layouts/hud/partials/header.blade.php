@@ -111,7 +111,7 @@
                 <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
                 <div class="menu-badge bg-theme"></div>
             </a>
-            <div class="dropdown-menu dropdown-menu-end mt-1 w-300px fs-11px pt-1">
+            <div class="dropdown-menu dropdown-menu-{{ session('locale') == 'en' ? 'end' : 'start' }} mt-1 w-300px fs-11px pt-1">
                 <h6 class="dropdown-header fs-10px mb-1">{{ __('general.layout.notifications') }}</h6>
                 <div class="dropdown-divider mt-1"></div>
                 <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
