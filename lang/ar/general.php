@@ -92,6 +92,8 @@ return [
         'language' => 'اللغة',
         'theme_color' => 'لون السمة',
         'theme_cover' => 'غلاف السمة',
+        'see_all' => 'عرض الكل',
+        'no_new_notifications' => 'لا توجد إشعارات جديدة',
     ],
     'pages' => [
         'reports' => [
@@ -478,6 +480,7 @@ return [
             'branch' => 'الفرع',
             'customer' => 'العميل',
             'order_date' => 'تاريخ الطلب',
+            'due_date' => 'تاريخ الاستحقاق',
             'invoice_number' => 'رقم الفاتورة',
             'leave_blank_for_auto_generated' => 'اتركه فارغًا لإنشاء تلقائي',
             'payment_note' => 'ملاحظة الدفع',

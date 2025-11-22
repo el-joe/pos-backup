@@ -64,6 +64,14 @@
                     </div>
 
                     <div class="col-sm-3">
+                        <label for="dueDate" class="fw-semibold">{{ __('general.pages.pos-page.due_date') }}:</label>
+                        <input type="date" class="form-control" id="dueDate" wire:model="data.due_date">
+                        @error('data.due_date')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div class="col-sm-3">
                         <label for="invoiceNumber" class="fw-semibold">{{ __('general.pages.pos-page.invoice_number') }}:</label>
                         <input type="text" class="form-control" id="invoiceNumber" wire:model="data.invoice_number">
                         <small class="text-primary">{{ __('general.pages.pos-page.leave_blank_for_auto_generated') }}</small>

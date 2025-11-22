@@ -109,74 +109,21 @@
         <div class="menu-item dropdown dropdown-mobile-full">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>
+                @if(count($__unreaded_notifications) > 0)
                 <div class="menu-badge bg-theme"></div>
+                @endif
             </a>
             <div class="dropdown-menu dropdown-menu-{{ session('locale') == 'en' ? 'end' : 'start' }} mt-1 w-300px fs-11px pt-1">
                 <h6 class="dropdown-header fs-10px mb-1">{{ __('general.layout.notifications') }}</h6>
                 <div class="dropdown-divider mt-1"></div>
-                <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-                    <div class="fs-20px">
-                        <i class="bi bi-bag text-theme"></i>
-                    </div>
-                    <div class="flex-1 flex-wrap ps-3">
-                        <div class="mb-1 text-inverse">NEW ORDER RECEIVED ($1,299)</div>
-                        <div class="small text-inverse text-opacity-50">JUST NOW</div>
-                    </div>
-                    <div class="ps-2 fs-16px">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </a>
-                <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-                    <div class="fs-20px w-20px">
-                        <i class="bi bi-person-circle text-theme"></i>
-                    </div>
-                    <div class="flex-1 flex-wrap ps-3">
-                        <div class="mb-1 text-inverse">3 NEW ACCOUNT CREATED</div>
-                        <div class="small text-inverse text-opacity-50">2 MINUTES AGO</div>
-                    </div>
-                    <div class="ps-2 fs-16px">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </a>
-                <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-                    <div class="fs-20px w-20px">
-                        <i class="bi bi-gear text-theme"></i>
-                    </div>
-                    <div class="flex-1 flex-wrap ps-3">
-                        <div class="mb-1 text-inverse">SETUP COMPLETED</div>
-                        <div class="small text-inverse text-opacity-50">3 MINUTES AGO</div>
-                    </div>
-                    <div class="ps-2 fs-16px">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </a>
-                <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-                    <div class="fs-20px w-20px">
-                        <i class="bi bi-grid text-theme"></i>
-                    </div>
-                    <div class="flex-1 flex-wrap ps-3">
-                        <div class="mb-1 text-inverse">WIDGET INSTALLATION DONE</div>
-                        <div class="small text-inverse text-opacity-50">5 MINUTES AGO</div>
-                    </div>
-                    <div class="ps-2 fs-16px">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </a>
-                <a href="#" class="d-flex align-items-center py-10px dropdown-item text-wrap fw-semibold">
-                    <div class="fs-20px w-20px">
-                        <i class="bi bi-credit-card text-theme"></i>
-                    </div>
-                    <div class="flex-1 flex-wrap ps-3">
-                        <div class="mb-1 text-inverse">PAYMENT METHOD ENABLED</div>
-                        <div class="small text-inverse text-opacity-50">10 MINUTES AGO</div>
-                    </div>
-                    <div class="ps-2 fs-16px">
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </a>
+                @forelse ($__unreaded_notifications as $notification)
+                    {!! __($notification->data['translation_key'], $notification->data['translation_params']+['id'=>$notification->id,'date'=>carbon($notification->created_at)->diffForHumans()] ?? []) !!}
+                @empty
+                    <div class="text-center p-2 text-muted">{{ __('general.layout.no_new_notifications') }}</div>
+                @endforelse
                 <hr class="my-0">
                 <div class="py-10px mb-n2 text-center">
-                    <a href="#" class="text-decoration-none fw-bold">SEE ALL</a>
+                    <a href="{{ route('admin.notifications.list') }}" class="text-decoration-none fw-bold">{{ __('general.layout.see_all') }}</a>
                 </div>
             </div>
         </div>

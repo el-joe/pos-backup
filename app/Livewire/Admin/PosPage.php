@@ -16,6 +16,7 @@ use App\Services\ProductService;
 use App\Services\SellService;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -42,6 +43,7 @@ class PosPage extends Component
 
     function mount() {
         $this->data['order_date'] = now()->format('Y-m-d');
+        $this->data['due_date'] = now()->format('Y-m-d');
         if(admin()->branch_id){
             $this->data['branch_id'] = admin()->branch_id;
             $this->updatingDataBranchId(admin()->branch_id);
@@ -258,7 +260,8 @@ class PosPage extends Component
             'paid_amount' => array_sum(array_column($payments ?? [], 'amount')),
             'tax_amount'=> $tax ?? 0,
             'discount_amount'=> $discount ?? 0,
-            'sell_price' => $subTotal ?? 0
+            'sell_price' => $subTotal ?? 0,
+            'due_date' => $this->data['due_date'] ?? null,
         ];
 
         foreach ($products as $product) {
@@ -280,6 +283,11 @@ class PosPage extends Component
         }
 
         $this->sellService->save(null,$dataToSave);
+
+        Artisan::call('app:stock-quantity-alert-check', [
+            '--branch_id' => $this->branch?->id,
+            '--tenant_id' => tenant('id'),
+        ]);
 
         $this->dismiss();
         $this->popup('success', 'Order placed successfully');

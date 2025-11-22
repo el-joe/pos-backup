@@ -92,6 +92,8 @@ return [
         'language' => 'Language',
         'theme_color' => 'Theme Color',
         'theme_cover' => 'Theme Cover',
+        'see_all' => 'See All',
+        'no_new_notifications' => 'No new notifications',
     ],
     'pages' => [
         'reports' => [
@@ -477,6 +479,7 @@ return [
             'branch' => 'Branch',
             'customer' => 'Customer',
             'order_date' => 'Order Date',
+            'due_date' => 'Due Date',
             'invoice_number' => 'Invoice Number',
             'leave_blank_for_auto_generated' => 'Leave blank for auto-generated',
             'payment_note' => 'Payment Note',

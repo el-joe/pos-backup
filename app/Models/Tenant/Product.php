@@ -221,4 +221,16 @@ class Product extends Model
         $stock = $this->stocks()->when($branchId, fn($query) => $query->where('branch_id', $branchId))->first();
         return $stock ? number_format($stock->sell_price, 2) : 0;
     }
+
+    function quantityAlert($branchId){
+        $stock = $this->branchStock($this->unit_id,$branchId);
+        $alertQty = $this->alert_qty ?? 0;
+        if($stock == 0){
+            return 'out_of_stock';
+        }elseif($stock <= $alertQty){
+            return 'low_stock';
+        }
+
+        return null;
+    }
 }

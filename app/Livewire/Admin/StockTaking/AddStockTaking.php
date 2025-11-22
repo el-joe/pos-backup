@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\StockTaking;
 
+use App\Models\Tenant\Admin;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockTakingService;
@@ -132,6 +133,11 @@ class AddStockTaking extends Component
         $data['stocks'] = collect($this->stocks ?? [])->flatten(1)->values()->toArray();
 
         $st = $this->stockTakingService->save(null,$data);
+
+        Admin::whereType('super_admin')->each(function($admin) use ($st) {
+            $admin->notifyNewStockTacking($st);
+        });
+
 
         $this->popup('success', 'Stock Take saved successfully');
 

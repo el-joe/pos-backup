@@ -14,6 +14,7 @@ class StockTransfer extends Model
         'ref_no',
         'status',
         'expense_paid_branch_id',
+        'created_by'
     ];
 
     protected $casts = [
@@ -36,6 +37,10 @@ class StockTransfer extends Model
 
     function expenses() {
         return $this->morphMany(Expense::class, 'model');
+    }
+
+    function createdBy() {
+        return $this->belongsTo(Admin::class, 'created_by');
     }
 
     function scopeFilter($q,$filters = []) {

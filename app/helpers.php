@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Tenant\Admin;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -147,4 +148,8 @@ function exportToExcel($data, $columns, $headers, $fileName) {
     );
 
     return public_path("storage/{$filePath}");
+}
+
+function superAdmins(){
+    return Admin::where('type', 'super_admin')->get();
 }

@@ -57,7 +57,8 @@ class SellService
             'discount_id' => $data['discount_id'] ?? null,
             'discount_type' => $data['discount_type'] ?? null,
             'discount_value' => $data['discount_value'] ?? 0,
-            'paid_amount' => 0
+            'paid_amount' => 0,
+            'due_date' => $data['due_date'] ?? null,
         ])->save();
 
         // fill sale items data
@@ -440,5 +441,10 @@ class SellService
         }
 
         return false;
+    }
+
+    function salesSummaryReport($from_date, $to_date, $period)
+    {
+        return $this->repo->salesSummaryReport($from_date, $to_date, $period);
     }
 }

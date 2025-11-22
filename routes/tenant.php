@@ -17,6 +17,7 @@ use App\Livewire\Admin\Categories\CategoriesList;
 use App\Livewire\Admin\Discounts\DiscountsList;
 use App\Livewire\Admin\Expenses\ExpenseCategoriesList;
 use App\Livewire\Admin\Expenses\ExpensesList;
+use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\AddEditProduct;
@@ -102,12 +103,17 @@ Route::middleware([
         Route::get('login',[AuthController::class,'login'])->name('login');
         Route::post('login',[AuthController::class,'postLogin'])->name('postLogin');
 
+        Route::post('notifications/mark-as-read/{id}', [AuthController::class, 'markAsRead'])->name('notifications.markAsRead');
+
         Route::middleware([AdminAuthMiddleware::class])->group(function () {
 
             Route::get('logout',[AuthController::class,'logout'])->name('logout');
 
             Route::get('/',Statistics::class)->name('statistics');
             Route::get('cash-register',CashRegisterPage::class)->name('cash.register.open');
+
+            Route::get('notifications', NotificationsList::class)->name('notifications.list');
+
             Route::get('switch-branch/{branch?}', [AuthController::class, 'switchBranch'])->name('switch.branch');
             Route::get('branches',BranchesList::class)->name('branches.list');
             Route::get('categories', CategoriesList::class)->name('categories.list');
@@ -264,7 +270,9 @@ Route::get('download-file', function () {
 // Filters into all list pages --------- #Done Except Reports
 // Export/Import Excel,CSV,PDF --------- #Done Except Reports
 // Translation System --------- #Done
-// Notification System
+// Notification System --------- #Done
+// Make Commands Work as Scheduled Tasks
+// Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
 // Add Currency & City to branch

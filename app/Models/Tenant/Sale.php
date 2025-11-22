@@ -12,7 +12,7 @@ class Sale extends Model
     protected $fillable = [
         'customer_id','branch_id','invoice_number','order_date','created_by',
         'tax_id','tax_percentage','discount_id','discount_type','discount_value',
-        'paid_amount','max_discount_amount'
+        'paid_amount','max_discount_amount','due_date'
     ];
 
     // boot method to update discount max value to 0 if null

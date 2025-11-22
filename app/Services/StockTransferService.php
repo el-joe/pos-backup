@@ -53,6 +53,7 @@ class StockTransferService
             'ref_no' => $data['ref_no'],
             'status' => $data['status'],
             'expense_paid_branch_id' => $expenseBranchId,
+            'created_by' => $data['created_by'] ?? null,
         ]);
 
         $items = $data['items'] ?? $data['products'] ?? [];

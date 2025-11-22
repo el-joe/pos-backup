@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Stocks;
 
 use App\Enums\StockTransferStatusEnum;
+use App\Models\Tenant\Admin;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockService;
@@ -146,7 +147,8 @@ class AddStockTransfer extends Component
     function save() {
         $dataToSave = [
             ...($this->data??[]),
-            'items' => $this->items
+            'items' => $this->items,
+            'created_by' => admin()->id,
         ];
 
         if(!$this->validator($dataToSave))return;
@@ -159,6 +161,10 @@ class AddStockTransfer extends Component
         }
 
         $stockTransfer = $this->stockTransferService->save($dataToSave);
+
+        Admin::whereType('super_admin')->each(function($admin) use ($stockTransfer) {
+            $admin->notifyNewStockTransfer($stockTransfer);
+        });
 
         $this->alert('success','Stock Transfer created successfully');
 

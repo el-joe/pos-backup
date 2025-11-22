@@ -195,7 +195,7 @@ class AddPurchase extends Component
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
         if($cashRegister){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $this->calcDetails['orderGrandTotal']);
+            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $calcDetails['orderGrandTotal']);
         }
 
         // save purchase

@@ -65,7 +65,31 @@
                     console.error('Error:', error);
                 });
             }
+
+
         });
+            function markAsRead(event,id) {
+                const element = $(event.currentTarget);
+                const href = element.data('href');
+                fetch('/admin/notifications/mark-as-read/' + id, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        element.removeClass('unread-notification').addClass('read-notification');
+                        if(href) {
+                            window.location.href = href;
+                        }
+                    } else {
+                        console.error('Failed to mark notification as read');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
 
     </script>
 
