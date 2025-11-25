@@ -37,7 +37,7 @@ class TenantCreateAdmin extends Command
 
         foreach ($permissions as $key => $value) {
             foreach($value as $permission){
-                Permission::firstOrCreate(['name' => $key.'.'.$permission, 'guard_name' => 'admin']);
+                Permission::firstOrCreate(['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin']);
                 $admin->givePermissionTo($key.'.'.$permission);
             }
         }
