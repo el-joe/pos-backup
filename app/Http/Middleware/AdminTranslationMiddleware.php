@@ -16,7 +16,9 @@ class AdminTranslationMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         app()->setLocale(session('locale', config('app.locale')));
-        view()->share('__unreaded_notifications', admin()->unreadedNotifications);
+        if(admin()?->id){
+            view()->share('__unreaded_notifications', admin()->unreadNotifications);
+        }
         return $next($request);
     }
 }
