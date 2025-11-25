@@ -18,9 +18,9 @@ return [
      */
     'central_domains' => [
         'mohaaseb.com',
-        '127.0.0.1',
-        'localhost',
-        'pos.loc'
+        // '127.0.0.1',
+        // 'localhost',
+        // 'pos.loc'
     ],
 
     /**
