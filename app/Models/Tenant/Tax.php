@@ -9,6 +9,12 @@ class Tax extends Model
     protected $fillable = ['name','rate'];
 
     function scopeFilter($q,$filter) {
-        return $q;
+        return $q->when($filter['search'] ?? null, function($query, $search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        })->when($filter['active'] ?? null, function($query, $active) {
+            if ($active !== 'all') {
+                $query->where('active', $active);
+            }
+        });
     }
 }

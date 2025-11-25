@@ -108,73 +108,74 @@
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Financial Reports </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Trial Balance</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Income Statement</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Cash Flow Statement</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> General Ledger</a> </li>
+                                <li> <a href="{{ route('admin.reports.financial.trail-balance') }}"><i class="fa fa-line-chart fa-fw"></i> Trial Balance</a> </li>
+                                <li> <a href="{{ route('admin.reports.financial.income-statement') }}"><i class="fa fa-bar-chart fa-fw"></i> Income Statement</a> </li>
+                                <li> <a href="{{ route('admin.reports.financial.cash-flow-statement') }}"><i class="fa fa-money fa-fw"></i> Cash Flow Statement</a> </li>
+                                <li> <a href="{{ route('admin.reports.financial.general-ledger') }}"><i class="fa fa-users fa-fw"></i> General Ledger</a> </li>
                             </ul>
                         </li>
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Sales Reports </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Sales Summary</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Sales by Product</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Sales by Category</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Sales by Branch</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales by Payment Method</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales by Customer</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales Profit Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> VAT on Sales (VAT Payable)</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Sales Return Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.sales.sales.summary') }}"><i class="fa fa-line-chart fa-fw"></i> Sales Summary</a> </li>
+                                <li> <a href="{{ route('admin.reports.sales.sales.product') }}"><i class="fa fa-line-chart fa-fw"></i> Sales by Product</a> </li>
+                                {{-- <li> <a href="{{ route('admin.reports.sales.sales.by-category') }}"><i class="fa fa-bar-chart fa-fw"></i> Sales by Category</a> </li> --}}
+                                <li> <a href="{{ route('admin.reports.sales.sales.branch') }}"><i class="fa fa-money fa-fw"></i> Sales by Branch</a> </li>
+                                {{-- <li> <a href="{{ route('admin.reports.sales.sales.by-payment-method') }}"><i class="fa fa-users fa-fw"></i> Sales by Payment Method</a> </li> --}}
+                                <li> <a href="{{ route('admin.reports.sales.sales.customer') }}"><i class="fa fa-users fa-fw"></i> Sales by Customer</a> </li>
+                                <li> <a href="{{ route('admin.reports.sales.sales.profit-loss') }}"><i class="fa fa-users fa-fw"></i> Sales Profit Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.sales.sales.vat-report') }}"><i class="fa fa-users fa-fw"></i> VAT on Sales (VAT Payable)</a> </li>
+                                <li> <a href="{{ route('admin.reports.sales.sales.returns') }}"><i class="fa fa-users fa-fw"></i> Sales Return Report</a> </li>
                             </ul>
                         </li>
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Purchase Reports </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Purchase Summary</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Purchase by Supplier</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-bar-chart fa-fw"></i> Purchase by Category</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Purchase Return Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Purchase Discount Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> VAT on Purchases (VAT Receivable)</a> </li>
+                                <li> <a href="{{ route('admin.reports.purchases.purchases.summary') }}"><i class="fa fa-line-chart fa-fw"></i> Purchase Summary</a> </li>
+                                <li> <a href="{{ route('admin.reports.purchases.purchases.supplier') }}"><i class="fa fa-line-chart fa-fw"></i> Purchase by Supplier</a> </li>
+                                <li> <a href="{{ route('admin.reports.purchases.purchases.product') }}"><i class="fa fa-bar-chart fa-fw"></i> Purchase by Product</a> </li>
+                                <li> <a href="{{ route('admin.reports.purchases.purchases.branch') }}"><i class="fa fa-bar-chart fa-fw"></i> Purchase by Branch</a> </li>
+                                <li> <a href="{{ route('admin.reports.purchases.purchases.returns') }}"><i class="fa fa-users fa-fw"></i> Purchase Return Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.purchases.purchases.discounts') }}"><i class="fa fa-users fa-fw"></i> Purchase Discount Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.purchases.purchases.vat-report') }}"><i class="fa fa-users fa-fw"></i> VAT on Purchases (VAT Receivable)</a> </li>
                             </ul>
                         </li>
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Inventory & COGS Reports </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li> <a href="index4.html"><i class="fa fa-cubes fa-fw"></i> Stock Valuation Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-exchange fa-fw"></i> Stock Movement Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-calculator fa-fw"></i> COGS Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-warning fa-fw"></i> Inventory Shortage Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.inventory.stock-valuation') }}"><i class="fa fa-cubes fa-fw"></i> Stock Valuation Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.inventory.stock-movement') }}"><i class="fa fa-exchange fa-fw"></i> Stock Movement Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.inventory.cogs-report') }}"><i class="fa fa-calculator fa-fw"></i> COGS Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.inventory.shortage-report') }}"><i class="fa fa-warning fa-fw"></i> Inventory Shortage Report</a> </li>
                             </ul>
                         </li>
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Performance & Analysis Reports </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li> <a href="index4.html"><i class="fa fa-line-chart fa-fw"></i> Profit Margin by Product</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Customer Outstanding Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-users fa-fw"></i> Supplier Payable Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Expense Breakdown</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Revenue Breakdown</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-percent fa-fw"></i> Discount Impact Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-trophy fa-fw"></i> Sales Threshold (Discount Trigger) Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.performance.product-profit-margin') }}"><i class="fa fa-line-chart fa-fw"></i> Profit Margin by Product</a> </li>
+                                <li> <a href="{{ route('admin.reports.performance.customer-outstanding') }}"><i class="fa fa-users fa-fw"></i> Customer Outstanding Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.performance.supplier-payable') }}"><i class="fa fa-users fa-fw"></i> Supplier Payable Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.performance.expense-breakdown') }}"><i class="fa fa-money fa-fw"></i> Expense Breakdown</a> </li>
+                                <li> <a href="{{ route('admin.reports.performance.revenue-breakdown-by-branch') }}"><i class="fa fa-money fa-fw"></i> Revenue Breakdown</a> </li>
+                                <li> <a href="{{ route('admin.reports.performance.discount-impact') }}"><i class="fa fa-percent fa-fw"></i> Discount Impact Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.performance.sales-threshold') }}"><i class="fa fa-trophy fa-fw"></i> Sales Threshold (Discount Trigger) Report</a> </li>
                             </ul>
                         </li>
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Tax & Compliance Reports </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li> <a href="index4.html"><i class="fa fa-percent fa-fw"></i> VAT Summary</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-file-text fa-fw"></i> Withholding Tax Report</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-book fa-fw"></i> Audit Trail Report</a> </li>
+                                <li> <a href="{{ route('admin.reports.taxes.vat-summary') }}"><i class="fa fa-percent fa-fw"></i> VAT Summary</a> </li>
+                                <li> <a href="{{ route('admin.reports.taxes.withholding-tax') }}"><i class="fa fa-file-text fa-fw"></i> Withholding Tax Report</a> </li>
+                                <li> <a href="#"><i class="fa fa-book fa-fw"></i> Audit Trail Report (Soon)</a> </li>
                             </ul>
                         </li>
 
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="fa fa-bar-chart fa-fw"></i> <span class="hide-menu"> Branch / User / Cash Reports </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li> <a href="index4.html"><i class="fa fa-money fa-fw"></i> Cash Register Summary</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-building fa-fw"></i> Branch Profitability</a> </li>
-                                <li> <a href="index4.html"><i class="fa fa-user fa-fw"></i> User / Cashier Performance</a> </li>
+                                <li> <a href="{{ route('admin.reports.cash.register.report') }}"><i class="fa fa-money fa-fw"></i> Cash Register Summary</a> </li>
+                                <li> <a href="{{ route('admin.reports.branch.profitability') }}"><i class="fa fa-building fa-fw"></i> Branch Profitability</a> </li>
+                                <li> <a href="{{ route('admin.reports.cashier.report') }}"><i class="fa fa-user fa-fw"></i> User / Cashier Performance</a> </li>
                             </ul>
                         </li>
 

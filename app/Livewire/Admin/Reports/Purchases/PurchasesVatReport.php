@@ -8,7 +8,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 
-#[Layout('layouts.admin')]
 class PurchasesVatReport extends Component
 {
     public $from_date;
@@ -24,7 +23,8 @@ class PurchasesVatReport extends Component
     public function render()
     {
         $this->report = $this->getPurchasesVatReport();
-        return view('livewire.admin.reports.purchases.purchases-vat-report', [
+
+        return layoutView('reports.purchases.purchases-vat-report', [
             'report' => $this->report,
             'from_date' => $this->from_date,
             'to_date' => $this->to_date,

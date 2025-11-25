@@ -10,7 +10,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
-#[Layout('layouts.admin')]
 class AdminsList extends Component
 {
     use LivewireOperations,WithPagination;
@@ -18,6 +17,10 @@ class AdminsList extends Component
     private $adminService, $branchService;
     public $current;
     public $data = [];
+
+    public $collapseFilters = false;
+    public $filters = [];
+    public $export = null;
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -91,9 +94,32 @@ class AdminsList extends Component
 
     public function render()
     {
-        $admins = $this->adminService->activeList();
+        $admins = $this->adminService->activeList(filter : $this->filters);
+
+        if ($this->export == 'excel') {
+            #	Name	Phone	Email	Type	Branch	Active
+            $data = $admins->map(function ($admin, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $admin->name,
+                    'phone' => $admin->phone,
+                    'email' => $admin->email,
+                    'type' => ucfirst(str_replace('_', ' ', $admin->type)),
+                    'branch' => $admin->branch?->name ?? 'N/A',
+                    'active' => $admin->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'phone', 'email','type', 'branch', 'active'];
+            $headers = ['#', 'Name', 'Phone', 'Email', 'Type', 'Branch', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'branches');
+
+            $this->redirectToDownload($fullPath);
+        }
+
         $branches = $this->branchService->activeList();
         $roles = Role::whereActive(1)->get();
-        return view('livewire.admin.admins.admins-list',get_defined_vars());
+
+        return layoutView('admins.admins-list', get_defined_vars());
     }
 }

@@ -8,13 +8,16 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class TaxesList extends Component
 {
     use LivewireOperations, WithPagination;
     private $taxService;
     public $current;
     public $data = [];
+
+    public $filters = [];
+    public $export;
+    public $collapseFilters = false;
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -70,7 +73,29 @@ class TaxesList extends Component
 
     public function render()
     {
-        $taxes = $this->taxService->list(perPage: 10, orderByDesc: 'id');
-        return view('livewire.admin.taxes.taxes-list', get_defined_vars());
+        if ($this->export == 'excel') {
+            $taxes = $this->taxService->list(filter: $this->filters, orderByDesc: 'id');
+
+            $data = $taxes->map(function ($tax, $loop) {
+                #	Name	Percentage	Status
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $tax->name,
+                    'rate' => $tax->rate,
+                    'active' => $tax->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'rate', 'active'];
+            $headers = ['#', 'Name', 'Percentage', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'taxes');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $taxes = $this->taxService->list(perPage: 10, orderByDesc: 'id', filter: $this->filters);
+
+        return layoutView('taxes.taxes-list', get_defined_vars())
+            ->title(__('general.titles.taxes'));
     }
 }

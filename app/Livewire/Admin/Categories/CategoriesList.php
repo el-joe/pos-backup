@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class CategoriesList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -19,8 +18,13 @@ class CategoriesList extends Component
     public $rules = [
         'name' => 'required|string|max:255',
         'parent_id' => 'nullable|integer',
+        'icon' => 'nullable|string|max:255',
         'active' => 'boolean',
     ];
+
+    public $export = null;
+    public $collapseFilters = false;
+    public $filters = [];
 
     function boot() {
         $this->categoryService = app(CategoryService::class);
@@ -31,9 +35,12 @@ class CategoriesList extends Component
         if ($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
+        }else{
+            $this->data = [];
         }
 
         $this->dispatch('iCheck-load');
+        $this->dispatch('changeSelect', $this->data['icon'] ?? null);
     }
 
     function deleteAlert($id)
@@ -72,13 +79,40 @@ class CategoriesList extends Component
 
     public function render()
     {
+
+        if ($this->export == 'excel') {
+            $qData = $this->categoryService->list(
+                orderByDesc: 'categories.created_at',
+                filter: $this->filters
+            );
+
+            $data = $qData->map(function ($category, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $category->name,
+                    'parent_category' => $category->parent ? $category->parent->name : 'N/A',
+                    'active' => $category->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'parent_category', 'active'];
+            $headers = ['#', 'Name', 'Parent Category', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'categories');
+
+            $this->redirectToDownload($fullPath);
+        }
+
         $categories = $this->categoryService->list(
             perPage: 10,
-            orderByDesc: 'categories.created_at'
+            orderByDesc: 'categories.created_at',
+            filter: $this->filters
         );
 
         $allCategories = $this->categoryService->list();
 
-        return view('livewire.admin.categories.categories-list', get_defined_vars());
+        $bootstrapIcons = config('icons.fontawesome_icons');
+
+        return layoutView('categories.categories-list', get_defined_vars())
+            ->title(__('general.titles.categories'));
     }
 }

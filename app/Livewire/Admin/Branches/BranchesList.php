@@ -9,13 +9,17 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class BranchesList extends Component
 {
     use LivewireOperations,WithPagination;
     private $branchService, $taxService;
     public $current;
     public $data = [];
+
+    public $filters = [];
+    public $collapseFilters = false;
+
+    public $export;
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -77,13 +81,40 @@ class BranchesList extends Component
 
     public function render()
     {
+        if ($this->export == 'excel') {
+            $branches = $this->branchService->list(
+                orderByDesc : 'branches.created_at',
+                filter : $this->filters
+            );
+
+            $data = $branches->map(function ($branch, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $branch->name,
+                    'phone' => $branch->phone,
+                    'email' => $branch->email,
+                    'address' => $branch->address,
+                    'active' => $branch->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'phone', 'email','address', 'active'];
+            $headers = ['#', 'Name', 'Phone', 'Email', 'Address', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'branches');
+
+            $this->redirectToDownload($fullPath);
+        }
+
         $branches = $this->branchService->list(
             perPage : 10,
-            orderByDesc : 'branches.created_at'
+            orderByDesc : 'branches.created_at',
+            filter : $this->filters
         );
+
 
         $taxes = $this->taxService->list();
 
-        return view('livewire.admin.branches.branches-list', get_defined_vars());
+        return layoutView('branches.branches-list', get_defined_vars())
+            ->title(__('general.titles.branches'));
     }
 }

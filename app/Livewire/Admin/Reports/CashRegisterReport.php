@@ -7,7 +7,6 @@ use Livewire\Component;
 use App\Models\Tenant\CashRegister;
 use Illuminate\Support\Carbon;
 
-#[Layout('layouts.admin')]
 
 class CashRegisterReport extends Component
 {
@@ -77,6 +76,6 @@ class CashRegisterReport extends Component
 
     public function render()
     {
-        return view('livewire.admin.reports.cash-register-report');
+        return layoutView('reports.cash-register-report');
     }
 }

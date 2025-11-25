@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class BrandsList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -20,6 +19,11 @@ class BrandsList extends Component
         'name' => 'required|string|max:255',
         'active' => 'boolean',
     ];
+
+    public $export;
+    public $filters = [];
+
+    public $collapseFilters = false;
 
     function boot() {
         $this->brandService = app(BrandService::class);
@@ -69,7 +73,30 @@ class BrandsList extends Component
 
     public function render()
     {
-        $brands = $this->brandService->list([], [], 10, 'id');
-        return view('livewire.admin.brands.brands-list',get_defined_vars());
+        if ($this->export == 'excel') {
+            $qData = $this->brandService->list(
+                orderByDesc : 'brands.id',
+                filter : $this->filters
+            );
+
+            $data = $qData->map(function ($brand, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $brand->name,
+                    'active' => $brand->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'active'];
+            $headers = ['#', 'Name', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'brands');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $brands = $this->brandService->list([], $this->filters, 10, 'id');
+
+        return layoutView('brands.brands-list', get_defined_vars())
+            ->title(__('general.titles.brands'));
     }
 }

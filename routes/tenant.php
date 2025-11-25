@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\GeneralController;
+use App\Http\Middleware\AdminTranslationMiddleware;
 use App\Http\Middleware\Tenant\AdminAuthMiddleware;
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Admins\AdminsList;
@@ -16,6 +17,7 @@ use App\Livewire\Admin\Categories\CategoriesList;
 use App\Livewire\Admin\Discounts\DiscountsList;
 use App\Livewire\Admin\Expenses\ExpenseCategoriesList;
 use App\Livewire\Admin\Expenses\ExpensesList;
+use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\AddEditProduct;
@@ -92,6 +94,7 @@ Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
+    AdminTranslationMiddleware::class,
 ])->group(function () {
 
     Route::redirect('/','admin/login');
@@ -100,10 +103,17 @@ Route::middleware([
         Route::get('login',[AuthController::class,'login'])->name('login');
         Route::post('login',[AuthController::class,'postLogin'])->name('postLogin');
 
+        Route::post('notifications/mark-as-read/{id}', [AuthController::class, 'markAsRead'])->name('notifications.markAsRead');
+
         Route::middleware([AdminAuthMiddleware::class])->group(function () {
+
+            Route::get('logout',[AuthController::class,'logout'])->name('logout');
+
             Route::get('/',Statistics::class)->name('statistics');
             Route::get('cash-register',CashRegisterPage::class)->name('cash.register.open');
-            // TODO : Cash Register Save Data for everything related like (sales,purchases,expenses)
+
+            Route::get('notifications', NotificationsList::class)->name('notifications.list');
+
             Route::get('switch-branch/{branch?}', [AuthController::class, 'switchBranch'])->name('switch.branch');
             Route::get('branches',BranchesList::class)->name('branches.list');
             Route::get('categories', CategoriesList::class)->name('categories.list');
@@ -111,7 +121,7 @@ Route::middleware([
             Route::get('units',UnitsList::class)->name('units.list');
             Route::get('taxes',TaxesList::class)->name('taxes.list');
             Route::get('pos',PosPage::class)->name('pos');
-            Route::get('discounts', DiscountsList::class)->name('discounts.list'); //TODO : Need to add sales threshold when type is fixed
+            Route::get('discounts', DiscountsList::class)->name('discounts.list');
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
             // TODO : expenses will be saved without payments and we can add payments later
             Route::get('expenses',ExpensesList::class)->name('expenses.list');
@@ -136,9 +146,7 @@ Route::middleware([
             Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
             // Transactions
             Route::get('transactions',TransactionList::class)->name('transactions.list');
-            // Shipping Companies
-            // Admininstrators (User|Role)
-            // Opening Balance page
+            // TODO : Shipping Companies
 
             // Reports
             Route::group([
@@ -218,6 +226,7 @@ Route::middleware([
                 Route::get('cashier-report', CashierReport::class)->name('cashier.report');
                 Route::get('cash-register-report', CashRegisterReport::class)->name('cash.register.report');
                 Route::get('branch-profitability', BranchProfitability::class)->name('branch.profitability');
+                // TODO : audit report
 
             });
             // Stock Adjustments
@@ -234,15 +243,40 @@ Route::middleware([
             Route::get('roles/{id?}',RoleDetails::class)->name('roles.show');
         });
     });
+
+
+    Route::get('change-language/{lang}', function($lang){
+        if($lang == 'ar'){
+            session()->put('locale','ar');
+        } else {
+            session()->put('locale','en');
+        }
+    })->name('change.language');
+
 });
+
+Route::get('download-file', function () {
+    $file = request()->get('file');
+    if (file_exists($file)) {
+        return response()->download($file);
+    } else {
+        return "File does not exist.";
+    }
+})->name('admin.export.download');
 
 
 // Features to add later
-// Export/Import Excel,CSV,PDF
+// Every Cashier Has Branch Restriction --------- #Done
+// Filters into all list pages --------- #Done Except Reports
+// Export/Import Excel,CSV,PDF --------- #Done Except Reports
+// Translation System --------- #Done
+// Notification System --------- #Done
+// Make Commands Work as Scheduled Tasks
+// Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
 // Add Currency & City to branch
-// Filters into all list pages
+// Audit Logs
 
 // TODO : E-Invoice Coming Soon
 // Email & Notification system

@@ -13,7 +13,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class PurchaseDetails extends Component
 {
     use LivewireOperations;
@@ -171,6 +170,7 @@ class PurchaseDetails extends Component
     {
         $actualQty = $this->purchase->purchaseItems->sum(fn($q)=>$q->actual_qty);
         list($orderSubTotal,$orderDiscountAmount,$orderTotalAfterDiscount,$orderTaxAmount,$orderGrandTotal) = array_values($this->purchaseCalculations());
-        return view('livewire.admin.purchases.purchase-details',get_defined_vars());
+
+        return layoutView('purchases.purchase-details', get_defined_vars());
     }
 }

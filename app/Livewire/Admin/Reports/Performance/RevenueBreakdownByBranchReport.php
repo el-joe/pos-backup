@@ -10,7 +10,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 
-#[Layout('layouts.admin')]
 class RevenueBreakdownByBranchReport extends Component
 {
     public $report = [];
@@ -64,6 +63,11 @@ class RevenueBreakdownByBranchReport extends Component
         if (empty($this->report)) {
             $this->loadReport();
         }
-        return view('livewire.admin.reports.performance.revenue-breakdown-by-branch-report');
+
+        return layoutView('reports.performance.revenue-breakdown-by-branch-report', [
+            'report' => $this->report,
+            'from_date' => $this->from_date,
+            'to_date' => $this->to_date,
+        ]);
     }
 }

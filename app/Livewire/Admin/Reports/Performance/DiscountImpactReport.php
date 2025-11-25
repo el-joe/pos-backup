@@ -10,7 +10,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 
-#[Layout('layouts.admin')]
 class DiscountImpactReport extends Component
 {
     public $report = [];
@@ -74,6 +73,11 @@ class DiscountImpactReport extends Component
         if (empty($this->report)) {
             $this->loadReport();
         }
-        return view('livewire.admin.reports.performance.discount-impact-report');
+
+        return layoutView('reports.performance.discount-impact-report', [
+            'report' => $this->report,
+            'from_date' => $this->from_date,
+            'to_date' => $this->to_date,
+        ]);
     }
 }

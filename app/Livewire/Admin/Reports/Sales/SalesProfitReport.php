@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class SalesProfitReport extends Component
 {
     public $from_date;
@@ -50,7 +49,7 @@ class SalesProfitReport extends Component
 
     public function render()
     {
-        return view('livewire.admin.reports.sales.sales-profit-report', [
+        return layoutView('reports.sales.sales-profit-report', [
             'report' => $this->report,
             'from_date' => $this->from_date,
             'to_date' => $this->to_date,

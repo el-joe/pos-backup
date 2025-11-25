@@ -16,7 +16,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 
-#[Layout('layouts.admin')]
 class AddPurchase extends Component
 {
     use LivewireOperations;
@@ -68,6 +67,12 @@ class AddPurchase extends Component
         $this->taxService = app(TaxService::class);
         $this->accountService = app(AccountService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+    }
+
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['branch_id'] = admin()->branch_id;
+        }
     }
 
     public function updatingProductSearch($value)
@@ -190,7 +195,7 @@ class AddPurchase extends Component
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
         if($cashRegister){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $this->calcDetails['orderGrandTotal']);
+            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $calcDetails['orderGrandTotal']);
         }
 
         // save purchase
@@ -224,6 +229,8 @@ class AddPurchase extends Component
 
         $totalQuantity = array_sum(array_column($this->orderProducts,'qty'));
         list($orderSubTotal,$orderDiscountAmount,$orderTotalAfterDiscount,$orderTaxAmount,$orderGrandTotal) = array_values($this->purchaseCalculations());
-        return view('livewire.admin.purchases.add-purchase',get_defined_vars());
+
+        return layoutView('purchases.add-purchase', get_defined_vars())
+            ->title(__( 'general.titles.add_purchase' ));
     }
 }

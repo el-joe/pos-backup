@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class CashFlowStatementReport extends Component
 {
     public $from_date;
@@ -75,7 +74,7 @@ class CashFlowStatementReport extends Component
 
     public function render()
     {
-        return view('livewire.admin.reports.financial.cash-flow-statement-report', [
+        return layoutView('reports.financial.cash-flow-statement-report', [
             'report' => $this->report,
             'from_date' => $this->from_date,
             'to_date' => $this->to_date,

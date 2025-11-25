@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Stocks;
 
 use App\Enums\StockTransferStatusEnum;
+use App\Models\Tenant\Admin;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockService;
@@ -11,7 +12,6 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class AddStockTransfer extends Component
 {
     use LivewireOperations;
@@ -41,6 +41,12 @@ class AddStockTransfer extends Component
         $this->branchService = app(BranchService::class);
         $this->productService = app(ProductService::class);
         $this->stockService = app(StockService::class);
+    }
+
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['from_branch_id'] = admin()->branch_id;
+        }
     }
 
     function resetSearchInput() {
@@ -141,7 +147,8 @@ class AddStockTransfer extends Component
     function save() {
         $dataToSave = [
             ...($this->data??[]),
-            'items' => $this->items
+            'items' => $this->items,
+            'created_by' => admin()->id,
         ];
 
         if(!$this->validator($dataToSave))return;
@@ -155,6 +162,10 @@ class AddStockTransfer extends Component
 
         $stockTransfer = $this->stockTransferService->save($dataToSave);
 
+        Admin::whereType('super_admin')->each(function($admin) use ($stockTransfer) {
+            $admin->notifyNewStockTransfer($stockTransfer);
+        });
+
         $this->alert('success','Stock Transfer created successfully');
 
         return $this->redirectWithTimeout(route('admin.stocks.transfers.details', $stockTransfer),1500);
@@ -165,6 +176,7 @@ class AddStockTransfer extends Component
         $branches = $this->branchService->activeList();
         $statuses = StockTransferStatusEnum::cases();
         $selectedBranches = $branches->whereIn('id',[$this->data['from_branch_id']??0,$this->data['to_branch_id']??0]);
-        return view('livewire.admin.stocks.add-stock-transfer',get_defined_vars());
+
+        return layoutView('stocks.add-stock-transfer', get_defined_vars());
     }
 }

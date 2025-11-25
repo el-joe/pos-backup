@@ -48,6 +48,10 @@ class PurchaseItem extends Model
 
         return $this->unit_amount_after_tax * $this->actual_qty;
     }
+    function getRefundedTotalAfterTaxAttribute() : float {
+
+        return $this->unit_amount_after_tax * $this->refunded_qty;
+    }
 
     function getTotalAfterXMarginAttribute() : float {
         $totalAfterTax = $this->unit_amount_after_tax;

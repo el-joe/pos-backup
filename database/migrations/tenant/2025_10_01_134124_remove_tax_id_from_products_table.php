@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE `products` DROP `tax_id`,DROP `tax_rate`,DROP `sale_price`');
+        DB::statement('ALTER TABLE `products` DROP `tax_id`,DROP `tax_rate`,DROP `sell_price`');
     }
 
     /**
