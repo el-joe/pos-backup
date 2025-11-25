@@ -29,6 +29,7 @@ class RegisterController extends Controller
             'domain'=>$request->domain
         ]);
 
+
         Artisan::call('tenants:seed',[
             '--tenants'=>[$tenant['id']],
         ]);

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Tenant;
 use App\Models\Tenant\Admin;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Setting;
@@ -31,28 +32,32 @@ class TenantCreateAdmin extends Command
      */
     public function handle()
     {
-        // get arguments
-        $admin = Admin::create(json_decode($this->argument('request'),true));
 
-        $permissions = defaultPermissionsList();
+        // الحصول على التينانت المحدد
+        $tenant = Tenant::find(tenant()->id);
 
-        foreach ($permissions as $key => $value) {
-            foreach($value as $permission){
-                Permission::firstOrCreate(['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin']);
-                // $admin->givePermissionTo($key.'.'.$permission);
+        // التبديل للقاعدة الخاصة بالـ tenant
+        $tenant->run(function () {
+            // get arguments
+            $admin = Admin::create(json_decode($this->argument('request'),true));
+
+            $permissions = defaultPermissionsList();
+
+            $permissionsData = [];
+
+            foreach ($permissions as $key => $value) {
+                foreach($value as $permission){
+                    $data = ['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin'];
+                    $permissionsData[] = $data;
+                }
             }
-        }
 
-        $role = Role::create([
-            'name' => 'Super Admin',
-            'guard_name' => 'tenant_admin',
-            'active' => true,
-        ]);
+            Permission::upsert($permissionsData, ['name', 'guard_name']);
 
-        $admin->assignRole($role);
+            $this->defaultPaymentMethods();
+            $this->defaultSettings();
+        });
 
-        $this->defaultPaymentMethods();
-        $this->defaultSettings();
     }
 
     function defaultPaymentMethods() {
