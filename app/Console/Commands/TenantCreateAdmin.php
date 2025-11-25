@@ -32,32 +32,24 @@ class TenantCreateAdmin extends Command
      */
     public function handle()
     {
+        // get arguments
+        $admin = Admin::create(json_decode($this->argument('request'),true));
 
-        // الحصول على التينانت المحدد
-        $tenant = Tenant::find(tenant()->id);
+        $permissions = defaultPermissionsList();
 
-        // التبديل للقاعدة الخاصة بالـ tenant
-        $tenant->run(function () {
-            // get arguments
-            $admin = Admin::create(json_decode($this->argument('request'),true));
+        $permissionsData = [];
 
-            $permissions = defaultPermissionsList();
-
-            $permissionsData = [];
-
-            foreach ($permissions as $key => $value) {
-                foreach($value as $permission){
-                    $data = ['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin'];
-                    $permissionsData[] = $data;
-                }
+        foreach ($permissions as $key => $value) {
+            foreach($value as $permission){
+                $data = ['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin'];
+                $permissionsData[] = $data;
             }
+        }
 
-            Permission::upsert($permissionsData, ['name', 'guard_name']);
+        Permission::upsert($permissionsData, ['name', 'guard_name']);
 
-            $this->defaultPaymentMethods();
-            $this->defaultSettings();
-        });
-
+        $this->defaultPaymentMethods();
+        $this->defaultSettings();
     }
 
     function defaultPaymentMethods() {
