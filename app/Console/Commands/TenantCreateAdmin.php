@@ -8,6 +8,7 @@ use App\Models\Tenant\Setting;
 use App\Services\PaymentMethodService;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class TenantCreateAdmin extends Command
 {
@@ -38,9 +39,17 @@ class TenantCreateAdmin extends Command
         foreach ($permissions as $key => $value) {
             foreach($value as $permission){
                 Permission::firstOrCreate(['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin']);
-                $admin->givePermissionTo($key.'.'.$permission);
+                // $admin->givePermissionTo($key.'.'.$permission);
             }
         }
+
+        $role = Role::create([
+            'name' => 'Super Admin',
+            'guard_name' => 'tenant_admin',
+            'active' => true,
+        ]);
+
+        $admin->assignRole($role);
 
         $this->defaultPaymentMethods();
         $this->defaultSettings();
