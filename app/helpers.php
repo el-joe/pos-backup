@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Tenant\Admin;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 const TENANT_ADMINS_GUARD = 'tenant_admin';
 
@@ -8,6 +10,18 @@ if(!function_exists('settings')) {
     function settings($key) {
         return null;
     }
+}
+
+function defaultLayout(){
+    return 'hud';
+}
+
+function layoutView($pageName,$with = [],$isSubPage = false){
+    $defaultView = "livewire." . defaultLayout();
+    $defaultLayout = 'layouts.' . defaultLayout();
+    $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
+    return view("$defaultView.$pageName", $with)
+            ->layout($isSubPage ? null : $defaultLayout, $layoutData);
 }
 
 if(!function_exists('admin')) {
@@ -63,8 +77,79 @@ if(!function_exists('formattedDateTime')) {
         return carbon($date)->translatedFormat('l , d-M-Y h:i A');
     }
 }
+
+function getMonthsBetween($from, $to)
+{
+    $from = Carbon::parse($from)->startOfMonth();
+    $to = Carbon::parse($to)->startOfMonth();
+
+    $months = [];
+
+    while ($from <= $to) {
+        $months[] = $from->copy();
+        $from->addMonth();
+    }
+
+    return $months;
+}
 if(!function_exists('defaultPermissionsList')) {
     function defaultPermissionsList() {
         return json_decode(file_get_contents(base_path('tenant-permissions.json')),true);
     }
+}
+
+function sidebarHud($data){
+    return view('layouts.hud.partials.sidebar-ul',get_defined_vars())->render();
+}
+
+function extractRoutes(array $items): array
+{
+    $routes = [];
+
+    foreach ($items as $item) {
+        if (!empty($item['route']) && $item['route'] !== '#') {
+            $routes[] = $item['route'];
+        }
+
+        if (!empty($item['children'])) {
+            $routes = array_merge($routes, extractRoutes($item['children']));
+        }
+    }
+
+    return $routes;
+}
+
+
+function checkRouteParams($routeParams = []){
+    foreach ($routeParams as $key => $value) {
+        $route = request()->route($key);
+        if($route == null){
+            return true;
+        }
+
+        if($route == $value) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function exportToExcel($data, $columns, $headers, $fileName) {
+    $filePath = "exports/{$fileName}-" . now()->format('Y-m-d_H-i-s') . ".xlsx";
+    Excel::store(
+        new \App\Exports\GeneralExport(
+            data: $data,
+            columns: $columns,
+            headers: $headers
+        ),
+        $filePath,
+        'public'
+    );
+
+    return public_path("storage/{$filePath}");
+}
+
+function superAdmins(){
+    return Admin::where('type', 'super_admin')->get();
 }

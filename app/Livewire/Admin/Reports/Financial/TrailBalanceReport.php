@@ -8,7 +8,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class TrailBalanceReport extends Component
 {
     use WithPagination;
@@ -78,6 +77,6 @@ class TrailBalanceReport extends Component
             'credit' => $query->clone()->where('type', 'credit')->sum('amount'),
         ];
 
-        return view('livewire.admin.reports.financial.trail-balance-report',get_defined_vars());
+        return layoutView('reports.financial.trail-balance-report',get_defined_vars());
     }
 }

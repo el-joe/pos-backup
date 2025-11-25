@@ -2,14 +2,21 @@
 
 namespace App\Livewire\Admin\Stocks;
 
+use App\Services\BranchService;
 use App\Services\StockTransferService;
+use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class StockTransferList extends Component
 {
+    use LivewireOperations;
     private $stockTransferService;
+
+    public $collapseFilters = false;
+
+    public $filters = [];
+    public $export = null;
 
     function boot() {
         $this->stockTransferService = app()->make(StockTransferService::class);
@@ -17,7 +24,34 @@ class StockTransferList extends Component
 
     public function render()
     {
-        $stockTransfers = $this->stockTransferService->list(['items', 'fromBranch', 'toBranch'], [], 10, 'created_at')
+        if ($this->export == 'excel') {
+            $stockTransfers = $this->stockTransferService->list(relations: ['items', 'fromBranch', 'toBranch'], filter: $this->filters, orderByDesc: 'created_at');
+
+            $data = $stockTransfers->map(function ($stockTransfer, $loop) {
+                // #	Ref No	From	To	Items Count	Total Quantity	Transfer Date	Status	Created At
+                return [
+                    'loop' => $loop + 1,
+                    'ref_no' => $stockTransfer->ref_no,
+                    'from_branch' => $stockTransfer->fromBranch ? $stockTransfer->fromBranch->name : 'N/A',
+                    'to_branch' => $stockTransfer->toBranch ? $stockTransfer->toBranch->name : 'N/A',
+                    'items_count' => $stockTransfer->items ? $stockTransfer->items->count() : 0,
+                    'total_quantity' => $stockTransfer->items ? $stockTransfer->items->sum('qty') : 0,
+                    'transfer_date' => $stockTransfer->transfer_date,
+                    'status' => $stockTransfer->status->label(),
+                    'created_at' => $stockTransfer->created_at,
+                ];
+            })->toArray();
+            $columns = ['loop', 'ref_no', 'from_branch', 'to_branch', 'items_count', 'total_quantity', 'transfer_date', 'status', 'created_at'];
+            $headers = ['#', 'Ref No', 'From', 'To', 'Items Count', 'Total Quantity', 'Transfer Date', 'Status', 'Created At'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'stock_transfers');
+
+            $this->redirectToDownload($fullPath);
+
+            $this->export = null;
+        }
+
+        $stockTransfers = $this->stockTransferService->list(['items', 'fromBranch', 'toBranch'], $this->filters, 10, 'created_at')
         ->through(function($st) {
             return [
                 'id' => $st->id,
@@ -64,6 +98,8 @@ class StockTransferList extends Component
             ]],
         ];
 
-        return view('livewire.admin.stocks.stock-transfer-list',get_defined_vars());
+        $branches = app()->make(BranchService::class)->activeList();
+
+        return layoutView('stocks.stock-transfer-list', get_defined_vars());
     }
 }

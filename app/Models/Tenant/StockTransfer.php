@@ -14,6 +14,7 @@ class StockTransfer extends Model
         'ref_no',
         'status',
         'expense_paid_branch_id',
+        'created_by'
     ];
 
     protected $casts = [
@@ -38,6 +39,10 @@ class StockTransfer extends Model
         return $this->morphMany(Expense::class, 'model');
     }
 
+    function createdBy() {
+        return $this->belongsTo(Admin::class, 'created_by');
+    }
+
     function scopeFilter($q,$filters = []) {
         return $q->when($filters['status'] ?? null, function($q,$status) {
             $q->where('status',$status);
@@ -50,12 +55,20 @@ class StockTransfer extends Model
                 $q->where('from_branch_id',$branchId)
                   ->orWhere('to_branch_id',$branchId);
             });
-        })->when($filters['ref_no'] ?? null, function($q,$refNo) {
+        })
+        ->when($filters['transfer_date'] ?? null, function($q,$transferDate) {
+            $q->whereDate('transfer_date',$transferDate);
+        })
+        ->when($filters['ref_no'] ?? null, function($q,$refNo) {
             $q->where('ref_no','like',"%$refNo%");
         })->when($filters['search'] ?? null, function($q,$search) {
             $q->where('ref_no','like',"%$search%");
         })->when($filters['id'] ?? null, function($q,$id) {
             $q->where('id',$id);
+        })->when($filters['from_branch_id'] ?? null, function($q,$from_branch_id) {
+            $q->where('from_branch_id',$from_branch_id);
+        })->when($filters['to_branch_id'] ?? null, function($q,$to_branch_id) {
+            $q->where('to_branch_id',$to_branch_id);
         });
     }
 }

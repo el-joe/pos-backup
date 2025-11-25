@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\StockTaking;
 
+use App\Models\Tenant\Admin;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockTakingService;
@@ -10,7 +11,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class AddStockTaking extends Component
 {
     use LivewireOperations,WithPagination;
@@ -34,6 +34,13 @@ class AddStockTaking extends Component
         $this->branchService = app(BranchService::class);
         $this->productService = app(ProductService::class);
         $this->stockTakingService = app(StockTakingService::class);
+    }
+
+    function mount(){
+        if(admin()->branch_id){
+            $this->data['branch_id'] = admin()->branch_id;
+            $this->updatingDataBranchId(admin()->branch_id);
+        }
     }
 
     function updatingDataBranchId($value) {
@@ -127,6 +134,11 @@ class AddStockTaking extends Component
 
         $st = $this->stockTakingService->save(null,$data);
 
+        Admin::whereType('super_admin')->each(function($admin) use ($st) {
+            $admin->notifyNewStockTacking($st);
+        });
+
+
         $this->popup('success', 'Stock Take saved successfully');
 
         $this->reset('data', 'stocks');
@@ -138,6 +150,6 @@ class AddStockTaking extends Component
         $branches = $this->branchService->activeList();
         $stocks = $this->stocks;
 
-        return view('livewire.admin.stock-taking.add-stock-taking',get_defined_vars());
+        return layoutView('stock-taking.add-stock-taking', get_defined_vars());
     }
 }

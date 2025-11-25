@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class CashierReport extends Component
 {
 
@@ -98,7 +97,8 @@ class CashierReport extends Component
 
     public function render()
     {
-        return view('livewire.admin.reports.admins.cashier-report',[
+
+        return layoutView('reports.admins.cashier-report', [
             'report' => $this->report,
         ]);
     }

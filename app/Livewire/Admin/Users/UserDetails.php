@@ -9,7 +9,6 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class UserDetails extends Component
 {
     public $id,$user;
@@ -34,7 +33,7 @@ class UserDetails extends Component
             'model_id' => $this->user->id
         ],10,'id');
 
-
-        return view('livewire.admin.users.user-details',get_defined_vars());
+        return layoutView('users.user-details', get_defined_vars())
+            ->title(__('general.titles.' . $this->user?->type?->value . '_details'));
     }
 }

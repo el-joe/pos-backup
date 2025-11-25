@@ -8,7 +8,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 
-#[Layout('layouts.admin')]
 class CogsReport extends Component
 {
     public $report = [];
@@ -16,7 +15,8 @@ class CogsReport extends Component
     public function render()
     {
         $this->report = $this->getCogsReport();
-        return view('livewire.admin.reports.inventory.cogs-report', [
+
+        return layoutView('reports.inventory.cogs-report', [
             'report' => $this->report,
         ]);
     }

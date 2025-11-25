@@ -9,7 +9,6 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class UsersList extends Component
 {
     use LivewireOperations, WithPagination;
@@ -19,6 +18,10 @@ class UsersList extends Component
 
     #[Url]
     public $type;
+
+    public $export;
+    public $collapseFilters = false;
+    public $filters = [];
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -84,7 +87,32 @@ class UsersList extends Component
     }
     public function render()
     {
-        $users = $this->userService->list(perPage : 10 , orderByDesc: 'id',filter : ['type' => $this->type]);
-        return view('livewire.admin.users.users-list',get_defined_vars());
+        if ($this->export == 'excel') {
+        $users = $this->userService->list(orderByDesc: 'id',filter : ['type' => $this->type , ...$this->filters]);
+
+            $data = $users->map(function ($user, $loop) {
+                #	Name	Email	Phone	Address	Sales Threshold	Active
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $user->name,
+                    'phone' => $user->phone,
+                    'email' => $user->email,
+                    'address' => $user->address,
+                    'sales_threshold' => $user->sales_threshold,
+                    'active' => $user->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name', 'phone', 'email', 'address', 'sales_threshold', 'active'];
+            $headers = ['#', 'Name', 'Phone', 'Email', 'Address', 'Sales Threshold', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'users');
+
+            $this->redirectToDownload($fullPath);
+        }
+
+        $users = $this->userService->list(perPage : 10 , orderByDesc: 'id',filter : ['type' => $this->type , ...$this->filters]);
+
+        return layoutView('users.users-list', get_defined_vars())
+            ->title(__('general.titles.' . $this->type . 's'));
     }
 }

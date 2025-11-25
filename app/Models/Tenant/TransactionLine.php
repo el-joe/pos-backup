@@ -29,4 +29,27 @@ class TransactionLine extends Model
     function getRefAttribute(){
         return $this->transaction?->reference_type ? (new $this->transaction?->reference_type)->getTable() : 'N/A';
     }
+
+    function scopeFilter($query, $filters)
+    {
+        return $query->when(isset($filters['transaction_id']) && $filters['transaction_id'] !== '', function($q) use ($filters) {
+                $q->where('transaction_id', $filters['transaction_id']);
+            })
+            ->when(isset($filters['transaction_type']) && $filters['transaction_type'] !== 'all', function($q) use ($filters) {
+                $q->whereHas('transaction', function($q2) use ($filters) {
+                    $q2->where('type', $filters['transaction_type']);
+                });
+            })
+            ->when(isset($filters['branch_id']) && $filters['branch_id'] !== 'all', function($q) use ($filters) {
+                $q->whereHas('transaction', function($q2) use ($filters) {
+                    $q2->where('branch_id', $filters['branch_id']);
+                });
+            })
+            ->when(isset($filters['date']) && $filters['date'] !== '', function($q) use ($filters) {
+                $q->whereHas('transaction', function($q2) use ($filters) {
+                    $q2->whereDate('date', '>=', $filters['date']);
+                });
+            });
+    }
+
 }

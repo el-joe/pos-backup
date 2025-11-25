@@ -22,6 +22,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::defaultView('vendor.pagination.default');
+        $defaultLayout = defaultLayout();
+
+        Paginator::defaultView('vendor.pagination.default' . ($defaultLayout == 'hud' ? '5' : ''));
+
+        // share layout to all views
+        View::share('defaultLayout', function () use ($defaultLayout) {
+            return $defaultLayout;
+        });
     }
 }

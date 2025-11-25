@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class BranchProfitability extends Component
 {
     public $from_date;
@@ -82,8 +81,7 @@ class BranchProfitability extends Component
     }
     public function render()
     {
-        return view('livewire.admin.reports.branch-profitability', [
-            'report' => $this->report,
-        ]);
+
+        return layoutView('reports.branch-profitability');
     }
 }

@@ -95,6 +95,8 @@ class AccountsList extends Component
         $accountTypes = AccountTypeEnum::cases();
         $branches = $this->branchService->activeList();
         $paymenthMethods = $this->paymentMethodService->activeList(filter : ['branch_id'=>$this->data['branch_id'] ?? null]);
-        return view('livewire.admin.accounts.accounts-list', get_defined_vars())->layout($this->subPage ? null : 'layouts.admin');
+
+        return layoutView('accounts.accounts-list', get_defined_vars(),$this->subPage ?? false)
+            ->title(__('general.titles.accounts') );
     }
 }

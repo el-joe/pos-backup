@@ -9,13 +9,16 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class ExpenseCategoriesList extends Component
 {
     use LivewireOperations, WithPagination;
     private $expenseCategoryService;
     public $current;
     public $data = [];
+
+    public $collapseFilters = false;
+    public $filters = [];
+    public $export;
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -69,7 +72,26 @@ class ExpenseCategoriesList extends Component
 
     public function render()
     {
-        $expenseCategories = $this->expenseCategoryService->list(perPage : 10 , orderByDesc : 'id');
-        return view('livewire.admin.expenses.expense-categories-list',get_defined_vars());
+        if ($this->export == 'excel') {
+            $expenseCategories = $this->expenseCategoryService->list(filter : $this->filters , orderByDesc : 'id');
+
+            $data = $expenseCategories->map(function ($expenseCategory, $loop) {
+                return [
+                    'loop' => $loop + 1,
+                    'name' => $expenseCategory->name,
+                    'status' => $expenseCategory->active ? 'Active' : 'Inactive',
+                ];
+            })->toArray();
+            $columns = ['loop', 'name','status'];
+            $headers = ['#', 'Name', 'Status'];
+
+            $fullPath = exportToExcel($data, $columns, $headers, 'expense_categories');
+
+            $this->redirectToDownload($fullPath);
+        }
+        $expenseCategories = $this->expenseCategoryService->list(perPage : 10 , orderByDesc : 'id', filter : $this->filters);
+
+        return layoutView('expenses.expense-categories-list', get_defined_vars())
+            ->title(__( 'general.titles.categories'));
     }
 }

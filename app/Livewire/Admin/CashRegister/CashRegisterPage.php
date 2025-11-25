@@ -11,7 +11,6 @@ use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\TransactionService;
 
-#[Layout('layouts.admin')]
 
 class CashRegisterPage extends Component
 {
@@ -25,11 +24,12 @@ class CashRegisterPage extends Component
         }
 
         $branches = $this->branchService->activeList();
-        return view('livewire.admin.cash-register.cash-register-page', [
+
+        return layoutView('cash-register.cash-register-page', [
             'aggregates' => $this->aggregates,
             'currentRegister' => $this->currentRegister,
             'branches' => $branches,
-        ]);
+        ])->title(__('general.titles.cash-register'));
     }
     public $aggregates = [];
     public $currentRegister;
@@ -85,7 +85,7 @@ class CashRegisterPage extends Component
             'opening_balance_input' => 'required|numeric',
         ])) return;
 
-        CashRegister::create([
+        $cashRegister = CashRegister::create([
             'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
             'admin_id' => admin()->id ?? null,
             'opening_balance' => $this->opening_balance_input,
@@ -98,6 +98,10 @@ class CashRegisterPage extends Component
             'amount' => $this->opening_balance_input,
             'date' => now(),
         ]);
+
+        superAdmins()->map(function($admin) use($cashRegister){
+            $admin->notifyCashRegisterOpened($cashRegister);
+        });
 
         $this->opening_balance_input = null;
         $this->loadData();
@@ -131,6 +135,10 @@ class CashRegisterPage extends Component
             'amount' => $this->closing_balance_input,
             'date' => now(),
         ],true);
+
+        superAdmins()->map(function($admin) use($reg){
+            $admin->notifyCashRegisterClosed($reg->fresh());
+        });
 
 
         $this->closing_balance_input = null;

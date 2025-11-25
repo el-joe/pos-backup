@@ -3,22 +3,27 @@
 namespace App\Livewire\Admin\Transactions;
 
 use App\Models\Tenant\TransactionLine;
+use App\Services\BranchService;
 use App\Services\TransactionService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin')]
 class TransactionList extends Component
 {
     use WithPagination;
+
+    public $collapseFilters = false;
+    public $filters = [];
+    public $export = null;
 
     public function render()
     {
         $transactionLines = TransactionLine::with(['transaction','account','transaction.branch'])
         ->orderByDesc('transaction_id')
         ->orderByDesc('id')
-        ->paginate(10)->withQueryString()
+        ->filter($this->filters)
+        ->paginate(20)->withQueryString()
         ->through(function($line) {
             return [
                 'id' => $line->id,
@@ -64,6 +69,8 @@ class TransactionList extends Component
             'created_at' => [ 'type' => 'datetime'],
         ];
 
-        return view('livewire.admin.transactions.transaction-list',get_defined_vars());
+        $branches = app(BranchService::class)->activeList();
+
+        return layoutView('transactions.transaction-list',get_defined_vars());
     }
 }

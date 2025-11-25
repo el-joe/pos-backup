@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.admin')]
 class StockValuationReport extends Component
 {
     public $report = [];
@@ -14,7 +13,8 @@ class StockValuationReport extends Component
     public function render()
     {
         $this->report = $this->getStockValuationReport();
-        return view('livewire.admin.reports.inventory.stock-valuation-report', [
+
+        return layoutView('reports.inventory.stock-valuation-report', [
             'report' => $this->report,
         ]);
     }

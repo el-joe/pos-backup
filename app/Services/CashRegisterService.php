@@ -23,7 +23,7 @@ class CashRegisterService
     function getOpenedCashRegister($relations = [])
     {
         $filters = [
-            'opened_at' => now(),
+            // 'opened_at' => now(),
             'status'=> 'open',
             'not_closed' => true,
             'admin_id' => admin()->id,
