@@ -3,6 +3,7 @@
 namespace App\Http\Middleware\Tenant;
 
 use App\Models\Tenant\CashRegister;
+use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use Closure;
 use Illuminate\Http\Request;
@@ -33,7 +34,9 @@ class AdminAuthMiddleware
             $isOnOpenRoute = true;
         }
 
-        if (!$cashRegister && !$isOnOpenRoute) {
+        $branches = app(BranchService::class)->activeList();
+
+        if (!$cashRegister && !$isOnOpenRoute && count($branches) > 0) {
             return redirect()->route('admin.cash.register.open')->with('warning', 'You must open a cash register before proceeding.');
         }
 
