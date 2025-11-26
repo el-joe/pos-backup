@@ -13,6 +13,7 @@ use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -48,6 +49,16 @@ class RegisterController extends Controller
             return "This request is already processed.";
         }
 
+        // request validation RegisterTenantRequest $request
+        $rules = (new RegisterTenantRequest())->rules();
+
+        $validator = Validator::make($registerRequest->data + [
+            'password_confirmation'=>$registerRequest->data['password'] ?? null,
+        ], $rules);
+        if ($validator->fails()) {
+            return "The registration data is invalid: " . implode(", ", $validator->errors()->all());
+        }
+
         $data = $registerRequest->data;
 
         $request = (object)$data;
@@ -62,7 +73,7 @@ class RegisterController extends Controller
         ]);
 
         $domain = $tenant->domains()->create([
-            'domain'=>$request->domain
+            'domain'=>$request->domain_mode == 'domain' ? $request->domain : $request->subdomain . '.' . str_replace(['http://','https://'],'',url('/')),
         ]);
 
 

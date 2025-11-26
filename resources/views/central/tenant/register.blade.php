@@ -53,19 +53,52 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label>Domain/SubDomain</label>
+                                    <label>Domain Type</label>
+                                    <div class="d-flex align-items-center gap-3" style="gap: 1rem;">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="domain_mode" value="subdomain" id="mode_subdomain" {{ old('domain_mode', 'subdomain') === 'subdomain' ? 'checked' : '' }}> Subdomain
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="domain_mode" value="domain" id="mode_domain" {{ old('domain_mode') === 'domain' ? 'checked' : '' }}> Custom Domain
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="group_subdomain">
+                                    <label>Subdomain</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend bg-transparent">
                                             <span class="input-group-text bg-transparent border-right-0">
                                                 <i class="mdi mdi-laptop text-primary"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control form-control-lg border-left-0" value="{{old('domain')}}"  name="domain" placeholder="example.com">
+                                        <input type="text" class="form-control form-control-lg border-left-0" id="subdomain_input" name="subdomain" value="{{ old('subdomain') }}" placeholder="yourname">
+                                    </div>
+                                    <small class="form-text text-muted mt-1" id="domain_preview">Will be: —</small>
+                                    @error('domain')
+                                    <small class="text-danger d-block">{{$message}}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group" id="group_domain" style="display:none;">
+                                    <label>Custom Domain</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend bg-transparent">
+                                            <span class="input-group-text bg-transparent border-right-0">
+                                                <i class="mdi mdi-laptop text-primary"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control form-control-lg border-left-0" id="domain_text_input" name="domain" placeholder="example.com" value="{{ old('domain') }}">
                                     </div>
                                     @error('domain')
                                     <small class="text-danger">{{$message}}</small>
                                     @enderror
                                 </div>
+                                <input type="hidden" name="domain" id="final_domain_input" value="{{ old('domain') }}">
                                 <div class="form-group">
                                     <label>Email</label>
                                     <div class="input-group">
@@ -178,6 +211,73 @@
     <script src="{{ asset('template/') }}/js/hoverable-collapse.js"></script>
     <script src="{{ asset('template/') }}/js/template.js"></script>
     <!-- endinject -->
+    <script>
+        (function() {
+            const form = document.querySelector('form[action*="register-domain"]') || document.querySelector('form.pt-3');
+            if (!form) return;
+
+            const modeRadios = document.querySelectorAll('input[name="domain_mode"]');
+            const groupSub = document.getElementById('group_subdomain');
+            const groupDom = document.getElementById('group_domain');
+            const subInput = document.getElementById('subdomain_input');
+            const baseSelect = document.getElementById('base_domain_select');
+            const domainText = document.getElementById('domain_text_input');
+            const finalInput = document.getElementById('final_domain_input');
+            const preview = document.getElementById('domain_preview');
+
+            function getMode() {
+                const checked = Array.from(modeRadios).find(r => r.checked);
+                return checked ? checked.value : 'subdomain';
+            }
+
+            function sanitizeSubdomain(v) {
+                return (v || '')
+                    .toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^a-z0-9-]/g, '')
+                    .replace(/^-+|-+$/g, '')
+                    .substring(0, 63);
+            }
+
+            function updateView() {
+                const mode = getMode();
+                if (mode === 'domain') {
+                    groupDom.style.display = '';
+                    groupSub.style.display = 'none';
+                } else {
+                    groupDom.style.display = 'none';
+                    groupSub.style.display = '';
+                }
+                composeFinal();
+            }
+
+            function composeFinal() {
+                const mode = getMode();
+                if (mode === 'domain') {
+                    const value = (domainText && domainText.value) ? domainText.value.trim() : '';
+                    finalInput.value = value;
+                    if (preview) preview.textContent = value ? `Will be: ${value}` : 'Will be: —';
+                } else {
+                    if (!subInput) return;
+                    const sub = sanitizeSubdomain(subInput.value);
+                    if (subInput.value !== sub) subInput.value = sub; // keep UI in sync
+                    const base = '{{ str_replace('https://', '', str_replace('http://', '', url('/'))) }}';
+                    const composed = sub && base ? `${sub}.${base}` : '';
+                    finalInput.value = composed;
+                    if (preview) preview.textContent = composed ? `Will be: ${composed}` : 'Will be: —';
+                }
+            }
+
+            modeRadios.forEach(r => r.addEventListener('change', updateView));
+            if (subInput) subInput.addEventListener('input', composeFinal);
+            if (baseSelect) baseSelect.addEventListener('change', composeFinal);
+            if (domainText) domainText.addEventListener('input', composeFinal);
+            form.addEventListener('submit', composeFinal);
+
+            // Initial state
+            updateView();
+        })();
+    </script>
 </body>
 
 </html>

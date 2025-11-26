@@ -28,14 +28,20 @@ class RegisterTenantRequest extends FormRequest
             'email'=>'required|email',
             'password'=>'required|string|confirmed|min:8',
             'country_id'=>'required|exists:countries,id',
-            'domain'=>'required|string|unique:domains,domain|regex:/^(?!-)(?:[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,}$/' // Validate domain name
+            'domain_mode' => 'required|in:subdomain,domain',
+            'domain'=>'required_if:domain_mode,domain|string|unique:domains,domain|regex:/^(?!-)(?:[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,}$/',
+            'subdomain'=>'required_if:domain_mode,subdomain|string|regex:/^[a-zA-Z0-9-]{1,63}$/'
         ];
     }
 
     function messages() {
         return [
             'id.regex'=>'The id may only contain letters, numbers, and underscores.',
-            'domain.regex'=>'The domain format is invalid.'
+            'domain.regex'=>'The domain format is invalid.',
+            'subdomain.regex'=>'The subdomain format is invalid.',
+            'domain_mode.in' => 'The selected domain mode is invalid.',
+            'domain.required_if' => 'The domain field is required when domain mode is set to domain.',
+            'subdomain.required_if' => 'The subdomain field is required when domain mode is set to subdomain.',
         ];
     }
 }
