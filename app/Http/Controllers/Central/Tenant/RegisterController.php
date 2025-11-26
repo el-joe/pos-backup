@@ -86,6 +86,10 @@ class RegisterController extends Controller
             'domain' => $request->domain,
         ]));
 
+        $registerRequest->update([
+            'status'=>'accepted'
+        ]);
+
         return "Done";
     }
 }
