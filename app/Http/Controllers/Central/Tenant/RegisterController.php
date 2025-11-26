@@ -43,6 +43,11 @@ class RegisterController extends Controller
 
     function acceptRegistration($id) {
         $registerRequest = RegisterRequest::findOrFail($id);
+
+        if($registerRequest->status != 'pending') {
+            return "This request is already processed.";
+        }
+
         $data = $registerRequest->data;
 
         $request = (object)$data;
