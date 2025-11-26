@@ -94,6 +94,26 @@
                                     <small class="text-danger">{{$message}}</small>
                                     @enderror
                                 </div>
+                                {{-- countries list --}}
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend bg-transparent">
+                                            <span class="input-group-text bg-transparent border-right-0">
+                                                <i class="mdi mdi-earth text-primary"></i>
+                                            </span>
+                                        </div>
+                                        <select class="form-control form-control-lg border-left-0" name="country_id">
+                                            <option value="">Select Country</option>
+                                            @foreach($countries as $country)
+                                            <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @error('country_id')
+                                    <small class="text-danger">{{$message}}</small>
+                                    @enderror
+                                </div>
                                 <div class="form-group">
                                     <label>Password</label>
                                     <div class="input-group">

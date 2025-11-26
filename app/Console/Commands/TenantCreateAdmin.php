@@ -35,19 +35,7 @@ class TenantCreateAdmin extends Command
         // get arguments
         $admin = Admin::create(json_decode($this->argument('request'),true));
 
-        $permissions = defaultPermissionsList();
-
-        $permissionsData = [];
-
-        foreach ($permissions as $key => $value) {
-            foreach($value as $permission){
-                $data = ['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin'];
-                $permissionsData[] = $data;
-            }
-        }
-
-        Permission::upsert($permissionsData, ['name', 'guard_name']);
-
+        $this->setPermissions();
         $this->defaultPaymentMethods();
         $this->defaultSettings();
     }
@@ -63,6 +51,21 @@ class TenantCreateAdmin extends Command
         foreach ($paymentMethods as $method) {
             $paymentMethodService->save(null, $method);
         }
+    }
+
+    function setPermissions(){
+        $permissions = defaultPermissionsList();
+
+        $permissionsData = [];
+
+        foreach ($permissions as $key => $value) {
+            foreach($value as $permission){
+                $data = ['name' => $key.'.'.$permission, 'guard_name' => 'tenant_admin'];
+                $permissionsData[] = $data;
+            }
+        }
+
+        Permission::upsert($permissionsData, ['name', 'guard_name']);
     }
 
     function defaultSettings() {

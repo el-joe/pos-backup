@@ -4,17 +4,48 @@ namespace App\Http\Controllers\Central\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterTenantRequest;
+use App\Mail\AdminRegisterRequestMail;
+use App\Mail\RegisterRequestAcceptMail;
+use App\Mail\RegisterRequestMail;
+use App\Models\Country;
+use App\Models\RegisterRequest;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
     function register() {
-        return view('central.tenant.register');
+        $countries = Country::select('id','name')->get();
+        return view('central.tenant.register', get_defined_vars());
     }
 
     function postRegister(RegisterTenantRequest $request) {
+
+        $data = $request->validated();
+
+        $registerRequest = RegisterRequest::create([
+            'data'=>$data,
+            'status'=>'pending'
+        ]);
+
+        Mail::to($data['email'])->send(new RegisterRequestMail([
+            'name' => $data['id'],
+        ]));
+
+        Mail::to(env('ADMIN_EMAIL'))->send(new AdminRegisterRequestMail(
+            registerRequest: $registerRequest
+        ));
+
+        return redirect()->back()->with('success',__('Register request submitted successfully. We will contact you soon.'));
+    }
+
+    function acceptRegistration($id) {
+        $registerRequest = RegisterRequest::findOrFail($id);
+        $data = $registerRequest->data;
+
+        $request = (object)$data;
         // make request id is valid for database name
         $id = preg_replace('/[^a-zA-Z0-9_]/', '_', $request->id);
         $tenant = Tenant::create([
@@ -39,7 +70,8 @@ class RegisterController extends Controller
             'phone'=>$request->phone,
             'email'=>$request->email,
             'password'=>$request->password,
-            'type'=>'super_admin'
+            'type'=>'super_admin',
+            'country_id'=>$request->country_id,
         ]);
 
         Artisan::call('tenants:run',[
@@ -48,6 +80,12 @@ class RegisterController extends Controller
             '--argument'=>["request=$_request"]
         ]);
 
-        return back()->with('success','Domain Created Successfully, please wait till Contact you.');
+        Mail::to($request->email)->send(new RegisterRequestAcceptMail([
+            'name' => $request->id,
+            'email' => $request->email,
+            'domain' => $request->domain,
+        ]));
+
+        return "Done";
     }
 }

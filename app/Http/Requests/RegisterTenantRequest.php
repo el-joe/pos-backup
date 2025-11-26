@@ -27,6 +27,7 @@ class RegisterTenantRequest extends FormRequest
             'phone'=>'required|string',
             'email'=>'required|email',
             'password'=>'required|string|confirmed|min:8',
+            'country_id'=>'required|exists:countries,id',
             'domain'=>'required|string|unique:domains,domain|regex:/^(?!-)(?:[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,}$/' // Validate domain name
         ];
     }

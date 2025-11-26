@@ -36,7 +36,7 @@ class AdminAuthMiddleware
 
         $branches = app(BranchService::class)->activeList();
 
-        if (!$cashRegister && !$isOnOpenRoute && count($branches) > 0) {
+        if (!$cashRegister && !$isOnOpenRoute && count($branches) > 0 && admin()->type == 'admin') {
             return redirect()->route('admin.cash.register.open')->with('warning', 'You must open a cash register before proceeding.');
         }
 

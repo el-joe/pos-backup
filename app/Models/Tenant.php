@@ -10,4 +10,8 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
+
+    function country(){
+        return Country::where('id',$this->data['country_id'])->first();
+    }
 }

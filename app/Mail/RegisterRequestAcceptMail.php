@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SupplierDueAmountEmail extends Mailable implements ShouldQueue
+class RegisterRequestAcceptMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -24,7 +24,7 @@ class SupplierDueAmountEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Supplier Due Amount| Weekly Alert',
+            subject: 'Register Request Accept Mail',
         );
     }
 
@@ -34,10 +34,12 @@ class SupplierDueAmountEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.supplier_due_amount_alert',
+            view: 'emails.register_request_accept',
             with: [
-                'data' => $this->data,
-            ],
+                'name' => $this->data['name'],
+                'email' => $this->data['email'],
+                'domain' => $this->data['domain'],
+            ]
         );
     }
 
