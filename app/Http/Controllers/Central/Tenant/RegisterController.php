@@ -13,6 +13,7 @@ use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -38,6 +39,12 @@ class RegisterController extends Controller
         Mail::to(env('ADMIN_EMAIL'))->send(new AdminRegisterRequestMail(
             registerRequest: $registerRequest
         ));
+
+        if(RateLimiter::tooManyAttempts($request->ip(), 2)) {
+            return redirect()->back()->withErrors(['Too many registration attempts. Please try again later.']);
+        }
+
+        RateLimiter::hit($request->ip(), 600);
 
         return redirect()->back()->with('success',__('Register request submitted successfully. We will contact you soon.'));
     }
