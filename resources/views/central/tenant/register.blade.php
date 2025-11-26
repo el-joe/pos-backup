@@ -46,7 +46,7 @@
                                                 <i class="mdi mdi-account-outline text-primary"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control form-control-lg border-left-0" name="id" value="{{old('id')}}" placeholder="Business Name">
+                                        <input type="text" class="form-control form-control-lg border-left-0" name="id" value="{{old('id')}}" placeholder="Business Name" required>
                                     </div>
                                     @error('id')
                                     <small class="text-danger">{{$message}}</small>
@@ -107,7 +107,7 @@
                                                 <i class="mdi mdi-email-outline text-primary"></i>
                                             </span>
                                         </div>
-                                        <input type="email" class="form-control form-control-lg border-left-0" value="{{old('email')}}"  name="email" placeholder="Email">
+                                        <input type="email" class="form-control form-control-lg border-left-0" value="{{old('email')}}"  name="email" placeholder="Email" required>
                                     </div>
                                     @error('email')
                                     <small class="text-danger">{{$message}}</small>
@@ -121,7 +121,7 @@
                                                 <i class="mdi mdi-phone-outline text-primary"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control form-control-lg border-left-0" value="{{old('phone')}}"  name="phone" placeholder="Phone">
+                                        <input type="text" class="form-control form-control-lg border-left-0" value="{{old('phone')}}"  name="phone" placeholder="Phone" required>
                                     </div>
                                     @error('phone')
                                     <small class="text-danger">{{$message}}</small>
@@ -136,7 +136,7 @@
                                                 <i class="mdi mdi-earth text-primary"></i>
                                             </span>
                                         </div>
-                                        <select class="form-control form-control-lg border-left-0" name="country_id">
+                                        <select class="form-control form-control-lg border-left-0" name="country_id" required>
                                             <option value="">Select Country</option>
                                             @foreach($countries as $country)
                                             <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
@@ -155,7 +155,7 @@
                                                 <i class="mdi mdi-lock-outline text-primary"></i>
                                             </span>
                                         </div>
-                                        <input type="password" class="form-control form-control-lg border-left-0" name="password" id="exampleInputPassword" placeholder="******">
+                                        <input type="password" class="form-control form-control-lg border-left-0" name="password" id="exampleInputPassword" placeholder="******" required>
                                     </div>
                                     @error('password')
                                     <small class="text-danger">{{$message}}</small>
@@ -169,7 +169,7 @@
                                                 <i class="mdi mdi-lock-outline text-primary"></i>
                                             </span>
                                         </div>
-                                        <input type="password" class="form-control form-control-lg border-left-0" name="password_confirmation" id="exampleInputPassword1" placeholder="******">
+                                        <input type="password" class="form-control form-control-lg border-left-0" name="password_confirmation" id="exampleInputPassword1" placeholder="******" required>
                                     </div>
                                     @error('password_confirmation')
                                     <small class="text-danger">{{$message}}</small>
@@ -177,9 +177,9 @@
                                 </div>
                                 <div class="mb-4">
                                     <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" required>
                                         <label class="form-check-label text-muted">
-                                            <input type="checkbox" class="form-check-input">
-                                            I agree to all Terms & Conditions
+                                            I agree to all <a href="/terms" target="_blank">Terms & Conditions</a>
                                         </label>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                     </div>
                     <div class="col-lg-6 register-half-bg d-flex flex-row">
                         <p class="text-white font-weight-medium text-center flex-grow align-self-end">Copyright &copy;
-                            2020 All rights reserved.</p>
+                            {{ date('Y') }} All rights reserved.</p>
                     </div>
                 </div>
             </div>
