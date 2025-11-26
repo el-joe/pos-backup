@@ -92,7 +92,7 @@ class RegisterController extends Controller
         ]));
 
         $registerRequest->update([
-            'status'=>'accepted'
+            'status'=>'approved'
         ]);
 
         return "Done";
