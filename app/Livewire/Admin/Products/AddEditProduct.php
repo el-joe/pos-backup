@@ -37,9 +37,9 @@ class AddEditProduct extends Component
         // 'tax_id' => 'required_if:taxable,true|exists:taxes,id',
         'code' => 'required|string|max:100',
         // 'sell_price' => 'required|numeric',
-        'image' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
+        'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048',
         'gallery' => 'nullable|array',
-        'gallery.*' => 'nullable|mimes:jpg,jpeg,png,gif|max:2048',
+        'gallery.*' => 'nullable|mimes:jpg,jpeg,png,gif,webp|max:2048',
     ];
 
     function boot() {

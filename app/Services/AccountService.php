@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Enums\AccountTypeEnum;
 use App\Models\Tenant\User;
 use App\Repositories\AccountRepository;
-use Str;
+use Illuminate\Support\Str;
 
 class AccountService
 {

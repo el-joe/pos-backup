@@ -134,7 +134,7 @@
 
                     @if (($data['image'] ?? false) && method_exists($data['image'],'temporaryUrl'))
                         <div class="mt-3 position-relative d-inline-block">
-                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 start-0 translate-middle p-1 rounded-circle" wire:click="removeFile()">
+                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 start-0 translate-middle p-1 rounded-circle" wire:click="removeImage()">
                                 <i class="fa fa-trash"></i>
                             </button>
                             <img src="{{ $data['image']->temporaryUrl() }}" alt="Image Preview" class="rounded border" style="width:100px;height:100px;">

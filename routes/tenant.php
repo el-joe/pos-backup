@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Tenant\AuthController;
-use App\Http\Controllers\Tenant\GeneralController;
 use App\Http\Middleware\AdminTranslationMiddleware;
 use App\Http\Middleware\Tenant\AdminAuthMiddleware;
 use App\Livewire\Admin\Accounts\AccountsList;
@@ -243,6 +243,8 @@ Route::middleware([
             Route::get('roles/{id?}',RoleDetails::class)->name('roles.show');
         });
     });
+
+    Route::get('admin/invoices/{type}/{id}', [GeneralController::class, 'generateInvoice'])->name('generate.invoice');
 
 
     Route::get('change-language/{lang}', function($lang){
