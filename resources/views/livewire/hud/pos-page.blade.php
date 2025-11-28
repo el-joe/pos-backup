@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <a href="#" class="pos-mobile-sidebar-toggler" data-bs-toggle-class="pos-mobile-sidebar-toggled" data-bs-target="#pos">
+			<a href="#" class="pos-mobile-sidebar-toggler" data-toggle-class="pos-mobile-sidebar-toggled" data-toggle-target="#pos">
                 <i class="bi bi-bag"></i>
                 <span class="badge bg-danger">{{ count($data['products'] ?? []) }}</span>
             </a>

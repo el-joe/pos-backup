@@ -113,7 +113,7 @@
                 <div class="menu-badge bg-theme"></div>
                 @endif
             </a>
-            <div class="dropdown-menu dropdown-menu-{{ session('locale') == 'en' ? 'end' : 'start' }} mt-1 w-300px fs-11px pt-1">
+            <div class="dropdown-menu dropdown-menu-{{ session('locale','en') == 'en' ? 'end' : 'start' }} mt-1 w-300px fs-11px pt-1">
                 <h6 class="dropdown-header fs-10px mb-1">{{ __('general.layout.notifications') }}</h6>
                 <div class="dropdown-divider mt-1"></div>
                 @forelse ($__unreaded_notifications as $notification)
@@ -134,7 +134,7 @@
                     </div>
                     {{-- <div class="menu-text d-sm-block d-none w-100px"></div> --}}
                 </a>
-                <div class="dropdown-menu  me-lg-3 fs-11px mt-1 dropdown-menu-end dropdown-menu-lg-{{ session('locale') == 'en' ? 'end' : 'start' }}">
+                <div class="dropdown-menu  me-lg-3 fs-11px mt-1 dropdown-menu-end dropdown-menu-lg-{{ session('locale','en') == 'en' ? 'end' : 'start' }}">
                     <h6 class="dropdown-header"> {{ __('general.pages.admins.name') }} : {{ admin()->name }}</h6>
                     <div class="dropdown-divider"></div>
                     {{-- <a class="dropdown-item d-flex align-items-center" href="profile.html">PROFILE <i class="bi bi-person-circle ms-auto text-theme fs-16px my-n1"></i></a>

@@ -82,7 +82,7 @@
         <div class="d-flex flex-column p-0">
             <div class="pos-sidebar-header">
                 <div class="back-btn">
-                    <button type="button" data-toggle-class="pos-mobile-sidebar-toggled" data-toggle-target="#pos" class="btn">
+                    <button type="button" onclick="$('#pos').toggleClass('pos-mobile-sidebar-toggled');" class="btn">
                         <i class="bi bi-chevron-left"></i>
                     </button>
 					<div class="title">{{ __('general.pages.pos-page.cart') }}</div>
