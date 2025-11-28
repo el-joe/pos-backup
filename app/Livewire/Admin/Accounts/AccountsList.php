@@ -8,6 +8,7 @@ use App\Services\BranchService;
 use App\Services\PaymentMethodService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -20,14 +21,6 @@ class AccountsList extends Component
     public $data = [];
     public $filters = [];
 
-    public $rules = [
-        'name' => 'required|string|max:255',
-        'code' => 'nullable|string|max:50',
-        'type' => 'required',
-        'branch_id' => 'nullable',
-        'payment_method_id' => 'required',
-    ];
-
     function boot() {
         $this->accountService = app(AccountService::class);
         $this->branchService = app(BranchService::class);
@@ -36,6 +29,13 @@ class AccountsList extends Component
 
     function setCurrent($id) {
         $this->current = $this->accountService->find($id);
+
+        $this->dispatch('setCurrentAccount', [
+            'currentId' => $id,
+            'filters' => $this->filters,
+            'subPage' => $this->subPage
+        ]);
+
         if($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
@@ -64,31 +64,7 @@ class AccountsList extends Component
         $this->reset('current','data');
     }
 
-    function save() {
-        if($this->subPage && !isset($this->data['type'])){
-            unset($this->rules['type']);
-        }
-        if(!$this->validator())return;
-
-        $data = $this->data;
-
-        if($this->filters['model_id'] ?? null) {
-            $data['model_type'] = $this->filters['model_type'];
-            $data['model_id'] = $this->filters['model_id'];
-        }
-
-        if(!isset($this->data['type'])){
-            $data['type'] = ($this->filters['model_type'])::find($this->filters['model_id'])->type->value;
-        }
-
-        $this->accountService->save($this->current?->id,$data);
-
-        $this->popup('success','Account saved successfully');
-
-        $this->dismiss();
-
-        $this->reset('current', 'data');
-    }
+    #[On('setCurrentAccountIntoList')]
     public function render()
     {
         $accounts = $this->accountService->list(['branch'],[...$this->filters],10,'id');

@@ -632,6 +632,7 @@ return [
             'edit_tax' => 'Edit Tax',
             'id' => '#',
             'name' => 'Name',
+            'vat_number' => 'VAT Number',
             'rate' => 'Rate',
             'percentage' => 'Percentage',
             'actions' => 'Actions',
@@ -643,6 +644,7 @@ return [
             'delete' => 'Delete',
             'enter_tax_name' => 'Enter tax name',
             'enter_tax_rate' => 'Enter tax rate',
+            'enter_vat_number' => 'Enter VAT number',
         ],
         'expenses' => [
             'filters' => 'Filters',

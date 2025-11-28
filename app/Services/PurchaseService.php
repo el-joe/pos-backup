@@ -91,7 +91,7 @@ class PurchaseService
                 'default' => 1,
             ]);
         }
-        foreach ($data['expenses'] as $item) {
+        foreach ($data['expenses']??[] as $item) {
             $purchase->expenses()->create([
                 'branch_id' => $data['branch_id'],
                 'model_type' => Purchase::class,

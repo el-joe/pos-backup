@@ -76,6 +76,7 @@
                         <tr>
                             <th>{{ __('general.pages.taxes.id') }}</th>
                             <th>{{ __('general.pages.taxes.name') }}</th>
+                            <th>{{ __('general.pages.taxes.vat_number') }}</th>
                             <th>{{ __('general.pages.taxes.percentage') }}</th>
                             <th>{{ __('general.pages.taxes.status') }}</th>
                             <th class="text-nowrap">{{ __('general.pages.taxes.actions') }}</th>
@@ -86,6 +87,7 @@
                             <tr>
                                 <td>{{ $tax->id }}</td>
                                 <td>{{ $tax->name }}</td>
+                                <td>{{ $tax->vat_number }}</td>
                                 <td>{{ $tax->rate ?? 0 }}%</td>
                                 <td>
                                     <span class="badge bg-{{ $tax->active ? 'success' : 'danger' }}">
@@ -140,6 +142,10 @@
                         <label for="taxName" class="form-label">{{ __('general.pages.taxes.name') }}</label>
                         <input type="text" class="form-control" wire:model="data.name" id="taxName" placeholder="{{ __('general.pages.taxes.enter_tax_name') }}">
                     </div>
+
+                    <div class="mb-3">
+                        <label for="taxVatNumber" class="form-label">{{ __('general.pages.taxes.vat_number') }}</label>
+                        <input type="text" class="form-control" wire:model="data.vat_number" id="taxVatNumber" placeholder="{{ __('general.pages.taxes.enter_vat_number') }}">
 
                     <div class="mb-3">
                         <label for="taxRate" class="form-label">{{ __('general.pages.taxes.rate') }}</label>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tax extends Model
 {
-    protected $fillable = ['name','rate'];
+    protected $fillable = ['name','vat_number','rate'];
 
     function scopeFilter($q,$filter) {
         return $q->when($filter['search'] ?? null, function($query, $search) {

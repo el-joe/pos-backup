@@ -46,6 +46,14 @@ class Sale extends Model
         return $this->belongsTo(Branch::class);
     }
 
+    function tax() {
+        return $this->belongsTo(Tax::class,'tax_id');
+    }
+
+    function createdBy() {
+        return $this->belongsTo(Admin::class,'created_by');
+    }
+
     function transactions() {
         return $this->morphMany(Transaction::class, 'reference');
     }

@@ -108,6 +108,8 @@
             <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
+
+    @livewire('admin.accounts.add-edit-modal')
 </div>
 
 @push('styles')

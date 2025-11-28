@@ -6,7 +6,11 @@
             </div>
             <div class="col-xs-6 text-right">
                 {{-- add toggle for edit account --}}
-                <a  class="btn btn-primary" data-toggle="modal" data-target="#editAccountModal" wire:click="setCurrent(null)">
+                <a  class="btn btn-primary" data-toggle="modal" data-target="#editAccountModal" wire:click="$dispatch('setCurrentAccount' , [
+                    'current' => null,
+                    'filters' => $filters,
+                    'subPage' => $subPage
+                ])">
                     <i class="fa fa-plus"></i> New Account
                 </a>
             </div>

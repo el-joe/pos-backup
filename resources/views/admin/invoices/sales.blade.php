@@ -84,25 +84,24 @@
             <div><strong>Company Name:</strong> {{ tenant('name') }}</div>
             <div><strong>Phone:</strong> {{ $order->branch?->phone }}</div>
             <div><strong>Address:</strong> {{ $order->branch?->address }}</div>
-            <div><strong>VAT Number:</strong> 123-456-789</div>
-            <div><strong>Invoice Number:</strong> INV-2025-001</div>
-            <div><strong>Invoice Date:</strong> 2025-11-27</div>
+            <div><strong>Invoice Number:</strong> {{ $order->invoice_number }}</div>
+            <div><strong>Invoice Date:</strong> {{ carbon($order->order_date)->format('Y-m-d') }}</div>
         </div>
 
         <div class="section-title">Customer Details</div>
         <div class="details-grid">
-            <div><strong>Name:</strong> Ahmed Mohamed</div>
-            <div><strong>Phone:</strong> 01123456789</div>
-            <div><strong>Address:</strong> Nasr City</div>
-            <div><strong>Customer Code:</strong> CUST-145</div>
+            <div><strong>Name:</strong> {{ $order->customer?->name }}</div>
+            <div><strong>Phone:</strong> {{ $order->customer?->phone }}</div>
+            <div><strong>Address:</strong> {{ $order->customer?->address }}</div>
+            <div><strong>Customer Code:</strong> CUST-{{ $order->customer_id }}</div>
         </div>
 
         <div class="section-title">Order Summary</div>
         <div class="details-grid">
-            <div><strong>Order ID:</strong> ORD-5521</div>
-            <div><strong>Order Date:</strong> 2025-11-27</div>
-            <div><strong>Branch:</strong> Main Branch</div>
-            <div><strong>Salesperson:</strong> Mohamed Ali</div>
+            <div><strong>Order ID:</strong> ORD-{{ $order->id }}</div>
+            <div><strong>Order Date:</strong> {{ carbon($order->order_date)->format('Y-m-d') }}</div>
+            <div><strong>Branch:</strong> {{ $order->branch?->name }}</div>
+            <div><strong>Salesperson:</strong> {{ $order->createdBy?->name }}</div>
         </div>
 
         <div class="section-title">Items</div>
@@ -112,40 +111,28 @@
                     <th>Item</th>
                     <th>Qty</th>
                     <th>Unit Price</th>
-                    <th>Discount</th>
                     <th>Total</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>iPhone 14 Pro</td>
-                    <td>1</td>
-                    <td>45,000 EGP</td>
-                    <td>0</td>
-                    <td>45,000 EGP</td>
-                </tr>
-                <tr>
-                    <td>Screen Protector</td>
-                    <td>2</td>
-                    <td>150 EGP</td>
-                    <td>10 EGP</td>
-                    <td>290 EGP</td>
-                </tr>
-                <tr>
-                    <td>Mobile Cover</td>
-                    <td>1</td>
-                    <td>200 EGP</td>
-                    <td>0</td>
-                    <td>200 EGP</td>
-                </tr>
+                @foreach ($order->saleItems as $item)
+                    <tr>
+                        <td>{{ $item->product?->name }}</td>
+                        <td>{{ $item->actual_qty }}</td>
+                        <td>{{ $item->sell_price }}</td>
+                        <td>{{ $item->actual_qty * $item->sell_price }}</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
 
         <div class="totals">
-            <div><span>Subtotal:</span> <span>45,490 EGP</span></div>
-            <div><span>Discount:</span> <span>10 EGP</span></div>
-            <div><span>VAT (14%):</span> <span>6,368.6 EGP</span></div>
-            <div><strong>Grand Total:</strong> <strong>51,848.6 EGP</strong></div>
+            <div><span>Subtotal:</span> <span>{{ $order->sub_total }}</span></div>
+            <div><span>Discount:</span> <span>{{ $order->discount_amount }}</span></div>
+            @if($order->tax)
+            <div><span>VAT ({{ $order->tax?->rate }}%):</span> <span>{{ $order->tax_amount }}</span></div>
+            @endif
+            <div><strong>Grand Total:</strong> <strong>{{ $order->grand_total_amount }}</strong></div>
         </div>
 
         <div style="clear: both"></div>

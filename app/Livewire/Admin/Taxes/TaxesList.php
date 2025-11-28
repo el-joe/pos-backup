@@ -22,6 +22,7 @@ class TaxesList extends Component
     public $rules = [
         'name' => 'required|string|max:255',
         'rate' => 'required|numeric',
+        'vat_number' => 'nullable|string|max:255',
         'active' => 'boolean',
     ];
 
@@ -81,12 +82,13 @@ class TaxesList extends Component
                 return [
                     'loop' => $loop + 1,
                     'name' => $tax->name,
+                    'vat_number' => $tax->vat_number,
                     'rate' => $tax->rate,
                     'active' => $tax->active ? 'Active' : 'Inactive',
                 ];
             })->toArray();
-            $columns = ['loop', 'name', 'rate', 'active'];
-            $headers = ['#', 'Name', 'Percentage', 'Status'];
+            $columns = ['loop', 'name', 'vat_number', 'rate', 'active'];
+            $headers = ['#', 'Name', 'VAT Number', 'Percentage', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'taxes');
 
