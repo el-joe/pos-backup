@@ -1,0 +1,22 @@
+plans :             id
+                    name
+                    price
+                    features
+                    // systems_allowed : POS | Bookings | HRM
+                    billing_cycle : monthly | yearly
+                    created_at
+                    updated_at
+
+subscriptions :     id
+                    tenant_id
+                    plan_id
+                    plan_details : json
+                    price
+                    systems_allowed : POS | Bookings | HRM
+                    start_date
+                    end_date
+                    status : paid | cancelled | refunded
+                    payment_details : json
+                    payment_callback_details : json
+                    created_at
+                    updated_at
