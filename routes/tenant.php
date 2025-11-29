@@ -277,7 +277,7 @@ Route::get('download-file', function () {
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
-// Add Currency & City to branch
+// Add Currency & City to branch (add currency to tenant instead)
 // Audit Logs
 
 // TODO : E-Invoice Coming Soon
