@@ -80,6 +80,9 @@ return [
         'cashier-performance' => 'User / Cashier Performance',
         'settings' => 'Settings',
         'general-settings' => 'General Settings',
+        'plans-subscriptions' => 'Plans & Subscriptions',
+        'plans' => 'Plans',
+        'subscriptions' => 'Subscriptions (Soon)',
     ],
     'layout' => [
         'notifications' => 'Notifications',
@@ -1196,5 +1199,20 @@ return [
             'enter_name' => 'Enter account name',
             'enter_code' => 'Enter account code',
         ],
+    ],
+    'features' => [
+        'branches' => 'Branches count',
+        'admins' => 'Users count',
+        'products' => 'Products count',
+        'pos' => 'POS',
+        'inventory' => 'Inventory management',
+        'sales' => 'Sales management',
+        'purchases' => 'Purchases management',
+        'double_entry_accounting' => 'Double entry accounting',
+        'basic_reports' => 'Basic reports',
+        'advanced_reports' => 'Advanced reports',
+        'discounts' => 'Discounts',
+        'taxes' => 'Taxes',
+        'customer_support' => 'Customer Support',
     ]
 ];

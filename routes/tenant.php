@@ -19,6 +19,7 @@ use App\Livewire\Admin\Expenses\ExpenseCategoriesList;
 use App\Livewire\Admin\Expenses\ExpensesList;
 use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
+use App\Livewire\Admin\Plans\PlansList;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\AddEditProduct;
 use App\Livewire\Admin\Products\ProductsList;
@@ -241,6 +242,8 @@ Route::middleware([
             Route::get('admins',AdminsList::class)->name('admins.list');
             Route::get('roles',RolesList::class)->name('roles.list');
             Route::get('roles/{id?}',RoleDetails::class)->name('roles.show');
+
+            Route::get('plans', PlansList::class)->name('plans.list');
         });
     });
 
@@ -279,6 +282,8 @@ Route::get('download-file', function () {
 // Barcode/QR Code Generation
 // Add Currency & City to branch (add currency to tenant instead)
 // Audit Logs
+
+// Plans & Subscriptions (Middleware,Plans Page , Plans Compare , Checkout Page , Current Subscription & subscription history )
 
 // TODO : E-Invoice Coming Soon
 // Email & Notification system

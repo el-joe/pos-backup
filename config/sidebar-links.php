@@ -460,6 +460,26 @@ return [
         ]
     ],
     [
+        'title'    => "Plans & Subscription",
+        'translated_title' => 'general.titles.plans-subscriptions',
+        'icon'     => 'fa fa-clipboard-list fa-fw',
+        'route'    => '#',
+        'children' => [
+            [
+                'title' => 'Plans',
+                'translated_title' => 'general.titles.plans',
+                'route' => 'admin.plans.list',
+                'icon'  => 'fa fa-list fa-fw'
+            ],
+            [
+                'title' => 'Subscriptions (Soon)',
+                'translated_title' => 'general.titles.subscriptions',
+                'route' => '#',
+                'icon'  => 'fa fa-file-contract fa-fw'
+            ]
+        ]
+    ],
+    [
         "title"     => "Settings",
         'translated_title' => 'general.titles.settings',
         "icon"      => "fa fa-cogs fa-fw",

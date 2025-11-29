@@ -80,6 +80,9 @@ return [
         'cashier-performance' => 'أداء المستخدم / الكاشير',
         'settings' => 'الإعدادات',
         'general-settings' => 'الإعدادات العامة',
+        'plans-subscriptions' => 'الخطط والاشتراكات',
+        'plans' => 'الخطط',
+        'subscriptions' => 'الاشتراكات (قريباً)',
     ],
     'layout' => [
         'notifications' => 'الإشعارات',
@@ -1195,5 +1198,21 @@ return [
             'transferred_products' => 'المنتجات المحولة',
             'stock_transfer_expenses' => 'مصروفات حوالة المخزون',
         ]
+    ],
+    'features' => [
+        'branches' => 'عدد الفروع',
+        'admins' => 'عدد المستخدمين',
+        'products' => 'عدد المنتجات',
+        'pos' => 'POS',
+        'inventory' => 'إدارة المخزون',
+        'sales' => 'إدارة المبيعات',
+        'purchases' => 'إدارة المشتريات',
+        'double_entry_accounting' => 'المحاسبة ذات القيد المزدوج',
+        'basic_reports' => 'التقارير الأساسية',
+        'advanced_reports' => 'التقارير المتقدمة',
+        'discounts' => 'الخصومات',
+        'taxes' => 'الضرائب',
+        'customer_support' => 'دعم فني',
     ]
+
 ];
