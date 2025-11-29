@@ -1,3 +1,9 @@
+plan_features :   id
+                    name
+                    description
+                    created_at
+                    updated_at
+
 plans :             id
                     name
                     price
