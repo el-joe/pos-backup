@@ -472,9 +472,9 @@ return [
                 'icon'  => 'fa fa-list fa-fw'
             ],
             [
-                'title' => 'Subscriptions (Soon)',
+                'title' => 'Subscriptions',
                 'translated_title' => 'general.titles.subscriptions',
-                'route' => '#',
+                'route' => 'admin.subscriptions.list',
                 'icon'  => 'fa fa-file-contract fa-fw'
             ]
         ]

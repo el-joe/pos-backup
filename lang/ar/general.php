@@ -82,7 +82,7 @@ return [
         'general-settings' => 'الإعدادات العامة',
         'plans-subscriptions' => 'الخطط والاشتراكات',
         'plans' => 'الخطط',
-        'subscriptions' => 'الاشتراكات (قريباً)',
+        'subscriptions' => 'الاشتراكات',
     ],
     'layout' => [
         'notifications' => 'الإشعارات',

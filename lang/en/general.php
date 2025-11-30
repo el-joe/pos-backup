@@ -82,7 +82,7 @@ return [
         'general-settings' => 'General Settings',
         'plans-subscriptions' => 'Plans & Subscriptions',
         'plans' => 'Plans',
-        'subscriptions' => 'Subscriptions (Soon)',
+        'subscriptions' => 'Subscriptions',
     ],
     'layout' => [
         'notifications' => 'Notifications',
