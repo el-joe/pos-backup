@@ -21,4 +21,9 @@ class Plan extends Model
     protected $casts = [
         'features' => 'array'
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 }

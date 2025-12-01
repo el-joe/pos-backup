@@ -113,14 +113,28 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/livewire/update', $handle)
-                ->middleware(
-                    'web',
-                    InitializeTenancyByDomain::class, // or whatever tenancy middleware you use
-                );
-        });
-        FilePreviewController::$middleware = ['web', InitializeTenancyByDomain::class];
+
+        // if central domain is runing then do action
+        $currentDomain = $_SERVER['HTTP_HOST']??'';
+        $isCentralDomain = in_array($currentDomain, config('tenancy.central_domains'));
+        if ($isCentralDomain) {
+            Livewire::setUpdateRoute(function ($handle) {
+                return Route::post('/livewire/update', $handle)
+                    ->middleware('web');
+            });
+
+        }else{
+            Livewire::setUpdateRoute(function ($handle) {
+                return Route::post('/livewire/update', $handle)
+                    ->middleware(
+                        'web',
+                        InitializeTenancyByDomain::class, // or whatever tenancy middleware you use
+                    );
+            });
+
+            FilePreviewController::$middleware = ['web', InitializeTenancyByDomain::class];
+        }
+
 
 
         $this->bootEvents();
