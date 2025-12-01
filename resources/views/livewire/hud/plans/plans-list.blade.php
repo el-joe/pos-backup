@@ -24,7 +24,7 @@
                     <div class="card-body p-30px d-flex flex-column">
                         <div class="d-flex align-items-center">
                             <div class="flex-1">
-                                <div class="h6 font-monospace">Starter Plan</div>
+                                <div class="h6 font-monospace">{{ $plan->name }} Plan</div>
                                 <div class="display-6 fw-bold mb-0">${{ $plan->{"price_".$period} }}<small
                                         class="h6 text-body text-opacity-50">/{{ $period }}</small></div>
                             </div>
