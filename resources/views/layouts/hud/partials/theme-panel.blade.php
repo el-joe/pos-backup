@@ -40,12 +40,12 @@
                 <div class="card-body p-2">
                     <div class="row gx-2">
                         <div class="col-6">
-                            <a href="#" class="changeDirection btn active btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-toggle="theme-direction-selector" data-theme-direction="ltr">
+                            <a href="#" class="changeDirection btn {{ $__locale == 'en' ? 'active' : '' }} btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-direction="ltr">
                                 <i class="bi bi-text-left fs-16px my-n1 ms-n2"></i> EN
                             </a>
                         </div>
                         <div class="col-6">
-                            <a href="#" class="changeDirection btn btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-toggle="theme-direction-selector" data-theme-direction="rtl">
+                            <a href="#" class="changeDirection btn {{ $__locale == 'ar' ? 'active' : '' }} btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-direction="rtl">
                                 <i class="bi bi-text-right fs-16px my-n1 ms-n2"></i> AR
                             </a>
                         </div>

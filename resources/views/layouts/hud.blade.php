@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="{{ $__locale }}" dir="{{ $__locale == 'en' ? 'ltr' : 'rtl' }}" data-bs-theme="dark">
 <head>
 	<meta charset="utf-8">
 	<title>{{ tenant()?->name }} | {{ $title ?? '' }}</title>
@@ -43,7 +43,7 @@
 
             $('.changeDirection').on('click', function(e) {
                 e.preventDefault();
-                var lang = $(this).data('theme-direction') === 'ltr' ? 'en' : 'ar';
+                var lang = $(this).data('direction') === 'ltr' ? 'en' : 'ar';
                 changeLanguage(lang);
             });
 
