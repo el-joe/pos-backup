@@ -70,6 +70,7 @@ class PlanSeeder extends Seeder
             ],
             'slug' => 'basic',
             'active' => true,
+            'icon' => 'bi bi-star',
         ];
 
         $plans[] = [
@@ -127,6 +128,7 @@ class PlanSeeder extends Seeder
             ],
             'slug' => 'pro',
             'active' => true,
+            'icon' => 'bi bi-lightning-charge-fill',
         ];
 
         // Enterprise Plan
@@ -185,6 +187,7 @@ class PlanSeeder extends Seeder
             ],
             'slug' => 'enterprise',
             'active' => true,
+            'icon' => 'bi bi-gem',
         ];
 
         foreach ($plans as $plan) {
