@@ -18,4 +18,5 @@ Route::group(['prefix'=> '/'],function () {
     Route::get('pricing/compare',[HomeController::class,'pricingCompare'])->name('pricing-compare');
 
     Route::get('payment/callback/{type}', [PaymentController::class,'callback'])->name('payment.callback');
+    Route::get('{type}/payment', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
 });

@@ -111,6 +111,7 @@
                         </div>
 
                         <!-- Domain Selection -->
+                        @if($plan->{'price_'.$period} > 0)
                         <div class="col-12">
                             <label class="form-label">Domain Type</label>
                             <div class="d-flex gap-3">
@@ -124,11 +125,12 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                         @if(!isset($data['domain_mode']) || $data['domain_mode'] == 'subdomain')
                         <div class="col-12" id="group_subdomain">
                             <label class="form-label">Subdomain</label>
-                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.live="data.subdomain" placeholder="yourname">
-                            <small class="text-muted" id="domain_preview">Will be: {{ $data['subdomain'] ?? '--' }}</small>
+                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.live.debounce500m="data.subdomain" placeholder="yourname">
+                            <small class="text-muted" id="domain_preview">Will be: {{  $data['final_domain'] ?? '--' }}</small>
                             @error('data.subdomain') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
                         @else
@@ -226,32 +228,34 @@
                         </div>
                     </div>
 
-                    <table class="table">
-                        <tr>
-                            <td>Plan:</td>
-                            <td>{{ $plan->name ?? 'Pro Plan' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Period:</td>
-                            <td>{{ $period }}</td>
-                        </tr>
-                        <tr>
-                            <td>Price:</td>
-                            <td>${{ $plan->yearly_price ?? 240 }}</td>
-                        </tr>
-                        <tr>
-                            <td>Discount:</td>
-                            <td id="discount_amount">$0</td>
-                        </tr>
-                        <tr>
-                            <td>VAT:</td>
-                            <td id="vat_amount">$0</td>
-                        </tr>
-                        <tr class="table-dark fw-bold">
-                            <td>Total:</td>
-                            <td id="total_amount">${{ $plan->yearly_price ?? 240 }}</td>
-                        </tr>
-                    </table>
+                    @if($plan->{'price_'.$period} > 0)
+                        <table class="table">
+                            <tr>
+                                <td>Plan:</td>
+                                <td>{{ $plan->name ?? 'Pro Plan' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Period:</td>
+                                <td>{{ $period }}</td>
+                            </tr>
+                            <tr>
+                                <td>Price:</td>
+                                <td>${{ $plan->yearly_price ?? 240 }}</td>
+                            </tr>
+                            <tr>
+                                <td>Discount:</td>
+                                <td id="discount_amount">$0</td>
+                            </tr>
+                            {{-- <tr>
+                                <td>VAT:</td>
+                                <td id="vat_amount">$0</td>
+                            </tr> --}}
+                            <tr class="table-dark fw-bold">
+                                <td>Total:</td>
+                                <td id="total_amount">${{ $plan->yearly_price ?? 240 }}</td>
+                            </tr>
+                        </table>
+                    @endif
 
                 </div>
                 <div class="card-footer d-flex justify-content-end">

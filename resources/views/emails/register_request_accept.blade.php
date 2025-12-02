@@ -30,7 +30,7 @@
 
               <p style="margin:0 0 18px 0;color:#334155;line-height:1.6;">
                 Hello <strong>{{$name}}</strong>,<br>
-                We are pleased to inform you that your registration request for our POS system has been approved. You can now access your account and begin using the system.
+                We are pleased to inform you that your registration request for our system has been approved. You can now access your account and begin using the system.
               </p>
 
               <p style="margin:0 0 12px 0;color:#475569;line-height:1.6;">

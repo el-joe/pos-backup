@@ -16,9 +16,11 @@ class CheckoutPage extends Component
     ];
 
     public $rules = [
-        'data.company_name'=>'required|string|max:255|unique:tenants,id|regex:/^[a-zA-Z0-9_]+$/',
+        'data.company_name'=>'required|string|max:255|unique:tenants,id|regex:/^[a-zA-Z0-9_ ]+$/',
         'data.company_email'=>'required|email|max:255',
         'data.company_phone'=>'required|string|max:50',
+        'data.domain_mode'=>'required|in:subdomain,domain',
+        'data.final_domain'=>'required|string|max:255|unique:domains,domain',
         'data.country_id'=>'required|exists:countries,id',
         'data.tax_number'=>'nullable|string|max:100',
         'data.address'=>'nullable|string|max:500',
@@ -27,6 +29,39 @@ class CheckoutPage extends Component
         'data.admin_phone'=>'nullable|string|max:50',
         'data.admin_password'=>'required|string|min:6',
     ];
+
+    function updatingDataSubdomain($value)
+    {
+        // Keep only characters that match /^[a-zA-Z0-9_]+$/
+        $raw = $value ?? '';
+        $clean = preg_replace('/[^a-z0-9_]/', '', $raw);
+        $clean = strtolower(trim($clean));
+        $clean = substr($clean, 0, 100);
+        $this->data['final_domain'] = $clean ? ($clean . '.' . ($_SERVER['HTTP_HOST'] ?? '')) : '';
+    }
+
+    function updatingDataDomain($value)
+    {
+        // if domain mode is domain, set final_domain to domain and make sure domain is valid url
+        $domain = $value ?? '';
+        $domain = trim($domain);
+        // prepend scheme if missing for validation
+        $testUrl = (preg_match('/^https?:\/\//i', $domain) ? $domain : 'http://' . $domain);
+        if (filter_var($testUrl, FILTER_VALIDATE_URL)) {
+            $this->data['final_domain'] = $domain;
+        } else {
+            $this->data['final_domain'] = '';
+        }
+    }
+
+    function updatingDataDomainMode($value)
+    {
+        if ($value === 'subdomain') {
+            $this->updatingDataSubdomain($this->data['subdomain'] ?? '');
+        } else {
+            $this->updatingDataDomain($this->data['domain'] ?? '');
+        }
+    }
 
     function mount()
     {

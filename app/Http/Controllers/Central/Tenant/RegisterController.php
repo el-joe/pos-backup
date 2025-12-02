@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -57,11 +58,21 @@ class RegisterController extends Controller
         }
 
         // request validation RegisterTenantRequest $request
-        $rules = (new RegisterTenantRequest())->rules();
+        $rules = [
+            'company.name'=>'required|string|max:255|unique:tenants,id|regex:/^[a-zA-Z0-9_ ]+$/',
+            'company.email'=>'required|email|max:255',
+            'company.phone'=>'required|string|max:50',
+            'company.domain'=>'required|string|max:255|unique:domains,domain',
+            'company.address'=>'nullable|string|max:500',
+            'company.country_id'=>'required|exists:countries,id',
+            'company.tax_number'=>'nullable|string|max:100',
+            'admin.name'=>'required|string|max:255',
+            'admin.email'=>'required|email|max:255',
+            'admin.phone'=>'nullable|string|max:50',
+            'admin.password'=>'required|string|min:6',
+        ];
 
-        $validator = Validator::make($registerRequest->data + [
-            'password_confirmation'=>$registerRequest->data['password'] ?? null,
-        ], $rules);
+        $validator = Validator::make($registerRequest->data, $rules);
         if ($validator->fails()) {
             return "The registration data is invalid: " . implode(", ", $validator->errors()->all());
         }
@@ -70,17 +81,19 @@ class RegisterController extends Controller
 
         $request = (object)$data;
         // make request id is valid for database name
-        $id = preg_replace('/[^a-zA-Z0-9_]/', '_', $request->id);
+        $id = Str::slug($request->company['name'], '_');
+        $id = preg_replace('/[^a-zA-Z0-9_]/', '_', $id);
+
         $tenant = Tenant::create([
             'id'=>$id,
-            'name'=> $request->id,
-            'phone'=>$request->phone,
-            'email'=>$request->email,
+            'name'=> $request->company['name'],
+            'phone'=>$request->company['phone'],
+            'email'=>$request->company['email'],
             'active'=>false,
         ]);
 
         $domain = $tenant->domains()->create([
-            'domain'=>$request->domain_mode == 'domain' ? $request->domain : $request->subdomain . '.' . str_replace(['http://','https://'],'',url('/')),
+            'domain'=> $request->company['domain']
         ]);
 
 
@@ -89,12 +102,12 @@ class RegisterController extends Controller
         ]);
 
         $_request = json_encode([
-            'name'=>$request->id,
-            'phone'=>$request->phone,
-            'email'=>$request->email,
-            'password'=>$request->password,
+            'name'=>$request->admin['name'],
+            'phone'=>$request->admin['phone'],
+            'email'=>$request->admin['email'],
+            'password'=>$request->admin['password'],
             'type'=>'super_admin',
-            'country_id'=>$request->country_id,
+            'country_id'=>$request->admin['country_id'] ?? null,
         ]);
 
         Artisan::call('tenants:run',[
@@ -103,10 +116,10 @@ class RegisterController extends Controller
             '--argument'=>["request=$_request"]
         ]);
 
-        Mail::to($request->email)->send(new RegisterRequestAcceptMail([
-            'name' => $request->id,
-            'email' => $request->email,
-            'domain' => $request->domain,
+        Mail::to($request->company['email'])->send(new RegisterRequestAcceptMail([
+            'name' => $request->company['name'],
+            'email' => $request->company['email'],
+            'domain' => $request->company['domain']
         ]));
 
         $registerRequest->update([

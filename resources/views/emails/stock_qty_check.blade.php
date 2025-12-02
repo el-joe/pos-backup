@@ -72,7 +72,7 @@
 
     <p style="margin-top: 20px;">Please restock these products as soon as possible.</p>
 
-    <p>Best regards,<br>Your POS System</p>
+    <p>Best regards,<br>{{ $_SERVER['HTTP_HOST'] }}</p>
 </div>
 
 </body>

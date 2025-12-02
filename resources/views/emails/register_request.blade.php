@@ -30,7 +30,7 @@
 
               <p style="margin:0 0 18px 0;color:#334155;line-height:1.6;">
                 Hello <strong>{{$name}}</strong>,<br>
-                Thank you for your interest in joining our POS system. We have successfully received your registration request, and it is currently under review.
+                Thank you for your interest in joining our system. We have successfully received your registration request, and it is currently under review.
               </p>
 
               <p style="margin:0 0 12px 0;color:#475569;line-height:1.6;font-weight:bold;">
@@ -40,7 +40,7 @@
               <ul style="margin:0 0 18px 20px;color:#475569;line-height:1.6;">
                 <li>Our team will review your submitted details.</li>
                 <li>You will receive an email once your request is approved.</li>
-                <li>After approval, you will be able to access your POS system account.</li>
+                <li>After approval, you will be able to access your system account.</li>
               </ul>
 
               <p style="margin:0;color:#475569;line-height:1.6;">
@@ -54,7 +54,7 @@
           <tr>
             <td style="padding:18px 32px;border-top:1px solid #eef2f6;background:#fbfdff;color:#6b7280;font-size:13px;">
               <strong style="color:#0f172a;">{{env('APP_NAME','POS System')}}</strong><br>
-              Thank you for choosing our POS system.
+              Thank you for choosing our system.
             </td>
           </tr>
 
