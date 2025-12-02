@@ -181,3 +181,15 @@ function exportToExcel($data, $columns, $headers, $fileName) {
 function superAdmins(){
     return Admin::where('type', 'super_admin')->get();
 }
+
+function encodedSlug($data)
+{
+    $newSlug = base64_encode(json_encode($data));
+
+    return $newSlug;
+}
+
+function decodedSlug($encoded)
+{
+    return json_decode(base64_decode($encoded), true);
+}

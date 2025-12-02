@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Central\Site\HomeController;
+use App\Http\Controllers\Central\Site\PaymentController;
 use App\Http\Controllers\Central\Tenant\RegisterController;
-use App\Livewire\Site\RegisterPage;
+use App\Livewire\Central\Site\CheckoutPage;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix'=> '/'],function () {
@@ -12,4 +13,9 @@ Route::group(['prefix'=> '/'],function () {
 
     Route::get('/',[HomeController::class,'index'])->name('central-home');
     Route::post('contact-us',[HomeController::class,'contactUs'])->name('contact-us');
+
+    Route::get('checkout', [HomeController::class,'checkout'])->name('tenant-checkout');
+    Route::get('pricing/compare',[HomeController::class,'pricingCompare'])->name('pricing-compare');
+
+    Route::get('payment/callback/{type}', [PaymentController::class,'callback'])->name('payment.callback');
 });

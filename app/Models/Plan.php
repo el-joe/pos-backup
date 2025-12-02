@@ -26,4 +26,19 @@ class Plan extends Model
     {
         return $query->where('active', true);
     }
+
+    function encodedSlug($period = null)
+    {
+        $newSlug = encodedSlug([
+            'slug'=>$this->slug,
+            'period'=>$period ?? 'month',
+        ]);
+
+        return $newSlug;
+    }
+
+    static function decodedSlug($encoded)
+    {
+        return decodedSlug($encoded);
+    }
 }

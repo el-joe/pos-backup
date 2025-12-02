@@ -38,4 +38,15 @@ class HomeController extends Controller
 
         return redirect()->back()->with('success','Your message has been sent successfully.');
     }
+
+    function checkout()
+    {
+        return view('central.site.checkout',get_defined_vars());
+    }
+
+    function pricingCompare()
+    {
+        $plans = Plan::all();
+        return view('central.site.pricing-compare',get_defined_vars());
+    }
 }

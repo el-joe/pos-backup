@@ -24,17 +24,17 @@ class PlanSeeder extends Seeder
                 PlanFeaturesEnum::BRANCHES->value => [
                     'limit' => 1,
                     'status' => true,
-                    'description' => '1 Branch'
+                    'description' => '1'
                 ],
                 PlanFeaturesEnum::ADMINS->value => [
                     'limit' => 1,
                     'status' => true,
-                    'description' => '1 Admin User'
+                    'description' => '1'
                 ],
                 PlanFeaturesEnum::PRODUCTS->value => [
                     'limit' => 100,
                     'status' => true,
-                    'description' => 'Up to 100 Products'
+                    'description' => 'Up to 100'
                 ],
                 PlanFeaturesEnum::POS->value => [
                     'status' => true
@@ -81,17 +81,17 @@ class PlanSeeder extends Seeder
                 PlanFeaturesEnum::BRANCHES->value => [
                     'limit' => 5,
                     'status' => true,
-                    'description' => 'Up to 5 Branches'
+                    'description' => '5'
                 ],
                 PlanFeaturesEnum::ADMINS->value => [
                     'limit' => 10,
                     'status' => true,
-                    'description' => 'Up to 10 Admin Users'
+                    'description' => '10'
                 ],
                 PlanFeaturesEnum::PRODUCTS->value => [
                     'limit' => 1000,
                     'status' => true,
-                    'description' => 'Up to 1000 Products'
+                    'description' => '1000'
                 ],
                 PlanFeaturesEnum::POS->value => [
                     'status' => true

@@ -49,7 +49,7 @@
                                 @endforeach
                             </div>
                             <div class="mx-n2">
-                                <a href="#" class="btn {{ $plan->recommended == 1 ? 'btn-theme text-black' : 'btn-outline-default' }}  btn-lg w-100 font-monospace">Get Started <i
+                                <a href="{{ route('tenant-checkout', ['plan' => $plan->encodedSlug($period)]) }}" class="btn {{ $plan->recommended == 1 ? 'btn-theme text-black' : 'btn-outline-default' }}  btn-lg w-100 font-monospace">Get Started <i
                                         class="fa fa-arrow-right"></i></a>
                             </div>
                         </div>

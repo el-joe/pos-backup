@@ -45,5 +45,6 @@
 	<!-- END #app -->
 
     @include('layouts.central.site.partials.scripts')
+    @stack('scripts')
 </body>
 </html>
