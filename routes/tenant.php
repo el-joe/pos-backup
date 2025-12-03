@@ -278,6 +278,7 @@ Route::get('download-file', function () {
 // Export/Import Excel,CSV,PDF --------- #Done Except Reports
 // Translation System --------- #Done
 // Notification System --------- #Done
+// Check Permissions into Pages/Actions (By Admin Role)
 // Make Commands Work as Scheduled Tasks
 // every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+)
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
