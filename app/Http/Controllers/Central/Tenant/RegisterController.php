@@ -39,7 +39,7 @@ class RegisterController extends Controller
             'name' => $data['id'],
         ]));
 
-        Mail::to(env('ADMIN_EMAIL'))->send(new AdminRegisterRequestMail(
+        Mail::to(env('ADMIN_EMAIL','support@codefanz.com'))->send(new AdminRegisterRequestMail(
             registerRequest: $registerRequest
         ));
 
@@ -67,6 +67,7 @@ class RegisterController extends Controller
             'company.domain'=>'required|string|max:255|unique:domains,domain',
             'company.address'=>'nullable|string|max:500',
             'company.country_id'=>'required|exists:countries,id',
+            'company.currency_id'=>'required|exists:currencies,id',
             'company.tax_number'=>'nullable|string|max:100',
             'admin.name'=>'required|string|max:255',
             'admin.email'=>'required|email|max:255',
@@ -94,6 +95,10 @@ class RegisterController extends Controller
             'name'=> $request->company['name'],
             'phone'=>$request->company['phone'],
             'email'=>$request->company['email'],
+            'country_id'=>$request->company['country_id'],
+            'currency_id'=>$request->company['currency_id'],
+            'address'=>$request->company['address'] ?? null,
+            'tax_number'=>$request->company['tax_number'] ?? null,
             'active'=>false,
         ]);
 

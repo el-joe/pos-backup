@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Admins;
 
+use App\Models\Subscription;
 use App\Services\AdminService;
 use App\Services\BranchService;
 use App\Traits\LivewireOperations;
@@ -74,6 +75,15 @@ class AdminsList extends Component
             $this->rules['email'] = 'required|email|max:255|unique:admins,email,'.$this->current->id;
             $this->rules['phone'] = 'required|string|max:50|unique:admins,phone,'.$this->current->id;
             $this->rules['password'] = 'nullable|string|max:500';
+        }else{
+            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
+            $limit = $currentSubscription?->plan?->features['admins']['limit'] ?? 999999;
+            $totalAdmins = $this->adminService->count();
+
+            if($totalAdmins >= $limit){
+                $this->popup('error','Admin limit reached. Please upgrade your subscription to add more admins.');
+                return;
+            }
         }
 
         if(!$this->validator())return;

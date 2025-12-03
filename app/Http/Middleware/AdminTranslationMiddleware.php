@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Subscription;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,8 @@ class AdminTranslationMiddleware
         if(admin()?->id){
             view()->share('__locale', app()->getLocale());
             view()->share('__unreaded_notifications', admin()->unreadNotifications);
+            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
+            view()->share('__current_subscription', $currentSubscription);
         }
         return $next($request);
     }

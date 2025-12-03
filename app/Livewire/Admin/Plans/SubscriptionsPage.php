@@ -10,7 +10,7 @@ class SubscriptionsPage extends Component
 {
     public function render()
     {
-        $currentSubscription = Subscription::current()->paid()->forTenant(tenant('id'))->first();
+        $currentSubscription = Subscription::currentTenantSubscriptions()->first();
         if(!$currentSubscription){
             $currentSubscription = Subscription::forTenant(tenant('id'))
                 ->orderBy('end_date', 'desc')->first();

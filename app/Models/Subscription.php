@@ -94,4 +94,14 @@ class Subscription extends Model
 
         return false;
     }
+
+    static function currentTenantSubscriptions(){
+        return self::forTenant(tenant('id'))
+            ->current()->paid()
+            ->with('plan')
+            ->join('plans', 'subscriptions.plan_id', '=', 'plans.id')
+            ->select('subscriptions.*')
+            ->orderByRaw("FIELD(plans.slug, 'basic', 'pro', 'enterprise') DESC")
+            ->get();
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use App\Models\Tenant\Admin;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Setting;
+use App\Services\BranchService;
 use App\Services\PaymentMethodService;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
@@ -32,12 +33,28 @@ class TenantCreateAdmin extends Command
      */
     public function handle()
     {
+        $data = json_decode($this->argument('request'),true);
         // get arguments
-        $admin = Admin::create(json_decode($this->argument('request'),true));
+        $admin = Admin::create($data);
 
         $this->setPermissions();
         $this->defaultPaymentMethods();
+        $this->defaultBranch();
         $this->defaultSettings();
+    }
+
+    function defaultBranch() {
+        $branchService = app(BranchService::class);
+
+        $branchData = [
+            'name' => 'Main Branch',
+            'email' => tenant()->email,
+            'phone' => tenant()->phone,
+            'address' => tenant()->address,
+            'active' => true,
+        ];
+
+        $branchService->save(null, $branchData);
     }
 
     function defaultPaymentMethods() {

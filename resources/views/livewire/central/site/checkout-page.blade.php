@@ -129,7 +129,7 @@
                         @if(!isset($data['domain_mode']) || $data['domain_mode'] == 'subdomain')
                         <div class="col-12" id="group_subdomain">
                             <label class="form-label">Subdomain</label>
-                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.defer="data.subdomain" wire:keyup="updateDomain" placeholder="yourname">
+                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.live.debounce.500ms="data.subdomain" placeholder="yourname">
                             <small class="text-muted" id="domain_preview">Will be: {{  $data['final_domain'] ?? '--' }}</small>
                             @error('data.subdomain') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -153,6 +153,17 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label class="form-label">Currency</label>
+                            <select class="form-select" wire:model="data.currency_id" required>
+                                <option value="">Select Currency</option>
+                                @foreach($currencies as $currency)
+                                    <option value="{{ $currency->id }}">{{ $currency->name }} ( {{ $currency->code }} )</option>
+                                @endforeach
+                            </select>
+                            @error('data.currency_id') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="col-md-12">
                             <label class="form-label">VAT Number (optional)</label>
                             <input wire:model="data.tax_number" class="form-control">
                             @error('data.tax_number') <small class="text-danger">{{ $message }}</small> @enderror

@@ -26,6 +26,10 @@ class BranchService
         return $this->repo->find($id, $relations);
     }
 
+    function count($filter = []) {
+        return $this->repo->count($filter);
+    }
+
     function save($id = null,$data) {
         if($id) {
             $branch = $this->repo->find($id);

@@ -16,7 +16,7 @@
           <tr>
             <td style="padding:20px 24px;border-bottom:1px solid #eef2f6;">
               <span style="font-size:20px;color:#0f172a;font-weight:bold;">
-                {{$name}}
+                Mohaaseb System
               </span>
             </td>
           </tr>
@@ -64,7 +64,7 @@
           <!-- Footer -->
           <tr>
             <td style="padding:18px 32px;border-top:1px solid #eef2f6;background:#fbfdff;color:#6b7280;font-size:13px;">
-              <strong style="color:#0f172a;">{{env('APP_NAME','POS System')}}</strong><br>
+              <strong style="color:#0f172a;">{{env('APP_NAME','Mohaaseb System')}}</strong><br>
               We're excited to have you onboard.
             </td>
           </tr>
@@ -74,7 +74,7 @@
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="margin-top:12px;">
           <tr>
             <td style="font-size:12px;color:#94a3b8;text-align:center;">
-              This is an automated message — please do not reply directly. © {{date('Y')}} {{env('APP_NAME','POS System')}}. All rights reserved.
+              This is an automated message — please do not reply directly. © {{date('Y')}} {{env('APP_NAME','Mohaaseb System')}}. All rights reserved.
             </td>
           </tr>
         </table>

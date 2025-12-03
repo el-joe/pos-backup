@@ -27,6 +27,10 @@ class ProductService
         return $this->repo->find($id, $relations);
     }
 
+    function count($filter = []) {
+        return $this->repo->count($filter);
+    }
+
     function search($term)
     {
         return $this->repo->search($term);

@@ -56,6 +56,12 @@ class BaseRepository implements BaseInterface {
             ->findOrFail($id);
     }
 
+    function count($filter = []) {
+        return $this->instance
+            ->when(count($filter) > 0 , fn($q) => $q->filter($filter))
+            ->count();
+    }
+
     function create(array $data) {
         return $this->instance->create($data);
     }

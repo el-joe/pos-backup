@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Branches;
 
+use App\Models\Subscription;
 use App\Services\BranchService;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
@@ -68,6 +69,18 @@ class BranchesList extends Component
     }
 
     function save() {
+
+        if(!$this->current?->id){
+            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
+            $limit = $currentSubscription?->plan?->features['branches']['limit'] ?? 999999;
+            $totalBranches = $this->branchService->count();
+
+            if($totalBranches >= $limit){
+                $this->popup('error','Branch limit reached. Please upgrade your subscription to add more branches.');
+                return;
+            }
+        }
+
         if(!$this->validator())return;
 
         $this->branchService->save($this->current?->id,$this->data);

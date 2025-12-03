@@ -3,6 +3,7 @@
 namespace App\Livewire\Central\Site;
 
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\Plan;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
@@ -22,6 +23,7 @@ class CheckoutPage extends Component
         'data.domain_mode'=>'required|in:subdomain,domain',
         'data.final_domain'=>'required|string|max:255|unique:domains,domain',
         'data.country_id'=>'required|exists:countries,id',
+        'data.currency_id'=>'required|exists:currencies,id',
         'data.tax_number'=>'nullable|string|max:100',
         'data.address'=>'nullable|string|max:500',
         'data.admin_name'=>'required|string|max:255',
@@ -30,12 +32,12 @@ class CheckoutPage extends Component
         'data.admin_password'=>'required|string|min:6',
     ];
 
-    function updateDomain()
-    {
-        // Keep only characters that match /^[a-zA-Z0-9_]+$/
-        $raw = $this->data['subdomain'] ?? '';
-        $this->updatingDataSubdomain($raw);
-    }
+    // function updateDomain()
+    // {
+    //     // Keep only characters that match /^[a-zA-Z0-9_]+$/
+    //     $raw = $this->data['subdomain'] ?? '';
+    //     $this->updatingDataSubdomain($raw);
+    // }
 
     function updatingDataSubdomain($value){
         $clean = preg_replace('/[^a-z0-9_]/', '', $value);
@@ -90,7 +92,8 @@ class CheckoutPage extends Component
 
     public function render()
     {
-        $countries = Country::all();
+        $countries = Country::orderBy('name')->get();
+        $currencies = Currency::orderBy('name')->get();
         return view('livewire.central.site.checkout-page', get_defined_vars());
     }
 }

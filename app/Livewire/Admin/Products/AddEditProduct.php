@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Products;
 
+use App\Models\Subscription;
 use App\Services\BranchService;
 use App\Services\BrandService;
 use App\Services\CategoryService;
@@ -77,6 +78,19 @@ class AddEditProduct extends Component
             $rules['image'] = str_replace('nullable','required',$rules['image'] ?? '');
             $rules['gallery'] = str_replace('nullable','required',$rules['gallery'] ?? '');
             $rules['gallery.*'] = str_replace('nullable','required',$rules['gallery.*'] ?? '');
+
+            if(!$this->current?->id){
+                $currentSubscription = Subscription::currentTenantSubscriptions()->first();
+                $limit = $currentSubscription?->plan?->features['products']['limit'] ?? 999999;
+                $totalProducts = $this->productService->count();
+
+                if($totalProducts >= $limit){
+                    $this->popup('error','Product limit reached. Please upgrade your subscription to add more products.');
+                    return;
+                }
+
+            }
+
         }else{
             $rules['sku'] = str_replace('unique:products,sku,deleted_at,NULL','unique:products,sku,'.$this->product->id.',id,deleted_at,NULL',$rules['sku'] ?? '');
         }

@@ -279,6 +279,7 @@ Route::get('download-file', function () {
 // Translation System --------- #Done
 // Notification System --------- #Done
 // Make Commands Work as Scheduled Tasks
+// every select we have in system and don't have data to show , we must add btn to add data from there
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation

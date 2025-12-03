@@ -27,6 +27,7 @@ class PaymentController extends Controller
                             'tax_number' => $data['tax_number'],
                             'address' => $data['address'],
                             'domain' => $data['final_domain'],
+                            'currency_id' => $data['currency_id'],
                         ],
                         'admin' => [
                             'name' => $data['admin_name'],
@@ -46,7 +47,7 @@ class PaymentController extends Controller
                     'name' => $data['company_name'],
                 ]));
 
-                Mail::to(env('ADMIN_EMAIL'))->send(new AdminRegisterRequestMail(
+                Mail::to(env('ADMIN_EMAIL','support@codefanz.com'))->send(new AdminRegisterRequestMail(
                     registerRequest: $registerRequest
                 ));
             }catch(\Exception $e){

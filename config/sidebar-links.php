@@ -62,6 +62,7 @@ return [
         'translated_title' => 'general.titles.inventory',
         "icon"      => "fa fa-warehouse fa-fw",
         "route"     => "#",
+        'subscription_check' => 'inventory',
         "children"  => [
             [
                 "title" => "Stock Transfers",
@@ -161,7 +162,8 @@ return [
                 "title" => "Transactions",
                 'translated_title' => 'general.titles.transactions',
                 "route" => 'admin.transactions.list',
-                "icon"  => "fa fa-exchange-alt fa-fw"
+                "icon"  => "fa fa-exchange-alt fa-fw",
+                'subscription_check' => 'double_entry_accounting'
             ]
         ],
     ],
@@ -175,7 +177,8 @@ return [
                 "title" => "Users",
                 'translated_title' => 'general.titles.admins',
                 "route" => 'admin.admins.list',
-                "icon"  => "fa fa-user-tie fa-fw"
+                "icon"  => "fa fa-user-tie fa-fw",
+                ''
             ],
             [
                 "title" => "Roles & Permissions",
@@ -196,6 +199,7 @@ return [
                 'translated_title' => 'general.titles.financial-reports',
                 "route" => "#",
                 "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                'subscription_check' => 'advanced_reports',
                 "children" => [
                     [
                         "title" => "Trial Balance",
@@ -233,43 +237,50 @@ return [
                         "title" => "Sales Summary",
                         'translated_title' => 'general.titles.sales-summary',
                         "route" => 'admin.reports.sales.sales.summary',
-                        "icon"  => "fa fa-clipboard-list fa-fw"
+                        "icon"  => "fa fa-clipboard-list fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales by Product",
                         'translated_title' => 'general.titles.sales-by-product',
                         "route" => 'admin.reports.sales.sales.product',
-                        "icon"  => "fa fa-box fa-fw"
+                        "icon"  => "fa fa-box fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales by Branch",
                         'translated_title' => 'general.titles.sales-by-branch',
                         "route" => 'admin.reports.sales.sales.branch',
-                        "icon"  => "fa fa-code-branch fa-fw"
+                        "icon"  => "fa fa-code-branch fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales by Customer",
                         'translated_title' => 'general.titles.sales-by-customer',
                         "route" => 'admin.reports.sales.sales.customer',
-                        "icon"  => "fa fa-user-friends fa-fw"
+                        "icon"  => "fa fa-user-friends fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales Profit Report",
                         'translated_title' => 'general.titles.sales-profit-report',
                         "route" => 'admin.reports.sales.sales.profit-loss',
-                        "icon"  => "fa fa-percentage fa-fw"
+                        "icon"  => "fa fa-percentage fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "VAT on Sales (VAT Payable)",
                         'translated_title' => 'general.titles.vat-on-sales',
                         "route" => 'admin.reports.sales.sales.vat-report',
-                        "icon"  => "fa fa-file-invoice fa-fw"
+                        "icon"  => "fa fa-file-invoice fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Sales Return Report",
                         'translated_title' => 'general.titles.sales-return-report',
                         "route" => 'admin.reports.sales.sales.returns',
-                        "icon"  => "fa fa-undo-alt fa-fw"
+                        "icon"  => "fa fa-undo-alt fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                 ],
             ],
@@ -283,43 +294,50 @@ return [
                         "title" => "Purchase Summary",
                         'translated_title' => 'general.titles.purchase-summary',
                         "route" => 'admin.reports.purchases.purchases.summary',
-                        "icon"  => "fa fa-clipboard-list fa-fw"
+                        "icon"  => "fa fa-clipboard-list fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Purchases by Product",
                         'translated_title' => 'general.titles.purchases-by-product',
                         "route" => 'admin.reports.purchases.purchases.product',
-                        "icon"  => "fa fa-box fa-fw"
+                        "icon"  => "fa fa-box fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Purchases by Branch",
                         'translated_title' => 'general.titles.purchases-by-branch',
                         "route" => 'admin.reports.purchases.purchases.branch',
-                        "icon"  => "fa fa-code-branch fa-fw"
+                        "icon"  => "fa fa-code-branch fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Purchases by Supplier",
                         'translated_title' => 'general.titles.purchases-by-supplier',
                         "route" => 'admin.reports.purchases.purchases.supplier',
-                        "icon"  => "fa fa-shipping-fast fa-fw"
+                        "icon"  => "fa fa-shipping-fast fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "VAT on Purchases (VAT Receivable)",
                         'translated_title' => 'general.titles.vat-on-purchases',
                         "route" => 'admin.reports.purchases.purchases.vat-report',
-                        "icon"  => "fa fa-file-invoice fa-fw"
+                        "icon"  => "fa fa-file-invoice fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Purchase Discount Report",
                         'translated_title' => 'general.titles.purchase-discount-report',
                         "route" => 'admin.reports.purchases.purchases.discounts',
-                        "icon"  => "fa fa-percentage fa-fw"
+                        "icon"  => "fa fa-percentage fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Purchase Return Report",
                         'translated_title' => 'general.titles.purchase-return-report',
                         "route" => 'admin.reports.purchases.purchases.returns',
-                        "icon"  => "fa fa-undo-alt fa-fw"
+                        "icon"  => "fa fa-undo-alt fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                 ],
             ],
@@ -333,25 +351,29 @@ return [
                         "title" => "Inventory Valuation",
                         'translated_title' => 'general.titles.inventory-valuation',
                         "route" => 'admin.reports.inventory.stock-valuation',
-                        "icon"  => "fa fa-balance-scale fa-fw"
+                        "icon"  => "fa fa-balance-scale fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Stock Movement Report",
                         'translated_title' => 'general.titles.stock-movement-report',
                         "route" => 'admin.reports.inventory.stock-movement',
                         "icon"  => "fa fa-exchange-alt fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "COGS Report",
                         'translated_title' => 'general.titles.cogs-report',
                         "route" => 'admin.reports.inventory.cogs-report',
-                        "icon"  => "fa fa-file-invoice-dollar fa-fw"
+                        "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Inventory Shortage Report",
                         'translated_title' => 'general.titles.inventory-shortage-report',
                         "route" => 'admin.reports.inventory.shortage-report',
-                        "icon"  => "fa fa-box-open fa-fw"
+                        "icon"  => "fa fa-box-open fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ],
                 ],
             ],
@@ -360,6 +382,7 @@ return [
                 'translated_title' => 'general.titles.performance-analysis-reports',
                 "route" => "#",
                 "icon"  => "fa fa-chart-pie fa-fw",
+                'subscription_check' => 'advanced_reports',
                 "children" => [
                     [
                         "title" => "Profit Margin by Product",
@@ -410,6 +433,7 @@ return [
                 'translated_title' => 'general.titles.tax-compliance-reports',
                 "route" => "#",
                 "icon"  => "fa fa-file-invoice fa-fw",
+                'subscription_check' => 'advanced_reports',
                 "children" => [
                     [
                         "title" => "VAT Summary Report",
@@ -441,19 +465,22 @@ return [
                         "title" => "Cash Register Summary",
                         'translated_title' => 'general.titles.cash-register',
                         "route" => 'admin.reports.cash.register.report',
-                        "icon"  => "fa fa-cash-register fa-fw"
+                        "icon"  => "fa fa-cash-register fa-fw",
+                        'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Branch Profitability",
                         'translated_title' => 'general.titles.branch-profitability',
                         "route" => 'admin.reports.branch.profitability',
-                        "icon"  => "fa fa-code-branch fa-fw"
+                        "icon"  => "fa fa-code-branch fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "User / Cashier Performance",
                         'translated_title' => 'general.titles.cashier-performance',
                         "route" => 'admin.reports.cashier.report',
-                        "icon"  => "fa fa-user-tie fa-fw"
+                        "icon"  => "fa fa-user-tie fa-fw",
+                        'subscription_check' => 'advanced_reports'
                     ]
                 ]
             ]
@@ -489,13 +516,15 @@ return [
                 "title" => "Discounts",
                 'translated_title' => 'general.titles.discounts',
                 "route" => 'admin.discounts.list',
-                "icon"  => "fa fa-percentage fa-fw"
+                "icon"  => "fa fa-percentage fa-fw",
+                'subscription_check' => 'discounts'
             ],
             [
                 "title" => "Taxes",
                 'translated_title' => 'general.titles.taxes',
                 "route" => 'admin.taxes.list',
-                "icon"  => "fa fa-file-invoice-dollar fa-fw"
+                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                'subscription_check' => 'taxes'
             ],
             [
                 "title" => "General Settings",

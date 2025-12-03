@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('adminBoard') }}/plugins/images/favicon.png">
-    <title>POS System</title>
+    <title>Mohaaseb System</title>
     @include('layouts.admin.partials.styles')
     @stack('styles')
     @livewireStyles

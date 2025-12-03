@@ -40,7 +40,7 @@ class PlanSeeder extends Seeder
                     'status' => true
                 ],
                 PlanFeaturesEnum::INVENTORY->value => [
-                    'status' => true
+                    'status' => false
                 ],
                 PlanFeaturesEnum::SALES->value => [
                     'status' => true
