@@ -33,6 +33,10 @@ class PaymentController extends Controller
                             'email' => $data['admin_email'],
                             'phone' => $data['admin_phone'],
                             'password' => $data['admin_password'],
+                        ],
+                        'plan' => [
+                            'id' => $data['plan_id'],
+                            'period' => $data['period'],
                         ]
                     ],
                     'status'=>'pending'
