@@ -8,7 +8,9 @@ use App\Mail\AdminRegisterRequestMail;
 use App\Mail\RegisterRequestAcceptMail;
 use App\Mail\RegisterRequestMail;
 use App\Models\Country;
+use App\Models\Plan;
 use App\Models\RegisterRequest;
+use App\Models\Subscription;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -84,12 +86,30 @@ class RegisterController extends Controller
         $id = Str::slug($request->company['name'], '_');
         $id = preg_replace('/[^a-zA-Z0-9_]/', '_', $id);
 
+        $plan = Plan::find($request->plan['id']);
+        $period = $request->plan['period'] ?? 'month';
+
         $tenant = Tenant::create([
             'id'=>$id,
             'name'=> $request->company['name'],
             'phone'=>$request->company['phone'],
             'email'=>$request->company['email'],
             'active'=>false,
+        ]);
+
+        Subscription::create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan?->id,
+            'plan_details' => $plan?->toArray() ?? [],
+            'price' => $plan->{'price_' . $period} ?? 0,
+            'systems_allowed' => ['pos'],
+            'start_date' => now(),
+            'end_date' => now()->addMonths($period == 'month' ? 1 : 12),
+            'status' => 'paid',
+            // 'payment_gateway',
+            // 'payment_details',
+            // 'payment_callback_details',
+            'billing_cycle' => $period == 'month' ? 'monthly' : 'yearly',
         ]);
 
         $domain = $tenant->domains()->create([
