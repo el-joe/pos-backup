@@ -279,16 +279,17 @@ Route::get('download-file', function () {
 // Translation System --------- #Done
 // Notification System --------- #Done
 // Make Commands Work as Scheduled Tasks
-// every select we have in system and don't have data to show , we must add btn to add data from there
+// every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+)
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
-// Add Currency & City to branch (add currency to tenant instead)
+// Add Currency & City to branch (add currency to tenant instead ---#Done) -> now we need to add currency symbol or code into every money field
 // Audit Logs
 
 // Plans & Subscriptions (Middleware,Plans Page , Plans Compare , Checkout Page , Current Subscription & subscription history )
 
 // TODO : E-Invoice Coming Soon
+// Multi Currency Support into sales orders -> EX : customer come to egypt and doesn't have EGP , he pay in USD , we save the exchange rate at that day and save the amount in both currencies
 // Email & Notification system
 // whatsapp notification
 // SMS notification
