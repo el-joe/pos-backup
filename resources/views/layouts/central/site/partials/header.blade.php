@@ -16,25 +16,25 @@
         <div class="collapse navbar-collapse" id="navbarContent">
             <div class="navbar-nav ms-auto mb-2 mb-lg-0 text-uppercase small fw-semibold">
                 <div class="nav-item me-2">
-                    <a href="#home" class="nav-link link-body-emphasis">Home</a>
+                    <a href="{{ request()->is('/') ? '#home' : '/#home' }}" class="nav-link link-body-emphasis">Home</a>
                 </div>
                 <div class="nav-item me-2">
-                    <a href="#about" class="nav-link link-body-emphasis">About</a>
+                    <a href="{{ request()->is('/') ? '#about' : '/#about' }}" class="nav-link link-body-emphasis">About</a>
                 </div>
                 <div class="nav-item me-2">
-                    <a href="#features" class="nav-link link-body-emphasis">Features</a>
+                    <a href="{{ request()->is('/') ? '#features' : '/#features' }}" class="nav-link link-body-emphasis">Features</a>
                 </div>
                 <div class="nav-item me-2">
-                    <a href="#pricing" class="nav-link link-body-emphasis">Pricing</a>
+                    <a href="{{ request()->is('/') ? '#pricing' : '/#pricing' }}" class="nav-link link-body-emphasis">Pricing</a>
                 </div>
                 <div class="nav-item me-2">
-                    <a href="#testimonials" class="nav-link link-body-emphasis">Testimonials</a>
+                    <a href="{{ request()->is('/') ? '#testimonials' : '/#testimonials' }}" class="nav-link link-body-emphasis">Testimonials</a>
                 </div>
                 {{-- <div class="nav-item me-2">
                     <a href="#blog" class="nav-link link-body-emphasis">Blog</a>
                 </div> --}}
                 <div class="nav-item me-2">
-                    <a href="#contact" class="nav-link link-body-emphasis">Contact</a>
+                    <a href="{{ request()->is('/') ? '#contact' : '/#contact' }}" class="nav-link link-body-emphasis">Contact</a>
                 </div>
             </div>
         </div>

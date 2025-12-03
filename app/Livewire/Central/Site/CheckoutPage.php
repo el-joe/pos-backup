@@ -67,7 +67,7 @@ class CheckoutPage extends Component
     {
         $newPlanSlug = request()->query('plan');
         $data = decodedSlug($newPlanSlug);
-        $this->period = $data['period'] ?? 'monthly';
+        $this->period = $data['period'] ?? 'month';
         $this->slug = $slug = $data['slug'] ?? null;
         $this->plan = Plan::whereSlug($slug)->firstOrFail();
     }
@@ -75,7 +75,10 @@ class CheckoutPage extends Component
     function completeSubscription()
     {
         $this->validate();
-        $dataToString = encodedSlug($this->data);
+        $dataToString = encodedSlug($this->data + [
+            'plan_id' => $this->plan?->id,
+            'period' => $this->period
+        ]);
         // TODO : when plan price is free , we should goto success page directly without payment gateway
         // else proceed to payment gateway
         $this->js("window.location='". '/payment/callback/success?data=' . $dataToString ."'");
