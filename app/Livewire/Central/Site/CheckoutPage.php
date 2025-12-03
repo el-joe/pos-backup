@@ -34,7 +34,11 @@ class CheckoutPage extends Component
     {
         // Keep only characters that match /^[a-zA-Z0-9_]+$/
         $raw = $this->data['subdomain'] ?? '';
-        $clean = preg_replace('/[^a-z0-9_]/', '', $raw);
+        $this->updatingDataSubdomain($raw);
+    }
+
+    function updatingDataSubdomain($value){
+        $clean = preg_replace('/[^a-z0-9_]/', '', $value);
         $clean = strtolower(trim($clean));
         $clean = substr($clean, 0, 100);
         $this->data['final_domain'] = $clean ? ($clean . '.' . ($_SERVER['HTTP_HOST'] ?? '')) : '';
