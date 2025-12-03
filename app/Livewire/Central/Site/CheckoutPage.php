@@ -76,6 +76,8 @@ class CheckoutPage extends Component
     {
         $this->validate();
         $dataToString = encodedSlug($this->data);
+        // TODO : when plan price is free , we should goto success page directly without payment gateway
+        // else proceed to payment gateway
         $this->js("window.location='". '/payment/callback/success?data=' . $dataToString ."'");
     }
 

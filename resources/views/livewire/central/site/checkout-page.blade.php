@@ -217,7 +217,7 @@
 
                 <div class="card-body">
 
-                    <div class="row g-3 mb-3">
+                    {{-- <div class="row g-3 mb-3">
                         <div class="col-md-12">
                             <label class="form-label">Coupon Code</label>
                             <div class="input-group">
@@ -226,7 +226,7 @@
                             </div>
                             <small class="text-muted">Enter a coupon code to reduce the total price</small>
                         </div>
-                    </div>
+                    </div> --}}
 
                     @if($plan->{'price_'.$period} > 0)
                         <table class="table">
