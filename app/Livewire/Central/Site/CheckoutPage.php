@@ -30,10 +30,10 @@ class CheckoutPage extends Component
         'data.admin_password'=>'required|string|min:6',
     ];
 
-    function updatingDataSubdomain($value)
+    function updateDomain()
     {
         // Keep only characters that match /^[a-zA-Z0-9_]+$/
-        $raw = $value ?? '';
+        $raw = $this->data['subdomain'] ?? '';
         $clean = preg_replace('/[^a-z0-9_]/', '', $raw);
         $clean = strtolower(trim($clean));
         $clean = substr($clean, 0, 100);

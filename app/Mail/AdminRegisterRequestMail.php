@@ -37,11 +37,11 @@ class AdminRegisterRequestMail extends Mailable implements ShouldQueue
             view: 'emails.admin_register_request',
             with: [
                 'id' => $this->registerRequest->id,
-                'name' => $this->registerRequest->data['id'],
-                'email' => $this->registerRequest->data['email'],
-                'phone' => $this->registerRequest->data['phone'],
-                'country_id' => $this->registerRequest->data['country_id'],
-                'domain' => $this->registerRequest->data['domain'],
+                'name' => $this->registerRequest->data['company']['name'],
+                'email' => $this->registerRequest->data['company']['email'],
+                'phone' => $this->registerRequest->data['company']['phone'],
+                'country_id' => $this->registerRequest->data['company']['country_id'],
+                'domain' => $this->registerRequest->data['company']['domain'],
                 'created_at' => carbon($this->registerRequest->created_at)->format('d M, Y H:i A'),
             ],
         );

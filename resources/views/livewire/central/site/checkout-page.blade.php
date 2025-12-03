@@ -129,7 +129,7 @@
                         @if(!isset($data['domain_mode']) || $data['domain_mode'] == 'subdomain')
                         <div class="col-12" id="group_subdomain">
                             <label class="form-label">Subdomain</label>
-                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.live.debounce500m="data.subdomain" placeholder="yourname">
+                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.defer="data.subdomain" wire:keyup="updateDomain" placeholder="yourname">
                             <small class="text-muted" id="domain_preview">Will be: {{  $data['final_domain'] ?? '--' }}</small>
                             @error('data.subdomain') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -240,7 +240,7 @@
                             </tr>
                             <tr>
                                 <td>Price:</td>
-                                <td>${{ $plan->yearly_price ?? 240 }}</td>
+                                <td>${{ $plan->{"price_" . $period} }}</td>
                             </tr>
                             <tr>
                                 <td>Discount:</td>
@@ -252,7 +252,7 @@
                             </tr> --}}
                             <tr class="table-dark fw-bold">
                                 <td>Total:</td>
-                                <td id="total_amount">${{ $plan->yearly_price ?? 240 }}</td>
+                                <td id="total_amount">${{ $plan->{"price_" . $period} }}</td>
                             </tr>
                         </table>
                     @endif
