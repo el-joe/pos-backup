@@ -26,8 +26,11 @@
     <!-- BEGIN brand -->
     <div class="brand">
         <a href="{{ route('admin.statistics') }}" class="brand-logo">
-            <span class="brand-img">
-                <span class="brand-img-text text-theme">{{ ucfirst(substr(tenant()->name, 0, 1)) }}</span>
+            <span class="navbar-brand d-flex align-items-center me-auto px-0">
+                <img src="{{ asset('mohaaseb_en_dark.png') }}"
+                    alt="Mohaaseb Logo"
+                    class="d-inline-block"
+                    height="50">
             </span>
             <span class="brand-text">{{ tenant()->name }}</span>
         </a>

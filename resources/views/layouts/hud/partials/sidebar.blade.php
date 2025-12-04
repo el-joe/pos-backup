@@ -4,6 +4,7 @@
     <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
         <!-- BEGIN menu -->
         <div class="menu">
+			<div class="menu-header">Navigation</div>
             @foreach (config("sidebar-links") as $sidebarData)
             {!! sidebarHud($sidebarData) !!}
             @endforeach
