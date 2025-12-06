@@ -941,6 +941,18 @@ return [
             'confirm_refund' => 'Confirm Refund',
             'cancel' => 'Cancel',
         ],
+        'contacts' => [
+            'contacts' => 'Contacts',
+            'new_contact' => 'New Contact',
+            'contact_details' => 'Contact Details',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'address' => 'Address',
+            'save_contact' => 'Save Contact',
+            'cancel' => 'Cancel',
+        ],
     'stock-transfers' => [
             'filters' => 'Filters',
             'show_hide' => 'Show / Hide',
