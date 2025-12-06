@@ -58,14 +58,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.brands.brands') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('brands.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.brands.export') }}
                 </button>
+                @endadminCan
+                @adminCan('brands.create')
                 <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editBrandModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.brands.new_brand') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 
@@ -91,6 +95,7 @@
                                     </span>
                                 </td>
                                 <td class="text-end text-nowrap">
+                                    @adminCan('brands.update')
                                     <button class="btn btn-sm btn-outline-primary me-1"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editBrandModal"
@@ -98,11 +103,14 @@
                                         title="{{ __('general.pages.brands.edit') }}">
                                         <i class="fa fa-pencil"></i>
                                     </button>
+                                    @endadminCan
+                                    @adminCan('brands.delete')
                                     <button class="btn btn-sm btn-outline-danger"
                                         wire:click="deleteAlert({{ $brand->id }})"
                                         title="{{ __('general.pages.brands.delete') }}">
                                         <i class="fa fa-times"></i>
                                     </button>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

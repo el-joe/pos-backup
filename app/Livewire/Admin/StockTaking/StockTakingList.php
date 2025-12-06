@@ -65,16 +65,9 @@ class StockTakingList extends Component
             '#' , 'Branch' , 'Date' , 'Products Count', 'Created by' , 'Created at' , 'Note' , 'Actions'
         ];
 
-        $columns = [
-            'id' => [ 'type' => 'number'],
-            'branch' => [ 'type' => 'text'],
-            'date' => [ 'type' => 'date'],
-            'products_count' => [ 'type' => 'number'],
-            'created_by' => [ 'type' => 'text'],
-            'created_at' => [ 'type' => 'datetime'],
-            'note' => [ 'type' => 'text'],
-            'actions' => [ 'type' => 'actions' , 'actions' => [
-                [
+        $actions = [];
+        if(adminCan('stock_adjustments.show')) {
+            $actions[] = [
                     'title' => 'Details',
                     'icon' => 'fa fa-eye',
                     'class' => 'btn btn-info btn-sm',
@@ -84,8 +77,18 @@ class StockTakingList extends Component
                         'data-placement' => 'top',
                         'data-original-title' => 'Details',
                     ],
-                ],
-            ]]
+                ];
+        }
+
+        $columns = [
+            'id' => [ 'type' => 'number'],
+            'branch' => [ 'type' => 'text'],
+            'date' => [ 'type' => 'date'],
+            'products_count' => [ 'type' => 'number'],
+            'created_by' => [ 'type' => 'text'],
+            'created_at' => [ 'type' => 'datetime'],
+            'note' => [ 'type' => 'text'],
+            'actions' => [ 'type' => 'actions' , 'actions' => $actions]
         ];
 
         $branches = $this->branchService->activeList();

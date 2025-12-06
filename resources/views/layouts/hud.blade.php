@@ -45,6 +45,26 @@
             window.open(event.detail[0].url, '_blank');
         });
 
+        @if(session()->has('success'))
+            Swal.fire({
+                icon: 'success',
+                title: '{{ session('success') }}',
+                showConfirmButton: false,
+                timer: 3000,
+                position: 'center',
+            });
+        @endif
+
+        @if(session()->has('error'))
+            Swal.fire({
+                icon: 'error',
+                title: '{{ session('error') }}',
+                showConfirmButton: false,
+                timer: 3000,
+                position: 'center',
+            });
+        @endif
+
         $(document).ready(function() {
 
             $('.changeDirection').on('click', function(e) {

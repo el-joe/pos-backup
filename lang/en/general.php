@@ -1215,5 +1215,8 @@ return [
         'discounts' => 'Discounts',
         'taxes' => 'Taxes',
         'customer_support' => 'Customer Support',
+    ],
+    'messages' => [
+        'you_do_not_have_permission_to_access' => 'You do not have permission to access this module.',
     ]
 ];

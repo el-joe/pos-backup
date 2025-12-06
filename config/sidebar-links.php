@@ -5,55 +5,64 @@ return [
         "title"     => "Dashboard",
         'translated_title' => 'general.titles.statistics',
         "icon"      => "fa fa-tachometer-alt fa-fw",
-        "route"     => 'admin.statistics'
+        "route"     => 'admin.statistics',
+        'can' => 'statistics.show'
     ],
     [
         "title"     => "Cash Register",
         'translated_title' => 'general.titles.cash-register',
         "icon"      => "fa fa-cash-register fa-fw",
-        "route"     => 'admin.cash.register.open'
+        "route"     => 'admin.cash.register.open',
+        'can' => 'cash_register.create'
     ],
     [
         "title"     => "POS",
         'translated_title' => 'general.titles.pos',
         "icon"      => "fa fa-store fa-fw",
-        "route"     => 'admin.pos'
+        "route"     => 'admin.pos',
+        'can' => 'pos.create'
     ],
     [
         "title"     => "Branches",
         'translated_title' => 'general.titles.branches',
         "icon"      => "fa fa-code-branch fa-fw",
-        "route"     => 'admin.branches.list'
+        "route"     => 'admin.branches.list',
+        'can' => 'branches.list,branches.create,branches.update,branches.delete,branches.export,branches.switch'
     ],
     [
         "title"     => "Products",
         'translated_title' => 'general.titles.products',
         "icon"      => "fa fa-boxes fa-fw",
         "route"     => "#",
+        'can' => 'products.list,products.create,products.update,products.delete,products.export,categories.list,categories.create,categories.update,categories.delete,categories.export,brands.list,brands.create,brands.update,brands.delete,brands.export,units.list,units.create,units.update,units.delete,units.export',
         "children"  => [
             [
                 "title" => "Products",
                 'translated_title' => 'general.titles.products',
                 "route" => 'admin.products.list',
-                "icon"  => "fa fa-box fa-fw"
+                "icon"  => "fa fa-box fa-fw",
+                'can' => 'products.list,products.create,products.update,products.delete,products.export'
             ],
             [
                 "title" => "Categories",
                 'translated_title' => 'general.titles.categories',
                 "route" => 'admin.categories.list',
-                "icon"  => "fa fa-list fa-fw"
+                "icon"  => "fa fa-list fa-fw",
+                'can' => 'categories.list,categories.create,categories.update,categories.delete,categories.export'
             ],
             [
                 "title" => "Brands",
                 'translated_title' => 'general.titles.brands',
                 "route" => 'admin.brands.list',
-                "icon"  => "fa fa-tag fa-fw"
+                "icon"  => "fa fa-tag fa-fw",
+                'can' => 'brands.list,brands.create,brands.update,brands.delete,brands.export'
             ],
             [
                 "title" => "Units",
                 'translated_title' => 'general.titles.units',
                 "route" => 'admin.units.list',
-                "icon"  => "fa fa-ruler fa-fw"
+                "icon"  => "fa fa-ruler fa-fw",
+                'can' => 'units.list,units.create,units.update,units.delete,units.export'
             ],
         ]
     ],
@@ -63,18 +72,21 @@ return [
         "icon"      => "fa fa-warehouse fa-fw",
         "route"     => "#",
         'subscription_check' => 'inventory',
+        'can' => 'stock_transfers.list,stock_transfers.show,stock_transfers.create,stock_transfers.update,stock_transfers.delete,stock_transfers.export,stock_adjustments.list,stock_adjustments.show,stock_adjustments.create,stock_adjustments.update,stock_adjustments.delete,stock_adjustments.export',
         "children"  => [
             [
                 "title" => "Stock Transfers",
                 'translated_title' => 'general.titles.stock-transfers',
                 "route" => 'admin.stocks.transfers.list',
-                "icon"  => "fa fa-exchange-alt fa-fw"
+                "icon"  => "fa fa-exchange-alt fa-fw",
+                'can' => 'stock_transfers.list,stock_transfers.show,stock_transfers.create,stock_transfers.update,stock_transfers.delete,stock_transfers.export'
             ],
             [
                 "title" => "Stock Adjustments",
                 'translated_title' => 'general.titles.stock-adjustments',
                 "route" => 'admin.stocks.adjustments.list',
-                "icon"  => "fa fa-sliders-h fa-fw"
+                "icon"  => "fa fa-sliders-h fa-fw",
+                'can' => 'stock_adjustments.list,stock_adjustments.show,stock_adjustments.create,stock_adjustments.update,stock_adjustments.delete,stock_adjustments.export'
             ],
         ]
     ],
@@ -83,19 +95,22 @@ return [
         'translated_title' => 'general.titles.sales',
         "icon"      => "fa fa-chart-line fa-fw",
         "route"     => "#",
+        'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export,customers.list,customers.show,customers.create,customers.update,customers.delete,customers.export',
         "children"  => [
             [
                 "title" => "Orders",
                 'translated_title' => 'general.titles.orders',
                 "route" => 'admin.sales.index',
-                "icon"  => "fa fa-receipt fa-fw"
+                "icon"  => "fa fa-receipt fa-fw",
+                'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export'
             ],
             [
                 "title" => "Customers",
                 'translated_title' => 'general.titles.customers',
                 "route" => 'admin.users.list',
                 'route_params' => ['type'=>'customer'],
-                "icon"  => "fa fa-user-friends fa-fw"
+                "icon"  => "fa fa-user-friends fa-fw",
+                'can' => 'customers.list,customers.show,customers.create,customers.update,customers.delete,customers.export'
             ],
         ],
     ],
@@ -104,19 +119,22 @@ return [
         'translated_title' => 'general.titles.purchases',
         "icon"      => "fa fa-shopping-bag fa-fw",
         "route"     => "#",
+        'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export,suppliers.list,suppliers.show,suppliers.create,suppliers.update,suppliers.delete,suppliers.export',
         "children"  => [
             [
                 "title" => "Orders",
                 'translated_title' => 'general.titles.orders',
                 "route" => 'admin.purchases.list',
-                "icon"  => "fa fa-file-invoice-dollar fa-fw"
+                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export'
             ],
             [
                 "title" => "Suppliers",
                 'translated_title' => 'general.titles.suppliers',
                 "route" => 'admin.users.list',
                 'route_params' => ['type'=>'supplier'],
-                "icon"  => "fa fa-shipping-fast fa-fw"
+                "icon"  => "fa fa-shipping-fast fa-fw",
+                'can' => 'suppliers.list,suppliers.show,suppliers.create,suppliers.update,suppliers.delete,suppliers.export'
             ],
         ],
     ],
@@ -125,18 +143,21 @@ return [
         'translated_title' => 'general.titles.expenses',
         "icon"      => "fa fa-file-invoice fa-fw",
         "route"     => "#",
+        'can' => 'expense_categories.list,expense_categories.create,expense_categories.update,expense_categories.delete,expense_categories.export,expenses.list,expenses.create,expenses.update,expenses.delete,expenses.export',
         "children"  => [
             [
                 "title" => "Expense Categories",
                 'translated_title' => 'general.titles.expense-categories',
                 "route" => 'admin.expense-categories.list',
-                "icon"  => "fa fa-folder-open fa-fw"
+                "icon"  => "fa fa-folder-open fa-fw",
+                'can' => 'expense_categories.list,expense_categories.create,expense_categories.update,expense_categories.delete,expense_categories.export'
             ],
             [
                 "title" => "Expenses",
                 'translated_title' => 'general.titles.expenses',
                 "route" => 'admin.expenses.list',
-                "icon"  => "fa fa-money-bill-wave fa-fw"
+                "icon"  => "fa fa-money-bill-wave fa-fw",
+                'can' => 'expenses.list,expenses.create,expenses.update,expenses.delete,expenses.export'
             ],
         ],
     ],
@@ -145,25 +166,29 @@ return [
         'translated_title' => 'general.titles.accounting',
         "icon"      => "fa fa-file-invoice-dollar fa-fw",
         "route"     => "#",
+        'can' => 'payment_methods.list,payment_methods.create,payment_methods.update,payment_methods.delete,payment_methods.export,transactions.list,transactions.export',
         "children"  => [
             [
                 "title" => "Payment Methods",
                 'translated_title' => 'general.titles.payment-methods',
                 "route" => 'admin.payment-methods.list',
-                "icon"  => "fa fa-credit-card fa-fw"
+                "icon"  => "fa fa-credit-card fa-fw",
+                'can' => 'payment_methods.list,payment_methods.create,payment_methods.update,payment_methods.delete,payment_methods.export'
             ],
             [
                 "title" => "Shipping Companies (SOON)",
                 'translated_title' => 'general.titles.shipping-companies',
                 "route" => "#",
-                "icon"  => "fa fa-shipping-fast fa-fw"
+                "icon"  => "fa fa-shipping-fast fa-fw",
+                //'can' => 'shipping_companies.list,shipping_companies.create,shipping_companies.update,shipping_companies.delete,shipping_companies.export'
             ],
             [
                 "title" => "Transactions",
                 'translated_title' => 'general.titles.transactions',
                 "route" => 'admin.transactions.list',
                 "icon"  => "fa fa-exchange-alt fa-fw",
-                'subscription_check' => 'double_entry_accounting'
+                'subscription_check' => 'double_entry_accounting',
+                'can' => 'transactions.list,transactions.export'
             ]
         ],
     ],
@@ -172,19 +197,21 @@ return [
         'translated_title' => 'general.titles.administrators',
         "icon"      => "fa fa-user-shield fa-fw",
         "route"     => "#",
+        'can' => 'user_management.list,user_management.create,user_management.update,user_management.delete,user_management.export,role_management.list,role_management.create,role_management.update,role_management.delete,role_management.export',
         "children"  => [
             [
                 "title" => "Users",
                 'translated_title' => 'general.titles.admins',
                 "route" => 'admin.admins.list',
                 "icon"  => "fa fa-user-tie fa-fw",
-                ''
+                'can' => 'user_management.list,user_management.create,user_management.update,user_management.delete,user_management.export'
             ],
             [
                 "title" => "Roles & Permissions",
                 'translated_title' => 'general.titles.roles-permissions',
                 "route" => 'admin.roles.list',
-                "icon"  => "fa fa-user-lock fa-fw"
+                "icon"  => "fa fa-user-lock fa-fw",
+                'can' => 'role_management.list,role_management.create,role_management.update,role_management.delete,role_management.export'
             ],
         ],
     ],
@@ -193,6 +220,7 @@ return [
         'translated_title' => 'general.titles.reports',
         "icon"      => "fa fa-chart-bar fa-fw",
         "route"     => "#",
+        'can' => 'reports.list,reports.export',
         "children"  => [
             [
                 "title" => "Financial Reports",
@@ -491,18 +519,21 @@ return [
         'translated_title' => 'general.titles.plans-subscriptions',
         'icon'     => 'fa fa-clipboard-list fa-fw',
         'route'    => '#',
+        'can'      => 'plans.list,assign,subscriptions.list,subscriptions.cancel',
         'children' => [
             [
                 'title' => 'Plans',
                 'translated_title' => 'general.titles.plans',
                 'route' => 'admin.plans.list',
-                'icon'  => 'fa fa-list fa-fw'
+                'icon'  => 'fa fa-list fa-fw',
+                'can' => 'plans.list,plans.assign'
             ],
             [
                 'title' => 'Subscriptions',
                 'translated_title' => 'general.titles.subscriptions',
                 'route' => 'admin.subscriptions.list',
-                'icon'  => 'fa fa-file-contract fa-fw'
+                'icon'  => 'fa fa-file-contract fa-fw',
+                'can' => 'subscriptions.list,subscriptions.cancel',
             ]
         ]
     ],
@@ -511,26 +542,30 @@ return [
         'translated_title' => 'general.titles.settings',
         "icon"      => "fa fa-cogs fa-fw",
         "route"     => "#",
+        'can' => 'discounts.list,discounts.create,discounts.update,discounts.delete,discounts.export,taxes.list,taxes.create,taxes.update,taxes.delete,taxes.export,general_settings.update',
         "children"  => [
             [
                 "title" => "Discounts",
                 'translated_title' => 'general.titles.discounts',
                 "route" => 'admin.discounts.list',
                 "icon"  => "fa fa-percentage fa-fw",
-                'subscription_check' => 'discounts'
+                'subscription_check' => 'discounts',
+                'can' => 'discounts.list,discounts.create,discounts.update,discounts.delete,discounts.export'
             ],
             [
                 "title" => "Taxes",
                 'translated_title' => 'general.titles.taxes',
                 "route" => 'admin.taxes.list',
                 "icon"  => "fa fa-file-invoice-dollar fa-fw",
-                'subscription_check' => 'taxes'
+                'subscription_check' => 'taxes',
+                'can' => 'taxes.list,taxes.create,taxes.update,taxes.delete,taxes.export'
             ],
             [
                 "title" => "General Settings",
                 'translated_title' => 'general.titles.general-settings',
                 "route" => "#",
-                "icon"  => "fa fa-cogs fa-fw"
+                "icon"  => "fa fa-cogs fa-fw",
+                'can' => 'general_settings.update'
             ]
         ]
     ]

@@ -71,6 +71,21 @@ class StockTransferList extends Component
             '#' , 'Ref No' , 'From' , 'To' , 'Items Count' , 'Total Quantity' , 'Transfer Date' , 'Status' , 'Created At' , 'Actions'
         ];
 
+        $actions = [];
+        if(adminCan('stock_transfers.show')){
+            $actions[] = [
+                'title' => 'Details',
+                'icon' => 'fa fa-eye',
+                'class' => 'btn btn-info btn-sm',
+                'route' => fn($row) => route('admin.stocks.transfers.details', $row['id']),
+                'attributes' => [
+                    'data-toggle' => 'tooltip',
+                    'data-placement' => 'top',
+                    'data-original-title' => 'Details',
+                ],
+            ];
+        }
+
         $columns = [
             'id' => ['type'=>'number'],
             'ref_no' => ['type'=>'text'],
@@ -83,19 +98,7 @@ class StockTransferList extends Component
                 'type'=>'badge' , 'class' => fn($row) => $row['status_class']
             ],
             'created_at' => ['type'=>'datetime'],
-            'actions' => [ 'type' => 'actions' , 'actions' => [
-                [
-                    'title' => 'Details',
-                    'icon' => 'fa fa-eye',
-                    'class' => 'btn btn-info btn-sm',
-                    'route' => fn($row) => route('admin.stocks.transfers.details', $row['id']),
-                    'attributes' => [
-                        'data-toggle' => 'tooltip',
-                        'data-placement' => 'top',
-                        'data-original-title' => 'Details',
-                    ],
-                ],
-            ]],
+            'actions' => [ 'type' => 'actions' , 'actions' => $actions],
         ];
 
         $branches = app()->make(BranchService::class)->activeList();

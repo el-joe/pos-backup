@@ -1,5 +1,6 @@
 <!-- BEGIN row -->
 <div class="row">
+    @if(adminCan('statistics.show'))
     <!-- BEGIN col-3 -->
     <div class="col-xl-3 col-lg-6 mb-3">
         <a href="#" class="card text-decoration-none">
@@ -227,6 +228,13 @@
             </div>
         </div>
     </div>
+    @else
+        <div class="col-12">
+            <div class="alert alert-danger">
+                {{ __('general.messages.you_do_not_have_permission_to_access') }}
+            </div>
+        </div>
+    @endif
 
 </div>
 <!-- END row -->

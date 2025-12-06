@@ -69,14 +69,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">{{ __('general.titles.expenses') }}</h3>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('expenses.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.expenses.export') }}
                 </button>
+                @endadminCan
+                @adminCan('expenses.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus"></i> {{ __('general.pages.expenses.new_expense') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 

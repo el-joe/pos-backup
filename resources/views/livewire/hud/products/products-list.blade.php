@@ -92,14 +92,18 @@
             <h5 class="mb-0"><i class="fa fa-cubes me-2"></i>{{ __('general.pages.products.products') }}</h5>
 
             <div class="d-flex align-items-center gap-2">
+                @adminCan('products.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.products.export') }}
                 </button>
+                @endadminCan
+                @adminCan('products.create')
                 <a href="{{ route('admin.products.add-edit','create') }}" class="btn btn-primary">
                     <i class="fa fa-plus"></i> {{ __('general.pages.products.new_product') }}
                 </a>
+                @endadminCan
             </div>
         </div>
 
@@ -139,15 +143,21 @@
                                     </span>
                                 </td>
                                 <td class="text-nowrap">
+                                    @adminCan('products.update')
                                     <a href="{{ route('admin.products.add-edit', $product->id) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="{{ __('general.pages.products.edit') }}">
                                         <i class="fa fa-edit"></i>
                                     </a>
+                                    @endadminCan
+                                    @adminCan('products.delete')
                                     <button type="button" class="btn btn-sm btn-danger me-1" data-bs-toggle="tooltip" title="{{ __('general.pages.products.delete') }}" wire:click="deleteAlert({{ $product->id }})">
                                         <i class="fa fa-trash"></i>
                                     </button>
+                                    @endadminCan
+                                    @adminCan('products.show')
                                     <a href="#" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="{{ __('general.pages.products.view') }}">
                                         <i class="fa fa-eye"></i>
                                     </a>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

@@ -3,14 +3,18 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StockTaking extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'branch_id',
         'date',
         'note',
-        'created_by'
+        'created_by',
+        'deleted_at'
     ];
 
     public function products()

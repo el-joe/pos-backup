@@ -78,11 +78,13 @@
             <h3 class="card-title mb-0">{{ __('general.pages.transactions.transactions_list') }}</h3>
 
             <div class="d-flex align-items-center gap-2">
+                @adminCan('transactions.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.transactions.export') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 

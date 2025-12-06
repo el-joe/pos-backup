@@ -58,14 +58,19 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ $type != null ? ucfirst($type) : __('general.pages.users.users') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                <?php $_name = $type == 'customer' ? 'customers' : ($type == 'supplier' ? 'suppliers' : 'users'); ?>
+                @adminCan($_name . '.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.users.export') }}
                 </button>
+                @endadminCan
+                @adminCan($_name . '.create')
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus"></i> {{ __('general.pages.users.new_user') }}
                 </a>
+                @endadminCan
             </div>
         </div>
 
@@ -103,15 +108,21 @@
                                     </span>
                                 </td>
                                 <td class="text-nowrap">
+                                    @adminCan($_name . '.update')
                                     <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="setCurrent({{ $user->id }})" title="{{ __('general.pages.users.edit') }}">
                                         <i class="fa fa-edit"></i>
                                     </button>
+                                    @endadminCan
+                                    @adminCan($_name . '.delete')
                                     <button class="btn btn-sm btn-danger me-1" wire:click="deleteAlert({{ $user->id }})" title="{{ __('general.pages.users.delete') }}">
                                         <i class="fa fa-trash"></i>
                                     </button>
+                                    @endadminCan
+                                    @adminCan($_name . '.show')
                                     <a href="{{ route('admin.users.details', $user->id) }}" class="btn btn-sm btn-info" title="{{ __('general.pages.users.view') }}">
                                         <i class="fa fa-eye"></i>
                                     </a>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

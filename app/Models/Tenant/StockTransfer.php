@@ -4,9 +4,11 @@ namespace App\Models\Tenant;
 
 use App\Enums\StockTransferStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StockTransfer extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'from_branch_id',
         'to_branch_id',
@@ -14,7 +16,8 @@ class StockTransfer extends Model
         'ref_no',
         'status',
         'expense_paid_branch_id',
-        'created_by'
+        'created_by',
+        'deleted_at'
     ];
 
     protected $casts = [

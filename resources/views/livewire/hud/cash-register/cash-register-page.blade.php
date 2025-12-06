@@ -1,4 +1,5 @@
 <div class="row g-4">
+    @if(adminCan('cash_register.create'))
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-header border-bottom">
@@ -117,4 +118,11 @@
 
         </div>
     </div>
+    @else
+        <div class="col-12">
+            <div class="alert alert-danger">
+                {{ __('general.messages.you_do_not_have_permission_to_access') }}
+            </div>
+        </div>
+    @endif
 </div>

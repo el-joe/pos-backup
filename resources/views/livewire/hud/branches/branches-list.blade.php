@@ -61,12 +61,14 @@
             <h5 class="mb-0">{{ __('general.pages.branches.branches') }}</h5>
 
             <div class="d-flex align-items-center gap-2">
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.branches.export') }}
-                </button>
-
+                @adminCan('branches.export')
+                    <!-- Export Button -->
+                    <button class="btn btn-outline-success"
+                            wire:click="$set('export', 'excel')">
+                        <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.branches.export') }}
+                    </button>
+                @endadminCan
+                @adminCan('branches.create')
                 <!-- Add New -->
                 <button class="btn btn-theme"
                         data-bs-toggle="modal"
@@ -74,6 +76,7 @@
                         wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.branches.new_branch') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 
@@ -113,6 +116,7 @@
                                     </span>
                                 </td>
                                 <td class="text-end text-nowrap">
+                                    @adminCan('branches.update')
                                     <button class="btn btn-sm btn-outline-primary me-1"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editBranchModal"
@@ -120,11 +124,14 @@
                                         title="{{ __('general.pages.branches.edit') }}">
                                         <i class="fa fa-pencil"></i>
                                     </button>
+                                    @endadminCan
+                                    @adminCan('branches.delete')
                                     <button class="btn btn-sm btn-outline-danger"
                                         wire:click="deleteAlert({{ $branch->id }})"
                                         title="{{ __('general.pages.branches.delete') }}">
                                         <i class="fa fa-times"></i>
                                     </button>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

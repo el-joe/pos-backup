@@ -3,9 +3,11 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ShippingCompany extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'name',
         'email',
@@ -14,6 +16,7 @@ class ShippingCompany extends Model
         'active',
         'type',
         'website',
+        'deleted_at'
     ];
 
     protected $casts = [

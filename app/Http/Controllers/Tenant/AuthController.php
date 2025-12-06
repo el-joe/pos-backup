@@ -25,6 +25,9 @@ class AuthController extends Controller
     }
 
     function switchBranch($branch = null) {
+        if(!adminCan('branches.switch')){
+            return redirect()->back()->with('error',__('general.messages.you_do_not_have_permission_to_access'));
+        }
         admin()->update(['branch_id' => $branch]);
 
         return redirect()->back();
@@ -32,6 +35,7 @@ class AuthController extends Controller
 
     function logout() {
         auth(TENANT_ADMINS_GUARD)->logout();
+        session()->flush();
         return redirect()->route('admin.login');
     }
 

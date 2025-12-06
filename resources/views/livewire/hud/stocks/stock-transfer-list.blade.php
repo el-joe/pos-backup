@@ -77,14 +77,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">{{ __('general.pages.stock-transfers.stock_transfers') }}</h3>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('stock_transfers.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.stock-transfers.export') }}
                 </button>
+                @endadminCan
+                @adminCan('stock_transfers.create')
                 <a class="btn btn-primary" href="{{ route('admin.stocks.transfers.create') }}">
                     <i class="fa fa-plus"></i> {{ __('general.pages.stock-transfers.new_stock_transfer') }}
                 </a>
+                @endadminCan
             </div>
         </div>
 

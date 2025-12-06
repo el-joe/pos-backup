@@ -72,14 +72,19 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.titles.discounts') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('discounts.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.discounts.export') }}
                 </button>
+                @endadminCan
+
+                @adminCan('discounts.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editDiscountModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.discounts.new_discount') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 
@@ -113,12 +118,16 @@
                                 </span>
                             </td>
                             <td class="text-center">
+                                @adminCan('discounts.update')
                                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editDiscountModal" wire:click="setCurrent({{ $discount->id }})" title="{{ __('general.pages.discounts.edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </button>
+                                @endadminCan
+                                @adminCan('discounts.delete')
                                 <button class="btn btn-sm btn-danger me-1" wire:click="deleteAlert({{ $discount->id }})" title="{{ __('general.pages.discounts.delete') }}">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                @endadminCan
                                 <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#historyModal" wire:click="setCurrent({{ $discount->id }})" title="{{ __('general.pages.discounts.history') }}">
                                     <i class="fa fa-history"></i>
                                 </button>

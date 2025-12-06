@@ -1,3 +1,6 @@
+<?php
+    $canAccess = isset($data['can']) ? adminCan($data['can']) : true;
+?>
 @if(isset($data['children']) && count($data['children']) > 0)
     <?php
         $isActive = false;
@@ -20,7 +23,7 @@
             $isActive = $isActive && $checkRouteParams;
         }
     ?>
-    @if(!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false))
+    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false)) && $canAccess)
         <div class="menu-item has-sub {{ $isActive ? 'active' : '' }} mb-1">
             <a href="#" class="menu-link">
                 <span class="menu-icon">
@@ -40,7 +43,7 @@
     @php
         $checkRouteParams = ($data['route_params'] ??false) ? checkRouteParams($data['route_params']) : true;
     @endphp
-    @if(!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false))
+    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false)) && $canAccess)
         <div class="menu-item {{ request()->routeIs($data['route']) && $checkRouteParams ? 'active' : '' }}  mb-1">
             <a href="{{ $data['route'] == "#" ? "#" : route($data['route'],$data['route_params']??null) }}" class="menu-link">
                 <span class="menu-icon"><i class="{{$data['icon']}}"></i></span>

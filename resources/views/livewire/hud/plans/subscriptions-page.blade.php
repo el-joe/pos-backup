@@ -20,11 +20,12 @@
                                 <p><strong>Expiration Date:</strong> {{ carbon($currentSubscription->end_date)->format('Y-m-d') }}</p>
                             </div>
                         </div>
-                        @if($currentSubscription->canCancel())
+
+                        @if($currentSubscription->canCancel() && adminCan('subscriptions.cancel'))
                             <button class="btn btn-danger">
                                 <i class="fa fa-times"></i> Cancel
                             </button>
-                        @elseif($currentSubscription->canRenew())
+                        @elseif($currentSubscription->canRenew() && adminCan('subscriptions.renew'))
                             <button class="btn btn-primary">
                                 <i class="fa fa-sync"></i> Renew
                             </button>

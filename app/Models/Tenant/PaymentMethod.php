@@ -3,11 +3,14 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PaymentMethod extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'name', 'active','slug','branch_id'
+        'name', 'active','slug','branch_id', 'deleted_at'
     ];
 
     public function branch() {

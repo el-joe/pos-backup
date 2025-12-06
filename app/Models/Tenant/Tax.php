@@ -3,10 +3,12 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tax extends Model
 {
-    protected $fillable = ['name','vat_number','rate'];
+    use SoftDeletes;
+    protected $fillable = ['name','vat_number','rate','deleted_at'];
 
     function scopeFilter($q,$filter) {
         return $q->when($filter['search'] ?? null, function($query, $search) {
