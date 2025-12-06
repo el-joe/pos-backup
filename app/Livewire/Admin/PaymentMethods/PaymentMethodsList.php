@@ -14,7 +14,9 @@ class PaymentMethodsList extends Component
     use LivewireOperations, WithPagination;
     private $paymentMethodService, $branchService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false,
+    ];
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -40,7 +42,7 @@ class PaymentMethodsList extends Component
         $this->current = $this->paymentMethodService->find($id);
         if ($this->current) {
             $this->data = $this->current->toArray();
-            $this->data['active'] = (bool)$this->data['active'];
+            $this->data['active'] = (bool)$this->current['active'];
         }
     }
 
