@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Middleware\AdminTranslationMiddleware;
+use App\Http\Middleware\InitializeTenancyByDomain;
 use App\Http\Middleware\Tenant\AdminAuthMiddleware;
 use App\Http\Middleware\Tenant\ReportsPermissionCheck;
 use App\Livewire\Admin\Accounts\AccountsList;
@@ -78,7 +79,6 @@ use App\Livewire\Admin\Units\UnitsList;
 use App\Livewire\Admin\Users\UserDetails;
 use App\Livewire\Admin\Users\UsersList;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 /*
