@@ -2,14 +2,20 @@
 
 namespace App\Livewire\Central\CPanel\Contacts;
 
+use App\Models\Contact;
+use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('layouts.cpanel')]
 class ContactsList extends Component
 {
+    use LivewireOperations, WithPagination;
+
     public function render()
     {
-        return view('livewire.central.c-panel.contacts.contacts-list');
+        $contacts = Contact::paginate(10);
+        return view('livewire.central.c-panel.contacts.contacts-list', get_defined_vars());
     }
 }
