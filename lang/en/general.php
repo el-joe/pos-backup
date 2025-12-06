@@ -1127,6 +1127,7 @@ return [
         ],
         'admins' => [
             'filters' => 'Filters',
+            'actions' => 'Actions',
             'show_hide' => 'Show / Hide',
             'search_label' => 'Search by Name|Phone|Email',
             'search_placeholder' => 'Search ...',

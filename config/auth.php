@@ -42,6 +42,10 @@ return [
             'driver' => 'session',
             'provider' => 'tenant_admin',
         ],
+        'cpanel_admin' => [
+            'driver' => 'session',
+            'provider' => 'cpanel_admin',
+        ],
     ],
 
     /*
@@ -65,6 +69,10 @@ return [
         'tenant_admin' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', Admin::class),
+        ],
+        'cpanel_admin' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
 
         // 'users' => [
