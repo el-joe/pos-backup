@@ -81,14 +81,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">{{ __('general.pages.sales.selling_orders') }}</h3>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('sales.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.sales.export') }}
                 </button>
+                @endadminCan
+                @adminCan('pos.create')
                 <a class="btn btn-primary btn-sm" href="{{ route('admin.pos') }}">
                     <i class="fa fa-plus"></i> {{ __('general.pages.sales.new_selling_order') }}
                 </a>
+                @endadminCan
             </div>
         </div>
 
@@ -126,17 +130,22 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
+                                    @adminCan('sales.show')
                                     <a href="{{ route('admin.sales.details', $sale->id) }}"
                                        class="btn btn-sm btn-primary me-1"
                                        title="{{ __('general.pages.sales.details') }}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
+                                    @endadminCan
+                                    @adminCan('sales.pay')
                                     <button class="btn btn-sm btn-success"
                                             wire:click="setCurrent({{ $sale->id }})"
                                             data-bs-toggle="modal"
                                             data-bs-target="#paymentModal">
                                         <i class="fa fa-credit-card"></i>
                                     </button>
+                                    @endadminCan
+                                    @adminCan('sales.show-invoice')
                                     {{-- create 2 btn one for print and one for export to pdf --}}
                                     <a href="{{ route('generate.invoice', ['type' => 'sales','id'=>$sale->id, 'action' => 'print']) }}"
                                        class="btn btn-sm btn-info ms-1"
@@ -150,6 +159,7 @@
                                        target="_blank">
                                         <i class="fa fa-file-pdf"></i>
                                     </a>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

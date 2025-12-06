@@ -69,14 +69,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.titles.payment-methods') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('payment_methods.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.payment-methods.export') }}
                 </button>
+                @endadminCan
+                @adminCan('payment_methods.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPaymentMethodModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.payment-methods.new_payment_method') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 
@@ -105,14 +109,18 @@
                             </td>
                             <td class="text-center">
                                 @if(!in_array($paymentMethod->slug, ['cash', 'bank-transfer']))
+                                @adminCan('payment_methods.update')
                                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal"
                                     data-bs-target="#editPaymentMethodModal"
                                     wire:click="setCurrent({{ $paymentMethod->id }})" title="{{ __('general.pages.payment-methods.edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </button>
+                                @endadminCan
+                                @adminCan('payment_methods.delete')
                                 <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $paymentMethod->id }})" title="{{ __('general.pages.payment-methods.delete') }}">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                @endadminCan
                                 @else
                                 <i class="fa fa-lock text-muted" title="{{ __('general.pages.payment-methods.lock_tooltip') }}"></i>
                                 @endif

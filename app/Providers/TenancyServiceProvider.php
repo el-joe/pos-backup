@@ -16,7 +16,7 @@ use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use App\Http\Middleware\InitializeTenancyByDomain;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -113,7 +113,6 @@ class TenancyServiceProvider extends ServiceProvider
 
     public function boot()
     {
-
         // if central domain is runing then do action
         $currentDomain = $_SERVER['HTTP_HOST']??'';
         $isCentralDomain = in_array($currentDomain, config('tenancy.central_domains'));
@@ -122,7 +121,6 @@ class TenancyServiceProvider extends ServiceProvider
                 return Route::post('/livewire/update', $handle)
                     ->middleware('web');
             });
-
         }else{
             Livewire::setUpdateRoute(function ($handle) {
                 return Route::post('/livewire/update', $handle)
@@ -150,7 +148,6 @@ class TenancyServiceProvider extends ServiceProvider
                 $view->with('__branches', $branches);
             }
         });
-
     }
 
     protected function bootEvents()

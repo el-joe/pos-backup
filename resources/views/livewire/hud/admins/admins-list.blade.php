@@ -69,14 +69,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.admins.admins') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('user_management.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.admins.export') }}
                 </button>
+                @endadminCan
+                @adminCan('user_management.create')
                 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAdminModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus"></i> {{ __('general.pages.admins.new_admin') }}
                 </a>
+                @endadminCan
             </div>
         </div>
 
@@ -110,17 +114,21 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-primary me-1"
-                                            data-bs-toggle="modal" data-bs-target="#editAdminModal"
-                                            wire:click="setCurrent({{ $admin->id }})"
-                                            title="{{ __('general.pages.admins.edit') }}">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger"
-                                            wire:click="deleteAlert({{ $admin->id }})"
-                                            title="{{ __('general.pages.admins.delete') }}">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                    @adminCan('user_management.update')
+                                        <button class="btn btn-sm btn-primary me-1"
+                                                data-bs-toggle="modal" data-bs-target="#editAdminModal"
+                                                wire:click="setCurrent({{ $admin->id }})"
+                                                title="{{ __('general.pages.admins.edit') }}">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    @endadminCan
+                                    @adminCan('user_management.delete')
+                                        <button class="btn btn-sm btn-danger"
+                                                wire:click="deleteAlert({{ $admin->id }})"
+                                                title="{{ __('general.pages.admins.delete') }}">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

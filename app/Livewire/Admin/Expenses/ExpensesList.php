@@ -151,6 +151,26 @@ class ExpensesList extends Component
         $headers = [
             '#' , 'Branch' ,'Target' , 'Category' , 'Amount' , 'Tax Percentage' , 'Total' , 'Date' , 'Note' , 'Created At' , 'Actions'
         ];
+
+        $actions = [];
+        if(adminCan('expenses.delete')){
+            $actions[] = [
+                'title' => fn($row) => $row['deleted'] ? 'Deleted' : 'Delete',
+                'icon' => 'fa fa-trash',
+                'class' => 'btn btn-danger btn-sm',
+                'wire:click' => fn($row) => "deleteAlert({$row['id']})",
+                'hide' => function($row) {
+                    return $row['target'] == 'purchases';
+                },
+                'disabled' => fn($row) => $row['deleted'],
+                'attributes' => [
+                    'data-toggle' => 'tooltip',
+                    'data-placement' => 'top',
+                    'data-original-title' => fn($row) => $row['deleted'] ? 'Deleted' : 'Delete',
+                ],
+            ];
+        }
+
         $columns = [
             'id' => [ 'type' => 'number'],
             'branch' => [ 'type' => 'text'],
@@ -162,23 +182,7 @@ class ExpensesList extends Component
             'date' => [ 'type' => 'date'],
             'note' => [ 'type' => 'text'],
             'created_at' => [ 'type' => 'datetime'],
-            'actions' => [ 'type' => 'actions' , 'actions' => [
-                [
-                    'title' => fn($row) => $row['deleted'] ? 'Deleted' : 'Delete',
-                    'icon' => 'fa fa-trash',
-                    'class' => 'btn btn-danger btn-sm',
-                    'wire:click' => fn($row) => "deleteAlert({$row['id']})",
-                    'hide' => function($row) {
-                        return $row['target'] == 'purchases';
-                    },
-                    'disabled' => fn($row) => $row['deleted'],
-                    'attributes' => [
-                        'data-toggle' => 'tooltip',
-                        'data-placement' => 'top',
-                        'data-original-title' => fn($row) => $row['deleted'] ? 'Deleted' : 'Delete',
-                    ],
-                ],
-            ]],
+            'actions' => [ 'type' => 'actions' , 'actions' => $actions],
         ];
 
         $expenseCategories = $this->expenseCategoryService->list([],['active'=>true]);

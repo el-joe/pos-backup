@@ -5,7 +5,9 @@ declare(strict_types=1);
 use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Middleware\AdminTranslationMiddleware;
+use App\Http\Middleware\InitializeTenancyByDomain;
 use App\Http\Middleware\Tenant\AdminAuthMiddleware;
+use App\Http\Middleware\Tenant\ReportsPermissionCheck;
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Admins\AdminsList;
 use App\Livewire\Admin\Admins\RoleDetails;
@@ -77,7 +79,6 @@ use App\Livewire\Admin\Units\UnitsList;
 use App\Livewire\Admin\Users\UserDetails;
 use App\Livewire\Admin\Users\UsersList;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 /*
@@ -154,6 +155,7 @@ Route::middleware([
             Route::group([
                 'prefix'=> 'reports',
                 'as'=> 'reports.',
+                'middleware' => [ReportsPermissionCheck::class]
             ],function () {
 
                 Route::group([
@@ -273,8 +275,8 @@ Route::get('download-file', function () {
 
 
 // Features to add later
-// Check Permissions into Pages/Actions (By Admin Role)
-// Make Commands Work as Scheduled Tasks
+// Check Everything Related to Soft Deletes and make sure it's working fine
+// everything (add/edit) have active must be with default active = false
 // every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+)
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
 // Import Excel,CSV

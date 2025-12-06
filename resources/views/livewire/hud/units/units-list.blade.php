@@ -70,14 +70,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.units.units') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('units.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.units.export') }}
                 </button>
+                @endadminCan
+                @adminCan('units.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editUnitModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.units.new_unit') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 
@@ -107,6 +111,7 @@
                                     </span>
                                 </td>
                                 <td class="text-nowrap">
+                                    @adminCan('units.update')
                                     <button type="button"
                                             class="btn btn-sm btn-primary me-1"
                                             data-bs-toggle="modal"
@@ -114,12 +119,14 @@
                                             wire:click="setCurrent({{ $unit->id }})">
                                         <i class="fa fa-edit me-1"></i> {{ __('general.pages.units.edit') }}
                                     </button>
-
+                                    @endadminCan
+                                    @adminCan('units.delete')
                                     <button type="button"
                                             class="btn btn-sm btn-danger"
                                             wire:click="deleteAlert({{ $unit->id }})">
                                         <i class="fa fa-trash me-1"></i> {{ __('general.pages.units.delete') }}
                                     </button>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

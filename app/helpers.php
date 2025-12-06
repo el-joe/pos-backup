@@ -111,9 +111,9 @@ if(!function_exists('defaultPermissionsList')) {
             "categories"=> ["list", "create", "update", "delete",'export'],
             "brands"=> ["list", "create", "update", "delete",'export'],
             "units"=> ["list", "create", "update", "delete",'export'],
-            "stock_transfers"=> ["list","show", "create", "update", "delete","export"],
-            "stock_adjustments"=> ["list","show", "create", "update", "delete",'export'],
-            "sales"=> ["list", "show","update", "delete","pay",'export'],
+            "stock_transfers"=> ["list","show", "create","export"],
+            "stock_adjustments"=> ["list","show", "create",'export'],
+            "sales"=> ["list", "show","update", "delete","pay",'show-invoice','export'],
             "customers"=> ["list","show", "create", "update", "delete",'export'],
             "purchases"=> ["list","show", "create", "delete","pay",'export'],
             "suppliers"=> ["list", "show", "create", "update", "delete",'export'],
@@ -125,13 +125,37 @@ if(!function_exists('defaultPermissionsList')) {
             "role_management"=> ["list", "create", "update", "delete",'export'],
             "reports"=> ["list",'export'],
             'plans' => ['list','assign'],
-            'subscriptions' => ['list','cancel'],
+            'subscriptions' => ['list','cancel','renew'],
             "discounts"=> ["list", "create", "update", "delete",'export'],
             "taxes"=> ["list", "create", "update", "delete",'export'],
             "general_settings"=> ["update"]
         ];
 
     }
+}
+
+function adminCan($permission) {
+    if(admin()->type == 'super_admin'){
+        return true;
+    }
+
+    $permissions = session()->get('admin.permissions');
+    if(!$permissions){
+        $permissions = admin()->getPermissionsViaRoles()->pluck('name')->toArray();
+        session()->put('admin.permissions',$permissions);
+    }
+
+    // set permissions values as keys too
+    $permissions = array_flip($permissions);
+
+    $permissionArr = explode(',',$permission);
+
+    foreach ($permissionArr as $p) {
+        if(isset($permissions[$p])){
+            return true;
+        }
+    }
+    return false;
 }
 
 function sidebarHud($data){

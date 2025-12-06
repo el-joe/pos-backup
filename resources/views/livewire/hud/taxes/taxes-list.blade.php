@@ -2,7 +2,6 @@
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.taxes.filters') }}</h5>
-
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
@@ -58,14 +57,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.titles.taxes') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('taxes.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.taxes.export') }}
                 </button>
+                @endadminCan
+                @adminCan('taxes.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editTaxModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.taxes.new_tax') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 
@@ -95,6 +98,7 @@
                                     </span>
                                 </td>
                                 <td class="text-nowrap">
+                                    @adminCan('taxes.update')
                                     <button type="button"
                                             class="btn btn-sm btn-primary me-1"
                                             data-bs-toggle="modal"
@@ -102,12 +106,14 @@
                                             wire:click="setCurrent({{ $tax->id }})">
                                         <i class="fa fa-edit me-1"></i> {{ __('general.pages.taxes.edit') }}
                                     </button>
-
+                                    @endadminCan
+                                    @adminCan('taxes.delete')
                                     <button type="button"
                                             class="btn btn-sm btn-danger"
                                             wire:click="deleteAlert({{ $tax->id }})">
                                         <i class="fa fa-trash me-1"></i> {{ __('general.pages.taxes.delete') }}
                                     </button>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach

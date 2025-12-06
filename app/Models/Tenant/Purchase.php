@@ -8,6 +8,7 @@ use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Contact;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
 {

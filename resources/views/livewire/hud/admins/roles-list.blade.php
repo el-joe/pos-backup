@@ -2,9 +2,11 @@
     <div class="card shadow-sm mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">{{ __('general.pages.roles.roles') }}</h3>
+            @adminCan('role_management.create')
             <a class="btn btn-primary" href="{{ route('admin.roles.show','create') }}">
                 <i class="fa fa-plus"></i> {{ __('general.pages.roles.new_role') }}
             </a>
+            @endadminCan
         </div>
 
         <div class="card-body">
@@ -33,12 +35,16 @@
                                 </span>
                             </td>
                             <td class="text-center">
+                                @adminCan('role_management.update')
                                 <a href="{{ route('admin.roles.show', $role->id) }}" class="btn btn-sm btn-primary" title="{{ __('general.pages.admins.edit') }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
+                                @endadminCan
+                                @adminCan('role_management.delete')
                                 <button type="button" class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $role->id }})" title="{{ __('general.pages.admins.delete') }}">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                                @endadminCan
                             </td>
                         </tr>
                         @endforeach

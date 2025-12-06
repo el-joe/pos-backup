@@ -7,6 +7,7 @@ use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Blade;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminAuthMiddleware
@@ -35,10 +36,20 @@ class AdminAuthMiddleware
         }
 
         $branches = app(BranchService::class)->activeList();
-
-        if (!$cashRegister && !$isOnOpenRoute && count($branches) > 0 && admin()->type == 'admin') {
-            return redirect()->route('admin.cash.register.open')->with('warning', 'You must open a cash register before proceeding.');
+        if(adminCan('cash_register.create')){
+            if (!$cashRegister && !$isOnOpenRoute && count($branches) > 0 && admin()->type == 'admin') {
+                return redirect()->route('admin.cash.register.open')->with('warning', 'You must open a cash register before proceeding.');
+            }
         }
+
+        Blade::directive('adminCan', function ($expression) {
+            return "<?php if(adminCan($expression)): ?>";
+        });
+
+        Blade::directive('endadminCan', function () {
+            return "<?php endif; ?>";
+        });
+
 
         return $next($request);
     }

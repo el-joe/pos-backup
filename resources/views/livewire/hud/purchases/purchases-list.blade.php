@@ -81,14 +81,18 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.purchases.purchase_orders') }}</h5>
             <div class="d-flex align-items-center gap-2">
+                @adminCan('purchases.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.purchases.export') }}
                 </button>
+                @endadminCan
+                @adminCan('purchases.create')
                 <a href="{{ route('admin.purchases.add') }}" class="btn btn-primary">
                     <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
                 </a>
+                @endadminCan
             </div>
         </div>
 
@@ -132,12 +136,16 @@
                                 </span>
                             </td>
                             <td class="text-nowrap">
+                                @adminCan('purchases.show')
                                 <a href="{{ route('admin.purchases.details', $purchase->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="{{ __('general.pages.purchases.details') }}">
                                     <i class="fa fa-eye"></i>
                                 </a>
+                                @endadminCan
+                                @adminCan('purchases.delete')
                                 <a href="#" class="btn btn-sm btn-outline-success" wire:click="setCurrent({{ $purchase->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal" data-id="{{ $purchase->id }}">
                                     <i class="fa fa-credit-card"></i>
                                 </a>
+                                @endadminCan
                             </td>
                         </tr>
                         @endforeach

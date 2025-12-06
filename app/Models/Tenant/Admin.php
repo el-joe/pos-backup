@@ -3,16 +3,17 @@
 namespace App\Models\Tenant;
 
 use App\Notifications\GeneralNotification;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasRoles,Notifiable;
+    use HasRoles,Notifiable,SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'type','active','branch_id'
+        'name', 'email', 'phone', 'password', 'type','active','branch_id','deleted_at'
     ];
 
     const TYPE = [

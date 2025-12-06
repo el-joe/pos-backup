@@ -70,14 +70,18 @@
             <h5 class="mb-0">{{ __('general.pages.categories.categories') }}</h5>
 
             <div class="d-flex align-items-center gap-2">
+                @adminCan('categories.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
                         wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.categories.export') }}
                 </button>
+                @endadminCan
+                @adminCan('categories.create')
                 <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editCategoryModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.categories.new_category') }}
                 </button>
+                @endadminCan
             </div>
         </div>
 
@@ -112,6 +116,7 @@
                                     </span>
                                 </td>
                                 <td class="text-end text-nowrap">
+                                    @adminCan('categories.update')
                                     <button class="btn btn-sm btn-outline-primary me-1"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editCategoryModal"
@@ -119,11 +124,14 @@
                                         title="{{ __('general.pages.categories.edit') }}">
                                         <i class="fa fa-pencil"></i>
                                     </button>
+                                    @endadminCan
+                                    @adminCan('categories.delete')
                                     <button class="btn btn-sm btn-outline-danger"
                                         wire:click="deleteAlert({{ $category->id }})"
                                         title="{{ __('general.pages.categories.delete') }}">
                                         <i class="fa fa-times"></i>
                                     </button>
+                                    @endadminCan
                                 </td>
                             </tr>
                         @endforeach
