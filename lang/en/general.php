@@ -84,6 +84,9 @@ return [
         'plans-subscriptions' => 'Plans & Subscriptions',
         'plans' => 'Plans',
         'subscriptions' => 'Subscriptions',
+        'countries' => 'Countries',
+        'currencies' => 'Currencies',
+        'currency.edit' => 'Edit Currency',
     ],
     'layout' => [
         'notifications' => 'Notifications',
@@ -455,7 +458,7 @@ return [
             'sales_overview_last_30_days' => 'Sales Overview Last 30 Days',
             'sales_overview_last_12_months' => 'Sales Overview Last 12 Months',
         ],
-        'cash_register'=> [
+        'cash_register' => [
             'summary' => 'Cash Register Summary',
             'aggregated_totals_across_registers' => 'Aggregated totals across registers',
             'field' => 'Field',
@@ -959,7 +962,7 @@ return [
             'actions' => 'Actions',
             'delete' => 'Delete',
         ],
-    'stock-transfers' => [
+        'stock-transfers' => [
             'filters' => 'Filters',
             'show_hide' => 'Show / Hide',
             'ref_no' => 'Ref No.',
