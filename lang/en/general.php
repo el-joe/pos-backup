@@ -87,6 +87,7 @@ return [
         'countries' => 'Countries',
         'currencies' => 'Currencies',
         'currency.edit' => 'Edit Currency',
+        'languages' => 'Languages',
     ],
     'layout' => [
         'notifications' => 'Notifications',

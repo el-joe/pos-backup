@@ -31,4 +31,10 @@ return [
         "icon"      => "fa fa-dollar-sign fa-fw",
         "route"     => 'cpanel.currencies.list'
     ],
+    [
+        "title"     => "Languages",
+        'translated_title' => 'general.titles.languages',
+        "icon"      => "fa fa-language fa-fw",
+        "route"     => 'cpanel.languages.list'
+    ],
 ];

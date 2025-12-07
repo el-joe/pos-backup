@@ -7,6 +7,7 @@ use App\Livewire\Central\CPanel\Contacts\ContactsList;
 use App\Livewire\Central\CPanel\Countries\CountriesList;
 use App\Livewire\Central\CPanel\Currencies\CurrenciesList;
 use App\Livewire\Central\CPanel\HomePage;
+use App\Livewire\Central\CPanel\Languages\LanguagesList;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [AdminTranslationMiddleware::class]],function () {
@@ -19,5 +20,6 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [AdminTransla
         Route::get('contacts', ContactsList::class)->name('contacts.list');
         Route::get('countries', CountriesList::class)->name('countries.list');
         Route::get('currencies', CurrenciesList::class)->name('currencies.list');
+        Route::get('languages', LanguagesList::class)->name('languages.list');
     });
 });
