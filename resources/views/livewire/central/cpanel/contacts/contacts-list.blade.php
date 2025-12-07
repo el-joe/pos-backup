@@ -31,9 +31,9 @@
                 </table>
 
                 {{-- pagination center aligned (optional) --}}
-                {{-- <div class="d-flex justify-content-center mt-3">
-                    {{ $admins->links() }}
-                </div> --}}
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $contacts->links() }}
+                </div>
             </div>
         </div>
 

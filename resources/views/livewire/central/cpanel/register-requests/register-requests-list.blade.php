@@ -59,9 +59,9 @@
                 </table>
 
                 {{-- pagination center aligned (optional) --}}
-                {{-- <div class="d-flex justify-content-center mt-3">
+                <div class="d-flex justify-content-center mt-3">
                     {{ $subscriptions->links() }}
-                </div> --}}
+                </div>
             </div>
         </div>
 

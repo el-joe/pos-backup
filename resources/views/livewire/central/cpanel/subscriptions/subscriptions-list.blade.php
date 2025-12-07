@@ -32,8 +32,8 @@
                                 <td>{{ $subscription->price }}</td>
                                 <td>{{ $subscription->start_date }}</td>
                                 <td>{{ $subscription->end_date }}</td>
-                                <span class="badge bg-{{ $sub->statusColor() }}">
-                                    {{ ucfirst($sub->status) }}
+                                <span class="badge bg-{{ $subscription->statusColor() }}">
+                                    {{ ucfirst($subscription->status) }}
                                 </span>
                                 <td>{{ $subscription->payment_method }}</td>
                                 <td>
@@ -46,9 +46,9 @@
                 </table>
 
                 {{-- pagination center aligned (optional) --}}
-                {{-- <div class="d-flex justify-content-center mt-3">
+                <div class="d-flex justify-content-center mt-3">
                     {{ $subscriptions->links() }}
-                </div> --}}
+                </div>
             </div>
         </div>
 
