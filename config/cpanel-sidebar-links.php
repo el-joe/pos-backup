@@ -37,4 +37,10 @@ return [
         "icon"      => "fa fa-language fa-fw",
         "route"     => 'cpanel.languages.list'
     ],
+    [
+        "title"     => "Subscriptions",
+        'translated_title' => 'general.titles.subscriptions',
+        "icon"      => "fa fa-credit-card fa-fw",
+        "route"     => 'cpanel.subscriptions.list'
+    ],
 ];
