@@ -38,6 +38,12 @@ return [
         "route"     => 'cpanel.languages.list'
     ],
     [
+        "title"     => "Register Requests",
+        'translated_title' => 'general.titles.register-requests',
+        "icon"      => "fa fa-user-plus fa-fw",
+        "route"     => 'cpanel.register-requests.list'
+    ],
+    [
         "title"     => "Subscriptions",
         'translated_title' => 'general.titles.subscriptions',
         "icon"      => "fa fa-credit-card fa-fw",

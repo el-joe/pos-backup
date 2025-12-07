@@ -88,6 +88,7 @@ return [
         'currencies' => 'Currencies',
         'currency.edit' => 'Edit Currency',
         'languages' => 'Languages',
+        'register-requests' => 'Register Requests',
     ],
     'layout' => [
         'notifications' => 'Notifications',
