@@ -15,7 +15,7 @@ class RegisterRequest extends Model
     {
         parent::boot();
 
-        static::updating(function ($model) {
+        static::updated(function ($model) {
             if($model->status == 'approved'){
                 $data = $model->data;
 
