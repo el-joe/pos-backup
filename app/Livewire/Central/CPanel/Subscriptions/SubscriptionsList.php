@@ -28,6 +28,6 @@ class SubscriptionsList extends Component
             ->orderBy('start_date', 'desc')
             ->paginate(10);
 
-        return view('livewire.central.c-panel.subscriptions.subscriptions-list', get_defined_vars());
+        return view('livewire.central.cpanel.subscriptions.subscriptions-list', get_defined_vars());
     }
 }

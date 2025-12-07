@@ -8,6 +8,6 @@ class CustomersList extends Component
 {
     public function render()
     {
-        return view('livewire.central.c-panel.customers.customers-list');
+        return view('livewire.central.cpanel.customers.customers-list');
     }
 }

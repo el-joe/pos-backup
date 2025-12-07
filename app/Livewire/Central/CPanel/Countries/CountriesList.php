@@ -78,6 +78,6 @@ class CountriesList extends Component
     public function render()
     {
         $countries = Country::query()->orderBy('name', 'asc')->paginate(10);
-        return view('livewire.central.c-panel.countries.countries-list', get_defined_vars());
+        return view('livewire.central.cpanel.countries.countries-list', get_defined_vars());
     }
 }

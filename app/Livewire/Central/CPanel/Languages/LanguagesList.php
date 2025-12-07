@@ -82,6 +82,6 @@ class LanguagesList extends Component
     {
         $languages = Language::paginate(10);
 
-        return view('livewire.central.c-panel.languages.languages-list', get_defined_vars());
+        return view('livewire.central.cpanel.languages.languages-list', get_defined_vars());
     }
 }

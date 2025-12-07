@@ -78,6 +78,6 @@ class CurrenciesList extends Component
     {
         $currencies = Currency::paginate(10);
 
-        return view('livewire.central.c-panel.currencies.currencies-list', get_defined_vars());
+        return view('livewire.central.cpanel.currencies.currencies-list', get_defined_vars());
     }
 }

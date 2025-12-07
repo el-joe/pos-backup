@@ -16,6 +16,6 @@ class ContactsList extends Component
     public function render()
     {
         $contacts = Contact::paginate(10);
-        return view('livewire.central.c-panel.contacts.contacts-list', get_defined_vars());
+        return view('livewire.central.cpanel.contacts.contacts-list', get_defined_vars());
     }
 }
