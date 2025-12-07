@@ -104,4 +104,13 @@ class Subscription extends Model
             ->orderByRaw("FIELD(plans.slug, 'basic', 'pro', 'enterprise') DESC")
             ->get();
     }
+
+        public function statusColor()
+    {
+        return [
+            'paid' => 'success',
+            'cancelled' => 'danger',
+            'refunded' => 'warning',
+        ][$this->status] ?? 'secondary';
+    }
 }

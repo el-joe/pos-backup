@@ -12,35 +12,27 @@
                             <th>#</th>
                             <th>Tenant</th>
                             <th>Plan Name</th>
-                            <th>Details</th>
                             <th>Price</th>
                             <th>start Date</th>
                             <th>End Date</th>
                             <th>Status</th>
-                            <th>Payment method</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach ($subscriptions as $subscription)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $subscription->tenant->name }}</td>
-                                <td>{{ $subscription->plan->name }}</td>
-                                <td>{{ $subscription->details }}</td>
-                                <td>{{ $subscription->price }}</td>
-                                <td>{{ $subscription->start_date }}</td>
-                                <td>{{ $subscription->end_date }}</td>
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $subscription->tenant->name }}</td>
+                            <td>{{ $subscription->plan->name }}</td>
+                            <td>{{ $subscription->price }} $</td>
+                            <td>{{ $subscription->start_date }}</td>
+                            <td>{{ $subscription->end_date }}</td>
+                            <td>
                                 <span class="badge bg-{{ $subscription->statusColor() }}">
                                     {{ ucfirst($subscription->status) }}
                                 </span>
-                                <td>{{ $subscription->payment_method }}</td>
-                                <td>
-                                    <a href="#" class="text-decoration-none text-inverse"><i
-                                            class="bi bi-search"></i></a>
-                                </td>
-                            </tr>
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>

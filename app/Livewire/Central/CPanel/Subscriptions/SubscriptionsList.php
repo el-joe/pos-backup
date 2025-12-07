@@ -13,15 +13,6 @@ class SubscriptionsList extends Component
 {
     use LivewireOperations, WithPagination;
 
-    public function statusColor()
-    {
-        return [
-            'paid' => 'success',
-            'cancelled' => 'danger',
-            'refunded' => 'warning',
-        ][$this->status] ?? 'secondary';
-    }
-
     public function render()
     {
         $subscriptions = Subscription::with('tenant', 'plan')
