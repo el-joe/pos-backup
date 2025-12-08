@@ -6,6 +6,7 @@ use App\Livewire\Central\CPanel\Admins\AdminsList;
 use App\Livewire\Central\CPanel\Contacts\ContactsList;
 use App\Livewire\Central\CPanel\Countries\CountriesList;
 use App\Livewire\Central\CPanel\Currencies\CurrenciesList;
+use App\Livewire\Central\CPanel\Customers\CustomersList;
 use App\Livewire\Central\CPanel\HomePage;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
 use App\Livewire\Central\CPanel\RegisterRequests\RegisterRequestsList;
@@ -25,5 +26,6 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [AdminTransla
         Route::get('languages', LanguagesList::class)->name('languages.list');
         Route::get('subscriptions', SubscriptionsList::class)->name('subscriptions.list');
         Route::get('register-requests', RegisterRequestsList::class)->name('register-requests.list');
+        Route::get('customers', CustomersList::class)->name('customers.list');
     });
 });
