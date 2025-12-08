@@ -16,7 +16,7 @@ class SubscriptionsList extends Component
     public function render()
     {
         $subscriptions = Subscription::with('tenant', 'plan')
-            ->orderBy('start_date', 'desc')
+            ->orderBy('start_date', 'desc')            
             ->paginate(10);
 
         return view('livewire.central.cpanel.subscriptions.subscriptions-list', get_defined_vars());

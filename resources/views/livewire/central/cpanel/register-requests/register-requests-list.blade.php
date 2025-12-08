@@ -20,7 +20,9 @@
                     <tbody>
 
                         @foreach ($registerRequests as $req)
-                            @php $d = $req->data; @endphp
+                            @php
+                             $d = $req->data;
+                            @endphp
 
                             <tr>
                                 <td>{{ $loop->iteration }}</td>

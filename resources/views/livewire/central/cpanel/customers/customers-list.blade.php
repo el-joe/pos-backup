@@ -10,27 +10,21 @@
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>Tenant</th>
-                            <th>Plan Name</th>
-                            <th>Price</th>
-                            <th>start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>phone</th>
+                            <th>domain</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($subscriptions as $subscription)
+                        @foreach ($tenants as $tenant)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $subscription->tenant->name }}</td>
-                            <td>{{ $subscription->plan->name }}</td>
-                            <td>{{ $subscription->price }} $</td>
-                            <td>{{ $subscription->start_date }}</td>
-                            <td>{{ $subscription->end_date }}</td>
-                            <td>
-                                <span class="badge bg-{{ $subscription->statusColor() }}">
-                                    {{ ucfirst($subscription->status) }}
-                                </span>
+                            <td>{{ $tenant->id }}</td>
+                            <td>{{ $tenant->email ?? '-' }}</td>
+                            <td>{{ $tenant->phone ?? '-' }}</td>
+                            <td>{{ $tenant->domains->first()->domain ?? '-'}}
                             </td>
                         </tr>
                         @endforeach
@@ -39,7 +33,7 @@
 
                 {{-- pagination center aligned (optional) --}}
                 <div class="d-flex justify-content-center mt-3">
-                    {{ $subscriptions->links() }}
+                    {{ $tenants->links() }}
                 </div>
             </div>
         </div>
