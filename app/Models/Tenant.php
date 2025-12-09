@@ -12,6 +12,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     use HasDatabase, HasDomains;
 
     function country(){
-        return Country::where('id',$this->data['country_id'])->first();
+        return Country::where('id',$this['country_id']??null)->first();
     }
 }

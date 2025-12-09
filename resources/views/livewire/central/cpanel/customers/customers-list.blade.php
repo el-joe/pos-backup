@@ -13,6 +13,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>phone</th>
+                            <th>Country</th>
                             <th>domain</th>
 
                         </tr>
@@ -24,6 +25,7 @@
                             <td>{{ $tenant->id }}</td>
                             <td>{{ $tenant->email ?? '-' }}</td>
                             <td>{{ $tenant->phone ?? '-' }}</td>
+                            <td>{{ $tenant->country()?->name ?? '-' }}</td>
                             <td>{{ $tenant->domains->first()->domain ?? '-'}}
                             </td>
                         </tr>
