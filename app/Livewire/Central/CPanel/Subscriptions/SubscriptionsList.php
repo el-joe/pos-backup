@@ -13,19 +13,10 @@ class SubscriptionsList extends Component
 {
     use LivewireOperations, WithPagination;
 
-    public function statusColor()
-    {
-        return [
-            'paid' => 'success',
-            'cancelled' => 'danger',
-            'refunded' => 'warning',
-        ][$this->status] ?? 'secondary';
-    }
-
     public function render()
     {
         $subscriptions = Subscription::with('tenant', 'plan')
-            ->orderBy('start_date', 'desc')
+            ->orderBy('start_date', 'desc')            
             ->paginate(10);
 
         return view('livewire.central.cpanel.subscriptions.subscriptions-list', get_defined_vars());

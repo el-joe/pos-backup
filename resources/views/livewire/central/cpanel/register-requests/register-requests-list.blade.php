@@ -20,7 +20,9 @@
                     <tbody>
 
                         @foreach ($registerRequests as $req)
-                            @php $d = $req->data; @endphp
+                            @php
+                             $d = $req->data;
+                            @endphp
 
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -59,9 +61,9 @@
                 </table>
 
                 {{-- pagination center aligned (optional) --}}
-                {{-- <div class="d-flex justify-content-center mt-3">
-                    {{ $subscriptions->links() }}
-                </div> --}}
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $registerRequests->links() }}
+                </div>
             </div>
         </div>
 

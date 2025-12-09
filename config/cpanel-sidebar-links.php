@@ -49,4 +49,16 @@ return [
         "icon"      => "fa fa-credit-card fa-fw",
         "route"     => 'cpanel.subscriptions.list'
     ],
+    [
+        "title"     => "Customers",
+        'translated_title' => 'general.titles.customers',
+        "icon"      => "fa fa-users fa-fw",
+        "route"     => 'cpanel.customers.list'
+    ],
+    [
+        "title"     => "Plans",
+        'translated_title' => 'general.titles.plans',
+        "icon"      => "fa fa-gem fa-fw",
+        "route"     => 'cpanel.plans.list'
+    ],
 ];
