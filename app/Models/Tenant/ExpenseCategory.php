@@ -9,12 +9,12 @@ class ExpenseCategory extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'name','active','default','name'
+        'name','active','default','name','deleted_at'
     ];
 
 
     function expenses() {
-        return $this->hasMany(Expense::class,'expense_category_id');
+        return $this->hasMany(Expense::class,'expense_category_id')->withTrashed();
     }
 
 

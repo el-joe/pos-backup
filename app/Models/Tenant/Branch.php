@@ -14,7 +14,7 @@ class Branch extends Model
     ];
 
     function tax() {
-        return $this->belongsTo(Tax::class);
+        return $this->belongsTo(Tax::class)->withTrashed();
     }
 
     function sales() {

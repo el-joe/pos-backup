@@ -2,16 +2,14 @@
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Plans List</h5>
-            <div class="d-flex align-items-center gap-2">
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPlanModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-layer-group"></i> New Plan
-                </a>
-            </div>
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editPlanModal" wire:click="setCurrent(null)">
+                <i class="fa fa-layer-group"></i> New Plan
+            </a>
         </div>
 
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
+                <table class="table table-bordered table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
@@ -28,38 +26,33 @@
                         <tr>
                             <td>{{ $plan->id }}</td>
                             <td>{{ $plan->name }}</td>
-                            <td>{{ $plan->price_month }}</td>
-                            <td>{{ $plan->price_year }}</td>
-
+                            <td>${{ $plan->price_month }}</td>
+                            <td>${{ $plan->price_year }}</td>
                             <td>
                                 <span class="badge bg-{{ $plan->active ? 'success' : 'danger' }}">
                                     {{ $plan->active ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
-
                             <td>
                                 <span class="badge bg-{{ $plan->recommended ? 'primary' : 'secondary' }}">
                                     {{ $plan->recommended ? 'Yes' : 'No' }}
                                 </span>
                             </td>
-
                             <td class="text-center">
-                                <!-- trigger active -->
-                                @if ($plan->active)
-                                <button class="btn btn-sm btn-danger" wire:click="triggerActive({{ $plan->id }})" title="Deactivate">
-                                    <i class="fa fa-toggle-off"></i>
+                                <button class="btn btn-sm {{ $plan->active ? 'btn-danger' : 'btn-success' }}"
+                                        wire:click="triggerActive({{ $plan->id }})"
+                                        title="{{ $plan->active ? 'Deactivate' : 'Activate' }}">
+                                    <i class="fa {{ $plan->active ? 'fa-toggle-off' : 'fa-toggle-on' }}"></i>
                                 </button>
-                                @else
-                                <button class="btn btn-sm btn-success" wire:click="triggerActive({{ $plan->id }})" title="Activate">
-                                    <i class="fa fa-toggle-on"></i>
-                                </button>
-                                @endif
-
-                                <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editPlanModal" wire:click="setCurrent({{ $plan->id }})" title="Edit">
+                                <button class="btn btn-sm btn-primary mx-1"
+                                        data-bs-toggle="modal" data-bs-target="#editPlanModal"
+                                        wire:click="setCurrent({{ $plan->id }})"
+                                        title="Edit">
                                     <i class="fa fa-edit"></i>
                                 </button>
-
-                                <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $plan->id }})" title="Delete">
+                                <button class="btn btn-sm btn-danger"
+                                        wire:click="deleteAlert({{ $plan->id }})"
+                                        title="Delete">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>
@@ -67,59 +60,72 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
 
-                {{-- pagination --}}
-                {{-- <div class="d-flex justify-content-center mt-3">
-                    {{ $plans->links() }}
-            </div> --}}
+        <div class="card-arrow">
+            <div class="card-arrow-top-left"></div>
+            <div class="card-arrow-top-right"></div>
+            <div class="card-arrow-bottom-left"></div>
+            <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
 
-    <div class="card-arrow">
-        <div class="card-arrow-top-left"></div>
-        <div class="card-arrow-top-right"></div>
-        <div class="card-arrow-bottom-left"></div>
-        <div class="card-arrow-bottom-right"></div>
-    </div>
-</div>
-
-<!-- Edit/Create Plan Modal -->
+    <!-- Edit/Create Plan Modal -->
 <div class="modal fade" id="editPlanModal" tabindex="-1" aria-labelledby="editPlanModalLabel" aria-hidden="true" wire:ignore.self>
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-sm">
             <div class="modal-header">
-                <h5 class="modal-title" id="editPlanModalLabel">
-                    {{ $current?->id ? 'Edit Plan' : 'New Plan' }}
-                </h5>
+                <h5 class="modal-title" id="editPlanModalLabel">{{ $current?->id ? 'Edit Plan' : 'New Plan' }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
                 <form>
-                    <div class="mb-3">
-                        <label class="form-label">Plan Name</label>
-                        <input type="text" class="form-control" wire:model="data.name" placeholder="Plan name">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Plan Name</label>
+                            <input type="text" class="form-control" wire:model="data.name" placeholder="Plan name">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Price per Month</label>
+                            <input type="number" class="form-control" wire:model="data.price_month" placeholder="Monthly price">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Price per Year</label>
+                            <input type="number" class="form-control" wire:model="data.price_year" placeholder="Yearly price">
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Price per Month</label>
-                        <input type="number" class="form-control" wire:model="data.price_month" placeholder="Monthly price">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Price per Year</label>
-                        <input type="number" class="form-control" wire:model="data.price_year" placeholder="Yearly price">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Features</label>
-                        <textarea class="form-control" wire:model="data.features" rows="3"></textarea>
-
-                    </div>
-
-                    <div class="form-check mb-2">
+                    <div class="form-check form-switch my-3">
                         <input class="form-check-input" type="checkbox" wire:model="data.recommended" id="planRecommended">
                         <label class="form-check-label" for="planRecommended">Recommended</label>
+                    </div>
+
+                    <div class="accordion" id="featuresAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFeatures">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFeatures" aria-expanded="false" aria-controls="collapseFeatures">
+                                    Plan Features
+                                </button>
+                            </h2>
+                            <div id="collapseFeatures" class="accordion-collapse collapse" aria-labelledby="headingFeatures" data-bs-parent="#featuresAccordion">
+                                <div class="accordion-body">
+                                    @foreach ($features as $feature)
+                                        <div class="mb-3">
+                                            <label class="form-label">{{ $feature->label() }}</label>
+                                            <div class="input-group mb-1">
+                                                <span class="input-group-text">
+                                                    <input class="form-check-input mt-0" type="checkbox" wire:model="data.features.{{ $feature->value }}.status">
+                                                </span>
+                                                <input type="text" class="form-control" wire:model="data.features.{{ $feature->value }}.description" placeholder="Description (optional)">
+                                            </div>
+                                            <input type="number" class="form-control" wire:model="data.features.{{ $feature->value }}.limit" placeholder="Limit (optional)">
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -128,7 +134,6 @@
                 <button class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fa fa-times"></i> Close
                 </button>
-
                 <button class="btn btn-primary" wire:click="save">
                     <i class="fa fa-save"></i> Save
                 </button>

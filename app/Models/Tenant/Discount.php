@@ -19,7 +19,8 @@ class Discount extends Model
         'usage_limit',
         'active',
         'branch_id',
-        'sales_threshold'
+        'sales_threshold',
+        'deleted_at'
     ];
 
     function history() {

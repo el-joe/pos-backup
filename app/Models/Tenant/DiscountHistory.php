@@ -17,7 +17,7 @@ class DiscountHistory extends Model
     ];
 
     function discount() {
-        return $this->belongsTo(Discount::class);
+        return $this->belongsTo(Discount::class)->withTrashed();
     }
 
     function target() {

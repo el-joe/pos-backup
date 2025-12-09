@@ -14,11 +14,11 @@ class Category extends Model
     ];
 
     function children() {
-        return $this->hasMany(self::class,'parent_id');
+        return $this->hasMany(self::class,'parent_id')->withTrashed();
     }
 
     function parent() {
-        return $this->belongsTo(self::class,'parent_id');
+        return $this->belongsTo(self::class,'parent_id')->withTrashed();
     }
 
     function isLastChild() {

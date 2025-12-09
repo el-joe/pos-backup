@@ -13,7 +13,9 @@ class CategoriesList extends Component
     use LivewireOperations, WithPagination;
     private $categoryService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false
+    ];
 
     public $rules = [
         'name' => 'required|string|max:255',
@@ -36,7 +38,7 @@ class CategoriesList extends Component
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
         }else{
-            $this->data = [];
+            $this->reset('data');
         }
 
         $this->dispatch('iCheck-load');

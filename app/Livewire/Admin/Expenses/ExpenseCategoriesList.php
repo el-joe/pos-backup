@@ -14,7 +14,9 @@ class ExpenseCategoriesList extends Component
     use LivewireOperations, WithPagination;
     private $expenseCategoryService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false
+    ];
 
     public $collapseFilters = false;
     public $filters = [];
@@ -33,6 +35,8 @@ class ExpenseCategoriesList extends Component
         if ($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
+        }else{
+            $this->reset('data');
         }
     }
 

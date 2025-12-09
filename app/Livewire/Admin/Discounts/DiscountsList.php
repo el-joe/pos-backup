@@ -15,7 +15,9 @@ class DiscountsList extends Component
     use LivewireOperations, WithPagination;
     private $discountService, $branchService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false
+    ];
 
     public $export;
     public $filters = [];
@@ -44,6 +46,8 @@ class DiscountsList extends Component
         if ($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
+        }else{
+            $this->reset('data');
         }
     }
 

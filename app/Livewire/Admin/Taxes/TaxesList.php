@@ -13,7 +13,9 @@ class TaxesList extends Component
     use LivewireOperations, WithPagination;
     private $taxService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false
+    ];
 
     public $filters = [];
     public $export;
@@ -35,6 +37,8 @@ class TaxesList extends Component
         if ($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
+        }else{
+            $this->reset('data');
         }
     }
 

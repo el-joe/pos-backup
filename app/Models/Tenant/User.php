@@ -27,7 +27,7 @@ class User extends Model
     ];
 
     function accounts() {
-        return $this->morphMany(Account::class, 'model');
+        return $this->morphMany(Account::class, 'model')->withTrashed();
     }
 
     function sales() {

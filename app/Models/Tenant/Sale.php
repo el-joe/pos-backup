@@ -39,19 +39,19 @@ class Sale extends Model
     }
 
     public function customer() {
-        return $this->belongsTo(User::class,'customer_id');
+        return $this->belongsTo(User::class,'customer_id')->withTrashed();
     }
 
     public function branch() {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class)->withTrashed();
     }
 
     function tax() {
-        return $this->belongsTo(Tax::class,'tax_id');
+        return $this->belongsTo(Tax::class,'tax_id')->withTrashed();
     }
 
     function createdBy() {
-        return $this->belongsTo(Admin::class,'created_by');
+        return $this->belongsTo(Admin::class,'created_by')->withTrashed();
     }
 
     function transactions() {
@@ -59,7 +59,7 @@ class Sale extends Model
     }
 
     function expenses() {
-        return $this->morphMany(Expense::class, 'model');
+        return $this->morphMany(Expense::class, 'model')->withTrashed();
     }
 
     static function generateInvoiceNumber() {

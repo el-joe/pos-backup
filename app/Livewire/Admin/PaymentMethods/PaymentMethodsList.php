@@ -43,6 +43,8 @@ class PaymentMethodsList extends Component
         if ($this->current) {
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->current['active'];
+        }else{
+            $this->reset('data');
         }
     }
 

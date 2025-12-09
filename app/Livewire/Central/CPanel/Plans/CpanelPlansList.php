@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Central\CPanel\Plans;
 
+use App\Enums\PlanFeaturesEnum;
 use App\Models\Plan;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -30,7 +31,6 @@ class CpanelPlansList extends Component
 
         if ($this->current) {
             $this->data = $this->current->toArray();
-            $this->data['features'] = json_encode($this->data['features'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
         $this->dispatch('iCheck-load');
@@ -51,11 +51,34 @@ class CpanelPlansList extends Component
             $plan = new Plan();
         }
 
-        $this->data['features'] = json_decode($this->data['features'], true);
+        $features = collect($this->data['features'])->map(function($item){
+            $keys = ['status', 'description', 'limit'];
+            $newItem = [];
+            foreach($keys as $key){
+                switch ($key) {
+                    case 'status':
+                        $newItem[$key] = $item[$key];
+                        continue;
+                    case 'description':
+                        if(($item[$key]??'') != ''){
+                            $newItem[$key] = $item[$key];
+                        }
+                        continue;
+                    case 'limit':
+                        if(is_numeric($item[$key]??null)){
+                            $newItem[$key] = (int)$item[$key];
+                        }
+                        continue;
+                    default:
+                        continue;
+                }
+            }
+            return $newItem;
+        })->toArray();
 
         if (!$this->validator()) return;
 
-        $plan = $plan->fill($this->data);
+        $plan = $plan->fill(array_merge($this->data, ['features' => $features]));
         $plan->save();
 
         $this->popup('success', 'Plan saved successfully');
@@ -77,7 +100,7 @@ class CpanelPlansList extends Component
     public function render()
     {
         $plans = Plan::orderBy('id', 'desc')->paginate(10);
-
+        $features = PlanFeaturesEnum::cases();
         return view('livewire.central.cpanel.plans.cpanel-plans-list', get_defined_vars());
     }
 }

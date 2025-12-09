@@ -21,7 +21,9 @@ class AddEditProduct extends Component
 
     private $productService, $branchService, $categoryService, $brandService, $unitService;
 
-    public $data = [];
+    public $data = [
+        'active' => false,
+    ];
 
     public $rules = [
         'name' => 'required|string|max:255',

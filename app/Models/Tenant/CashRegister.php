@@ -35,11 +35,11 @@ class CashRegister extends Model
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class)->withTrashed();
     }
 
     public function admin()
     {
-        return $this->belongsTo(Admin::class);
+        return $this->belongsTo(Admin::class)->withTrashed();
     }
 }

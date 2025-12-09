@@ -10,7 +10,7 @@ class Product extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name','description','sku','code','unit_id','branch_id','category_id','brand_id','weight','alert_qty','active','taxable'
+        'name','description','sku','code','unit_id','branch_id','category_id','brand_id','weight','alert_qty','active','taxable','deleted_at'
     ];
 
     protected $casts = [
@@ -24,12 +24,12 @@ class Product extends Model
 
     public function unit()
     {
-        return $this->belongsTo(Unit::class,'unit_id')->with('children');
+        return $this->belongsTo(Unit::class,'unit_id')->withTrashed()->with('children');
     }
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->withTrashed();
     }
 
     function stocks() {
@@ -38,7 +38,7 @@ class Product extends Model
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(Brand::class)->withTrashed();
     }
 
     function image() {

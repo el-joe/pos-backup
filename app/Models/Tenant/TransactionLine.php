@@ -23,7 +23,7 @@ class TransactionLine extends Model
     }
 
     function account() {
-        return $this->belongsTo(Account::class,'account_id');
+        return $this->belongsTo(Account::class,'account_id')->withTrashed();
     }
 
     function getRefAttribute(){

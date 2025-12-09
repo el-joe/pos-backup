@@ -27,11 +27,11 @@ class Account extends Model
     ];
 
     function branch() {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class)->withTrashed();
     }
 
     function paymentMethod() {
-        return $this->belongsTo(PaymentMethod::class,'payment_method_id');
+        return $this->belongsTo(PaymentMethod::class,'payment_method_id')->withTrashed();
     }
 
     function scopeFilter($q,$filters = []) {

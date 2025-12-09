@@ -240,8 +240,8 @@ Route::get('download-file', function () {
 
 
 // Features to add later
-// Check Everything Related to Soft Deletes and make sure it's working fine
-// everything (add/edit) have active must be with default active = false
+// Check Everything Related to Soft Deletes and make sure it's working fine ---- #DONE
+// everything (add/edit) have active must be with default active = false ---- #DONE
 // every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+)
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
 // Import Excel,CSV

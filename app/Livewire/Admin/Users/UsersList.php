@@ -14,7 +14,9 @@ class UsersList extends Component
     use LivewireOperations, WithPagination;
     private $userService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false
+    ];
 
     #[Url]
     public $type;
@@ -44,7 +46,7 @@ class UsersList extends Component
             $this->data = $this->current->toArray();
             $this->data['active'] = (bool)$this->data['active'];
         }else{
-            $this->data = [];
+            $this->reset('data');
         }
     }
 

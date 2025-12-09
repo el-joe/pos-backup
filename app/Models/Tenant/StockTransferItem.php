@@ -19,14 +19,14 @@ class StockTransferItem extends Model
     // Relationships
 
     function stockTransfer() {
-        return $this->belongsTo(StockTransfer::class, 'stock_transfer_id');
+        return $this->belongsTo(StockTransfer::class, 'stock_transfer_id')->withTrashed();
     }
 
     function product() {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id')->withTrashed();
     }
 
     function unit() {
-        return $this->belongsTo(Unit::class, 'unit_id');
+        return $this->belongsTo(Unit::class, 'unit_id')->withTrashed();
     }
 }

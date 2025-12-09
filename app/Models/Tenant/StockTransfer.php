@@ -27,11 +27,11 @@ class StockTransfer extends Model
     // Relationships and other model methods can be defined here
 
     function fromBranch() {
-        return $this->belongsTo(Branch::class, 'from_branch_id');
+        return $this->belongsTo(Branch::class, 'from_branch_id')->withTrashed();
     }
 
     function toBranch() {
-        return $this->belongsTo(Branch::class, 'to_branch_id');
+        return $this->belongsTo(Branch::class, 'to_branch_id')->withTrashed();
     }
 
     function items() {
@@ -39,11 +39,11 @@ class StockTransfer extends Model
     }
 
     function expenses() {
-        return $this->morphMany(Expense::class, 'model');
+        return $this->morphMany(Expense::class, 'model')->withTrashed();
     }
 
     function createdBy() {
-        return $this->belongsTo(Admin::class, 'created_by');
+        return $this->belongsTo(Admin::class, 'created_by')->withTrashed();
     }
 
     function scopeFilter($q,$filters = []) {

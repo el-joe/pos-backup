@@ -13,7 +13,9 @@ class BrandsList extends Component
     use LivewireOperations, WithPagination;
     private $brandService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false
+    ];
 
     public $rules = [
         'name' => 'required|string|max:255',

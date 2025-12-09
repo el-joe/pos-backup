@@ -15,7 +15,8 @@ class UnitsList extends Component
     public $current;
     private $unitService;
     public $data = [
-        'parent_id'=>0
+        'parent_id'=>0,
+        'active' => false
     ];
 
     public $export = null;

@@ -15,7 +15,9 @@ class BranchesList extends Component
     use LivewireOperations,WithPagination;
     private $branchService, $taxService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false
+    ];
 
     public $filters = [];
     public $collapseFilters = false;

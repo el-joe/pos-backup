@@ -13,11 +13,11 @@ class Expense extends Model
     ];
 
     public function category() {
-        return $this->belongsTo(ExpenseCategory::class,'expense_category_id');
+        return $this->belongsTo(ExpenseCategory::class,'expense_category_id')->withTrashed();
     }
 
     public function branch() {
-        return $this->belongsTo(Branch::class,'branch_id');
+        return $this->belongsTo(Branch::class,'branch_id')->withTrashed();
     }
 
     public function model() {

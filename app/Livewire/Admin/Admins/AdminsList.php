@@ -17,7 +17,9 @@ class AdminsList extends Component
 
     private $adminService, $branchService;
     public $current;
-    public $data = [];
+    public $data = [
+        'active' => false,
+    ];
 
     public $collapseFilters = false;
     public $filters = [];
@@ -43,6 +45,8 @@ class AdminsList extends Component
             unset($this->data['password']);
             $this->data['active'] = (bool)$this->data['active'];
             $this->data['role_id'] = $this->current->roles->first()?->id;
+        }else{
+            $this->reset('data');
         }
 
         $this->dispatch('iCheck-load');

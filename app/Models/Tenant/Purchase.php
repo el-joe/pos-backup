@@ -22,16 +22,16 @@ class Purchase extends Model
     ];
 
     function supplier(){
-        return $this->belongsTo(User::class,'supplier_id')
+        return $this->belongsTo(User::class,'supplier_id')->withTrashed()
             ->where('users.type','supplier');
     }
 
     function expenses() {
-        return $this->morphMany(Expense::class, 'model');
+        return $this->morphMany(Expense::class, 'model')->withTrashed();
     }
 
     function branch() {
-        return $this->belongsTo(Branch::class,'branch_id');
+        return $this->belongsTo(Branch::class,'branch_id')->withTrashed();
     }
 
     function purchaseItems() {

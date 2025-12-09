@@ -15,11 +15,11 @@ class Unit extends Model
 
 
     function children() {
-        return $this->hasMany(self::class,'parent_id')->with('children');
+        return $this->hasMany(self::class,'parent_id')->with('children')->withTrashed();
     }
 
     function parent() {
-        return $this->belongsTo(self::class,'parent_id')->with('parent');
+        return $this->belongsTo(self::class,'parent_id')->with('parent')->withTrashed();
     }
 
     function isParent() {
