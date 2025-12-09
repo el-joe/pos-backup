@@ -55,4 +55,10 @@ return [
         "icon"      => "fa fa-users fa-fw",
         "route"     => 'cpanel.customers.list'
     ],
+    [
+        "title"     => "Plans",
+        'translated_title' => 'general.titles.plans',
+        "icon"      => "fa fa-gem fa-fw",
+        "route"     => 'cpanel.plans.list'
+    ],
 ];

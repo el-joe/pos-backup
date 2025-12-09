@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Central\CPanel\AuthController;
 use App\Http\Middleware\AdminTranslationMiddleware;
+use App\Livewire\Admin\Plans\PlansList;
 use App\Livewire\Central\CPanel\Admins\AdminsList;
 use App\Livewire\Central\CPanel\Contacts\ContactsList;
 use App\Livewire\Central\CPanel\Countries\CountriesList;
@@ -9,6 +10,8 @@ use App\Livewire\Central\CPanel\Currencies\CurrenciesList;
 use App\Livewire\Central\CPanel\Customers\CustomersList;
 use App\Livewire\Central\CPanel\HomePage;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
+use App\Livewire\Central\CPanel\Plans\CpanelPlansList;
+use App\Livewire\Central\CPanel\Plans\PlansList as PlansPlansList;
 use App\Livewire\Central\CPanel\RegisterRequests\RegisterRequestsList;
 use App\Livewire\Central\CPanel\Subscriptions\SubscriptionsList;
 use Illuminate\Support\Facades\Route;
@@ -27,5 +30,6 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [AdminTransla
         Route::get('subscriptions', SubscriptionsList::class)->name('subscriptions.list');
         Route::get('register-requests', RegisterRequestsList::class)->name('register-requests.list');
         Route::get('customers', CustomersList::class)->name('customers.list');
+        Route::get('plans', CpanelPlansList::class)->name('plans.list');
     });
 });

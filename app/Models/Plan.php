@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Plan extends Model
 {
@@ -22,6 +23,17 @@ class Plan extends Model
         'features' => 'array'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($plan) {
+            if (empty($plan->slug)) {
+                $plan->slug = Str::slug($plan->name);
+            }
+        });
+    }
+
     public function scopeActive($query)
     {
         return $query->where('active', true);
@@ -30,8 +42,8 @@ class Plan extends Model
     function encodedSlug($period = null)
     {
         $newSlug = encodedSlug([
-            'slug'=>$this->slug,
-            'period'=>$period ?? 'month',
+            'slug' => $this->slug,
+            'period' => $period ?? 'month',
         ]);
 
         return $newSlug;
