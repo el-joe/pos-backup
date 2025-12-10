@@ -134,7 +134,7 @@
                     <a class="dropdown-item d-flex align-items-center" href="calendar.html">CALENDAR <i class="bi bi-calendar ms-auto text-theme fs-16px my-n1"></i></a>
                     <a class="dropdown-item d-flex align-items-center" href="settings.html">SETTINGS <i class="bi bi-gear ms-auto text-theme fs-16px my-n1"></i></a>
                     <div class="dropdown-divider"></div> --}}
-                    <a class="dropdown-item d-flex align-items-center" href="#">{{ __('general.layout.logout') }} <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
+                    <a class="dropdown-item d-flex align-items-center" href="{{ route('cpanel.logout') }}">{{ __('general.layout.logout') }} <i class="bi bi-toggle-off ms-auto text-theme fs-16px my-n1"></i></a>
                 </div>
         </div>
 

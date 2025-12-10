@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [AdminTranslationMiddleware::class]],function () {
     Route::get('login', [AuthController::class, 'login'])->name('login');
     Route::post('login', [AuthController::class, 'postLogin'])->name('postLogin');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::group(['middleware' => ['auth:' . CPANEL_ADMINS_GUARD]], function () {
         Route::get('/', HomePage::class)->name('dashboard');
