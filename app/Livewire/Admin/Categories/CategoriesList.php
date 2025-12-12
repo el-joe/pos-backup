@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Categories;
 use App\Services\CategoryService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,16 +14,6 @@ class CategoriesList extends Component
     use LivewireOperations, WithPagination;
     private $categoryService;
     public $current;
-    public $data = [
-        'active' => false
-    ];
-
-    public $rules = [
-        'name' => 'required|string|max:255',
-        'parent_id' => 'nullable|integer',
-        'icon' => 'nullable|string|max:255',
-        'active' => 'boolean',
-    ];
 
     public $export = null;
     public $collapseFilters = false;
@@ -34,15 +25,8 @@ class CategoriesList extends Component
 
     function setCurrent($id) {
         $this->current = $this->categoryService->find($id);
-        if ($this->current) {
-            $this->data = $this->current->toArray();
-            $this->data['active'] = (bool)$this->data['active'];
-        }else{
-            $this->reset('data');
-        }
 
         $this->dispatch('iCheck-load');
-        $this->dispatch('changeSelect', $this->data['icon'] ?? null);
     }
 
     function deleteAlert($id)
@@ -64,21 +48,10 @@ class CategoriesList extends Component
 
         $this->dismiss();
 
-        $this->reset('current', 'data');
+        $this->reset('current');
     }
 
-    function save() {
-        if (!$this->validator()) return;
-
-        $this->categoryService->save($this->current?->id, $this->data);
-
-        $this->popup('success', 'Category saved successfully');
-
-        $this->dismiss();
-
-        $this->reset('current', 'data');
-    }
-
+    #[On('re-render')]
     public function render()
     {
 
@@ -111,8 +84,6 @@ class CategoriesList extends Component
         );
 
         $allCategories = $this->categoryService->list();
-
-        $bootstrapIcons = config('icons.fontawesome_icons');
 
         return layoutView('categories.categories-list', get_defined_vars())
             ->title(__('general.titles.categories'));

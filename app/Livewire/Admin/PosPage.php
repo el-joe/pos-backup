@@ -18,6 +18,7 @@ use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\Artisan;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class PosPage extends Component
@@ -32,6 +33,9 @@ class PosPage extends Component
 
     public $step = 1;
 
+    public $customers;
+    public $branches;
+
     function boot() {
         $this->productService = app(ProductService::class);
         $this->userService = app(UserService::class);
@@ -41,13 +45,17 @@ class PosPage extends Component
         $this->categoryService = app(CategoryService::class);
     }
 
+    #[On('re-render')]
     function mount() {
-        $this->data['order_date'] = now()->format('Y-m-d');
-        $this->data['due_date'] = now()->format('Y-m-d');
+        $this->data['order_date'] = $this->data['order_date'] ?? now()->format('Y-m-d');
+        $this->data['due_date'] = $this->data['due_date'] ?? now()->format('Y-m-d');
         if(admin()->branch_id){
             $this->data['branch_id'] = admin()->branch_id;
             $this->updatingDataBranchId(admin()->branch_id);
         }
+        $this->customers = $this->userService->customersList();
+        $this->branches = $this->branchService->activeList();
+
     }
 
     function updatingSelectedUnitId($value) {
@@ -345,9 +353,7 @@ class PosPage extends Component
             'branch_id' => $this->data['branch_id'] ?? null,
             'active' => true,
         ]);
-        $customers = $this->userService->customersList();
-        $selectedCustomer = $customers->firstWhere('id',$this->selectedCustomerId);
-        $branches = $this->branchService->activeList();
+        $selectedCustomer = $this->customers->firstWhere('id',$this->selectedCustomerId);
         extract($this->calculateTotals());
 
         $withoutSidebar = true;

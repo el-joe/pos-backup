@@ -58,19 +58,19 @@ class CpanelPlansList extends Component
                 switch ($key) {
                     case 'status':
                         $newItem[$key] = $item[$key];
-                        continue;
+                        continue 2;
                     case 'description':
                         if(($item[$key]??'') != ''){
                             $newItem[$key] = $item[$key];
                         }
-                        continue;
+                        continue 2;
                     case 'limit':
                         if(is_numeric($item[$key]??null)){
                             $newItem[$key] = (int)$item[$key];
                         }
-                        continue;
+                        continue 2;
                     default:
-                        continue;
+                        continue 2;
                 }
             }
             return $newItem;

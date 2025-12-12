@@ -7,6 +7,7 @@ use App\Services\BranchService;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -23,15 +24,6 @@ class BranchesList extends Component
     public $collapseFilters = false;
 
     public $export;
-
-    public $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'nullable|email|max:255',
-        'phone' => 'nullable|string|max:50',
-        'address' => 'nullable|string|max:500',
-        'website' => 'nullable|url|max:255',
-        'tax_id' => 'nullable|exists:taxes,id',
-    ];
 
     function boot() {
         $this->branchService = app(BranchService::class);
@@ -70,30 +62,8 @@ class BranchesList extends Component
         $this->reset('current','data');
     }
 
-    function save() {
 
-        if(!$this->current?->id){
-            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-            $limit = $currentSubscription?->plan?->features['branches']['limit'] ?? 999999;
-            $totalBranches = $this->branchService->count();
-
-            if($totalBranches >= $limit){
-                $this->popup('error','Branch limit reached. Please upgrade your subscription to add more branches.');
-                return;
-            }
-        }
-
-        if(!$this->validator())return;
-
-        $this->branchService->save($this->current?->id,$this->data);
-
-        $this->popup('success','Branch saved successfully');
-
-        $this->dismiss();
-
-        $this->reset('current', 'data');
-    }
-
+    #[On('re-render')]
     public function render()
     {
         if ($this->export == 'excel') {

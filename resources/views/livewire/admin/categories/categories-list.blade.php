@@ -6,7 +6,7 @@
             </div>
             <div class="col-xs-6 text-right">
                 {{-- add toggle for edit category --}}
-                <a  class="btn btn-primary" data-toggle="modal" data-target="#editCategoryModal" wire:click="setCurrent(null)">
+                <a  class="btn btn-primary" data-toggle="modal" data-target="#editCategoryModal" wire:click="$dispatch('category-set-current', null)">
                     <i class="fa fa-plus"></i> New Category
                 </a>
             </div>
@@ -35,7 +35,7 @@
                                 </span>
                             </td>
                             <td class="text-nowrap">
-                                <a href="javascript:void(0)"  data-toggle="modal" data-target="#editCategoryModal" wire:click="setCurrent({{ $category->id }})" data-toggle="tooltip" data-original-title="Edit">
+                                <a href="javascript:void(0)"  data-toggle="modal" data-target="#editCategoryModal" wire:click="$dispatch('category-set-current', { id : '{{ $category->id }}' })" data-toggle="tooltip" data-original-title="Edit">
                                     <i class="fa fa-pencil text-primary m-r-10"></i>
                                 </a>
                                 <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Close" wire:click="deleteAlert({{ $category->id }})">

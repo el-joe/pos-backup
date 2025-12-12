@@ -21,38 +21,49 @@
             <div class="pos card shadow-sm" id="pos">
                 @if($step == 1)
                 <div class="card-body row g-3">
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <label for="branchSelect" class="fw-semibold">{{ __('general.pages.pos-page.branch') }}:</label>
-                        @if(admin()->branch_id == null)
-                            <select class="form-select" id="branchSelect" wire:model.live="data.branch_id">
-                                <option value="">-- {{ __('general.pages.pos-page.branch') }} --</option>
-                                @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">
-                                        {{ $branch->name }} @if($branch->phone) - {{ $branch->phone }} @endif
+                        <div class="d-flex">
+                            @if(admin()->branch_id == null)
+                                <select class="form-select" id="branchSelect" wire:model.live="data.branch_id">
+                                    <option value="">-- {{ __('general.pages.pos-page.branch') }} --</option>
+                                    @foreach($branches as $branch)
+                                        <option value="{{ $branch->id }}">
+                                            {{ $branch->name }} @if($branch->phone) - {{ $branch->phone }} @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', null)">
+                                    +
+                                </button>
+
+                                @error('data.branch_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            @else
+                                <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label for="customerSelect" class="fw-semibold">{{ __('general.pages.pos-page.customer') }}:</label>
+                        <div class="d-flex">
+                            <select class="form-select" id="customerSelect" wire:model="selectedCustomerId">
+                                <option value="">-- {{ __('general.pages.pos-page.customer') }} --</option>
+                                @foreach($customers as $customer)
+                                    <option value="{{ $customer->id }}">
+                                        {{ $customer->name }} @if($customer->phone) - {{ $customer->phone }} @endif
                                     </option>
                                 @endforeach
                             </select>
-                            @error('data.branch_id')
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="$dispatch('user-set-current', {id : null, type: 'customer'})">
+                                +
+                            </button>
+                            @error('selectedCustomerId')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
-                        @else
-                            <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
-                        @endif
-                    </div>
-
-                    <div class="col-sm-3">
-                        <label for="customerSelect" class="fw-semibold">{{ __('general.pages.pos-page.customer') }}:</label>
-                        <select class="form-select" id="customerSelect" wire:model="selectedCustomerId">
-                            <option value="">-- {{ __('general.pages.pos-page.customer') }} --</option>
-                            @foreach($customers as $customer)
-                                <option value="{{ $customer->id }}">
-                                    {{ $customer->name }} @if($customer->phone) - {{ $customer->phone }} @endif
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('selectedCustomerId')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
+                        </div>
                     </div>
 
                     <div class="col-sm-3">
@@ -279,6 +290,9 @@
 
 
 @push('scripts')
+@livewire('admin.branches.branch-modal')
+@livewire('admin.users.user-modal')
+
 <script src="{{ asset('hud/assets/plugins/@highlightjs/cdn-assets/highlight.min.js') }}"></script>
 <script src="{{ asset('hud/assets/js/demo/highlightjs.demo.js') }}"></script>
 <script src="{{ asset('hud/assets/js/demo/sidebar-scrollspy.demo.js') }}"></script>
