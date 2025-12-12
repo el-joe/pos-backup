@@ -11,12 +11,15 @@
                 <div class="col-md-4">
                     <label for="from_branch_id" class="form-label">{{ __('general.pages.stock-transfers.from_branch') }}</label>
                     @if(admin()->branch_id == null)
-                    <select id="from_branch_id" wire:model.change="data.from_branch_id" class="form-select">
-                        <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="from_branch_id" wire:model.change="data.from_branch_id" class="form-select">
+                            <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                    </div>
                     @else
                     <input type="text" class="form-control" value="{{ admin()->branch->name }}" disabled>
                     @endif
@@ -24,12 +27,15 @@
 
                 <div class="col-md-4">
                     <label for="to_branch_id" class="form-label">{{ __('general.pages.stock-transfers.to_branch') }}</label>
-                    <select id="to_branch_id" wire:model.change="data.to_branch_id" class="form-select">
-                        <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="to_branch_id" wire:model.change="data.to_branch_id" class="form-select">
+                            <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -239,6 +245,7 @@
 @endpush
 
 @push('scripts')
+@livewire('admin.branches.branch-modal')
 <script>
     window.addEventListener('reset-search-input', () => {
         const input = document.getElementById('product_search');

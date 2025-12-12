@@ -13,6 +13,7 @@ use App\Services\TaxService;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 
@@ -217,6 +218,7 @@ class AddPurchase extends Component
         return $this->redirectWithTimeout(route('admin.purchases.list'),1000);
     }
 
+    #[On('re-render')]
     public function render()
     {
         $suppliers = $this->userService->suppliersList([],[],null,'name');

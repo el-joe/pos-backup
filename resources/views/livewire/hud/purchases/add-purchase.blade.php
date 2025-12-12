@@ -9,12 +9,15 @@
                 <div class="col-md-4">
                     <label for="branch_id" class="form-label">{{ __('general.pages.purchases.branch') }}</label>
                     @if(admin()->branch_id == null)
-                    <select id="branch_id" wire:model.change="data.branch_id" class="form-select">
-                        <option value="">{{ __('general.pages.purchases.select_branch') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="branch_id" wire:model.change="data.branch_id" class="form-select">
+                            <option value="">{{ __('general.pages.purchases.select_branch') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                    </div>
                     @else
                     <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
                     @endif
@@ -22,12 +25,15 @@
 
                 <div class="col-md-4">
                     <label for="supplier_id" class="form-label">{{ __('general.pages.purchases.supplier') }}</label>
-                    <select id="supplier_id" wire:model.change="data.supplier_id" class="form-select">
-                        <option value="">{{ __('general.pages.purchases.select_supplier') }}</option>
-                        @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="supplier_id" wire:model.change="data.supplier_id" class="form-select">
+                            <option value="">{{ __('general.pages.purchases.select_supplier') }}</option>
+                            @foreach ($suppliers as $supplier)
+                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="$dispatch('user-set-current', {id : null,type: 'supplier'})">+</button>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -467,6 +473,8 @@
 </div>
 
 @push('scripts')
+@livewire('admin.users.user-modal')
+@livewire('admin.branches.branch-modal')
     <script>
         window.addEventListener('reset-search-input', event => {
             const input = document.getElementById('product_search');

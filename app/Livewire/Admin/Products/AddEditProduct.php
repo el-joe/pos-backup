@@ -11,6 +11,7 @@ use App\Services\TaxService;
 use App\Services\UnitService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class AddEditProduct extends Component
@@ -132,6 +133,7 @@ class AddEditProduct extends Component
         }
     }
 
+    #[On('re-render')]
     public function render()
     {
         $branches = $this->branchService->activeList();

@@ -44,53 +44,66 @@
                 <!-- Branch -->
                 <div class="col-md-4">
                     <label for="branch_id" class="form-label">{{ __('general.pages.products.branch') }}</label>
-                    @if(admin()->branch_id == null)
-                    <select id="branch_id" wire:model.change="data.branch_id" class="form-select">
-                        <option value="">{{ __('general.pages.products.select_branch') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
-                    @else
-                    <input type="text" class="form-control" value="{{ admin()->branch->name }}" readonly disabled>
-                    @endif
+                    <div class="d-flex">
+                        @if(admin()->branch_id == null)
+                        <select id="branch_id" wire:model.change="data.branch_id" class="form-select">
+                            <option value="">{{ __('general.pages.products.select_branch') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        @else
+                        <input type="text" class="form-control" value="{{ admin()->branch->name }}" readonly disabled>
+                        @endif
+                        <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                    </div>
                 </div>
 
                 <!-- Brand -->
                 <div class="col-md-4">
                     <label for="brand_id" class="form-label">{{ __('general.pages.products.brand') }}</label>
-                    <select id="brand_id" wire:model.change="data.brand_id" class="form-select">
-                        <option value="">{{ __('general.pages.products.select_brand') }}</option>
-                        @foreach ($brands as $brand)
-                            <option value="{{ $brand->id }}" {{ ($this->data['brand_id']??false) == $brand->id ? 'selected' : '' }}>
-                                {{ $brand->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="brand_id" wire:model.change="data.brand_id" class="form-select">
+                            <option value="">{{ __('general.pages.products.select_brand') }}</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}" {{ ($this->data['brand_id']??false) == $brand->id ? 'selected' : '' }}>
+                                    {{ $brand->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editBrandModal" wire:click="$dispatch('brand-set-current', {id : null})">+</button>
+                    </div>
                 </div>
 
                 <!-- Category -->
                 <div class="col-md-4">
                     <label for="category_id" class="form-label">{{ __('general.pages.products.category') }}</label>
-                    <select id="category_id" wire:model.change="data.category_id" class="form-select">
-                        <option value="">{{ __('general.pages.products.select_category') }}</option>
-                        @foreach ($categories as $parent)
-                            {{ recursiveChildrenForOptions($parent,'children','id','name',0,true,$this->data['category_id'] ?? null) }}
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="category_id" wire:model.change="data.category_id" class="form-select">
+                            <option value="">{{ __('general.pages.products.select_category') }}</option>
+                            @foreach ($categories as $parent)
+                                {{ recursiveChildrenForOptions($parent,'children','id','name',0,true,$this->data['category_id'] ?? null) }}
+                            @endforeach
+                        </select>
+
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editCategoryModal" wire:click="$dispatch('category-set-current', {id : null})">+</button>
+                    </div>
                 </div>
 
                 <!-- Unit -->
                 <div class="col-md-4">
                     <label for="unit_id" class="form-label">{{ __('general.pages.products.unit') }}</label>
-                    <select id="unit_id" wire:model="data.unit_id" class="form-select">
-                        <option value="">{{ __('general.pages.products.select_unit') }}</option>
-                        @foreach ($units as $unit)
-                            <option value="{{ $unit->id }}" {{ ($this->data['unit_id']??false) == $unit->id ? 'selected' : '' }}>
-                                {{ $unit->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="unit_id" wire:model="data.unit_id" class="form-select">
+                            <option value="">{{ __('general.pages.products.select_unit') }}</option>
+                            @foreach ($units as $unit)
+                                <option value="{{ $unit->id }}" {{ ($this->data['unit_id']??false) == $unit->id ? 'selected' : '' }}>
+                                    {{ $unit->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editUnitModal" wire:click="$dispatch('unit-set-current', {id : null})">+</button>
+                    </div>
                 </div>
 
                 <!-- Weight -->
@@ -201,3 +214,10 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    @livewire('admin.branches.branch-modal')
+    @livewire('admin.brands.brand-modal')
+    @livewire('admin.categories.category-modal')
+    @livewire('admin.units.unit-modal')
+@endpush

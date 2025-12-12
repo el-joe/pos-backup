@@ -8,6 +8,7 @@ use App\Services\ProductService;
 use App\Services\StockTakingService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -145,6 +146,8 @@ class AddStockTaking extends Component
 
         return $this->redirectWithTimeout(route('admin.stocks.adjustments.details', $st->id), 2000);
     }
+
+    #[On('re-render')]
     public function render()
     {
         $branches = $this->branchService->activeList();

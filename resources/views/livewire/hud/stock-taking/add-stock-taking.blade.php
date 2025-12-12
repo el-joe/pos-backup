@@ -18,15 +18,19 @@
                                     <div class="mb-3">
                                         <label for="branch_id" class="form-label">{{ __('general.pages.stock-taking.branch') }}</label>
                                         @if(admin()->branch_id == null)
-                                        <select id="branch_id" class="form-select" wire:model.live="data.branch_id">
-                                            <option value="">{{ __('general.pages.stock-taking.select_branch') }}</option>
-                                            @foreach($branches as $branch)
-                                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="d-flex">
+                                            <select id="branch_id" class="form-select" wire:model.live="data.branch_id">
+                                                <option value="">{{ __('general.pages.stock-taking.select_branch') }}</option>
+                                                @foreach($branches as $branch)
+                                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                                        </div>
                                         @else
-                                        <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
+                                            <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
                                         @endif
+
                                     </div>
                                 </div>
 
@@ -194,6 +198,7 @@
 @endpush
 
 @push('styles')
+@livewire('admin.branches.branch-modal')
 {{-- <style>
     .section-card {
         border-radius: 18px;

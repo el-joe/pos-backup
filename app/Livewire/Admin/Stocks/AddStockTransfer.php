@@ -10,6 +10,7 @@ use App\Services\StockService;
 use App\Services\StockTransferService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class AddStockTransfer extends Component
@@ -171,6 +172,7 @@ class AddStockTransfer extends Component
         return $this->redirectWithTimeout(route('admin.stocks.transfers.details', $stockTransfer),1500);
     }
 
+    #[On('re-render')]
     public function render()
     {
         $branches = $this->branchService->activeList();
