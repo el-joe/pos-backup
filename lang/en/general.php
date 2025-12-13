@@ -7,6 +7,7 @@ return [
         'pos' => 'POS',
         'contacts' => 'Contacts',
         'branches' => 'Branches',
+        'imports' => 'Imports',
         'categories' => 'Categories',
         'brands' => 'Brands',
         'units' => 'Units',

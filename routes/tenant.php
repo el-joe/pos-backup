@@ -13,6 +13,7 @@ use App\Livewire\Admin\CashRegister\CashRegisterPage;
 use App\Livewire\Admin\Categories\CategoriesList;
 use App\Livewire\Admin\Discounts\DiscountsList;
 use App\Livewire\Admin\Expenses\{ExpenseCategoriesList,ExpensesList};
+use App\Livewire\Admin\Imports\ImportsPage;
 use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\Plans\{PlansList,SubscriptionsPage};
@@ -213,6 +214,9 @@ Route::middleware([
 
             Route::get('plans', PlansList::class)->name('plans.list');
             Route::get('subscriptions', SubscriptionsPage::class)->name('subscriptions.list');
+
+
+            Route::get('imports',ImportsPage::class)->name('imports');
         });
     });
 

@@ -23,6 +23,13 @@ return [
         'can' => 'pos.create'
     ],
     [
+        "title"     => "Imports",
+        'translated_title' => 'general.titles.imports',
+        "icon"      => "fa fa-file-import fa-fw",
+        "route"     => 'admin.imports',
+        // 'can' => 'imports.create'
+    ],
+    [
         "title"     => "Branches",
         'translated_title' => 'general.titles.branches',
         "icon"      => "fa fa-code-branch fa-fw",
