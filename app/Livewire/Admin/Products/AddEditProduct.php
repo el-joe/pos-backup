@@ -82,16 +82,13 @@ class AddEditProduct extends Component
             $rules['gallery'] = str_replace('nullable','required',$rules['gallery'] ?? '');
             $rules['gallery.*'] = str_replace('nullable','required',$rules['gallery.*'] ?? '');
 
-            if(!$this->current?->id){
-                $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-                $limit = $currentSubscription?->plan?->features['products']['limit'] ?? 999999;
-                $totalProducts = $this->productService->count();
+            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
+            $limit = $currentSubscription?->plan?->features['products']['limit'] ?? 999999;
+            $totalProducts = $this->productService->count();
 
-                if($totalProducts >= $limit){
-                    $this->popup('error','Product limit reached. Please upgrade your subscription to add more products.');
-                    return;
-                }
-
+            if($totalProducts >= $limit){
+                $this->popup('error','Product limit reached. Please upgrade your subscription to add more products.');
+                return;
             }
 
         }else{
