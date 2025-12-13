@@ -248,7 +248,7 @@ Route::get('download-file', function () {
 // everything (add/edit) have active must be with default active = false ---- #DONE
 // every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+) ---- #DONE
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches ---- #DONE
-// Import Excel,CSV
+// Import Excel,CSV ---- #DONE
 // Invoice Customization (Logo,Color,Text)
 // Barcode/QR Code Generation
 // Add Currency & City to branch (add currency to tenant instead ---#Done) -> now we need to add currency symbol or code into every money field
