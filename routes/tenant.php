@@ -255,7 +255,7 @@ Route::get('download-file', function () {
 // Audit Logs
 
 // Before Publishing we need to test domain register not just subdomain
-
+// اداره التصنيع
 
 // TODO : E-Invoice Coming Soon
 // Multi Currency Support into sales orders -> EX : customer come to egypt and doesn't have EGP , he pay in USD , we save the exchange rate at that day and save the amount in both currencies
