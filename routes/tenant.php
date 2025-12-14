@@ -242,20 +242,32 @@ Route::get('download-file', function () {
     }
 })->name('admin.export.download');
 
+Route::view('invoice-80mm','invoices.invoice-80mm');
+Route::view('invoice-80mm-ar','invoices.invoice-80mm-ar');
+Route::view('invoice-a4-ar','invoices.invoice-a4-ar');
+Route::view('invoice-a4','invoices.invoice-a4');
+Route::view('refund-invoice-a4-ar','invoices.refund-invoice-a4-ar');
+Route::view('refund-invoice-a4','invoices.refund-invoice-a4');
+Route::view('refund-invoice-80mm','invoices.refund-invoice-80mm');
+Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
+
 
 // Features to add later
 // Check Everything Related to Soft Deletes and make sure it's working fine ---- #DONE
 // everything (add/edit) have active must be with default active = false ---- #DONE
 // every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+) ---- #DONE
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches ---- #DONE
-// Import Excel,CSV ---- #DONE
-// Invoice Customization (Logo,Color,Text)
-// Barcode/QR Code Generation
+// Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
+// Invoice Customization (Logo,Color,Text) ----- Prienters Settings
 // Add Currency & City to branch (add currency to tenant instead ---#Done) -> now we need to add currency symbol or code into every money field
 // Audit Logs
+// Barcode/QR Code Generation
 
 // Before Publishing we need to test domain register not just subdomain
 // اداره التصنيع
+// https://pos.ultimatefosters.com/business/settings
+// refactor select elements to be a select2 with search
+// fix reports date range picker to be consistent across all reports
 
 // TODO : E-Invoice Coming Soon
 // Multi Currency Support into sales orders -> EX : customer come to egypt and doesn't have EGP , he pay in USD , we save the exchange rate at that day and save the amount in both currencies
