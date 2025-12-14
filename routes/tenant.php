@@ -258,7 +258,8 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 // every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+) ---- #DONE
 // Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches ---- #DONE
 // Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
-// Invoice Customization (Logo,Color,Text) ----- Prienters Settings
+// Invoice Customization (Logo,Color,Text)
+// Prienters Settings
 // Add Currency & City to branch (add currency to tenant instead ---#Done) -> now we need to add currency symbol or code into every money field
 // Audit Logs
 // Barcode/QR Code Generation
