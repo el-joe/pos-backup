@@ -48,14 +48,12 @@ hr {
     border-collapse: collapse;
 }
 
-.items th {
-    border-bottom: 1px solid #000;
-    padding-bottom: 4px;
+table.items th,
+table.items td {
+    border: 1px solid #000;
+    padding: 2px 4px;
+    text-align: left;
     font-size: 11px;
-}
-
-.items td {
-    padding: 3px 0;
 }
 
 .right {

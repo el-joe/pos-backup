@@ -192,4 +192,14 @@ class Sale extends Model
 
         return $grandTotal;
     }
+
+    function getPaymentStatusAttribute() {
+        if($this->due_amount <= 0){
+            return 'paid';
+        }elseif($this->paid_amount > 0 && $this->due_amount > 0){
+            return 'partial';
+        }else{
+            return 'unpaid';
+        }
+    }
 }

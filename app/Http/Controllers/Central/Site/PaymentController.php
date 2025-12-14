@@ -13,7 +13,7 @@ class PaymentController extends Controller
 {
     function callback(Request $request,$type) {
         $data = $request->query('data');
-        $data = decodedSlug($data);
+        $data = decodedData($data);
 
         if($type == 'success'){
             try{

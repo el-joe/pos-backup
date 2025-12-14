@@ -11,10 +11,12 @@
 
     <!-- بيانات الشركة -->
     <div class="center">
-        <h2 class="company-name">كودفانز لنظم البيع</h2>
-        <p>حلول برمجية وتقنية</p>
-        <p>الرقم الضريبي: 123456789</p>
-        <p>هاتف: 01000000000</p>
+        <h2 class="company-name">{{ tenant('name') }} POS</h2>
+        <!-- <p>حلول برمجية وتقنية</p> -->
+        @if(tenant('tax_number'))
+        <p>الرقم الضريبي: {{ tenant('tax_number') }}</p>
+        @endif
+        <p>هاتف: {{ tenant('phone') }}</p>
     </div>
 
     <hr>
@@ -22,20 +24,19 @@
     <!-- بيانات الفاتورة -->
     <div class="row">
         <span>رقم الفاتورة</span>
-        <span>INV-00025</span>
+        <span>{{ $order->invoice_number }}</span>
     </div>
     <div class="row">
         <span>التاريخ</span>
-        <span>2025-12-14 14:35</span>
+        <span>{{ carbon($order->created_at)->translatedFormat('Y-m-d H:i') }}</span>
     </div>
 
     <hr>
 
     <!-- بيانات العميل -->
     <div class="section-title">بيانات العميل</div>
-    <p>الاسم: أحمد حسن</p>
-    <p>الهاتف: 01123456789</p>
-    <p>الحساب: حساب عميل</p>
+    <p>الاسم: {{ $order->customer?->name }}</p>
+    <p>الهاتف: {{ $order->customer?->phone }}</p>
 
     <!-- بيانات المورد (اختياري) -->
     <!--
@@ -57,18 +58,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>أرز 1 كجم</td>
-                <td class="right">2</td>
-                <td class="right">25.00</td>
-                <td class="right">50.00</td>
-            </tr>
-            <tr>
-                <td>سكر 1 كجم</td>
-                <td class="right">1</td>
-                <td class="right">18.00</td>
-                <td class="right">18.00</td>
-            </tr>
+            @foreach ($order->saleItems as $item)
+                <tr>
+                    <td>{{ $item->name }}</td>
+                    <td class="right">{{ $item->qty }}</td>
+                    <td class="right">{{ $item->sell_price }}{{ currency()?->symbol }}</td>
+                    <td class="right">{{ $item->total }}{{ currency()->symbol }}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
@@ -77,20 +74,20 @@
     <!-- الإجماليات -->
     <div class="row">
         <span>الإجمالي الفرعي</span>
-        <span>68.00</span>
+        <span>{{ $order->sub_total }}{{ currency()->symbol }}</span>
     </div>
     <div class="row">
         <span>الخصم</span>
-        <span>-8.00</span>
+        <span>-{{ $order->discount_amount ?? 0 }}{{ currency()->symbol }}</span>
     </div>
     <div class="row">
-        <span>ضريبة القيمة المضافة (14%)</span>
-        <span>8.40</span>
+        <span>ضريبة القيمة المضافة</span>
+        <span>{{ $order->tax_amount ?? 0 }}{{ currency()->symbol }}</span>
     </div>
 
     <div class="row total">
         <span>الإجمالي النهائي</span>
-        <span>68.40</span>
+        <span>{{ $order->grand_total_amount }}{{ currency()->symbol }}</span>
     </div>
 
     <hr>
@@ -103,19 +100,19 @@
     </div>
     <div class="row">
         <span>المدفوع</span>
-        <span>70.00</span>
+        <span>{{ $order->paid_amount }}{{ currency()->symbol }}</span>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <span>الباقي</span>
         <span>1.60</span>
-    </div>
+    </div> -->
 
     <hr>
 
     <!-- تذييل -->
     <div class="center footer">
         <p>شكرًا لتعاملكم معنا</p>
-        <p>مشغل بواسطة Codefanz POS</p>
+        <p>مشغل بواسطة {{ tenant('name') }} POS</p>
     </div>
 
 </div>

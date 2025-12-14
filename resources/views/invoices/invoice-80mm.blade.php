@@ -11,10 +11,12 @@
 
     <!-- Company Info -->
     <div class="center">
-        <h2 class="company-name">CODEFANZ POS</h2>
-        <p>Software & IT Solutions</p>
-        <p>Tax No: 123456789</p>
-        <p>Tel: 01000000000</p>
+        <h2 class="company-name">{{ tenant('name') }} POS</h2>
+        <!-- <p>Software & IT Solutions</p> -->
+        @if(tenant('tax_number'))
+        <p>Tax No: {{ tenant('tax_number') }}</p>
+        @endif
+        <p>Tel: {{ tenant('phone') }}</p>
     </div>
 
     <hr>
@@ -22,20 +24,19 @@
     <!-- Invoice Info -->
     <div class="row">
         <span>Invoice #</span>
-        <span>INV-00025</span>
+        <span>{{ $order->invoice_number }}</span>
     </div>
     <div class="row">
         <span>Date</span>
-        <span>2025-12-14 14:35</span>
+        <span>{{ carbon($order->created_at)->format('Y-m-d H:i') }}</span>
     </div>
 
     <hr>
 
     <!-- Customer / Supplier -->
     <div class="section-title">Customer Details</div>
-    <p>Name: Ahmed Hassan</p>
-    <p>Phone: 01123456789</p>
-    <p>Account: Customer Account</p>
+    <p>Name: {{ $order->customer?->name }}</p>
+    <p>Phone: {{ $order->customer?->phone }}</p>
 
     <!-- Uncomment if supplier -->
     <!--
@@ -45,7 +46,6 @@
     -->
 
     <hr>
-
     <!-- Items Table -->
     <table class="items">
         <thead>
@@ -57,18 +57,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Rice 1KG</td>
-                <td class="right">2</td>
-                <td class="right">25.00</td>
-                <td class="right">50.00</td>
-            </tr>
-            <tr>
-                <td>Sugar 1KG</td>
-                <td class="right">1</td>
-                <td class="right">18.00</td>
-                <td class="right">18.00</td>
-            </tr>
+            @foreach ($order->saleItems as $item)
+                <tr>
+                    <td>{{ $item->name }}</td>
+                    <td class="right">{{ $item->qty }}</td>
+                    <td class="right">{{ $item->sell_price }}{{ currency()?->symbol }}</td>
+                    <td class="right">{{ $item->total }}{{ currency()->symbol }}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
@@ -77,20 +73,20 @@
     <!-- Totals -->
     <div class="row">
         <span>Subtotal</span>
-        <span>68.00</span>
+        <span>{{ $order->sub_total }}{{ currency()->symbol }}</span>
     </div>
     <div class="row">
         <span>Discount</span>
-        <span>-8.00</span>
+        <span>-{{ $order->discount_amount ?? 0 }}{{ currency()->symbol }}</span>
     </div>
     <div class="row">
-        <span>VAT (14%)</span>
-        <span>8.40</span>
+        <span>VAT </span>
+        <span>{{ $order->tax_amount ?? 0 }}{{ currency()->symbol }}</span>
     </div>
 
     <div class="row total">
         <span>TOTAL</span>
-        <span>68.40</span>
+        <span>{{ $order->grand_total_amount }}{{ currency()->symbol }}</span>
     </div>
 
     <hr>
@@ -103,19 +99,19 @@
     </div>
     <div class="row">
         <span>Paid</span>
-        <span>70.00</span>
+        <span>{{ $order->paid_amount }}{{ currency()->symbol }}</span>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <span>Change</span>
         <span>1.60</span>
-    </div>
+    </div> -->
 
     <hr>
 
     <!-- Footer -->
     <div class="center footer">
         <p>Thank you for your business</p>
-        <p>Powered by Codefanz POS</p>
+        <p>Powered by {{ tenant('name') }} POS</p>
     </div>
 
 </div>

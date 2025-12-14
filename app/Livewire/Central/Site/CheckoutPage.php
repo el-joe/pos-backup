@@ -72,7 +72,7 @@ class CheckoutPage extends Component
     function mount()
     {
         $newPlanSlug = request()->query('plan');
-        $data = decodedSlug($newPlanSlug);
+        $data = decodedData($newPlanSlug);
         $this->period = $data['period'] ?? 'month';
         $this->slug = $slug = $data['slug'] ?? null;
         $this->plan = Plan::whereSlug($slug)->firstOrFail();
@@ -81,7 +81,7 @@ class CheckoutPage extends Component
     function completeSubscription()
     {
         $this->validate();
-        $dataToString = encodedSlug($this->data + [
+        $dataToString = encodedData($this->data + [
             'plan_id' => $this->plan?->id,
             'period' => $this->period
         ]);

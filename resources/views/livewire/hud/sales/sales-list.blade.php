@@ -147,13 +147,13 @@
                                     @endadminCan
                                     @adminCan('sales.show-invoice')
                                     {{-- create 2 btn one for print and one for export to pdf --}}
-                                    <a href="{{ route('generate.invoice', ['type' => 'sales','id'=>$sale->id, 'action' => 'print']) }}"
+                                    <a href="{{ route('sales.invoice', encodedData(['type' => '80mm','order_id'=>$sale->id, 'action' => 'print'])) }}"
                                        class="btn btn-sm btn-info ms-1"
                                        title="{{ __('general.pages.sales.print') }}"
                                        target="_blank">
                                         <i class="fa fa-print"></i>
                                     </a>
-                                    <a href="{{ route('generate.invoice', ['type' => 'sales','id'=>$sale->id, 'action' => 'pdf']) }}"
+                                    <a href="{{ route('sales.invoice', encodedData(['type' => 'a4','order_id'=>$sale->id, 'action' => 'pdf'])) }}"
                                        class="btn btn-sm btn-warning ms-1"
                                        title="{{ __('general.pages.sales.export_pdf') }}"
                                        target="_blank">

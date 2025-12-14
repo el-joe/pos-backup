@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Currency;
 use App\Models\Tenant\Admin;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 
 const TENANT_ADMINS_GUARD = 'tenant_admin';
@@ -218,14 +220,25 @@ function superAdmins(){
     return Admin::where('type', 'super_admin')->get();
 }
 
-function encodedSlug($data)
+function encodedData($data)
 {
     $newSlug = base64_encode(json_encode($data));
 
     return $newSlug;
 }
 
-function decodedSlug($encoded)
+function decodedData($encoded)
 {
     return json_decode(base64_decode($encoded), true);
+}
+
+function lang(){
+    return app()->getLocale();
+}
+
+function currency(){
+    $key = 'currency_' . tenant('id') . '_default';
+    return Cache::driver('file')->remember($key, 60*60, function() {
+        return Currency::find(tenant('currency_id'));
+    });
 }
