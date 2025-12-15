@@ -255,18 +255,17 @@ Route::view('refund-invoice-80mm','invoices.refund-invoice-80mm');
 Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 
 
-// Features to add later
 // Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
-// Prienters Settings
-// Barcode/QR Code Generation
-// Add refund_orders table and refund_order_items table to handle refunds properly
+// Add return/refund_orders table and refund_order_items table to handle refunds properly
 // add order_payments table to handle multiple payments per order
-// add opening hours to branches
 // add more settings to general settings page
+// https://pos.ultimatefosters.com/business/settings
+// add opening hours to branches
+// Barcode/QR Code Generation
+// Prienters Settings
 
 // Before Publishing we need to test domain register not just subdomain
 // اداره التصنيع
-// https://pos.ultimatefosters.com/business/settings
 // refactor select elements to be a select2 with search
 // fix reports date range picker to be consistent across all reports
 
