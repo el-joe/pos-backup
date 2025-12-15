@@ -3,6 +3,7 @@
 return [
     'titles' => [
         'statistics' => 'Statistics',
+        'audit_report' => 'Audit Report',
         'cash-register' => 'Cash Register',
         'pos' => 'POS',
         'contacts' => 'Contacts',
@@ -81,7 +82,7 @@ return [
         'branch-profitability' => 'Branch Profitability',
         'cashier-performance' => 'User / Cashier Performance',
         'settings' => 'Settings',
-        'general-settings' => 'General Settings',
+        'general-settings' => 'General Settings (SOON)',
         'plans-subscriptions' => 'Plans & Subscriptions',
         'plans' => 'Plans',
         'subscriptions' => 'Subscriptions',
@@ -111,6 +112,8 @@ return [
             'common' => [
                 'filter_options' => 'Filter Options',
                 'from_date' => 'From Date',
+                'admin' => 'Admin',
+                'all' => 'All',
                 'to_date' => 'To Date',
                 'from' => 'From',
                 'to' => 'To',
@@ -133,6 +136,16 @@ return [
                 'metric' => 'Metric',
                 'amount' => 'Amount',
                 'status' => 'Status',
+            ],
+            'audit_report'=> [
+                'action' => 'Action',
+                'title' => 'Audit Report',
+                'total' => 'Total',
+                'date_time' => 'Date & Time',
+                'admin' => 'Admin',
+                'description' => 'Description',
+                'system' => 'System',
+                'no_records' => 'No audit records found for the selected filters.',
             ],
             'sales' => [
                 'summary' => [
@@ -452,8 +465,8 @@ return [
         ],
         'statistics' => [
             'total_sales' => 'Total Sales',
-            'net_sales' => 'Net',
-            'due_amount' => 'Invoice due',
+            'net_sales' => 'Net Sales',
+            'due_amount' => 'Due Sales',
             'total_sales_return' => 'Total Sell Return',
             'total_purchases' => 'Total purchase',
             'purchase_due' => 'Purchase due',

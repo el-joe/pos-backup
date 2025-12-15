@@ -23,6 +23,7 @@ use App\Livewire\Admin\Products\{AddEditProduct,ProductsList};
 use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
 use App\Livewire\Admin\Reports\{
     Admins\CashierReport,
+    AuditReport,
     BranchProfitability,CashRegisterReport,
     Financial\BalanceSheetReport,Financial\CashFlowStatementReport,Financial\GeneralLedgerReport,Financial\IncomeStatmentReport,Financial\TrailBalanceReport,
     Inventory\CogsReport,Inventory\ShortageReport,Inventory\StockMovementReport,Inventory\StockValuationReport,
@@ -197,7 +198,7 @@ Route::middleware([
                 Route::get('cashier-report', CashierReport::class)->name('cashier.report');
                 Route::get('cash-register-report', CashRegisterReport::class)->name('cash.register.report');
                 Route::get('branch-profitability', BranchProfitability::class)->name('branch.profitability');
-                // TODO : audit report
+                Route::get('audit-report', AuditReport::class)->name('audit.report');
 
             });
             // Stock Adjustments

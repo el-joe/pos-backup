@@ -260,6 +260,12 @@ return [
                         "route" => 'admin.reports.financial.general-ledger',
                         "icon"  => "fa fa-book fa-fw"
                     ],
+                    [
+                        "title" => "Audit Trail Report",
+                        'translated_title' => 'general.titles.audit-trail-report',
+                        "route" => "admin.reports.audit.report",
+                        "icon"  => "fa fa-user-secret fa-fw"
+                    ]
                 ],
             ],
             [
@@ -481,12 +487,6 @@ return [
                         'translated_title' => 'general.titles.withholding-tax-report',
                         "route" => 'admin.reports.taxes.withholding-tax',
                         "icon"  => "fa fa-file-invoice-dollar fa-fw"
-                    ],
-                    [
-                        "title" => "Audit Trail Report (Soon)",
-                        'translated_title' => 'general.titles.audit-trail-report',
-                        "route" => "#",
-                        "icon"  => "fa fa-user-secret fa-fw"
                     ]
                 ]
             ],
