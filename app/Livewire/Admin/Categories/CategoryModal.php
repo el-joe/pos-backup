@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Categories;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\CategoryService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\On;
@@ -46,7 +48,15 @@ class CategoryModal extends Component
     function save() {
         if (!$this->validator()) return;
 
-        $this->categoryService->save($this->current?->id, $this->data);
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_CATEGORY;
+        }else{
+            $action = AuditLogActionEnum::CREATE_CATEGORY;
+        }
+
+        $category = $this->categoryService->save($this->current?->id, $this->data);
+
+        AuditLog::log($action, ['id' => $category->id]);
 
         $this->popup('success', 'Category saved successfully');
 

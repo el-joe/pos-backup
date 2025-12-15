@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Admins;
 
+use App\Enums\AuditLogActionEnum;
 use App\Models\Subscription;
+use App\Models\Tenant\AuditLog;
 use App\Services\AdminService;
 use App\Services\BranchService;
 use App\Traits\LivewireOperations;
@@ -56,6 +58,8 @@ class AdminsList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_ADMIN_TRY, ['id' => $id]);
+
         $this->confirm('delete','warning','Are you sure?','You want to delete this Admin','Yes, delete it!');
     }
 
@@ -64,8 +68,11 @@ class AdminsList extends Component
             $this->popup('error','Admin not found');
             return;
         }
+        $id = $this->current->id;
 
-        $this->adminService->delete($this->current->id);
+        $this->adminService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_ADMIN, ['id' => $id]);
 
         $this->popup('success','Admin deleted successfully');
 
@@ -79,6 +86,7 @@ class AdminsList extends Component
             $this->rules['email'] = 'required|email|max:255|unique:admins,email,'.$this->current->id;
             $this->rules['phone'] = 'required|string|max:50|unique:admins,phone,'.$this->current->id;
             $this->rules['password'] = 'nullable|string|max:500';
+            $action = AuditLogActionEnum::UPDATE_ADMIN;
         }else{
             $currentSubscription = Subscription::currentTenantSubscriptions()->first();
             $limit = $currentSubscription?->plan?->features['admins']['limit'] ?? 999999;
@@ -88,11 +96,14 @@ class AdminsList extends Component
                 $this->popup('error','Admin limit reached. Please upgrade your subscription to add more admins.');
                 return;
             }
+            $action = AuditLogActionEnum::CREATE_ADMIN;
         }
 
         if(!$this->validator())return;
 
         $admin = $this->adminService->save($this->current?->id,$this->data);
+
+        AuditLog::log($action, ['id' => $admin->id]);
 
         if($this->data['role_id']??false){
             $role = Role::find($this->data['role_id']);
@@ -127,6 +138,8 @@ class AdminsList extends Component
             $headers = ['#', 'Name', 'Phone', 'Email', 'Type', 'Branch', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'branches');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_ADMINS, ['type' => 'Admin', 'url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

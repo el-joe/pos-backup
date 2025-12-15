@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\StockTaking;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\AdminService;
 use App\Services\BranchService;
 use App\Services\StockTakingService;
@@ -43,6 +45,8 @@ class StockTakingList extends Component
             $headers = ['#', 'Branch', 'Date', 'Products Count', 'Created by', 'Created at', 'Note'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'stock-takings');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_STOCK_TAKINGS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

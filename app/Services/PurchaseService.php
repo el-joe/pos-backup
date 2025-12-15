@@ -128,6 +128,8 @@ class PurchaseService
         }
         // Grouped by type = Payments
         $this->addPayment($purchase->id, $data);
+
+        return $purchase;
     }
 
     function addPayment($purchaseId, $data , $reverse = false) {

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Branches;
 
+use App\Enums\AuditLogActionEnum;
 use App\Models\Subscription;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
@@ -61,6 +63,14 @@ class BranchModal extends Component
         if(!$this->validator())return;
 
         $this->branchService->save($this->current?->id,$this->data);
+
+        if($this->current?->id){
+            $action = AuditLogActionEnum::UPDATE_BRANCH;
+        }else{
+            $action = AuditLogActionEnum::CREATE_BRANCH;
+        }
+
+        AuditLog::log($action,['id' => $this->current?->id ?? '']);
 
         $this->popup('success','Branch saved successfully');
 

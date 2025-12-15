@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Stocks;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\ExpenseService;
 use App\Services\PurchaseService;
 use App\Services\StockTransferService;
@@ -47,6 +49,7 @@ class StockTransferDetails extends Component
 
     function deleteExpenseConfirm($id) {
         $this->setCurrentExpense($id);
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_INTO_STOCK_TRANSFER_TRY, ['id' => $id, 'stock_transfer_id' => $this->stockTransfer->id]);
         $this->confirm('deleteExpense','error','Delete Expense','Are you sure you want to delete this expense? This action cannot be undone.','Do it!' );
     }
 
@@ -61,7 +64,12 @@ class StockTransferDetails extends Component
             $this->popup('error','Expense already refunded.');
             return;
         }
-        $this->expenseService->delete($expense->id);
+
+        $id = $expense->id;
+
+        $this->expenseService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_INTO_STOCK_TRANSFER, ['id' => $id, 'stock_transfer_id' => $this->stockTransfer->id]);
 
         $this->mount();
 

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Branches;
 
+use App\Enums\AuditLogActionEnum;
 use App\Models\Subscription;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
@@ -44,6 +46,8 @@ class BranchesList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETED_BRANCH);
+
         $this->confirm('delete','warning','Are you sure?','You want to delete this branch','Yes, delete it!');
     }
 
@@ -53,8 +57,11 @@ class BranchesList extends Component
             return;
         }
 
-        $this->branchService->delete($this->current->id);
+        $current = $this->current;
 
+        $this->branchService->delete($current->id);
+
+        AuditLog::log(AuditLogActionEnum::DELETED_BRANCH, ['id' => $current->id,'name'=>$current->name]);
         $this->popup('success','Branch deleted successfully');
 
         $this->dismiss();
@@ -86,6 +93,8 @@ class BranchesList extends Component
             $headers = ['#', 'Name', 'Phone', 'Email', 'Address', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'branches');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_BRANCHES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

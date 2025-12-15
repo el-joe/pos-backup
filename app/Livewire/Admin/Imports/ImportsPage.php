@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Admin\Imports;
 
+use App\Enums\AuditLogActionEnum;
 use App\Imports\BranchesImport;
 use App\Imports\BrandsImport;
 use App\Imports\CategoriesImport;
 use App\Imports\ProductsImport;
 use App\Imports\UnitsImport;
+use App\Models\Tenant\AuditLog;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -30,6 +32,7 @@ class ImportsPage extends Component
 
         try {
             Excel::import(new BranchesImport, $this->branchesFile->getRealPath());
+            AuditLog::log(AuditLogActionEnum::IMPORT_BRANCHES);
             $this->alert('success', 'Branches imported successfully!');
             $this->reset('branchesFile');
         } catch (\Exception $e) {
@@ -45,6 +48,7 @@ class ImportsPage extends Component
 
         try {
             Excel::import(new ProductsImport, $this->productsFile->getRealPath());
+            AuditLog::log(AuditLogActionEnum::IMPORT_PRODUCTS);
             $this->alert('success', 'Products imported successfully!');
             $this->reset('productsFile');
         } catch (\Exception $e) {
@@ -60,6 +64,7 @@ class ImportsPage extends Component
 
         try {
             Excel::import(new CategoriesImport, $this->categoriesFile->getRealPath());
+            AuditLog::log(AuditLogActionEnum::IMPORT_CATEGORIES);
             $this->alert('success', 'Categories imported successfully!');
             $this->reset('categoriesFile');
         } catch (\Exception $e) {
@@ -75,6 +80,7 @@ class ImportsPage extends Component
 
         try {
             Excel::import(new BrandsImport, $this->brandsFile->getRealPath());
+            AuditLog::log(AuditLogActionEnum::IMPORT_BRANDS);
             $this->alert('success', 'Brands imported successfully!');
             $this->reset('brandsFile');
         } catch (\Exception $e) {
@@ -90,6 +96,7 @@ class ImportsPage extends Component
 
         try {
             Excel::import(new UnitsImport, $this->unitsFile->getRealPath());
+            AuditLog::log(AuditLogActionEnum::IMPORT_UNITS);
             $this->alert('success', 'Units imported successfully!');
             $this->reset('unitsFile');
         } catch (\Exception $e) {

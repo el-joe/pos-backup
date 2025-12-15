@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Purchases;
 
+use App\Enums\AuditLogActionEnum;
 use App\Helpers\PurchaseHelper;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Product;
 use App\Services\AccountService;
 use App\Services\BranchService;
@@ -200,7 +202,7 @@ class AddPurchase extends Component
         }
 
         // save purchase
-        $this->purchaseService->save(null,[
+        $purchase = $this->purchaseService->save(null,[
             ...$this->data,
             'tax_percentage'=> $this->data['tax_rate'] ?? 0,
             'orderProducts' => $this->orderProducts,
@@ -212,6 +214,9 @@ class AddPurchase extends Component
             'tax_amount' => $calcDetails['orderTaxAmount'] ?? 0,
             'grand_total' => $calcDetails['orderGrandTotal'] ?? 0,
         ]);
+
+        AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE, ['id' => $purchase->id]);
+
         // alert success
         $this->alert('success','Purchase created successfully');
         // redirect to purchases list

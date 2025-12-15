@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin;
 
+use App\Enums\AuditLogActionEnum;
 use App\Helpers\SaleHelper;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Discount;
 use App\Models\Tenant\Sale;
@@ -290,7 +292,9 @@ class PosPage extends Component
             $this->cashRegisterService->increment($cashRegister->id,'total_sales',$dataToSave['paid_amount']);
         }
 
-        $this->sellService->save(null,$dataToSave);
+        $saleOrder = $this->sellService->save(null,$dataToSave);
+
+        AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER,['invoice_number' => $saleOrder->invoice_number]);
 
         Artisan::call('app:stock-quantity-alert-check', [
             '--branch_id' => $this->branch?->id,

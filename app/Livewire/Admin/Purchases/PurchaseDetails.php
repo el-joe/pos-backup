@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Purchases;
 
+use App\Enums\AuditLogActionEnum;
 use App\Helpers\PurchaseHelper;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Expense;
 use App\Models\Tenant\PurchaseItem;
 use App\Services\CashRegisterService;
@@ -81,6 +83,8 @@ class PurchaseDetails extends Component
 
         $this->purchaseService->refundPurchaseItem($this->currentItem?->id,$this->refundedQty); // TODO : if all products with qty is refunded then change purchase status to refunded and add badge of purchase list order and details page
 
+        AuditLog::log(AuditLogActionEnum::REFUND_PURCHASE_ITEM, ['id' => $this->currentItem->id, 'purchase_id' => $this->purchase->id]);
+
         $this->mount();
 
         $this->dismiss();
@@ -106,6 +110,9 @@ class PurchaseDetails extends Component
 
     function deleteExpenseConfirm($id) {
         $this->setCurrentExpense($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_INTO_PURCHASE_TRY, ['id' => $id, 'purchase_id' => $this->purchase->id]);
+
         $this->confirm('deleteExpense','error','Delete Expense','Are you sure you want to delete this expense? This action cannot be undone.','Do it!' );
     }
 
@@ -130,6 +137,8 @@ class PurchaseDetails extends Component
 
         $this->purchaseService->deleteExpenseTransaction($expense->id);
         $this->expenseService->delete($expense->id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_INTO_PURCHASE, ['id' => $expense->id, 'purchase_id' => $this->purchase->id]);
 
         $this->mount();
 

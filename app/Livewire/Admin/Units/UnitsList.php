@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Units;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Unit;
 use App\Services\UnitService;
 use App\Traits\LivewireOperations;
@@ -32,6 +34,8 @@ class UnitsList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_UNIT_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this Unit', 'Yes, delete it!');
     }
 
@@ -41,7 +45,11 @@ class UnitsList extends Component
             return;
         }
 
-        $this->unitService->delete($this->current->id);
+        $id = $this->current->id;
+
+        $this->unitService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_UNIT, ['id' => $id]);
 
         $this->popup('success', 'Unit deleted successfully');
 
@@ -57,12 +65,6 @@ class UnitsList extends Component
 
         if ($this->export == 'excel') {
 
-                            //             <th>#</th>
-                            // <th>Name</th>
-                            // <th>Parent</th>
-                            // <th>Count</th>
-                            // <th>Status</th>
-
             $data = $units->get()->map(function ($unit, $loop) {
                 return [
                     'loop' => $loop + 1,
@@ -76,6 +78,8 @@ class UnitsList extends Component
             $headers = ['#', 'Name', 'Parent', 'Count', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'units');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_UNITS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
 

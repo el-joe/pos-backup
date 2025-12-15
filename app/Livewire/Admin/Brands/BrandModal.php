@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Brands;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BrandService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\On;
@@ -40,7 +42,15 @@ class BrandModal extends Component
     public function save() {
         if (!$this->validator()) return;
 
-        $this->brandService->save($this->current?->id, $this->data);
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_BRAND;
+        }else{
+            $action = AuditLogActionEnum::CREATE_BRAND;
+        }
+
+        $brand = $this->brandService->save($this->current?->id, $this->data);
+
+        AuditLog::log($action, ['id' => $brand->id]);
 
         $this->popup('success', 'Brand saved successfully');
 

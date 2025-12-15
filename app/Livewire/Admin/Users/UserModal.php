@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Users;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\On;
@@ -51,7 +53,15 @@ class UserModal extends Component
         }
         if (!$this->validator()) return;
 
-        $this->userService->save($this->current?->id, $this->data + ['type' => $this->type]);
+        if($this->current?->id){
+            $action = AuditLogActionEnum::UPDATE_USER;
+        }else{
+            $action = AuditLogActionEnum::CREATE_USER;
+        }
+
+        $user = $this->userService->save($this->current?->id, $this->data + ['type' => $this->type]);
+
+        AuditLog::log($action, ['id' => $user->id,'type' => $this->type]);
 
         $this->popup('success', 'User saved successfully');
 

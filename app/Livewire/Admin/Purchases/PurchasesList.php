@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Purchases;
 
+use App\Enums\AuditLogActionEnum;
 use App\Enums\TransactionTypeEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\PurchaseService;
@@ -63,6 +65,8 @@ class PurchasesList extends Component
             'payment_account' => $this->payment['account_id'],
         ]);
 
+        AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE_PAYMENT, ['id' => $this->current->id]);
+
         $this->alert('success','Payment added successfully!');
         $this->reset('payment');
     }
@@ -88,6 +92,8 @@ class PurchasesList extends Component
             $columns = ['loop', 'ref_no', 'supplier', 'branch', 'status', 'total_amount', 'due_amount', 'refund_status'];
             $headers = ['#', 'Ref No.', 'Supplier', 'Branch', 'Status', 'Total Amount', 'Due Amount', 'Refund Status'];
             $fullPath = exportToExcel($data, $columns, $headers, 'purchases');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_PURCHASES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

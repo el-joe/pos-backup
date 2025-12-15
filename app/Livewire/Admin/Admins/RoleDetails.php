@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Admins;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -58,6 +60,9 @@ class RoleDetails extends Component
             $role = new Role();
             $role->guard_name = 'tenant_admin';
             $role->active = true;
+            $action = AuditLogActionEnum::CREATE_ROLE;
+        }else{
+            $action = AuditLogActionEnum::UPDATE_ROLE;
         }
 
         $role->fill($this->data);
@@ -66,6 +71,8 @@ class RoleDetails extends Component
 
         $role->syncPermissions(array_keys(array_filter($this->permissions)));
 
+        AuditLog::log($action, ['id' => $role->id]);
+
         $this->popup('success','تم التعديل بنجاح','center');
 
         $this->redirectWithTimeout(route('admin.roles.list'));
@@ -73,8 +80,6 @@ class RoleDetails extends Component
 
     public function render()
     {
-        // read $permissions from /tenant-permissions.json
-
         return layoutView('admins.role-details');
     }
 }

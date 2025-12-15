@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Taxes;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -46,6 +48,8 @@ class TaxesList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_TAX_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this tax', 'Yes, delete it!');
     }
 
@@ -55,7 +59,11 @@ class TaxesList extends Component
             return;
         }
 
-        $this->taxService->delete($this->current->id);
+        $id = $this->current->id;
+
+        $this->taxService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_TAX, ['id' => $id]);
 
         $this->popup('success', 'Tax deleted successfully');
 
@@ -67,7 +75,15 @@ class TaxesList extends Component
     function save() {
         if (!$this->validator()) return;
 
-        $this->taxService->save($this->current?->id, $this->data);
+        if($this->current) {
+            $action = AuditLogActionEnum::UPDATE_TAX;
+        } else {
+            $action = AuditLogActionEnum::CREATE_TAX;
+        }
+
+        $tax = $this->taxService->save($this->current?->id, $this->data);
+
+        AuditLog::log($action, ['id' => $tax->id]);
 
         $this->popup('success', 'Tax saved successfully');
 
@@ -95,6 +111,8 @@ class TaxesList extends Component
             $headers = ['#', 'Name', 'VAT Number', 'Percentage', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'taxes');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_TAXES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

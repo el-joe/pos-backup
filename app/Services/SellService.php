@@ -123,6 +123,8 @@ class SellService
         }
         // Grouped by type = Payments
         $this->addPayment($sell->id, $data);
+
+        return $sell->refresh();
     }
 
     function addPayment($sellId, $data , $reverse = false) {

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Discounts;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\DiscountService;
 use App\Traits\LivewireOperations;
@@ -55,6 +57,8 @@ class DiscountsList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_DISCOUNT_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this discount', 'Yes, delete it!');
     }
 
@@ -64,7 +68,11 @@ class DiscountsList extends Component
             return;
         }
 
-        $this->discountService->delete($this->current->id);
+        $id = $this->current->id;
+
+        $this->discountService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_DISCOUNT, ['id' => $id]);
 
         $this->popup('success', 'Discount deleted successfully');
 
@@ -76,7 +84,15 @@ class DiscountsList extends Component
     function save() {
         if (!$this->validator()) return;
 
-        $this->discountService->save($this->current?->id, $this->data);
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_DISCOUNT;
+        }else{
+            $action = AuditLogActionEnum::CREATE_DISCOUNT;
+        }
+
+        $discount = $this->discountService->save($this->current?->id, $this->data);
+
+        AuditLog::log($action, ['id' => $discount->id]);
 
         $this->popup('success', 'Discount saved successfully');
 
@@ -106,6 +122,8 @@ class DiscountsList extends Component
             $headers = ['#', 'Name', 'Code', 'Value', 'Start Date', 'End Date', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'discounts');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_DISCOUNTS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

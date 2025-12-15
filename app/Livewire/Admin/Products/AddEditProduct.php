@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Products;
 
+use App\Enums\AuditLogActionEnum;
 use App\Models\Subscription;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\BrandService;
 use App\Services\CategoryService;
@@ -76,7 +78,13 @@ class AddEditProduct extends Component
 
     function save() {
         $rules = $this->rules;
-        // dd($this->data);
+
+        if($this->product){
+            $action = AuditLogActionEnum::UPDATE_PRODUCT;
+        }else{
+            $action = AuditLogActionEnum::CREATE_PRODUCT;
+        }
+
         if(!$this->product) {
             $rules['image'] = str_replace('nullable','required',$rules['image'] ?? '');
             $rules['gallery'] = str_replace('nullable','required',$rules['gallery'] ?? '');
@@ -98,6 +106,8 @@ class AddEditProduct extends Component
         if(!$this->validator($this->data,$rules))return;
 
         $product = $this->productService->save($this->product?->id,$this->data);
+
+        AuditLog::log($action,  ['id' => $product->id]);
 
         $this->popup('success','Product saved successfully');
 

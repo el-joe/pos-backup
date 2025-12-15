@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Admin\Stocks;
 
+use App\Enums\AuditLogActionEnum;
 use App\Enums\StockTransferStatusEnum;
 use App\Models\Tenant\Admin;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockService;
@@ -166,6 +168,8 @@ class AddStockTransfer extends Component
         Admin::whereType('super_admin')->each(function($admin) use ($stockTransfer) {
             $admin->notifyNewStockTransfer($stockTransfer);
         });
+
+        AuditLog::log(AuditLogActionEnum::CREATE_STOCK_TRANSFER, ['id' => $stockTransfer->id]);
 
         $this->alert('success','Stock Transfer created successfully');
 

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Stocks;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\StockTransferService;
 use App\Traits\LivewireOperations;
@@ -45,6 +47,8 @@ class StockTransferList extends Component
             $headers = ['#', 'Ref No', 'From', 'To', 'Items Count', 'Total Quantity', 'Transfer Date', 'Status', 'Created At'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'stock_transfers');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_STOCK_TRANSFERS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
 

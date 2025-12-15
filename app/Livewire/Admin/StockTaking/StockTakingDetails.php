@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\StockTaking;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\StockTakingService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -37,11 +39,15 @@ class StockTakingDetails extends Component
     function returnStockAlert($id) {
         $this->stProductId = $id;
 
+        AuditLog::log(AuditLogActionEnum::RETURN_STOCK_TAKING_PRODUCT_TRY, ['id' => $id]);
+
         $this->confirm('returnStock', 'warning', 'Are you sure?', 'You want to return this stock', 'Yes, return it!');
     }
 
     function returnStock() {
         $this->stockTakingService->returnStock($this->stProductId);
+
+        AuditLog::log(AuditLogActionEnum::RETURN_STOCK_TAKING_PRODUCT, ['id' => $this->stProductId]);
 
         $this->popup('success', 'Stock returned successfully');
     }

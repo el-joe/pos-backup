@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\CashRegister;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +105,8 @@ class CashRegisterPage extends Component
             $admin->notifyCashRegisterOpened($cashRegister);
         });
 
+        AuditLog::log(AuditLogActionEnum::CASH_REGISTER_OPENED, ['id' => $cashRegister->id]);
+
         $this->opening_balance_input = null;
         $this->loadData();
         $this->alert('success', 'Cash register opened');
@@ -140,6 +144,7 @@ class CashRegisterPage extends Component
             $admin->notifyCashRegisterClosed($reg->fresh());
         });
 
+        AuditLog::log(AuditLogActionEnum::CASH_REGISTER_CLOSED, ['id' => $reg->id]);
 
         $this->closing_balance_input = null;
         $this->closing_notes = null;

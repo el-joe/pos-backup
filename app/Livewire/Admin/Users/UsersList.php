@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Users;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -35,6 +37,8 @@ class UsersList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_USER_TRY, ['id' => $id,'type' => $this->type]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this user', 'Yes, delete it!');
     }
 
@@ -44,8 +48,11 @@ class UsersList extends Component
             return;
         }
 
-        $this->userService->delete($this->current->id);
+        $id = $this->current->id;
 
+        $this->userService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_USER, ['id' => $id,'type' => $this->type]);
         $this->popup('success', 'User deleted successfully');
 
         $this->dismiss();
@@ -75,6 +82,8 @@ class UsersList extends Component
             $headers = ['#', 'Name', 'Phone', 'Email', 'Address', 'Sales Threshold', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'users');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_USERS, ['url' => $fullPath,'type' => $this->type]);
 
             $this->redirectToDownload($fullPath);
         }

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Sales;
 
+use App\Enums\AuditLogActionEnum;
 use App\Enums\TransactionTypeEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\SellService;
@@ -68,6 +70,8 @@ class SalesList extends Component
             ]
         ]);
 
+        AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER_PAYMENT,  ['id' => $this->current->id]);
+
         $this->alert('success','Payment added successfully!');
         $this->reset('payment');
 
@@ -95,6 +99,8 @@ class SalesList extends Component
             $headers = ['#', 'Invoice No.', 'Customer', 'Branch', 'Total Amount', 'Due Amount', 'Refund Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'sales');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_SALES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

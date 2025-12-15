@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Products;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\BrandService;
 use App\Services\CategoryService;
@@ -37,6 +39,8 @@ class ProductsList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_PRODUCT_TRY, ['id' => $id]);
+
         $this->confirm('delete','warning','Are you sure?','You want to delete this product','Yes, delete it!');
     }
 
@@ -47,6 +51,8 @@ class ProductsList extends Component
         }
 
         $this->productService->delete($this->current->id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_PRODUCT, ['id' => $this->current->id]);
 
         $this->popup('success','Product deleted successfully');
 
@@ -82,6 +88,8 @@ class ProductsList extends Component
             $columns = ['loop', 'sku', 'code', 'name', 'branch', 'category', 'brand', 'unit', 'weight', 'alert_qty', 'active'];
             $headers = ['#', 'SKU', 'Code', 'Name', 'Branch', 'Category', 'Brand', 'Unit', 'Weight', 'Alert Quantity', 'Status'];
             $fullPath = exportToExcel($data, $columns, $headers, 'branches');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_PRODUCTS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
 

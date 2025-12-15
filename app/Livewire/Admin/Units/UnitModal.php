@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Units;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Unit;
 use App\Services\UnitService;
 use App\Traits\LivewireOperations;
@@ -56,8 +58,15 @@ class UnitModal extends Component
 
         if(!$this->validator()) return;
 
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_UNIT;
+        }else{
+            $action = AuditLogActionEnum::CREATE_UNIT;
+        }
 
-        $this->unitService->save($this->current?->id , $this->data);
+        $unit = $this->unitService->save($this->current?->id , $this->data);
+
+        AuditLog::log($action, ['id' => $unit->id]);
 
         $this->swal('Success!','Saved Successfully!','success');
 

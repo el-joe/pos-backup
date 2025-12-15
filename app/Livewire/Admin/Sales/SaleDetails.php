@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\Sales;
 
+use App\Enums\AuditLogActionEnum;
 use App\Helpers\SaleHelper;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\SaleItem;
 use App\Services\CashRegisterService;
 use App\Services\SellService;
@@ -52,6 +54,8 @@ class SaleDetails extends Component
             $totalRefunded = $this->getTotalRefundedCalc($this->currentItem?->id, $this->refundedQty);
             $this->cashRegisterService->increment($cashRegister->id, 'total_sale_refunds', $totalRefunded);
         }
+
+        AuditLog::log(AuditLogActionEnum::RETURN_SALE_ITEM, ['id' => $this->currentItem?->id]);
 
         $this->mount();
 

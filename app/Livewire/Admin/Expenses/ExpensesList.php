@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Expenses;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\ExpenseCategoryService;
@@ -53,6 +55,8 @@ class ExpensesList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this expense category', 'Yes, delete it!');
     }
 
@@ -69,8 +73,11 @@ class ExpensesList extends Component
             $this->cashRegisterService->increment($cashRegister->id, 'total_expense_refunds', $getTotalRefunded);
         }
 
+        $id = $this->current->id;
 
-        $this->expenseService->delete($this->current->id);
+        $this->expenseService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE, ['id' => $id]);
 
         $this->popup('success', 'Expense deleted successfully');
 
@@ -82,7 +89,15 @@ class ExpensesList extends Component
     function save()  {
         if (!$this->validator()) return;
 
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_EXPENSE;
+        } else {
+            $action = AuditLogActionEnum::CREATE_EXPENSE;
+        }
+
         $expense = $this->expenseService->save($this->current?->id, $this->data);
+
+        AuditLog::log($action, ['id' => $expense->id]);
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
@@ -125,6 +140,8 @@ class ExpensesList extends Component
             $columns = ['loop', 'branch', 'target', 'category', 'amount', 'tax_percentage', 'total', 'date', 'note', 'created_at'];
             $headers = ['#', 'Branch', 'Target', 'Category', 'Amount', 'Tax Percentage', 'Total', 'Date', 'Note', 'Created At'];
             $fullPath = exportToExcel($data, $columns, $headers, 'expenses');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_EXPENSES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

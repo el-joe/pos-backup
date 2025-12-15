@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Categories;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\CategoryService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -33,6 +35,8 @@ class CategoriesList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_CATEGORY_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this category', 'Yes, delete it!');
     }
 
@@ -41,8 +45,10 @@ class CategoriesList extends Component
             $this->popup('error', 'Category not found');
             return;
         }
+        $current = $this->current;
+        $this->categoryService->delete($current->id);
 
-        $this->categoryService->delete($this->current->id);
+        AuditLog::log(AuditLogActionEnum::DELETE_CATEGORY, ['id' => $current->id]);
 
         $this->popup('success', 'Category deleted successfully');
 
@@ -73,6 +79,8 @@ class CategoriesList extends Component
             $headers = ['#', 'Name', 'Parent Category', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'categories');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_CATEGORIES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

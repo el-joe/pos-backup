@@ -22,11 +22,11 @@
                         </div>
 
                         @if($currentSubscription->canCancel() && adminCan('subscriptions.cancel'))
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" wire:click="cancelSubscription">
                                 <i class="fa fa-times"></i> Cancel
                             </button>
                         @elseif($currentSubscription->canRenew() && adminCan('subscriptions.renew'))
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" wire:click="renewSubscription">
                                 <i class="fa fa-sync"></i> Renew
                             </button>
                         @endif

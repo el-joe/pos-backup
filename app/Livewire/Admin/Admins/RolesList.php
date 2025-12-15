@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Admins;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
@@ -29,12 +31,17 @@ class RolesList extends Component
     function deleteAlert($id)
     {
         $this->setCurrent($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_ROLE_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'error', 'Do you want to delete this Role?', '', 'Cancel');
     }
 
     function delete()
     {
+        $id = $this->current->id;
         $this->current->delete();
+        AuditLog::log(AuditLogActionEnum::DELETE_ROLE, ['id' => $id]);
         $this->popup('success', 'Role deleted successfully', 'center');
     }
     public function render()

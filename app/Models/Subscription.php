@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
@@ -112,5 +114,39 @@ class Subscription extends Model
             'cancelled' => 'danger',
             'refunded' => 'warning',
         ][$this->status] ?? 'secondary';
+    }
+
+    static function cancel(){
+        $currentSubscription = self::currentTenantSubscriptions()->first();
+        if($currentSubscription && $currentSubscription->canCancel()){
+            AuditLog::log(AuditLogActionEnum::CANCEL_SUBSCRIPTION, ['id' => $currentSubscription->id]);
+            $currentSubscription->status = 'cancelled';
+            $currentSubscription->save();
+            return true;
+        }
+        return false;
+    }
+
+    static function renew(){
+        $currentSubscription = self::currentTenantSubscriptions()->first();
+        if($currentSubscription && $currentSubscription->canRenew()){
+            // Implement renew logic here
+            Subscription::create([
+                'tenant_id' => $currentSubscription->tenant_id,
+                'plan_id' => $currentSubscription->plan_id,
+                'plan_details' => $currentSubscription->plan_details,
+                'price' => $currentSubscription->price,
+                'systems_allowed' => $currentSubscription->systems_allowed,
+                'start_date' => now(),
+                'end_date' => now()->addMonth(),
+                'status' => 'paid',
+                'payment_gateway' => $currentSubscription->payment_gateway,
+                'payment_details' => $currentSubscription->payment_details,
+                'billing_cycle' => $currentSubscription->billing_cycle,
+            ]);
+            AuditLog::log(AuditLogActionEnum::RENEW_SUBSCRIPTION, ['id' => $currentSubscription->id]);
+            return true;
+        }
+        return false;
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin\StockTaking;
 
+use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\Admin;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockTakingService;
@@ -139,6 +141,7 @@ class AddStockTaking extends Component
             $admin->notifyNewStockTacking($st);
         });
 
+        AuditLog::log(AuditLogActionEnum::CREATE_STOCK_TAKING, ['id' => $st->id]);
 
         $this->popup('success', 'Stock Take saved successfully');
 

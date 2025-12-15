@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Brands;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BrandService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -32,6 +34,8 @@ class BrandsList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_BRAND_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this brand', 'Yes, delete it!');
     }
 
@@ -41,7 +45,11 @@ class BrandsList extends Component
             return;
         }
 
-        $this->brandService->delete($this->current->id);
+        $id = $this->current->id;
+
+        $this->brandService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_BRAND, ['id' => $id]);
 
         $this->popup('success', 'Brand deleted successfully');
 
@@ -70,6 +78,8 @@ class BrandsList extends Component
             $headers = ['#', 'Name', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'brands');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_BRANDS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }
