@@ -258,8 +258,6 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 // Features to add later
 // Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
 // Prienters Settings
-// Audit Logs & Audit Report
-// add import suppliers/customers
 // Barcode/QR Code Generation
 // Add refund_orders table and refund_order_items table to handle refunds properly
 // add order_payments table to handle multiple payments per order

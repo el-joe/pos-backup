@@ -9,6 +9,8 @@ return [
     'import_categories' => 'تم استيراد الفئات.',
     'import_brands' => 'تم استيراد العلامات التجارية.',
     'import_units' => 'تم استيراد الوحدات.',
+    'import_customers' => 'تم استيراد العملاء.',
+    'import_suppliers' => 'تم استيراد الموردين.',
     'deleted_branch_try' => 'محاولة حذف الفرع.',
     'deleted_branch' => 'تم حذف الفرع #:id.',
     'update_branch' => 'تم تحديث الفرع #:id.',

@@ -6,7 +6,9 @@ use App\Enums\AuditLogActionEnum;
 use App\Imports\BranchesImport;
 use App\Imports\BrandsImport;
 use App\Imports\CategoriesImport;
+use App\Imports\CustomersImport;
 use App\Imports\ProductsImport;
+use App\Imports\SuppliersImport;
 use App\Imports\UnitsImport;
 use App\Models\Tenant\AuditLog;
 use App\Traits\LivewireOperations;
@@ -23,6 +25,8 @@ class ImportsPage extends Component
     public $categoriesFile;
     public $brandsFile;
     public $unitsFile;
+    public $customersFile;
+    public $suppliersFile;
 
     public function importBranches()
     {
@@ -104,6 +108,38 @@ class ImportsPage extends Component
         }
     }
 
+    public function importCustomers()
+    {
+        $this->validate([
+            'customersFile' => 'required|mimes:xlsx,xls,csv|max:10240',
+        ]);
+
+        try {
+            Excel::import(new CustomersImport, $this->customersFile->getRealPath());
+            AuditLog::log(AuditLogActionEnum::IMPORT_CUSTOMERS);
+            $this->alert('success', 'Customers imported successfully!');
+            $this->reset('customersFile');
+        } catch (\Exception $e) {
+            $this->alert('error', 'Import failed: ' . $e->getMessage());
+        }
+    }
+
+    public function importSuppliers()
+    {
+        $this->validate([
+            'suppliersFile' => 'required|mimes:xlsx,xls,csv|max:10240',
+        ]);
+
+        try {
+            Excel::import(new SuppliersImport, $this->suppliersFile->getRealPath());
+            AuditLog::log(AuditLogActionEnum::IMPORT_SUPPLIERS);
+            $this->alert('success', 'Suppliers imported successfully!');
+            $this->reset('suppliersFile');
+        } catch (\Exception $e) {
+            $this->alert('error', 'Import failed: ' . $e->getMessage());
+        }
+    }
+
     public function downloadTemplate($type)
     {
         $templates = [
@@ -126,6 +162,14 @@ class ImportsPage extends Component
             'units' => [
                 ['name', 'parent', 'count', 'active'],
                 ['Piece', 'Parent Unit (optional)', '1', 'YES/NO'],
+            ],
+            'customers' => [
+                ['name', 'email', 'phone', 'address', 'sales_threshold', 'active'],
+                ['Customer Name', 'customer@example.com', '1234567890', '123 Customer St', '1000', 'YES/NO'],
+            ],
+            'suppliers' => [
+                ['name', 'email', 'phone', 'address', 'active'],
+                ['Supplier Name', 'supplier@example.com', '1234567890', '123 Supplier St', 'YES/NO'],
             ],
         ];
 
