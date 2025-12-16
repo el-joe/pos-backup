@@ -9,6 +9,7 @@ use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Expense;
+use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\User;
@@ -58,8 +59,8 @@ class PurchaseService
             'branch_id' => $data['branch_id'],
             'ref_no' => $data['ref_no'],
             'order_date' => $data['order_date'],
-            'discount_type' => $data['discount_type'],
-            'discount_value' => $data['discount_value'],
+            'discount_type' => $data['discount_type'] ?? 'fixed',
+            'discount_value' => $data['discount_value'] ?? 0,
             'tax_id' => $data['tax_id'] ?? null,
             'tax_percentage' => $data['tax_rate'] ?? $data['tax_percentage'] ?? 0,
             // 'paid_amount' => $status == 'full_paid' ? $data['grand_total'] : ($data['payment_amount'] ?? $data['paid_amount'] ?? 0),
@@ -150,6 +151,24 @@ class PurchaseService
         if(!$reverse){
             $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
         }
+
+        if(!isset($data['payment_account'])){
+            $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
+        }else{
+            $getSupplierAccount = Account::find($data['payment_account']);
+        }
+
+        $orderPaymentData['account_id'] = $getSupplierAccount->id ?? null;
+        $orderPaymentData['amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
+
+        OrderPayment::create([
+            'payable_type' => Purchase::class,
+            'payable_id' => $purchaseId,
+            'refunded' => $reverse ? 1 : 0,
+            'note' => $data['payment_note'] ?? '',
+            ... $orderPaymentData
+        ]);
+
 
         $purchase = $purchase->refresh();
 

@@ -38,6 +38,10 @@ class Sale extends Model
         return $this->hasMany(SaleItem::class);
     }
 
+    function orderPayments(){
+        return $this->morphMany(OrderPayment::class,'payable');
+    }
+
     public function customer() {
         return $this->belongsTo(User::class,'customer_id')->withTrashed();
     }

@@ -10,6 +10,7 @@ use App\Helpers\SaleHelper;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Expense;
+use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\Sale;
@@ -131,6 +132,8 @@ class SellService
         $sell = $this->repo->find($sellId);
         if(!$sell) return;
 
+        $amount = $data['paid_amount'] ?? $data['payment_amount'] ?? 0;
+
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
             'type' => $reverse ? TransactionTypeEnum::SALE_PAYMENT_REFUND->value : TransactionTypeEnum::SALE_PAYMENT->value,
@@ -138,15 +141,28 @@ class SellService
             'reference_id' => $sell->id,
             'branch_id' => $sell->branch_id,
             'note' => $data['payment_note'] ?? '',
-            'amount' => $data['payment_amount'] ?? 0,
+            'amount' => $amount,
             'lines' => $this->salePaymentLines($data,'create',$reverse)
         ];
 
         $this->transactionService->create($transactionData);
         if(!$reverse){
-            $sell->increment('paid_amount', $data['paid_amount'] ?? $data['payment_amount'] ?? 0);
+            $sell->increment('paid_amount', $amount);
         }else{
-            $sell->decrement('paid_amount',$data['paid_amount'] ?? $data['payment_amount'] ?? 0);
+            $sell->decrement('paid_amount',$amount);
+        }
+
+        foreach ($data['payments'] as $payment) {
+            $orderPaymentData['account_id'] = $payment['account_id'] ?? null;
+            $orderPaymentData['amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
+
+            OrderPayment::create([
+                'payable_type' => Sale::class,
+                'payable_id' => $sellId,
+                'refunded' => $reverse ? 1 : 0,
+                'note' => $data['payment_note'] ?? '',
+                ... $orderPaymentData
+            ]);
         }
 
         return $sell->refresh();

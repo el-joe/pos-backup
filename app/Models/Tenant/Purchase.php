@@ -38,6 +38,10 @@ class Purchase extends Model
         return $this->hasMany(PurchaseItem::class,'purchase_id');
     }
 
+    function orderPayments(){
+        return $this->morphMany(OrderPayment::class,'payable');
+    }
+
     function transactions() {
         return $this->morphMany(Transaction::class,'reference');
     }
