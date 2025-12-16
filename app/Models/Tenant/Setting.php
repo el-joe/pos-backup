@@ -19,4 +19,9 @@ class Setting extends Model
         $setting = self::where('key', $key)->first();
         return $setting?->value ?? $default;
     }
+
+    function file()
+    {
+        return $this->morphOne(File::class, 'model')->where('key', $this->key);
+    }
 }

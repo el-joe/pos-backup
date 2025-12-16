@@ -47,11 +47,17 @@ class SettingsPage extends Component
             // Handle file uploads
             if (isset($this->uploadedFiles[$key])) {
                 $file = $this->uploadedFiles[$key];
-                $path = $file->store('settings', 'public');
-                $value = $path;
+                $s = Setting::where('key', $key)->first();
+                if($s) $s->file()->create([
+                    'path' => $file,
+                    'key' => $key,
+                ]);
+
+                $s->update([
+                    'value' => $s->file->full_path ?? ''
+                ]);
             }
 
-            Setting::where('key', $key)->update(['value' => $value]);
         }
 
         $this->alert('success', 'Settings saved successfully!');

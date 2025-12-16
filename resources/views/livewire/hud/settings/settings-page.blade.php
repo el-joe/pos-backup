@@ -130,7 +130,7 @@
                                                     <div>
                                                         @if($settings[$setting->key] ?? null)
                                                             <div class="mb-2">
-                                                                <img src="{{ Storage::url($settings[$setting->key]) }}"
+                                                                <img src="{{ $settings[$setting->key] }}"
                                                                      alt="Current logo"
                                                                      class="img-thumbnail"
                                                                      style="max-height: 100px;">
