@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Livewire\Admin\Settings;
+
+use App\Enums\TenantSettingEnum;
+use App\Models\Country;
+use App\Models\Currency;
+use App\Models\Language;
+use App\Models\Tenant\Setting;
+use App\Models\Tenant\Tax;
+use App\Traits\LivewireOperations;
+use Livewire\Attributes\Url;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+
+class SettingsPage extends Component
+{
+    use LivewireOperations, WithFileUploads;
+
+    #[Url]
+    public $activeGroup = 'business';
+    public $settings = [];
+    public $uploadedFiles = [];
+
+    public function mount()
+    {
+        $this->loadSettings();
+    }
+
+    public function loadSettings()
+    {
+        $allSettings = Setting::all();
+
+        foreach ($allSettings as $setting) {
+            $this->settings[$setting->key] = $setting->value;
+        }
+    }
+
+    public function setActiveGroup($group)
+    {
+        $this->activeGroup = $group;
+    }
+
+    public function save()
+    {
+        foreach ($this->settings as $key => $value) {
+            // Handle file uploads
+            if (isset($this->uploadedFiles[$key])) {
+                $file = $this->uploadedFiles[$key];
+                $path = $file->store('settings', 'public');
+                $value = $path;
+            }
+
+            Setting::where('key', $key)->update(['value' => $value]);
+        }
+
+        $this->alert('success', 'Settings saved successfully!');
+        $this->loadSettings();
+    }
+
+    public function getGroupedSettingsProperty()
+    {
+        return Setting::all()->groupBy('group') ?? [];
+    }
+
+    public function getGroupsProperty()
+    {
+        return Setting::select('group')->distinct()->pluck('group')->toArray() ?? [];
+    }
+
+    public function getCountriesProperty()
+    {
+        return Country::all();
+    }
+
+    public function getCurrenciesProperty()
+    {
+        return Currency::all();
+    }
+
+    public function getLanguagesProperty()
+    {
+        return Language::all();
+    }
+
+    public function getTaxesProperty()
+    {
+        return Tax::where('active', true)->get();
+    }
+
+    public function render()
+    {
+        return layoutView('settings.settings-page')
+            ->title('Settings');
+    }
+}

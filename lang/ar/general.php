@@ -82,7 +82,7 @@ return [
         'branch-profitability' => 'ربحية الفرع',
         'cashier-performance' => 'أداء المستخدم / الكاشير',
         'settings' => 'الإعدادات',
-        'general-settings' => 'الإعدادات العامة (قريبًا)',
+        'general-settings' => 'الإعدادات العامة',
         'plans-subscriptions' => 'الخطط والاشتراكات',
         'plans' => 'الخطط',
         'subscriptions' => 'الاشتراكات',

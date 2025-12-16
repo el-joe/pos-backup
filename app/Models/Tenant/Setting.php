@@ -2,14 +2,21 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\TenantSettingEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    protected $fillable = ['key', 'value'];
+    protected $fillable = [
+        'key', 'value', 'title', 'type', 'group','options'
+    ];
+
+    protected $casts = [
+        'type' => TenantSettingEnum::class
+    ];
 
     static function get($key, $default = null) {
         $setting = self::where('key', $key)->first();
-        return $setting ? $setting->value : $default;
+        return $setting?->value ?? $default;
     }
 }

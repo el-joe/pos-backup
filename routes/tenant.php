@@ -36,7 +36,7 @@ use App\Livewire\Admin\Reports\{
 };
 
 use App\Livewire\Admin\Sales\{SaleDetails,SalesList};
-
+use App\Livewire\Admin\Settings\SettingsPage;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Stocks\{AddStockTransfer,StockTransferDetails,StockTransferList};
 
@@ -219,6 +219,7 @@ Route::middleware([
 
 
             Route::get('imports',ImportsPage::class)->name('imports');
+            Route::get('settings',SettingsPage::class)->name('settings');
         });
     });
 

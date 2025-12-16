@@ -570,7 +570,7 @@ return [
             [
                 "title" => "General Settings",
                 'translated_title' => 'general.titles.general-settings',
-                "route" => "#",
+                "route" => "admin.settings",
                 "icon"  => "fa fa-cogs fa-fw",
                 'can' => 'general_settings.update'
             ]

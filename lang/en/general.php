@@ -82,7 +82,7 @@ return [
         'branch-profitability' => 'Branch Profitability',
         'cashier-performance' => 'User / Cashier Performance',
         'settings' => 'Settings',
-        'general-settings' => 'General Settings (SOON)',
+        'general-settings' => 'General Settings',
         'plans-subscriptions' => 'Plans & Subscriptions',
         'plans' => 'Plans',
         'subscriptions' => 'Subscriptions',
