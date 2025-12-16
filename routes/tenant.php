@@ -268,6 +268,7 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 // اداره التصنيع
 // refactor select elements to be a select2 with search
 // fix reports date range picker to be consistent across all reports
+// DB::transaction to all operations that include multiple DB operations
 
 // TODO : E-Invoice Coming Soon
 // Multi Currency Support into sales orders -> EX : customer come to egypt and doesn't have EGP , he pay in USD , we save the exchange rate at that day and save the amount in both currencies
@@ -275,3 +276,8 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 // whatsapp notification
 // SMS notification
 // tenant balance
+
+// booking reservation system
+// hrm system
+
+// make tenant website & mobile app
