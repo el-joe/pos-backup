@@ -34,34 +34,6 @@
                 <!-- END card-arrow -->
             </div>
 
-            <div class="small fw-bold text-inverse mb-1">{{ __('general.layout.language') }}</div>
-            <div class="card mb-3">
-                <!-- BEGIN card-body -->
-                <div class="card-body p-2">
-                    <div class="row gx-2">
-                        <div class="col-6">
-                            <a href="#" class="changeDirection btn {{ $__locale == 'en' ? 'active' : '' }} btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-direction="ltr">
-                                <i class="bi bi-text-left fs-16px my-n1 ms-n2"></i> EN
-                            </a>
-                        </div>
-                        <div class="col-6">
-                            <a href="#" class="changeDirection btn {{ $__locale == 'ar' ? 'active' : '' }} btn-sm btn-outline-light d-flex align-items-center justify-content-center gap-2 w-100 rounded-0 fw-bold fs-12px" data-direction="rtl">
-                                <i class="bi bi-text-right fs-16px my-n1 ms-n2"></i> AR
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- END card-body -->
-
-                <!-- BEGIN card-arrow -->
-                <div class="card-arrow">
-                    <div class="card-arrow-top-left"></div>
-                    <div class="card-arrow-top-right"></div>
-                    <div class="card-arrow-bottom-left"></div>
-                    <div class="card-arrow-bottom-right"></div>
-                </div>
-                <!-- END card-arrow -->
-            </div>
 
             <div class="small fw-bold text-inverse mb-1">{{ __('general.layout.theme_color') }}</div>
             <div class="card mb-3">
@@ -128,6 +100,9 @@
                         </div>
                         <div class="app-theme-cover-item">
                             <a href="javascript:;" class="app-theme-cover-link" style="background-image: url({{ asset('hud/assets/img/cover/cover-thumb-9.jpg') }});" data-theme-cover-class="bg-cover-9" data-toggle="theme-cover-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Cover 9">&nbsp;</a>
+                        </div>
+                        <div class="app-theme-cover-item">
+                            <a href="javascript:;" class="app-theme-cover-link" style="background-color: white;" data-theme-cover-class="bg-cover-none" data-toggle="theme-cover-selector" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-container="body" data-bs-title="Cover None">&nbsp;</a>
                         </div>
                     </div>
                     <!-- END theme-cover -->

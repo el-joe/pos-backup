@@ -4,7 +4,7 @@
         <div class="col-xl-2 col-lg-3 col-md-4 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">{{ __('Settings Groups') }}</h5>
+                    <h5 class="mb-0">{{ __('general.pages.settings.settings_groups') }}</h5>
                 </div>
                 <div class="list-group list-group-flush">
                     @foreach($this->groups as $group)
@@ -30,14 +30,14 @@
         <div class="col-xl-10 col-lg-9 col-md-8">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">{{ ucfirst($activeGroup) }} Settings</h4>
+                    <h4 class="mb-0">{{ __('general.pages.settings.'.($activeGroup)) }}</h4>
                     <button type="button" wire:click="save" class="btn btn-primary" wire:loading.attr="disabled">
                         <span wire:loading.remove>
-                            <i class="fa fa-save me-1"></i> Save Settings
+                            <i class="fa fa-save me-1"></i> {{ __('general.pages.settings.save') }}
                         </span>
                         <span wire:loading>
                             <span class="spinner-border spinner-border-sm me-1"></span>
-                            Saving...
+                            {{ __('general.pages.settings.saving') }}
                         </span>
                     </button>
                 </div>
@@ -130,7 +130,7 @@
                                                     <div>
                                                         @if($settings[$setting->key] ?? null)
                                                             <div class="mb-2">
-                                                                <img src="{{ $settings[$setting->key] }}"
+                                                                <img src="{{ $setting->key == 'logo' ? ($settings[$setting->key] ?? asset('mohaaseb_en_dark.png')) : $settings[$setting->key] ?? '' }}"
                                                                      alt="Current logo"
                                                                      class="img-thumbnail"
                                                                      style="max-height: 100px;">

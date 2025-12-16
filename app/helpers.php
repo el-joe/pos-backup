@@ -2,6 +2,7 @@
 
 use App\Models\Currency;
 use App\Models\Tenant\Admin;
+use App\Models\Tenant\Setting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
@@ -9,10 +10,8 @@ use Maatwebsite\Excel\Facades\Excel;
 const TENANT_ADMINS_GUARD = 'tenant_admin';
 const CPANEL_ADMINS_GUARD = 'cpanel_admin';
 
-if(!function_exists('settings')) {
-    function settings($key) {
-        return null;
-    }
+function cacheKey($key){
+    return tenant()->id . '_' . $key;
 }
 
 function defaultLayout(){
@@ -237,8 +236,14 @@ function lang(){
 }
 
 function currency(){
-    $key = 'currency_' . tenant('id') . '_default';
+    $key = cacheKey('currency');
     return Cache::driver('file')->remember($key, 60*60, function() {
         return Currency::find(tenant('currency_id'));
     });
+}
+
+function tenantSetting($key, $default = null) {
+    return Cache::driver('file')->remember(cacheKey('setting'), 60 * 60 * 24, function () {
+            return Setting::all()->pluck('value', 'key')->toArray();
+    })[$key] ?? $default;
 }

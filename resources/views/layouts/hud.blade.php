@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ $__locale }}" dir="{{ $__locale == 'en' ? 'ltr' : 'rtl' }}" data-bs-theme="dark">
+<html lang="{{ $__locale }}" dir="{{ $__locale != 'ar' ? 'ltr' : 'rtl' }}" data-bs-theme="dark">
 <head>
 	<meta charset="utf-8">
-	<title>{{ tenant()?->name }} | {{ $title ?? '' }}</title>
+	<title>{{ tenantSetting('business_name', tenant()->name) }} | {{ $title ?? '' }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="">

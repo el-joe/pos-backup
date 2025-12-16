@@ -56,12 +56,18 @@ class SettingsPage extends Component
                 $s->update([
                     'value' => $s->file->full_path ?? ''
                 ]);
+            }else{
+                Setting::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => $value]
+                );
             }
-
         }
 
+        cache()->driver('file')->forget(cacheKey('setting'));
+
         $this->alert('success', 'Settings saved successfully!');
-        $this->loadSettings();
+        $this->js('setTimeout(() => { location.reload(); }, 1000);');
     }
 
     public function getGroupedSettingsProperty()

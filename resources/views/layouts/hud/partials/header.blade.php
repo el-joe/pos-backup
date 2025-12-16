@@ -27,12 +27,12 @@
     <div class="brand">
         <a href="{{ route('admin.statistics') }}" class="brand-logo">
             <span class="navbar-brand d-flex align-items-center me-auto px-0">
-                <img src="{{ asset('mohaaseb_en_dark.png') }}"
+                <img src="{{ tenantSetting('logo', asset('mohaaseb_en_dark.png')) }}"
                     alt="Mohaaseb Logo"
                     class="d-inline-block"
                     height="50">
             </span>
-            <span class="brand-text">{{ tenant()->name }}</span>
+            <span class="brand-text">{{ tenantSetting('business_name', tenant()->name) }}</span>
         </a>
     </div>
     <!-- END brand -->

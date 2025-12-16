@@ -16,8 +16,7 @@ class Setting extends Model
     ];
 
     static function get($key, $default = null) {
-        $setting = self::where('key', $key)->first();
-        return $setting?->value ?? $default;
+        return tenantSetting($key, $default);
     }
 
     function file()

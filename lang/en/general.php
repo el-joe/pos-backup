@@ -1238,6 +1238,16 @@ return [
             'enter_name' => 'Enter account name',
             'enter_code' => 'Enter account code',
         ],
+        'settings' => [
+            'settings_groups' => 'Settings Groups',
+            'business' => 'Business Settings',
+            'product' => 'Product Settings',
+            'pos' => 'POS Settings',
+            'general' => 'General Settings',
+            'system' => 'System Settings',
+            'saving' => 'Saving...',
+            'save' => 'Save Settings',
+        ]
     ],
     'features' => [
         'branches' => 'Branches count',
