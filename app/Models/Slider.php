@@ -2,20 +2,17 @@
 
 namespace App\Models;
 
-use File;
 use Illuminate\Database\Eloquent\Model;
 
 class Slider extends Model
 {
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'number', 'active'];
 
-    function image()
-    {
-        $this->morphOne(File::class, 'image')->key('image');
+    function image() {
+        return $this->morphOne(File::class, 'model')->key('image');
     }
 
-    function getImagePathAttribute()
-    {
-        return $this->image ? $this->image->full_path : null;
+    function getImagePathAttribute() {
+        return $this->image->full_path ?? asset('admin/assets/images/yadawia/user_1.png');
     }
 }

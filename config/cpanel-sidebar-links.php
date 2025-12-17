@@ -61,4 +61,10 @@ return [
         "icon"      => "fa fa-gem fa-fw",
         "route"     => 'cpanel.plans.list'
     ],
+    [
+        "title"     => "Sliders",
+        'translated_title' => 'general.titles.sliders',
+        "icon"      => "fa fa-image fa-fw",
+        "route"     => 'cpanel.sliders.list'
+    ],
 ];

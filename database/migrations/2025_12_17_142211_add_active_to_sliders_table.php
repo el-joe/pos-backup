@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('sliders', function (Blueprint $table) {
             $table->boolean('active')->default(true)->after('title');
-            $table->integer('number')->default(0)->after('active');
+            $table->integer('number')->default(0)->after(column: 'active');
         });
     }
 
