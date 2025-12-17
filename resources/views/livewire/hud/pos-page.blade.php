@@ -152,7 +152,7 @@
 
                     <div class="card-body">
                         <div class="alert alert-info mb-4">
-                            <strong><i class="fa fa-money-bill me-1"></i> {{ __('general.pages.pos-page.order_total') }}:</strong> ${{ $total }}
+                            <strong><i class="fa fa-money-bill me-1"></i> {{ __('general.pages.pos-page.order_total') }}:</strong> {{ currency()->symbol }}{{ $total }}
                         </div>
 
                         <div class="table-responsive">
@@ -248,7 +248,7 @@
                                                     <label class="option-label" for="unit-{{ $currentProduct->id }}-{{ $unit->id }}">
                                                         <span class="option-text">{{ $unit->name }}</span>
                                                         @php $sellPrice = number_format($unit->stock($currentProduct->id,$this->data['branch_id']??null)?->sell_price ?? 0, 3); @endphp
-                                                        <span class="option-price">$ {{ $sellPrice }}</span>
+                                                        <span class="option-price">{{ currency()->symbol }}{{ $sellPrice }}</span>
                                                     </label>
                                                 </div>
                                             @endforeach

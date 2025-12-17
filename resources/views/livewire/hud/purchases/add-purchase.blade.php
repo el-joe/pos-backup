@@ -138,8 +138,8 @@
                                                 wire:model.blur="orderProducts.{{ $index }}.discount_percentage"
                                                 step="0.01" min="0" placeholder="0.00">
                                         </td>
-                                        <td class="text-muted">{{ number_format($product['unit_cost_after_discount'], 2) }}</td>
-                                        <td class="text-muted">{{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}</td>
+                                        <td class="text-muted">{{ currency()->symbol }}{{ number_format($product['unit_cost_after_discount'], 2) }}</td>
+                                        <td class="text-muted">{{ currency()->symbol }}{{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}</td>
                                         <td>
                                             <select name="tax_percentage"
                                                 id="tax_percentage"
@@ -159,8 +159,8 @@
                                                 wire:model.blur="orderProducts.{{ $index }}.x_margin"
                                                 step="0.01" min="0" placeholder="0.00">
                                         </td>
-                                        <td class="fw-semibold">{{ number_format($product['sell_price'], 2) }}</td>
-                                        <td class="fw-semibold">{{ number_format($product['total'], 2) }}</td>
+                                        <td class="fw-semibold">{{ currency()->symbol }}{{ number_format($product['sell_price'], 2) }}</td>
+                                        <td class="fw-semibold">{{ currency()->symbol }}{{ number_format($product['total'], 2) }}</td>
                                         <td>
                                             <button type="button"
                                                 class="btn btn-sm btn-danger rounded-2"
@@ -452,7 +452,7 @@
                                     <small class="text-muted">{{ __('general.pages.purchases.items') }}</small>
                                 </div>
                                 <div class="col-6">
-                                    <h4 class="text-success mb-0">{{ number_format($grandTotal ?? 0, 0) }}</h4>
+                                    <h4 class="text-success mb-0">{{ currency()->symbol }}{{ number_format($grandTotal ?? 0, 0) }}</h4>
                                     <small class="text-muted">{{ __('general.pages.purchases.total') }}</small>
                                 </div>
                             </div>

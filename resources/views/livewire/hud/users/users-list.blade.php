@@ -100,7 +100,7 @@
                                 <td>{{ $user->phone }}</td>
                                 <td>{{ $user->address }}</td>
                                 @if($type == 'customer')
-                                <td>{{ $user->sales_threshold }}</td>
+                                <td>{{ currency()->symbol }}{{ $user->sales_threshold }}</td>
                                 @endif
                                 <td>
                                     <span class="badge bg-{{ $user->active ? 'success' : 'danger' }}">

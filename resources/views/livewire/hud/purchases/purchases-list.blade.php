@@ -124,10 +124,10 @@
                                     {{ $purchase->status->label() }}
                                 </span>
                             </td>
-                            <td>{{ $purchase->total_amount ?? 0 }}</td>
+                            <td>{{ currency()->symbol }}{{ $purchase->total_amount ?? 0 }}</td>
                             <td>
                                 <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
-                                    {{ number_format($purchase->due_amount ?? 0, 2) }}
+                                    {{ currency()->symbol }}{{ number_format($purchase->due_amount ?? 0, 2) }}
                                 </span>
                             </td>
                             <td>
@@ -180,7 +180,7 @@
                         <div class="col-md-6">
                             <label for="paymentAmount" class="form-label">{{ __('general.pages.purchases.amount') }}</label>
                             <div class="input-group">
-                                <span class="input-group-text">$</span>
+                                <span class="input-group-text">{{ currency()->symbol }}</span>
                                 <input type="number" class="form-control" id="paymentAmount" wire:model="payment.amount" placeholder="{{ __('general.pages.purchases.amount') }}">
                                 <span class="input-group-text">
                                     {{ __('general.pages.purchases.due_amount') }}: <strong class="text-danger ms-1">{{ number_format($current->due_amount ?? 0, 2) }}</strong>
@@ -234,7 +234,7 @@
                                 @forelse($payments as $payment)
                                     <tr>
                                         <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
-                                        <td><span class="badge bg-success">{{ $payment->amount }}</span></td>
+                                        <td><span class="badge bg-success">{{ currency()->symbol }}{{ $payment->amount }}</span></td>
                                         <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name ? $payment->account()->paymentMethod?->name .' - '  : '' ) . $payment->account()->name : 'N/A' }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>

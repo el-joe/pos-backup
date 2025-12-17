@@ -35,7 +35,7 @@ class TransactionList extends Component
                 'date' => $line->transaction?->date,
                 'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
                 'line_type' => $line->type,
-                'amount' => $line->amount,
+                'amount' => currency()->symbol . number_format($line->amount, 2),
                 'created_at' => $line->created_at,
             ];
         });
@@ -65,7 +65,7 @@ class TransactionList extends Component
                     return ucfirst($row['line_type']);
                 }
             ],
-            'amount' => [ 'type' => 'decimal'],
+            'amount' => [ 'type' => 'text'],
             'created_at' => [ 'type' => 'datetime'],
         ];
 

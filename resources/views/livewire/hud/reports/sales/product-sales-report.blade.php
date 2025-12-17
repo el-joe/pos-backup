@@ -58,8 +58,8 @@
                                 <tr>
                                     <td>{{ $row->product_name }}</td>
                                     <td>{{ number_format($row->quantity_sold, 0) }}</td>
-                                    <td>{{ number_format($row->total_cost, 2) }}</td>
-                                    <td>{{ number_format($row->total_revenue, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($row->total_cost, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($row->total_revenue, 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>

@@ -53,7 +53,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $row->vat_date }}</td>
-                                    <td>{{ number_format($row->vat_amount, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($row->vat_amount, 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -63,7 +63,7 @@
                             @if(count($report))
                                 <tr class="fw-semibold bg-success bg-opacity-25">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
-                                    <td>{{ number_format($total_vat, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($total_vat, 2) }}</td>
                                 </tr>
                             @endif
                         </tbody>

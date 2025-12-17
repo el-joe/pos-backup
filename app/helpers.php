@@ -238,7 +238,7 @@ function lang(){
 function currency(){
     $key = cacheKey('currency');
     return Cache::driver('file')->remember($key, 60*60, function() {
-        return Currency::find(tenant('currency_id'));
+        return Currency::find(tenantSetting('currency_id',1));
     });
 }
 

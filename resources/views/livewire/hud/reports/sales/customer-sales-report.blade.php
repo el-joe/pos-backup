@@ -58,7 +58,7 @@
                                     <tr>
                                         <td>{{ $row->customer_name }}</td>
                                         <td>{{ $row->sale_count }}</td>
-                                        <td>{{ number_format($row->total_spent, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($row->total_spent, 2) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -71,7 +71,7 @@
                                     <tr class="bg-success text-dark fw-bold">
                                         <td>{{ __('general.pages.reports.common.total') }}</td>
                                         <td>{{ $total_count }}</td>
-                                        <td>{{ number_format($total_spent, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($total_spent, 2) }}</td>
                                     </tr>
                                 @endif
                             </tbody>

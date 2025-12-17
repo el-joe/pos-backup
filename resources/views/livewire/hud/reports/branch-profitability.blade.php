@@ -97,12 +97,12 @@
                                         <strong>{{ $row->branch_name }}</strong>
                                         <small class="text-muted d-block">(ID: {{ $row->branch_id ?? '-' }})</small>
                                     </td>
-                                    <td class="text-end">{{ number_format($row->sales_revenue ?? 0, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->cogs ?? 0, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->expenses ?? 0, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->other_income ?? 0, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->sales_revenue ?? 0, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->cogs ?? 0, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->expenses ?? 0, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->other_income ?? 0, 2) }}</td>
                                     <td class="text-end fw-bold text-{{ $isProfit ? 'success' : 'danger' }}">
-                                        {{ number_format($row->net_profit ?? 0, 2) }}
+                                        {{ currency()->symbol }}{{ number_format($row->net_profit ?? 0, 2) }}
                                     </td>
                                 </tr>
                             @empty
@@ -116,11 +116,11 @@
                         <tfoot class="table-light fw-bold">
                             <tr>
                                 <th class="">{{ __('general.pages.reports.branch_profitability.totals') }}</th>
-                                <th class="text-end">{{ number_format($totals['sales_revenue'], 2) }}</th>
-                                <th class="text-end">{{ number_format($totals['cogs'], 2) }}</th>
-                                <th class="text-end">{{ number_format($totals['expenses'], 2) }}</th>
-                                <th class="text-end">{{ number_format($totals['other_income'], 2) }}</th>
-                                <th class="text-end text-primary">{{ number_format($totals['net_profit'], 2) }}</th>
+                                <th class="text-end">{{ currency()->symbol }}{{ number_format($totals['sales_revenue'], 2) }}</th>
+                                <th class="text-end">{{ currency()->symbol }}{{ number_format($totals['cogs'], 2) }}</th>
+                                <th class="text-end">{{ currency()->symbol }}{{ number_format($totals['expenses'], 2) }}</th>
+                                <th class="text-end">{{ currency()->symbol }}{{ number_format($totals['other_income'], 2) }}</th>
+                                <th class="text-end text-primary">{{ currency()->symbol }}{{ number_format($totals['net_profit'], 2) }}</th>
                             </tr>
                         </tfoot>
                     </table>

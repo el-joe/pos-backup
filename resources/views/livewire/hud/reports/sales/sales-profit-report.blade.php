@@ -61,9 +61,9 @@
                                     @endphp
                                     <tr>
                                         <td>{{ $row->product_name }}</td>
-                                        <td>{{ number_format($row->sales_revenue, 2) }}</td>
-                                        <td>{{ number_format($row->cogs, 2) }}</td>
-                                        <td>{{ number_format($row->gross_profit, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($row->sales_revenue, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($row->cogs, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($row->gross_profit, 2) }}</td>
                                         <td>{{ number_format($row->margin, 2) }}</td>
                                     </tr>
                                 @empty
@@ -76,9 +76,9 @@
                                 @if(count($report))
                                     <tr class="bg-success text-dark fw-bold">
                                         <td>{{ __('general.pages.reports.common.total') }}</td>
-                                        <td>{{ number_format($total_revenue, 2) }}</td>
-                                        <td>{{ number_format($total_cogs, 2) }}</td>
-                                        <td>{{ number_format($total_profit, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($total_revenue, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($total_cogs, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($total_profit, 2) }}</td>
                                         <td>{{ $total_revenue > 0 ? number_format($total_profit / $total_revenue * 100, 2) : '0.00' }}</td>
                                     </tr>
                                 @endif

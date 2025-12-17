@@ -44,19 +44,19 @@
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.sales') }}</td>
-                                    <td>{{ number_format($report['accounts']['sales']['credit'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['accounts']['sales']['credit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.sales_discount') }}</td>
-                                    <td>-{{ number_format($report['accounts']['sales_discount']['debit'] ?? 0, 2) }}</td>
+                                    <td>-{{ currency()->symbol }}{{ number_format($report['accounts']['sales_discount']['debit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.sales_return') }}</td>
-                                    <td>-{{ number_format($report['accounts']['sales_return']['debit'] ?? 0, 2) }}</td>
+                                    <td>-{{ currency()->symbol }}{{ number_format($report['accounts']['sales_return']['debit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr class="fw-semibold bg-primary bg-opacity-10">
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_revenue') }}</td>
-                                    <td>{{ number_format($report['revenue'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['revenue'] ?? 0, 2) }}</td>
                                 </tr>
 
                                 {{-- ================= COGS ================= --}}
@@ -65,27 +65,27 @@
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.cogs') }}</td>
-                                    <td>{{ number_format($report['accounts']['cogs']['debit'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['accounts']['cogs']['debit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.inventory_shortage') }}</td>
-                                    <td>{{ number_format($report['accounts']['inventory_shortage']['debit'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['accounts']['inventory_shortage']['debit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.purchase_discount') }}</td>
-                                    <td>-{{ number_format($report['accounts']['purchase_discount']['credit'] ?? 0, 2) }}</td>
+                                    <td>-{{ currency()->symbol }}{{ number_format($report['accounts']['purchase_discount']['credit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.purchase_return') }}</td>
-                                    <td>-{{ number_format($report['accounts']['purchase_return']['credit'] ?? 0, 2) }}</td>
+                                    <td>-{{ currency()->symbol }}{{ number_format($report['accounts']['purchase_return']['credit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr class="fw-semibold bg-info bg-opacity-10">
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_cogs') }}</td>
-                                    <td>{{ number_format($report['cogs'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['cogs'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr class="bg-warning bg-opacity-25 fw-bold">
                                     <th>{{ __('general.pages.reports.financial.income_statement.gross_profit') }}</th>
-                                    <th>{{ number_format($report['gross_profit'] ?? 0, 2) }}</th>
+                                    <th>{{ currency()->symbol }}{{ number_format($report['gross_profit'] ?? 0, 2) }}</th>
                                 </tr>
 
                                 {{-- ================= Expenses ================= --}}
@@ -94,23 +94,23 @@
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.expense') }}</td>
-                                    <td>{{ number_format($report['accounts']['expense']['debit'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['accounts']['expense']['debit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.vat_payable') }}</td>
-                                    <td>{{ number_format($report['accounts']['vat_payable']['credit'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['accounts']['vat_payable']['credit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ __('general.pages.reports.financial.income_statement.vat_receivable') }}</td>
-                                    <td>-{{ number_format($report['accounts']['vat_receivable']['debit'] ?? 0, 2) }}</td>
+                                    <td>-{{ currency()->symbol }}{{ number_format($report['accounts']['vat_receivable']['debit'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr class="fw-semibold bg-purple bg-opacity-10">
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_expenses') }}</td>
-                                    <td>{{ number_format($report['expenses'] ?? 0, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($report['expenses'] ?? 0, 2) }}</td>
                                 </tr>
                                 <tr class="bg-success bg-opacity-25 fw-bold fs-5">
                                     <th>{{ __('general.pages.reports.financial.income_statement.net_profit') }}</th>
-                                    <th>{{ number_format($report['net_profit'] ?? 0, 2) }}</th>
+                                    <th>{{ currency()->symbol }}{{ number_format($report['net_profit'] ?? 0, 2) }}</th>
                                 </tr>
                             </tbody>
                         </table>

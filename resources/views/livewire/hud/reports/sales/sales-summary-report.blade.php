@@ -60,14 +60,14 @@
                             @forelse($report as $row)
                             <tr>
                                 <td>{{ $row['period'] }}</td>
-                                <td>{{ number_format($row['gross_sales'], 2) }}</td>
-                                <td class="text-danger">-{{ number_format($row['discount'], 2) }}</td>
-                                <td class="text-danger">-{{ number_format($row['sales_return'], 2) }}</td>
-                                <td><span class="badge bg-success">{{ number_format($row['net_sales'], 2) }}</span></td>
-                                <td>{{ number_format($row['vat_payable'], 2) }}</td>
-                                <td>{{ number_format($row['total_collected'], 2) }}</td>
-                                <td>{{ number_format($row['cogs'], 2) }}</td>
-                                <td>{{ number_format($row['gross_profit'], 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format($row['gross_sales'], 2) }}</td>
+                                <td class="text-danger">-{{ currency()->symbol }}{{ number_format($row['discount'], 2) }}</td>
+                                <td class="text-danger">-{{ currency()->symbol }}{{ number_format($row['sales_return'], 2) }}</td>
+                                <td><span class="badge bg-success">{{ currency()->symbol }}{{ number_format($row['net_sales'], 2) }}</span></td>
+                                <td>{{ currency()->symbol }}{{ number_format($row['vat_payable'], 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format($row['total_collected'], 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format($row['cogs'], 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format($row['gross_profit'], 2) }}</td>
                             </tr>
                             @empty
                             <tr>
@@ -78,14 +78,14 @@
                             @if(count($report))
                             <tr class="table-success fw-semibold">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
-                                <td>{{ number_format(collect($report)->sum('gross_sales'), 2) }}</td>
-                                <td class="text-danger">-{{ number_format(collect($report)->sum('discount'), 2) }}</td>
-                                <td class="text-danger">-{{ number_format(collect($report)->sum('sales_return'), 2) }}</td>
-                                <td><span class="badge bg-success">{{ number_format(collect($report)->sum('net_sales'), 2) }}</span></td>
-                                <td>{{ number_format(collect($report)->sum('vat_payable'), 2) }}</td>
-                                <td>{{ number_format(collect($report)->sum('total_collected'), 2) }}</td>
-                                <td>{{ number_format(collect($report)->sum('cogs'), 2) }}</td>
-                                <td>{{ number_format(collect($report)->sum('gross_profit'), 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format(collect($report)->sum('gross_sales'), 2) }}</td>
+                                <td class="text-danger">-{{ currency()->symbol }}{{ number_format(collect($report)->sum('discount'), 2) }}</td>
+                                <td class="text-danger">-{{ currency()->symbol }}{{ number_format(collect($report)->sum('sales_return'), 2) }}</td>
+                                <td><span class="badge bg-success">{{ currency()->symbol }}{{ number_format(collect($report)->sum('net_sales'), 2) }}</span></td>
+                                <td>{{ currency()->symbol }}{{ number_format(collect($report)->sum('vat_payable'), 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format(collect($report)->sum('total_collected'), 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format(collect($report)->sum('cogs'), 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format(collect($report)->sum('gross_profit'), 2) }}</td>
                             </tr>
                             @endif
                         </tbody>

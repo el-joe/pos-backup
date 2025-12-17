@@ -109,7 +109,7 @@
                             <td>{{ $discount->id }}</td>
                             <td>{{ $discount->name }}</td>
                             <td>{{ $discount->code }}</td>
-                            <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : '' }}</td>
+                            <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
                             <td>{{ formattedDate($discount->start_date) }}</td>
                             <td>{{ formattedDate($discount->end_date) }}</td>
                             <td>

@@ -7,7 +7,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-success bg-opacity-10 text-success">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.total_sales') }}</div>
-                <h2>${{ $data['totalSales'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['totalSales'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-cash-register fa-4x"></i>
@@ -31,7 +31,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-success bg-opacity-25 text-success">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.net_sales') }}</div>
-                <h2>${{ $data['netSales'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['netSales'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-chart-line fa-4x"></i>
@@ -55,7 +55,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-warning bg-opacity-10 text-warning">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.due_amount') }}</div>
-                <h2>${{ $data['dueAmount'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['dueAmount'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-hand-holding-usd fa-4x"></i>
@@ -78,7 +78,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-danger bg-opacity-10 text-danger">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.total_sales_return') }}</div>
-                <h2>${{ $data['totalSalesReturn'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['totalSalesReturn'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-undo-alt fa-4x"></i>
@@ -102,7 +102,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-primary bg-opacity-10 text-primary">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.total_purchases') }}</div>
-                <h2>${{ $data['totalPurchases'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['totalPurchases'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-shopping-cart fa-4x"></i>
@@ -127,7 +127,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-purple bg-opacity-10 text-purple">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.purchase_due') }}</div>
-                <h2>${{ $data['purchaseDue'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['purchaseDue'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-file-invoice-dollar fa-4x"></i>
@@ -152,7 +152,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-danger bg-opacity-25 text-danger">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.total_purchase_return') }}</div>
-                <h2>${{ $data['totalPurchaseReturn'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['totalPurchaseReturn'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-reply-all fa-4x"></i>
@@ -177,7 +177,7 @@
             <div class="card-body d-flex align-items-center m-5px bg-secondary bg-opacity-10 text-secondary">
                 <div class="flex-fill">
                 <div class="mb-1">{{ __('general.pages.statistics.total_expense') }}</div>
-                <h2>${{ $data['totalExpense'] }}</h2>
+                <h2>{{ currency()->symbol }}{{ $data['totalExpense'] }}</h2>
                 </div>
                 <div class="opacity-5">
                 <i class="fa fa-receipt fa-4x"></i>
@@ -244,7 +244,7 @@
 	<script src="{{ asset('hud/assets/plugins/jvectormap-next/jquery-jvectormap.min.js') }}"></script>
 	<script src="{{ asset('hud/assets/plugins/jvectormap-content/world-mill.js') }}"></script>
 	<script src="{{ asset('hud/assets/plugins/apexcharts/dist/apexcharts.min.js') }}"></script>
-	<script src="{{ asset('hud/assets/js/demo/dashboard.demo.js') }}"></script>
+	{{-- <script src="{{ asset('hud/assets/js/demo/dashboard.demo.js') }}"></script> --}}
 	<!-- ================== END page-js ================== -->
     <script src="{{ asset('hud/assets/plugins/chart.js/dist/chart.umd.js') }}"></script>
     <script>

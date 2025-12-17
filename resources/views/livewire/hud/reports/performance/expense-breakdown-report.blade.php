@@ -60,11 +60,11 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $row->category_name }}</td>
-                                    <td class="text-end">{{ number_format($row->total_debit, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->total_credit, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_debit, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_credit, 2) }}</td>
                                     <td class="text-end">
                                         <span class="badge bg-{{ $net > 0 ? 'danger' : ($net < 0 ? 'success' : 'secondary') }}">
-                                            {{ number_format($net, 2) }}
+                                            {{ currency()->symbol }}{{ number_format($net, 2) }}
                                         </span>
                                     </td>
                                 </tr>
@@ -78,9 +78,9 @@
                             @if(count($report))
                                 <tr class="fw-semibold table-success text-dark">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
-                                    <td class="text-end">{{ number_format($sum_debit, 2) }}</td>
-                                    <td class="text-end">{{ number_format($sum_credit, 2) }}</td>
-                                    <td class="text-end">{{ number_format($sum_net, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_debit, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_credit, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_net, 2) }}</td>
                                 </tr>
                             @endif
                         </tbody>

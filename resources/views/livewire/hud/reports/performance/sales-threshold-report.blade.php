@@ -51,8 +51,8 @@
                                 @php $sum_sales += $row->total_sales; @endphp
                                 <tr>
                                     <td>{{ $row->customer_name }}</td>
-                                    <td class="text-end">{{ number_format($row->sales_threshold, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->total_sales, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->sales_threshold, 2) }}</td>
+                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_sales, 2) }}</td>
                                     <td class="text-center">
                                         @php
                                             $badgeClass = $row->status == 'Reached' ? 'bg-success' : 'bg-danger';
@@ -70,7 +70,7 @@
                             <tr class="bg-success bg-opacity-25 fw-bold">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td></td>
-                                <td class="text-end">{{ number_format($sum_sales, 2) }}</td>
+                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_sales, 2) }}</td>
                                 <td></td>
                             </tr>
                             @endif

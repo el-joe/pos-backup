@@ -57,7 +57,7 @@
                                 <tr>
                                     <td>{{ $row->purchase_ref }}</td>
                                     <td>{{ $row->returned_qty }}</td>
-                                    <td>{{ number_format($row->returned_amount, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($row->returned_amount, 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -70,7 +70,7 @@
                                 <tr class="fw-semibold table-success">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_qty }}</td>
-                                    <td>{{ number_format($total_amount, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($total_amount, 2) }}</td>
                                 </tr>
                             @endif
                         </tbody>

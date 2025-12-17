@@ -65,6 +65,7 @@ class SettingsPage extends Component
         }
 
         cache()->driver('file')->forget(cacheKey('setting'));
+        cache()->driver('file')->forget(cacheKey('currency'));
 
         $this->alert('success', 'Settings saved successfully!');
         $this->js('setTimeout(() => { location.reload(); }, 1000);');

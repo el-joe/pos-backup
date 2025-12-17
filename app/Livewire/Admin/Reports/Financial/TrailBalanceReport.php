@@ -31,8 +31,8 @@ class TrailBalanceReport extends Component
                     'description' => $line->transaction?->description,
                     'date' => $line->transaction?->date,
                     'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
-                    'debit' => $line->type == 'debit' ? $line->amount : 0,
-                    'credit' => $line->type == 'credit' ? $line->amount : 0,
+                    'debit' => currency()->symbol . ($line->type == 'debit' ? number_format($line->amount, 2) : 0),
+                    'credit' => currency()->symbol . ($line->type == 'credit' ? number_format($line->amount, 2) : 0),
                     'created_at' => $line->created_at,
                 ];
             });
@@ -73,8 +73,8 @@ class TrailBalanceReport extends Component
                 'label' => 'Totals',
                 'class' => 'text-end',
             ],
-            'debit' => $query->clone()->where('type', 'debit')->sum('amount'),
-            'credit' => $query->clone()->where('type', 'credit')->sum('amount'),
+            'debit' => currency()->symbol . number_format($query->clone()->where('type', 'debit')->sum('amount'), 2),
+            'credit' => currency()->symbol . number_format($query->clone()->where('type', 'credit')->sum('amount'), 2),
         ];
 
         return layoutView('reports.financial.trail-balance-report',get_defined_vars());

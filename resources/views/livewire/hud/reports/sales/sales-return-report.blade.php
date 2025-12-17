@@ -60,7 +60,7 @@
                                         <td>{{ $row->invoice_number }}</td>
                                         <td>{{ $row->customer_name }}</td>
                                         <td>{{ $row->return_count }}</td>
-                                        <td>{{ number_format($row->return_amount, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($row->return_amount, 2) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -74,7 +74,7 @@
                                         <td>{{ __('general.pages.reports.common.total') }}</td>
                                         <td></td>
                                         <td>{{ $total_count }}</td>
-                                        <td>{{ number_format($total_amount, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($total_amount, 2) }}</td>
                                     </tr>
                                 @endif
                             </tbody>

@@ -12,6 +12,7 @@ return [
         'categories' => 'Categories',
         'brands' => 'Brands',
         'units' => 'Units',
+        'balance-sheet' => 'Balance Sheet',
         'taxes' => 'Taxes',
         'discounts' => 'Discounts',
         'expenses' => 'Expenses',

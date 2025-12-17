@@ -44,12 +44,12 @@
                         @foreach($report['assets'] as $label => $amount)
                         <tr>
                             <td>{{ $label }}</td>
-                            <td>{{ number_format($amount, 2) }}</td>
+                            <td>{{ currency()->symbol }}{{ number_format($amount, 2) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-primary-subtle">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_assets') }}</td>
-                            <td>{{ number_format($report['total_assets'] ?? 0, 2) }}</td>
+                            <td>{{ currency()->symbol }}{{ number_format($report['total_assets'] ?? 0, 2) }}</td>
                         </tr>
 
                         {{-- ================= Liabilities ================= --}}
@@ -59,12 +59,12 @@
                         @foreach($report['liabilities'] as $label => $amount)
                         <tr>
                             <td>{{ $label }}</td>
-                            <td>{{ number_format($amount, 2) }}</td>
+                            <td>{{ currency()->symbol }}{{ number_format($amount, 2) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-danger-subtle">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_liabilities') }}</td>
-                            <td>{{ number_format($report['total_liabilities'] ?? 0, 2) }}</td>
+                            <td>{{ currency()->symbol }}{{ number_format($report['total_liabilities'] ?? 0, 2) }}</td>
                         </tr>
 
                         {{-- ================= Equity ================= --}}
@@ -74,12 +74,12 @@
                         @foreach($report['equity'] as $label => $amount)
                         <tr>
                             <td>{{ $label }}</td>
-                            <td>{{ number_format($amount, 2) }}</td>
+                            <td>{{ currency()->symbol }}{{ number_format($amount, 2) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-success-subtle">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_equity') }}</td>
-                            <td>{{ number_format($report['total_equity'] ?? 0, 2) }}</td>
+                            <td>{{ currency()->symbol }}{{ number_format($report['total_equity'] ?? 0, 2) }}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -120,8 +120,8 @@
                                         <td><strong>{{ $item?->product?->name }}</strong></td>
                                         <td>{{ $item?->unit?->name ?? 'N/A' }}</td>
                                         <td>{{ $item->qty }}</td>
-                                        <td>{{ number_format($item->unit_cost, 2) }}</td>
-                                        <td>{{ number_format($item->sell_price, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($item->unit_cost, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($item->sell_price, 2) }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -150,7 +150,7 @@
                                     @foreach ($stockTransfer->expenses ?? [] as $expense)
                                     <tr>
                                         <td>{{ $expense->description ?? $expense->note ?? 'N/A' }}</td>
-                                        <td>{{ number_format($expense->amount ?? 0, 2) }}</td>
+                                        <td>{{ currency()->symbol }}{{ number_format($expense->amount ?? 0, 2) }}</td>
                                         <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">

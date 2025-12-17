@@ -31,7 +31,7 @@
                                 <td>{{ $row->product_name }}</td>
                                 <td>{{ $row->branch_name }}</td>
                                 <td>{{ $row->shortage_qty }}</td>
-                                <td>{{ number_format($row->shortage_value, 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format($row->shortage_value, 2) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -43,7 +43,7 @@
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td></td>
                                 <td>{{ $total_qty }}</td>
-                                <td>{{ number_format($total_value, 2) }}</td>
+                                <td>{{ currency()->symbol }}{{ number_format($total_value, 2) }}</td>
                             </tr>
                         @endif
                     </tbody>

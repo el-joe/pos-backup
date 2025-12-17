@@ -261,6 +261,12 @@ return [
                         "icon"  => "fa fa-book fa-fw"
                     ],
                     [
+                        "title" => "Balance Sheet",
+                        'translated_title' => 'general.titles.balance-sheet',
+                        "route" => 'admin.reports.financial.balance-sheet',
+                        "icon"  => "fa fa-balance-scale fa-fw"
+                    ],
+                    [
                         "title" => "Audit Trail Report",
                         'translated_title' => 'general.titles.audit-trail-report',
                         "route" => "admin.reports.audit.report",

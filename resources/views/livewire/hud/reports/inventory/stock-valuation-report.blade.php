@@ -32,8 +32,8 @@
                                     <td>{{ $row->branch_name ?? 'N/A' }}</td>
                                     <td>{{ $row->product_name }}</td>
                                     <td>{{ $row->stock_qty }}</td>
-                                    <td>{{ number_format($row->unit_cost, 2) }}</td>
-                                    <td>{{ number_format($row->stock_value, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($row->unit_cost, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($row->stock_value, 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -45,7 +45,7 @@
                                     <td colspan="2">{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_qty }}</td>
                                     <td></td>
-                                    <td>{{ number_format($total_value, 2) }}</td>
+                                    <td>{{ currency()->symbol }}{{ number_format($total_value, 2) }}</td>
                                 </tr>
                             @endif
                         </tbody>
