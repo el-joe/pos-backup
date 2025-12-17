@@ -30,7 +30,8 @@
                                 <td>{{ $slider->title }}</td>
                                 <td>{{ $slider->number }}</td>
                                 <td>
-                                    <img src="{{ $slider->image_path }}" alt="" class="img-thumbnail" width="60">
+                                    <img src="{{ $slider->image_path }}" alt="" class="img-thumbnail"
+                                        width="60">
                                 </td>
                                 <td>
                                     <span class="badge bg-{{ $slider->active ? 'success' : 'danger' }}">
@@ -91,6 +92,32 @@
                         <div class="mb-3">
                             <label for="sliderImage" class="form-label">Slider Image</label>
                             <input type="file" class="form-control" wire:model="data.image" id="sliderImage">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Preview</label>
+
+                            <div class="border rounded p-2 text-center">
+                                @if (!empty($data['image']))
+                                    <img src="{{ $data['image']->temporaryUrl() }}" class="img-fluid rounded"
+                                        style="max-height: 200px;">
+                                @elseif (!empty($data['image_path']))
+                                    <img src="{{ $data['image_path'] }}" class="img-fluid rounded"
+                                        style="max-height: 200px;">
+                                @else
+                                    <div class="text-muted small">
+                                        No image selected
+                                    </div>
+                                @endif
+
+                                @if (!empty($data['image']))
+                                    <button type="button" class="btn btn-sm btn-outline-danger mt-2"
+                                        wire:click="$set('data.image', null)">
+                                        Remove new image
+                                    </button>
+                                @endif
+
+                            </div>
                         </div>
 
                         <div class="form-check mb-3">

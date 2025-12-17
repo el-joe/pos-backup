@@ -25,11 +25,18 @@ class SliderList extends Component
         $this->current = Slider::find($id);
         if ($this->current) {
             $this->data = $this->current->toArray();
-            $this->data['active'] = (bool)$this->data['active'];
+            $this->data['active'] = (bool) $this->data['active'];
             $this->data['image_path'] = $this->current->image_path;
         }
 
         $this->dispatch('iCheck-load');
+    }
+
+    function triggerActive($id)
+    {
+        $slider = Slider::find($id);
+        $slider->active = !$slider->active;
+        $slider->save();
     }
 
     function save()
@@ -40,7 +47,8 @@ class SliderList extends Component
             $slider = new Slider();
         }
 
-        if (!$this->validator()) return;
+        if (!$this->validator())
+            return;
 
         $this->data['active'] = !empty($this->data['active']) ? 1 : 0;
 
@@ -60,6 +68,21 @@ class SliderList extends Component
         $this->dismiss();
 
         $this->reset('current', 'data');
+    }
+
+    function deleteAlert($id)
+    {
+        $this->setCurrent($id);
+        $this->confirm('delete', 'warning', 'Are you sure', 'Are you sure you want to delete this slider?', 'Delete');
+
+    }
+
+    function delete()
+    {
+        $this->current->delete();
+        $this->popup('success', 'Slider deleted successfully');
+        $this->dismiss();
+        $this->reset('current');
     }
 
     public function render()
