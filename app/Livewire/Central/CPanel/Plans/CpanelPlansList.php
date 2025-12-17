@@ -18,11 +18,11 @@ class CpanelPlansList extends Component
     public $id, $plan;
     public $data = [];
     public $rules = [
-        'name'         => 'required|string|max:255',
-        'price_month'  => 'required|numeric|min:0',
-        'price_year'   => 'required|numeric|min:0',
+        'name' => 'required|string|max:255',
+        'price_month' => 'required|numeric|min:0',
+        'price_year' => 'required|numeric|min:0',
         'features' => 'required|array',
-        'recommended'  => 'boolean',
+        'recommended' => 'boolean',
     ];
 
     function setCurrent($id)
@@ -51,32 +51,34 @@ class CpanelPlansList extends Component
             $plan = new Plan();
         }
 
-        $features = collect($this->data['features'])->map(function($item){
+        $features = collect($this->data['features'])->map(function ($item) {
             $keys = ['status', 'description', 'limit'];
             $newItem = [];
-            foreach($keys as $key){
+            foreach ($keys as $key) {
                 switch ($key) {
                     case 'status':
-                        $newItem[$key] = $item[$key];
-                        continue;
+                        $newItem[$key] = $item[$key] ?? null;
+                        continue 2;
+
                     case 'description':
-                        if(($item[$key]??'') != ''){
+                        if (!empty($item[$key] ?? null)) {
                             $newItem[$key] = $item[$key];
                         }
-                        continue;
+                        continue 2;
+
                     case 'limit':
-                        if(is_numeric($item[$key]??null)){
-                            $newItem[$key] = (int)$item[$key];
+                        if (is_numeric($item[$key] ?? null)) {
+                            $newItem[$key] = (int) $item[$key];
                         }
-                        continue;
-                    default:
-                        continue;
+                        continue 2;
                 }
             }
+
             return $newItem;
         })->toArray();
 
-        if (!$this->validator()) return;
+        if (!$this->validator())
+            return;
 
         $plan = $plan->fill(array_merge($this->data, ['features' => $features]));
         $plan->save();
