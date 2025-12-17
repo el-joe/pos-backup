@@ -13,6 +13,6 @@ class Slider extends Model
     }
 
     function getImagePathAttribute() {
-        return $this->image->full_path ?? asset('admin/assets/images/yadawia/user_1.png');
+        return $this->image->full_path ?? asset('hud/assets/img/no_image.jpg');
     }
 }
