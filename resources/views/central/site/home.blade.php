@@ -36,7 +36,7 @@
 							</div> --}}
 
                         <div class="mb-2">
-                            <a href="index.html" class="btn btn-lg btn-outline-white px-3">Explore ERP Features <i
+                            <a href="https://test.mohaaseb.com" class="btn btn-lg btn-outline-white px-3">Explore ERP Features <i
                                     class="fa fa-arrow-right ms-2 opacity-5"></i></a>
                         </div>
 
@@ -81,24 +81,29 @@
 
             <div
                 class="position-absolute top-0 bottom-0 end-0 w-50 p-5 z-2 overflow-hidden d-lg-flex align-items-center d-none">
-                <img class="w-100 d-block shadow-lg" alt="HUD"
-                    src="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}">
+                    <img
+                    src="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}"
+                    alt="ERP dashboard showing sales, inventory, and accounting modules"
+                    loading="lazy"
+                    width="800"
+                    height="600"
+                    class="w-100 d-block shadow-lg">
             </div>
         </div>
         <!-- END container -->
         <div class="position-absolute bg-size-cover bg-position-center d-none2 bg-no-repeat top-0 start-0 w-100 h-100"
-            style="background-image: url(assets/img/landing/cover.jpg);"></div>
+            style="background-image: url({{ asset('hud/assets/img/landing/cover.jpg') }});"></div>
         <div class="position-absolute top-0 start-0 d-none2 w-100 h-100 opacity-95"
             style="background: var(--bs-body-bg-gradient);"></div>
         <div class="position-absolute top-0 start-0 d-none2 w-100 h-100 opacity-95"
-            style="background-image: url(assets/css/images/pattern-dark.png); background-size: var(--bs-body-bg-image-size);">
+            style="background-image: url({{ asset('hud/assets/css/images/pattern-dark.png') }}); background-size: var(--bs-body-bg-image-size);">
         </div>
     </div>
     <!-- END #home -->
 
     <div id="about" class="py-5 bg-component">
         <div class="container-xxl p-3 p-lg-5 text-center">
-            <h1 class="mb-3">About Our ERP System</h1>
+            <h2 class="mb-3 h1">About Our ERP System</h2>
             <p class="fs-16px text-body text-opacity-50 mb-5">
                 A powerful, all-in-one Enterprise Resource Planning system designed to streamline operations,
                 improve efficiency, and give businesses full control over sales, inventory, accounting, HR,
@@ -224,7 +229,7 @@
     <div id="features" class="py-5 position-relative">
         <div class="container-xxl p-3 p-lg-5 z-2 position-relative">
             <div class="text-center mb-5">
-                <h1 class="mb-3">Our Unique Features</h1>
+                <h2 class="mb-3 h1">Our Unique ERP Features</h2>
                 <p class="fs-16px text-body text-opacity-50 mb-5">
                     Explore HUD Admin Template's standout features. <br>
                     With advanced customization and seamless integration, create powerful and stunning <br>
@@ -237,8 +242,15 @@
             <div class="row g-3 g-lg-5">
                 @foreach ($sliders as $item)
                     <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="{{ $item->image_path }}" data-lity class="shadow d-block"><img
-                                                        src="{{ $item->image_path }}" alt="" class="w-100 h-170px"></a>
+                        <a href="{{ $item->image_path }}" data-lity class="shadow d-block">
+                            <img
+                                src="{{ $item->image_path }}"
+                                alt="{{ $item->title }} ERP feature"
+                                loading="lazy"
+                                width="400"
+                                height="170"
+                                class="w-100 h-170px">
+                        </a>
                         <div class="text-center my-3 text-body fw-bold">{{ $item->title }}</div>
                     </div>
                 @endforeach
@@ -265,7 +277,7 @@
     <div id="testimonials" class="py-5 text-body text-opacity-75">
         <div class="container-xxl p-3 p-lg-5">
             <div class="text-center mb-5">
-                <h1 class="mb-3 text-center">What Our Clients Say</h1>
+                <h2 class="mb-3 text-center h1">What Our Clients Say</h2>
                 <p class="fs-16px text-body text-opacity-50 text-center mb-0">
                     Real testimonials from clients using our ERP System.
                 </p>
@@ -635,7 +647,7 @@
     <div id="contact" class="py-5 text-body text-opacity-75">
         <div class="container-xl p-3 p-lg-5">
             <div class="text-center mb-5">
-                <h1 class="mb-3 text-center">Get in Touch</h1>
+                <h2 class="mb-3 text-center h1">Get in Touch</h2>
                 <p class="fs-16px text-body text-opacity-50 text-center mb-0">
                     Contact us today to explore how our team can assist you. <br>
                     Whether you have inquiries, need support, or want to discuss a partnership, <br>

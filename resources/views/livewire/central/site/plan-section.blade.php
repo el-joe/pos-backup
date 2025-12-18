@@ -1,7 +1,7 @@
 <!-- BEGIN #pricing -->
 <div id="pricing" class="py-5 text-body text-opacity-75">
     <div class="container-xxl p-3 p-lg-5">
-        <h1 class="mb-3 text-center">Our Pricing Plans</h1>
+        <h2 class="mb-3 text-center h1">Our Pricing Plans</h2>
         <p class="fs-16px text-body text-opacity-50 text-center mb-0">Choose the perfect plan that suits your needs. <br>Our pricing is designed to be flexible and affordable, providing value for businesses of all sizes. <br>Explore our plans to find the best fit for your requirements.</p>
 
         <div class="d-flex justify-content-center mb-4">
