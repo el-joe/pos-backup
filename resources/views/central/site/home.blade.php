@@ -238,7 +238,7 @@
                 @foreach ($sliders as $item)
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <a href="{{ $item->image_path }}" data-lity class="shadow d-block"><img
-                                src="{{ $item->image_path }}" alt="" class="mw-100"></a>
+                                                        src="{{ $item->image_path }}" alt="" class="w-100 h-170px"></a>
                         <div class="text-center my-3 text-body fw-bold">{{ $item->title }}</div>
                     </div>
                 @endforeach
