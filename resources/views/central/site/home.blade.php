@@ -87,6 +87,8 @@
                     loading="lazy"
                     width="800"
                     height="600"
+                    fetchpriority="high"
+                    decoding="async"
                     class="w-100 d-block shadow-lg">
             </div>
         </div>
