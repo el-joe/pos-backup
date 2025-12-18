@@ -81,8 +81,8 @@
                                     <td class="text-center">{{ $audit->id }}</td>
                                     <td>
                                         <small>
-                                            {{ carbon($audit->created_at)->translatedFormat('Y-m-d') }}<br>
-                                            <span class="text-muted">{{ carbon($audit->created_at)->translatedFormat('h:i A') }}</span>
+                                            {{ dateTimeFormat($audit->created_at, true, false) }}<br>
+                                            <span class="text-muted">{{ dateTimeFormat($audit->created_at, false, true) }}</span>
                                         </small>
                                     </td>
                                     <td>

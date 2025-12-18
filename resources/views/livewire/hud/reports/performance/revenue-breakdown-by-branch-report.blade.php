@@ -50,7 +50,7 @@
                                 <tr>
                                     <td>{{ $row->branch_name }}</td>
                                     <td class="text-end">
-                                        <span class="badge bg-success">{{ currency()->symbol }}{{ number_format($row->total_revenue, 2) }}</span>
+                                        <span class="badge bg-success">{{ currencyFormat($row->total_revenue, true) }}</span>
                                     </td>
                                 </tr>
                             @empty
@@ -62,7 +62,7 @@
                             @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-bold">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_revenue, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_revenue, true) }}</td>
                             </tr>
                             @endif
                         </tbody>

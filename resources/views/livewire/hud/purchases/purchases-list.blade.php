@@ -233,7 +233,7 @@
                                 ?>
                                 @forelse($payments as $payment)
                                     <tr>
-                                        <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
+                                        <td>{{ dateTimeFormat($payment->created_at) }}</td>
                                         <td><span class="badge bg-success">{{ currencyFormat($payment->amount, true) }}</span></td>
                                         <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name ? $payment->account()->paymentMethod?->name .' - '  : '' ) . $payment->account()->name : 'N/A' }}</td>
                                         <td>{{ $payment->note }}</td>

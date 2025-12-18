@@ -110,8 +110,8 @@
                             <td>{{ $discount->name }}</td>
                             <td>{{ $discount->code }}</td>
                             <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
-                            <td>{{ formattedDate($discount->start_date) }}</td>
-                            <td>{{ formattedDate($discount->end_date) }}</td>
+                            <td>{{ dateTimeFormat($discount->start_date,true,false) }}</td>
+                            <td>{{ dateTimeFormat($discount->end_date,true,false) }}</td>
                             <td>
                                 <span class="badge bg-{{ $discount->active ? 'success' : 'danger' }}">
                                     {{ $discount->active ? __('general.pages.discounts.active') : __('general.pages.discounts.inactive') }}

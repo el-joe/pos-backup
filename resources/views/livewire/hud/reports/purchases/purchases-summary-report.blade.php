@@ -55,9 +55,9 @@
                                     $total_value += $row['total_value'];
                                 @endphp
                                 <tr>
-                                    <td>{{ $row['purchase_date'] }}</td>
+                                    <td>{{ dateTimeFormat($row['purchase_date'], true, false) }}</td>
                                     <td>{{ $row['purchase_count'] }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($row['total_value'], 2) }}</td>
+                                    <td>{{ currencyFormat($row['total_value'], true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -68,7 +68,7 @@
                                 <tr class="fw-semibold table-success">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_count }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($total_value, 2) }}</td>
+                                    <td>{{ currencyFormat($total_value, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>

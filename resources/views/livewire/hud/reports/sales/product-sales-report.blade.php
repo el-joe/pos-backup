@@ -58,8 +58,8 @@
                                 <tr>
                                     <td>{{ $row->product_name }}</td>
                                     <td>{{ number_format($row->quantity_sold, 0) }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($row->total_cost, 2) }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($row->total_revenue, 2) }}</td>
+                                    <td>{{ currencyFormat($row->total_cost, true) }}</td>
+                                    <td>{{ currencyFormat($row->total_revenue, true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -70,9 +70,9 @@
                             @if(count($report))
                                 <tr class="table-success fw-semibold">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
-                                    <td>{{ number_format($total_qty, 0) }}</td>
-                                    <td>{{ number_format($total_cost, 2) }}</td>
-                                    <td>{{ number_format($total_revenue, 2) }}</td>
+                                    <td>{{ currencyFormat($total_qty, true) }}</td>
+                                    <td>{{ currencyFormat($total_cost, true) }}</td>
+                                    <td>{{ currencyFormat($total_revenue, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>

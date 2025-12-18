@@ -59,11 +59,11 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $row->customer_name }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_debit, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_credit, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->total_debit, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->total_credit, true) }}</td>
                                     <td class="text-end">
                                         <span class="badge bg-{{ $row->balance > 0 ? 'danger' : 'success' }}">
-                                            {{ currency()->symbol }}{{ number_format($row->balance, 2) }}
+                                            {{ currencyFormat($row->balance, true) }}
                                         </span>
                                     </td>
                                 </tr>
@@ -75,9 +75,9 @@
                             @if(count($report))
                                 <tr class="fw-semibold table-success text-dark">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($total_debit, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($total_credit, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_balance, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($total_debit, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($total_credit, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($sum_balance, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>

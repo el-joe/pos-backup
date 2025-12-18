@@ -78,7 +78,7 @@
                                             <tbody>
                                                 @foreach($report['ledger'][$account] ?? [] as $txn)
                                                     <tr>
-                                                        <td>{{ \Carbon\Carbon::parse($txn['date'])->format('Y-m-d') }}</td>
+                                                        <td>{{ dateTimeFormat($txn['date'], true, false) }}</td>
                                                         <td>{{ $txn['txn_id'] }}</td>
                                                         <td>{{ ucfirst($txn['type']) }}</td>
                                                         <td>

@@ -118,10 +118,10 @@
                                 <td>{{ $sale->invoice_number }}</td>
                                 <td>{{ $sale->customer?->name }}</td>
                                 <td>{{ $sale->branch?->name }}</td>
-                                <td>{{ currency()->symbol }}{{ $sale->grand_total_amount ?? 0 }}</td>
+                                <td>{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
                                 <td>
                                     <span class="badge bg-danger">
-                                        {{ currency()->symbol }}{{ number_format($sale->due_amount ?? 0, 2) }}
+                                        {{ currencyFormat($sale->due_amount ?? 0, true) }}
                                     </span>
                                 </td>
                                 <td>
@@ -259,8 +259,8 @@
                                 ?>
                                 @forelse($payments as $payment)
                                     <tr>
-                                        <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
-                                        <td><span class="badge bg-success">{{ currency()->symbol }}{{ $payment->amount }}</span></td>
+                                        <td>{{ dateTimeFormat($payment->created_at,true,false) }}</td>
+                                        <td><span class="badge bg-success">{{ currencyFormat($payment->amount, true) }}</span></td>
                                         <td>{{ $payment->account() ? ($payment->account('credit')->paymentMethod?->name ? $payment->account('credit')->paymentMethod?->name .' - '  : '' ) . $payment->account('credit')->name : 'N/A' }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>

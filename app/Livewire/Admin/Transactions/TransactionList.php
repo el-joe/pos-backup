@@ -32,11 +32,11 @@ class TransactionList extends Component
                 'branch' => $line->transaction?->branch?->name ?? 'N/A',
                 'reference' => $line->ref,
                 'note' => $line->transaction?->note,
-                'date' => $line->transaction?->date,
+                'date' => dateTimeFormat($line->transaction?->date, true, false),
                 'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
                 'line_type' => $line->type,
                 'amount' => currencyFormat($line->amount, true),
-                'created_at' => $line->created_at,
+                'created_at' => dateTimeFormat($line->created_at),
             ];
         });
 
@@ -51,7 +51,7 @@ class TransactionList extends Component
             'branch' => [ 'type' => 'text'],
             'reference' => [ 'type' => 'text'],
             'note' => [ 'type' => 'text'],
-            'date' => [ 'type' => 'date'],
+            'date' => [ 'type' => 'text'],
             'account' => [ 'type' => 'text'],
             'line_type' => [
                 'type' => 'badge', 'class' => function($row) {
@@ -66,7 +66,7 @@ class TransactionList extends Component
                 }
             ],
             'amount' => [ 'type' => 'text'],
-            'created_at' => [ 'type' => 'datetime'],
+            'created_at' => [ 'type' => 'text'],
         ];
 
         $branches = app(BranchService::class)->activeList();

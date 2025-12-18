@@ -61,10 +61,10 @@
                                     @endphp
                                     <tr>
                                         <td>{{ $row->product_name }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($row->sales_revenue, 2) }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($row->cogs, 2) }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($row->gross_profit, 2) }}</td>
-                                        <td>{{ number_format($row->margin, 2) }}</td>
+                                        <td>{{ currencyFormat($row->sales_revenue, true) }}</td>
+                                        <td>{{ currencyFormat($row->cogs, true) }}</td>
+                                        <td>{{ currencyFormat($row->gross_profit, true) }}</td>
+                                        <td>{{ currencyFormat($row->margin, true) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -76,10 +76,10 @@
                                 @if(count($report))
                                     <tr class="bg-success text-dark fw-bold">
                                         <td>{{ __('general.pages.reports.common.total') }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($total_revenue, 2) }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($total_cogs, 2) }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($total_profit, 2) }}</td>
-                                        <td>{{ $total_revenue > 0 ? number_format($total_profit / $total_revenue * 100, 2) : '0.00' }}</td>
+                                        <td>{{ currencyFormat($total_revenue, true) }}</td>
+                                        <td>{{ currencyFormat($total_cogs, true) }}</td>
+                                        <td>{{ currencyFormat($total_profit, true) }}</td>
+                                        <td>{{ $total_revenue > 0 ? currencyFormat(($total_profit / $total_revenue * 100), true) : '0.00' }}</td>
                                     </tr>
                                 @endif
                             </tbody>

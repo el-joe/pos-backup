@@ -160,7 +160,7 @@ class ExpensesList extends Component
                 'total' => currencyFormat($expense->total, true),
                 'date' => $expense->expense_date,
                 'note' => $expense->note ?? 'N/A',
-                'created_at' => $expense->created_at,
+                'created_at' => dateTimeFormat($expense->created_at,true,false),
                 'deleted' => $expense->deleted_at != null,
             ];
         });
@@ -198,7 +198,7 @@ class ExpensesList extends Component
             'total' => [ 'type' => 'decimal'],
             'date' => [ 'type' => 'date'],
             'note' => [ 'type' => 'text'],
-            'created_at' => [ 'type' => 'datetime'],
+            'created_at' => [ 'type' => 'text'],
             'actions' => [ 'type' => 'actions' , 'actions' => $actions],
         ];
 

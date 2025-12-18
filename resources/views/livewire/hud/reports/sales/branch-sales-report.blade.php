@@ -64,8 +64,8 @@
                                 <tr>
                                     <td>{{ $row->name }}</td>
                                     <td>{{ $total_count_record }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($total_sales_record, 2) }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($avg_ticket_size_record, 2) }}</td>
+                                    <td>{{ currencyFormat($total_sales_record, true) }}</td>
+                                    <td>{{ currencyFormat($avg_ticket_size_record, true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -76,8 +76,8 @@
                                 <tr class="table-success fw-semibold">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_count }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($total_sales, 2) }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($avg_ticket_size, 2) }}</td>
+                                    <td>{{ currencyFormat($total_sales, true) }}</td>
+                                    <td>{{ currencyFormat($avg_ticket_size, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>

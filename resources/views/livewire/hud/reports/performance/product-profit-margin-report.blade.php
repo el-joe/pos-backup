@@ -59,9 +59,9 @@
                             @endphp
                             <tr>
                                 <td>{{ $row->product_name }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_sales, 2) }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_cogs, 2) }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($row->profit, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($row->total_sales, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($row->total_cogs, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($row->profit, true) }}</td>
                                 <td class="text-end">
                                     <span class="badge bg-success bg-opacity-75">{{ number_format($row->profit_margin_percent, 2) }}</span>
                                 </td>
@@ -75,9 +75,9 @@
                         @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-semibold">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_sales, 2) }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_cogs, 2) }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sum_profit, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_sales, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_cogs, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_profit, true) }}</td>
                                 <td></td>
                             </tr>
                         @endif

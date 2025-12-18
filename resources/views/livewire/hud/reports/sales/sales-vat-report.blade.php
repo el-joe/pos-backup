@@ -57,8 +57,8 @@
                                     <tr>
                                         <td>{{ $row->invoice_number }}</td>
                                         <td>{{ $row->customer_name }}</td>
-                                        <td>{{ $row->sale_date }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($row->vat_payable, 2) }}</td>
+                                        <td>{{ dateTimeFormat($row->sale_date, true, false) }}</td>
+                                        <td>{{ currencyFormat($row->vat_payable, true) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -72,7 +72,7 @@
                                         <td>{{ __('general.pages.reports.common.total') }}</td>
                                         <td></td>
                                         <td></td>
-                                        <td>{{ currency()->symbol }}{{ number_format($total_vat, 2) }}</td>
+                                        <td>{{ currencyFormat($total_vat, true) }}</td>
                                     </tr>
                                 @endif
                             </tbody>

@@ -59,7 +59,7 @@
                             <div class="col-md-3">
                                 <div class="border rounded p-3">
                                     <strong><i class="fa fa-calendar me-1"></i> {{ __('general.pages.purchases.order_date') }}:</strong>
-                                    <div>{{ carbon($purchase->order_date)->format('F j, Y') ?? 'N/A' }}</div>
+                                    <div>{{ dateTimeFormat($purchase->order_date) ?? 'N/A' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -247,7 +247,7 @@
                                         <tr>
                                             <td>{{ $expense->description ?? 'N/A' }}</td>
                                             <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
-                                            <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}</td>
+                                            <td>{{ $expense->expense_date ? dateTimeFormat($expense->expense_date) : 'N/A' }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
                                                     <i class="fa fa-trash"></i>

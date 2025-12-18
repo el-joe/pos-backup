@@ -127,7 +127,7 @@
                                                                 @endphp
                                                                 {{ $sign }}{{ $difference }}
                                                             </td>
-                                                            <td>{{ currency()->symbol }}{{ number_format($unit['unit_cost'] * $difference , 2) }}</td>
+                                                            <td>{{ currencyFormat($unit['unit_cost'] * $difference , true) }}</td>
                                                             <td>
                                                                 <span class="badge {{ $badgeClass }}">{{ $status }}</span>
                                                             </td>

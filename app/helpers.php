@@ -75,11 +75,6 @@ if(!function_exists('carbon')) {
     }
 }
 
-if(!function_exists('formattedDate')) {
-    function formattedDate($date): string {
-        return carbon($date)->translatedFormat('l , d-M-Y');
-    }
-}
 
 if(!function_exists('formattedDateTime')) {
     function formattedDateTime($date): string {
@@ -245,7 +240,13 @@ function currency(){
 function currencyFormat($amount, $withComma = false){
     $currency = currency();
     $currencyPercision = tenantSetting('currency_precision',2);
-    return "$currency->symbol " . number_format((float)$amount, $currencyPercision, '.',$withComma ? ',' : '');
+    return "$currency->symbol" . number_format((float)$amount, $currencyPercision, '.',$withComma ? ',' : '');
+}
+
+function dateTimeFormat($date,$dateFormat = true, $timeFormat = true){
+    $dateFormat = $dateFormat ? tenantSetting('date_format','Y-m-d') : '';
+    $timeFormat = $timeFormat ? tenantSetting('time_format','H:i:s') : '';
+    return carbon($date)->translatedFormat(trim("$dateFormat $timeFormat"));
 }
 
 function tenantSetting($key, $default = null) {

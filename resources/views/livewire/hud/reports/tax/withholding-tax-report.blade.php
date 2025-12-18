@@ -61,7 +61,7 @@
                                 <td>{{ $row->account_name }}</td>
                                 <td>{{ $row->party_type }}</td>
                                 <td>{{ $row->party_name ?? 'N/A' }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($row->withholding_amount, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($row->withholding_amount, true) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -72,7 +72,7 @@
                         @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-semibold">
                                 <td colspan="3">{{ __('general.pages.reports.common.total') }}</td>
-                                <td colspan="2" class="text-end">{{ currency()->symbol }}{{ number_format($total, 2) }}</td>
+                                <td colspan="2" class="text-end">{{ currencyFormat($total, true) }}</td>
                             </tr>
                         @endif
                     </tbody>

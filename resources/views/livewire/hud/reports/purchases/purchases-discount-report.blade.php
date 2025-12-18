@@ -52,8 +52,8 @@
                                     $total_discount += $row->discount_amount;
                                 @endphp
                                 <tr>
-                                    <td>{{ $row->discount_date }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($row->discount_amount, 2) }}</td>
+                                    <td>{{ dateTimeFormat($row->discount_date, true, false) }}</td>
+                                    <td>{{ currencyFormat($row->discount_amount, true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -64,7 +64,7 @@
                             @if(count($report))
                                 <tr class="fw-semibold bg-success bg-opacity-25">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($total_discount, 2) }}</td>
+                                    <td>{{ currencyFormat($total_discount, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>

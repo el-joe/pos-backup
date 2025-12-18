@@ -29,11 +29,11 @@ class TrailBalanceReport extends Component
                     'reference' => $line->ref,
                     'note' => $line->transaction?->note,
                     'description' => $line->transaction?->description,
-                    'date' => $line->transaction?->date,
+                    'date' => dateTimeFormat($line->transaction?->date,true,false),
                     'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
                     'debit' => currencyFormat($line->type == 'debit' ? number_format($line->amount, 2) : 0 , true),
                     'credit' => currencyFormat($line->type == 'credit' ? number_format($line->amount, 2) : 0, true),
-                    'created_at' => $line->created_at,
+                    'created_at' => dateTimeFormat($line->created_at,true,false),
                 ];
             });
 
@@ -50,7 +50,7 @@ class TrailBalanceReport extends Component
             'reference' => [ 'type' => 'text'],
             'note' => [ 'type' => 'text'],
             'description' => [ 'type' => 'text'],
-            'date' => [ 'type' => 'date'],
+            'date' => [ 'type' => 'text'],
             'account' => [ 'type' => 'text'],
             'debit' => [
                 'type' => 'badge',
@@ -64,7 +64,7 @@ class TrailBalanceReport extends Component
                 'icon' => 'fa-arrow-down text-danger',
                 'value' => fn($q)=>$q['credit']
             ],
-            'created_at' => [ 'type' => 'datetime'],
+            'created_at' => [ 'type' => 'text'],
         ];
 
         $totals = [

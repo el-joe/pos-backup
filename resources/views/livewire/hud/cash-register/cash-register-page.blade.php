@@ -75,7 +75,7 @@
             </div>
             <div class="card-body">
                 @if($currentRegister)
-                <p><strong>{{ __('general.pages.cash_register.open_since') }}:</strong> {{ $currentRegister->opened_at }}</p>
+                <p><strong>{{ __('general.pages.cash_register.open_since') }}:</strong> {{ dateTimeFormat($currentRegister->opened_at) }}</p>
                 <p><strong>{{ __('general.pages.cash_register.opening_balance') }}:</strong> {{ currencyFormat($currentRegister->opening_balance, true) }}</p>
 
                 <div class="mb-3">

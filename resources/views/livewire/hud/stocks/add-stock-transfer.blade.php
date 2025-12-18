@@ -133,8 +133,8 @@
                                     <input type="number" class="form-control" wire:model.blur="items.{{ $index }}.qty" step="any" min="1" max="{{ $product['max_stock'] ?? 0 }}" placeholder="0.00">
                                     <small class="text-muted">{{ __('general.pages.pos-page.max') }}: {{ $product['max_stock'] }}</small>
                                 </td>
-                                <td>{{ currency()->symbol }}{{ $product['unit_cost'] }}</td>
-                                <td>{{ currency()->symbol }}{{ $product['sell_price'] }}</td>
+                                <td>{{ currencyFormat($product['unit_cost'], true) }}</td>
+                                <td>{{ currencyFormat($product['sell_price'], true) }}</td>
                                 <td>
                                     <button class="btn btn-danger btn-sm" wire:click="delete({{ $index }})">
                                         <i class="fa fa-trash"></i>

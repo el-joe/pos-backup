@@ -50,15 +50,15 @@
                     <tbody>
                         <tr>
                             <td>{{ __('general.pages.reports.tax.vat_summary.vat_payable_sales') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($report['vat_payable'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($report['vat_payable'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.reports.tax.vat_summary.vat_receivable_purchases') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($report['vat_receivable'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($report['vat_receivable'] ?? 0, true) }}</td>
                         </tr>
                         <tr class="bg-success bg-opacity-25 fw-semibold">
                             <td>{{ __('general.pages.reports.tax.vat_summary.net_vat') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($report['net'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($report['net'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
                 </table>

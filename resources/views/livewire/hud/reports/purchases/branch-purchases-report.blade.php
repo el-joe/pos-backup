@@ -57,7 +57,7 @@
                                 <tr>
                                     <td>{{ $row->branch_name }}</td>
                                     <td>{{ $row->total_qty }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($row->total_value, 2) }}</td>
+                                    <td>{{ currencyFormat($row->total_value, true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -70,7 +70,7 @@
                                 <tr class="fw-semibold table-success">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_qty }}</td>
-                                    <td>{{ currency()->symbol }}{{ number_format($total_value, 2) }}</td>
+                                    <td>{{ currencyFormat($total_value, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>

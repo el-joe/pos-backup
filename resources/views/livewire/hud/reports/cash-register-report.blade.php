@@ -90,8 +90,8 @@
                         <tbody>
                             @forelse($registers as $register)
                                 <tr>
-                                    <td>{{ $register->opened_at }}</td>
-                                    <td>{{ $register->closed_at ?? '-' }}</td>
+                                    <td>{{ dateTimeFormat($register->opened_at, false,true) }}</td>
+                                    <td>{{ dateTimeFormat($register->closed_at, false,true) ?? '-' }}</td>
                                     <td>{{ $register->branch?->name ?? $register->branch_id }}</td>
                                     <td>{{ $register->admin->name ?? $register->admin_id }}</td>
                                     <td class="text-end">{{ currencyFormat($register->opening_balance, true) }}</td>

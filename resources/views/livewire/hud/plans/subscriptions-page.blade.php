@@ -14,10 +14,10 @@
                                 <p><strong>Plan:</strong> {{ $currentSubscription->plan->name }}</p>
                             </div>
                             <div class="col-md-4">
-                                <p><strong>Start Date:</strong> {{ carbon($currentSubscription->start_date)->format('Y-m-d') }}</p>
+                                <p><strong>Start Date:</strong> {{ dateTimeFormat($currentSubscription->start_date,true,false) }}</p>
                             </div>
                             <div class="col-md-4">
-                                <p><strong>Expiration Date:</strong> {{ carbon($currentSubscription->end_date)->format('Y-m-d') }}</p>
+                                <p><strong>Expiration Date:</strong> {{ dateTimeFormat($currentSubscription->end_date,true,false) }}</p>
                             </div>
                         </div>
 
@@ -69,8 +69,8 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $subscription->plan?->name }}</td>
-                                    <td>{{ carbon($subscription->start_date)->format('Y-m-d') }}</td>
-                                    <td>{{ carbon($subscription->end_date)->format('Y-m-d') }}</td>
+                                    <td>{{ dateTimeFormat($subscription->start_date,true,false) }}</td>
+                                    <td>{{ dateTimeFormat($subscription->end_date,true,false) }}</td>
                                     <td>{{ $subscription->status }}</td>
                                     <td>${{ number_format($subscription->price, 2) }}</td>
                                 </tr>

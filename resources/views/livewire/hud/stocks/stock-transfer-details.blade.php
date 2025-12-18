@@ -82,7 +82,7 @@
                             <div class="col-md-3">
                                 <div class="border rounded p-3 bg-dark text-light">
                                     <h6><i class="fa fa-calendar me-2"></i>{{ __('general.pages.stock-transfers.transfer_date') }}</h6>
-                                    <p class="mb-0">{{ carbon($stockTransfer->transfer_date)->format('F j, Y') ?? 'N/A' }}</p>
+                                    <p class="mb-0">{{ dateTimeFormat($stockTransfer->transfer_date, true, false) ?? 'N/A' }}</p>
                                 </div>
                             </div>
 
@@ -120,8 +120,8 @@
                                         <td><strong>{{ $item?->product?->name }}</strong></td>
                                         <td>{{ $item?->unit?->name ?? 'N/A' }}</td>
                                         <td>{{ $item->qty }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($item->unit_cost, 2) }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($item->sell_price, 2) }}</td>
+                                        <td>{{ currencyFormat($item->unit_cost, true) }}</td>
+                                        <td>{{ currencyFormat($item->sell_price, true) }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -150,7 +150,7 @@
                                     @foreach ($stockTransfer->expenses ?? [] as $expense)
                                     <tr>
                                         <td>{{ $expense->description ?? $expense->note ?? 'N/A' }}</td>
-                                        <td>{{ currency()->symbol }}{{ number_format($expense->amount ?? 0, 2) }}</td>
+                                        <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
                                         <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
