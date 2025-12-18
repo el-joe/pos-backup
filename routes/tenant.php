@@ -257,20 +257,17 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 
 
 // Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
-// add order_payments table to handle multiple payments per order -> #DONE
 // Add return/refund_orders table and refund_order_items table to handle refunds properly
-// add more settings to general settings page
-// https://pos.ultimatefosters.com/business/settings
 // add opening hours to branches
 // Barcode/QR Code Generation
 // Prienters Settings
-// change tenant login page
-// Before Publishing we need to test domain register not just subdomain
-// اداره التصنيع
+
+// DB::transaction to all operations that include multiple DB operations
 // refactor select elements to be a select2 with search
 // fix reports date range picker to be consistent across all reports
-// DB::transaction to all operations that include multiple DB operations
+// Before Publishing we need to test domain register not just subdomain
 
+// اداره التصنيع
 // TODO : E-Invoice Coming Soon
 // Multi Currency Support into sales orders -> EX : customer come to egypt and doesn't have EGP , he pay in USD , we save the exchange rate at that day and save the amount in both currencies
 // tenant balance

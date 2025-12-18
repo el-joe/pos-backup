@@ -7,6 +7,7 @@ use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\PaymentMethodService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -87,9 +88,17 @@ class PaymentMethodsList extends Component
             $action = AuditLogActionEnum::CREATE_PAYMENT_METHOD;
         }
 
-        $paymentMethod = $this->paymentMethodService->save($this->current?->id, $this->data);
+        try{
+            DB::beginTransaction();
+            $paymentMethod = $this->paymentMethodService->save($this->current?->id, $this->data);
+            AuditLog::log($action, ['id' => $paymentMethod->id]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving payment method: '.$e->getMessage());
+            return;
+        }
 
-        AuditLog::log($action, ['id' => $paymentMethod->id]);
 
         $this->popup('success', 'Payment method saved successfully');
 

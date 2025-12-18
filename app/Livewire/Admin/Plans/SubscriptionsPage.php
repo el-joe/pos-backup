@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Plans;
 
 use App\Models\Subscription;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -13,7 +14,15 @@ class SubscriptionsPage extends Component
     {
         $currentSubscription = Subscription::currentTenantSubscriptions()->first();
         if($currentSubscription && $currentSubscription->canCancel() && adminCan('subscriptions.cancel')){
-            $currentSubscription->cancel();
+            try{
+                DB::beginTransaction();
+                $currentSubscription->cancel();
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                $this->popup('error','Error occurred while cancelling subscription: '.$e->getMessage(), 'center');
+                return;
+            }
             $this->popup('success', 'Subscription cancelled successfully', 'center');
         }else{
             $this->popup('error', 'Cannot cancel this subscription', 'center');
@@ -25,7 +34,15 @@ class SubscriptionsPage extends Component
     {
         $currentSubscription = Subscription::currentTenantSubscriptions()->first();
         if($currentSubscription && $currentSubscription->canRenew() && adminCan('subscriptions.renew')){
-            $currentSubscription->renew();
+            try{
+                DB::beginTransaction();
+                $currentSubscription->renew();
+                DB::commit();
+            }catch (\Exception $e) {
+                DB::rollBack();
+                $this->popup('error','Error occurred while renewing subscription: '.$e->getMessage(), 'center');
+                return;
+            }
             $this->popup('success', 'Subscription renewed successfully', 'center');
         }else{
             $this->popup('error', 'Cannot renew this subscription', 'center');

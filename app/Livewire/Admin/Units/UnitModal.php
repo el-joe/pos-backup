@@ -7,6 +7,7 @@ use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Unit;
 use App\Services\UnitService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -63,10 +64,17 @@ class UnitModal extends Component
         }else{
             $action = AuditLogActionEnum::CREATE_UNIT;
         }
+        try{
+            DB::beginTransaction();
+            $unit = $this->unitService->save($this->current?->id , $this->data);
 
-        $unit = $this->unitService->save($this->current?->id , $this->data);
-
-        AuditLog::log($action, ['id' => $unit->id]);
+            AuditLog::log($action, ['id' => $unit->id]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->swal('Error!','Error occurred while saving unit: '.$e->getMessage(),'error');
+            return;
+        }
 
         $this->swal('Success!','Saved Successfully!','success');
 

@@ -7,6 +7,7 @@ use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\ExpenseCategory;
 use App\Services\ExpenseCategoryService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -78,8 +79,15 @@ class ExpenseCategoriesList extends Component
         }else{
             $action = AuditLogActionEnum::CREATE_EXPENSE_CATEGORY;
         }
-
-        $expenseCat = $this->expenseCategoryService->save($this->current?->id, $this->data);
+        try{
+            DB::beginTransaction();
+            $expenseCat = $this->expenseCategoryService->save($this->current?->id, $this->data);
+            DB::commit();
+        }catch(\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving expense category: '.$e->getMessage());
+            return;
+        }
 
         AuditLog::log($action, ['id' => $expenseCat->id]);
 

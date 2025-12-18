@@ -6,6 +6,7 @@ use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
 use App\Services\CategoryService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -53,8 +54,15 @@ class CategoryModal extends Component
         }else{
             $action = AuditLogActionEnum::CREATE_CATEGORY;
         }
-
-        $category = $this->categoryService->save($this->current?->id, $this->data);
+        try{
+            DB::beginTransaction();
+            $category = $this->categoryService->save($this->current?->id, $this->data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving category: '.$e->getMessage());
+            return;
+        }
 
         AuditLog::log($action, ['id' => $category->id]);
 

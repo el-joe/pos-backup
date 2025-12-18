@@ -8,6 +8,7 @@ use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -61,8 +62,15 @@ class BranchModal extends Component
         }
 
         if(!$this->validator())return;
-
-        $this->branchService->save($this->current?->id,$this->data);
+        try{
+            DB::beginTransaction();
+            $this->branchService->save($this->current?->id,$this->data);
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving branch: '.$e->getMessage());
+            return;
+        }
 
         if($this->current?->id){
             $action = AuditLogActionEnum::UPDATE_BRANCH;

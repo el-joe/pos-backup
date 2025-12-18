@@ -19,6 +19,7 @@ use App\Services\SellService;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -288,12 +289,20 @@ class PosPage extends Component
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
-        if($cashRegister && ($dataToSave['paid_amount']??0) > 0){
-            $this->cashRegisterService->increment($cashRegister->id,'total_sales',$dataToSave['paid_amount']);
+        // db transaction
+        try {
+            DB::beginTransaction();
+            if($cashRegister && ($dataToSave['paid_amount']??0) > 0){
+                $this->cashRegisterService->increment($cashRegister->id,'total_sales',$dataToSave['paid_amount']);
+            }
+
+            $saleOrder = $this->sellService->save(null,$dataToSave);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->alert('error', 'Error placing order: ' . $e->getMessage());
+            return;
         }
-
-        $saleOrder = $this->sellService->save(null,$dataToSave);
-
         AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER,['invoice_number' => $saleOrder->invoice_number]);
 
         Artisan::call('app:stock-quantity-alert-check', [

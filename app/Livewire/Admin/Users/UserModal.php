@@ -6,6 +6,7 @@ use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -59,9 +60,17 @@ class UserModal extends Component
             $action = AuditLogActionEnum::CREATE_USER;
         }
 
-        $user = $this->userService->save($this->current?->id, $this->data + ['type' => $this->type]);
+        try{
+            DB::beginTransaction();
+            $user = $this->userService->save($this->current?->id, $this->data + ['type' => $this->type]);
 
-        AuditLog::log($action, ['id' => $user->id,'type' => $this->type]);
+            AuditLog::log($action, ['id' => $user->id,'type' => $this->type]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error', 'Error occurred while saving user: ' . $e->getMessage());
+            return;
+        }
 
         $this->popup('success', 'User saved successfully');
 

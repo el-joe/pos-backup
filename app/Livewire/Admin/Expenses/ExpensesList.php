@@ -9,6 +9,7 @@ use App\Services\CashRegisterService;
 use App\Services\ExpenseCategoryService;
 use App\Services\ExpenseService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -95,7 +96,15 @@ class ExpensesList extends Component
             $action = AuditLogActionEnum::CREATE_EXPENSE;
         }
 
-        $expense = $this->expenseService->save($this->current?->id, $this->data);
+        try{
+            DB::beginTransaction();
+            $expense = $this->expenseService->save($this->current?->id, $this->data);
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving expense: '.$e->getMessage());
+            return;
+        }
 
         AuditLog::log($action, ['id' => $expense->id]);
 

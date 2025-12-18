@@ -6,6 +6,7 @@ use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -81,9 +82,17 @@ class TaxesList extends Component
             $action = AuditLogActionEnum::CREATE_TAX;
         }
 
-        $tax = $this->taxService->save($this->current?->id, $this->data);
+        try{
+            DB::beginTransaction();
+            $tax = $this->taxService->save($this->current?->id, $this->data);
 
-        AuditLog::log($action, ['id' => $tax->id]);
+            AuditLog::log($action, ['id' => $tax->id]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving tax: '.$e->getMessage());
+            return;
+        }
 
         $this->popup('success', 'Tax saved successfully');
 

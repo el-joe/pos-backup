@@ -14,6 +14,7 @@ use App\Services\PurchaseService;
 use App\Services\TaxService;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -197,25 +198,33 @@ class AddPurchase extends Component
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
-        if($cashRegister){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $calcDetails['orderGrandTotal']);
+        try{
+            DB::beginTransaction();
+            if($cashRegister){
+                $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $calcDetails['orderGrandTotal']);
+            }
+
+            // save purchase
+            $purchase = $this->purchaseService->save(null,[
+                ...$this->data,
+                'tax_percentage'=> $this->data['tax_rate'] ?? 0,
+                'orderProducts' => $this->orderProducts,
+                'total' => $this->calcOrderProductsTotal(),
+                'expenses_total' => $this->calcExpensesTotal(),
+                'sub_total' => $calcDetails['orderSubTotal'],
+                'discount_amount' => $calcDetails['orderDiscountAmount'] ?? 0,
+                'total_after_discount' => $calcDetails['orderTotalAfterDiscount'] ?? 0,
+                'tax_amount' => $calcDetails['orderTaxAmount'] ?? 0,
+                'grand_total' => $calcDetails['orderGrandTotal'] ?? 0,
+            ]);
+
+            AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE, ['id' => $purchase->id]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while creating purchase: '.$e->getMessage());
+            return;
         }
-
-        // save purchase
-        $purchase = $this->purchaseService->save(null,[
-            ...$this->data,
-            'tax_percentage'=> $this->data['tax_rate'] ?? 0,
-            'orderProducts' => $this->orderProducts,
-            'total' => $this->calcOrderProductsTotal(),
-            'expenses_total' => $this->calcExpensesTotal(),
-            'sub_total' => $calcDetails['orderSubTotal'],
-            'discount_amount' => $calcDetails['orderDiscountAmount'] ?? 0,
-            'total_after_discount' => $calcDetails['orderTotalAfterDiscount'] ?? 0,
-            'tax_amount' => $calcDetails['orderTaxAmount'] ?? 0,
-            'grand_total' => $calcDetails['orderGrandTotal'] ?? 0,
-        ]);
-
-        AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE, ['id' => $purchase->id]);
 
         // alert success
         $this->alert('success','Purchase created successfully');

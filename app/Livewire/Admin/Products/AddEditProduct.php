@@ -12,6 +12,7 @@ use App\Services\ProductService;
 use App\Services\TaxService;
 use App\Services\UnitService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -105,9 +106,16 @@ class AddEditProduct extends Component
 
         if(!$this->validator($this->data,$rules))return;
 
-        $product = $this->productService->save($this->product?->id,$this->data);
-
-        AuditLog::log($action,  ['id' => $product->id]);
+        try{
+            DB::beginTransaction();
+            $product = $this->productService->save($this->product?->id,$this->data);
+            AuditLog::log($action,  ['id' => $product->id]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving product: '.$e->getMessage());
+            return;
+        }
 
         $this->popup('success','Product saved successfully');
 

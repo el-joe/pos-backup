@@ -6,6 +6,7 @@ use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
 use App\Services\BrandService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -48,7 +49,16 @@ class BrandModal extends Component
             $action = AuditLogActionEnum::CREATE_BRAND;
         }
 
-        $brand = $this->brandService->save($this->current?->id, $this->data);
+        try{
+            DB::beginTransaction();
+            $brand = $this->brandService->save($this->current?->id, $this->data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving brand: '.$e->getMessage());
+            return;
+        }
+
 
         AuditLog::log($action, ['id' => $brand->id]);
 

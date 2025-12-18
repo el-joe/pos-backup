@@ -127,12 +127,20 @@ class CashRegisterPage extends Component
             return;
         }
 
-        $reg->update([
-            'closing_balance' => $this->closing_balance_input,
-            'closed_at' => now(),
-            'status' => 'closed',
-            'notes' => $this->closing_notes,
-        ]);
+        try{
+            DB::beginTransaction();
+            $reg->update([
+                'closing_balance' => $this->closing_balance_input,
+                'closed_at' => now(),
+                'status' => 'closed',
+                'notes' => $this->closing_notes,
+            ]);
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            $this->alert('error', 'Error occurred while closing cash register: '.$e->getMessage());
+            return;
+        }
 
         $this->transactionService->createOpenBalanceTransaction([
             'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
