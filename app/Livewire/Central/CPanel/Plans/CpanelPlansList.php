@@ -57,33 +57,20 @@ class CpanelPlansList extends Component
             foreach ($keys as $key) {
                 switch ($key) {
                     case 'status':
-<<<<<<< HEAD
                         $newItem[$key] = $item[$key];
                         continue 2;
-=======
-                        $newItem[$key] = $item[$key] ?? null;
-                        continue 2;
-
->>>>>>> origin/cpanel
                     case 'description':
                         if (!empty($item[$key] ?? null)) {
                             $newItem[$key] = $item[$key];
                         }
                         continue 2;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/cpanel
                     case 'limit':
                         if (is_numeric($item[$key] ?? null)) {
                             $newItem[$key] = (int) $item[$key];
                         }
                         continue 2;
-<<<<<<< HEAD
                     default:
                         continue 2;
-=======
->>>>>>> origin/cpanel
                 }
             }
 
