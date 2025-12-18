@@ -22,4 +22,10 @@ class AuthController extends Controller
 
         return redirect()->back()->withErrors(['Invalid credentials provided.']);
     }
+
+    function logout()
+    {
+        auth()->guard(CPANEL_ADMINS_GUARD)->logout();
+        return redirect()->route('cpanel.login');
+    }
 }

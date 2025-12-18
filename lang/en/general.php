@@ -92,7 +92,7 @@ return [
         'currency.edit' => 'Edit Currency',
         'languages' => 'Languages',
         'register-requests' => 'Register Requests',
-        'customers' => 'Customers',
+        'sliders' => 'Sliders',
     ],
     'layout' => [
         'notifications' => 'Notifications',
