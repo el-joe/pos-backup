@@ -62,8 +62,8 @@
                 <tr>
                     <td>{{ $item->name }}</td>
                     <td class="right">{{ $item->qty }}</td>
-                    <td class="right">{{ $item->sell_price }}{{ currency()?->symbol }}</td>
-                    <td class="right">{{ $item->total }}{{ currency()->symbol }}</td>
+                    <td class="right">{{ currencyFormat($item->sell_price, true) }}</td>
+                    <td class="right">{{ currencyFormat($item->total, true) }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -74,20 +74,20 @@
     <!-- الإجماليات -->
     <div class="row">
         <span>الإجمالي الفرعي</span>
-        <span>{{ $order->sub_total }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->sub_total, true) }}</span>
     </div>
     <div class="row">
         <span>الخصم</span>
-        <span>-{{ $order->discount_amount ?? 0 }}{{ currency()->symbol }}</span>
+        <span>-{{ currencyFormat($order->discount_amount ?? 0, true) }}</span>
     </div>
     <div class="row">
         <span>ضريبة القيمة المضافة</span>
-        <span>{{ $order->tax_amount ?? 0 }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->tax_amount ?? 0, true) }}</span>
     </div>
 
     <div class="row total">
         <span>الإجمالي النهائي</span>
-        <span>{{ $order->grand_total_amount }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->grand_total_amount, true) }}</span>
     </div>
 
     <hr>
@@ -100,7 +100,7 @@
     </div>
     <div class="row">
         <span>المدفوع</span>
-        <span>{{ $order->paid_amount }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->paid_amount, true) }}</span>
     </div>
     <!-- <div class="row">
         <span>الباقي</span>

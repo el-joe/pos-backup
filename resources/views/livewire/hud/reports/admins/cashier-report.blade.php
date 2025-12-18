@@ -67,10 +67,10 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $row->cashier }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_sales, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_refunds, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->total_discounts, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($row->net_sales, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->total_sales, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->total_refunds, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->total_discounts, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->net_sales, true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -83,10 +83,10 @@
                         <tfoot class="bg-success bg-opacity-25 fw-bold">
                             <tr>
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sumSales, 2) }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sumRefunds, 2) }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sumDiscounts, 2) }}</td>
-                                <td class="text-end">{{ currency()->symbol }}{{ number_format($sumNet, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($sumSales, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($sumRefunds, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($sumDiscounts, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($sumNet, true) }}</td>
                             </tr>
                         </tfoot>
                         @endif

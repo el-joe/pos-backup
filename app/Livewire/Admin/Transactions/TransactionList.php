@@ -35,7 +35,7 @@ class TransactionList extends Component
                 'date' => $line->transaction?->date,
                 'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
                 'line_type' => $line->type,
-                'amount' => currency()->symbol . number_format($line->amount, 2),
+                'amount' => currencyFormat($line->amount, true),
                 'created_at' => $line->created_at,
             ];
         });

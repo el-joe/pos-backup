@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Central\CPanel\AuthController;
 use App\Http\Middleware\AdminTranslationMiddleware;
+use App\Http\Middleware\CpanelTranslationMiddleware;
 use App\Livewire\Admin\Plans\PlansList;
 use App\Livewire\Central\CPanel\Admins\AdminsList;
 use App\Livewire\Central\CPanel\Contacts\ContactsList;
@@ -16,7 +17,7 @@ use App\Livewire\Central\CPanel\RegisterRequests\RegisterRequestsList;
 use App\Livewire\Central\CPanel\Subscriptions\SubscriptionsList;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [AdminTranslationMiddleware::class]],function () {
+Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTranslationMiddleware::class]],function () {
     Route::get('login', [AuthController::class, 'login'])->name('login');
     Route::post('login', [AuthController::class, 'postLogin'])->name('postLogin');
 

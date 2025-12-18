@@ -86,19 +86,19 @@
         <table>
             <tr>
                 <td>الإجمالي الفرعي</td>
-                <td>{{ currency()->symbol }}{{ $order->sub_total }}</td>
+                <td>{{ currencyFormat($order->sub_total, true) }}</td>
             </tr>
             <tr>
                 <td>خصم</td>
-                <td>{{ currency()->symbol }}{{ ($order->discount_amount ?? 0 ) * -1}}</td>
+                <td>{{ currencyFormat($order->discount_amount ?? 0, true) }}</td>
             </tr>
             <tr>
                 <td>ضريبة القيمة المضافة</td>
-                <td>{{ currency()->symbol }}{{ $order->tax_amount ?? 0 }}</td>
+                <td>{{ currencyFormat($order->tax_amount ?? 0, true) }}</td>
             </tr>
             <tr class="grand-total">
                 <td>الإجمالي النهائي</td>
-                <td>{{ currency()->symbol }}{{ $order->grand_total_amount }}</td>
+                <td>{{ currencyFormat($order->grand_total_amount, true) }}</td>
             </tr>
         </table>
     </div>

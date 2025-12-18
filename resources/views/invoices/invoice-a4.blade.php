@@ -74,8 +74,8 @@
                     <td>{{ $item->product?->name }}</td>
                     <td>{{ $item->unit?->name ?? 'PIECE' }}</td>
                     <td>{{ $item->qty }}</td>
-                    <td>{{ $item->sell_price }}{{ currency()?->symbol }}</td>
-                    <td>{{ $item->total }}{{ currency()->symbol }}</td>
+                    <td>{{ currencyFormat($item->sell_price, true) }}</td>
+                    <td>{{ currencyFormat($item->total, true) }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -86,19 +86,19 @@
         <table>
             <tr>
                 <td>Subtotal</td>
-                <td>{{ $order->sub_total }}{{ currency()->symbol }}</td>
+                <td>{{ currencyFormat($order->sub_total, true) }}</td>
             </tr>
             <tr>
                 <td>Discount</td>
-                <td>{{ ($order->discount_amount ?? 0 ) * -1}}{{ currency()->symbol }}</td>
+                <td>{{ currencyFormat($order->discount_amount ?? 0, true) }}</td>
             </tr>
             <tr>
                 <td>VAT</td>
-                <td>{{ $order->tax_amount ?? 0 }}{{ currency()->symbol }}</td>
+                <td>{{ currencyFormat($order->tax_amount ?? 0, true) }}</td>
             </tr>
             <tr class="grand-total">
                 <td>Grand Total</td>
-                <td>{{ $order->grand_total_amount }}{{ currency()->symbol }}</td>
+                <td>{{ currencyFormat($order->grand_total_amount, true) }}</td>
             </tr>
         </table>
     </div>

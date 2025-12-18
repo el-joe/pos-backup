@@ -61,8 +61,8 @@
                 <tr>
                     <td>{{ $item->name }}</td>
                     <td class="right">{{ $item->qty }}</td>
-                    <td class="right">{{ $item->sell_price }}{{ currency()?->symbol }}</td>
-                    <td class="right">{{ $item->total }}{{ currency()->symbol }}</td>
+                    <td class="right">{{ currencyFormat($item->sell_price, true) }}</td>
+                    <td class="right">{{ currencyFormat($item->total, true) }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -73,20 +73,20 @@
     <!-- Totals -->
     <div class="row">
         <span>Subtotal</span>
-        <span>{{ $order->sub_total }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->sub_total, true) }}</span>
     </div>
     <div class="row">
         <span>Discount</span>
-        <span>-{{ $order->discount_amount ?? 0 }}{{ currency()->symbol }}</span>
+        <span>-{{ currencyFormat($order->discount_amount ?? 0, true) }}</span>
     </div>
     <div class="row">
         <span>VAT </span>
-        <span>{{ $order->tax_amount ?? 0 }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->tax_amount ?? 0, true) }}</span>
     </div>
 
     <div class="row total">
         <span>TOTAL</span>
-        <span>{{ $order->grand_total_amount }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->grand_total_amount, true) }}</span>
     </div>
 
     <hr>
@@ -99,7 +99,7 @@
     </div>
     <div class="row">
         <span>Paid</span>
-        <span>{{ $order->paid_amount }}{{ currency()->symbol }}</span>
+        <span>{{ currencyFormat($order->paid_amount, true) }}</span>
     </div>
     <!-- <div class="row">
         <span>Change</span>

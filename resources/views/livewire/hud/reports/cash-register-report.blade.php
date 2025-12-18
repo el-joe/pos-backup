@@ -94,16 +94,16 @@
                                     <td>{{ $register->closed_at ?? '-' }}</td>
                                     <td>{{ $register->branch?->name ?? $register->branch_id }}</td>
                                     <td>{{ $register->admin->name ?? $register->admin_id }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->opening_balance, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_sales, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_sale_refunds, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_purchases, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_purchase_refunds, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_expenses, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_expense_refunds, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_deposits, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->total_withdrawals, 2) }}</td>
-                                    <td class="text-end">{{ currency()->symbol }}{{ number_format($register->closing_balance, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->opening_balance, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_sales, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_sale_refunds, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_purchases, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_purchase_refunds, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_expenses, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_expense_refunds, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_deposits, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_withdrawals, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->closing_balance, true) }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-{{ $register->status == 'open' ? 'success' : 'danger' }}">
                                             {{ ucfirst($register->status) }}

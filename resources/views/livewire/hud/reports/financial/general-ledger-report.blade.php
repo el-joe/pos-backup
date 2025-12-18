@@ -83,7 +83,7 @@
                                                         <td>{{ ucfirst($txn['type']) }}</td>
                                                         <td>
                                                             <span class="badge bg-{{ $txn['type'] === 'debit' ? 'success' : 'danger' }}">
-                                                                {{ currency()->symbol }}{{ number_format($txn['amount'], 2) }}
+                                                                {{ currencyFormat($txn['amount'], true) }}
                                                             </span>
                                                         </td>
                                                         <td>{{ $txn['description'] }}</td>

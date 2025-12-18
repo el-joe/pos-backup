@@ -17,43 +17,43 @@
                     <tbody>
                         <tr class="fw-semibold">
                             <td>{{ __('general.pages.cash_register.opening_balance') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['opening_balance'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['opening_balance'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_sales') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['total_sales'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_sales'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_sale_refunds') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{  number_format($aggregates['total_sale_refunds'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_sale_refunds'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_purchases') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['total_purchases'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_purchases'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_purchase_refunds') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{  number_format($aggregates['total_purchase_refunds'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_purchase_refunds'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_expenses') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['total_expenses'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_expenses'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_expense_refunds') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['total_expense_refunds'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_expense_refunds'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_deposits') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['total_deposits'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_deposits'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.cash_register.total_withdrawals') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['total_withdrawals'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['total_withdrawals'] ?? 0, true) }}</td>
                         </tr>
                         <tr class="fw-semibold table-light">
                             <td>{{ __('general.pages.cash_register.closing_balance') }}</td>
-                            <td class="text-end">{{ currency()->symbol }}{{ number_format($aggregates['closing_balance'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['closing_balance'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -76,7 +76,7 @@
             <div class="card-body">
                 @if($currentRegister)
                 <p><strong>{{ __('general.pages.cash_register.open_since') }}:</strong> {{ $currentRegister->opened_at }}</p>
-                <p><strong>{{ __('general.pages.cash_register.opening_balance') }}:</strong> {{ currency()->symbol }}{{ number_format($currentRegister->opening_balance, 2) }}</p>
+                <p><strong>{{ __('general.pages.cash_register.opening_balance') }}:</strong> {{ currencyFormat($currentRegister->opening_balance, true) }}</p>
 
                 <div class="mb-3">
                     <label class="form-label">{{ __('general.pages.cash_register.closing_balance') }}</label>

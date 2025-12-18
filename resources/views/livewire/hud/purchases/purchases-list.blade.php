@@ -124,10 +124,10 @@
                                     {{ $purchase->status->label() }}
                                 </span>
                             </td>
-                            <td>{{ currency()->symbol }}{{ $purchase->total_amount ?? 0 }}</td>
+                            <td>{{ currencyFormat($purchase->total_amount ?? 0, true) }}</td>
                             <td>
                                 <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
-                                    {{ currency()->symbol }}{{ number_format($purchase->due_amount ?? 0, 2) }}
+                                    {{ currencyFormat($purchase->due_amount ?? 0, true) }}
                                 </span>
                             </td>
                             <td>
@@ -234,7 +234,7 @@
                                 @forelse($payments as $payment)
                                     <tr>
                                         <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
-                                        <td><span class="badge bg-success">{{ currency()->symbol }}{{ $payment->amount }}</span></td>
+                                        <td><span class="badge bg-success">{{ currencyFormat($payment->amount, true) }}</span></td>
                                         <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name ? $payment->account()->paymentMethod?->name .' - '  : '' ) . $payment->account()->name : 'N/A' }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>

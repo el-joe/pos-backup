@@ -48,16 +48,16 @@
                         @foreach($report['cash_flows'] ?? [] as $type => $flow)
                         <tr>
                             <td>{{ ucfirst(str_replace('_', ' ', $type)) }}</td>
-                            <td>{{ currency()->symbol }}{{ number_format($flow['inflow'], 2) }}</td>
-                            <td>{{ currency()->symbol }}{{ number_format($flow['outflow'], 2) }}</td>
-                            <td>{{ currency()->symbol }}{{ number_format($flow['net'], 2) }}</td>
+                            <td>{{ currencyFormat($flow['inflow'], true) }}</td>
+                            <td>{{ currencyFormat($flow['outflow'], true) }}</td>
+                            <td>{{ currencyFormat($flow['net'], true) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-primary-subtle">
                             <td>{{ __('general.pages.reports.common.total') }}</td>
-                            <td>{{ currency()->symbol }}{{ number_format($report['total_inflow'] ?? 0, 2) }}</td>
-                            <td>{{ currency()->symbol }}{{ number_format($report['total_outflow'] ?? 0, 2) }}</td>
-                            <td>{{ currency()->symbol }}{{ number_format($report['net_cash_flow'] ?? 0, 2) }}</td>
+                            <td>{{ currencyFormat($report['total_inflow'] ?? 0, true) }}</td>
+                            <td>{{ currencyFormat($report['total_outflow'] ?? 0, true) }}</td>
+                            <td>{{ currencyFormat($report['net_cash_flow'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
                 </table>
