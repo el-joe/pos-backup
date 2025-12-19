@@ -97,7 +97,7 @@
                 @if(admin()->branch_id === null)
                 <div class="mb-3">
                     <label class="form-label">{{ __('general.pages.cash_register.select_branch') }}</label>
-                    <select class="form-select" wire:model="branchId">
+                    <select class="form-select select2" name="branchId">
                         <option value="">-- {{ __('general.pages.cash_register.select_branch') }} --</option>
                         @foreach($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -126,3 +126,7 @@
         </div>
     @endif
 </div>
+
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush
