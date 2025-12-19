@@ -1,5 +1,6 @@
 @extends('layouts.central.site.layout')
 
+@section('title','Powerful ERP System for Business Management | Mohaaseb')
 
 @section('content')
     <!-- BEGIN #home -->
