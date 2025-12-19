@@ -19,11 +19,11 @@
                     <!-- Filter by Branch -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.expenses.branch') }}</label>
-                        <select class="form-select"
-                                wire:model="filters.branch_id">
+                        <select class="form-select select2"
+                                name="filters.branch_id">
                             <option value="">{{ __('general.layout.all_branches') }}</option>
                             @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -31,11 +31,11 @@
                     <!-- Filter by Category -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.expenses.category') }}</label>
-                        <select class="form-select"
-                                wire:model="filters.expense_category_id">
+                        <select class="form-select select2"
+                                name="filters.expense_category_id">
                             <option value="">{{ __('general.pages.expenses.all_categories') }}</option>
                             @foreach($expenseCategories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" {{ ($filters['expense_category_id']??'') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -114,10 +114,10 @@
                         <div class="col-md-6">
                             <label for="expenseBranch" class="form-label">{{ __('general.pages.expenses.branch') }}</label>
                             @if(admin()->branch_id == null)
-                            <select id="expenseBranch" wire:model="data.branch_id" class="form-select">
+                            <select id="expenseBranch" name="data.branch_id" class="form-select select2">
                                 <option value="">{{ __('general.pages.expenses.select_branch') }}</option>
                                 @foreach($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    <option value="{{ $branch->id }}" {{ ($data['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                                 @endforeach
                             </select>
                             @else
@@ -127,10 +127,10 @@
 
                         <div class="col-md-6">
                             <label for="expenseCategory" class="form-label">{{ __('general.pages.expenses.category') }}</label>
-                            <select id="expenseCategory" wire:model="data.expense_category_id" class="form-select">
+                            <select id="expenseCategory" name="data.expense_category_id" class="form-select select2">
                                 <option value="">{{ __('general.pages.expenses.select_category') }}</option>
                                 @foreach($expenseCategories as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    <option value="{{ $cat->id }}" {{ ($data['expense_category_id']??'') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -167,5 +167,6 @@
 
 </div>
 
-@push('styles')
+@push('scripts')
+@include('layouts.hud.partials.select2-script')
 @endpush

@@ -27,10 +27,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.brands.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.brands.all') }}</option>
-                            <option value="1">{{ __('general.pages.brands.active') }}</option>
-                            <option value="0">{{ __('general.pages.brands.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'all') == 'all' ? 'selected' : '' }}>{{ __('general.pages.brands.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'all') == '1' ? 'selected' : '' }}>{{ __('general.pages.brands.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'all') == '0' ? 'selected' : '' }}>{{ __('general.pages.brands.inactive') }}</option>
                         </select>
                     </div>
 
@@ -134,4 +134,5 @@
 
 @push('styles')
     @livewire('admin.brands.brand-modal')
+    @include('layouts.hud.partials.select2-script')
 @endpush

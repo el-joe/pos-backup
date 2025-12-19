@@ -27,10 +27,10 @@
                     {{-- Parent Categories --}}
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.categories.parent_category') }}</label>
-                        <select class="form-select" wire:model.live="filters.parent_id">
+                        <select class="form-select select2" name="filters.parent_id">
                             <option value="all">{{ __('general.pages.categories.all') }}</option>
                             @foreach ($allCategories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                <option value="{{ $cat->id }}" {{ ($filters['parent_id']??0) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.categories.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.categories.all') }}</option>
-                            <option value="1">{{ __('general.pages.categories.active') }}</option>
-                            <option value="0">{{ __('general.pages.categories.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'all') == 'all' ? 'selected' : '' }}>{{ __('general.pages.categories.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'all') == '1' ? 'selected' : '' }}>{{ __('general.pages.categories.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'all') == '0' ? 'selected' : '' }}>{{ __('general.pages.categories.inactive') }}</option>
                         </select>
                     </div>
 
@@ -155,4 +155,5 @@
 
 @push('scripts')
     @livewire('admin.categories.category-modal')
+    @include('layouts.hud.partials.select2-script')
 @endpush

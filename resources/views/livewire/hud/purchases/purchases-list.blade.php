@@ -27,10 +27,10 @@
                     <!-- Filter by Supplier -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.purchases.supplier') }}</label>
-                        <select class="form-select" wire:model.live="filters.supplier_id">
+                        <select class="form-select select2" name="filters.supplier_id">
                             <option value="">{{ __('general.pages.purchases.all_suppliers') }}</option>
                             @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                <option value="{{ $supplier->id }}" {{ ($filters['supplier_id']??'') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     <!-- Filter by Branch -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.purchases.branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.branch_id">
+                        <select class="form-select select2" name="filters.branch_id">
                             <option value="">{{ __('general.pages.purchases.all_branches_option') }}</option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -49,10 +49,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.purchases.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.status">
+                        <select class="form-select select2" name="filters.status">
                             <option value="">{{ __('general.pages.purchases.all_statuses') }}</option>
                             @foreach (App\Enums\PurchaseStatusEnum::cases() as $status)
-                                <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                                <option value="{{ $status->value }}" {{ ($filters['status']??'') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -260,5 +260,6 @@
 </div>
 
 
-@push('styles')
+@push('scripts')
+@include('layouts.hud.partials.select2-script')
 @endpush

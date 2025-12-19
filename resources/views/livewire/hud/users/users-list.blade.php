@@ -27,10 +27,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.users.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.users.all') }}</option>
-                            <option value="1">{{ __('general.pages.users.active') }}</option>
-                            <option value="0">{{ __('general.pages.users.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.users.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.users.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.users.inactive') }}</option>
                         </select>
                     </div>
 
@@ -146,4 +146,5 @@
 
 @push('styles')
 @livewire('admin.users.user-modal',['type'=> $type])
+@include('layouts.hud.partials.select2-script')
 @endpush

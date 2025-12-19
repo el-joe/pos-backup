@@ -27,10 +27,10 @@
                     <!-- Filter by Customer -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.sales.customer') }}</label>
-                        <select class="form-select" wire:model.live="filters.customer_id">
+                        <select class="form-select select2" name="filters.customer_id">
                             <option value="">{{ __('general.pages.sales.all_customers') }}</option>
                             @foreach ($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                <option value="{{ $customer->id }}" {{ ($filters['customer_id']??'') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     {{-- Filter by Branch --}}
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.sales.branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.branch_id">
+                        <select class="form-select select2" name="filters.branch_id">
                             <option value="">{{ __('general.pages.sales.all_branches_option') }}</option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -285,5 +285,6 @@
 </div>
 
 
-@push('styles')
+@push('scripts')
+@include('layouts.hud.partials.select2-script')
 @endpush

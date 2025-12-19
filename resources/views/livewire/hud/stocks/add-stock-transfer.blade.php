@@ -12,10 +12,10 @@
                     <label for="from_branch_id" class="form-label">{{ __('general.pages.stock-transfers.from_branch') }}</label>
                     @if(admin()->branch_id == null)
                     <div class="d-flex">
-                        <select id="from_branch_id" wire:model.change="data.from_branch_id" class="form-select">
+                        <select id="from_branch_id" name="data.from_branch_id" class="form-select select2">
                             <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($data['from_branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                         <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
@@ -28,10 +28,10 @@
                 <div class="col-md-4">
                     <label for="to_branch_id" class="form-label">{{ __('general.pages.stock-transfers.to_branch') }}</label>
                     <div class="d-flex">
-                        <select id="to_branch_id" wire:model.change="data.to_branch_id" class="form-select">
+                        <select id="to_branch_id" name="data.to_branch_id" class="form-select select2">
                             <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($data['to_branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                         <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
@@ -53,20 +53,20 @@
 
                 <div class="col-md-4">
                     <label for="expense_paid_branch_id" class="form-label">{{ __('general.pages.stock-transfers.expense_payer_question') }}</label>
-                    <select id="expense_paid_branch_id" wire:model.change="data.expense_paid_branch_id" class="form-select">
+                    <select id="expense_paid_branch_id" name="data.expense_paid_branch_id" class="form-select select2">
                         <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
                         @foreach ($selectedBranches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            <option value="{{ $branch->id }}" {{ ($data['expense_paid_branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="col-md-4">
                     <label for="status" class="form-label">{{ __('general.pages.stock-transfers.status') }}</label>
-                    <select id="status" wire:model.change="data.status" class="form-select">
+                    <select id="status" name="data.status" class="form-select select2">
                         <option value="">{{ __('general.pages.stock-transfers.select_status') }}</option>
                         @foreach ($statuses as $status)
-                            <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                            <option value="{{ $status->value }}" {{ ($data['status']??'') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -246,6 +246,7 @@
 
 @push('scripts')
 @livewire('admin.branches.branch-modal')
+@include('layouts.hud.partials.select2-script')
 <script>
     window.addEventListener('reset-search-input', () => {
         const input = document.getElementById('product_search');

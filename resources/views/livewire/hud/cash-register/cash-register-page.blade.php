@@ -75,38 +75,38 @@
             </div>
             <div class="card-body">
                 @if($currentRegister)
-                <p><strong>{{ __('general.pages.cash_register.open_since') }}:</strong> {{ dateTimeFormat($currentRegister->opened_at) }}</p>
-                <p><strong>{{ __('general.pages.cash_register.opening_balance') }}:</strong> {{ currencyFormat($currentRegister->opening_balance, true) }}</p>
+                    <p><strong>{{ __('general.pages.cash_register.open_since') }}:</strong> {{ dateTimeFormat($currentRegister->opened_at) }}</p>
+                    <p><strong>{{ __('general.pages.cash_register.opening_balance') }}:</strong> {{ currencyFormat($currentRegister->opening_balance, true) }}</p>
 
-                <div class="mb-3">
-                    <label class="form-label">{{ __('general.pages.cash_register.closing_balance') }}</label>
-                    <input type="number" class="form-control" wire:model="closing_balance_input">
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('general.pages.cash_register.closing_balance') }}</label>
+                        <input type="number" class="form-control" wire:model="closing_balance_input">
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label">{{ __('general.pages.cash_register.notes') }}</label>
-                    <textarea class="form-control" wire:model="closing_notes" rows="3"></textarea>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('general.pages.cash_register.notes') }}</label>
+                        <textarea class="form-control" wire:model="closing_notes" rows="3"></textarea>
+                    </div>
 
-                <button wire:click="closeRegister" class="btn btn-danger w-100">{{ __('general.pages.cash_register.close_register') }}</button>
+                    <button wire:click="closeRegister" class="btn btn-danger w-100">{{ __('general.pages.cash_register.close_register') }}</button>
                 @else
-                <div class="mb-3">
-                    <label class="form-label">{{ __('general.pages.cash_register.opening_balance') }}</label>
-                    <input type="number" class="form-control" wire:model="opening_balance_input">
-                </div>
-                @if(admin()->branch_id === null)
-                <div class="mb-3">
-                    <label class="form-label">{{ __('general.pages.cash_register.select_branch') }}</label>
-                    <select class="form-select select2" name="branchId">
-                        <option value="">-- {{ __('general.pages.cash_register.select_branch') }} --</option>
-                        @foreach($branches as $branch)
-                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                @endif
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('general.pages.cash_register.opening_balance') }}</label>
+                        <input type="number" class="form-control" wire:model="opening_balance_input">
+                    </div>
+                    @if(admin()->branch_id === null)
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('general.pages.cash_register.select_branch') }}</label>
+                            <select class="form-select select2" name="branchId">
+                                <option value=""> {{ __('general.pages.cash_register.select_branch') }} </option>
+                                @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
 
-                <button wire:click="openRegister" class="btn btn-success w-100">{{ __('general.pages.cash_register.open_register') }}</button>
+                    <button wire:click="openRegister" class="btn btn-success w-100">{{ __('general.pages.cash_register.open_register') }}</button>
                 @endif
             </div>
             <div class="card-arrow">

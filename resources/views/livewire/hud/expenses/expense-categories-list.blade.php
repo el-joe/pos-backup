@@ -27,10 +27,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.expense-categories.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.expense-categories.all') }}</option>
-                            <option value="1">{{ __('general.pages.expense-categories.active') }}</option>
-                            <option value="0">{{ __('general.pages.expense-categories.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.inactive') }}</option>
                         </select>
                     </div>
 
@@ -153,3 +153,7 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush

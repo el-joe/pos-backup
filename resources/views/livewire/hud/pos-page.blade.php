@@ -25,10 +25,10 @@
                         <label for="branchSelect" class="fw-semibold">{{ __('general.pages.pos-page.branch') }}:</label>
                         <div class="d-flex">
                             @if(admin()->branch_id == null)
-                                <select class="form-select" id="branchSelect" wire:model.live="data.branch_id">
+                                <select class="form-select select2" id="branchSelect" name="data.branch_id">
                                     <option value="">-- {{ __('general.pages.pos-page.branch') }} --</option>
                                     @foreach($branches as $branch)
-                                        <option value="{{ $branch->id }}">
+                                        <option value="{{ $branch->id }}" @if(isset($data['branch_id']) && $data['branch_id'] == $branch->id) selected @endisset>
                                             {{ $branch->name }} @if($branch->phone) - {{ $branch->phone }} @endif
                                         </option>
                                     @endforeach
@@ -49,10 +49,10 @@
                     <div class="col-sm-4">
                         <label for="customerSelect" class="fw-semibold">{{ __('general.pages.pos-page.customer') }}:</label>
                         <div class="d-flex">
-                            <select class="form-select" id="customerSelect" wire:model="selectedCustomerId">
+                            <select class="form-select select2" id="customerSelect" name="selectedCustomerId">
                                 <option value="">-- {{ __('general.pages.pos-page.customer') }} --</option>
                                 @foreach($customers as $customer)
-                                    <option value="{{ $customer->id }}">
+                                    <option value="{{ $customer->id }}" @if(isset($selectedCustomerId) && $selectedCustomerId == $customer->id) selected @endisset>
                                         {{ $customer->name }} @if($customer->phone) - {{ $customer->phone }} @endif
                                     </option>
                                 @endforeach
@@ -297,6 +297,7 @@
 <script src="{{ asset('hud/assets/js/demo/highlightjs.demo.js') }}"></script>
 <script src="{{ asset('hud/assets/js/demo/sidebar-scrollspy.demo.js') }}"></script>
 <script src="{{ asset('hud/assets/js/demo/pos-customer-order.demo.js') }}"></script>
+@include('layouts.hud.partials.select2-script')
 
 <script>
     function redirectTo(url){

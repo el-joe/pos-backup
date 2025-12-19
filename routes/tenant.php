@@ -262,7 +262,7 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 // Barcode/QR Code Generation
 // Prienters Settings
 
-// refactor select elements to be a select2 with search
+// refactor select elements to be a select2 with search -> #DONE except reports filters
 // fix reports date range picker to be consistent across all reports
 // Before Publishing we need to test domain register not just subdomain
 

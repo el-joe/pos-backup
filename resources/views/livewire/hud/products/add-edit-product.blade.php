@@ -46,10 +46,10 @@
                     <label for="branch_id" class="form-label">{{ __('general.pages.products.branch') }}</label>
                     <div class="d-flex">
                         @if(admin()->branch_id == null)
-                        <select id="branch_id" wire:model.change="data.branch_id" class="form-select">
+                        <select id="branch_id" name="data.branch_id" class="form-select select2">
                             <option value="">{{ __('general.pages.products.select_branch') }}</option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($data['branch_id']??false) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                         @else
@@ -63,10 +63,10 @@
                 <div class="col-md-4">
                     <label for="brand_id" class="form-label">{{ __('general.pages.products.brand') }}</label>
                     <div class="d-flex">
-                        <select id="brand_id" wire:model.change="data.brand_id" class="form-select">
+                        <select id="brand_id" name="data.brand_id" class="form-select select2">
                             <option value="">{{ __('general.pages.products.select_brand') }}</option>
                             @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" {{ ($this->data['brand_id']??false) == $brand->id ? 'selected' : '' }}>
+                                <option value="{{ $brand->id }}" {{ ($data['brand_id']??false) == $brand->id ? 'selected' : '' }}>
                                     {{ $brand->name }}
                                 </option>
                             @endforeach
@@ -79,10 +79,10 @@
                 <div class="col-md-4">
                     <label for="category_id" class="form-label">{{ __('general.pages.products.category') }}</label>
                     <div class="d-flex">
-                        <select id="category_id" wire:model.change="data.category_id" class="form-select">
+                        <select id="category_id" name="data.category_id" class="form-select select2">
                             <option value="">{{ __('general.pages.products.select_category') }}</option>
                             @foreach ($categories as $parent)
-                                {{ recursiveChildrenForOptions($parent,'children','id','name',0,true,$this->data['category_id'] ?? null) }}
+                                {{ recursiveChildrenForOptions($parent,'children','id','name',0,true,$this->data['category_id'] ?? null,$data['category_id'] ?? null) }}
                             @endforeach
                         </select>
 
@@ -94,10 +94,10 @@
                 <div class="col-md-4">
                     <label for="unit_id" class="form-label">{{ __('general.pages.products.unit') }}</label>
                     <div class="d-flex">
-                        <select id="unit_id" wire:model="data.unit_id" class="form-select">
+                        <select id="unit_id" name="data.unit_id" class="form-select select2">
                             <option value="">{{ __('general.pages.products.select_unit') }}</option>
                             @foreach ($units as $unit)
-                                <option value="{{ $unit->id }}" {{ ($this->data['unit_id']??false) == $unit->id ? 'selected' : '' }}>
+                                <option value="{{ $unit->id }}" {{ ($data['unit_id']??false) == $unit->id ? 'selected' : '' }}>
                                     {{ $unit->name }}
                                 </option>
                             @endforeach
@@ -220,4 +220,5 @@
     @livewire('admin.brands.brand-modal')
     @livewire('admin.categories.category-modal')
     @livewire('admin.units.unit-modal')
+    @include('layouts.hud.partials.select2-script')
 @endpush

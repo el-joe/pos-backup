@@ -27,7 +27,7 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.branches.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
+                        <select class="form-select select2" name="filters.active">
                             <option value="all">{{ __('general.pages.branches.all') }}</option>
                             <option value="1">{{ __('general.pages.branches.active') }}</option>
                             <option value="0">{{ __('general.pages.branches.inactive') }}</option>
@@ -157,4 +157,5 @@
 
 @push('scripts')
     @livewire('admin.branches.branch-modal')
+    @include('layouts.hud.partials.select2-script')
 @endpush

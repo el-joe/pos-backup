@@ -27,10 +27,10 @@
                     <!-- Filter by Transaction Type -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.transactions.transaction_type') }}</label>
-                        <select class="form-select" wire:model.live="filters.transaction_type">
+                        <select class="form-select select2" name="filters.transaction_type">
                             <option value="all">{{ __('general.pages.transactions.all') }}</option>
                             @foreach (App\Enums\TransactionTypeEnum::cases() as $case)
-                                <option value="{{ $case->value }}">{{ $case->label() }}</option>
+                                <option value="{{ $case->value }}" {{ ($filters['transaction_type']??'') == $case->value ? 'selected' : '' }}>{{ $case->label() }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     <!-- Filter by Branch -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.transactions.branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.branch_id">
+                        <select class="form-select select2" name="filters.branch_id">
                             <option value="all">{{ __('general.pages.transactions.all') }}</option>
                             @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -105,5 +105,6 @@
     </div>
 </div>
 
-@push('styles')
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
 @endpush

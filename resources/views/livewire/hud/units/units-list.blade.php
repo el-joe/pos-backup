@@ -27,11 +27,11 @@
                     {{-- Filter By Parent Unit --}}
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.units.parent_unit') }}</label>
-                        <select class="form-select" wire:model.live="filters.parent_id">
-                            <option value="all">{{ __('general.pages.units.all') }}</option>
-                            <option value="0">{{ __('general.pages.units.is_parent') }}</option>
+                        <select class="form-select select2" name="filters.parent_id">
+                            <option value="all" {{ ($filters['parent_id']??'all') == 'all' ? 'selected' : '' }}>{{ __('general.pages.units.all') }}</option>
+                            <option value="0" {{ ($filters['parent_id']??'all') == '0' ? 'selected' : '' }}>{{ __('general.pages.units.is_parent') }}</option>
                             @foreach($filterUnits as $parentUnit)
-                                <option value="{{ $parentUnit->id }}">{{ $parentUnit->name }}</option>
+                                <option value="{{ $parentUnit->id }}" {{ ($filters['parent_id']??'all') == $parentUnit->id ? 'selected' : '' }}>{{ $parentUnit->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -39,10 +39,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.units.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.units.all') }}</option>
-                            <option value="1">{{ __('general.pages.units.active') }}</option>
-                            <option value="0">{{ __('general.pages.units.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'all') == 'all' ? 'selected' : '' }}>{{ __('general.pages.units.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'all') == '1' ? 'selected' : '' }}>{{ __('general.pages.units.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'all') == '0' ? 'selected' : '' }}>{{ __('general.pages.units.inactive') }}</option>
                         </select>
                     </div>
 
@@ -150,4 +150,5 @@
 
 @push('styles')
     @livewire('admin.units.unit-modal')
+    @include('layouts.hud.partials.select2-script')
 @endpush

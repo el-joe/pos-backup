@@ -27,10 +27,10 @@
                     <!-- Filter by Stock From Branch -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.stock-transfers.stock_from_branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.from_branch_id">
+                        <select class="form-select select2" name="filters.from_branch_id">
                             <option value="all">{{ __('general.pages.stock-transfers.all') }}</option>
                             @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['from_branch_id']??'all') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     <!-- Filter by Stock To Branch -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.stock-transfers.stock_to_branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.to_branch_id">
+                        <select class="form-select select2" name="filters.to_branch_id">
                             <option value="all">{{ __('general.pages.stock-transfers.all') }}</option>
                             @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['to_branch_id']??'all') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -109,21 +109,6 @@
     </div>
 </div>
 
-@push('styles')
-<style>
-    /* .card {
-        border-radius: 16px;
-        border: 1.5px solid #e3e6ed;
-    }
-    .card-header {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-        padding: 16px 24px;
-    }
-    .card-title {
-        font-size: 20px;
-        font-weight: 600;
-        color: #333;
-    } */
-</style>
+@push('scripts')
+@include('layouts.hud.partials.select2-script')
 @endpush

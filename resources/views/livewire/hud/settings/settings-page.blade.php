@@ -97,30 +97,30 @@
                                                     @break
 
                                                 @case('select')
-                                                    <select class="form-select" wire:model="settings.{{ $setting->key }}">
+                                                    <select class="form-select select2" name="settings.{{ $setting->key }}">
                                                         <option value="">-- Select --</option>
                                                         @if($setting->key === 'currency_id')
                                                             @foreach($this->currencies as $currency)
-                                                                <option value="{{ $currency->id }}">{{ $currency->name }} ({{ $currency->code }})</option>
+                                                                <option value="{{ $currency->id }}" {{ ($settings[$setting->key] ?? '') == $currency->id ? 'selected' : '' }}>{{ $currency->name }} ({{ $currency->code }})</option>
                                                             @endforeach
                                                         @elseif($setting->key === 'country_id')
                                                             @foreach($this->countries as $country)
-                                                                <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                                <option value="{{ $country->id }}" {{ ($settings[$setting->key] ?? '') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
                                                             @endforeach
                                                         @elseif($setting->key === 'default_language')
                                                             @foreach($this->languages as $language)
-                                                                <option value="{{ $language->code }}">{{ $language->name }}</option>
+                                                                <option value="{{ $language->code }}" {{ ($settings[$setting->key] ?? '') == $language->code ? 'selected' : '' }}>{{ $language->name }}</option>
                                                             @endforeach
                                                         @elseif($setting->key === 'default_tax')
                                                             @foreach($this->taxes as $tax)
-                                                                <option value="{{ $tax->id }}">{{ $tax->name }} ({{ $tax->rate }}%)</option>
+                                                                <option value="{{ $tax->id }}" {{ ($settings[$setting->key] ?? '') == $tax->id ? 'selected' : '' }}>{{ $tax->name }} ({{ $tax->rate }}%)</option>
                                                             @endforeach
                                                         @elseif($setting->options)
                                                             @php
                                                                 $options = json_decode($setting->options, true);
                                                             @endphp
                                                             @foreach($options as $optionKey => $optionValue)
-                                                                <option value="{{ $optionKey }}">{{ $optionValue }}</option>
+                                                                <option value="{{ $optionKey }}" {{ ($settings[$setting->key] ?? '') == $optionKey ? 'selected' : '' }}>{{ $optionValue }}</option>
                                                             @endforeach
                                                         @endif
                                                     </select>
@@ -196,3 +196,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush
