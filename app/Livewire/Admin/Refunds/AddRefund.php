@@ -97,6 +97,21 @@ class AddRefund extends Component
             'reason' => 'nullable|string|max:255',
         ]))return;
 
+        if(!$this->validator([
+            'refundItems' => $this->refundItems
+        ],[
+            'refundItems' => 'required|array|min:1',
+            'refundItems.*' => 'required|integer|min:1',
+        ]))return;
+
+        foreach ($this->refundItems??[] as $itemId => $qty) {
+            $orderItem = $this->getOrder()->{$this->order_type == 'sale' ? 'saleItems' : 'purchaseItems'}()->where('id',$itemId)->first();
+            if(($orderItem->actual_qty ?? 0) == 0){
+                $this->alert('error', __('general.messages.invalid_refund_quantity', ['item' => $orderItem->product->name ?? '']));
+                return;
+            }
+        }
+
         DB::beginTransaction();
         try {
             $refund = Refund::create($this->data);
