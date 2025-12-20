@@ -8,13 +8,11 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
-                            <input type="date" class="form-control border-secondary" wire:model.lazy="from_date">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
-                            <input type="date" class="form-control border-secondary" wire:model.lazy="to_date">
+                        <div class="col-6" wire:ignore>
+                            <label class="form-label">{{ __('general.pages.reports.common.date_range') }}</label>
+                            <div class="input-group">
+                                <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -128,16 +126,6 @@
     </div>
 </div>
 
-@push('styles')
-<style>
-    /* .bg-purple {
-        background-color: #6f42c1 !important;
-    }
-    .bg-dark-subtle {
-        background-color: #2c2f36 !important;
-    }
-    .table-dark th, .table-dark td {
-        border-color: #444;
-    } */
-</style>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
 @endpush

@@ -8,13 +8,9 @@
             </div>
             <div class="card-body">
                 <form class="row g-3">
-                    <div class="col-md-3">
-                        <label for="from_date" class="form-label">{{ __('general.pages.reports.common.from') }}</label>
-                        <input type="date" id="from_date" wire:model.lazy="from_date" class="form-control form-control-sm bg-dark text-light border-secondary">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="to_date" class="form-label">{{ __('general.pages.reports.common.to') }}</label>
-                        <input type="date" id="to_date" wire:model.lazy="to_date" class="form-control form-control-sm bg-dark text-light border-secondary">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                     </div>
                 </form>
             </div>
@@ -96,3 +92,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

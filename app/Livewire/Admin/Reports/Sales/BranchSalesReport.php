@@ -26,7 +26,15 @@ class BranchSalesReport extends Component
 
     public function loadReport()
     {
-        $rows = Branch::with('sales.saleItems')->get();
+        $rows = Branch::with([
+            'sales' => function ($query) {
+                return $query->when($this->from_date, function ($q) {
+                    $q->whereDate('created_at', '>=', $this->from_date);
+                })->when($this->to_date, function ($q) {
+                    $q->whereDate('created_at', '<=', $this->to_date);
+                })->with('saleItems');
+            }
+        ])->get();
 
         $this->report = $rows;
     }

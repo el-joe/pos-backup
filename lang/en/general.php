@@ -112,6 +112,7 @@ return [
         'reports' => [
             'common' => [
                 'filter_options' => 'Filter Options',
+                'date_range' => 'Date Range',
                 'from_date' => 'From Date',
                 'admin' => 'Admin',
                 'all' => 'All',

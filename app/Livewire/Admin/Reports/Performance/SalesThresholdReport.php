@@ -39,7 +39,13 @@ class SalesThresholdReport extends Component
         $salesType = AccountTypeEnum::SALES->value;
 
         $this->report = User::whereType(UserTypeEnum::CUSTOMER->value)
-            ->with('sales.saleItems')
+            ->with([
+                'sales' => function ($query) use ($fromDate, $toDate, $salesType) {
+                    $query->when($fromDate && $toDate, function ($q) use ($fromDate, $toDate) {
+                        $q->whereBetween('created_at', [$fromDate, $toDate]);
+                    })->with('saleItems');
+                }
+            ])
             ->get()
             ->map(function ($user) {
                 $totalSales = $user->sales->sum(fn($q)=>$q->grand_total_amount);
