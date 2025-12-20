@@ -121,6 +121,14 @@ return [
                 "icon"  => "fa fa-user-friends fa-fw",
                 'can' => 'customers.list,customers.show,customers.create,customers.update,customers.delete,customers.export'
             ],
+            [
+                "title" => "Refunds",
+                'translated_title' => 'general.titles.refunds',
+                "route" => 'admin.refunds.list',
+                'request_params' => ['order_type' => 'sale'],
+                "icon"  => "fa fa-undo-alt fa-fw",
+                'can' => 'refunds.list,refunds.show,refunds.create,refunds.delete,refunds.export'
+            ]
         ],
     ],
     [
@@ -145,6 +153,14 @@ return [
                 "icon"  => "fa fa-shipping-fast fa-fw",
                 'can' => 'suppliers.list,suppliers.show,suppliers.create,suppliers.update,suppliers.delete,suppliers.export'
             ],
+            [
+                "title" => "Refunds",
+                'translated_title' => 'general.titles.refunds',
+                "route" => 'admin.refunds.list',
+                'request_params' => ['order_type' => 'purchase'],
+                "icon"  => "fa fa-undo-alt fa-fw",
+                'can' => 'refunds.list,refunds.show,refunds.create,refunds.delete,refunds.export'
+            ]
         ],
     ],
     [

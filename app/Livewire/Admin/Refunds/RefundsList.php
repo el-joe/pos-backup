@@ -21,10 +21,21 @@ class RefundsList extends Component
 
     public $collapseFilters = false;
 
+    #[Url]
+    public $order_type;
+
+    function orderType(){
+        return match ($this->order_type) {
+            'sale' => Sale::class,
+            'purchase' => Purchase::class,
+            default => null
+        };
+    }
+
     public function render()
     {
-
         $refundsQuery = Refund::query()
+            ->where('order_type', $this->orderType())
             ->with(['items.product', 'items.unit'])
             ->orderByDesc('id');
 

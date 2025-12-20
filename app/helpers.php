@@ -168,7 +168,7 @@ function extractRoutes(array $items): array
 
     foreach ($items as $item) {
         if (!empty($item['route']) && $item['route'] !== '#') {
-            $routes[] = $item['route'];
+            $routes[] = $item;
         }
 
         if (!empty($item['children'])) {
@@ -182,13 +182,21 @@ function extractRoutes(array $items): array
 
 function checkRouteParams($routeParams = []){
     foreach ($routeParams as $key => $value) {
-        $route = request()->route($key);
-        if($route == null){
-            return true;
-        }
+        $routeCheck = request()->route($key);
 
-        if($route == $value) {
-            return true;
+        if(!empty($routeCheck)){
+            return $routeCheck == $value;
+        }
+    }
+
+    return false;
+}
+
+function checkRequestParams($requestParams = []){
+    foreach ($requestParams as $key => $value) {
+        $paramCheck = request()->has($key) ?? false;
+        if($paramCheck){
+            return request($key) == $value;
         }
     }
 

@@ -114,7 +114,9 @@ class AddRefund extends Component
 
         DB::beginTransaction();
         try {
-            $refund = Refund::create($this->data);
+            $data = $this->data;
+            $data['order_type'] = $this->order_type == 'sale' ? Sale::class : Purchase::class;
+            $refund = Refund::create($data);
             foreach($this->refundItems as $itemId => $qty){
                 if($qty == 0){
                     continue;
