@@ -32,6 +32,8 @@ return [
         'stock-transfers' => 'Stock Transfers',
         'stock-adjustments' => 'Stock Adjustments',
         'sales' => 'Sales',
+        'refunds' => 'Refunds',
+        'add_refund' => 'Add Refund',
         'orders' => 'Orders',
         'accounting' => 'Accounting',
         'shipping-companies' => 'Shipping Companies (SOON)',

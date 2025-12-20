@@ -31,6 +31,8 @@ return [
         'stock-transfers' => 'تحويلات المخزون',
         'stock-adjustments' => 'تعديلات المخزون',
         'sales' => 'المبيعات',
+        'refunds' => 'المرتجعات',
+        'add_refund' => 'إضافة مرتجع',
         'orders' => 'الطلبات',
         'accounting' => 'المحاسبة',
         'shipping-companies' => 'شركات الشحن (قريبًا)',
