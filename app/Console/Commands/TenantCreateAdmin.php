@@ -217,14 +217,14 @@ class TenantCreateAdmin extends Command
                 'group' => 'product',
                 'options' => null
             ],
-            [
-                'title' => 'settings.default_tax',
-                'key' => 'default_tax',
-                'value' => null,
-                'type' => TenantSettingEnum::SELECT->value,
-                'group' => 'pos',
-                'options' => null
-            ],
+            // [
+            //     'title' => 'settings.default_tax',
+            //     'key' => 'default_tax',
+            //     'value' => null,
+            //     'type' => TenantSettingEnum::SELECT->value,
+            //     'group' => 'pos',
+            //     'options' => null
+            // ],
             // [
             //     'title' => 'settings.theme_color',
             //     'key' => 'theme_color',

@@ -55,14 +55,16 @@ return [
                 'translated_title' => 'general.titles.categories',
                 "route" => 'admin.categories.list',
                 "icon"  => "fa fa-list fa-fw",
-                'can' => 'categories.list,categories.create,categories.update,categories.delete,categories.export'
+                'can' => 'categories.list,categories.create,categories.update,categories.delete,categories.export',
+                'enabled' => 'enable_categories'
             ],
             [
                 "title" => "Brands",
                 'translated_title' => 'general.titles.brands',
                 "route" => 'admin.brands.list',
                 "icon"  => "fa fa-tag fa-fw",
-                'can' => 'brands.list,brands.create,brands.update,brands.delete,brands.export'
+                'can' => 'brands.list,brands.create,brands.update,brands.delete,brands.export',
+                'enabled' => 'enable_brands'
             ],
             [
                 "title" => "Units",
