@@ -5,7 +5,7 @@
                 <h3 class="box-title m-b-0" style="margin:0;">Refunds</h3>
             </div>
             <div class="col-xs-6 text-right">
-                <a class="btn btn-primary" href="{{ route('admin.refunds.create', array_filter(['order_type' => $order_type, 'order_id' => $order_id], fn($v) => !is_null($v) && $v !== '')) }}">
+                <a class="btn btn-primary" href="{{ route('admin.refunds.create') }}">
                     <i class="fa fa-plus"></i> New Refund
                 </a>
                 <button type="button" class="btn btn-default" wire:click="$set('export','excel')">
@@ -21,8 +21,7 @@
                         <th>#</th>
                         <th>Order Type</th>
                         <th>Order ID</th>
-                        <th>Items</th>
-                        <th>Total</th>
+                        <th>Items Count</th>
                         <th>Reason</th>
                         <th>Created At</th>
                     </tr>
@@ -32,9 +31,10 @@
                         <tr>
                             <td>{{ $refund->id }}</td>
                             <td>{{ class_basename($refund->order_type) }}</td>
-                            <td>{{ $refund->order_id }}</td>
+                            <td>
+                                <a target="_blank" href="{{ class_basename($refund->order_type) == 'sale' ? route('admin.sales.details',$refund->order_id) : route('admin.purchases.details',$refund->order_id) }}">#{{ $refund->order_id }}</a>
+                            </td>
                             <td>{{ $refund->items?->count() ?? 0 }}</td>
-                            <td>{{ number_format($refund->total ?? 0, 2) }}</td>
                             <td>{{ $refund->reason }}</td>
                             <td>{{ $refund->created_at?->format('Y-m-d H:i') }}</td>
                         </tr>

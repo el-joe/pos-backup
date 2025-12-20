@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('refunds', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('branch_id');
             $table->morphs('order');
-            $table->decimal('total', 15, 2);
             $table->text('reason')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

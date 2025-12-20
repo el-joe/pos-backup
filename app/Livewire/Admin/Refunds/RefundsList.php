@@ -14,11 +14,6 @@ class RefundsList extends Component
 {
     use LivewireOperations, WithPagination;
 
-    #[Url]
-    public ?string $order_type = null;
-
-    #[Url]
-    public ?int $order_id = null;
 
     public $export = null;
 
@@ -26,31 +21,11 @@ class RefundsList extends Component
 
     public $collapseFilters = false;
 
-    private function normalizedOrderType(): ?string
-    {
-        $type = $this->order_type;
-
-        if (!$type) {
-            return null;
-        }
-
-        $type = trim((string) $type);
-
-        return match ($type) {
-            'sale', Sale::class => Sale::class,
-            'purchase', Purchase::class => Purchase::class,
-            default => null,
-        };
-    }
-
     public function render()
     {
-        $normalizedOrderType = $this->normalizedOrderType();
 
         $refundsQuery = Refund::query()
             ->with(['items.product', 'items.unit'])
-            ->when($normalizedOrderType, fn($q) => $q->where('order_type', $normalizedOrderType))
-            ->when($this->order_id, fn($q) => $q->where('order_id', $this->order_id))
             ->orderByDesc('id');
 
         if ($this->export == 'excel') {

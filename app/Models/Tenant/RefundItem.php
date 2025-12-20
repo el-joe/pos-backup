@@ -8,6 +8,8 @@ class RefundItem extends Model
 {
     protected $fillable = [
         'refund_id',
+        'refundable_type',
+        'refundable_id',
         'product_id',
         'unit_id',
         'qty',
@@ -26,5 +28,10 @@ class RefundItem extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function refundable()
+    {
+        return $this->morphTo();
     }
 }

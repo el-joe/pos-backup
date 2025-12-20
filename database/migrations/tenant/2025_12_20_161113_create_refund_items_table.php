@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('refund_id');
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('unit_id');
+            $table->morphs('refundable');
             $table->decimal('qty', 15, 4);
             $table->timestamps();
         });

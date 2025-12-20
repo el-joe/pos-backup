@@ -1062,6 +1062,17 @@ return [
             'return' => 'مرتجع',
             'returned' => 'تم الإرجاع',
         ],
+        'refunds' => [
+            'add_new_refund_order' => 'إضافة طلب مرتجع جديد',
+            'branch' => 'الفرع',
+            'select_branch' => 'اختر الفرع',
+            'order_type' => 'نوع الطلب',
+            'select_type' => 'اختر النوع',
+            'orders' => 'الطلبات',
+            'select_order' => 'اختر الطلب',
+            'reason' => 'السبب',
+            'order_products' => 'منتجات الطلب',
+        ],
         'products' => [
             'filters' => 'الفلاتر',
             'show_hide' => 'إظهار / إخفاء',

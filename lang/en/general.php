@@ -903,6 +903,7 @@ return [
         'sales' => [
             'filters' => 'Filters',
             'show_hide' => 'Show / Hide',
+            'refund_qty' => 'Refund Qty',
             'invoice_no' => 'Invoice No',
             'search_placeholder' => 'Search ...',
             'customer' => 'Customer',
@@ -1024,6 +1025,19 @@ return [
             'cancel' => 'Cancel',
             'transferred_products' => 'Transferred Products',
             'stock_transfer_expenses' => 'Stock Transfer Expenses',
+        ],
+        'refunds' => [
+            'add_new_refund_order' => 'Add New Refund Order',
+            'branch' => 'Branch',
+            'select_branch' => 'Select Branch',
+            'order_type' => 'Order Type',
+            'select_type' => 'Select Type',
+            'orders' => 'Orders',
+            'select_order' => 'Select Order',
+            'reason' => 'Reason',
+            'order_products' => 'Order Products',
+            'save_refund' => 'Save Refund',
+            'refund' => 'Refund',
         ],
         'stock-taking' => [
             'filters' => 'Filters',
@@ -1270,5 +1284,6 @@ return [
     ],
     'messages' => [
         'you_do_not_have_permission_to_access' => 'You do not have permission to access this module.',
+        'created_successfully' => 'Created successfully.',
     ]
 ];

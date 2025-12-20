@@ -50,6 +50,8 @@ enum AuditLogActionEnum : string
     case CREATE_SALE_ORDER_PAYMENT = 'create_sale_order_payment';
     case EXPORT_SALES = 'export_sales';
     case RETURN_SALE_ITEM = 'return_sale_item';
+    case RETURN_SALE_ORDER = 'return_sale_order';
+    case RETURN_PURCHASE_ORDER = 'return_purchase_order';
     case DELETE_USER_TRY = 'delete_user_try';
     case DELETE_USER = 'delete_user';
     case EXPORT_USERS = 'export_users';

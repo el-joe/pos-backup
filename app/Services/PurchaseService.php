@@ -166,6 +166,7 @@ class PurchaseService
             'payable_id' => $purchaseId,
             'refunded' => $reverse ? 1 : 0,
             'note' => $data['payment_note'] ?? '',
+            'account_id' => $getSupplierAccount->id ?? null,
             ... $orderPaymentData
         ]);
 
@@ -398,12 +399,18 @@ class PurchaseService
         ];
     }
 
-    function createSupplierCreditLine($data,$reverse = false) {
-        if(!isset($data['payment_account'])){
-            $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
+    function getSupplierAccount($supplierId = null,$paymentAccountId = null){
+        if(!isset($paymentAccountId)){
+            $getSupplierAccount = User::find($supplierId)->accounts->first();
         }else{
-            $getSupplierAccount = Account::find($data['payment_account']);
+            $getSupplierAccount = Account::find($paymentAccountId);
         }
+
+        return $getSupplierAccount;
+    }
+
+    function createSupplierCreditLine($data,$reverse = false) {
+        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null, $data['payment_account'] ?? null);
 
         // get grand total from data
         $grandTotal = $data['grand_total'] ?? 0;
@@ -483,22 +490,24 @@ class PurchaseService
         // refund purchase payments
         $totalRefunded = $grandTotalFromRefundedQty - $purchaseDueAmount;
         if($totalRefunded <= 0){
-            return;
-        }
-        $refundPaymentData = [
-            'grand_total' => $totalRefunded,
-            'payment_note' => 'Refund for purchase item #'. ($purchaseItem->product?->name ?? 'N/A'),
-            'payment_status' => 'refunded',
-            'payment_amount' => $totalRefunded,
-            'branch_id' => $purchaseOrder->branch_id,
-            'supplier_id' => $purchaseOrder->supplier_id,
-        ];
+        }else{
+            $refundPaymentData = [
+                'grand_total' => $totalRefunded,
+                'payment_note' => 'Refund for purchase item #'. ($purchaseItem->product?->name ?? 'N/A'),
+                'payment_status' => 'refunded',
+                'payment_amount' => $totalRefunded,
+                'branch_id' => $purchaseOrder->branch_id,
+                'supplier_id' => $purchaseOrder->supplier_id,
+                'payment_account' => $this->getSupplierAccount($purchaseOrder->supplier_id, $data['payment_account'] ?? null)?->id ?? null,
+            ];
 
-        $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
+            $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
+
+            $purchaseOrder->decrement('paid_amount',$totalRefunded);
+        }
 
         // refund purchase items qty
         $purchaseItem->increment('refunded_qty',$qty);
-        $purchaseOrder->decrement('paid_amount',$totalRefunded);
 
         // Refund Qty from stock
         $this->stockService->reduceStock(productId: $purchaseItem->product_id,unitId: $purchaseItem->unit_id,qty: $qty,branchId: $purchaseOrder->branch_id);
