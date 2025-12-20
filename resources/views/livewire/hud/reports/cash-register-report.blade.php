@@ -18,24 +18,20 @@
                     </div>
                     <div class="col-md-3">
                         <label for="branch_id" class="form-label">{{ __('general.pages.reports.common.branch') }}</label>
-                        <select id="branch_id" wire:model.defer="branch_id" class="form-select form-select-sm">
+                        <select id="branch_id" name="branch_id" class="form-select form-select-sm select2">
                             <option value="">{{ __('general.pages.reports.common.all_branches') }}</option>
-                            @if(function_exists('branches'))
-                                @foreach(branches() as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                @endforeach
-                            @endif
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ $branch->id == $branch_id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label for="admin_id" class="form-label">{{ __('general.pages.reports.cash_register_report.admin_cashier') }}</label>
-                        <select id="admin_id" wire:model.defer="admin_id" class="form-select form-select-sm">
+                        <select id="admin_id" name="admin_id" class="form-select form-select-sm select2">
                             <option value="">{{ __('general.pages.reports.cash_register_report.all_admins') }}</option>
-                            @if(function_exists('admins'))
-                                @foreach(admins() as $admin)
-                                    <option value="{{ $admin->id }}">{{ $admin->name }}</option>
-                                @endforeach
-                            @endif
+                            @foreach($admins as $admin)
+                                <option value="{{ $admin->id }}" {{ $admin->id == $admin_id ? 'selected' : '' }}>{{ $admin->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
@@ -129,3 +125,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush

@@ -17,10 +17,10 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">{{ __('general.pages.reports.common.period') }}</label>
-                        <select class="form-select form-select-sm" wire:model.lazy="period">
-                            <option value="day">{{ __('general.pages.reports.common.day') }}</option>
-                            <option value="week">{{ __('general.pages.reports.common.week') }}</option>
-                            <option value="month">{{ __('general.pages.reports.common.month') }}</option>
+                        <select class="form-select select2 form-select-sm" name="period">
+                            <option value="day" {{ $period == 'day' ? 'selected' : '' }}>{{ __('general.pages.reports.common.day') }}</option>
+                            <option value="week" {{ $period == 'week' ? 'selected' : '' }}>{{ __('general.pages.reports.common.week') }}</option>
+                            <option value="month" {{ $period == 'month' ? 'selected' : '' }}>{{ __('general.pages.reports.common.month') }}</option>
                         </select>
                     </div>
                 </div>
@@ -102,3 +102,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush

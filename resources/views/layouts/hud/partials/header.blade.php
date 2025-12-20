@@ -116,7 +116,8 @@
                 <div class="menu-badge bg-theme"></div>
                 @endif
             </a>
-            <div class="dropdown-menu dropdown-menu-{{ $__locale == 'en' ? 'end' : 'start' }} mt-1 w-300px fs-11px pt-1">
+            {{-- set max width and scroll to bottom --}}
+            <div class="dropdown-menu dropdown-menu-{{ $__locale == 'en' ? 'end' : 'start' }} mt-1 w-300px fs-11px pt-1" style="max-height: 400px; overflow-y: auto;">
                 <h6 class="dropdown-header fs-10px mb-1">{{ __('general.layout.notifications') }}</h6>
                 <div class="dropdown-divider mt-1"></div>
                 @forelse ($__unreaded_notifications as $notification)
@@ -124,9 +125,12 @@
                 @empty
                     <div class="text-center p-2 text-muted">{{ __('general.layout.no_new_notifications') }}</div>
                 @endforelse
-                <hr class="my-0">
-                <div class="py-10px mb-n2 text-center">
-                    <a href="{{ route('admin.notifications.list') }}" class="text-decoration-none fw-bold">{{ __('general.layout.see_all') }}</a>
+                {{-- make see all fixed position --}}
+                <div style="position: sticky; bottom: 0; z-index: 10;background-color: var(--bs-dropdown-bg);">
+                    <hr class="my-0">
+                    <div class="py-10px mb-n2 text-center">
+                        <a href="{{ route('admin.notifications.list') }}" class="text-decoration-none fw-bold">{{ __('general.layout.see_all') }}</a>
+                    </div>
                 </div>
             </div>
         </div>

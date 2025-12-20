@@ -18,13 +18,11 @@
                     </div>
                     <div class="col-md-3">
                         <label for="branch_id" class="form-label">{{ __('general.pages.reports.branch_profitability.branch') }}</label>
-                        <select id="branch_id" wire:model.defer="branch_id" class="form-select form-select-sm">
+                        <select id="branch_id" name="branch_id" class="form-select form-select-sm select2">
                             <option value="">{{ __('general.pages.reports.branch_profitability.all_branches') }}</option>
-                            @if(function_exists('branches'))
-                                @foreach(branches() as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                @endforeach
-                            @endif
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ $branch->id == $branch_id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
@@ -135,3 +133,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush

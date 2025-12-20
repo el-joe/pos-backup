@@ -18,19 +18,19 @@
                     </div>
                     <div class="col-md-3">
                         <label for="admin_id" class="form-label">{{ __('general.pages.reports.common.admin') }}</label>
-                        <select id="admin_id" wire:model.defer="admin_id" class="form-select form-select-sm">
+                        <select id="admin_id" name="admin_id" class="form-select select2 form-select-sm">
                             <option value="">{{ __('general.pages.reports.common.all') }}</option>
                             @foreach($admins as $admin)
-                                <option value="{{ $admin->id }}">{{ $admin->name }} #{{ $admin->id }}</option>
+                                <option value="{{ $admin->id }}" {{ $admin->id == ($admin_id??null) ? 'selected' : '' }}>{{ $admin->name }} #{{ $admin->id }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label for="action" class="form-label">{{ __('general.pages.reports.audit_report.action') }}</label>
-                        <select id="action" wire:model.defer="action" class="form-select form-select-sm">
+                        <select id="action" name="action" class="form-select select2 form-select-sm">
                             <option value="">{{ __('general.pages.reports.common.all') }}</option>
                             @foreach(\App\Enums\AuditLogActionEnum::cases() as $actionEnum)
-                                <option value="{{ $actionEnum->value }}">{{ ucwords(str_replace('_', ' ', $actionEnum->value)) }}</option>
+                                <option value="{{ $actionEnum->value }}" {{ $actionEnum->value == ($action??null) ? 'selected' : '' }}>{{ ucwords(str_replace('_', ' ', $actionEnum->value)) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -136,3 +136,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush
