@@ -21,6 +21,8 @@ use App\Livewire\Admin\Plans\{PlansList,SubscriptionsPage};
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\{AddEditProduct,ProductsList};
 use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
+use App\Livewire\Admin\Refunds\AddRefund;
+use App\Livewire\Admin\Refunds\RefundsList;
 use App\Livewire\Admin\Reports\{
     Admins\CashierReport,
     AuditReport,
@@ -220,6 +222,9 @@ Route::middleware([
 
             Route::get('imports',ImportsPage::class)->name('imports');
             Route::get('settings',SettingsPage::class)->name('settings');
+
+            Route::get('refunds', RefundsList::class)->name('refunds.list');
+            Route::get('refunds/create', AddRefund::class)->name('refunds.create');
         });
     });
 
@@ -257,12 +262,9 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 
 
 // Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
-// Add return/refund_orders table and refund_order_items table to handle refunds properly
-// add opening hours to branches
 // Barcode/QR Code Generation
 // Prienters Settings
 
-// fix reports date range picker to be consistent across all reports
 // Before Publishing we need to test domain register not just subdomain
 
 // اداره التصنيع

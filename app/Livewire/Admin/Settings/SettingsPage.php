@@ -243,10 +243,13 @@ class SettingsPage extends Component
             if (isset($this->uploadedFiles[$key])) {
                 $file = $this->uploadedFiles[$key];
                 $s = Setting::where('key', $key)->first();
-                if($s) $s->file()->create([
-                    'path' => $file,
-                    'key' => $key,
-                ]);
+                if($s) {
+                    $s->file()->delete();
+                    $s->file()->create([
+                        'path' => $file,
+                        'key' => $key,
+                    ]);
+                }
 
                 $s->update([
                     'value' => $s->file->full_path ?? ''
