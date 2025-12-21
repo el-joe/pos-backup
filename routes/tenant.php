@@ -271,6 +271,7 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 // TODO : E-Invoice Coming Soon
 // Multi Currency Support into sales orders -> EX : customer come to egypt and doesn't have EGP , he pay in USD , we save the exchange rate at that day and save the amount in both currencies
 // tenant balance
+// static pages into central website
 
 // booking reservation system
 // hrm system

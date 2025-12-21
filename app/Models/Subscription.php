@@ -19,9 +19,7 @@ class Subscription extends Model
         'start_date',
         'end_date',
         'status',
-        'payment_gateway',
-        'payment_details',
-        'payment_callback_details',
+        'payment_transaction_id',
         'billing_cycle',
     ];
 
@@ -30,8 +28,6 @@ class Subscription extends Model
         'systems_allowed' => 'array',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
-        'payment_details' => 'array',
-        'payment_callback_details' => 'array',
         'billing_cycle' => 'string',
     ];
 
@@ -43,6 +39,11 @@ class Subscription extends Model
     function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    function paymentTransaction()
+    {
+        return $this->belongsTo(PaymentTransaction::class, 'payment_transaction_id');
     }
 
     function scopeForTenant($query, $tenantId)
