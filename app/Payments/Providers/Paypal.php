@@ -142,24 +142,7 @@ class Paypal implements PaymentMethodInterface
                 [
                     'amount' => [
                         'currency_code' => $currency,
-                        'value' => $amount,
-                        'breakdown' => [
-                            'item_total' => [
-                                'currency_code' => $currency,
-                                'value' => $amount
-                            ]
-                        ]
-                    ],
-                    'description' => 'Mohaaseb Subscription Payment',
-                    'items' => [
-                        [
-                            'name' => 'Subscription Payment',
-                            'unit_amount' => [
-                                'currency_code' => $currency,
-                                'value' => $amount
-                            ],
-                            'quantity' => '1'
-                        ]
+                        'value' => $amount
                     ]
                 ]
             ],
