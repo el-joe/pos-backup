@@ -3,6 +3,7 @@
 use App\Http\Controllers\Central\Site\HomeController;
 use App\Http\Controllers\Central\Site\PaymentController;
 use App\Http\Controllers\Central\Tenant\RegisterController;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix'=> '/'],function () {
@@ -18,6 +19,12 @@ Route::group(['prefix'=> '/'],function () {
 
     Route::get('payment/callback/{type}', [PaymentController::class,'callback'])->name('payment.callback');
     Route::get('{type}/payment', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
+});
+
+Route::get('test', function () {
+    PaymentMethod::whereProvider('Paypal')->update([
+        'required_fields' => ['client_id','secret'],
+    ]);
 });
 
 // add central_panel routes here

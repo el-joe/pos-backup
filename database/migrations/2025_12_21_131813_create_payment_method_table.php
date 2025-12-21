@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('provider')->unique();
             $table->json('credentials')->nullable();
             $table->json('required_fields')->nullable();
+            $table->decimal('fee_percentage', 8, 2)->default(0);
+            $table->decimal('fixed_fee', 10, 2)->default(0);
             $table->boolean('active')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

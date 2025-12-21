@@ -4,7 +4,10 @@ namespace App\Livewire\Central\Site;
 
 use App\Models\Country;
 use App\Models\Currency;
+use App\Models\PaymentTransaction;
 use App\Models\Plan;
+use App\Payments\Providers\Paypal;
+use App\Payments\Services\PaymentService;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
 
@@ -81,13 +84,38 @@ class CheckoutPage extends Component
     function completeSubscription()
     {
         $this->validate();
-        $dataToString = encodedData($this->data + [
+        $newData = $this->data + [
             'plan_id' => $this->plan?->id,
-            'period' => $this->period
-        ]);
-        // TODO : when plan price is free , we should goto success page directly without payment gateway
+            'period' => $this->period,
+            'amount' => (float)$this->plan->{'price_' . $this->period} ?? 0,
+        ];
+        $dataToString = encodedData($newData);
+
         // else proceed to payment gateway
-        $this->js("window.location='". '/payment/callback/success?data=' . $dataToString ."'");
+        if($newData['amount'] <= 0){
+            return redirect()->route('payment.callback', ['type' => 'success', 'data' => $dataToString]);
+        }
+
+        $paymentService = new PaymentService(new Paypal());
+        $requestPayload = $paymentService->pay([
+            'amount' => $newData['amount'],
+            'currency' => 'USD',
+            'description' => 'Mohaaseb Subscription Payment',
+            'metadata' => $newData,
+            'return_url' => url('/payment/callback/check?data=' . $dataToString),
+            'cancel_url' => url('/payment/callback/failed?data=' . $dataToString),
+        ]);
+
+        PaymentTransaction::create([
+            // 'tenant_id',
+            'payment_method_id' => 1, // Paypal
+            'amount' => $newData['amount'],
+            'status' => 'pending',
+            'request_payload' => $requestPayload,
+            'transaction_reference' => $dataToString
+        ]);
+
+        return redirect()->to($requestPayload['payment']['links'][1]['href']);
     }
 
     public function render()

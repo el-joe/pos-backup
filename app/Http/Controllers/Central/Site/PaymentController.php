@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Central\Site;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminRegisterRequestMail;
 use App\Mail\RegisterRequestMail;
+use App\Models\Plan;
 use App\Models\RegisterRequest;
+use App\Payments\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -14,6 +16,19 @@ class PaymentController extends Controller
     function callback(Request $request,$type) {
         $data = $request->query('data');
         $data = decodedData($data);
+
+        if($type == 'check'){
+            $plan = Plan::find($data['plan_id'] ?? 1);
+            if(!$plan){
+                return redirect()->route('payment-callback',['type'=>'failed']);
+            }
+
+            $paymentProvider = 'App\\Payments\\Providers\\'.($plan->provider ?? 'Paypal');
+
+            $paymentService = new PaymentService(new $paymentProvider());
+
+            dd($paymentService->callback($request->token));
+        }
 
         if($type == 'success'){
             try{

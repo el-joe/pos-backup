@@ -15,6 +15,8 @@ class PaymentMethod extends Model
         'provider',
         'credentials',
         'required_fields',
+        'fee_percentage',
+        'fixed_fee',
         'active',
     ];
 

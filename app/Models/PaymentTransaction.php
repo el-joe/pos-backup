@@ -13,6 +13,7 @@ class PaymentTransaction extends Model
         'status',
         'request_payload',
         'response_payload',
+        'transaction_reference'
     ];
 
     protected $casts = [

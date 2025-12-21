@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,12 +12,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //         'tenant_id',
-        // 'payment_method_id',
-        // 'amount',
-        // 'status',
-        // 'request_payload',
-        // 'response_payload',
 
         Schema::create('payment_transactions', function (Blueprint $table) {
             $table->id();
@@ -26,8 +21,11 @@ return new class extends Migration
             $table->enum('status', ['pending', 'success', 'failed', 'refunded'])->default('pending');
             $table->json('request_payload')->nullable();
             $table->json('response_payload')->nullable();
+            $table->text('transaction_reference')->nullable();
             $table->timestamps();
         });
+
+        DB::statement("ALTER TABLE payment_transactions ADD FULLTEXT(transaction_reference);");
     }
 
     /**
