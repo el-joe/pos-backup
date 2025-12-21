@@ -132,6 +132,9 @@ class Paypal implements PaymentMethodInterface
             'payment_source' => [
                 'paypal' => [
                     'experience_context' => [
+                        "payment_method_preference" =>  "UNRESTRICTED",
+                        "landing_page" => "LOGIN",
+                        "shipping_preference" => "NO_SHIPPING",
                         'return_url' => $returnUrl,
                         'cancel_url' => $cancelUrl,
                         'user_action' => 'PAY_NOW'
@@ -145,6 +148,9 @@ class Paypal implements PaymentMethodInterface
                         'value' => $amount
                     ]
                 ]
+            ],
+            'payment_method' => [
+                'payee_preferred' => 'UNRESTRICTED'
             ]
         ];
 
