@@ -145,12 +145,6 @@ class Paypal implements PaymentMethodInterface
                         'value' => $amount
                     ]
                 ]
-            ],
-            'application_context' => [
-                'brand_name' => config('app.name'),
-                'landing_page' => 'NO_PREFERENCE',
-                'shipping_preference' => 'NO_SHIPPING',
-                'user_action' => 'PAY_NOW',
             ]
         ];
 
