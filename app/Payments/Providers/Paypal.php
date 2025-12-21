@@ -131,15 +131,6 @@ class Paypal implements PaymentMethodInterface
             'intent' => 'CAPTURE',
             'payment_source' => [
                 'paypal' => [
-                    'address' => [
-                        'address_line_1' => '123 Townsend St',
-                        'address_line_2' => 'Floor 6',
-                        'admin_area_2' => 'San Francisco',
-                        'admin_area_1' => 'CA',
-                        'postal_code' => '94107',
-                        'country_code' => 'US'
-                    ],
-                    'email_address' => 'support@mohaaseb.com',
                     'experience_context' => [
                         'return_url' => $returnUrl,
                         'cancel_url' => $cancelUrl,
