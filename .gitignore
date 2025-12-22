@@ -3,6 +3,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/sitemap.xml
 /config/tenancy.php
 /storage/*.key
 /storage/pail
