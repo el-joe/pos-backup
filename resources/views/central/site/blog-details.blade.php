@@ -28,7 +28,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="fs-16px text-body text-opacity-75">
-                        {!! nl2br(e($blog->content)) !!}
+                        {!! $blog->content !!}
                     </div>
                 </div>
                 <div class="card-arrow">
