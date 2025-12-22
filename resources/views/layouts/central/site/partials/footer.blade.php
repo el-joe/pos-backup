@@ -1,5 +1,5 @@
 <!-- BEGIN #footer -->
-<div id="footer" class="py-5 bg-gray-900 bg-opacity-75 text-body text-opacity-75" data-bs-theme="dark">
+<footer id="footer" class="py-5 bg-gray-900 bg-opacity-75 text-body text-opacity-75" data-bs-theme="dark">
     <div class="container-xxl px-3 px-lg-5">
         <div class="row gx-lg-5 gx-3 gy-lg-4 gy-3">
             <div class="col-lg-3 col-md-6">
@@ -11,7 +11,7 @@
                 </p>
                 {{-- <h5>Follow Us</h5>
                 <div class="d-flex">
-                    <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-facebook fa-fw"></i></a>
+                    <a href="#" class="me-2 text-body text-opacity-50" aria-label="Facebook" rel="noopener"><i class="fab fa-lg fa-facebook fa-fw"></i></a>
                     <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-instagram fa-fw"></i></a>
                     <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-twitter fa-fw"></i></a>
                     <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-youtube fa-fw"></i></a>
@@ -88,9 +88,9 @@
                         <li><a href="#" class="dropdown-item">Spain (Español)</a></li>
                     </ul>
                 </div> --}}
-                <a href="#" class="text-decoration-none text-body text-opacity-50">{{ __('website.footer.sitemap') }}</a>
+                <a href="{{ url('sitemap.xml') }}" class="text-decoration-none text-body text-opacity-50">{{ __('website.footer.sitemap') }}</a>
             </div>
         </div>
     </div>
-</div>
+</footer>
 <!-- END #footer -->
