@@ -1,2 +1,22 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Disallow: /admin/
+Disallow: /login/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*?*search=
+Disallow: /*?*q=
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+Sitemap: https://mohaaseb.com/sitemap.xml
