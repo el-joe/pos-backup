@@ -7,8 +7,13 @@ use App\Models\Blog;
 use App\Models\Contact;
 use App\Models\Plan;
 use App\Models\Slider;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use RalphJSmit\Laravel\SEO\SchemaCollection;
+use RalphJSmit\Laravel\SEO\Support\AlternateTag;
+use RalphJSmit\Laravel\SEO\Support\ImageMeta;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 
 class HomeController extends Controller
 {
@@ -44,6 +49,58 @@ class HomeController extends Controller
     function blogDetails($slug)
     {
         $blog = Blog::published()->where('slug', $slug)->firstOrFail();
+
+        $alternates = [
+            new AlternateTag('en', url('/en')),
+            new AlternateTag('ar', url('/ar')),
+        ];
+
+        $seoData = new SEOData(
+            title : $blog->title,
+            description : $blog->excerpt,
+            author: 'codefanz.com',
+            image : asset('favicon_io/apple-touch-icon.png'),
+            url : url()->current(),
+            robots : 'index, follow',
+            canonical_url : url('/'),
+            enableTitleSuffix: true,
+            type: "website",
+            site_name: "Mohaaseb",
+            favicon: asset('favicon_io/favicon.ico'),
+            locale: app()->getLocale() == 'en' ? 'en_US' : 'ar_AR',
+
+            openGraphTitle: $blog->title,
+            imageMeta: new ImageMeta(asset('favicon_io/apple-touch-icon.png')),
+
+            twitter_username: "@mohaaseb",
+
+            // المقالات/الصفحات الديناميكية
+            published_time: Carbon::now(), // مثال للصفحات الجديدة
+            modified_time: Carbon::now(),
+            articleBody: null,
+            section: null,
+            tags: ['ERP', 'POS', 'Accounting', 'Inventory', 'Business Management'],
+
+            // Schema (JSON-LD)
+            schema: new SchemaCollection([
+                [
+                    "@context" => "https://schema.org",
+                    "@type" => "SoftwareApplication",
+                    "name" => "Mohaaseb ERP",
+                    "applicationCategory" => "BusinessApplication",
+                    "operatingSystem" => "Web",
+                    "url" => url('/'),
+                    "offers" => [
+                        "@type" => "Offer",
+                        "price" => "0",
+                        "priceCurrency" => "USD"
+                    ]
+                ]
+            ]),
+
+            alternates: $alternates
+        );
+
         return view('central.site.blog-details', get_defined_vars());
     }
 
