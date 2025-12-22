@@ -1,39 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
-    <loc>http://localhost</loc>
+    <loc>http://pos.loc</loc>
             </url>
     <url>
-    <loc>http://localhost/ar</loc>
+    <loc>http://pos.loc/ar</loc>
             </url>
     <url>
-    <loc>http://localhost/en</loc>
+    <loc>http://pos.loc/en</loc>
             </url>
     <url>
-    <loc>http://localhost/contact-us</loc>
+    <loc>http://pos.loc/pricing/compare</loc>
             </url>
     <url>
-    <loc>http://localhost/pricing/compare</loc>
+    <loc>http://pos.loc/blogs</loc>
             </url>
     <url>
-    <loc>http://localhost/blogs</loc>
+    <loc>http://pos.loc/blogs/getting-started-smart-erp-pos</loc>
             </url>
     <url>
-    <loc>http://localhost/blogs/getting-started-smart-erp-pos</loc>
+    <loc>http://pos.loc/blogs/inventory-control-best-practices</loc>
             </url>
     <url>
-    <loc>http://localhost/blogs/inventory-control-best-practices</loc>
+    <loc>http://pos.loc/blogs/cashier-shift-management</loc>
             </url>
     <url>
-    <loc>http://localhost/blogs/cashier-shift-management</loc>
+    <loc>http://pos.loc/blogs/accounting-reports-for-owners</loc>
             </url>
     <url>
-    <loc>http://localhost/blogs/accounting-reports-for-owners</loc>
+    <loc>http://pos.loc/blogs/refunds-and-returns-policy</loc>
             </url>
     <url>
-    <loc>http://localhost/blogs/refunds-and-returns-policy</loc>
+    <loc>http://pos.loc/blogs/why-centralized-erp-matters</loc>
             </url>
     <url>
-    <loc>http://localhost/blogs/why-centralized-erp-matters</loc>
+    <loc>http://pos.loc/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/how-smart-inventory-management-increases-profitability</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/why-financial-reports-are-essential-for-business-growth</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/7-essential-erp-pos-system-modules-for-small-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/retail-kpis-dashboard-12-metrics-every-erp-pos-should-track</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/multi-branch-management-how-erp-pos-keeps-branches-in-sync</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/vat-and-e-invoicing-readiness-for-erp-pos-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/offline-pos-mode-how-sync-should-work-when-internet-drops</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/role-based-access-and-audit-logs-control-without-slowing-teams</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/procure-to-pay-workflow-from-purchase-order-to-vendor-payment</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/inventory-forecasting-and-replenishment-reduce-stockouts-without-overstock</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/integrations-guide-e-commerce-accounting-and-payment-gateways</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/erp-pos-implementation-checklist-go-live-without-chaos</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/data-security-for-erp-pos-backups-access-and-recovery-basics</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/pricing-strategy-in-erp-pos-promotions-without-losing-margin</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/blogs/customer-loyalty-in-erp-pos-programs-that-actually-work</loc>
             </url>
 </urlset>

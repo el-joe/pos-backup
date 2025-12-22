@@ -10,13 +10,12 @@ class BlogSeeder extends Seeder
     public function run(): void
     {
         // read file "7 Essential ERP POS System Modules for Small Businesses.html" from /_blogs/ directory
-        $contentEn_1 = file_get_contents(asset('_blogs/ERP System vs. POS System_ Choosing the Right Business Management Software.html'));
-        $contentAr_1 = file_get_contents(asset('_blogs/ERP System vs. POS System_ Choosing the Right Business Management Software_ar.html'));
-        $contentEn_2 = file_get_contents(asset('_blogs/7 Essential ERP POS System Modules for Small Businesses.html'));
-        $contentAr_2 = file_get_contents(asset('_blogs/7 Essential ERP POS System Modules for Small Businesses_ar.html'));
-        $contentEn_3 = file_get_contents(asset('_blogs/Inventory Management Software ERP_ Essential Features.html'));
-        $contentAr_3 = file_get_contents(asset('_blogs/Inventory Management Software ERP_ Essential Features_ar.html'));
-
+        $contentEn_1 = file_get_contents(url('_blogs/ERP_System_vs_POS_System_Choosing_the_Right_Business_Management_Software.html'));
+        $contentAr_1 = file_get_contents(url('_blogs/ERP_System_vs_POS_System_Choosing_the_Right_Business_Management_Software_ar.html'));
+        $contentEn_2 = file_get_contents(url('_blogs/7_Essential_ERP_POS_System_Modules_for_Small_Businesses.html'));
+        $contentAr_2 = file_get_contents(url('_blogs/7_Essential_ERP_POS_System_Modules_for_Small_Businesses_ar.html'));
+        $contentEn_3 = file_get_contents(url('_blogs/Inventory_Management_Software_ERP_Essential_Features.html'));
+        $contentAr_3 = file_get_contents(url('_blogs/Inventory_Management_Software_ERP_Essential_Features_ar.html'));
         $blogs = [
             [
     'title_en' => 'ERP System vs. POS System: Choosing the Right Business Management Software',
