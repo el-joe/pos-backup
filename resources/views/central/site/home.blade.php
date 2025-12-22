@@ -1,6 +1,6 @@
 @extends('layouts.central.site.layout')
 
-@section('title','Powerful ERP System for Business Management | Mohaaseb')
+@section('title',__('website.home.title'))
 
 @section('content')
     <!-- BEGIN #home -->
@@ -15,14 +15,14 @@
                     <div class="col-lg-6">
                         <!-- BEGIN hero-title-desc -->
                         <h1 class="display-6 fw-600 mb-2 mt-4">
-                            Powerful ERP System for Smarter Business Management
+                            {{ __('website.home.section1_title') }}
                         </h1>
                         <div class="fs-18px text-body text-opacity-75 mb-4">
-                            Manage your entire business from one intelligent dashboard. <span
+                            {{ __('website.home.section1_description1') }} <span
                                 class="d-xl-inline d-none"><br></span>
-                            Streamline sales, inventory, accounting, HR, and operations using a modern ERP <span
+                            {{ __('website.home.section1_description2') }} <span
                                 class="d-xl-inline d-none"><br></span>
-                            built for speed, automation, and real-time insights.
+                            {{ __('website.home.section1_description3') }}
                         </div>
                         <!-- END hero-title-desc -->
 
@@ -37,7 +37,7 @@
 							</div> --}}
 
                         <div class="mb-2">
-                            <a href="https://test.mohaaseb.com" class="btn btn-lg btn-outline-white px-3">Explore ERP Features <i
+                            <a href="https://test.mohaaseb.com" class="btn btn-lg btn-outline-white px-3">{{ __('website.home.explore_section') }} <i
                                     class="fa fa-arrow-right ms-2 opacity-5"></i></a>
                         </div>
 
@@ -53,7 +53,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-500 mb-0 h3">12k+</div>
-                                        <div class="fw-500 text-body text-opacity-75">Active Businesses</div>
+                                        <div class="fw-500 text-body text-opacity-75">{{ __('website.home.active_business') }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-500 mb-0 h3">99.9%</div>
-                                        <div class="fw-500 text-body text-opacity-75">System Uptime</div>
+                                        <div class="fw-500 text-body text-opacity-75">{{ __('website.home.system_uptime') }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -106,11 +106,9 @@
 
     <div id="about" class="py-5 bg-component">
         <div class="container-xxl p-3 p-lg-5 text-center">
-            <h2 class="mb-3 h1">About Our ERP System</h2>
+            <h2 class="mb-3 h1">{{ __('website.home.about_title') }}</h2>
             <p class="fs-16px text-body text-opacity-50 mb-5">
-                A powerful, all-in-one Enterprise Resource Planning system designed to streamline operations,
-                improve efficiency, and give businesses full control over sales, inventory, accounting, HR,
-                and day-to-day activities.
+                {{ __('website.home.about_description') }}
             </p>
 
             <div class="row text-start g-3 gx-lg-5 gy-lg-4">
@@ -122,9 +120,8 @@
                         <iconify-icon icon="solar:monitor-smartphone-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Complete Business Control</h4>
-                        <p class="mb-0">Manage sales, purchases, accounting, inventory, HR, and more—all from a unified
-                            dashboard.</p>
+                        <h4>{{ __('website.home.feature1_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature1_description') }}</p>
                     </div>
                 </div>
 
@@ -135,9 +132,8 @@
                         <iconify-icon icon="solar:settings-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Customizable Modules</h4>
-                        <p class="mb-0">Tailor features, workflows, permissions, and reports to suit your exact business
-                            operations.</p>
+                        <h4>{{ __('website.home.feature2_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature2_description') }}</p>
                     </div>
                 </div>
 
@@ -148,9 +144,8 @@
                         <iconify-icon icon="solar:bolt-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Real-Time Performance</h4>
-                        <p class="mb-0">Monitor sales, stock, profits, and financial reports instantly with real-time
-                            analytics.</p>
+                        <h4>{{ __('website.home.feature3_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature3_description') }}</p>
                     </div>
                 </div>
 
@@ -161,9 +156,8 @@
                         <iconify-icon icon="solar:lock-keyhole-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Advanced Security</h4>
-                        <p class="mb-0">Role-based permissions, encrypted data, and secure cloud infrastructure protect
-                            your business 24/7.</p>
+                        <h4>{{ __('website.home.feature4_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature4_description') }}</p>
                     </div>
                 </div>
 
@@ -174,9 +168,8 @@
                         <iconify-icon icon="solar:dialog-2-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Multi-Branch Support</h4>
-                        <p class="mb-0">Manage multiple branches, warehouses, users, and departments with centralized
-                            control.</p>
+                        <h4>{{ __('website.home.feature5_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature5_description') }}</p>
                     </div>
                 </div>
 
@@ -187,8 +180,8 @@
                         <iconify-icon icon="solar:help-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>24/7 Technical Support</h4>
-                        <p class="mb-0">Get continuous technical assistance and guidance from our expert support team.</p>
+                        <h4>{{ __('website.home.feature6_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature6_description') }}</p>
                     </div>
                 </div>
 
@@ -199,9 +192,8 @@
                         <iconify-icon icon="solar:tuning-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Scalable Infrastructure</h4>
-                        <p class="mb-0">Grow your business with a flexible system that scales smoothly as your needs
-                            expand.</p>
+                        <h4>{{ __('website.home.feature7_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature7_description') }}</p>
                     </div>
                 </div>
 
@@ -212,9 +204,8 @@
                         <iconify-icon icon="solar:widget-5-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>User-Friendly Interface</h4>
-                        <p class="mb-0">Designed for simplicity, speed, and productivity—no technical experience required.
-                        </p>
+                        <h4>{{ __('website.home.feature8_title') }}</h4>
+                        <p class="mb-0">{{ __('website.home.feature8_description') }}</p>
                     </div>
                 </div>
 
@@ -232,16 +223,11 @@
     <div id="features" class="py-5 position-relative">
         <div class="container-xxl p-3 p-lg-5 z-2 position-relative">
             <div class="text-center mb-5">
-                <h2 class="mb-3 h1">Our Unique ERP Features</h2>
+                <h2 class="mb-3 h1">{{ __('website.home.our_unique_erp_features') }}</h2>
                 <p class="fs-16px text-body text-opacity-50 mb-5">
-                    Explore HUD Admin Template's standout features. <br>
-                    With advanced customization and seamless integration, create powerful and stunning <br>
-                    admin interfaces, enhancing productivity and user satisfaction.
+                    {{ __('website.home.explore_erp_features_description') }}
                 </p>
             </div>
-            @php
-                $sliders = App\Models\Slider::where('active', true)->orderBy('number', 'asc')->get();
-            @endphp
             <div class="row g-3 g-lg-5">
                 @foreach ($sliders as $item)
                     <div class="col-xl-3 col-lg-4 col-sm-6">
@@ -280,9 +266,9 @@
     <div id="testimonials" class="py-5 text-body text-opacity-75">
         <div class="container-xxl p-3 p-lg-5">
             <div class="text-center mb-5">
-                <h2 class="mb-3 text-center h1">What Our Clients Say</h2>
+                <h2 class="mb-3 text-center h1">{{ __('website.home.our_clients_says') }}</h2>
                 <p class="fs-16px text-body text-opacity-50 text-center mb-0">
-                    Real testimonials from clients using our ERP System.
+                    {{ __('website.home.our_clients_says_subtitle') }}
                 </p>
             </div>
 
@@ -537,107 +523,43 @@
     <!-- END divider -->
 
     <!-- BEGIN #blog -->
-    {{-- <div id="blog" class="py-5 bg-component">
+    <div id="blog" class="py-5 bg-component">
 			<div class="container-xxl p-3 p-lg-5">
 				<div class="text-center mb-5">
-					<h1 class="mb-3 text-center">Our Latest Insights</h1>
+					<h1 class="mb-3 text-center">{{ __('website.home.our_insights_title') }}</h1>
 					<p class="fs-16px text-body text-opacity-50 text-center mb-0">
-						Dive into our blog for the latest trends, tips, and updates <br>
-						on web development, design, and industry best practices. Stay informed and inspired <br>
-						with expert insights and valuable resources.
+                        {{ __('website.home.our_insights_subtitle') }}
 					</p>
 				</div>
 				<div class="row g-3 g-xl-4 mb-5">
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-1.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 px-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Web Design</span>
-								</div>
-								<h5>Mastering Responsive Design: A Guide for Beginners</h5>
-								<p>Explore the fundamentals of responsive web design and learn essential tips to create websites that look great on any device.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">July 15, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-2.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 p-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">UXUI Design</span>
-								</div>
-								<h5>The Future of UI/UX Trends in 2025</h5>
-								<p>Discover the latest trends shaping user interface and experience design in the digital landscape this year.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">July 11, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-3.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 p-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Search Engine</span>
-								</div>
-								<h5>Effective SEO Strategies for 2025</h5>
-								<p>Dive into actionable SEO strategies and tips to boost your website’s visibility and drive organic traffic.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">June 29, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-4.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 p-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Cyber Security</span>
-								</div>
-								<h5>Security Essentials: Protecting Your Website from Cyber Threats</h5>
-								<p>Essential security measures and best practices to safeguard your website and user data from cyber threats.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">June 27, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
+                    @foreach ($blogs as $blog)
+                        <div class="col-xl-3 col-lg-4 col-sm-6">
+                            <a href="{{ route('blogs.show', $blog->slug) }}" class="text-decoration-none text-body">
+                                <div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
+                                    <div class="card-body">
+                                        <img src="{{ $blog->image ? asset($blog->image) : asset('hud/assets/img/landing/blog-1.jpg') }}" alt="{{ $blog->title }}" class="object-fit-cover h-200px w-100 d-block">
+                                    </div>
+                                    <div class="flex-1 px-3 pb-0">
+                                        <h5 class="mb-2">{{ $blog->title }}</h5>
+                                        <p class="mb-0">{{ \Illuminate\Support\Str::limit($blog->excerpt ?: strip_tags($blog->content), 120) }}</p>
+                                    </div>
+                                    <div class="p-3 pt-0 text-body text-opacity-50">{{ optional($blog->published_at ?: $blog->created_at)->format('M d, Y') }}</div>
+                                    <div class="card-arrow">
+                                        <div class="card-arrow-top-left"></div>
+                                        <div class="card-arrow-top-right"></div>
+                                        <div class="card-arrow-bottom-left"></div>
+                                        <div class="card-arrow-bottom-right"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
 				</div>
 				<div class="text-center">
-					<a href="#" class="text-decoration-none text-body text-opacity-50 h6">See More Company Stories <i class="fa fa-arrow-right ms-3"></i></a>
+					<a href="{{ route('blogs.index') }}" class="text-decoration-none text-body text-opacity-50 h6">{{ __('website.home.see_more_stories') }} <i class="fa fa-arrow-right ms-3"></i></a>
 				</div>
 			</div>
-		</div> --}}
+		</div>
     <!-- END #blog -->
 
     <!-- BEGIN divider -->
@@ -650,28 +572,19 @@
     <div id="contact" class="py-5 text-body text-opacity-75">
         <div class="container-xl p-3 p-lg-5">
             <div class="text-center mb-5">
-                <h2 class="mb-3 text-center h1">Get in Touch</h2>
+                <h2 class="mb-3 text-center h1">{{ __('website.home.get_in_touch') }}</h2>
                 <p class="fs-16px text-body text-opacity-50 text-center mb-0">
-                    Contact us today to explore how our team can assist you. <br>
-                    Whether you have inquiries, need support, or want to discuss a partnership, <br>
-                    we're here to help. Reach out to us and let's start a conversation!
+                    {!! __('website.home.get_in_touch_p') !!}
                 </p>
             </div>
             <div class="row gx-3 gx-lg-5">
                 <div class="col-lg-6">
-                    <h4>Contact Us to Discuss Your Project</h4>
+                    <h4>{{ __('website.home.contacts_title') }}</h4>
                     <p>
-                        Do you have a project in mind? We’re eager to discuss it with you. Whether you’re looking for
-                        advice, have questions, or want to share your ideas, feel free to reach out.
+                        {!! __('website.home.contacts_description') !!}
                     </p>
                     <p>
-
-                        Saturday - Thursday: 9:00 AM - 6:00 PM<br>
-                        Friday : Closed<br> <br>
-
-                        Phone: <a href="tel:+201558099183" class="text-theme">+20 155 8099 183</a><br>
-                        Email:
-                        <a href="mailto:support@mohaaseb.com" class="text-theme">support@mohaaseb.com</a>
+                        {!! __('website.home.contacts_hours') !!}
                     </p>
                 </div>
                 <div class="col-lg-6">
@@ -679,7 +592,7 @@
                         @csrf
                         <div class="row gy-3 mb-3">
                             <div class="col-6">
-                                <label class="form-label">First Name <span class="text-theme">*</span></label>
+                                <label class="form-label">{{ __('website.home.contact_us_first_name') }} <span class="text-theme">*</span></label>
                                 <input type="text" class="form-control form-control-lg fs-15px" name="fname"
                                     required>
                                 @if ($errors->has('fname'))
@@ -687,7 +600,7 @@
                                 @endif
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Last Name <span class="text-theme">*</span></label>
+                                <label class="form-label">{{ __('website.home.contact_us_last_name') }} <span class="text-theme">*</span></label>
                                 <input type="text" class="form-control form-control-lg fs-15px" name="lname"
                                     required>
                                 @if ($errors->has('lname'))
@@ -695,7 +608,7 @@
                                 @endif
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Email <span class="text-theme">*</span></label>
+                                <label class="form-label">{{ __('website.home.contact_us_email') }} <span class="text-theme">*</span></label>
                                 <input type="text" class="form-control form-control-lg fs-15px" name="email"
                                     required>
                                 @if ($errors->has('email'))
@@ -703,7 +616,7 @@
                                 @endif
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Phone <span class="text-theme">*</span></label>
+                                <label class="form-label">{{ __('website.home.contact_us_phone') }} <span class="text-theme">*</span></label>
                                 <input type="text" class="form-control form-control-lg fs-15px" name="phone"
                                     required>
                                 @if ($errors->has('phone'))
@@ -711,15 +624,14 @@
                                 @endif
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Message <span class="text-theme">*</span></label>
+                                <label class="form-label">{{ __('website.home.contact_us_message') }} <span class="text-theme">*</span></label>
                                 <textarea class="form-control form-control-lg fs-15px" name="message" rows="8" required></textarea>
                                 @if ($errors->has('message'))
                                     <div class="text-danger fs-13px mt-1">{{ $errors->first('message') }}</div>
                                 @endif
                             </div>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-outline-theme btn-lg btn-block px-4 fs-15px">Send
-                                    Message</button>
+                                <button type="submit" class="btn btn-outline-theme btn-lg btn-block px-4 fs-15px">{{ __('website.home.contact_us_send_message') }}</button>
                             </div>
                         </div>
                     </form>

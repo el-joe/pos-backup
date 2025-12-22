@@ -3,16 +3,48 @@
 namespace App\Http\Controllers\Central\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\Blog;
 use App\Models\Contact;
 use App\Models\Plan;
+use App\Models\Slider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
-    function index()
+    function index($lang = null)
     {
+        if($lang != null){
+            app()->setLocale($lang);
+            session(['locale' => $lang]);
+
+            return redirect()->route('central-home');
+        }
+
+        $sliders = Slider::where('active', true)->orderBy('number', 'asc')->get();
+        $blogs = Blog::published()
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->limit(4)
+            ->get();
+
         return view('central.site.home',get_defined_vars());
+    }
+
+    function blogs()
+    {
+        $blogs = Blog::published()
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->paginate(12);
+
+        return view('central.site.blogs', get_defined_vars());
+    }
+
+    function blogDetails($slug)
+    {
+        $blog = Blog::published()->where('slug', $slug)->firstOrFail();
+        return view('central.site.blog-details', get_defined_vars());
     }
 
     function contactUs(Request $request)

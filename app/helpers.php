@@ -4,8 +4,11 @@ use App\Models\Currency;
 use App\Models\Tenant\Admin;
 use App\Models\Tenant\Setting;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
+use RalphJSmit\Laravel\SEO\TagManager;
 
 const TENANT_ADMINS_GUARD = 'tenant_admin';
 const CPANEL_ADMINS_GUARD = 'cpanel_admin';
@@ -261,4 +264,17 @@ function tenantSetting($key, $default = null) {
     return Cache::driver('file')->remember(cacheKey('setting'), 60 * 60 * 24, function () {
             return Setting::all()->pluck('value', 'key')->toArray();
     })[$key] ?? $default;
+}
+
+if (! function_exists('seo')) {
+    function seo(Model | SEOData | null $source = null): TagManager
+    {
+        $tagManager = app(TagManager::class);
+
+        if ($source) {
+            $tagManager->for($source);
+        }
+
+        return $tagManager;
+    }
 }

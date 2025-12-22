@@ -1,8 +1,8 @@
 <!-- BEGIN #pricing -->
 <div id="pricing" class="py-5 text-body text-opacity-75">
     <div class="container-xxl p-3 p-lg-5">
-        <h2 class="mb-3 text-center h1">Our Pricing Plans</h2>
-        <p class="fs-16px text-body text-opacity-50 text-center mb-0">Choose the perfect plan that suits your needs. <br>Our pricing is designed to be flexible and affordable, providing value for businesses of all sizes. <br>Explore our plans to find the best fit for your requirements.</p>
+        <h2 class="mb-3 text-center h1">{{ __('website.pricing.our_pricing_title') }}</h2>
+        <p class="fs-16px text-body text-opacity-50 text-center mb-0">{!! __('website.pricing.our_pricing_description') !!}</p>
 
         <div class="d-flex justify-content-center mb-4">
             <div class="form-check form-switch">
@@ -13,7 +13,7 @@
                     wire:model.live="yearly"
                 >
                 <label class="form-check-label ms-2" for="planToggleSwitch">
-                    <span class="{{ $yearly ? 'fw-bold text-primary' : '' }}">Yearly Billing</span>
+                    <span class="{{ $yearly ? 'fw-bold text-primary' : '' }}">{{ __('website.pricing.yearly_billing')}}</span>
                 </label>
             </div>
         </div>

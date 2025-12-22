@@ -11,18 +11,18 @@
         <div class="table-responsive">
             {{-- title --}}
             <div class="mb-4">
-                <h1 class="mb-3 text-center">Compare Our Plans</h1>
+                <h1 class="mb-3 text-center">{{ __('website.pricing_compare.title') }}</h1>
                 <p class="fs-16px text-body text-opacity-50 text-center mb-0">
-                    Compare our plans and choose the solution that best suits your business.
-                    <br>All plans are designed to support your business growth and provide powerful tools for management,
-                    <br>accounting, and sales.
+                    {{ __('website.pricing_compare.subtitle_1') }}
+                    <br>{{ __('website.pricing_compare.subtitle_2') }}
+                    <br>{{ __('website.pricing_compare.subtitle_3') }}
                 </p>
             </div>
             <table class="table table-bordered text-center align-middle">
 
                 <thead class="table-dark">
                     <tr>
-                        <th>الميزة</th>
+                        <th>{{ __('website.pricing_compare.feature') }}</th>
                         @foreach($plans as $plan)
                             <th>{{ $plan->name }}</th>
                         @endforeach

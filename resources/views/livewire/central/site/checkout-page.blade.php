@@ -9,8 +9,8 @@
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="mb-0">Plan Details</h5>
-                        <small class="text-muted">Review the selected subscription plan features</small>
+                        <h5 class="mb-0">{{ __('website.checkout.plan_details_title') }}</h5>
+                        <small class="text-muted">{{ __('website.checkout.plan_details_subtitle') }}</small>
                     </div>
                 </div>
 
@@ -23,16 +23,16 @@
                         <div class="d-flex align-items-center">
                             <span class="{{ $plan->icon }} display-4 text-body text-opacity-50 rounded-3 me-3"></span>
                             <div>
-                                <h6 class="mb-0">{{ $plan->name ?? 'Pro Plan' }}</h6>
+                                <h6 class="mb-0">{{ $plan->name ?? __('website.checkout.pro_plan') }}</h6>
                             </div>
                         </div>
 
                         <!-- Right Side (Price) -->
                         <div class="text-end">
-                            <small class="text-muted">Price</small>
+                            <small class="text-muted">{{ __('website.checkout.price') }}</small>
                             <h5 class="mb-0">
                                 {{ $plan->{"price_".$period} }}$
-                                <small class="text-muted">/ {{ $period }}</small>
+                                <small class="text-muted">/ {{ __('website.checkout.periods.' . $period) }}</small>
                             </h5>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                     <hr>
 
                     <!-- Features Table -->
-                    <h6 class="fw-bold">Limits & Features</h6>
+                    <h6 class="fw-bold">{{ __('website.checkout.limits_features') }}</h6>
                     <table class="table table-borderless mb-0">
                         @foreach ($plan->features as $title=>$feature)
                             @php $featureEnum = \App\Enums\PlanFeaturesEnum::from($title); @endphp
@@ -59,10 +59,10 @@
 
                     <div class="mt-3 d-flex gap-2">
                         <a href="/#pricing" class="btn btn-outline-secondary btn-sm">
-                            <i class="fa fa-edit"></i> Change Plan
+                            <i class="fa fa-edit"></i> {{ __('website.checkout.change_plan') }}
                         </a>
                         <a href="{{ route('pricing-compare') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fa fa-list"></i> Compare Plans
+                            <i class="fa fa-list"></i> {{ __('website.checkout.compare_plans') }}
                         </a>
                     </div>
 
@@ -85,66 +85,66 @@
             <div class="card shadow-sm">
 
                 <div class="card-header">
-                    <h5 class="mb-0">Company Details</h5>
-                    <small class="text-muted">Enter your company information to create an account</small>
+                    <h5 class="mb-0">{{ __('website.checkout.company_details_title') }}</h5>
+                    <small class="text-muted">{{ __('website.checkout.company_details_subtitle') }}</small>
                 </div>
 
                 <div class="card-body">
                     <div class="row g-3">
 
                         <div class="col-12">
-                            <label class="form-label">Company Name *</label>
-                            <input required wire:model="data.company_name" class="form-control" placeholder="Example: Nile Trading">
+                            <label class="form-label">{{ __('website.checkout.company_name') }} *</label>
+                            <input required wire:model="data.company_name" class="form-control" placeholder="{{ __('website.checkout.company_name_placeholder') }}">
                             @error('data.company_name') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="col-6">
-                            <label class="form-label">Company Email *</label>
-                            <input required wire:model="data.company_email" type="email" class="form-control" placeholder="example@example.com">
+                            <label class="form-label">{{ __('website.checkout.company_email') }} *</label>
+                            <input required wire:model="data.company_email" type="email" class="form-control" placeholder="{{ __('website.checkout.company_email_placeholder') }}">
                             @error('data.company_email') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="col-6">
-                            <label class="form-label">Company Phone *</label>
-                            <input type="text" required wire:model="data.company_phone" class="form-control" placeholder="0123456789">
+                            <label class="form-label">{{ __('website.checkout.company_phone') }} *</label>
+                            <input type="text" required wire:model="data.company_phone" class="form-control" placeholder="{{ __('website.checkout.company_phone_placeholder') }}">
                             @error('data.company_phone') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <!-- Domain Selection -->
                         @if($plan->{'price_'.$period} > 0)
                         <div class="col-12">
-                            <label class="form-label">Domain Type</label>
+                            <label class="form-label">{{ __('website.checkout.domain_type') }}</label>
                             <div class="d-flex gap-3">
                                 <div class="form-check form-check-inline">
                                     <input type="radio" class="form-check-input" name="domain_mode" id="mode_subdomain" wire:click="$set('data.domain_mode', 'subdomain')" checked>
-                                    <label class="form-check-label" for="mode_subdomain">Subdomain</label>
+                                    <label class="form-check-label" for="mode_subdomain">{{ __('website.checkout.subdomain') }}</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input type="radio" class="form-check-input" name="domain_mode" id="mode_domain" wire:click="$set('data.domain_mode', 'domain')">
-                                    <label class="form-check-label" for="mode_domain">Custom Domain</label>
+                                    <label class="form-check-label" for="mode_domain">{{ __('website.checkout.custom_domain') }}</label>
                                 </div>
                             </div>
                         </div>
                         @endif
                         @if(!isset($data['domain_mode']) || $data['domain_mode'] == 'subdomain')
                         <div class="col-12" id="group_subdomain">
-                            <label class="form-label">Subdomain</label>
-                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.live.debounce.500ms="data.subdomain" placeholder="yourname">
-                            <small class="text-muted" id="domain_preview">Will be: {{  $data['final_domain'] ?? '--' }}</small>
+                            <label class="form-label">{{ __('website.checkout.subdomain') }}</label>
+                            <input type="text" class="form-control form-control-lg" id="subdomain_input" wire:model.live.debounce.500ms="data.subdomain" placeholder="{{ __('website.checkout.subdomain_placeholder') }}">
+                            <small class="text-muted" id="domain_preview">{{ __('website.checkout.domain_preview') }}: {{  $data['final_domain'] ?? '--' }}</small>
                             @error('data.subdomain') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
                         @else
                         <div class="col-12" id="group_domain">
-                            <label class="form-label">Custom Domain</label>
-                            <input type="text" class="form-control form-control-lg" id="domain_text_input" wire:model.live="data.domain" placeholder="example.com">
+                            <label class="form-label">{{ __('website.checkout.custom_domain') }}</label>
+                            <input type="text" class="form-control form-control-lg" id="domain_text_input" wire:model.live="data.domain" placeholder="{{ __('website.checkout.custom_domain_placeholder') }}">
                             @error('data.domain') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
                         @endif
 
                         <div class="col-md-6">
-                            <label class="form-label">Country</label>
+                            <label class="form-label">{{ __('website.checkout.country') }}</label>
                             <select class="form-select" wire:model="data.country_id" required>
-                                <option value="">Select Country</option>
+                                <option value="">{{ __('website.checkout.select_country') }}</option>
                                 @foreach($countries as $country)
                                     <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
                                 @endforeach
@@ -153,9 +153,9 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Currency</label>
+                            <label class="form-label">{{ __('website.checkout.currency') }}</label>
                             <select class="form-select" wire:model="data.currency_id" required>
-                                <option value="">Select Currency</option>
+                                <option value="">{{ __('website.checkout.select_currency') }}</option>
                                 @foreach($currencies as $currency)
                                     <option value="{{ $currency->id }}">{{ $currency->name }} ( {{ $currency->code }} )</option>
                                 @endforeach
@@ -164,41 +164,41 @@
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label">VAT Number (optional)</label>
+                            <label class="form-label">{{ __('website.checkout.vat_number_optional') }}</label>
                             <input wire:model="data.tax_number" class="form-control">
                             @error('data.tax_number') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Address</label>
-                            <input wire:model="data.address" class="form-control" placeholder="Full address">
+                            <label class="form-label">{{ __('website.checkout.address') }}</label>
+                            <input wire:model="data.address" class="form-control" placeholder="{{ __('website.checkout.address_placeholder') }}">
                             @error('data.address') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <hr class="mt-4">
 
-                        <h6 class="fw-bold">Admin Details</h6>
+                        <h6 class="fw-bold">{{ __('website.checkout.admin_details') }}</h6>
 
                         <div class="col-md-6">
-                            <label class="form-label">Admin Name *</label>
+                            <label class="form-label">{{ __('website.checkout.admin_name') }} *</label>
                             <input required wire:model="data.admin_name" class="form-control">
                             @error('data.admin_name') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Admin Email *</label>
+                            <label class="form-label">{{ __('website.checkout.admin_email') }} *</label>
                             <input required wire:model="data.admin_email" type="email" class="form-control">
                             @error('data.admin_email') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Admin Phone *</label>
+                            <label class="form-label">{{ __('website.checkout.admin_phone') }} *</label>
                             <input wire:model="data.admin_phone" class="form-control">
                             @error('data.admin_phone') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Password *</label>
+                            <label class="form-label">{{ __('website.checkout.password') }} *</label>
                             <input required wire:model="data.admin_password" type="password" class="form-control">
                             @error('data.admin_password') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
@@ -222,8 +222,8 @@
         <div class="col-12">
             <div class="card shadow-sm mt-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Checkout Summary</h5>
-                    <small class="text-muted">Invoice details before payment</small>
+                    <h5 class="mb-0">{{ __('website.checkout.summary_title') }}</h5>
+                    <small class="text-muted">{{ __('website.checkout.summary_subtitle') }}</small>
                 </div>
 
                 <div class="card-body">
@@ -242,19 +242,19 @@
                     @if($plan->{'price_'.$period} > 0)
                         <table class="table">
                             <tr>
-                                <td>Plan:</td>
-                                <td>{{ $plan->name ?? 'Pro Plan' }}</td>
+                                <td>{{ __('website.checkout.plan') }}:</td>
+                                <td>{{ $plan->name ?? __('website.checkout.pro_plan') }}</td>
                             </tr>
                             <tr>
-                                <td>Period:</td>
-                                <td>{{ $period }}</td>
+                                <td>{{ __('website.checkout.period') }}:</td>
+                                <td>{{ __('website.checkout.periods.' . $period) }}</td>
                             </tr>
                             <tr>
-                                <td>Price:</td>
+                                <td>{{ __('website.checkout.price') }}:</td>
                                 <td>${{ $plan->{"price_" . $period} }}</td>
                             </tr>
                             <tr>
-                                <td>Discount:</td>
+                                <td>{{ __('website.checkout.discount') }}:</td>
                                 <td id="discount_amount">$0</td>
                             </tr>
                             {{-- <tr>
@@ -262,7 +262,7 @@
                                 <td id="vat_amount">$0</td>
                             </tr> --}}
                             <tr class="table-dark fw-bold">
-                                <td>Total:</td>
+                                <td>{{ __('website.checkout.total') }}:</td>
                                 <td id="total_amount">${{ $plan->{"price_" . $period} }}</td>
                             </tr>
                         </table>
@@ -271,7 +271,7 @@
                 </div>
                 <div class="card-footer d-flex justify-content-end">
                     <button class="btn btn-primary px-4" wire:click="completeSubscription">
-                        <i class="fa fa-credit-card"></i> Complete Subscription
+                        <i class="fa fa-credit-card"></i> {{ __('website.checkout.complete_subscription') }}
                     </button>
                 </div>
 

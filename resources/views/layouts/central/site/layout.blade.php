@@ -1,41 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="{{ app()->getLocale() }}" data-bs-theme="dark" dir="{{ in_array(app()->getLocale(), ['ar', 'he', 'fa', 'ur']) ? 'rtl' : 'ltr' }}">
 <head>
 	<meta charset="utf-8">
-	{{-- <title>mohaaseb.com - Complete ERP & POS Solution for Businesses</title> --}}
+    {{-- <title>@yield('title', __('website.titles.main'))</title> --}}
 
-    <title>@yield('title', 'Powerful ERP System for Business Management | Mohaaseb')</title>
-
-
+    @isset($seoData)
+    {!! seo($seoData) !!}
+    @endisset
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon_io/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
     <link rel="icon" href="{{ asset('favicon_io/favicon.ico') }}" type="image/x-icon">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon_io/apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="mohaaseb.com provides a comprehensive ERP & POS system to manage your business efficiently. Streamline sales, inventory, purchases, accounting, and reporting with ease.">
-    <meta name="keywords" content="mohaaseb.com, ERP software,mohaseb erp system, POS system, business management, inventory management, accounting software, sales management, purchase management, reporting software,erp,enterprise resource management software, enterprise resource planning software, enterprise resource planning software, enterprise resource software, erp enterprise resource planning software, erp software, erp system">
-    <meta name="author" content="mohaaseb.com">
-
-    <meta property="og:title" content="mohaaseb.com - Complete ERP & POS Solution">
-    <meta property="og:description" content="Manage your business smarter with mohaaseb.com ERP & POS. Handle sales, inventory, purchases, and accounting with ease.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mohaaseb.com/">
-    <meta property="og:image" content="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="mohaaseb.com - Complete ERP & POS Solution">
-    <meta name="twitter:description" content="mohaaseb.com helps businesses manage sales, inventory, purchases, and accounting efficiently.">
-    <meta name="twitter:image" content="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}">
-
-    <!-- Robots -->
-    <meta name="robots" content="index, follow">
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://mohaaseb.com/">
 
     <!-- Favicon -->
 
