@@ -9,6 +9,7 @@ return [
         'section1_description3' => 'built for speed, automation, and real-time insights.',
         'explore_section' => 'Explore ERP Features',
         'active_business' => 'Active Businesses',
+        'working_hours' => 'Working Hours',
         'system_uptime' => 'System Uptime',
         'about_title' => 'About Our ERP System',
         'about_description' => 'A powerful, all-in-one Enterprise Resource Planning system designed to streamline operations, improve efficiency, and give businesses full control over sales, inventory, accounting, HR, and day-to-day activities.',
@@ -58,6 +59,9 @@ return [
         'our_pricing_title' => 'Our Pricing Plans',
         'our_pricing_description' => 'Choose the perfect plan that suits your needs. <br>Our pricing is designed to be flexible and affordable, providing value for businesses of all sizes. <br>Explore our plans to find the best fit for your requirements.',
         'yearly_billing' => 'Yearly Billing',
+        'name_content' => 'Mohaaseb ERP Software Plans',
+        'description_content' => 'Flexible pricing plans for businesses of all sizes.',
+        'get_started' => 'Get Started',
     ],
 
     'pricing_compare' => [

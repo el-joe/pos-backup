@@ -15,12 +15,6 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Favicon -->
-
-    <link rel="preload" href="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}" as="image">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     @include('layouts.central.site.partials.styles')
     @stack('styles')

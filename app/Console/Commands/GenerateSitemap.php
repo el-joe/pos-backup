@@ -33,7 +33,6 @@ class GenerateSitemap extends Command
         $sitemap->add(url('/'));
         $sitemap->add(url('/ar'));
         $sitemap->add(url('/en'));
-        $sitemap->add(url('/contact-us'));
         $sitemap->add(url('/pricing/compare'));
         $sitemap->add(url('/blogs'));
 
