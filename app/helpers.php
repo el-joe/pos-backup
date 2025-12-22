@@ -6,6 +6,7 @@ use App\Models\Tenant\Setting;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 use RalphJSmit\Laravel\SEO\TagManager;
@@ -131,6 +132,21 @@ if(!function_exists('defaultPermissionsList')) {
         ];
 
     }
+}
+
+function generateSlug($model,$slug) {
+    if(!$slug){
+        $slug = uniqid();
+    }
+
+    $slug = Str::slug(trim($slug), '-');
+
+    $modelObj = $model::whereSlug($slug)->first();
+    if($modelObj){
+        return generateSlug($model,$slug.'-'.time());
+    }
+
+    return $slug;
 }
 
 function adminCan($permission) {

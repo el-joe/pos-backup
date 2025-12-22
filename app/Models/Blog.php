@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 
 class Blog extends Model
@@ -31,9 +32,9 @@ class Blog extends Model
         parent::boot();
 
         static::creating(function ($blog) {
-            if (empty($blog->slug)) {
-                $blog->slug = $blog->generateSlug($blog->title_en);
-            }
+            $blog->slug = generateSlug(self::class, $blog->title_en);
+
+            Artisan::call('app:generate-sitemap');
         });
     }
 
@@ -47,17 +48,6 @@ class Blog extends Model
             return $this->image->path;
         }
         return "/hud/assets/img/landing/blog-1.jpg";
-    }
-
-    function generateSlug($title)
-    {
-        $slug = Str::slug($title);
-        $count = static::where('slug', 'LIKE', "{$slug}%")->count();
-        if($count == 0) {
-            return $slug;
-        }
-
-        return $count ? "{$slug}-{$count}" : $slug;
     }
 
     public function scopePublished($query)
