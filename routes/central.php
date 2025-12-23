@@ -34,7 +34,7 @@ Route::group(['prefix'=> '/', 'middleware' => [SiteTranslationMiddleware::class]
     Route::get('payment/callback/{type}', [PaymentController::class,'callback'])->name('payment.callback');
     Route::get('{type}/payment', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
 
-    Route::get('/{lang?}',[HomeController::class,'index'])->name('central-home');
+    Route::get('/{lang?}',[HomeController::class,'index'])->name('central-home')->where('lang','en|ar') ;
 });
 
 // add central_panel routes here

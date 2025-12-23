@@ -14,6 +14,18 @@ return [
         "route"     => 'cpanel.admins.list'
     ],
     [
+        "title"     => "Blogs",
+        'translated_title' => 'general.titles.blogs',
+        "icon"      => "fa fa-newspaper fa-fw",
+        "route"     => 'cpanel.blogs.list'
+    ],
+    [
+        "title"     => "File Manager",
+        'translated_title' => 'general.titles.file_manager',
+        "icon"      => "fa fa-folder-open fa-fw",
+        "route"     => 'cpanel.file-manager'
+    ],
+    [
         "title"     => "Contacts",
         'translated_title' => 'general.titles.contacts',
         "icon"      => "fa fa-envelope fa-fw",

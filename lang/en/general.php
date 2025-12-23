@@ -6,6 +6,8 @@ return [
         'audit_report' => 'Audit Report',
         'cash-register' => 'Cash Register',
         'pos' => 'POS',
+        'blogs' => 'Blogs',
+        'file_manager' => 'File Manager',
         'contacts' => 'Contacts',
         'branches' => 'Branches',
         'imports' => 'Imports',

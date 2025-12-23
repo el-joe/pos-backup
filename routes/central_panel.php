@@ -7,6 +7,9 @@ use App\Livewire\Central\CPanel\Contacts\ContactsList;
 use App\Livewire\Central\CPanel\Countries\CountriesList;
 use App\Livewire\Central\CPanel\Currencies\CurrenciesList;
 use App\Livewire\Central\CPanel\Customers\CustomersList;
+use App\Livewire\Central\CPanel\Blogs\BlogForm;
+use App\Livewire\Central\CPanel\Blogs\BlogsList;
+use App\Livewire\Central\CPanel\FileManager\FileManagerPage;
 use App\Livewire\Central\CPanel\HomePage;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
 use App\Livewire\Central\CPanel\Plans\CpanelPlansList;
@@ -23,6 +26,10 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
     Route::group(['middleware' => ['auth:' . CPANEL_ADMINS_GUARD]], function () {
         Route::get('/', HomePage::class)->name('dashboard');
         Route::get('admins',AdminsList::class)->name('admins.list');
+        Route::get('blogs', BlogsList::class)->name('blogs.list');
+        Route::get('blogs/create', BlogForm::class)->name('blogs.create');
+        Route::get('blogs/{id}', BlogForm::class)->whereNumber('id')->name('blogs.edit');
+        Route::get('file-manager', FileManagerPage::class)->name('file-manager');
         Route::get('contacts', ContactsList::class)->name('contacts.list');
         Route::get('countries', CountriesList::class)->name('countries.list');
         Route::get('currencies', CurrenciesList::class)->name('currencies.list');

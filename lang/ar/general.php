@@ -6,6 +6,8 @@ return [
         'audit_report' => 'تقرير التدقيق',
         'cash-register' => 'سجل النقدية',
         'pos' => 'نظام نقاط البيع',
+        'blogs' => 'المدونات',
+        'file_manager' => 'مدير الملفات',
         'contacts' => 'جهات الاتصال',
         'branches' => 'الفروع',
         'imports' => 'الاستيرادات',
