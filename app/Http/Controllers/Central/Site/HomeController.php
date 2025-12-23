@@ -28,7 +28,6 @@ class HomeController extends Controller
 
         $sliders = Slider::where('active', true)->orderBy('number', 'asc')->get();
         $blogs = Blog::published()
-            ->orderByDesc('published_at')
             ->orderByDesc('id')
             ->limit(4)
             ->get();
@@ -39,7 +38,6 @@ class HomeController extends Controller
     function blogs()
     {
         $blogs = Blog::published()
-            ->orderByDesc('published_at')
             ->orderByDesc('id')
             ->paginate(12);
 
