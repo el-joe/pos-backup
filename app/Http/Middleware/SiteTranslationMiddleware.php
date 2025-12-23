@@ -62,7 +62,9 @@ class SiteTranslationMiddleware
                         "@type" => "Offer",
                         "price" => "0",
                         "priceCurrency" => "USD"
-                    ]
+                    ],
+                    'image' => asset('favicon_io/apple-touch-icon.png'),
+                    "description" => __('website.meta_description'),
                 ]
             ]),
 
