@@ -50,6 +50,19 @@
                     <input type="datetime-local" class="form-control" wire:model.defer="data.published_at">
                 </div>
 
+                <div class="col-md-6">
+                    <label class="form-label">Image</label>
+                    <input type="file" class="form-control" wire:model="imageFile" accept="image/*">
+
+                    <div class="mt-2">
+                        @if ($imageFile)
+                            <img src="{{ $imageFile->temporaryUrl() }}" alt="Blog image" class="img-fluid rounded" style="max-height: 180px;">
+                        @elseif ($blog?->image_path)
+                            <img src="{{ $blog->image_path }}" alt="Blog image" class="img-fluid rounded" style="max-height: 180px;">
+                        @endif
+                    </div>
+                </div>
+
                 <div class="col-12">
                     <label class="form-label">Content (EN)</label>
                     <div wire:ignore>

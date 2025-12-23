@@ -45,7 +45,7 @@ class Blog extends Model
     function getImagePathAttribute()
     {
         if ($this->image) {
-            return $this->image->path;
+            return $this->image->full_path;
         }
         return "/hud/assets/img/landing/blog-1.jpg";
     }

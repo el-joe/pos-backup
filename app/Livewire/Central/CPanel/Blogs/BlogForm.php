@@ -16,6 +16,8 @@ class BlogForm extends Component
     public ?Blog $blog = null;
     public array $data = [];
 
+    public $imageFile = null;
+
     public array $rules = [
         'data.title_en' => 'required|string|max:255',
         'data.title_ar' => 'nullable|string|max:255',
@@ -61,7 +63,10 @@ class BlogForm extends Component
 
     public function save(): void
     {
-        $this->validate();
+        $this->validate([
+            ...$this->rules,
+            'imageFile' => 'nullable|image|max:5120',
+        ]);
 
         $payload = $this->data;
 
@@ -73,6 +78,16 @@ class BlogForm extends Component
 
         $blog->fill($payload);
         $blog->save();
+
+        if ($this->imageFile) {
+            $blog->image()->delete();
+            $blog->image()->create([
+                'path' => $this->imageFile,
+                'key' => 'image',
+            ]);
+
+            $this->imageFile = null;
+        }
 
         $this->blog = $blog;
 
