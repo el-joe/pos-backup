@@ -22,8 +22,6 @@ class HomeController extends Controller
         if($lang != null){
             app()->setLocale($lang);
             session(['locale' => $lang]);
-
-            return redirect()->route('central-home');
         }
 
         $sliders = Slider::where('active', true)->orderBy('number', 'asc')->get();
