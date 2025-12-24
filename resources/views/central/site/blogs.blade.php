@@ -23,7 +23,7 @@
                                 <article class="card d-flex flex-column h-100 mb-5 mb-lg-0">
                                     <div class="card-body p-0 overflow-hidden" style="flex:none!important">
                                         <img
-                                            src="{{ $blog->image ? asset($blog->image) : asset('hud/assets/img/landing/blog-1.jpg') }}"
+                                            src="{{ $blog->image ? asset($blog->image_path) : asset('hud/assets/img/landing/blog-1.jpg') }}"
                                             alt="{{ $blog->title }}"
                                             {{-- Disable lazy loading for the first 4 items to improve LCP --}}
                                             @if($index > 3) loading="lazy" @endif
