@@ -23,19 +23,28 @@
 
 <style>
     .navbar-logo {
+        /* Set max-height but allow width to be calculated */
         max-height: 50px;
         width: auto;
+        /* Important: Define the native aspect ratio of your logo here */
+        /* Example: if your logo is 150x50, the ratio is 3/1 */
+        aspect-ratio: 3 / 1;
         display: block;
+        /* Ensures the logo looks sharp and fits its container */
+        object-fit: contain;
     }
+
     .app-header {
         min-height: 64px;
         display: flex;
         align-items: center;
+        /* Optimization: contain paint to help browser rendering performance */
+        contain: layout;
     }
 
     @media (max-width: 768px) {
         .navbar-logo {
-            max-height: 45px;
+            max-height: 40px; /* Slightly smaller for mobile UX */
         }
     }
 </style>

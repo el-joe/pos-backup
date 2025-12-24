@@ -8,10 +8,12 @@
         </button>
 
         <a class="navbar-brand d-flex align-items-center me-auto px-0" href="/">
-            <img src="{{ asset('mohaaseb_en_dark_2.png') }}"
+            <img src="{{ asset('mohaaseb_en_dark_2.webp') }}"
                 loading="lazy"
                 alt="Mohaaseb Cloud ERP Logo"
-                class="navbar-logo">
+                class="navbar-logo"
+                fetchpriority="high"
+                >
         </a>
 
         <div class="collapse navbar-collapse" id="navbarContent">
