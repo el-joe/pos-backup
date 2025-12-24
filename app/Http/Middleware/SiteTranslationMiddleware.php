@@ -23,7 +23,7 @@ class SiteTranslationMiddleware
             new AlternateTag('ar', url('/ar')),
         ];
 
-        $seoImage = asset('mohaaseb_en_dark_2.png');
+        $seoImage = asset('mohaaseb_en_dark_2.webp');
 
         $seoData = new SEOData(
             title: __('website.titles.home'),
