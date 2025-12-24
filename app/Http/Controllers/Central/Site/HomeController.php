@@ -46,55 +46,65 @@ class HomeController extends Controller
     {
         $blog = Blog::published()->where('slug', $slug)->firstOrFail();
 
-        $alternates = [
-            new AlternateTag('en', url('/en')),
-            new AlternateTag('ar', url('/ar')),
-        ];
+        $imageUrl = asset($blog->image_path);
+        $publishedAt = $blog->published_at ?: $blog->created_at;
 
         $seoData = new SEOData(
-            title : $blog->title,
-            description : $blog->excerpt,
-            author: 'codefanz.com',
-            image : asset('favicon_io/apple-touch-icon.png'),
-            url : url()->current(),
-            robots : 'index, follow',
-            canonical_url : url('/'),
+            title: $blog->title,
+            description: $blog->excerpt,
+            author: 'Mohaaseb',
+            image: $imageUrl,
+            url: url()->current(),
+            robots: 'index, follow',
+            canonical_url: url()->current(),
             enableTitleSuffix: true,
-            type: "website",
-            site_name: "Mohaaseb",
+            type: 'article',
+            site_name: 'Mohaaseb',
             favicon: asset('favicon_io/favicon.ico'),
             locale: app()->getLocale() == 'en' ? 'en_US' : 'ar_AR',
 
             openGraphTitle: $blog->title,
-            imageMeta: new ImageMeta(asset('favicon_io/apple-touch-icon.png')),
+            imageMeta: new ImageMeta($imageUrl),
 
-            twitter_username: "@mohaaseb",
+            twitter_username: '@mohaaseb',
 
             // المقالات/الصفحات الديناميكية
-            published_time: Carbon::now(), // مثال للصفحات الجديدة
-            modified_time: Carbon::now(),
+            published_time: $publishedAt,
+            modified_time: $blog->updated_at,
             articleBody: null,
             section: null,
-            tags: ['ERP', 'POS', 'Accounting', 'Inventory', 'Business Management'],
+            tags: null,
 
             // Schema (JSON-LD)
             schema: new SchemaCollection([
                 [
-                    "@context" => "https://schema.org",
-                    "@type" => "SoftwareApplication",
-                    "name" => "Mohaaseb ERP",
-                    "applicationCategory" => "BusinessApplication",
-                    "operatingSystem" => "Web",
-                    "url" => url('/'),
-                    "offers" => [
-                        "@type" => "Offer",
-                        "price" => "0",
-                        "priceCurrency" => "USD"
-                    ]
+                    '@context' => 'https://schema.org',
+                    '@type' => 'BlogPosting',
+                    'headline' => $blog->title,
+                    'description' => $blog->excerpt,
+                    'image' => [$imageUrl],
+                    'datePublished' => optional($publishedAt)->toIso8601String(),
+                    'dateModified' => optional($blog->updated_at)->toIso8601String(),
+                    'mainEntityOfPage' => [
+                        '@type' => 'WebPage',
+                        '@id' => url()->current(),
+                    ],
+                    'author' => [
+                        '@type' => 'Organization',
+                        'name' => 'Mohaaseb',
+                        'url' => url('/'),
+                    ],
+                    'publisher' => [
+                        '@type' => 'Organization',
+                        'name' => 'Mohaaseb',
+                        'url' => url('/'),
+                        'logo' => [
+                            '@type' => 'ImageObject',
+                            'url' => asset('favicon_io/apple-touch-icon.png'),
+                        ],
+                    ],
                 ]
             ]),
-
-            alternates: $alternates
         );
 
         return view('central.site.blog-details', get_defined_vars());
