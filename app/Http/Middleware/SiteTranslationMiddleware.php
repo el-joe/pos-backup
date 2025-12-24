@@ -23,33 +23,40 @@ class SiteTranslationMiddleware
             new AlternateTag('ar', url('/ar')),
         ];
 
+        $seoImage = asset('mohaaseb_en_dark.png');
+
         $seoData = new SEOData(
-            title : __('website.titles.home'),
-            description : __('website.meta_description'),
+            title: __('website.titles.home'),
+            description: __('website.meta_description'),
             author: 'codefanz.com',
-            image : asset('favicon_io/apple-touch-icon.png'),
-            url : url()->current(),
-            robots : 'index, follow',
-            canonical_url : url('/'),
+
+            // ⭐ الصورة الأساسية
+            image: $seoImage,
+
+            url: url()->current(),
+            robots: 'index, follow',
+            canonical_url: url('/'),
             enableTitleSuffix: true,
             type: "website",
             site_name: "Mohaaseb",
+
             favicon: asset('favicon_io/favicon.ico'),
-            locale: app()->getLocale() == 'en' ? 'en_US' : 'ar_AR',
 
+            locale: app()->getLocale() === 'en' ? 'en_US' : 'ar_AR',
+
+            // ⭐ OpenGraph
             openGraphTitle: __('website.titles.home'),
-            imageMeta: new ImageMeta(asset('favicon_io/apple-touch-icon.png')),
+            imageMeta: new ImageMeta($seoImage),
 
+            // ⭐ Twitter
             twitter_username: "@mohaaseb",
 
-            // المقالات/الصفحات الديناميكية
-            published_time: Carbon::now(), // مثال للصفحات الجديدة
+            published_time: Carbon::now(),
             modified_time: Carbon::now(),
-            articleBody: null,
-            section: null,
+
             tags: ['ERP', 'POS', 'Accounting', 'Inventory', 'Business Management'],
 
-            // Schema (JSON-LD)
+            // ⭐ Schema
             schema: new SchemaCollection([
                 [
                     "@context" => "https://schema.org",
@@ -58,13 +65,13 @@ class SiteTranslationMiddleware
                     "applicationCategory" => "BusinessApplication",
                     "operatingSystem" => "Web",
                     "url" => url('/'),
+                    "image" => $seoImage,
+                    "description" => __('website.meta_description'),
                     "offers" => [
                         "@type" => "Offer",
                         "price" => "0",
                         "priceCurrency" => "USD"
                     ],
-                    'image' => asset('favicon_io/apple-touch-icon.png'),
-                    "description" => __('website.meta_description'),
                 ]
             ]),
 
