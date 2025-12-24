@@ -39,7 +39,8 @@ class GenerateSitemap extends Command
 
         // الصفحات الديناميكية
         Blog::all()->each(function($blog) use ($sitemap) {
-            $sitemap->add(url("/blogs/{$blog->slug}"));
+            $sitemap->add(url("ar/blogs/{$blog->slug}"));
+            $sitemap->add(url("en/blogs/{$blog->slug}"));
         });
 
         // حفظ الـ sitemap
