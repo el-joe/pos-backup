@@ -3,6 +3,7 @@
 use App\Http\Controllers\Central\Site\HomeController;
 use App\Http\Controllers\Central\Site\PaymentController;
 use App\Http\Controllers\Central\Tenant\RegisterController;
+use App\Http\Middleware\CentralWebsitesetLocal;
 use App\Http\Middleware\SiteTranslationMiddleware;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Route;
@@ -18,7 +19,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class]]
     Route::get('checkout', [HomeController::class,'checkout'])->name('tenant-checkout');
     Route::get('pricing/compare',[HomeController::class,'pricingCompare'])->name('pricing-compare');
     Route::get('pricing', [HomeController::class,'pricing'])->name('pricing');
-    Route::group(['prefix'=>'{lang?}','where' => ['lang' => 'en|ar']],function(){
+    Route::group(['prefix'=>'{lang?}','where' => ['lang' => 'en|ar'],'middleware'=>[CentralWebsitesetLocal::class]],function(){
         Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
         Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
         Route::get('/',[HomeController::class,'index'])->name('central-home');
