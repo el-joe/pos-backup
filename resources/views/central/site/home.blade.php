@@ -548,7 +548,7 @@
                                 <a href="{{ route('blogs.show', $blog->slug) }}" aria-label="Read more about {{ $blog->title }}">
                                     <img
                                         loading="lazy"
-                                        src="{{ $blog->image ? asset($blog->image) : asset('hud/assets/img/landing/blog-1.jpg') }}"
+                                        src="{{ $blog->image ? $blog->image_path : asset('hud/assets/img/landing/blog-1.jpg') }}"
                                         alt="{{ $blog->title }}"
                                         itemprop="image"
                                         width="400"
