@@ -33,7 +33,7 @@ class HomeController extends Controller
         return view('central.site.home',get_defined_vars());
     }
 
-    function blogs()
+    function blogs($lang)
     {
         $blogs = Blog::published()
             ->orderByDesc('id')
@@ -42,7 +42,7 @@ class HomeController extends Controller
         return view('central.site.blogs', get_defined_vars());
     }
 
-    function blogDetails($slug)
+    function blogDetails($lang, $slug)
     {
         $blog = Blog::published()->where('slug', $slug)->firstOrFail();
 

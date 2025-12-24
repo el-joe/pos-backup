@@ -7,7 +7,7 @@ use App\Http\Middleware\SiteTranslationMiddleware;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix'=> '/', 'middleware' => [SiteTranslationMiddleware::class]],function () {
+Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class]],function () {
 
     Route::get('register',[RegisterController::class,'register']);
     Route::post('register',[RegisterController::class,'postRegister'])->name('register-domain')->middleware('throttle:5,10');
@@ -18,9 +18,11 @@ Route::group(['prefix'=> '/', 'middleware' => [SiteTranslationMiddleware::class]
     Route::get('checkout', [HomeController::class,'checkout'])->name('tenant-checkout');
     Route::get('pricing/compare',[HomeController::class,'pricingCompare'])->name('pricing-compare');
     Route::get('pricing', [HomeController::class,'pricing'])->name('pricing');
-
-    Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
-    Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
+    Route::group(['prefix'=>'{lang?}','where' => ['lang' => 'en|ar']],function(){
+        Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
+        Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
+        Route::get('/',[HomeController::class,'index'])->name('central-home');
+    });
 
     Route::get('lang/{locale}', function (string $locale) {
         if (!in_array($locale, ['en', 'ar'], true)) {
@@ -29,13 +31,20 @@ Route::group(['prefix'=> '/', 'middleware' => [SiteTranslationMiddleware::class]
 
         session(['locale' => $locale]);
 
-        return redirect()->back()->withInput();
+        // redirect to same route but with new lang parameter
+        $previousUrl = url()->previous();
+        if(str_contains($previousUrl, '/en/') || str_contains($previousUrl, '/ar/')){
+            $newUrl = preg_replace('/\/(en|ar)\//', '/' . $locale . '/', $previousUrl);
+        }else{
+            return redirect()->back();
+        }
+
+        return redirect($newUrl);
     })->name('site.lang');
 
     Route::get('payment/callback/{type}', [PaymentController::class,'callback'])->name('payment.callback');
     Route::get('{type}/payment', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
 
-    Route::get('/{lang?}',[HomeController::class,'index'])->name('central-home')->where('lang','en|ar') ;
 });
 
 // add central_panel routes here
