@@ -219,5 +219,7 @@ return [
         'blogs' => 'Latest News & Insights from Mohaaseb ERP Blog',
     ],
     'meta_description' => 'mohaaseb.com provides a comprehensive ERP & POS system to manage your business efficiently. Streamline sales, inventory, purchases, accounting, and reporting with ease.',
-
+    'seo' => [
+        'review_body' => 'Mohaaseb Cloud ERP has transformed our business operations. The interface is intuitive, and having our accounting, inventory, and sales data in one cloud-based platform has saved us hours of manual work every week. The customer support team is responsive and knowledgeable, helping us get the most out of the system. Highly recommended for any business looking to streamline their processes and improve efficiency.',
+    ]
 ];

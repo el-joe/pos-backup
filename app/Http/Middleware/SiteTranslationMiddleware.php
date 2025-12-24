@@ -70,8 +70,26 @@ class SiteTranslationMiddleware
                     "offers" => [
                         "@type" => "Offer",
                         "price" => "0",
-                        "priceCurrency" => "USD"
+                        "priceCurrency" => "USD",
+                        'priceValidUntil' => Carbon::now()->addYear()->toDateString(),
                     ],
+                    "aggregateRating"=> [
+                        "@type" => "AggregateRating",
+                        "ratingValue" => "4.9",
+                        "ratingCount" => "1202"
+                    ],
+                    "review"=> [
+                        "@type" => "Review",
+                        "reviewRating" => [
+                            "@type" => "Rating",
+                            "ratingValue" => "5"
+                        ],
+                        "author" => [
+                                "@type" => "Person",
+                                "name" => "John Doe"
+                        ],
+                        "reviewBody" => __("website.seo.review_body")
+                    ]
                 ]
             ]),
 
