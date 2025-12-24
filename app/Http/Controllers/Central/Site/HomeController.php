@@ -134,4 +134,9 @@ class HomeController extends Controller
         $plans = Plan::all();
         return view('central.site.pricing-compare',get_defined_vars());
     }
+
+    function pricing()
+    {
+        return view('central.site.pricing',get_defined_vars());
+    }
 }

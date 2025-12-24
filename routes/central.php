@@ -17,6 +17,7 @@ Route::group(['prefix'=> '/', 'middleware' => [SiteTranslationMiddleware::class]
 
     Route::get('checkout', [HomeController::class,'checkout'])->name('tenant-checkout');
     Route::get('pricing/compare',[HomeController::class,'pricingCompare'])->name('pricing-compare');
+    Route::get('pricing', [HomeController::class,'pricing'])->name('pricing');
 
     Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
     Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');

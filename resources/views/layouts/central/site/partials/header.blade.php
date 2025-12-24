@@ -28,13 +28,13 @@
                     <a href="{{ request()->is('/') ? '#features' : '/#features' }}" class="nav-link">{{ __('website.nav.features') }}</a>
                 </li>
                 <li class="nav-item me-2">
-                    <a href="{{ request()->is('/') ? '#pricing' : '/#pricing' }}" class="nav-link">{{ __('website.nav.pricing') }}</a>
-                </li>
-                <li class="nav-item me-2">
                     <a href="{{ request()->is('/') ? '#testimonials' : '/#testimonials' }}" class="nav-link">{{ __('website.nav.testimonials') }}</a>
                 </li>
                 <li class="nav-item me-2">
                     <a href="{{ request()->is('/') ? '#contact' : '/#contact' }}" class="nav-link">{{ __('website.nav.contact') }}</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ route('pricing') }}" class="nav-link">{{ __('website.nav.pricing') }}</a>
                 </li>
                 <li class="nav-item me-2">
                     <a href="{{ route('blogs.index') }}" class="nav-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}">{{ __('website.nav.blogs') }}</a>

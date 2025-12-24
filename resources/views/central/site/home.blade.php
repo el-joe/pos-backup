@@ -266,14 +266,6 @@
     </div>
     <!-- END divider -->
 
-    @livewire('central.site.plan-section')
-
-    <!-- BEGIN divider -->
-    <div class="container-xxl px-3 px-lg-5">
-        <hr class="opacity-4 m-0" aria-hidden="true" />
-    </div>
-    <!-- END divider -->
-
     <!-- BEGIN #testimonials -->
     <section id="testimonials" class="py-5 text-body text-opacity-75" aria-labelledby="testimonials-heading">
         <div class="container-xxl p-3 p-lg-5">
