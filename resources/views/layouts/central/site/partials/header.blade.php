@@ -9,6 +9,7 @@
 
         <a class="navbar-brand d-flex align-items-center me-auto px-0" href="/">
             <img src="{{ asset('mohaaseb_en_dark_2.png') }}"
+                loading="lazy"
                 alt="Mohaaseb Cloud ERP Logo"
                 class="navbar-logo">
         </a>
