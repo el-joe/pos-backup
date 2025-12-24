@@ -66,6 +66,7 @@ class SiteTranslationMiddleware
                     "operatingSystem" => "Web",
                     "url" => url('/'),
                     "image" => $seoImage,
+                    'logo' => $seoImage,
                     "description" => __('website.meta_description'),
                     "offers" => [
                         "@type" => "Offer",
