@@ -2,20 +2,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<!-- Preload: Hero Images (High Priority) -->
+<!-- Preload: Hero Images -->
 <link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/cover.webp') }}" fetchpriority="high">
 <link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/mockup-1.webp') }}" fetchpriority="high">
 
-<!-- Preload + Load: Vendor CSS -->
-<link rel="preload"
-      href="{{ asset('hud/assets/css/vendor.min.css') }}"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-    <link rel="stylesheet" href="{{ asset('hud/assets/css/vendor.min.css') }}">
-</noscript>
+<!-- CRITICAL CSS (no preload) -->
+<link rel="stylesheet" href="{{ asset('hud/assets/css/vendor.min.css') }}">
 
-<!-- Preload + Load: App CSS -->
+<!-- NON-CRITICAL CSS -->
 <link rel="preload"
       href="{{ asset('hud/assets/css/app.min.css') }}"
       as="style"
@@ -33,13 +27,12 @@
     <link rel="stylesheet" href="{{ asset('hud/assets/plugins/lity/dist/lity.min.css') }}">
 </noscript>
 
-<!-- Preload Google Font CSS -->
+<!-- Google Fonts -->
 <link rel="preload"
       as="style"
       href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap"
       crossorigin>
 
-<!-- Load Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
       media="print"
