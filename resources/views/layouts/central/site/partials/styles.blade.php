@@ -20,3 +20,22 @@
 <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </noscript>
+
+<style>
+    .navbar-logo {
+        max-height: 50px;
+        width: auto;
+        display: block;
+    }
+    .app-header {
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .navbar-logo {
+            max-height: 45px;
+        }
+    }
+</style>
