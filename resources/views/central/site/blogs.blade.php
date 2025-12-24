@@ -41,7 +41,7 @@
 
                                     <div class="p-3 pt-2 text-body text-opacity-50 small">
                                         <time datetime="{{ optional($blog->published_at ?: $blog->created_at)->toIso8601String() }}">
-                                            {{ optional($blog->published_at ?: $blog->created_at)->format('M d, Y') }}
+                                            {{ optional($blog->published_at ?: $blog->created_at)->translatedFormat('M d, Y') }}
                                         </time>
                                     </div>
 

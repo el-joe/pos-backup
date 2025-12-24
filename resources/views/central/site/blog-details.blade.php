@@ -13,7 +13,7 @@
 
             <h1 class="mb-2">{{ $blog->title }}</h1>
             <div class="text-body text-opacity-50 mb-4">
-                {{ optional($blog->published_at ?: $blog->created_at)->format('M d, Y') }}
+                {{ optional($blog->published_at ?: $blog->created_at)->translatedFormat('M d, Y') }}
             </div>
 
             @if($blog->image)

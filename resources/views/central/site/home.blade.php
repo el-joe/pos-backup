@@ -620,7 +620,7 @@
                                 <time itemprop="datePublished"
                                     datetime="{{ optional($blog->published_at ?: $blog->created_at)->toIso8601String() }}"
                                     class="small text-body text-opacity-50">
-                                    {{ optional($blog->published_at ?: $blog->created_at)->format('M d, Y') }}
+                                    {{ optional($blog->published_at ?: $blog->created_at)->translatedFormat('M d, Y') }}
                                 </time>
 
                                 <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" class="d-none">
