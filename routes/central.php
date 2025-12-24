@@ -36,7 +36,11 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class]]
         if(str_contains($previousUrl, '/en/') || str_contains($previousUrl, '/ar/')){
             $newUrl = preg_replace('/\/(en|ar)\//', '/' . $locale . '/', $previousUrl);
         }else{
-            return redirect()->back();
+            if($previousUrl == url('/')){
+                $newUrl = url('/' . $locale);
+            }else{
+                $newUrl = $previousUrl;
+            }
         }
 
         return redirect($newUrl);
