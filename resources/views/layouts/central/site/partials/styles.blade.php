@@ -1,8 +1,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/cover.jpg') }}" fetchpriority="high">
-<link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/cover.webp') }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/mockup-1.webp') }}" fetchpriority="high">
 
 <link rel="preload" href="{{ asset('hud/assets/css/vendor.min.css') }}" as="style">
 <link rel="preload" href="{{ asset('hud/assets/css/app.min.css') }}" as="style">

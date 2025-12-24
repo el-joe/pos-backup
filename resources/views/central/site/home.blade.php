@@ -84,7 +84,7 @@
             <div
                 class="position-absolute top-0 bottom-0 end-0 w-50 p-5 z-2 overflow-hidden d-lg-flex align-items-center d-none">
                     <img
-                    src="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}"
+                    src="{{ asset('hud/assets/img/landing/mockup-1.webp') }}"
                     alt="ERP dashboard showing sales, inventory, and accounting modules"
                     loading="lazy"
                     width="800"
@@ -96,7 +96,7 @@
         </div>
         <!-- END container -->
         <div class="position-absolute bg-size-cover bg-position-center bg-no-repeat top-0 start-0 w-100 h-100"
-            style="background-image: url({{ asset('hud/assets/img/landing/cover.jpg') }});"
+            style="background-image: url({{ asset('hud/assets/img/landing/cover.webp') }});"
             role="presentation"
             aria-hidden="true">
         </div>
