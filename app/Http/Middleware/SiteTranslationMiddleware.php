@@ -73,6 +73,8 @@ class SiteTranslationMiddleware
                         "price" => "0",
                         "priceCurrency" => "USD",
                         'priceValidUntil' => Carbon::now()->addYear()->toDateString(),
+                        'shippingDetails' => null,
+                        'hasMerchantReturnPolicy' => null,
                     ],
                     "aggregateRating"=> [
                         "@type" => "AggregateRating",

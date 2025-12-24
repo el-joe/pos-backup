@@ -343,7 +343,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">محمد ياسر</h5>
                                 <small class="text-muted" itemprop="jobTitle">مدير التطوير الرقمي</small>
@@ -353,17 +353,21 @@
                         <div class="d-flex">
                             <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                <span dir="rtl">
+                                <div itemprop="reviewBody" dir="rtl">
                                     نظام الـ ERP ساعدنا في تنظيم الحسابات والمخزون بشكل احترافي
                                     وأصبح اتخاذ القرار أسرع وأكثر دقة.
-                                </span>
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
                                 <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
@@ -385,7 +389,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px">
+                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">Sophia Williams</h5>
                                 <small class="text-muted" itemprop="jobTitle">Finance &amp; Compliance Lead</small>
@@ -395,15 +399,21 @@
                         <div class="d-flex">
                             <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                A reliable system with perfect financial tracking.
-                                VAT, reports, and analytics are incredibly accurate.
+                                <div itemprop="reviewBody">
+                                    A reliable system with perfect financial tracking.
+                                    VAT, reports, and analytics are incredibly accurate.
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
                                 <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
@@ -426,7 +436,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px">
+                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">ليلى عمر</h5>
                                 <small class="text-muted" itemprop="jobTitle">قائدة قسم الجودة</small>
@@ -436,17 +446,21 @@
                         <div class="d-flex">
                             <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                <span dir="rtl">
+                                <div itemprop="reviewBody" dir="rtl">
                                     النظام سهّل علينا متابعة الفروع
                                     وربط جميع العمليات بشكل سلس وبدون تعقيد.
-                                </span>
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
                                 <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
@@ -468,7 +482,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">خالد سمير</h5>
                                 <small class="text-muted" itemprop="jobTitle">محلل نظم الأعمال</small>
@@ -478,17 +492,21 @@
                         <div class="d-flex">
                             <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                <span dir="rtl">
+                                <div itemprop="reviewBody" dir="rtl">
                                     نظام ممتاز وسلس،
                                     ويوفر تقارير قوية تساعد الإدارة في رؤية واضحة لكل تفاصيل العمل.
-                                </span>
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
                                 <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
@@ -510,7 +528,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">Mark Henderson</h5>
                                 <small class="text-muted" itemprop="jobTitle">Supply Chain Strategist</small>
@@ -520,15 +538,21 @@
                         <div class="d-flex">
                             <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                Stock control accuracy improved by 300%.
-                                Perfect solution for multi-branch businesses.
+                                <div itemprop="reviewBody">
+                                    Stock control accuracy improved by 300%.
+                                    Perfect solution for multi-branch businesses.
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
                                 <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
