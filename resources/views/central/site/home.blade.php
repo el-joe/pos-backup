@@ -293,6 +293,10 @@
             @endphp
             <div class="row g-3 g-lg-4 mb-4">
                 <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="User Avatar" role="presentation">
@@ -333,12 +337,16 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">محمد ياسر</h5>
-                                <small class="text-muted">مدير التطوير الرقمي</small>
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">محمد ياسر</h5>
+                                <small class="text-muted" itemprop="jobTitle">مدير التطوير الرقمي</small>
                             </div>
                         </div>
 
@@ -371,12 +379,16 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">Sophia Williams</h5>
-                                <small class="text-muted">Finance & Compliance Lead</small>
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">Sophia Williams</h5>
+                                <small class="text-muted" itemprop="jobTitle">Finance &amp; Compliance Lead</small>
                             </div>
                         </div>
 
@@ -408,12 +420,16 @@
                 </div>
                 {{-- <div class="col-xl-2 d-none d-xl-block"></div> --}}
                 <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">ليلى عمر</h5>
-                                <small class="text-muted">قائدة قسم الجودة</small>
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">ليلى عمر</h5>
+                                <small class="text-muted" itemprop="jobTitle">قائدة قسم الجودة</small>
                             </div>
                         </div>
 
@@ -446,12 +462,16 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">خالد سمير</h5>
-                                <small class="text-muted">محلل نظم الأعمال</small>
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">خالد سمير</h5>
+                                <small class="text-muted" itemprop="jobTitle">محلل نظم الأعمال</small>
                             </div>
                         </div>
 
@@ -484,12 +504,16 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
                             <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">Mark Henderson</h5>
-                                <small class="text-muted">Supply Chain Strategist</small>
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">Mark Henderson</h5>
+                                <small class="text-muted" itemprop="jobTitle">Supply Chain Strategist</small>
                             </div>
                         </div>
 
