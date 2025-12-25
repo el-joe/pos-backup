@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Tenant\AuthController;
-use App\Http\Middleware\{AdminTranslationMiddleware,InitializeTenancyByDomain,Tenant\ReportsPermissionCheck,Tenant\AdminAuthMiddleware};
+use App\Http\Middleware\{AdminTranslationMiddleware,InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck,Tenant\AdminAuthMiddleware};
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Admins\{AdminsList,RoleDetails,RolesList};
 use App\Livewire\Admin\Branches\BranchesList;
@@ -68,6 +68,7 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
     AdminTranslationMiddleware::class,
+    RedirectFromWWW::class,
 ])->group(function () {
 
     Route::redirect('/','admin/login');
