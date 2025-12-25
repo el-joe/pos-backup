@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use RalphJSmit\Laravel\SEO\SchemaCollection;
+use RalphJSmit\Laravel\SEO\Support\AlternateTag;
+use RalphJSmit\Laravel\SEO\Support\ImageMeta;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 use RalphJSmit\Laravel\SEO\TagManager;
 
@@ -292,5 +295,88 @@ if (! function_exists('seo')) {
         }
 
         return $tagManager;
+    }
+
+    function defaultSeoData($newData = []){
+        $alternates = [
+            new AlternateTag('en', url('/en')),
+            new AlternateTag('ar', url('/ar')),
+        ];
+
+        $seoImage = asset('mohaaseb_en_dark_2.webp');
+
+        return new SEOData(
+            title: $newData['title'] ?? __('website.titles.home'),
+            description: $newData['description'] ?? __('website.meta_description'),
+            author: $newData['author'] ?? 'codefanz.com',
+
+            // ⭐ الصورة الأساسية
+            image: $newData['image'] ?? $seoImage,
+
+            url: url()->current(),
+            robots: 'index, follow',
+            canonical_url: url('/'),
+            enableTitleSuffix: true,
+            type: "website",
+            site_name: "Mohaaseb",
+
+            favicon: asset('favicon_io/favicon.ico'),
+
+            locale: app()->getLocale() === 'en' ? 'en_US' : 'ar_AR',
+
+            // ⭐ OpenGraph
+            openGraphTitle: $newData['title'] ?? __('website.titles.home'),
+            imageMeta: new ImageMeta($newData['imageMeta'] ?? $seoImage),
+
+            // ⭐ Twitter
+            twitter_username: "@mohaaseb",
+
+            published_time: $newData['published_time'] ?? Carbon::now(),
+            modified_time: $newData['modified_time'] ?? Carbon::now(),
+
+            tags: $newData['tags'] ?? ['ERP', 'POS', 'Accounting', 'Inventory', 'Business Management'],
+
+            // ⭐ Schema
+            schema: new SchemaCollection([
+                [
+                    "@context" => "https://schema.org",
+                    "@type" => "SoftwareApplication",
+                    "name" => "Mohaaseb ERP",
+                    "applicationCategory" => "BusinessApplication",
+                    "operatingSystem" => "Web",
+                    "url" => url('/'),
+                    "image" => $newData['image'] ?? $seoImage,
+                    'logo' => $newData['image'] ?? $seoImage,
+                    "description" => $newData['description'] ?? __('website.meta_description'),
+                    "offers" => [
+                        "@type" => "Offer",
+                        "price" => "0",
+                        "priceCurrency" => "USD",
+                        'priceValidUntil' => Carbon::now()->addYear()->toDateString(),
+                        'shippingDetails' => null,
+                        'hasMerchantReturnPolicy' => null,
+                    ],
+                    "aggregateRating"=> [
+                        "@type" => "AggregateRating",
+                        "ratingValue" => "4.9",
+                        "ratingCount" => "1202"
+                    ],
+                    "review"=> [
+                        "@type" => "Review",
+                        "reviewRating" => [
+                            "@type" => "Rating",
+                            "ratingValue" => "5"
+                        ],
+                        "author" => [
+                                "@type" => "Person",
+                                "name" => "John Doe"
+                        ],
+                        "reviewBody" => __("website.seo.review_body")
+                    ]
+                ]
+            ]),
+
+            alternates: $alternates
+        );
     }
 }

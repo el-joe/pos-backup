@@ -49,63 +49,13 @@ class HomeController extends Controller
         $imageUrl = asset($blog->image_path);
         $publishedAt = $blog->published_at ?: $blog->created_at;
 
-        $seoData = new SEOData(
-            title: $blog->title,
-            description: $blog->excerpt,
-            author: 'Mohaaseb',
-            image: $imageUrl,
-            url: url()->current(),
-            robots: 'index, follow',
-            canonical_url: url()->current(),
-            enableTitleSuffix: true,
-            type: 'article',
-            site_name: 'Mohaaseb',
-            favicon: asset('favicon_io/favicon.ico'),
-            locale: app()->getLocale() == 'en' ? 'en_US' : 'ar_AR',
-
-            openGraphTitle: $blog->title,
-            imageMeta: new ImageMeta($imageUrl),
-
-            twitter_username: '@mohaaseb',
-
-            // المقالات/الصفحات الديناميكية
-            published_time: $publishedAt,
-            modified_time: $blog->updated_at,
-            articleBody: null,
-            section: null,
-            tags: null,
-
-            // Schema (JSON-LD)
-            schema: new SchemaCollection([
-                [
-                    '@context' => 'https://schema.org',
-                    '@type' => 'BlogPosting',
-                    'headline' => $blog->title,
-                    'description' => $blog->excerpt,
-                    'image' => [$imageUrl],
-                    'datePublished' => optional($publishedAt)->toIso8601String(),
-                    'dateModified' => optional($blog->updated_at)->toIso8601String(),
-                    'mainEntityOfPage' => [
-                        '@type' => 'WebPage',
-                        '@id' => url()->current(),
-                    ],
-                    'author' => [
-                        '@type' => 'Organization',
-                        'name' => 'Mohaaseb',
-                        'url' => url('/'),
-                    ],
-                    'publisher' => [
-                        '@type' => 'Organization',
-                        'name' => 'Mohaaseb',
-                        'url' => url('/'),
-                        'logo' => [
-                            '@type' => 'ImageObject',
-                            'url' => asset('favicon_io/apple-touch-icon.png'),
-                        ],
-                    ],
-                ]
-            ]),
-        );
+        $seoData = defaultSeoData([
+            'title' => $blog->title,
+            'description' => $blog->excerpt,
+            'image' => $imageUrl,
+            'published_time' => $publishedAt,
+            'modified_time' => $blog->updated_at,
+        ]);
 
         return view('central.site.blog-details', get_defined_vars());
     }
