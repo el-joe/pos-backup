@@ -149,4 +149,26 @@ class HomeController extends Controller
     {
         return view('central.site.pricing',get_defined_vars());
     }
+
+    function changeLanguage($locale) {
+        if (!in_array($locale, ['en', 'ar'], true)) {
+            abort(404);
+        }
+
+        session(['locale' => $locale]);
+
+        // redirect to same route but with new lang parameter
+        $previousUrl = url()->previous();
+        if(str_contains($previousUrl, '/en/') || str_contains($previousUrl, '/ar/')){
+            $newUrl = preg_replace('/\/(en|ar)\//', '/' . $locale . '/', $previousUrl);
+        }else{
+            if($previousUrl == url('/')){
+                $newUrl = url('/' . $locale);
+            }else{
+                $newUrl = $previousUrl;
+            }
+        }
+
+        return redirect($newUrl);
+    }
 }

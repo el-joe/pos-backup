@@ -25,27 +25,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class]]
         Route::get('/',[HomeController::class,'index'])->name('central-home');
     });
 
-    Route::get('lang/{locale}', function (string $locale) {
-        if (!in_array($locale, ['en', 'ar'], true)) {
-            abort(404);
-        }
-
-        session(['locale' => $locale]);
-
-        // redirect to same route but with new lang parameter
-        $previousUrl = url()->previous();
-        if(str_contains($previousUrl, '/en/') || str_contains($previousUrl, '/ar/')){
-            $newUrl = preg_replace('/\/(en|ar)\//', '/' . $locale . '/', $previousUrl);
-        }else{
-            if($previousUrl == url('/')){
-                $newUrl = url('/' . $locale);
-            }else{
-                $newUrl = $previousUrl;
-            }
-        }
-
-        return redirect($newUrl);
-    })->name('site.lang');
+    Route::get('lang/{locale}', [HomeController::class, 'changeLanguage'])->name('site.lang');
 
     Route::get('payment/callback/{type}', [PaymentController::class,'callback'])->name('payment.callback');
     Route::get('{type}/payment', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
