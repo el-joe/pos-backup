@@ -36,10 +36,6 @@ class InitializeTenancyByDomain extends IdentificationMiddleware
     public function handle($request, Closure $next)
     {
         $intoCentralDomains = in_array($request->getHost(), config('tenancy.central_domains'));
-        // redirect from http to https for central domains
-        if ($intoCentralDomains && !$request->isSecure()) {
-            return redirect()->secure($request->getRequestUri());
-        }
         if($intoCentralDomains)return $next($request);
         return $this->initializeTenancy(
             $request, $next, $request->getHost()

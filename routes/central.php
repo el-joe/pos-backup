@@ -4,11 +4,12 @@ use App\Http\Controllers\Central\Site\HomeController;
 use App\Http\Controllers\Central\Site\PaymentController;
 use App\Http\Controllers\Central\Tenant\RegisterController;
 use App\Http\Middleware\CentralWebsitesetLocal;
+use App\Http\Middleware\RedirectToSecure;
 use App\Http\Middleware\SiteTranslationMiddleware;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class]],function () {
+Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,RedirectToSecure::class]],function () {
 
     Route::get('register',[RegisterController::class,'register']);
     Route::post('register',[RegisterController::class,'postRegister'])->name('register-domain')->middleware('throttle:5,10');
