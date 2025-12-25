@@ -68,7 +68,6 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
     AdminTranslationMiddleware::class,
-    RedirectFromWWW::class,
 ])->group(function () {
 
     Route::redirect('/','admin/login');
