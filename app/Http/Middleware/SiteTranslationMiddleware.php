@@ -35,7 +35,7 @@ class SiteTranslationMiddleware
 
             url: url()->current(),
             robots: 'index, follow',
-            canonical_url: url('/'),
+            canonical_url: 'https://mohaaseb.com/',
             enableTitleSuffix: true,
             type: "website",
             site_name: "Mohaaseb",
