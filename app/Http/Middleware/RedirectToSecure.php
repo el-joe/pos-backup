@@ -20,6 +20,12 @@ class RedirectToSecure
             return redirect()->secure($request->getRequestUri());
         }
 
+        // if route is index.html or index.php or index.* file, redirect to secure
+        $path = $request->path();
+        if (preg_match('/^index\.(html|php)$/', $path) && !$request->isSecure()) {
+            return redirect('/', 301);
+        }
+
         return $next($request);
     }
 }
