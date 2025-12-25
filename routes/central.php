@@ -27,7 +27,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class]]
 
     Route::get('lang/{locale}', [HomeController::class, 'changeLanguage'])->name('site.lang');
 
-    Route::get('payment/callback/{type}', [PaymentController::class,'callback'])->name('payment.callback');
+    Route::get(' /{type}', [PaymentController::class,'callback'])->name('payment.callback');
     Route::get('{type}/payment', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
 
 });

@@ -65,13 +65,6 @@
         display: block;
     }
 
-    .app-header {
-        min-height: 64px;
-        display: flex;
-        align-items: center;
-        contain: layout paint;
-    }
-
     @media (max-width: 768px) {
         .navbar-logo {
             max-height: 36px;
