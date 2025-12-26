@@ -28,13 +28,13 @@
 #   ExpiresByType application/javascript "access plus 1 month"
 # </IfModule>
 
-<IfModule mod_expires.c>
-    ExpiresActive Off
-</IfModule>
+# <IfModule mod_expires.c>
+#     ExpiresActive Off
+# </IfModule>
 
-# 2. Prevent Apache from sending its own Cache headers
-<IfModule mod_headers.c>
-    Header unset Cache-Control
-    Header unset Expires
-    Header unset Pragma
-</IfModule>
+# # 2. Prevent Apache from sending its own Cache headers
+# <IfModule mod_headers.c>
+#     Header unset Cache-Control
+#     Header unset Expires
+#     Header unset Pragma
+# </IfModule>
