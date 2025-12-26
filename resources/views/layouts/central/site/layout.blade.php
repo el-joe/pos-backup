@@ -27,14 +27,15 @@
 
         gtag('config', 'G-P9269JMGT5');
     </script>
+
     <script>
-        document.addEventListener("livewire:navigated", () => {
-            if (typeof gtag === 'function') {
-                gtag('event', 'page_view', {
-                    page_path: window.location.pathname,
-                    page_title: document.title
-                });
-            }
+        document.addEventListener("livewire:navigated", function () {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: "livewire:navigated",
+                page_path: window.location.pathname,
+                page_title: document.title
+            });
         });
     </script>
 
