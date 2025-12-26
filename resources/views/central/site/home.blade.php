@@ -97,16 +97,19 @@
         <!-- END container -->
         <div class="position-absolute bg-size-cover bg-position-center bg-no-repeat top-0 start-0 w-100 h-100"
             style="background-image: url({{ asset('hud/assets/img/landing/cover.webp') }});"
+            role="presentation"
             aria-hidden="true">
         </div>
 
         <div class="position-absolute top-0 start-0 w-100 h-100 opacity-95"
             style="background: var(--bs-body-bg-gradient);"
+            role="presentation"
             aria-hidden="true">
         </div>
 
         <div class="position-absolute top-0 start-0 w-100 h-100 opacity-95"
             style="background-image: url({{ asset('hud/assets/css/images/pattern-dark.png') }}); background-size: var(--bs-body-bg-image-size);"
+            role="presentation"
             aria-hidden="true">
         </div>
     </div>
@@ -296,7 +299,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="">
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="User Avatar" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h3 class="h5 mb-0" itemprop="name">Daniel Carter</h3>
                                 <small class="text-muted" itemprop="jobTitle">Senior Operations Director</small>
@@ -340,7 +343,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="">
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">محمد ياسر</h5>
                                 <small class="text-muted" itemprop="jobTitle">مدير التطوير الرقمي</small>
@@ -386,7 +389,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="">
+                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">Sophia Williams</h5>
                                 <small class="text-muted" itemprop="jobTitle">Finance &amp; Compliance Lead</small>
@@ -433,7 +436,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="">
+                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">ليلى عمر</h5>
                                 <small class="text-muted" itemprop="jobTitle">قائدة قسم الجودة</small>
@@ -479,7 +482,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="">
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">خالد سمير</h5>
                                 <small class="text-muted" itemprop="jobTitle">محلل نظم الأعمال</small>
@@ -525,7 +528,7 @@
                     </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="">
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
                             <div itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 <h5 class="mb-0" itemprop="name">Mark Henderson</h5>
                                 <small class="text-muted" itemprop="jobTitle">Supply Chain Strategist</small>
