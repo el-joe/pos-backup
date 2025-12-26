@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Central\Site;
 
+use App\Helpers\SeoHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Contact;
@@ -19,11 +20,6 @@ class HomeController extends Controller
 {
     function index($lang = null)
     {
-        if($lang != null){
-            app()->setLocale($lang);
-            session(['locale' => $lang]);
-        }
-
         $sliders = Slider::where('active', true)->orderBy('number', 'asc')->get();
         $blogs = Blog::published()
             ->orderByDesc('id')
@@ -39,6 +35,8 @@ class HomeController extends Controller
             ->orderByDesc('id')
             ->paginate(12);
 
+        $seoData = SeoHelper::render('blogs');
+
         return view('central.site.blogs', get_defined_vars());
     }
 
@@ -49,12 +47,15 @@ class HomeController extends Controller
         $imageUrl = $blog->image_path;
         $publishedAt = $blog->published_at ?: $blog->created_at;
 
-        $seoData = defaultSeoData([
+        $seoData = SeoHelper::render('blog-details', [
             'title' => $blog->title,
             'description' => $blog->excerpt,
             'image' => $imageUrl,
             'published_time' => $publishedAt,
             'modified_time' => $blog->updated_at,
+            'slug' => $slug,
+            'canonical_url' => url("/{$lang}/blogs/{$slug}"),
+            'content' => $blog->content,
         ]);
 
         return view('central.site.blog-details', get_defined_vars());
@@ -92,11 +93,14 @@ class HomeController extends Controller
     function pricingCompare()
     {
         $plans = Plan::all();
+
+        $seoData = SeoHelper::render('pricing-compare');
         return view('central.site.pricing-compare',get_defined_vars());
     }
 
     function pricing()
     {
+        $seoData = SeoHelper::render('pricing');
         return view('central.site.pricing',get_defined_vars());
     }
 
