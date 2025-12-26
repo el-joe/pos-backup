@@ -39,17 +39,47 @@
                 <li class="nav-item me-2">
                     <a href="{{ route('blogs.index', ['lang' => app()->getLocale()]) }}" class="nav-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}">{{ __('website.nav.blogs') }}</a>
                 </li>
+                <li class="nav-item dropdown ms-lg-3">
+                    <button
+                        class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 rounded-pill px-3"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        aria-label="Select Language">
+
+                        <i class="bi bi-globe fs-14px"></i>
+
+                        <span class="fw-semibold text-uppercase">
+                            {{ app()->getLocale() }}
+                        </span>
+
+                        <i class="bi bi-chevron-down fs-12px opacity-75"></i>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2 p-1">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between rounded"
+                            href="{{ route('site.lang', ['locale' => 'en']) }}">
+                                <span>English</span>
+                                @if (app()->getLocale() === 'en')
+                                    <i class="bi bi-check2 text-primary"></i>
+                                @endif
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between rounded"
+                            href="{{ route('site.lang', ['locale' => 'ar']) }}">
+                                <span>العربية</span>
+                                @if (app()->getLocale() === 'ar')
+                                    <i class="bi bi-check2 text-primary"></i>
+                                @endif
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
-
-        <div class="ms-3 d-none d-lg-flex align-items-center gap-2">
-            <select class="form-select form-select-sm"
-                    aria-label="Select Language"
-                    onchange="if (this.value) window.location.href = this.value;">
-                <option value="{{ route('site.lang', 'en') }}" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>{{ __('website.nav.english') }}</option>
-                <option value="{{ route('site.lang', 'ar') }}" {{ app()->getLocale() === 'ar' ? 'selected' : '' }}>{{ __('website.nav.arabic') }}</option>
-            </select>
-        </div>
-
     </nav>
 </header>

@@ -67,4 +67,17 @@
             max-height: 36px;
         }
     }
+
+    .navbar .dropdown-menu {
+        min-width: 160px;
+    }
+
+    .navbar .dropdown-item {
+        font-size: 0.875rem;
+    }
+
+    .navbar .dropdown-item:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+
 </style>
