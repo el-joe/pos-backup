@@ -36,3 +36,15 @@
 #         Header unset Last-Modified
 #     </FilesMatch>
 # </IfModule>
+
+# 1. Disable Apache's automatic caching modules
+<IfModule mod_expires.c>
+    ExpiresActive Off
+</IfModule>
+
+# 2. Prevent Apache from sending its own Cache headers
+<IfModule mod_headers.c>
+    Header unset Cache-Control
+    Header unset Expires
+    Header unset Pragma
+</IfModule>
