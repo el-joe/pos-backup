@@ -251,6 +251,11 @@ class SeoHelper
                 break;
         }
 
+        // remove www from canonical urls
+        if (isset($data['canonical_url'])) {
+            $data['canonical_url'] = preg_replace('/^www\./', '', $data['canonical_url']);
+        }
+
         return $helper->buildSEOData($data);
     }
 }
