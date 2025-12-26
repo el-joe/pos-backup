@@ -76,18 +76,16 @@ class BlogForm extends Component
 
         $blog = $this->blog ?: new Blog();
 
-        $blog->fill($payload);
-        $blog->save();
 
+        $blog->fill($payload);
         if ($this->imageFile) {
-            $blog->image()->delete();
-            $blog->image()->create([
-                'path' => $this->imageFile,
-                'key' => 'image',
-            ]);
+            $blog->image_file = $this->imageFile;
 
             $this->imageFile = null;
         }
+
+        $blog->save();
+
 
         $this->blog = $blog;
 

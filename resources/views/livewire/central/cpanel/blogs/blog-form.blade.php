@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="col-12 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" wire:click="save">
+                    <button type="button" class="btn btn-primary" wire:click="save" wire:loading.attr="disabled">
                         <i class="fa fa-save"></i> Save
                     </button>
                 </div>

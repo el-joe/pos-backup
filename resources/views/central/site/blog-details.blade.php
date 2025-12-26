@@ -19,7 +19,7 @@
             @if($blog->image)
                 <div class="mb-4">
                     <img
-                        src="{{ asset($blog->image_path) }}"
+                        src="{{ $blog->image_path }}"
                         alt="{{ $blog->title }}"
                         class="w-100 d-block object-fit-cover rounded">
                 </div>

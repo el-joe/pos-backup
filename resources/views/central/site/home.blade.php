@@ -596,7 +596,7 @@
                                 <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => app()->getLocale()]) }}" aria-label="Read more about {{ $blog->title }}">
                                     <img
                                         loading="lazy"
-                                        src="{{ $blog->image ? $blog->image_path : asset('hud/assets/img/landing/blog-1.jpg') }}"
+                                        src="{{ $blog->thumb_image_path }}"
                                         alt="{{ $blog->title }}"
                                         itemprop="image"
                                         width="400"

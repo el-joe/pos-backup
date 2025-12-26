@@ -44,7 +44,7 @@ class HomeController extends Controller
     {
         $blog = Blog::published()->where('slug', $slug)->firstOrFail();
 
-        $imageUrl = $blog->image_path;
+        $imageUrl = $blog->og_image_path;
         $publishedAt = $blog->published_at ?: $blog->created_at;
 
         $seoData = SeoHelper::render('blog-details', [
