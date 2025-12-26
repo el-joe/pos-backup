@@ -7,7 +7,8 @@
 <link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/mockup-1.webp') }}" fetchpriority="high">
 
 <!-- CRITICAL CSS (no preload) -->
-<link rel="stylesheet" href="{{ asset('hud/assets/css/vendor.min.css') }}">
+<link rel="preload" href="{{ asset('hud/assets/css/vendor.min.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ asset('hud/assets/css/vendor.min.css') }}"></noscript>
 
 <!-- NON-CRITICAL CSS -->
 <link rel="preload"
