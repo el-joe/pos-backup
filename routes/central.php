@@ -21,14 +21,15 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
     Route::get('pricing/compare',[HomeController::class,'pricingCompare'])->name('pricing-compare');
     Route::get('pricing', [HomeController::class,'pricing'])->name('pricing');
     // lang in ar|en or null
+    Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');
+    Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
+
     Route::group(['prefix'=>'{lang?}','where' => ['lang' => 'en|ar'],'middleware'=>[CentralWebsitesetLocal::class]],function(){
         Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
         Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
         Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');
         Route::get('/',[HomeController::class,'index'])->name('central-home');
     });
-    Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');
-    Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
 
     Route::get('lang/{locale}', [HomeController::class, 'changeLanguage'])->name('site.lang');
 
