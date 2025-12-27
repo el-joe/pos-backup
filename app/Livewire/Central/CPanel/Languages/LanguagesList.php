@@ -80,7 +80,7 @@ class LanguagesList extends Component
 
     public function render()
     {
-        $languages = Language::paginate(10);
+        $languages = Language::paginate(10)->withPath(route('cpanel.languages.list'));
 
         return view('livewire.central.cpanel.languages.languages-list', get_defined_vars());
     }

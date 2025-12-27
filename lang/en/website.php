@@ -144,6 +144,12 @@ return [
         'back_to_all' => 'Back to all posts',
     ],
 
+    'faqs' => [
+        'title' => 'Frequently Asked Questions',
+        'subtitle' => 'Quick answers about Mohaaseb, subscriptions, and using the platform.',
+        'empty' => 'No FAQs available right now.',
+    ],
+
     'header' => [
         'logo_alt' => 'Mohaaseb Logo',
     ],
@@ -219,6 +225,7 @@ return [
         'blog' => 'Business Blog & ERP Insights | Mohaaseb',
         'pricing' => 'Pricing Plans | Mohaaseb ERP',
         'pricing_compare' => 'Compare Pricing Plans | Mohaaseb ERP & POS',
+        'faqs' => 'FAQs & Help Center | Mohaaseb',
 
     ],
     'meta_description' => 'Mohaaseb is a comprehensive cloud-based ERP system with POS, accounting, inventory management, and more. Start managing your business efficiently today.',
@@ -228,6 +235,8 @@ return [
     'meta_description_pricing' => 'Choose the perfect pricing plan for your business. Flexible ERP and POS system options for businesses of all sizes with transparent pricing.',
 
     'meta_description_pricing_compare' => 'Compare Mohaaseb pricing plans side-by-side. Find the best ERP and POS system features for your business needs and budget.',
+
+    'meta_description_faqs' => 'Find quick answers to common questions about Mohaaseb ERP & POS, subscriptions, features, and support.',
 
     'seo' => [
         'review_body' => 'Mohaaseb Cloud ERP has transformed our business operations. The interface is intuitive, and having our accounting, inventory, and sales data in one cloud-based platform has saved us hours of manual work every week. The customer support team is responsive and knowledgeable, helping us get the most out of the system. Highly recommended for any business looking to streamline their processes and improve efficiency.',

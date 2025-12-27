@@ -43,7 +43,7 @@ class BlogsList extends Component
 
     public function render()
     {
-        $blogs = Blog::orderByDesc('id')->paginate(10);
+        $blogs = Blog::orderByDesc('id')->paginate(10)->withPath(route('cpanel.blogs.list'));
 
         return view('livewire.central.cpanel.blogs.blogs-list', get_defined_vars());
     }

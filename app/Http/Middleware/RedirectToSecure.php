@@ -16,7 +16,7 @@ class RedirectToSecure
     public function handle(Request $request, Closure $next): Response
     {
         $intoCentralDomains = in_array($request->getHost(), config('tenancy.central_domains'));
-        if ($intoCentralDomains && !$request->isSecure()) {
+        if ($intoCentralDomains && !$request->isSecure() && app()->environment('production')) {
             return redirect()->secure($request->getRequestUri());
         }
 

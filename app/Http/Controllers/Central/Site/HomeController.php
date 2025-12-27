@@ -6,6 +6,7 @@ use App\Helpers\SeoHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Contact;
+use App\Models\Faq;
 use App\Models\Plan;
 use App\Models\Slider;
 use Carbon\Carbon;
@@ -29,7 +30,7 @@ class HomeController extends Controller
         return view('central.site.home',get_defined_vars());
     }
 
-    function blogs($lang)
+    function blogs($lang = null)
     {
         $blogs = Blog::published()
             ->orderByDesc('id')
@@ -59,6 +60,27 @@ class HomeController extends Controller
         ]);
 
         return view('central.site.blog-details', get_defined_vars());
+    }
+
+    function faqs($lang = null)
+    {
+        if($lang == null){
+            $lang = app()->getLocale();
+        }
+        $faqs = Faq::published()
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        $seoData = SeoHelper::render('faqs', [
+            'canonical_url' => url("/{$lang}/faqs"),
+            'faq_items' => $faqs->map(fn (Faq $faq) => [
+                'question' => $faq->question,
+                'answer' => strip_tags($faq->answer),
+            ])->all(),
+        ]);
+
+        return view('central.site.faqs', get_defined_vars());
     }
 
     function contactUs(Request $request)

@@ -36,6 +36,9 @@ class GenerateSitemap extends Command
         $sitemap->add(url('/pricing'));
         $sitemap->add(url('/pricing/compare'));
         $sitemap->add(url('/blogs'));
+        $sitemap->add(url('/faqs'));
+        $sitemap->add(url('/ar/faqs'));
+        $sitemap->add(url('/en/faqs'));
 
         // الصفحات الديناميكية
         Blog::all()->each(function($blog) use ($sitemap) {

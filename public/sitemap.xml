@@ -10,75 +10,159 @@
     <loc>http://pos.loc/en</loc>
             </url>
     <url>
+    <loc>http://pos.loc/pricing</loc>
+            </url>
+    <url>
     <loc>http://pos.loc/pricing/compare</loc>
             </url>
     <url>
     <loc>http://pos.loc/blogs</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/getting-started-smart-erp-pos</loc>
+    <loc>http://pos.loc/faqs</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/inventory-control-best-practices</loc>
+    <loc>http://pos.loc/ar/faqs</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/cashier-shift-management</loc>
+    <loc>http://pos.loc/en/faqs</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/accounting-reports-for-owners</loc>
+    <loc>http://pos.loc/ar/blogs/getting-started-smart-erp-pos</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/refunds-and-returns-policy</loc>
+    <loc>http://pos.loc/en/blogs/getting-started-smart-erp-pos</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/why-centralized-erp-matters</loc>
+    <loc>http://pos.loc/ar/blogs/inventory-control-best-practices</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software</loc>
+    <loc>http://pos.loc/en/blogs/inventory-control-best-practices</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/how-smart-inventory-management-increases-profitability</loc>
+    <loc>http://pos.loc/ar/blogs/cashier-shift-management</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/why-financial-reports-are-essential-for-business-growth</loc>
+    <loc>http://pos.loc/en/blogs/cashier-shift-management</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/7-essential-erp-pos-system-modules-for-small-businesses</loc>
+    <loc>http://pos.loc/ar/blogs/accounting-reports-for-owners</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/retail-kpis-dashboard-12-metrics-every-erp-pos-should-track</loc>
+    <loc>http://pos.loc/en/blogs/accounting-reports-for-owners</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/multi-branch-management-how-erp-pos-keeps-branches-in-sync</loc>
+    <loc>http://pos.loc/ar/blogs/refunds-and-returns-policy</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/vat-and-e-invoicing-readiness-for-erp-pos-businesses</loc>
+    <loc>http://pos.loc/en/blogs/refunds-and-returns-policy</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/offline-pos-mode-how-sync-should-work-when-internet-drops</loc>
+    <loc>http://pos.loc/ar/blogs/why-centralized-erp-matters</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/role-based-access-and-audit-logs-control-without-slowing-teams</loc>
+    <loc>http://pos.loc/en/blogs/why-centralized-erp-matters</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/procure-to-pay-workflow-from-purchase-order-to-vendor-payment</loc>
+    <loc>http://pos.loc/ar/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/inventory-forecasting-and-replenishment-reduce-stockouts-without-overstock</loc>
+    <loc>http://pos.loc/en/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/integrations-guide-e-commerce-accounting-and-payment-gateways</loc>
+    <loc>http://pos.loc/ar/blogs/how-smart-inventory-management-increases-profitability</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/erp-pos-implementation-checklist-go-live-without-chaos</loc>
+    <loc>http://pos.loc/en/blogs/how-smart-inventory-management-increases-profitability</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/data-security-for-erp-pos-backups-access-and-recovery-basics</loc>
+    <loc>http://pos.loc/ar/blogs/why-financial-reports-are-essential-for-business-growth</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/pricing-strategy-in-erp-pos-promotions-without-losing-margin</loc>
+    <loc>http://pos.loc/en/blogs/why-financial-reports-are-essential-for-business-growth</loc>
             </url>
     <url>
-    <loc>http://pos.loc/blogs/customer-loyalty-in-erp-pos-programs-that-actually-work</loc>
+    <loc>http://pos.loc/ar/blogs/7-essential-erp-pos-system-modules-for-small-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/7-essential-erp-pos-system-modules-for-small-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/retail-kpis-dashboard-12-metrics-every-erp-pos-should-track</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/retail-kpis-dashboard-12-metrics-every-erp-pos-should-track</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/multi-branch-management-how-erp-pos-keeps-branches-in-sync</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/multi-branch-management-how-erp-pos-keeps-branches-in-sync</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/vat-and-e-invoicing-readiness-for-erp-pos-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/vat-and-e-invoicing-readiness-for-erp-pos-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/offline-pos-mode-how-sync-should-work-when-internet-drops</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/offline-pos-mode-how-sync-should-work-when-internet-drops</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/role-based-access-and-audit-logs-control-without-slowing-teams</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/role-based-access-and-audit-logs-control-without-slowing-teams</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/procure-to-pay-workflow-from-purchase-order-to-vendor-payment</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/procure-to-pay-workflow-from-purchase-order-to-vendor-payment</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/inventory-forecasting-and-replenishment-reduce-stockouts-without-overstock</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/inventory-forecasting-and-replenishment-reduce-stockouts-without-overstock</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/integrations-guide-e-commerce-accounting-and-payment-gateways</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/integrations-guide-e-commerce-accounting-and-payment-gateways</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/erp-pos-implementation-checklist-go-live-without-chaos</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/erp-pos-implementation-checklist-go-live-without-chaos</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/data-security-for-erp-pos-backups-access-and-recovery-basics</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/data-security-for-erp-pos-backups-access-and-recovery-basics</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/pricing-strategy-in-erp-pos-promotions-without-losing-margin</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/pricing-strategy-in-erp-pos-promotions-without-losing-margin</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/customer-loyalty-in-erp-pos-programs-that-actually-work</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/customer-loyalty-in-erp-pos-programs-that-actually-work</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses</loc>
             </url>
 </urlset>

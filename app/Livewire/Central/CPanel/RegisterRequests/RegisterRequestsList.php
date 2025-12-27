@@ -40,7 +40,7 @@ class RegisterRequestsList extends Component
     public function render()
     {
 
-        $registerRequests = RegisterRequest::orderBy('created_at', 'desc')->paginate(10);
+        $registerRequests = RegisterRequest::orderBy('created_at', 'desc')->paginate(10)->withPath(route('cpanel.register-requests.list'));
 
         return view('livewire.central.cpanel.register-requests.register-requests-list', get_defined_vars());
     }

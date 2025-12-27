@@ -41,7 +41,7 @@
                 <ul class="list-unstyled">
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.documentation') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.support') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.faqs') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('faqs.index', ['lang' => app()->getLocale()]) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.faqs') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.community') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.tutorials') }}</a></li>
                 </ul>

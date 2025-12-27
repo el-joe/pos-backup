@@ -127,6 +127,38 @@ class SeoHelper
                     ]
                 ]);
 
+            case 'FAQPage':
+                $mainEntity = [];
+
+                foreach (($data['faq_items'] ?? []) as $faq) {
+                    $question = trim((string) ($faq['question'] ?? ''));
+                    $answer = trim((string) ($faq['answer'] ?? ''));
+
+                    if ($question === '' || $answer === '') {
+                        continue;
+                    }
+
+                    $mainEntity[] = [
+                        '@type' => 'Question',
+                        'name' => $question,
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $answer,
+                        ],
+                    ];
+                }
+
+                return new SchemaCollection([
+                    [
+                        "@context" => "https://schema.org",
+                        "@type" => "FAQPage",
+                        "name" => $data['title'],
+                        "description" => $data['description'],
+                        "url" => $data['canonical_url'],
+                        "mainEntity" => $mainEntity,
+                    ]
+                ]);
+
             default:
                 return new SchemaCollection([
                     [
@@ -221,6 +253,16 @@ class SeoHelper
                     'tags' => ['Blog', 'Articles', 'Business Tips', 'ERP Guide', 'POS Tips'],
                     'schema_type' => 'Blog',
                 ],$data);
+                break;
+            case 'faqs':
+                $data = array_merge([
+                    'title' => __('website.titles.faqs'),
+                    'description' => __('website.meta_description_faqs'),
+                    'canonical_url' => url(app()->getLocale() .'/faqs'),
+                    'type' => 'website',
+                    'tags' => ['FAQs', 'Support', 'Help Center', 'Mohaaseb'],
+                    'schema_type' => 'FAQPage',
+                ], $data);
                 break;
             case 'blog-details':
                 // Build alternates for this specific blog
