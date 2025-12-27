@@ -26,7 +26,6 @@ class SeoHelper
             'author' => 'codefanz.com',
             'robots' => 'index, follow',
             'site_name' => 'Mohaaseb',
-            'favicon' => asset('favicon_io/favicon.ico'),
             'twitter_username' => '@mohaaseb',
             'tags' => ['ERP', 'POS', 'Accounting', 'Inventory', 'Business Management'],
         ];
