@@ -78,14 +78,10 @@ class BlogForm extends Component
 
 
         $blog->fill($payload);
-        if ($this->imageFile) {
-            $blog->image_file = $this->imageFile;
-
-            $this->imageFile = null;
-        }
 
         $blog->save();
 
+        $blog->generateImages($this->imageFile);
 
         $this->blog = $blog;
 

@@ -46,30 +46,8 @@ class Blog extends Model
             $blog->slug = generateSlug(self::class, $blog->title_en);
 
             Artisan::call('app:generate-sitemap');
-
-            $value = $blog->image_file;
-
-            foreach (self::$sizes as $sizeKey => [$relation,$width, $height]) {
-                $blog->{$relation}()->create([
-                    'path' => self::optimizeImage($value,[$width, $height]),
-                    'key' => $sizeKey,
-                ]);
-            }
         });
 
-        static::updating(function ($blog) {
-            if($blog->image_file instanceof UploadedFile){
-                $value = $blog->image_file;
-
-                foreach (self::$sizes as $sizeKey => [$relation,$width, $height]) {
-                    $blog->{$relation}()->delete();
-                    $blog->{$relation}()->create([
-                        'path' => self::optimizeImage($value,[$width, $height]),
-                        'key' => $sizeKey,
-                    ]);
-                }
-            }
-        });
 
         static::deleting(function ($blog) {
             Artisan::call('app:generate-sitemap');
@@ -78,21 +56,20 @@ class Blog extends Model
                 $blog->{$relation}()->delete();
             }
         });
+    }
 
-        static::saving(function ($blog) {
-            if($blog->image_file instanceof UploadedFile){
-                $value = $blog->image_file;
+    function generateImages($file){
+        if($file instanceof UploadedFile){
+            $value = $file;
 
-                foreach (self::$sizes as $sizeKey => [$relation,$width, $height]) {
-                    $blog->{$relation}()->delete();
-                    $blog->{$relation}()->create([
-                        'path' => self::optimizeImage($value,[$width, $height]),
-                        'key' => $sizeKey,
-                    ]);
-                }
-                unset($blog->image_file);
+            foreach (self::$sizes as $sizeKey => [$relation,$width, $height]) {
+                $this->{$relation}()->delete();
+                $this->{$relation}()->create([
+                    'path' => self::optimizeImage($value,[$width, $height]),
+                    'key' => $sizeKey,
+                ]);
             }
-        });
+        }
     }
 
     static function optimizeImage($value,$size = null){
