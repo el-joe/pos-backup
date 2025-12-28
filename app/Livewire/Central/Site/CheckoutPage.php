@@ -106,6 +106,8 @@ class CheckoutPage extends Component
             'cancel_url' => url('/payment/failed'),
         ]);
 
+        $requestPayload['metadata'] = $dataToString;
+
         PaymentTransaction::create([
             // 'tenant_id',
             'payment_method_id' => 1, // Paypal

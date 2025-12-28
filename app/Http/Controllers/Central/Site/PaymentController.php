@@ -17,13 +17,9 @@ class PaymentController extends Controller
     function callback(Request $request,$type) {
 
         if($type == 'check'){
-            $order = PaymentTransaction::where('transaction_reference',$request->token)->first();
-            $plan = Plan::find($data['plan_id'] ?? 1);
-            if(!$plan){
-                return redirect()->route('payment-callback',['type'=>'failed']);
-            }
+            $pt = PaymentTransaction::where('transaction_reference',$request->token)->first();
 
-            $paymentProvider = 'App\\Payments\\Providers\\'.($plan->provider ?? 'Paypal');
+            $paymentProvider = 'App\\Payments\\Providers\\'.($pt->paymentMethod->provider ?? 'Paypal');
 
             $paymentService = new PaymentService(new $paymentProvider());
 
@@ -32,6 +28,8 @@ class PaymentController extends Controller
 
         if($type == 'success'){
             try{
+                $data = $request->query('data');
+                $data = decodedData($data);
                 $registerRequest = RegisterRequest::create([
                     'data'=>[
                         'company' => [

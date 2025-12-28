@@ -20,4 +20,9 @@ class PaymentTransaction extends Model
         'request_payload' => 'array',
         'response_payload' => 'array',
     ];
+
+    function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
 }
