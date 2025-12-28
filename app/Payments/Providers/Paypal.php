@@ -102,7 +102,7 @@ class Paypal implements PaymentMethodInterface
                 throw new \Exception('PayPal Auth Failed');
             }
 
-            return $response->json('access_token')['access_token'] ?? null;
+            return $response->json('access_token') ?? null;
         });
 
 
