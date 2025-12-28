@@ -22,8 +22,13 @@ class PaymentController extends Controller
             $paymentProvider = 'App\\Payments\\Providers\\'.($pt->paymentMethod->provider ?? 'Paypal');
 
             $paymentService = new PaymentService(new $paymentProvider());
-
-            dd($paymentService->capture($request->token));
+            $captureResult = $paymentService->capture($request->token);
+            if($captureResult['status'] == 'COMPLETED'){
+                $type = 'success';
+                $data = $pt->request_payload['metadata'] ?? null;
+            }else{
+                $type = 'failed';
+            }
         }
 
         if($type == 'success'){
