@@ -27,11 +27,15 @@ class PaymentController extends Controller
                 $type = 'success';
                 $data = $pt->request_payload['metadata'] ?? null;
                 $pt->update([
-                    'status'=>'completed',
+                    'status'=>'success',
                     'response_payload'=>$captureResult,
                 ]);
             }else{
                 $type = 'failed';
+                $pt->update([
+                    'status'=>'failed',
+                    'response_payload'=>$captureResult,
+                ]);
             }
         }
 
