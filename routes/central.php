@@ -33,9 +33,9 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
 
     Route::get('lang/{locale}', [HomeController::class, 'changeLanguage'])->name('site.lang');
 
-    Route::group(['prefix'=>'{type}','where' => ['type' => 'check|success|failed']],function(){
-        Route::get(' /', [PaymentController::class,'callback'])->name('payment.callback');
-        Route::get('/payment', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
+    Route::group(['prefix'=>'payment/{type}','where' => ['type' => 'check|success|failed']],function(){
+        Route::get('/', [PaymentController::class,'callback'])->name('payment.callback');
+        Route::get('/callback', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
     });
 
 });
