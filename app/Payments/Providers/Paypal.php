@@ -66,7 +66,7 @@ class Paypal implements PaymentMethodInterface
         $paymentConfig = $this->gateway->credentials; // its array contains 'client_id', 'secret', 'mode' etc.
 
         $this->createAccessToken($paymentConfig['client_id'], $paymentConfig['secret']);
-        dd($this->accessToken);
+
         return Http::withToken($this->accessToken)
             ->post($this->baseUrl . '/v2/checkout/orders/' . $transactionId . '/capture')
             ->json();
@@ -102,7 +102,7 @@ class Paypal implements PaymentMethodInterface
                 throw new \Exception('PayPal Auth Failed');
             }
 
-            return $response->json('access_token');
+            return $response->json('access_token')['access_token'] ?? null;
         });
 
 
