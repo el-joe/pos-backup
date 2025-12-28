@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
-    function callback(Request $request,$provider,$type) {
+    function callback(Request $request,$type) {
         $data = $request->query('data');
         $data = decodedData($data);
 
