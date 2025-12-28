@@ -6,7 +6,7 @@ interface PaymentMethodInterface
 {
     public function pay($data);
 
-    public function callback($transactionId);
+    public function capture($transactionId);
 
     public function refund($transactionId);
 }

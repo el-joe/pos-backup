@@ -102,8 +102,8 @@ class CheckoutPage extends Component
             'currency' => 'USD',
             'description' => 'Mohaaseb Subscription Payment',
             'metadata' => $newData,
-            'return_url' => url('/payment/callback/check?data=' . $dataToString),
-            'cancel_url' => url('/payment/callback/failed?data=' . $dataToString),
+            'return_url' => url('/payment/check?data=' . $dataToString),
+            'cancel_url' => url('/payment/failed?data=' . $dataToString),
         ]);
 
         PaymentTransaction::create([

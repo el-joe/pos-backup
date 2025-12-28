@@ -27,7 +27,7 @@ class PaymentController extends Controller
 
             $paymentService = new PaymentService(new $paymentProvider());
 
-            dd($paymentService->callback($request->token));
+            dd($paymentService->capture($request->token));
         }
 
         if($type == 'success'){
