@@ -65,10 +65,18 @@ class Paypal implements PaymentMethodInterface
     {
         $paymentConfig = $this->gateway->credentials; // its array contains 'client_id', 'secret', 'mode' etc.
 
-        $this->createAccessToken($paymentConfig['client_id'], $paymentConfig['secret']);
+        $accessToken = $this->createAccessToken($paymentConfig['client_id'], $paymentConfig['secret']);
 
-        return Http::withToken($this->accessToken)
-            ->post($this->baseUrl . '/v2/checkout/orders/' . $transactionId . '/capture')
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Prefer' => 'return=representation',
+            'PayPal-Request-Id' => uniqid()
+        ];
+
+        return Http::withToken($accessToken)
+            ->post($this->baseUrl . '/v2/checkout/orders/' . $transactionId . '/capture',[
+                'headers' => $headers
+            ])
             ->json();
     }
 
