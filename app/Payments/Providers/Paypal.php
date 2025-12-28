@@ -8,12 +8,16 @@ use App\Payments\Interfaces\PaymentMethodInterface;
 class Paypal implements PaymentMethodInterface
 {
     protected $gateway;
-    protected $accessToken;
+    protected $accessToken, $baseUrl;
 
     public function __construct()
     {
         $className = (new \ReflectionClass($this))->getShortName();
         $this->gateway = PaymentMethod::whereProvider($className)->firstOrFail();
+
+        $this->baseUrl = false
+            ? 'https://api-m.paypal.com'
+            : 'https://api-m.sandbox.paypal.com';
     }
 
     function getGrandTotalAmount($amount){
@@ -29,13 +33,12 @@ class Paypal implements PaymentMethodInterface
 
         $accessTokenData = $this->createAccessToken($clientId, $secret);
 
-        $this->accessToken = $accessTokenData['access_token'] ?? null;
-        $this->gateway->credentials = [
-            ... ($this->gateway->credentials ?? []),
-            'access_token' => $this->accessToken,
-        ];
+        // $this->gateway->credentials = [
+        //     ... ($this->gateway->credentials ?? []),
+        //     'access_token' => $this->accessToken,
+        // ];
 
-        $this->gateway->save();
+        // $this->gateway->save();
 
         if(!$this->accessToken){
             return [
@@ -63,8 +66,10 @@ class Paypal implements PaymentMethodInterface
 
         $curl = curl_init();
 
+        $this->createAccessToken($paymentConfig['client_id'], $paymentConfig['secret']);
+
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v2/checkout/orders/'. $transactionId .'/capture',
+        CURLOPT_URL => $this->baseUrl . '/v2/checkout/orders/'. $transactionId .'/capture',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -76,7 +81,7 @@ class Paypal implements PaymentMethodInterface
             'Content-Type: application/json',
             'Prefer: return=representation',
             'PayPal-Request-Id: ' . uniqid(),
-            'Authorization: Bearer ' . $paymentConfig['access_token']
+            'Authorization: Bearer ' . $this->accessToken
         ),
         ));
 
@@ -99,29 +104,38 @@ class Paypal implements PaymentMethodInterface
 
     function createAccessToken($clientId, $secret)
     {
-        $basicToken = base64_encode($clientId . ':' . $secret);
+        // ttl = 8 hours = 28800 seconds
+        $data = cache()->driver('file')->remember('paypal_access_token_'.$clientId, 28800, function() use ($clientId, $secret) {
+            $basicToken = base64_encode($clientId . ':' . $secret);
 
-        $curl = curl_init();
+            $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v1/oauth2/token',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => 'grant_type=client_credentials',
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/x-www-form-urlencoded',
-                'Authorization: Basic ' . $basicToken
-            ),
-        ));
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $this->baseUrl . '/v1/oauth2/token',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => 'grant_type=client_credentials',
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $basicToken
+                ),
+            ));
 
-        $response = curl_exec($curl);
+            $response = curl_exec($curl);
 
-        return json_decode($response, true);
+            $data = json_decode($response, true);
+
+            return $data;
+        });
+
+
+        $this->accessToken = (array)$data['access_token'] ?? null;
+        return $data;
     }
 
     function createPayment($returnUrl, $cancelUrl, $amount, $currency){
@@ -149,7 +163,7 @@ class Paypal implements PaymentMethodInterface
         ];
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+            CURLOPT_URL => $this->baseUrl . '/v2/checkout/orders',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
