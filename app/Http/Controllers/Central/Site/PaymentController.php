@@ -26,6 +26,10 @@ class PaymentController extends Controller
             if($captureResult['status'] == 'COMPLETED'){
                 $type = 'success';
                 $data = $pt->request_payload['metadata'] ?? null;
+                $pt->update([
+                    'status'=>'completed',
+                    'response_payload'=>$captureResult,
+                ]);
             }else{
                 $type = 'failed';
             }
@@ -33,7 +37,6 @@ class PaymentController extends Controller
 
         if($type == 'success'){
             try{
-                $data = $request->query('data');
                 $data = decodedData($data);
                 $registerRequest = RegisterRequest::create([
                     'data'=>[
