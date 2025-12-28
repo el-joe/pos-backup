@@ -102,8 +102,8 @@ class CheckoutPage extends Component
             'currency' => 'USD',
             'description' => 'Mohaaseb Subscription Payment',
             'metadata' => $newData,
-            'return_url' => url('/payment/check?data=' . $dataToString),
-            'cancel_url' => url('/payment/failed?data=' . $dataToString),
+            'return_url' => url('/payment/check'),
+            'cancel_url' => url('/payment/failed'),
         ]);
 
         PaymentTransaction::create([
@@ -112,7 +112,7 @@ class CheckoutPage extends Component
             'amount' => $newData['amount'],
             'status' => 'pending',
             'request_payload' => $requestPayload,
-            'transaction_reference' => $dataToString
+            'transaction_reference' => $requestPayload['payment']['id'] ?? null,
         ]);
 
         return redirect()->to($requestPayload['payment']['links'][1]['href']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Central\Site;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminRegisterRequestMail;
 use App\Mail\RegisterRequestMail;
+use App\Models\PaymentTransaction;
 use App\Models\Plan;
 use App\Models\RegisterRequest;
 use App\Payments\Services\PaymentService;
@@ -14,10 +15,9 @@ use Illuminate\Support\Facades\Mail;
 class PaymentController extends Controller
 {
     function callback(Request $request,$type) {
-        $data = $request->query('data');
-        $data = decodedData($data);
 
         if($type == 'check'){
+            $order = PaymentTransaction::where('transaction_reference',$request->token)->first();
             $plan = Plan::find($data['plan_id'] ?? 1);
             if(!$plan){
                 return redirect()->route('payment-callback',['type'=>'failed']);
