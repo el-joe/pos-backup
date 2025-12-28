@@ -75,7 +75,7 @@ class Paypal implements PaymentMethodInterface
 
         return Http::withToken($accessToken)
             ->withHeaders($headers)
-            ->post($this->baseUrl . '/v2/checkout/orders/' . $transactionId . '/capture')
+            ->post($this->baseUrl . '/v2/checkout/orders/' . $transactionId . '/capture', [])
             ->json();
     }
 
