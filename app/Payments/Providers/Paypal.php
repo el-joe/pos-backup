@@ -134,7 +134,7 @@ class Paypal implements PaymentMethodInterface
         });
 
 
-        $this->accessToken = (array)$data['access_token'] ?? null;
+        $this->accessToken = $data['access_token'] ?? null;
         return $data;
     }
 
