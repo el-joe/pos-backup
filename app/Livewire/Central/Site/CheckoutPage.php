@@ -104,6 +104,7 @@ class CheckoutPage extends Component
             'metadata' => $newData,
             'return_url' => url('/payment/check'),
             'cancel_url' => url('/payment/failed'),
+            'token' => $dataToString
         ]);
 
         $requestPayload['metadata'] = $dataToString;
