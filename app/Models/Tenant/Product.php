@@ -71,10 +71,8 @@ class Product extends Model
             $q->whereHas('stocks', function($q2) {
                 $q2->where('qty','>',0);
             });
-        })->when(isset($filter['active']), function($q) use ($filter) {
-            if($filter['active'] != 'all'){
-                $q->where('active', $filter['active']);
-            }
+        })->when(isset($filter['active']) && $filter['active'] !== 'all', function($q) use ($filter) {
+            $q->where('active', $filter['active']);
         })->when($filter['inactive'] ?? null, function($q) {
             $q->where('active', 0);
         })->when($filter['category_id'] ?? null, function($q,$categoryId) {

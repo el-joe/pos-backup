@@ -364,8 +364,9 @@ class PosPage extends Component
     {
         $products = $this->productService->getAllProductWhereHasStock([],[
             'branch_id' => $this->data['branch_id'] ?? null,
-            'active' => true,
+            'active' => 1,
         ]);
+
         $selectedCustomer = $this->customers->firstWhere('id',$this->selectedCustomerId);
         extract($this->calculateTotals());
 
