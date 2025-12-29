@@ -19,7 +19,7 @@ class TrailBalanceReport extends Component
 
 
         $transactionLines = $query->clone()
-            ->paginate(100)->withQueryString()
+            ->paginate(20)->withQueryString()
             ->through(function($line) {
                 return [
                     'id' => $line->id,
