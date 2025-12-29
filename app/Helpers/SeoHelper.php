@@ -187,7 +187,6 @@ class SeoHelper
             enableTitleSuffix: $data['enableTitleSuffix'] ?? true,
             type: $data['type'] ?? 'website',
             site_name: $data['site_name'] ?? $this->defaults['site_name'],
-            favicon: $data['favicon'] ?? $this->defaults['favicon'],
             locale: app()->getLocale() === 'en' ? 'en_US' : 'ar_AR',
             openGraphTitle: $data['openGraphTitle'] ?? $data['title'],
             imageMeta: new ImageMeta($image),

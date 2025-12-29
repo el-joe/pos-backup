@@ -18,8 +18,8 @@ class PaymentService
         return $this->gateway->pay($data);
     }
 
-    public function callback($transactionId)
+    public function capture($transactionId)
     {
-        return $this->gateway->callback($transactionId);
+        return $this->gateway->capture($transactionId);
     }
 }
