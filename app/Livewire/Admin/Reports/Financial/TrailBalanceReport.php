@@ -32,8 +32,8 @@ class TrailBalanceReport extends Component
                     'date' => dateTimeFormat($line->transaction?->date,true,false),
                     'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
                     'account_type' => $line->account?->type->label() ?? 'N/A',
-                    'debit' => currencyFormat($line->type == 'debit' ? number_format($line->amount, 2) : 0 , true),
-                    'credit' => currencyFormat($line->type == 'credit' ? number_format($line->amount, 2) : 0, true),
+                    'debit' => currencyFormat($line->type == 'debit' ? $line->amount: 0 , true),
+                    'credit' => currencyFormat($line->type == 'credit' ? $line->amount : 0, true),
                     'created_at' => dateTimeFormat($line->created_at,true,false),
                 ];
             });
