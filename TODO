@@ -6,7 +6,7 @@ become partner page
 # static pages
 free trial period
 tenant balance and charge balance
-subscription Renewal email and notification
+subscription Renewal email and notification (command to send notification for all tenants with expiring subscription in next 7 days)
 --------------------
 
 Notifications
