@@ -58,6 +58,7 @@ class SubscriptionsPage extends Component
         }
         $subscriptions = Subscription::forTenant(tenant('id'))
             ->orderBy('start_date', 'desc')->get();
+        $accountBalance = tenant('balance');
         return layoutView('plans.subscriptions-page', get_defined_vars());
     }
 }

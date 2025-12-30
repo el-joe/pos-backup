@@ -53,6 +53,34 @@ class PageSeeder extends Seeder
                 'content_ar' => "تم تصميم منصة محاسب لتقديم الخدمة بشكل عادل وفعال لجميع المستخدمين.\n\nيُحظر إساءة استخدام النظام بأي شكل قد يؤثر سلبًا على الأداء أو الأمان أو تجربة المستخدمين الآخرين.\n\nتشمل الأنشطة المحظورة الطلبات الآلية المفرطة، استخراج البيانات، محاولة الوصول غير المصرح به، أو استخدام النظام لأغراض غير قانونية.\n\nتحتفظ منصة محاسب بالحق في تقييد أو إيقاف أو إنهاء الحسابات المخالفة دون إشعار مسبق.\n\nتهدف هذه السياسة إلى ضمان استقرار الخدمة وتوفير تجربة عادلة للجميع.",
                 'is_published' => true,
             ],
+            [
+                'slug' => 'terms-conditions',
+                'title_en' => 'Terms & Conditions',
+                'title_ar' => 'الشروط والأحكام',
+                'short_description_en' => 'Read the terms and conditions for using our services.',
+                'short_description_ar' => 'اقرأ الشروط والأحكام لاستخدام خدماتنا.',
+                'content_en' => '<h2>Terms & Conditions</h2>
+                    <p>Welcome to our website. By using our services, you agree to the following terms and conditions:</p>
+                    <ul>
+                    <li>Use the website responsibly and lawfully.</li>
+                    <li>Respect the intellectual property of the website and third parties.</li>
+                    <li>We reserve the right to suspend or terminate access for violations.</li>
+                    <li>All payments, refunds, and account balance policies apply as described in our Privacy Policy.</li>
+                    <li>We are not liable for any damages resulting from misuse of the website.</li>
+                    </ul>
+                    <p>For detailed information, please contact us via our support channels.</p>',
+                'content_ar' => '<h2>الشروط والأحكام</h2>
+                    <p>مرحبًا بكم في موقعنا. باستخدام خدماتنا، فإنك توافق على الشروط والأحكام التالية:</p>
+                    <ul>
+                    <li>استخدام الموقع بطريقة مسؤولة وقانونية.</li>
+                    <li>احترام الملكية الفكرية للموقع والأطراف الثالثة.</li>
+                    <li>نحتفظ بالحق في تعليق أو إنهاء الوصول في حالة الانتهاك.</li>
+                    <li>جميع سياسات الدفع، الاسترداد، ورصيد الحساب تطبق كما هو موضح في سياسة الخصوصية.</li>
+                    <li>نحن غير مسؤولين عن أي أضرار ناتجة عن سوء استخدام الموقع.</li>
+                    </ul>
+                    <p>للحصول على معلومات تفصيلية، يرجى التواصل معنا عبر قنوات الدعم الخاصة بنا.</p>',
+                'is_published' => true,
+            ]
         ];
 
         foreach ($pages as $pageData) {

@@ -18,7 +18,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
 
     Route::post('contact-us',[HomeController::class,'contactUs'])->name('contact-us');
 
-    Route::get('checkout', [HomeController::class,'checkout'])->name('tenant-checkout');
+    Route::get('checkout-page', [HomeController::class,'checkout'])->name('tenant-checkout');
     Route::get('pricing/compare',[HomeController::class,'pricingCompare'])->name('pricing-compare');
     Route::get('pricing', [HomeController::class,'pricing'])->name('pricing');
     // lang in ar|en or null

@@ -33,6 +33,8 @@ class CheckoutPage extends Component
         'data.admin_email'=>'required|email|max:255',
         'data.admin_phone'=>'nullable|string|max:50',
         'data.admin_password'=>'required|string|min:6',
+        'data.privacy_policy_agree' => 'accepted',
+        'data.terms_conditions_agree' => 'accepted',
     ];
 
     // function updateDomain()
