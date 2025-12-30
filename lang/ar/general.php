@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'total' => 'الإجمالي',
     'titles' => [
         'statistics' => 'الإحصائيات',
         'audit_report' => 'تقرير التدقيق',

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'total' => 'Total',
     'titles' => [
         'statistics' => 'Statistics',
         'audit_report' => 'Audit Report',
