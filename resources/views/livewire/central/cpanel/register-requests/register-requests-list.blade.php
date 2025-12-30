@@ -13,6 +13,8 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>time</th>
+                            <th>Read at</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -21,7 +23,7 @@
 
                         @foreach ($registerRequests as $req)
                             @php
-                             $d = $req->data;
+                                $d = $req->data;
                             @endphp
 
                             <tr>
@@ -36,6 +38,27 @@
                                 <td>
                                     {{ $d['company']['phone'] }}
                                 </td>
+                                <td>
+                                    {{ $req->created_at->translatedFormat('d M Y h:i A') }}
+                                </td>
+                                <td>
+                                    @if ($req->read_at)
+                                        <span class="text-muted" style="font-size: 0.9rem;">
+                                            {{ \Carbon\Carbon::parse($req->read_at)->translatedFormat('d M Y h:i A') }}
+                                        </span>
+                                    @else
+                                        <button class="btn btn-sm btn-outline-primary"
+                                            wire:click="markAsRead({{ $req->id }})" wire:loading.attr="disabled"
+                                            title="تحديد كمقروء">
+                                            <i class="bi bi-eye"></i>
+                                            <span wire:loading.remove
+                                                wire:target="markAsRead({{ $req->id }})">مشاهدة</span>
+                                            <span class="spinner-border spinner-border-sm" wire:loading
+                                                wire:target="markAsRead({{ $req->id }})"></span>
+                                        </button>
+                                    @endif
+                                </td>
+
                                 <td>
                                     <span
                                         class="badge bg-{{ $req->status === 'pending' ? 'warning' : ($req->status === 'approved' ? 'success' : 'danger') }}">

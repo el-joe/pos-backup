@@ -4,6 +4,7 @@ namespace App\Livewire\Central\CPanel\RegisterRequests;
 
 use App\Models\RegisterRequest;
 use App\Traits\LivewireOperations;
+use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,6 +21,18 @@ class RegisterRequestsList extends Component
     {
         $this->current = RegisterRequest::find($id);
     }
+
+    function markAsRead($id)
+    {
+        $this->current = RegisterRequest::find($id);
+
+        if ($this->current && $this->current->read_at === null) {
+            $this->current->update([
+                'read_at' => Carbon::now(),
+            ]);
+        }
+    }
+
 
     function changeStatus($id, $status)
     {
