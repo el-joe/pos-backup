@@ -30,7 +30,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
         Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
         Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');
 
-        Route::get('{page}', [PageController::class, 'renderPageWithLang']);
+        Route::get('{slug}', [PageController::class, 'renderPageWithLang'])->name('static-page.localized');
 
         Route::get('/',[HomeController::class,'index'])->name('central-home');
     });

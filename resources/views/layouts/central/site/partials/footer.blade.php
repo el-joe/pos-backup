@@ -21,34 +21,35 @@
             <div class="col-lg-3 col-md-6">
                 <h5>{{ __('website.footer.legal') }}</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.privacy_policy') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.terms_of_service') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.cookie_policy') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.compliance') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'about-us']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.about_us') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'privacy-policy']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.privacy_policy') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'terms-conditions']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.terms_of_service') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'refund-cancellation-policy']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.refund_cancellation_policy') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'fair-usage-policy']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.fair_usage_policy') }}</a></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">
                 <h5>{{ __('website.footer.resources') }}</h5>
                 <ul class="list-unstyled">
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.documentation') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.support') }}</a></li>
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.support') }}</a></li> --}}
                     <li class="mb-3px"><a href="{{ route('faqs.index', ['lang' => app()->getLocale()]) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.faqs') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.community') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.tutorials') }}</a></li>
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.community') }}</a></li> --}}
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.tutorials') }}</a></li> --}}
                 </ul>
                 {{-- <hr class="text-body text-opacity-50"> --}}
             </div>
             <div class="col-lg-3 col-md-6">
                 <h5>{{ __('website.footer.help_center') }}</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.contact_form') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.live_chat_support') }}</a></li>
+                    <li class="mb-3px"><a href="/#contact" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.contact_form') }}</a></li>
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.live_chat_support') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.portal_help_center') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.email_support') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.technical_documentation') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.service_updates') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.developer_api') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.knowledge_base') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.knowledge_base') }}</a></li> --}}
                 </ul>
             </div>
         </div>

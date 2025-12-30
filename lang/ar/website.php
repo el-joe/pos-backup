@@ -199,8 +199,11 @@ return [
 
         'legal' => 'قانوني',
         'legal_links' => [
+            'about_us' => 'من نحن',
             'privacy_policy' => 'سياسة الخصوصية',
             'terms_of_service' => 'شروط الخدمة',
+            'refund_cancellation_policy' => 'سياسة الإلغاء والاسترداد',
+            'fair_usage_policy' => 'سياسة الاستخدام العادل',
             'cookie_policy' => 'سياسة ملفات تعريف الارتباط',
             'compliance' => 'الامتثال',
         ],

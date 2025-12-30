@@ -200,8 +200,11 @@ return [
 
         'legal' => 'Legal',
         'legal_links' => [
+            'about_us' => 'About Us',
             'privacy_policy' => 'Privacy Policy',
             'terms_of_service' => 'Terms of Service',
+            'refund_cancellation_policy' => 'Refund & Cancellation Policy',
+            'fair_usage_policy' => 'Fair Usage Policy',
             'cookie_policy' => 'Cookie Policy',
             'compliance' => 'Compliance',
         ],
