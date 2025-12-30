@@ -19,21 +19,12 @@
                 </div> --}}
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5>{{ __('website.footer.quick_links') }}</h5>
+                <h5>{{ __('website.footer.legal') }}</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.links.newsroom') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.links.company_info') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.links.careers') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.links.for_investors') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.links.brand_resources') }}</a></li>
-                </ul>
-                <hr class="text-body text-opacity-50">
-                <h5>{{ __('website.footer.services') }}</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.services_links.web_development') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.services_links.app_development') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.services_links.seo') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.services_links.marketing') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.privacy_policy') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.terms_of_service') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.cookie_policy') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.compliance') }}</a></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -45,14 +36,7 @@
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.community') }}</a></li>
                     <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.tutorials') }}</a></li>
                 </ul>
-                <hr class="text-body text-opacity-50">
-                <h5>{{ __('website.footer.legal') }}</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.privacy_policy') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.terms_of_service') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.cookie_policy') }}</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.compliance') }}</a></li>
-                </ul>
+                {{-- <hr class="text-body text-opacity-50"> --}}
             </div>
             <div class="col-lg-3 col-md-6">
                 <h5>{{ __('website.footer.help_center') }}</h5>

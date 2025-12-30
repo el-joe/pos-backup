@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Central\Site\HomeController;
+use App\Http\Controllers\Central\Site\PageController;
 use App\Http\Controllers\Central\Site\PaymentController;
 use App\Http\Controllers\Central\Tenant\RegisterController;
 use App\Http\Middleware\CentralWebsitesetLocal;
@@ -28,6 +29,9 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
         Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
         Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
         Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');
+
+        // Route::get('{page}', [PageController::class, 'renderPage']);
+
         Route::get('/',[HomeController::class,'index'])->name('central-home');
     });
 
@@ -37,7 +41,8 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
         Route::get('/', [PaymentController::class,'callback'])->name('payment.callback');
         Route::get('/callback', [PaymentController::class,'paymentCallbackPage'])->name('payment-callback');
     });
-
+    // static pages where not in ar|en group
+    Route::get('{slug}', [PageController::class, 'renderPage'])->where('slug', '^(?!cpanel|faqs|blogs|pricing|register|payment).*$')->name('static-page');
 });
 
 // add central_panel routes here

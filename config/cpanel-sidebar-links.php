@@ -20,6 +20,12 @@ return [
         "route"     => 'cpanel.blogs.list'
     ],
     [
+        "title"     => "Pages",
+        'translated_title' => 'general.titles.pages',
+        "icon"      => "fa fa-file-alt fa-fw",
+        "route"     => 'cpanel.pages.list'
+    ],
+    [
         "title"     => "FAQs",
         'translated_title' => 'general.titles.faqs',
         "icon"      => "fa fa-question-circle fa-fw",

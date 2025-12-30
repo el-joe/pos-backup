@@ -11,6 +11,8 @@ use App\Livewire\Central\CPanel\Faqs\FaqForm;
 use App\Livewire\Central\CPanel\Faqs\FaqsList;
 use App\Livewire\Central\CPanel\Blogs\BlogForm;
 use App\Livewire\Central\CPanel\Blogs\BlogsList;
+use App\Livewire\Central\CPanel\Pages\PageForm;
+use App\Livewire\Central\CPanel\Pages\PagesList;
 use App\Livewire\Central\CPanel\FileManager\FileManagerPage;
 use App\Livewire\Central\CPanel\HomePage;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
@@ -31,6 +33,11 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('blogs', BlogsList::class)->name('blogs.list');
         Route::get('blogs/create', BlogForm::class)->name('blogs.create');
         Route::get('blogs/{id}', BlogForm::class)->whereNumber('id')->name('blogs.edit');
+
+        Route::get('pages', PagesList::class)->name('pages.list');
+        Route::get('pages/create', PageForm::class)->name('pages.create');
+        Route::get('pages/{id}', PageForm::class)->whereNumber('id')->name('pages.edit');
+
         Route::get('faqs', FaqsList::class)->name('faqs.list');
         Route::get('faqs/create', FaqForm::class)->name('faqs.create');
         Route::get('faqs/{id}', FaqForm::class)->whereNumber('id')->name('faqs.edit');

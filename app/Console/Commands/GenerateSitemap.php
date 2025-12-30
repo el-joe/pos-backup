@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Blog;
+use App\Models\Page;
 use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
 
@@ -39,6 +40,12 @@ class GenerateSitemap extends Command
         $sitemap->add(url('/faqs'));
         $sitemap->add(url('/ar/faqs'));
         $sitemap->add(url('/en/faqs'));
+
+        Page::published()->get()->each(function (Page $page) use ($sitemap) {
+            $sitemap->add(url("/{$page->slug}"));
+            $sitemap->add(url("/ar/{$page->slug}"));
+            $sitemap->add(url("/en/{$page->slug}"));
+        });
 
         // الصفحات الديناميكية
         Blog::all()->each(function($blog) use ($sitemap) {

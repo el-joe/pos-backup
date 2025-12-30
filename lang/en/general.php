@@ -7,6 +7,7 @@ return [
         'cash-register' => 'Cash Register',
         'pos' => 'POS',
         'blogs' => 'Blogs',
+        'pages' => 'Pages',
         'faqs' => 'FAQs',
         'file_manager' => 'File Manager',
         'contacts' => 'Contacts',
