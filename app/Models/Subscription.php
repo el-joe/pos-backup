@@ -123,6 +123,7 @@ class Subscription extends Model
             AuditLog::log(AuditLogActionEnum::CANCEL_SUBSCRIPTION, ['id' => $currentSubscription->id]);
             $currentSubscription->status = 'cancelled';
             $currentSubscription->save();
+            tenant()->update(['balance' => tenant()->balance + $currentSubscription->price]);
             return true;
         }
         return false;
