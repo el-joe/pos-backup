@@ -31,6 +31,7 @@ class TrailBalanceReport extends Component
                     'description' => $line->transaction?->description,
                     'date' => dateTimeFormat($line->transaction?->date,true,false),
                     'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
+                    'account_type' => $line->account?->type->label() ?? 'N/A',
                     'debit' => currencyFormat($line->type == 'debit' ? number_format($line->amount, 2) : 0 , true),
                     'credit' => currencyFormat($line->type == 'credit' ? number_format($line->amount, 2) : 0, true),
                     'created_at' => dateTimeFormat($line->created_at,true,false),
@@ -39,7 +40,7 @@ class TrailBalanceReport extends Component
 
         // Refactor the headers by columns
         $headers = [
-            '#' , 'Transaction ID' , 'Transaction Type' , 'Branch' , 'Reference' , 'Note' , 'Description' , 'Date' , 'Account' ,'Debit' , 'Credit' , 'Created At'
+            '#' , 'Transaction ID' , 'Transaction Type' , 'Branch' , 'Reference' , 'Note' , 'Description' , 'Date' , 'Account' , 'Account Type' ,'Debit' , 'Credit' , 'Created At'
         ];
 
         $columns = [
@@ -52,6 +53,7 @@ class TrailBalanceReport extends Component
             'description' => [ 'type' => 'text'],
             'date' => [ 'type' => 'text'],
             'account' => [ 'type' => 'text'],
+            'account_type' => [ 'type' => 'text'],
             'debit' => [
                 'type' => 'badge',
                 'class' => 'badge-success',
@@ -69,7 +71,7 @@ class TrailBalanceReport extends Component
 
         $totals = [
             'total' => [
-                'colspan' => 8,
+                'colspan' => 9,
                 'label' => 'Totals',
                 'class' => 'text-end',
             ],
