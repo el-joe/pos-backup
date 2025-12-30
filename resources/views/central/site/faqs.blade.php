@@ -13,22 +13,22 @@
             </header>
 
             @if($faqs->count())
-                <div class="accordion" id="faqAccordion" itemscope itemtype="https://schema.org/FAQPage">
+                <div class="accordion" id="faqAccordion">
                     @foreach($faqs as $index => $faq)
                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="faqHeading{{ $faq->id }}" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                            <h2 class="accordion-header" id="faqHeading{{ $faq->id }}">
                                 <button class="accordion-button {{ $index === 0 ? '' : 'collapsed' }}" type="button"
                                         data-bs-toggle="collapse"
                                         data-bs-target="#faqCollapse{{ $faq->id }}"
                                         aria-expanded="{{ $index === 0 ? 'true' : 'false' }}"
                                         aria-controls="faqCollapse{{ $faq->id }}">
-                                    <span itemprop="name">{{ $faq->question }}</span>
+                                    <span>{{ $faq->question }}</span>
                                 </button>
                             </h2>
                             <div id="faqCollapse{{ $faq->id }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}"
                                  aria-labelledby="faqHeading{{ $faq->id }}" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-                                    <div class="fs-16px text-body text-opacity-75" itemprop="text">
+                                <div class="accordion-body">
+                                    <div class="fs-16px text-body text-opacity-75">
                                         {!! $faq->answer !!}
                                     </div>
                                 </div>
