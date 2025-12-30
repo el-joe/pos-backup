@@ -7,7 +7,7 @@ use App\Models\Page;
 
 class PageController extends Controller
 {
-    function renderPage($lang,$slug)
+    function renderPage($lang = null,$slug)
     {
         $page = Page::published()->where('slug', $slug)->firstOrFail();
 
