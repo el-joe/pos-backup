@@ -202,25 +202,6 @@
                             <input required wire:model="data.admin_password" type="password" class="form-control">
                             @error('data.admin_password') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
-
-                        <!-- Agreements: Privacy Policy & Terms -->
-                        <div class="col-12 mt-3">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="privacy_policy_agree" wire:model="data.privacy_policy_agree">
-                                <label class="form-check-label" for="privacy_policy_agree">
-                                    {!! __('website.i_agree_to_the_privacy_policy') !!} *
-                                </label>
-                            </div>
-                            @error('data.privacy_policy_agree') <small class="text-danger">{{ $message }}</small> @enderror
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="terms_conditions_agree" wire:model="data.terms_conditions_agree">
-                                <label class="form-check-label" for="terms_conditions_agree">
-                                    {!! __('website.i_agree_to_the_terms_conditions') !!} *
-                                </label>
-                            </div>
-                            @error('data.terms_conditions_agree') <small class="text-danger">{{ $message }}</small> @enderror
-                        </div>
-
                     </div>
                 </div>
 
@@ -286,11 +267,30 @@
                         </table>
                     @endif
 
+                        <!-- Agreements: Privacy Policy & Terms -->
+                        <div class="col-12 mt-3">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="privacy_policy_agree" wire:model.live="data.privacy_policy_agree">
+                                <label class="form-check-label" for="privacy_policy_agree">
+                                    {!! __('website.i_agree_to_the_privacy_policy') !!} *
+                                </label>
+                            </div>
+                            @error('data.privacy_policy_agree') <small class="text-danger">{{ $message }}</small> @enderror
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms_conditions_agree" wire:model.live="data.terms_conditions_agree">
+                                <label class="form-check-label" for="terms_conditions_agree">
+                                    {!! __('website.i_agree_to_the_terms_conditions') !!} *
+                                </label>
+                            </div>
+                            @error('data.terms_conditions_agree') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
                 </div>
                 <div class="card-footer d-flex justify-content-end">
-                    <button class="btn btn-primary px-4" wire:click="completeSubscription">
-                        <i class="fa fa-credit-card"></i> {{ __('website.checkout.complete_subscription') }}
-                    </button>
+                        <button class="btn btn-primary px-4" wire:click="completeSubscription"
+                            @if(empty($data['privacy_policy_agree']) || empty($data['terms_conditions_agree'])) disabled @endif>
+                            <i class="fa fa-credit-card"></i> {{ __('website.checkout.complete_subscription') }}
+                        </button>
                 </div>
 
                 <div class="card-arrow">
