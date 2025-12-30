@@ -208,14 +208,14 @@
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" id="privacy_policy_agree" wire:model="data.privacy_policy_agree">
                                 <label class="form-check-label" for="privacy_policy_agree">
-                                    {!! __('I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a>') !!} *
+                                    {!! __('website.i_agree_to_the_privacy_policy') !!} *
                                 </label>
                             </div>
                             @error('data.privacy_policy_agree') <small class="text-danger">{{ $message }}</small> @enderror
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="terms_conditions_agree" wire:model="data.terms_conditions_agree">
                                 <label class="form-check-label" for="terms_conditions_agree">
-                                    {!! __('I agree to the <a href="/terms-conditions" target="_blank">Terms & Conditions</a>') !!} *
+                                    {!! __('website.i_agree_to_the_terms_conditions') !!} *
                                 </label>
                             </div>
                             @error('data.terms_conditions_agree') <small class="text-danger">{{ $message }}</small> @enderror

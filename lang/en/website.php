@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'i_agree_to_the_privacy_policy' => 'I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a>',
+    'i_agree_to_the_terms_conditions' => 'I agree to the <a href="/terms-conditions" target="_blank">Terms & Conditions</a>',
     'home' => [
         'title' => 'Powerful ERP System for Business Management | Mohaaseb',
         'section1_title' => 'Powerful ERP System for Smarter Business Management',
