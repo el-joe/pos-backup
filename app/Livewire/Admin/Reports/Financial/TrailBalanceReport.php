@@ -71,7 +71,7 @@ class TrailBalanceReport extends Component
 
         $totals = [
             'total' => [
-                'colspan' => 9,
+                'colspan' => 10,
                 'label' => 'Totals',
                 'class' => 'text-end',
             ],
