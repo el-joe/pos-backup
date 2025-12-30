@@ -73,7 +73,7 @@ class TrailBalanceReport extends Component
             'total' => [
                 'colspan' => 10,
                 'label' => 'Totals',
-                'class' => 'text-end',
+                'class' => app()->getLocale() == 'ar' ? 'text-end pe-3' : 'text-start ps-3',
             ],
             'debit' => currencyFormat($query->clone()->where('type', 'debit')->sum('amount'), true),
             'credit' => currencyFormat($query->clone()->where('type', 'credit')->sum('amount'), true),
