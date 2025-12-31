@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Admin;
 
+use App\Enums\AuditLogActionEnum;
 use App\Helpers\SaleHelper;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Discount;
 use App\Models\Tenant\Sale;
@@ -17,7 +19,9 @@ use App\Services\SellService;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class PosPage extends Component
@@ -32,6 +36,9 @@ class PosPage extends Component
 
     public $step = 1;
 
+    public $customers;
+    public $branches;
+
     function boot() {
         $this->productService = app(ProductService::class);
         $this->userService = app(UserService::class);
@@ -41,13 +48,17 @@ class PosPage extends Component
         $this->categoryService = app(CategoryService::class);
     }
 
+    #[On('re-render')]
     function mount() {
-        $this->data['order_date'] = now()->format('Y-m-d');
-        $this->data['due_date'] = now()->format('Y-m-d');
+        $this->data['order_date'] = $this->data['order_date'] ?? now()->format('Y-m-d');
+        $this->data['due_date'] = $this->data['due_date'] ?? now()->format('Y-m-d');
         if(admin()->branch_id){
             $this->data['branch_id'] = admin()->branch_id;
             $this->updatingDataBranchId(admin()->branch_id);
         }
+        $this->customers = $this->userService->customersList();
+        $this->branches = $this->branchService->activeList();
+
     }
 
     function updatingSelectedUnitId($value) {
@@ -278,11 +289,21 @@ class PosPage extends Component
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
-        if($cashRegister && ($dataToSave['paid_amount']??0) > 0){
-            $this->cashRegisterService->increment($cashRegister->id,'total_sales',$dataToSave['paid_amount']);
-        }
+        // db transaction
+        try {
+            DB::beginTransaction();
+            if($cashRegister && ($dataToSave['paid_amount']??0) > 0){
+                $this->cashRegisterService->increment($cashRegister->id,'total_sales',$dataToSave['paid_amount']);
+            }
 
-        $this->sellService->save(null,$dataToSave);
+            $saleOrder = $this->sellService->save(null,$dataToSave);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->alert('error', 'Error placing order: ' . $e->getMessage());
+            return;
+        }
+        AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER,['invoice_number' => $saleOrder->invoice_number]);
 
         Artisan::call('app:stock-quantity-alert-check', [
             '--branch_id' => $this->branch?->id,
@@ -343,11 +364,10 @@ class PosPage extends Component
     {
         $products = $this->productService->getAllProductWhereHasStock([],[
             'branch_id' => $this->data['branch_id'] ?? null,
-            'active' => true,
+            'active' => 1,
         ]);
-        $customers = $this->userService->customersList();
-        $selectedCustomer = $customers->firstWhere('id',$this->selectedCustomerId);
-        $branches = $this->branchService->activeList();
+
+        $selectedCustomer = $this->customers->firstWhere('id',$this->selectedCustomerId);
         extract($this->calculateTotals());
 
         $withoutSidebar = true;

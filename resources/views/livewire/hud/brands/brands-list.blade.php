@@ -27,10 +27,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.brands.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.brands.all') }}</option>
-                            <option value="1">{{ __('general.pages.brands.active') }}</option>
-                            <option value="0">{{ __('general.pages.brands.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'all') == 'all' ? 'selected' : '' }}>{{ __('general.pages.brands.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'all') == '1' ? 'selected' : '' }}>{{ __('general.pages.brands.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'all') == '0' ? 'selected' : '' }}>{{ __('general.pages.brands.inactive') }}</option>
                         </select>
                     </div>
 
@@ -66,7 +66,7 @@
                 </button>
                 @endadminCan
                 @adminCan('brands.create')
-                <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editBrandModal" wire:click="setCurrent(null)">
+                <button class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#editBrandModal" wire:click="$dispatch('brand-set-current', { id : null })">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.brands.new_brand') }}
                 </button>
                 @endadminCan
@@ -99,7 +99,7 @@
                                     <button class="btn btn-sm btn-outline-primary me-1"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editBrandModal"
-                                        wire:click="setCurrent({{ $brand->id }})"
+                                        wire:click="$dispatch('brand-set-current', { id : '{{ $brand->id }}'})"
                                         title="{{ __('general.pages.brands.edit') }}">
                                         <i class="fa fa-pencil"></i>
                                     </button>
@@ -130,38 +130,9 @@
             <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
-
-    <!-- Edit Brand Modal -->
-    <div class="modal fade" id="editBrandModal" tabindex="-1" aria-labelledby="editBrandModalLabel" aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editBrandModalLabel">{{ $current?->id ? __('general.pages.brands.edit_brand') : __('general.pages.brands.new_brand') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="brandName" class="form-label">{{ __('general.pages.brands.name') }}</label>
-                            <input type="text" class="form-control" wire:model="data.name" id="brandName" placeholder="{{ __('general.pages.brands.name') }}">
-                        </div>
-
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="brandActive" wire:model="data.active">
-                            <label class="form-check-label" for="brandActive">{{ __('general.pages.brands.is_active') }}</label>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('general.pages.brands.close') }}</button>
-                    <button type="button" class="btn btn-primary" wire:click="save">{{ __('general.pages.brands.save') }}</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 @push('styles')
+    @livewire('admin.brands.brand-modal')
+    @include('layouts.hud.partials.select2-script')
 @endpush

@@ -5,18 +5,49 @@ namespace App\Http\Controllers\Central\Site;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminRegisterRequestMail;
 use App\Mail\RegisterRequestMail;
+use App\Models\PaymentTransaction;
+use App\Models\Plan;
 use App\Models\RegisterRequest;
+use App\Payments\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+
+use function Laravel\Prompts\info;
 
 class PaymentController extends Controller
 {
     function callback(Request $request,$type) {
-        $data = $request->query('data');
-        $data = decodedSlug($data);
+
+        info('PaymentController callback check called with type : ' . $type);
+        info(json_encode($request->all()));
+        info('------------');
+
+        if($type == 'check'){
+            $pt = PaymentTransaction::where('transaction_reference',$request->token)->first();
+
+            $paymentProvider = 'App\\Payments\\Providers\\'.($pt->paymentMethod->provider ?? 'Paypal');
+
+            $paymentService = new PaymentService(new $paymentProvider());
+            $captureResult = $paymentService->capture($request->token);
+            if($captureResult['status'] == 'COMPLETED'){
+                $type = 'success';
+                $data = $pt->request_payload['metadata'] ?? null;
+                $pt->update([
+                    'status'=>'success',
+                    'response_payload'=>$captureResult,
+                ]);
+            }else{
+                $type = 'failed';
+                $pt->update([
+                    'status'=>'failed',
+                    'response_payload'=>$captureResult,
+                ]);
+            }
+        }
 
         if($type == 'success'){
             try{
+                $data = decodedData($data);
                 $registerRequest = RegisterRequest::create([
                     'data'=>[
                         'company' => [

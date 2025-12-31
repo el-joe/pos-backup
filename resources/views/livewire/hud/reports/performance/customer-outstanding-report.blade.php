@@ -8,13 +8,9 @@
             </div>
             <div class="card-body">
                 <form class="row g-3">
-                    <div class="col-md-3">
-                        <label for="from_date" class="form-label">{{ __('general.pages.reports.common.from') }}</label>
-                        <input type="date" id="from_date" wire:model.lazy="from_date" class="form-control form-control-sm bg-dark text-light border-secondary">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="to_date" class="form-label">{{ __('general.pages.reports.common.to') }}</label>
-                        <input type="date" id="to_date" wire:model.lazy="to_date" class="form-control form-control-sm bg-dark text-light border-secondary">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                     </div>
                 </form>
             </div>
@@ -59,11 +55,11 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $row->customer_name }}</td>
-                                    <td class="text-end">{{ number_format($row->total_debit, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->total_credit, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->total_debit, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->total_credit, true) }}</td>
                                     <td class="text-end">
                                         <span class="badge bg-{{ $row->balance > 0 ? 'danger' : 'success' }}">
-                                            {{ number_format($row->balance, 2) }}
+                                            {{ currencyFormat($row->balance, true) }}
                                         </span>
                                     </td>
                                 </tr>
@@ -75,9 +71,9 @@
                             @if(count($report))
                                 <tr class="fw-semibold table-success text-dark">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
-                                    <td class="text-end">{{ number_format($total_debit, 2) }}</td>
-                                    <td class="text-end">{{ number_format($total_credit, 2) }}</td>
-                                    <td class="text-end">{{ number_format($sum_balance, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($total_debit, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($total_credit, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($sum_balance, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>
@@ -93,3 +89,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

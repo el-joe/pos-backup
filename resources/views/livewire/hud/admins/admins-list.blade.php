@@ -27,10 +27,10 @@
                     {{-- Filter By Branch --}}
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.admins.branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.branch_id">
+                        <select class="form-select select2" name="filters.branch_id">
                             <option value="all">{{ __('general.pages.admins.all') }}</option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.admins.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.admins.all') }}</option>
-                            <option value="1">{{ __('general.pages.admins.active') }}</option>
-                            <option value="0">{{ __('general.pages.admins.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.admins.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.admins.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.admins.inactive') }}</option>
                         </select>
                     </div>
 
@@ -184,20 +184,20 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="adminType" class="form-label">{{ __('general.pages.admins.type') }}</label>
-                                <select class="form-select" wire:model.live="data.type" id="adminType">
+                                <select class="form-select select2" name="data.type" id="adminType">
                                     <option value="">{{ __('general.pages.admins.select_type') }}</option>
-                                    <option value="super_admin">{{ __('general.pages.admins.super_admin') }}</option>
-                                    <option value="admin">{{ __('general.pages.admins.admin') }}</option>
+                                    <option value="super_admin" {{ ($data['type']??'') == 'super_admin' ? 'selected' : '' }}>{{ __('general.pages.admins.super_admin') }}</option>
+                                    <option value="admin" {{ ($data['type']??'') == 'admin' ? 'selected' : '' }}>{{ __('general.pages.admins.admin') }}</option>
                                 </select>
                             </div>
 
                             @if(($data['type']??false) == 'admin')
                                 <div class="col-md-6 mb-3">
                                     <label for="adminRole" class="form-label">{{ __('general.pages.admins.role') }}</label>
-                                    <select class="form-select" wire:model="data.role_id" id="adminRole">
+                                    <select class="form-select select2" name="data.role_id" id="adminRole">
                                         <option value="">{{ __('general.pages.admins.select_role') }}</option>
                                         @foreach ($roles as $role)
-                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            <option value="{{ $role->id }}" {{ ($data['role_id']??'') == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -206,10 +206,10 @@
 
                         <div class="mb-3">
                             <label for="branchId" class="form-label">{{ __('general.pages.admins.branch') }}</label>
-                            <select class="form-select" wire:model="data.branch_id" id="branchId">
+                            <select class="form-select select2" name="data.branch_id" id="branchId">
                                 <option value="">{{ __('general.pages.purchases.select_branch') }}</option>
                                 @foreach ($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    <option value="{{ $branch->id }}" {{ ($data['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -236,3 +236,6 @@
     </div>
 
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush

@@ -8,13 +8,9 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
-                        <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="from_date">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
-                        <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="to_date">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                     </div>
                 </div>
             </div>
@@ -52,8 +48,8 @@
                                     $total_vat += $row->vat_amount;
                                 @endphp
                                 <tr>
-                                    <td>{{ $row->vat_date }}</td>
-                                    <td>{{ number_format($row->vat_amount, 2) }}</td>
+                                    <td>{{ dateTimeFormat($row->vat_date, true, false) }}</td>
+                                    <td>{{ currencyFormat($row->vat_amount, true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -63,7 +59,7 @@
                             @if(count($report))
                                 <tr class="fw-semibold bg-success bg-opacity-25">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
-                                    <td>{{ number_format($total_vat, 2) }}</td>
+                                    <td>{{ currencyFormat($total_vat, true) }}</td>
                                 </tr>
                             @endif
                         </tbody>
@@ -79,3 +75,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

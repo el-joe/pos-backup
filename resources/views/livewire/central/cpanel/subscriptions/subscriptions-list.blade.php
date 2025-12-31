@@ -39,7 +39,7 @@
 
                 {{-- pagination center aligned (optional) --}}
                 <div class="d-flex justify-content-center mt-3">
-                    {{ $subscriptions->links() }}
+                    {{ $subscriptions->links("pagination::bootstrap-5") }}
                 </div>
             </div>
         </div>

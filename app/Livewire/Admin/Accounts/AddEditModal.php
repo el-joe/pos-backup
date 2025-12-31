@@ -6,6 +6,7 @@ use App\Enums\AccountTypeEnum;
 use App\Services\BranchService;
 use App\Services\PaymentMethodService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -67,8 +68,15 @@ class AddEditModal extends Component
         if(!isset($this->data['type'])){
             $data['type'] = ($this->filters['model_type'])::find($this->filters['model_id'])?->type?->value;
         }
-
-        $this->accountService->save($this->current?->id,$data);
+        try{
+            DB::beginTransaction();
+            $this->accountService->save($this->current?->id,$data);
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving account: '.$e->getMessage());
+            return;
+        }
 
         $this->popup('success','Account saved successfully');
 

@@ -27,10 +27,10 @@
                     <!-- Filter by branch -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.payment-methods.branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.branch_id">
+                        <select class="form-select select2" name="filters.branch_id">
                             <option value="all">{{ __('general.layout.all_branches') }}</option>
                             @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.payment-methods.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.payment-methods.all') }}</option>
-                            <option value="1">{{ __('general.pages.payment-methods.active') }}</option>
-                            <option value="0">{{ __('general.pages.payment-methods.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.payment-methods.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.payment-methods.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.payment-methods.inactive') }}</option>
                         </select>
                     </div>
 
@@ -163,10 +163,10 @@
                     <div class="col-md-6 mb-3">
                         <label for="branch_id" class="form-label">{{ __('general.pages.payment-methods.branch') }}</label>
                         @if(admin()->branch_id == null)
-                        <select class="form-select" id="branch_id" wire:model="data.branch_id">
+                        <select class="form-select select2" id="branch_id" name="data.branch_id">
                             <option value="">{{ __('general.layout.all_branches') }}</option>
                             @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            <option value="{{ $branch->id }}" {{ ($data['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                         @else
@@ -190,3 +190,7 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush

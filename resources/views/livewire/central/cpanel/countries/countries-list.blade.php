@@ -46,7 +46,7 @@
 
                 {{-- pagination center aligned (optional) --}}
                 <div class="d-flex justify-content-center mt-3">
-                    {{ $countries->links() }}
+                    {{ $countries->links("pagination::bootstrap-5") }}
                 </div>
             </div>
         </div>

@@ -10,6 +10,7 @@ use App\Helpers\SaleHelper;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Expense;
+use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\Sale;
@@ -123,11 +124,15 @@ class SellService
         }
         // Grouped by type = Payments
         $this->addPayment($sell->id, $data);
+
+        return $sell->refresh();
     }
 
     function addPayment($sellId, $data , $reverse = false) {
         $sell = $this->repo->find($sellId);
         if(!$sell) return;
+
+        $amount = $data['paid_amount'] ?? $data['payment_amount'] ?? 0;
 
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
@@ -136,15 +141,28 @@ class SellService
             'reference_id' => $sell->id,
             'branch_id' => $sell->branch_id,
             'note' => $data['payment_note'] ?? '',
-            'amount' => $data['payment_amount'] ?? 0,
+            'amount' => $amount,
             'lines' => $this->salePaymentLines($data,'create',$reverse)
         ];
 
         $this->transactionService->create($transactionData);
         if(!$reverse){
-            $sell->increment('paid_amount', $data['paid_amount'] ?? $data['payment_amount'] ?? 0);
+            $sell->increment('paid_amount', $amount);
         }else{
-            $sell->decrement('paid_amount',$data['paid_amount'] ?? $data['payment_amount'] ?? 0);
+            $sell->decrement('paid_amount',$amount);
+        }
+        foreach ($data['payments'] as $payment) {
+            $orderPaymentData['account_id'] = $payment['account_id'] ?? $payment['payment_account'] ?? null;
+            $orderPaymentData['amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
+
+            OrderPayment::create([
+                'payable_type' => Sale::class,
+                'payable_id' => $sellId,
+                'refunded' => $reverse ? 1 : 0,
+                'note' => $data['payment_note'] ?? '',
+                'account_id' => $this->getCustomerAccount($data['customer_id'] ?? null, $orderPaymentData['account_id'] ?? null)->id,
+                ... $orderPaymentData
+            ]);
         }
 
         return $sell->refresh();
@@ -305,18 +323,23 @@ class SellService
         ];
     }
 
-    function createCustomerLine($data,$type = 'debit',$reverse = false) {
-        if(!isset($data['payment_account'])){
-            $user = User::find($data['customer_id']);
+    function getCustomerAccount($customerId = null, $paymentAccountId = null) {
+        if(!$paymentAccountId){
+            $user = User::find($customerId);
             $getCustomerAccount = $user->accounts->first();
             if(!$getCustomerAccount){
                 // create default customer account
                 $getCustomerAccount = $this->accountService->createAccountForUser($user);
             }
         }else{
-            $getCustomerAccount = Account::find($data['payment_account']);
+            $getCustomerAccount = Account::find($paymentAccountId);
         }
+        return $getCustomerAccount;
+    }
 
+    function createCustomerLine($data,$type = 'debit',$reverse = false) {
+
+        $getCustomerAccount = $this->getCustomerAccount($data['customer_id']??null, $data['payment_account']??null);
         // get grand total from data
         $grandTotal = $data['payment_amount'] ?? $data['grand_total'] ?? 0;
         //`transaction_id`, `account_id`, `type`, `amount`
@@ -337,7 +360,7 @@ class SellService
     function refundSaleItem($id,$qty) {
         $saleItem = SaleItem::findOrFail($id);
         $saleOrder = $saleItem->sale;
-        $product = $saleItem->toArray();
+        $product = (clone $saleItem)->toArray();
         $product['qty'] = $qty;
         $discountAmount = SaleHelper::singleDiscountAmount($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value, $saleOrder->max_discount_amount ?? 0);
         $taxPercentage = $saleItem->taxable == 1 ? ($saleOrder->tax_percentage ?? 0) : 0;
@@ -395,22 +418,24 @@ class SellService
 
         // refund sale payments
         if($totalRefunded <= 0){
-            return;
+        }else{
+            $refundPaymentData = [
+                'grand_total' => $totalRefunded,
+                'payment_note' => 'Refund for sale item #'. ($saleItem->product?->name ?? 'N/A'),
+                'payment_status' => 'refunded',
+                'payment_amount' => $totalRefunded,
+                'branch_id' => $saleOrder->branch_id,
+                'customer_id' => $saleOrder->customer_id,
+                'payment_account' => $this->getCustomerAccount($saleOrder->customer_id)->id
+            ];
+
+            $refundPaymentData['payments'] = [
+                $refundPaymentData
+            ];
+
+            $this->addPayment($saleOrder->id, $refundPaymentData, true);
         }
-        $refundPaymentData = [
-            'grand_total' => $totalRefunded,
-            'payment_note' => 'Refund for sale item #'. ($saleItem->product?->name ?? 'N/A'),
-            'payment_status' => 'refunded',
-            'payment_amount' => $totalRefunded,
-            'branch_id' => $saleOrder->branch_id,
-            'customer_id' => $saleOrder->customer_id,
-        ];
 
-        $refundPaymentData['payments'] = [
-            $refundPaymentData
-        ];
-
-        $this->addPayment($saleOrder->id, $refundPaymentData, true);
 
         // refund sale items qty
         $saleItem->increment('refunded_qty',$qty);

@@ -8,13 +8,9 @@
             </div>
             <div class="card-body">
                 <form class="row g-3 align-items-center">
-                    <div class="col-md-3">
-                        <label for="from_date" class="form-label mb-1">{{ __('general.pages.reports.common.from') }}</label>
-                        <input type="date" id="from_date" wire:model.lazy="from_date" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="to_date" class="form-label mb-1">{{ __('general.pages.reports.common.to') }}</label>
-                        <input type="date" id="to_date" wire:model.lazy="to_date" class="form-control form-control-sm">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                     </div>
                 </form>
             </div>
@@ -50,7 +46,7 @@
                                 <tr>
                                     <td>{{ $row->branch_name }}</td>
                                     <td class="text-end">
-                                        <span class="badge bg-success">{{ number_format($row->total_revenue, 2) }}</span>
+                                        <span class="badge bg-success">{{ currencyFormat($row->total_revenue, true) }}</span>
                                     </td>
                                 </tr>
                             @empty
@@ -62,7 +58,7 @@
                             @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-bold">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
-                                <td class="text-end">{{ number_format($sum_revenue, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_revenue, true) }}</td>
                             </tr>
                             @endif
                         </tbody>
@@ -78,3 +74,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

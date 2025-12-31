@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
@@ -17,9 +19,7 @@ class Subscription extends Model
         'start_date',
         'end_date',
         'status',
-        'payment_gateway',
-        'payment_details',
-        'payment_callback_details',
+        'payment_transaction_id',
         'billing_cycle',
     ];
 
@@ -28,8 +28,6 @@ class Subscription extends Model
         'systems_allowed' => 'array',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
-        'payment_details' => 'array',
-        'payment_callback_details' => 'array',
         'billing_cycle' => 'string',
     ];
 
@@ -41,6 +39,11 @@ class Subscription extends Model
     function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    function paymentTransaction()
+    {
+        return $this->belongsTo(PaymentTransaction::class, 'payment_transaction_id');
     }
 
     function scopeForTenant($query, $tenantId)
@@ -73,9 +76,9 @@ class Subscription extends Model
         $now = now();
 
         if ($this->billing_cycle === 'monthly') {
-            return $now->diffInDays($startDate) <= 3;
+            return $startDate->diffInDays($now) <= 3;
         } elseif ($this->billing_cycle === 'yearly') {
-            return $now->diffInDays($startDate) <= 14;
+            return $startDate->diffInDays($now) <= 14;
         }
 
         return false;
@@ -87,9 +90,9 @@ class Subscription extends Model
         $now = now();
 
         if ($this->billing_cycle === 'monthly') {
-            return $now->diffInDays($endDate) <= 3;
+            return $endDate->diffInDays($now) <= 3;
         } elseif ($this->billing_cycle === 'yearly') {
-            return $now->diffInDays($endDate) <= 14;
+            return $endDate->diffInDays($now) <= 14;
         }
 
         return false;
@@ -112,5 +115,40 @@ class Subscription extends Model
             'cancelled' => 'danger',
             'refunded' => 'warning',
         ][$this->status] ?? 'secondary';
+    }
+
+    static function cancel(){
+        $currentSubscription = self::currentTenantSubscriptions()->first();
+        if($currentSubscription && $currentSubscription->canCancel()){
+            AuditLog::log(AuditLogActionEnum::CANCEL_SUBSCRIPTION, ['id' => $currentSubscription->id]);
+            $currentSubscription->status = 'cancelled';
+            $currentSubscription->save();
+            tenant()->update(['balance' => tenant()->balance + $currentSubscription->price]);
+            return true;
+        }
+        return false;
+    }
+
+    static function renew(){
+        $currentSubscription = self::currentTenantSubscriptions()->first();
+        if($currentSubscription && $currentSubscription->canRenew()){
+            // Implement renew logic here
+            Subscription::create([
+                'tenant_id' => $currentSubscription->tenant_id,
+                'plan_id' => $currentSubscription->plan_id,
+                'plan_details' => $currentSubscription->plan_details,
+                'price' => $currentSubscription->price,
+                'systems_allowed' => $currentSubscription->systems_allowed,
+                'start_date' => now(),
+                'end_date' => now()->addMonth(),
+                'status' => 'paid',
+                'payment_gateway' => $currentSubscription->payment_gateway,
+                'payment_details' => $currentSubscription->payment_details,
+                'billing_cycle' => $currentSubscription->billing_cycle,
+            ]);
+            AuditLog::log(AuditLogActionEnum::RENEW_SUBSCRIPTION, ['id' => $currentSubscription->id]);
+            return true;
+        }
+        return false;
     }
 }

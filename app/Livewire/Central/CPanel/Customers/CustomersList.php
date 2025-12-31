@@ -13,7 +13,8 @@ class CustomersList extends Component
     public function render()
     {
         $tenants =Tenant::with('domains')
-            ->paginate(10);
+            ->paginate(10)
+            ->withPath(route('cpanel.customers.list'));
         return view('livewire.central.cpanel.customers.customers-list', get_defined_vars());
     }
 }

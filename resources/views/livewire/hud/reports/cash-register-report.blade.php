@@ -8,34 +8,26 @@
             </div>
             <div class="card-body">
                 <form wire:submit.prevent="applyFilter" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="from_date" class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
-                        <input type="date" id="from_date" wire:model.defer="from_date" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="to_date" class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
-                        <input type="date" id="to_date" wire:model.defer="to_date" class="form-control form-control-sm">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                     </div>
                     <div class="col-md-3">
                         <label for="branch_id" class="form-label">{{ __('general.pages.reports.common.branch') }}</label>
-                        <select id="branch_id" wire:model.defer="branch_id" class="form-select form-select-sm">
+                        <select id="branch_id" name="branch_id" class="form-select form-select-sm select2">
                             <option value="">{{ __('general.pages.reports.common.all_branches') }}</option>
-                            @if(function_exists('branches'))
-                                @foreach(branches() as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                @endforeach
-                            @endif
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ $branch->id == $branch_id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label for="admin_id" class="form-label">{{ __('general.pages.reports.cash_register_report.admin_cashier') }}</label>
-                        <select id="admin_id" wire:model.defer="admin_id" class="form-select form-select-sm">
+                        <select id="admin_id" name="admin_id" class="form-select form-select-sm select2">
                             <option value="">{{ __('general.pages.reports.cash_register_report.all_admins') }}</option>
-                            @if(function_exists('admins'))
-                                @foreach(admins() as $admin)
-                                    <option value="{{ $admin->id }}">{{ $admin->name }}</option>
-                                @endforeach
-                            @endif
+                            @foreach($admins as $admin)
+                                <option value="{{ $admin->id }}" {{ $admin->id == $admin_id ? 'selected' : '' }}>{{ $admin->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
@@ -90,20 +82,20 @@
                         <tbody>
                             @forelse($registers as $register)
                                 <tr>
-                                    <td>{{ $register->opened_at }}</td>
-                                    <td>{{ $register->closed_at ?? '-' }}</td>
+                                    <td>{{ dateTimeFormat($register->opened_at, false,true) }}</td>
+                                    <td>{{ dateTimeFormat($register->closed_at, false,true) ?? '-' }}</td>
                                     <td>{{ $register->branch?->name ?? $register->branch_id }}</td>
                                     <td>{{ $register->admin->name ?? $register->admin_id }}</td>
-                                    <td class="text-end">{{ number_format($register->opening_balance, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_sales, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_sale_refunds, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_purchases, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_purchase_refunds, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_expenses, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_expense_refunds, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_deposits, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->total_withdrawals, 2) }}</td>
-                                    <td class="text-end">{{ number_format($register->closing_balance, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->opening_balance, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_sales, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_sale_refunds, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_purchases, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_purchase_refunds, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_expenses, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_expense_refunds, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_deposits, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->total_withdrawals, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($register->closing_balance, true) }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-{{ $register->status == 'open' ? 'success' : 'danger' }}">
                                             {{ ucfirst($register->status) }}
@@ -129,3 +121,7 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+        @include('layouts.hud.partials.daterange-picker-script')
+@endpush

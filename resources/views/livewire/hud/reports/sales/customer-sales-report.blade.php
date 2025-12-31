@@ -9,13 +9,9 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label text-light">{{ __('general.pages.reports.common.from_date') }}</label>
-                            <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="from_date">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label text-light">{{ __('general.pages.reports.common.to_date') }}</label>
-                            <input type="date" class="form-control form-control-sm bg-dark text-light border-secondary" wire:model.lazy="to_date">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                            <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                         </div>
                     </div>
                 </div>
@@ -58,7 +54,7 @@
                                     <tr>
                                         <td>{{ $row->customer_name }}</td>
                                         <td>{{ $row->sale_count }}</td>
-                                        <td>{{ number_format($row->total_spent, 2) }}</td>
+                                        <td>{{ currencyFormat($row->total_spent, true) }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -71,7 +67,7 @@
                                     <tr class="bg-success text-dark fw-bold">
                                         <td>{{ __('general.pages.reports.common.total') }}</td>
                                         <td>{{ $total_count }}</td>
-                                        <td>{{ number_format($total_spent, 2) }}</td>
+                                        <td>{{ currencyFormat($total_spent, true) }}</td>
                                     </tr>
                                 @endif
                             </tbody>
@@ -88,3 +84,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

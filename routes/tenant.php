@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\GeneralController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Tenant\AuthController;
-use App\Http\Middleware\{AdminTranslationMiddleware,InitializeTenancyByDomain,Tenant\ReportsPermissionCheck,Tenant\AdminAuthMiddleware};
+use App\Http\Middleware\{AdminTranslationMiddleware,InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck,Tenant\AdminAuthMiddleware};
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Admins\{AdminsList,RoleDetails,RolesList};
 use App\Livewire\Admin\Branches\BranchesList;
@@ -13,14 +14,18 @@ use App\Livewire\Admin\CashRegister\CashRegisterPage;
 use App\Livewire\Admin\Categories\CategoriesList;
 use App\Livewire\Admin\Discounts\DiscountsList;
 use App\Livewire\Admin\Expenses\{ExpenseCategoriesList,ExpensesList};
+use App\Livewire\Admin\Imports\ImportsPage;
 use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\Plans\{PlansList,SubscriptionsPage};
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\{AddEditProduct,ProductsList};
 use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
+use App\Livewire\Admin\Refunds\AddRefund;
+use App\Livewire\Admin\Refunds\RefundsList;
 use App\Livewire\Admin\Reports\{
     Admins\CashierReport,
+    AuditReport,
     BranchProfitability,CashRegisterReport,
     Financial\BalanceSheetReport,Financial\CashFlowStatementReport,Financial\GeneralLedgerReport,Financial\IncomeStatmentReport,Financial\TrailBalanceReport,
     Inventory\CogsReport,Inventory\ShortageReport,Inventory\StockMovementReport,Inventory\StockValuationReport,
@@ -33,7 +38,7 @@ use App\Livewire\Admin\Reports\{
 };
 
 use App\Livewire\Admin\Sales\{SaleDetails,SalesList};
-
+use App\Livewire\Admin\Settings\SettingsPage;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Stocks\{AddStockTransfer,StockTransferDetails,StockTransferList};
 
@@ -195,7 +200,7 @@ Route::middleware([
                 Route::get('cashier-report', CashierReport::class)->name('cashier.report');
                 Route::get('cash-register-report', CashRegisterReport::class)->name('cash.register.report');
                 Route::get('branch-profitability', BranchProfitability::class)->name('branch.profitability');
-                // TODO : audit report
+                Route::get('audit-report', AuditReport::class)->name('audit.report');
 
             });
             // Stock Adjustments
@@ -213,10 +218,18 @@ Route::middleware([
 
             Route::get('plans', PlansList::class)->name('plans.list');
             Route::get('subscriptions', SubscriptionsPage::class)->name('subscriptions.list');
+
+
+            Route::get('imports',ImportsPage::class)->name('imports');
+            Route::get('settings',SettingsPage::class)->name('settings');
+
+            Route::get('refunds', RefundsList::class)->name('refunds.list');
+            Route::get('refunds/create', AddRefund::class)->name('refunds.create');
         });
     });
 
-    Route::get('admin/invoices/{type}/{id}', [GeneralController::class, 'generateInvoice'])->name('generate.invoice');
+    //Route::get('admin/invoices/{type}/{id}', [GeneralController::class, 'generateInvoice'])->name('generate.invoice');
+    Route::get('sales/invoice/{token}',[InvoiceController::class,'show'])->name('sales.invoice');
 
 
     Route::get('change-language/{lang}', function($lang){
@@ -238,22 +251,29 @@ Route::get('download-file', function () {
     }
 })->name('admin.export.download');
 
+Route::view('invoice-80mm','invoices.invoice-80mm');
+Route::view('invoice-80mm-ar','invoices.invoice-80mm-ar');
+Route::view('invoice-a4-ar','invoices.invoice-a4-ar');
+Route::view('invoice-a4','invoices.invoice-a4');
+Route::view('refund-invoice-a4-ar','invoices.refund-invoice-a4-ar');
+Route::view('refund-invoice-a4','invoices.refund-invoice-a4');
+Route::view('refund-invoice-80mm','invoices.refund-invoice-80mm');
+Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 
-// Features to add later
-// Check Everything Related to Soft Deletes and make sure it's working fine ---- #DONE
-// everything (add/edit) have active must be with default active = false ---- #DONE
-// every select we have in system and don't have data to show , we must add btn to add data from there -> btn (+)
-// Into Product Add/Update -> add select to branch which i can assign product to all branches or specific branches
-// Import Excel,CSV
-// Invoice Customization (Logo,Color,Text)
+
+// Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
 // Barcode/QR Code Generation
-// Add Currency & City to branch (add currency to tenant instead ---#Done) -> now we need to add currency symbol or code into every money field
-// Audit Logs
+// Prienters Settings
 
+// Before Publishing we need to test domain register not just subdomain
 
+// اداره التصنيع
 // TODO : E-Invoice Coming Soon
 // Multi Currency Support into sales orders -> EX : customer come to egypt and doesn't have EGP , he pay in USD , we save the exchange rate at that day and save the amount in both currencies
-// Email & Notification system
-// whatsapp notification
-// SMS notification
 // tenant balance
+// static pages into central website
+
+// booking reservation system
+// hrm system
+
+// make tenant website & mobile app

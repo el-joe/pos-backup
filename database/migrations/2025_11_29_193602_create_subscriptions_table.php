@@ -37,9 +37,7 @@ return new class extends Migration
             $table->timestamp('end_date')->nullable();
             $table->enum('billing_cycle', ['monthly', 'yearly'])->default('monthly');
             $table->enum('status', ['paid', 'cancelled', 'refunded'])->default('paid');
-            $table->string('payment_gateway')->nullable();
-            $table->json('payment_details');
-            $table->json('payment_callback_details');
+            $table->unsignedBigInteger('payment_transaction_id')->nullable()->index();
             $table->timestamps();
         });
     }

@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class PaymentMethod extends Model
+{
+    use SoftDeletes,HasFactory;
+
+    protected $fillable = [
+        'name',
+        'provider',
+        'credentials',
+        'required_fields',
+        'fee_percentage',
+        'fixed_fee',
+        'active',
+    ];
+
+    protected $casts = [
+        'credentials' => 'array',
+        'required_fields' => 'array',
+        'active' => 'boolean',
+    ];
+
+    // Scopes
+    function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
+}

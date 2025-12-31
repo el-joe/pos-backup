@@ -18,15 +18,19 @@
                                     <div class="mb-3">
                                         <label for="branch_id" class="form-label">{{ __('general.pages.stock-taking.branch') }}</label>
                                         @if(admin()->branch_id == null)
-                                        <select id="branch_id" class="form-select" wire:model.live="data.branch_id">
-                                            <option value="">{{ __('general.pages.stock-taking.select_branch') }}</option>
-                                            @foreach($branches as $branch)
-                                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="d-flex">
+                                            <select id="branch_id" name="data.branch_id" class="form-select select2">
+                                                <option value="">{{ __('general.pages.stock-taking.select_branch') }}</option>
+                                                @foreach($branches as $branch)
+                                                    <option value="{{ $branch->id }}" {{ ($data['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                                        </div>
                                         @else
-                                        <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
+                                            <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
                                         @endif
+
                                     </div>
                                 </div>
 
@@ -123,7 +127,7 @@
                                                                 @endphp
                                                                 {{ $sign }}{{ $difference }}
                                                             </td>
-                                                            <td>{{ number_format($unit['unit_cost'] * $difference , 2) }}</td>
+                                                            <td>{{ currencyFormat($unit['unit_cost'] * $difference , true) }}</td>
                                                             <td>
                                                                 <span class="badge {{ $badgeClass }}">{{ $status }}</span>
                                                             </td>
@@ -193,36 +197,7 @@
 </script>
 @endpush
 
-@push('styles')
-{{-- <style>
-    .section-card {
-        border-radius: 18px;
-        margin-top: 18px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-        border: 1.5px solid #e3e6ed;
-        background: #fff;
-    }
-    .section-card .card-body {
-        padding: 32px 32px 24px 32px;
-    }
-    .section-title {
-        font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 24px;
-        letter-spacing: 0.5px;
-    }
-    .table {
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    .save-stock-btn {
-        min-width: 220px;
-        max-width: 320px;
-        padding: 14px 0;
-        font-size: 20px;
-        font-weight: 600;
-        border-radius: 10px;
-        margin-top: 24px;
-    }
-</style> --}}
+@push('scripts')
+@livewire('admin.branches.branch-modal')
+@include('layouts.hud.partials.select2-script')
 @endpush

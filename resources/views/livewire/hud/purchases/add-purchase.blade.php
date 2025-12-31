@@ -9,12 +9,15 @@
                 <div class="col-md-4">
                     <label for="branch_id" class="form-label">{{ __('general.pages.purchases.branch') }}</label>
                     @if(admin()->branch_id == null)
-                    <select id="branch_id" wire:model.change="data.branch_id" class="form-select">
-                        <option value="">{{ __('general.pages.purchases.select_branch') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="branch_id" name="data.branch_id" class="form-select select2">
+                            <option value="">{{ __('general.pages.purchases.select_branch') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ $branch->id == ($data['branch_id']??0) ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                    </div>
                     @else
                     <input type="text" class="form-control" value="{{ admin()->branch?->name }}" disabled>
                     @endif
@@ -22,12 +25,15 @@
 
                 <div class="col-md-4">
                     <label for="supplier_id" class="form-label">{{ __('general.pages.purchases.supplier') }}</label>
-                    <select id="supplier_id" wire:model.change="data.supplier_id" class="form-select">
-                        <option value="">{{ __('general.pages.purchases.select_supplier') }}</option>
-                        @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="supplier_id" name="data.supplier_id" class="form-select select2">
+                            <option value="">{{ __('general.pages.purchases.select_supplier') }}</option>
+                            @foreach ($suppliers as $supplier)
+                                <option value="{{ $supplier->id }}" {{ $supplier->id == ($data['supplier_id']??0) ? 'selected' : '' }}>{{ $supplier->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="$dispatch('user-set-current', {id : null,type: 'supplier'})">+</button>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -107,10 +113,10 @@
                                     <tr>
                                         <td class="fw-semibold">{{ $product['name'] }}</td>
                                         <td>
-                                            <select name="unit_id"
+                                            <select
                                                 id="unit_id"
-                                                wire:model.change="orderProducts.{{ $index }}.unit_id"
-                                                class="form-select">
+                                                name="orderProducts.{{ $index }}.unit_id"
+                                                class="form-select select2">
                                                 <option value="">{{ __('general.pages.purchases.unit') }}</option>
                                                 @foreach ($product['units'] as $unit)
                                                     <option value="{{ $unit['id'] }}">{{ $unit['name'] }}</option>
@@ -132,13 +138,13 @@
                                                 wire:model.blur="orderProducts.{{ $index }}.discount_percentage"
                                                 step="0.01" min="0" placeholder="0.00">
                                         </td>
-                                        <td class="text-muted">{{ number_format($product['unit_cost_after_discount'], 2) }}</td>
-                                        <td class="text-muted">{{ number_format($product['unit_cost_after_discount'] * $product['qty'], 2) }}</td>
+                                        <td class="text-muted">{{ currencyFormat($product['unit_cost_after_discount'], true) }}</td>
+                                        <td class="text-muted">{{ currencyFormat($product['unit_cost_after_discount'] * $product['qty'], true) }}</td>
                                         <td>
-                                            <select name="tax_percentage"
+                                            <select
                                                 id="tax_percentage"
-                                                wire:model.change="orderProducts.{{ $index }}.tax_percentage"
-                                                class="form-select">
+                                                name="orderProducts.{{ $index }}.tax_percentage"
+                                                class="form-select select2">
                                                 <option value="">{{ __('general.pages.purchases.select_tax') }}</option>
                                                 @foreach ($taxes as $tax)
                                                     <option value="{{ $tax->rate }}" {{ $product['tax_percentage'] == $tax->rate ? 'selected' : '' }}>
@@ -153,8 +159,8 @@
                                                 wire:model.blur="orderProducts.{{ $index }}.x_margin"
                                                 step="0.01" min="0" placeholder="0.00">
                                         </td>
-                                        <td class="fw-semibold">{{ number_format($product['sell_price'], 2) }}</td>
-                                        <td class="fw-semibold">{{ number_format($product['total'], 2) }}</td>
+                                        <td class="fw-semibold">{{ currencyFormat($product['sell_price'], true) }}</td>
+                                        <td class="fw-semibold">{{ currencyFormat($product['total'], true) }}</td>
                                         <td>
                                             <button type="button"
                                                 class="btn btn-sm btn-danger rounded-2"
@@ -245,10 +251,10 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="discount_type" class="form-label">{{ __('general.pages.purchases.discount_type') }}</label>
-                    <select id="discount_type" wire:model.live="data.discount_type" class="form-select">
-                        <option value="">{{ __('general.pages.purchases.select_discount_type') }}</option>
-                        <option value="fixed">{{ __('general.pages.purchases.fixed') }}</option>
-                        <option value="percentage">{{ __('general.pages.purchases.percentage') }}</option>
+                    <select id="discount_type" name="data.discount_type" class="form-select select2">
+                        <option value="" {{ ($data['discount_type']??'') == '' ? 'selected' : '' }}>{{ __('general.pages.purchases.select_discount_type') }}</option>
+                        <option value="fixed" {{ ($data['discount_type']??'') == 'fixed' ? 'selected' : '' }}>{{ __('general.pages.purchases.fixed') }}</option>
+                        <option value="percentage" {{ ($data['discount_type']??'') == 'percentage' ? 'selected' : '' }}>{{ __('general.pages.purchases.percentage') }}</option>
                     </select>
                 </div>
 
@@ -269,10 +275,10 @@
 
                 <div class="col-md-4">
                     <label for="tax" class="form-label">{{ __('general.pages.purchases.tax') }}</label>
-                    <select id="tax" wire:model.live="data.tax_id" class="form-select">
+                    <select id="tax" name="data.tax_id" class="form-select select2">
                         <option value="">{{ __('general.pages.purchases.select_tax') }}</option>
                         @foreach ($taxes as $tax)
-                            <option value="{{ $tax->id }}">{{ $tax->name }} - {{ $tax->rate }}%</option>
+                            <option value="{{ $tax->id }}" {{ ($data['tax_id']??'') == $tax->id ? 'selected' : '' }}>{{ $tax->name }} - {{ $tax->rate }}%</option>
                         @endforeach
                     </select>
                 </div>
@@ -446,7 +452,7 @@
                                     <small class="text-muted">{{ __('general.pages.purchases.items') }}</small>
                                 </div>
                                 <div class="col-6">
-                                    <h4 class="text-success mb-0">{{ number_format($grandTotal ?? 0, 0) }}</h4>
+                                    <h4 class="text-success mb-0">{{ currencyFormat($grandTotal ?? 0, true) }}</h4>
                                     <small class="text-muted">{{ __('general.pages.purchases.total') }}</small>
                                 </div>
                             </div>
@@ -467,6 +473,9 @@
 </div>
 
 @push('scripts')
+@livewire('admin.users.user-modal')
+@livewire('admin.branches.branch-modal')
+@include('layouts.hud.partials.select2-script')
     <script>
         window.addEventListener('reset-search-input', event => {
             const input = document.getElementById('product_search');

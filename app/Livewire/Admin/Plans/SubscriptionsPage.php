@@ -3,11 +3,52 @@
 namespace App\Livewire\Admin\Plans;
 
 use App\Models\Subscription;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 class SubscriptionsPage extends Component
 {
+
+    function cancelSubscription()
+    {
+        $currentSubscription = Subscription::currentTenantSubscriptions()->first();
+        if($currentSubscription && $currentSubscription->canCancel() && adminCan('subscriptions.cancel')){
+            try{
+                DB::beginTransaction();
+                $currentSubscription->cancel();
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                $this->popup('error','Error occurred while cancelling subscription: '.$e->getMessage(), 'center');
+                return;
+            }
+            $this->popup('success', 'Subscription cancelled successfully', 'center');
+        }else{
+            $this->popup('error', 'Cannot cancel this subscription', 'center');
+        }
+    }
+
+
+    function renewSubscription()
+    {
+        $currentSubscription = Subscription::currentTenantSubscriptions()->first();
+        if($currentSubscription && $currentSubscription->canRenew() && adminCan('subscriptions.renew')){
+            try{
+                DB::beginTransaction();
+                $currentSubscription->renew();
+                DB::commit();
+            }catch (\Exception $e) {
+                DB::rollBack();
+                $this->popup('error','Error occurred while renewing subscription: '.$e->getMessage(), 'center');
+                return;
+            }
+            $this->popup('success', 'Subscription renewed successfully', 'center');
+        }else{
+            $this->popup('error', 'Cannot renew this subscription', 'center');
+        }
+    }
+
     public function render()
     {
         $currentSubscription = Subscription::currentTenantSubscriptions()->first();
@@ -17,6 +58,7 @@ class SubscriptionsPage extends Component
         }
         $subscriptions = Subscription::forTenant(tenant('id'))
             ->orderBy('start_date', 'desc')->get();
+        $accountBalance = tenant('balance');
         return layoutView('plans.subscriptions-page', get_defined_vars());
     }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Admin\Users;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,9 +17,6 @@ class UsersList extends Component
     use LivewireOperations, WithPagination;
     private $userService;
     public $current;
-    public $data = [
-        'active' => false
-    ];
 
     #[Url]
     public $type;
@@ -25,34 +25,19 @@ class UsersList extends Component
     public $collapseFilters = false;
     public $filters = [];
 
-    public $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'phone' => 'required|string|max:255',
-        'address' => 'required|string|max:255',
-        'active' => 'boolean',
-        'type' => 'in:customer,supplier',
-        'sales_threshold' => 'required_if:type,customer|numeric|min:0',
-    ];
-
     function boot() {
         $this->userService = app(UserService::class);
     }
 
     function setCurrent($id) {
         $this->current = $this->userService->find($id);
-
-        if ($this->current) {
-            $this->data = $this->current->toArray();
-            $this->data['active'] = (bool)$this->data['active'];
-        }else{
-            $this->reset('data');
-        }
     }
 
     function deleteAlert($id)
     {
         $this->setCurrent($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_USER_TRY, ['id' => $id,'type' => $this->type]);
 
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this user', 'Yes, delete it!');
     }
@@ -63,8 +48,11 @@ class UsersList extends Component
             return;
         }
 
-        $this->userService->delete($this->current->id);
+        $id = $this->current->id;
 
+        $this->userService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_USER, ['id' => $id,'type' => $this->type]);
         $this->popup('success', 'User deleted successfully');
 
         $this->dismiss();
@@ -72,21 +60,7 @@ class UsersList extends Component
         $this->reset('current', 'data');
     }
 
-    function save() {
-        if($this->userService->checkIfUserExistsIntoSameType($this->data['email'] ?? '',$this->type) || $this->userService->checkIfUserExistsIntoSameType($this->data['phone'] ?? '',$this->type)) {
-            $this->alert('error', 'User with this email or phone already exists');
-            return;
-        }
-        if (!$this->validator()) return;
-
-        $this->userService->save($this->current?->id, $this->data + ['type' => $this->type]);
-
-        $this->popup('success', 'User saved successfully');
-
-        $this->dismiss();
-
-        $this->reset('current', 'data');
-    }
+    #[On('re-render')]
     public function render()
     {
         if ($this->export == 'excel') {
@@ -108,6 +82,8 @@ class UsersList extends Component
             $headers = ['#', 'Name', 'Phone', 'Email', 'Address', 'Sales Threshold', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'users');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_USERS, ['url' => $fullPath,'type' => $this->type]);
 
             $this->redirectToDownload($fullPath);
         }

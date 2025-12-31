@@ -1,17 +1,17 @@
 <!-- BEGIN #footer -->
-<div id="footer" class="py-5 bg-gray-900 bg-opacity-75 text-body text-opacity-75" data-bs-theme="dark">
+<footer id="footer" class="py-5 bg-gray-900 bg-opacity-75 text-body text-opacity-75" data-bs-theme="dark">
     <div class="container-xxl px-3 px-lg-5">
         <div class="row gx-lg-5 gx-3 gy-lg-4 gy-3">
             <div class="col-lg-3 col-md-6">
                 <div class="mb-3">
-                    <div class="h2">Mohaaseb ERP</div>
+                    <div class="h2">{{ __('website.footer.brand_title') }}</div>
                 </div>
                 <p class="mb-4">
-                    Mohaaseb ERP is your complete solution for managing business operations efficiently. From inventory, sales, and purchases to accounting and reporting, our platform helps businesses streamline processes and make smarter decisions.
+                    {{ __('website.footer.brand_description') }}
                 </p>
                 {{-- <h5>Follow Us</h5>
                 <div class="d-flex">
-                    <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-facebook fa-fw"></i></a>
+                    <a href="#" class="me-2 text-body text-opacity-50" aria-label="Facebook" rel="noopener"><i class="fab fa-lg fa-facebook fa-fw"></i></a>
                     <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-instagram fa-fw"></i></a>
                     <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-twitter fa-fw"></i></a>
                     <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-youtube fa-fw"></i></a>
@@ -19,59 +19,44 @@
                 </div> --}}
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5>Quick Links</h5>
+                <h5>{{ __('website.footer.legal') }}</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Newsroom</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Company Info</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Careers</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">For Investors</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Brand Resources</a></li>
-                </ul>
-                <hr class="text-body text-opacity-50">
-                <h5>Services</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Web Development</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">App Development</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">SEO</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Marketing</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'about-us']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.about_us') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'privacy-policy']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.privacy_policy') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'terms-conditions']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.terms_of_service') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'refund-cancellation-policy']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.refund_cancellation_policy') }}</a></li>
+                    <li class="mb-3px"><a href="{{ route('static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'fair-usage-policy']) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.legal_links.fair_usage_policy') }}</a></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5>Resources</h5>
+                <h5>{{ __('website.footer.resources') }}</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Documentation</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Support</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">FAQs</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Community</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Tutorials</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.documentation') }}</a></li>
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.support') }}</a></li> --}}
+                    <li class="mb-3px"><a href="{{ route('faqs.index', ['lang' => app()->getLocale()]) }}" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.faqs') }}</a></li>
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.community') }}</a></li> --}}
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.resources_links.tutorials') }}</a></li> --}}
                 </ul>
-                <hr class="text-body text-opacity-50">
-                <h5>Legal</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Privacy Policy</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Terms of Service</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Cookie Policy</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Compliance</a></li>
-                </ul>
+                {{-- <hr class="text-body text-opacity-50"> --}}
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5>Help Center</h5>
+                <h5>{{ __('website.footer.help_center') }}</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Contact Form</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Live Chat Support</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Portal Help Center</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Email Support</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Technical Documentation</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Service Updates</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Developer API</a></li>
-                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Knowledge Base</a></li>
+                    <li class="mb-3px"><a href="/#contact" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.contact_form') }}</a></li>
+                    {{-- <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.live_chat_support') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.portal_help_center') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.email_support') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.technical_documentation') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.service_updates') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.developer_api') }}</a></li>
+                    <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">{{ __('website.footer.help_links.knowledge_base') }}</a></li> --}}
                 </ul>
             </div>
         </div>
         <hr class="text-body text-opacity-50">
         <div class="row">
             <div class="col-sm-6 mb-3 mb-lg-0">
-                <div class="footer-copyright-text">&copy; 2025 Codefanz.com All Rights Reserved</div>
+                <div class="footer-copyright-text">&copy; 2025 Codefanz.com {{ __('website.footer.all_rights_reserved') }}</div>
             </div>
             <div class="col-sm-6 text-sm-end">
                 {{-- <div class="dropdown me-4 d-inline">
@@ -88,9 +73,9 @@
                         <li><a href="#" class="dropdown-item">Spain (Español)</a></li>
                     </ul>
                 </div> --}}
-                <a href="#" class="text-decoration-none text-body text-opacity-50">Sitemap</a>
+                <a href="{{ url('sitemap.xml') }}" class="text-decoration-none text-body text-opacity-50">{{ __('website.footer.sitemap') }}</a>
             </div>
         </div>
     </div>
-</div>
+</footer>
 <!-- END #footer -->

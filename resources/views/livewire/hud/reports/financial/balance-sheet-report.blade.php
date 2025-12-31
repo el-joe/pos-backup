@@ -8,13 +8,9 @@
         </div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.from_date') }}</label>
-                    <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.to_date') }}</label>
-                    <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
+                <div class="col-sm-6">
+                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                    <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                 </div>
             </div>
         </div>
@@ -44,12 +40,12 @@
                         @foreach($report['assets'] as $label => $amount)
                         <tr>
                             <td>{{ $label }}</td>
-                            <td>{{ number_format($amount, 2) }}</td>
+                            <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-primary-subtle">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_assets') }}</td>
-                            <td>{{ number_format($report['total_assets'] ?? 0, 2) }}</td>
+                            <td>{{ currencyFormat($report['total_assets'] ?? 0, true) }}</td>
                         </tr>
 
                         {{-- ================= Liabilities ================= --}}
@@ -59,12 +55,12 @@
                         @foreach($report['liabilities'] as $label => $amount)
                         <tr>
                             <td>{{ $label }}</td>
-                            <td>{{ number_format($amount, 2) }}</td>
+                            <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-danger-subtle">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_liabilities') }}</td>
-                            <td>{{ number_format($report['total_liabilities'] ?? 0, 2) }}</td>
+                            <td>{{ currencyFormat($report['total_liabilities'] ?? 0, true) }}</td>
                         </tr>
 
                         {{-- ================= Equity ================= --}}
@@ -74,12 +70,12 @@
                         @foreach($report['equity'] as $label => $amount)
                         <tr>
                             <td>{{ $label }}</td>
-                            <td>{{ number_format($amount, 2) }}</td>
+                            <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-success-subtle">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_equity') }}</td>
-                            <td>{{ number_format($report['total_equity'] ?? 0, 2) }}</td>
+                            <td>{{ currencyFormat($report['total_equity'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -93,3 +89,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

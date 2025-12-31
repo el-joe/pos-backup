@@ -19,11 +19,11 @@
                     <!-- Filter by Branch -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.stock-taking.branch') }}</label>
-                        <select class="form-select"
-                                wire:model.live="filters.branch_id">
+                        <select class="form-select select2"
+                                name="filters.branch_id">
                             <option value="">{{ __('general.pages.stock-taking.all_branches_option') }}</option>
                             @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -37,11 +37,11 @@
                     <!-- Filter by Created By -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.stock-taking.created_by') }}</label>
-                        <select class="form-select"
-                                wire:model.live="filters.created_by">
+                        <select class="form-select select2"
+                                name="filters.created_by">
                             <option value="">{{ __('general.pages.stock-taking.all_users') }}</option>
                             @foreach($admins as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                <option value="{{ $user->id }}" {{ ($filters['created_by']??'') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -101,5 +101,6 @@
     </div>
 </div>
 
-@push('styles')
+@push('scripts')
+@include('layouts.hud.partials.select2-script')
 @endpush

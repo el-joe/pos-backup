@@ -38,6 +38,10 @@ class Sale extends Model
         return $this->hasMany(SaleItem::class);
     }
 
+    function orderPayments(){
+        return $this->morphMany(OrderPayment::class,'payable');
+    }
+
     public function customer() {
         return $this->belongsTo(User::class,'customer_id')->withTrashed();
     }
@@ -191,5 +195,15 @@ class Sale extends Model
         })->sum();
 
         return $grandTotal;
+    }
+
+    function getPaymentStatusAttribute() {
+        if($this->due_amount <= 0){
+            return 'paid';
+        }elseif($this->paid_amount > 0 && $this->due_amount > 0){
+            return 'partial';
+        }else{
+            return 'unpaid';
+        }
     }
 }

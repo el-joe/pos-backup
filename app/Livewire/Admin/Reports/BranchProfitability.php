@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Reports;
 
 use App\Enums\AccountTypeEnum;
+use App\Services\BranchService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -81,7 +82,7 @@ class BranchProfitability extends Component
     }
     public function render()
     {
-
-        return layoutView('reports.branch-profitability');
+        $branches = app(BranchService::class)->activeList();
+        return layoutView('reports.branch-profitability',get_defined_vars());
     }
 }

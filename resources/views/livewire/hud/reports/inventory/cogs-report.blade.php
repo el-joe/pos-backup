@@ -24,7 +24,7 @@
                             @endphp
                             <tr>
                                 <td>{{ $row->branch_name }}</td>
-                                <td>{{ number_format($row->cogs_amount, 2) }}</td>
+                                <td>{{ currencyFormat($row->cogs_amount, true) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -34,7 +34,7 @@
                         @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-semibold">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
-                                <td>{{ number_format($total_cogs, 2) }}</td>
+                                <td>{{ currencyFormat($total_cogs, true) }}</td>
                             </tr>
                         @endif
                     </tbody>

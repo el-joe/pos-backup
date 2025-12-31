@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Admin\Branches;
 
+use App\Enums\AuditLogActionEnum;
 use App\Models\Subscription;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\TaxService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -23,15 +26,6 @@ class BranchesList extends Component
     public $collapseFilters = false;
 
     public $export;
-
-    public $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'nullable|email|max:255',
-        'phone' => 'nullable|string|max:50',
-        'address' => 'nullable|string|max:500',
-        'website' => 'nullable|url|max:255',
-        'tax_id' => 'nullable|exists:taxes,id',
-    ];
 
     function boot() {
         $this->branchService = app(BranchService::class);
@@ -52,6 +46,8 @@ class BranchesList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETED_BRANCH);
+
         $this->confirm('delete','warning','Are you sure?','You want to delete this branch','Yes, delete it!');
     }
 
@@ -61,8 +57,11 @@ class BranchesList extends Component
             return;
         }
 
-        $this->branchService->delete($this->current->id);
+        $current = $this->current;
 
+        $this->branchService->delete($current->id);
+
+        AuditLog::log(AuditLogActionEnum::DELETED_BRANCH, ['id' => $current->id,'name'=>$current->name]);
         $this->popup('success','Branch deleted successfully');
 
         $this->dismiss();
@@ -70,30 +69,8 @@ class BranchesList extends Component
         $this->reset('current','data');
     }
 
-    function save() {
 
-        if(!$this->current?->id){
-            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-            $limit = $currentSubscription?->plan?->features['branches']['limit'] ?? 999999;
-            $totalBranches = $this->branchService->count();
-
-            if($totalBranches >= $limit){
-                $this->popup('error','Branch limit reached. Please upgrade your subscription to add more branches.');
-                return;
-            }
-        }
-
-        if(!$this->validator())return;
-
-        $this->branchService->save($this->current?->id,$this->data);
-
-        $this->popup('success','Branch saved successfully');
-
-        $this->dismiss();
-
-        $this->reset('current', 'data');
-    }
-
+    #[On('re-render')]
     public function render()
     {
         if ($this->export == 'excel') {
@@ -116,6 +93,8 @@ class BranchesList extends Component
             $headers = ['#', 'Name', 'Phone', 'Email', 'Address', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'branches');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_BRANCHES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

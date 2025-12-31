@@ -76,7 +76,7 @@ class CurrenciesList extends Component
 
     public function render()
     {
-        $currencies = Currency::paginate(10);
+        $currencies = Currency::paginate(10)->withPath(route('cpanel.currencies.list'));
 
         return view('livewire.central.cpanel.currencies.currencies-list', get_defined_vars());
     }

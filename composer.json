@@ -11,7 +11,10 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "maatwebsite/excel": "^3.1",
+        "ralphjsmit/laravel-seo": "^1.7",
+        "spatie/image": "^3.8",
         "spatie/laravel-permission": "^6.22",
+        "spatie/laravel-sitemap": "^7.3",
         "stancl/tenancy": "^3.8"
     },
     "require-dev": {

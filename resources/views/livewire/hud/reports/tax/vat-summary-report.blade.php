@@ -6,18 +6,9 @@
         </div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">{{ __('general.pages.reports.common.from') }}</label>
-                    <input type="date" class="form-control form-control-sm bg-secondary text-light border-0" wire:model="from_date">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">{{ __('general.pages.reports.common.to') }}</label>
-                    <input type="date" class="form-control form-control-sm bg-secondary text-light border-0" wire:model="to_date">
-                </div>
-                <div class="col-md-4 d-flex align-items-end justify-content-end">
-                    <button wire:click="resetDates" class="btn btn-outline-light btn-sm">
-                        <i class="fa fa-refresh me-1"></i> {{ __('general.pages.reports.common.reset') }}
-                    </button>
+                <div class="col-sm-6">
+                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                    <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                 </div>
             </div>
         </div>
@@ -50,15 +41,15 @@
                     <tbody>
                         <tr>
                             <td>{{ __('general.pages.reports.tax.vat_summary.vat_payable_sales') }}</td>
-                            <td class="text-end">{{ number_format($report['vat_payable'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($report['vat_payable'] ?? 0, true) }}</td>
                         </tr>
                         <tr>
                             <td>{{ __('general.pages.reports.tax.vat_summary.vat_receivable_purchases') }}</td>
-                            <td class="text-end">{{ number_format($report['vat_receivable'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($report['vat_receivable'] ?? 0, true) }}</td>
                         </tr>
                         <tr class="bg-success bg-opacity-25 fw-semibold">
                             <td>{{ __('general.pages.reports.tax.vat_summary.net_vat') }}</td>
-                            <td class="text-end">{{ number_format($report['net'] ?? 0, 2) }}</td>
+                            <td class="text-end">{{ currencyFormat($report['net'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -73,3 +64,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

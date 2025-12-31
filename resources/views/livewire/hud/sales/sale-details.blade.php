@@ -53,7 +53,7 @@
                         <div class="col-md-3">
                             <div class="p-3 bg-dark-subtle rounded">
                                 <h6><i class="fa fa-calendar me-1"></i> {{ __('general.pages.sales.order_date') }}</h6>
-                                <p class="mb-0">{{ $order->created_at->format('F j, Y') }}</p>
+                                <p class="mb-0">{{ dateTimeFormat($order->created_at, true, false) }}</p>
                             </div>
                         </div>
                     </div>
@@ -66,12 +66,12 @@
                             $summaryCards = [
                                 ['title'=>__('general.pages.sales.items_count'),'icon'=>'fa-cube','bg'=>'bg-primary-subtle','color'=>'text-primary','value'=>$itemsCount],
                                 ['title'=>__('general.pages.sales.total_quantity'),'icon'=>'fa-plus','bg'=>'bg-info-subtle','color'=>'text-info','value'=>$totalQty],
-                                ['title'=>__('general.pages.sales.subtotal'),'icon'=>'fa-calculator','bg'=>'bg-warning-subtle','color'=>'text-warning','value'=>$subTotal],
-                                ['title'=>__('general.pages.sales.discount'),'icon'=>'fa-tag','bg'=>'bg-danger-subtle','color'=>'text-danger','value'=>$totalDiscount],
-                                ['title'=>__('general.pages.sales.tax'),'icon'=>'fa-percent','bg'=>'bg-secondary-subtle','color'=>'text-secondary','value'=>$totalTax],
-                                ['title'=>__('general.pages.sales.grand_total'),'icon'=>'fa-money','bg'=>'bg-gradient','color'=>'text-white','value'=>$grandTotal, 'gradient'=>'linear-gradient(135deg, #2196f3, #00c6ff)'],
-                                ['title'=>__('general.pages.sales.paid'),'icon'=>'fa-check-circle','bg'=>'bg-success-subtle','color'=>'text-success','value'=>$paid],
-                                ['title'=>__('general.pages.sales.due'),'icon'=>'fa-clock-o','bg'=>'bg-light-subtle','color'=>'text-light','value'=>number_format(($grandTotal - $paid), 2)],
+                                ['title'=>__('general.pages.sales.subtotal'),'icon'=>'fa-calculator','bg'=>'bg-warning-subtle','color'=>'text-warning','value'=>currencyFormat($subTotal, true)],
+                                ['title'=>__('general.pages.sales.discount'),'icon'=>'fa-tag','bg'=>'bg-danger-subtle','color'=>'text-danger','value'=>currencyFormat($totalDiscount, true)],
+                                ['title'=>__('general.pages.sales.tax'),'icon'=>'fa-percent','bg'=>'bg-secondary-subtle','color'=>'text-secondary','value'=>currencyFormat($totalTax, true)],
+                                ['title'=>__('general.pages.sales.grand_total'),'icon'=>'fa-money','bg'=>'bg-gradient','color'=>'text-white','value'=>currencyFormat($grandTotal, true), 'gradient'=>'linear-gradient(135deg, #2196f3, #00c6ff)'],
+                                ['title'=>__('general.pages.sales.paid'),'icon'=>'fa-check-circle','bg'=>'bg-success-subtle','color'=>'text-success','value'=>currencyFormat($paid, true)],
+                                ['title'=>__('general.pages.sales.due'),'icon'=>'fa-clock-o','bg'=>'bg-light-subtle','color'=>'text-light','value'=>currencyFormat(($grandTotal - $paid), true)],
                             ];
                         @endphp
 
@@ -115,8 +115,8 @@
                                         <td><strong>{{ $item->product?->name }} - {{ $item->unit?->name }}</strong></td>
                                         <td>{{ $item->qty }}</td>
                                         <td>{{ $item->refunded_qty }}</td>
-                                        <td>{{ number_format($item->sell_price, 2) }}</td>
-                                        <td>{{ number_format($item->total, 2) }}</td>
+                                        <td>{{ currencyFormat($item->sell_price, true) }}</td>
+                                        <td>{{ currencyFormat($item->total, true) }}</td>
                                         <td>
                                             @if($item->actual_qty <= 0)
                                                 <span class="badge bg-success">{{ __('general.pages.sales.fully_refunded') }}</span>
@@ -163,8 +163,8 @@
                                     <tr>
                                         <td>#{{ $transaction->id }}</td>
                                         <td>{{ $transaction->type->label() }}</td>
-                                        <td>{{ number_format($transaction->amount, 2) }}</td>
-                                        <td>{{ carbon($transaction->created_at)->format('d M Y, h:i A') }}</td>
+                                        <td>{{ currencyFormat($transaction->amount, true) }}</td>
+                                        <td>{{ dateTimeFormat($transaction->created_at) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -85,7 +85,7 @@
 
                 {{-- pagination center aligned (optional) --}}
                 <div class="d-flex justify-content-center mt-3">
-                    {{ $registerRequests->links() }}
+                    {{ $registerRequests->links("pagination::bootstrap-5") }}
                 </div>
             </div>
         </div>

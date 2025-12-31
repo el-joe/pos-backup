@@ -1,8 +1,87 @@
-	<!-- ================== BEGIN core-css ================== -->
-	<link href="{{ asset('hud/assets/css/vendor.min.css') }}" rel="stylesheet">
-	<link href="{{ asset('hud/assets/css/app.min.css') }}" rel="stylesheet">
-	<!-- ================== END core-css ================== -->
+<!-- Preconnect: Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-	<!-- ================== BEGIN page-css ================== -->
-	<link href="{{ asset('hud/assets/plugins/lity/dist/lity.min.css') }}" rel="stylesheet">
-	<!-- ================== END page-css ================== -->
+<!-- Preload: Hero Images -->
+<link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/cover.webp') }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ asset('hud/assets/img/landing/mockup-1.webp') }}" fetchpriority="high">
+
+<!-- CRITICAL CSS (no preload) -->
+<link rel="preload" href="{{ asset('hud/assets/css/vendor.min.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ asset('hud/assets/css/vendor.min.css') }}"></noscript>
+
+<!-- NON-CRITICAL CSS -->
+<link rel="preload"
+      href="{{ asset('hud/assets/css/app.min.css') }}"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+    <link rel="stylesheet" href="{{ asset('hud/assets/css/app.min.css') }}">
+</noscript>
+
+<!-- Lazy CSS: Lity -->
+<link rel="stylesheet"
+      href="{{ asset('hud/assets/plugins/lity/dist/lity.min.css') }}"
+      media="print"
+      onload="this.media='all'">
+<noscript>
+    <link rel="stylesheet" href="{{ asset('hud/assets/plugins/lity/dist/lity.min.css') }}">
+</noscript>
+
+<!-- Google Fonts -->
+<link rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'">
+<noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+</noscript>
+
+<!-- Preload Fonts -->
+<link rel="preload"
+      href="{{ asset('hud/assets/webfonts/fa-solid-900.woff2') }}"
+      as="font"
+      type="font/woff2"
+      crossorigin>
+
+<link rel="preload"
+      href="{{ asset('hud/assets/css/fonts/bootstrap-icons.woff2') }}"
+      as="font"
+      type="font/woff2"
+      crossorigin>
+
+<!-- Header & Logo Styling -->
+<style>
+    .navbar-logo {
+        max-height: 42px;
+        width: auto;
+        aspect-ratio: 3 / 1;
+        object-fit: contain;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .navbar-logo {
+            max-height: 36px;
+        }
+    }
+
+    .navbar .dropdown-menu {
+        min-width: 160px;
+    }
+
+    .navbar .dropdown-item {
+        font-size: 0.875rem;
+    }
+
+    .navbar .dropdown-item:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+
+</style>

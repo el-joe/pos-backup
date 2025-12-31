@@ -19,7 +19,7 @@ class TrailBalanceReport extends Component
 
 
         $transactionLines = $query->clone()
-            ->paginate(100)->withQueryString()
+            ->paginate(20)->withQueryString()
             ->through(function($line) {
                 return [
                     'id' => $line->id,
@@ -29,17 +29,18 @@ class TrailBalanceReport extends Component
                     'reference' => $line->ref,
                     'note' => $line->transaction?->note,
                     'description' => $line->transaction?->description,
-                    'date' => $line->transaction?->date,
+                    'date' => dateTimeFormat($line->transaction?->date,true,false),
                     'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
-                    'debit' => $line->type == 'debit' ? $line->amount : 0,
-                    'credit' => $line->type == 'credit' ? $line->amount : 0,
-                    'created_at' => $line->created_at,
+                    'account_type' => $line->account?->type->label() ?? 'N/A',
+                    'debit' => currencyFormat($line->type == 'debit' ? $line->amount: 0 , true),
+                    'credit' => currencyFormat($line->type == 'credit' ? $line->amount : 0, true),
+                    'created_at' => dateTimeFormat($line->created_at,true,false),
                 ];
             });
 
         // Refactor the headers by columns
         $headers = [
-            '#' , 'Transaction ID' , 'Transaction Type' , 'Branch' , 'Reference' , 'Note' , 'Description' , 'Date' , 'Account' ,'Debit' , 'Credit' , 'Created At'
+            '#' , 'Transaction ID' , 'Transaction Type' , 'Branch' , 'Reference' , 'Note' , 'Description' , 'Date' , 'Account' , 'Account Type' ,'Debit' , 'Credit' , 'Created At'
         ];
 
         $columns = [
@@ -50,8 +51,9 @@ class TrailBalanceReport extends Component
             'reference' => [ 'type' => 'text'],
             'note' => [ 'type' => 'text'],
             'description' => [ 'type' => 'text'],
-            'date' => [ 'type' => 'date'],
+            'date' => [ 'type' => 'text'],
             'account' => [ 'type' => 'text'],
+            'account_type' => [ 'type' => 'text'],
             'debit' => [
                 'type' => 'badge',
                 'class' => 'badge-success',
@@ -64,17 +66,17 @@ class TrailBalanceReport extends Component
                 'icon' => 'fa-arrow-down text-danger',
                 'value' => fn($q)=>$q['credit']
             ],
-            'created_at' => [ 'type' => 'datetime'],
+            'created_at' => [ 'type' => 'text'],
         ];
 
         $totals = [
             'total' => [
-                'colspan' => 8,
-                'label' => 'Totals',
-                'class' => 'text-end',
+                'colspan' => 10,
+                'label' => __('general.total'),
+                'class' => app()->getLocale() == 'ar' ? 'text-end pe-3' : 'text-start ps-3',
             ],
-            'debit' => $query->clone()->where('type', 'debit')->sum('amount'),
-            'credit' => $query->clone()->where('type', 'credit')->sum('amount'),
+            'debit' => currencyFormat($query->clone()->where('type', 'debit')->sum('amount'), true),
+            'credit' => currencyFormat($query->clone()->where('type', 'credit')->sum('amount'), true),
         ];
 
         return layoutView('reports.financial.trail-balance-report',get_defined_vars());

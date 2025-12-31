@@ -75,4 +75,7 @@ class SaleItem extends Model
         return SaleHelper::singleTaxAmount($this, clone $sale->salesItemsRefunded(), $sale->discount_type, $sale->discount_value, $sale->tax_percentage, $sale->max_discount_amount);
     }
 
+    function getNameAttribute(){
+        return $this->product?->name . ' - ' . $this->unit?->name;
+    }
 }

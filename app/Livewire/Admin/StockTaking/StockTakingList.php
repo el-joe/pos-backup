@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\StockTaking;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\AdminService;
 use App\Services\BranchService;
 use App\Services\StockTakingService;
@@ -35,7 +37,7 @@ class StockTakingList extends Component
                     'date' => $stockTaking->date,
                     'products_count' => $stockTaking->products->unique('product_id')?->count() ?? 0,
                     'created_by' => $stockTaking->user?->name ?? 'N/A',
-                    'created_at' => $stockTaking->created_at,
+                    'created_at' => dateTimeFormat($stockTaking->created_at),
                     'note' => $stockTaking->note,
                 ];
             })->toArray();
@@ -43,6 +45,8 @@ class StockTakingList extends Component
             $headers = ['#', 'Branch', 'Date', 'Products Count', 'Created by', 'Created at', 'Note'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'stock-takings');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_STOCK_TAKINGS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }
@@ -53,11 +57,11 @@ class StockTakingList extends Component
             return [
                 'id' => $st->id,
                 'branch' => $st->branch?->name ?? 'N/A',
-                'date' => $st->date,
+                'date' => dateTimeFormat($st->date, true, false),
                 'note' => $st->note,
                 'created_by' => $st->user?->name ?? 'N/A',
                 'products_count' => $st->products->unique('product_id')?->count() ?? 0,
-                'created_at' => $st->created_at,
+                'created_at' => dateTimeFormat($st->created_at),
             ];
         });
 
@@ -83,10 +87,10 @@ class StockTakingList extends Component
         $columns = [
             'id' => [ 'type' => 'number'],
             'branch' => [ 'type' => 'text'],
-            'date' => [ 'type' => 'date'],
+            'date' => [ 'type' => 'text'],
             'products_count' => [ 'type' => 'number'],
             'created_by' => [ 'type' => 'text'],
-            'created_at' => [ 'type' => 'datetime'],
+            'created_at' => [ 'type' => 'text'],
             'note' => [ 'type' => 'text'],
             'actions' => [ 'type' => 'actions' , 'actions' => $actions]
         ];

@@ -2,12 +2,16 @@
 
 namespace App\Livewire\Admin\StockTaking;
 
+use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\Admin;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockTakingService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -132,12 +136,22 @@ class AddStockTaking extends Component
         $data = $this->data;
         $data['stocks'] = collect($this->stocks ?? [])->flatten(1)->values()->toArray();
 
-        $st = $this->stockTakingService->save(null,$data);
+        try{
+            DB::beginTransaction();
+            $st = $this->stockTakingService->save(null,$data);
 
-        Admin::whereType('super_admin')->each(function($admin) use ($st) {
-            $admin->notifyNewStockTacking($st);
-        });
+            Admin::whereType('super_admin')->each(function($admin) use ($st) {
+                $admin->notifyNewStockTacking($st);
+            });
 
+            AuditLog::log(AuditLogActionEnum::CREATE_STOCK_TAKING, ['id' => $st->id]);
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving stock take: '.$e->getMessage());
+            return;
+        }
 
         $this->popup('success', 'Stock Take saved successfully');
 
@@ -145,6 +159,8 @@ class AddStockTaking extends Component
 
         return $this->redirectWithTimeout(route('admin.stocks.adjustments.details', $st->id), 2000);
     }
+
+    #[On('re-render')]
     public function render()
     {
         $branches = $this->branchService->activeList();

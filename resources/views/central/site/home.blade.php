@@ -1,5 +1,6 @@
 @extends('layouts.central.site.layout')
 
+@section('title',__('website.home.title'))
 
 @section('content')
     <!-- BEGIN #home -->
@@ -14,14 +15,14 @@
                     <div class="col-lg-6">
                         <!-- BEGIN hero-title-desc -->
                         <h1 class="display-6 fw-600 mb-2 mt-4">
-                            Powerful ERP System for Smarter Business Management
+                            {{ __('website.home.section1_title') }}
                         </h1>
                         <div class="fs-18px text-body text-opacity-75 mb-4">
-                            Manage your entire business from one intelligent dashboard. <span
+                            {{ __('website.home.section1_description1') }} <span
                                 class="d-xl-inline d-none"><br></span>
-                            Streamline sales, inventory, accounting, HR, and operations using a modern ERP <span
+                            {{ __('website.home.section1_description2') }} <span
                                 class="d-xl-inline d-none"><br></span>
-                            built for speed, automation, and real-time insights.
+                            {{ __('website.home.section1_description3') }}
                         </div>
                         <!-- END hero-title-desc -->
 
@@ -36,8 +37,9 @@
 							</div> --}}
 
                         <div class="mb-2">
-                            <a href="index.html" class="btn btn-lg btn-outline-white px-3">Explore ERP Features <i
-                                    class="fa fa-arrow-right ms-2 opacity-5"></i></a>
+                            <a href="https://test.mohaaseb.com" class="btn btn-lg btn-outline-white px-3" aria-label="{{ __('website.home.explore_section') }}">{{ __('website.home.explore_section') }}
+                                <i class="fa fa-arrow-right ms-2 opacity-5"></i>
+                            </a>
                         </div>
 
                         <hr class="my-4" />
@@ -52,7 +54,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-500 mb-0 h3">12k+</div>
-                                        <div class="fw-500 text-body text-opacity-75">Active Businesses</div>
+                                        <div class="fw-500 text-body text-opacity-75">{{ __('website.home.active_business') }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +67,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-500 mb-0 h3">99.9%</div>
-                                        <div class="fw-500 text-body text-opacity-75">System Uptime</div>
+                                        <div class="fw-500 text-body text-opacity-75">{{ __('website.home.system_uptime') }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -81,193 +83,196 @@
 
             <div
                 class="position-absolute top-0 bottom-0 end-0 w-50 p-5 z-2 overflow-hidden d-lg-flex align-items-center d-none">
-                <img class="w-100 d-block shadow-lg" alt="HUD"
-                    src="{{ asset('hud/assets/img/landing/mockup-1.jpg') }}">
+                    <img
+                    src="{{ asset('hud/assets/img/landing/mockup-1.webp') }}"
+                    alt="ERP dashboard showing sales, inventory, and accounting modules"
+                    loading="lazy"
+                    width="800"
+                    height="600"
+                    fetchpriority="high"
+                    decoding="async"
+                    class="w-100 d-block shadow-lg">
             </div>
         </div>
         <!-- END container -->
-        <div class="position-absolute bg-size-cover bg-position-center d-none2 bg-no-repeat top-0 start-0 w-100 h-100"
-            style="background-image: url(assets/img/landing/cover.jpg);"></div>
-        <div class="position-absolute top-0 start-0 d-none2 w-100 h-100 opacity-95"
-            style="background: var(--bs-body-bg-gradient);"></div>
-        <div class="position-absolute top-0 start-0 d-none2 w-100 h-100 opacity-95"
-            style="background-image: url(assets/css/images/pattern-dark.png); background-size: var(--bs-body-bg-image-size);">
+        <div class="position-absolute bg-size-cover bg-position-center bg-no-repeat top-0 start-0 w-100 h-100"
+            style="background-image: url({{ asset('hud/assets/img/landing/cover.webp') }});"
+            role="presentation"
+            aria-hidden="true">
+        </div>
+
+        <div class="position-absolute top-0 start-0 w-100 h-100 opacity-95"
+            style="background: var(--bs-body-bg-gradient);"
+            role="presentation"
+            aria-hidden="true">
+        </div>
+
+        <div class="position-absolute top-0 start-0 w-100 h-100 opacity-95"
+            style="background-image: url({{ asset('hud/assets/css/images/pattern-dark.png') }}); background-size: var(--bs-body-bg-image-size);"
+            role="presentation"
+            aria-hidden="true">
         </div>
     </div>
     <!-- END #home -->
 
-    <div id="about" class="py-5 bg-component">
+    <section id="about" class="py-5 bg-component" aria-labelledby="about-heading">
         <div class="container-xxl p-3 p-lg-5 text-center">
-            <h1 class="mb-3">About Our ERP System</h1>
+            <h2 class="mb-3 h1">{{ __('website.home.about_title') }}</h2>
             <p class="fs-16px text-body text-opacity-50 mb-5">
-                A powerful, all-in-one Enterprise Resource Planning system designed to streamline operations,
-                improve efficiency, and give businesses full control over sales, inventory, accounting, HR,
-                and day-to-day activities.
+                {{ __('website.home.about_description') }}
             </p>
 
-            <div class="row text-start g-3 gx-lg-5 gy-lg-4">
+            <div class="row text-start g-3 gx-lg-5 gy-lg-4" itemscope itemtype="https://schema.org/ItemList">
 
                 <!-- Feature 1 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:monitor-smartphone-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Complete Business Control</h4>
-                        <p class="mb-0">Manage sales, purchases, accounting, inventory, HR, and more—all from a unified
-                            dashboard.</p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature1_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature1_description') }}</p>
                     </div>
                 </div>
 
                 <!-- Feature 2 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:settings-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Customizable Modules</h4>
-                        <p class="mb-0">Tailor features, workflows, permissions, and reports to suit your exact business
-                            operations.</p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature2_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature2_description') }}</p>
                     </div>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:bolt-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Real-Time Performance</h4>
-                        <p class="mb-0">Monitor sales, stock, profits, and financial reports instantly with real-time
-                            analytics.</p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature3_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature3_description') }}</p>
                     </div>
                 </div>
 
                 <!-- Feature 4 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:lock-keyhole-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Advanced Security</h4>
-                        <p class="mb-0">Role-based permissions, encrypted data, and secure cloud infrastructure protect
-                            your business 24/7.</p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature4_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature4_description') }}</p>
                     </div>
                 </div>
 
                 <!-- Feature 5 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:dialog-2-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Multi-Branch Support</h4>
-                        <p class="mb-0">Manage multiple branches, warehouses, users, and departments with centralized
-                            control.</p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature5_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature5_description') }}</p>
                     </div>
                 </div>
 
                 <!-- Feature 6 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:help-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>24/7 Technical Support</h4>
-                        <p class="mb-0">Get continuous technical assistance and guidance from our expert support team.</p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature6_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature6_description') }}</p>
                     </div>
                 </div>
 
                 <!-- Feature 7 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:tuning-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>Scalable Infrastructure</h4>
-                        <p class="mb-0">Grow your business with a flexible system that scales smoothly as your needs
-                            expand.</p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature7_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature7_description') }}</p>
                     </div>
                 </div>
 
                 <!-- Feature 8 -->
-                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
+                <div class="col-xl-3 col-lg-4 col-sm-6 d-flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <div
                         class="w-50px h-50px bg-theme bg-opacity-15 text-theme fs-32px d-flex align-items-center justify-content-center">
                         <iconify-icon icon="solar:widget-5-line-duotone"></iconify-icon>
                     </div>
                     <div class="flex-1 ps-3">
-                        <h4>User-Friendly Interface</h4>
-                        <p class="mb-0">Designed for simplicity, speed, and productivity—no technical experience required.
-                        </p>
+                        <h3 class="h4" itemprop="name">{{ __('website.home.feature8_title') }}</h3>
+                        <p class="mb-0" itemprop="description">{{ __('website.home.feature8_description') }}</p>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- BEGIN divider -->
     <div class="container-xxl px-3 px-lg-5">
-        <hr class="opacity-4 m-0" />
+        <hr class="opacity-1 m-0" aria-hidden="true" />
     </div>
     <!-- END divider -->
 
     <!-- BEGIN #features -->
-    <div id="features" class="py-5 position-relative">
+    <section id="features" class="py-5 position-relative" aria-labelledby="features-heading">
         <div class="container-xxl p-3 p-lg-5 z-2 position-relative">
             <div class="text-center mb-5">
-                <h1 class="mb-3">Our Unique Features</h1>
+                <h2 class="mb-3 h1">{{ __('website.home.our_unique_erp_features') }}</h2>
                 <p class="fs-16px text-body text-opacity-50 mb-5">
-                    Explore HUD Admin Template's standout features. <br>
-                    With advanced customization and seamless integration, create powerful and stunning <br>
-                    admin interfaces, enhancing productivity and user satisfaction.
+                    {{ __('website.home.explore_erp_features_description') }}
                 </p>
             </div>
-            @php
-                $sliders = App\Models\Slider::where('active', true)->orderBy('number', 'asc')->get();
-            @endphp
-            <div class="row g-3 g-lg-5">
+            <div class="row g-3 g-lg-5" itemscope itemtype="https://schema.org/ImageGallery">
                 @foreach ($sliders as $item)
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="{{ $item->image_path }}" data-lity class="shadow d-block"><img
-                                src="{{ $item->image_path }}" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">{{ $item->title }}</div>
+                    <div class="col-xl-3 col-lg-4 col-sm-6" itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
+                        <a href="{{ $item->image_path }}" data-lity class="shadow d-block" itemprop="contentUrl" aria-label="{{ $item->title }} ERP Feature">
+                            <img
+                                src="{{ $item->image_path }}"
+                                alt="{{ $item->title }} ERP feature"
+                                itemprop="thumbnail"
+                                loading="lazy"
+                                width="400"
+                                height="170"
+                                class="w-100 h-170px">
+                        </a>
+                        <div class="text-center my-3 text-body fw-bold" itemprop="caption">{{ $item->title }}</div>
                     </div>
                 @endforeach
             </div>
         </div>
-    </div>
+    </section>
     <!-- END #features -->
 
     <!-- BEGIN divider -->
     <div class="container-xxl px-3 px-lg-5">
-        <hr class="opacity-4 m-0" />
-    </div>
-    <!-- END divider -->
-
-    @livewire('central.site.plan-section')
-
-    <!-- BEGIN divider -->
-    <div class="container-xxl px-3 px-lg-5">
-        <hr class="opacity-4 m-0" />
+        <hr class="opacity-4 m-0" aria-hidden="true" />
     </div>
     <!-- END divider -->
 
     <!-- BEGIN #testimonials -->
-    <div id="testimonials" class="py-5 text-body text-opacity-75">
+    <section id="testimonials" class="py-5 text-body text-opacity-75" aria-labelledby="testimonials-heading">
         <div class="container-xxl p-3 p-lg-5">
             <div class="text-center mb-5">
-                <h1 class="mb-3 text-center">What Our Clients Say</h1>
+                <h2 class="mb-3 text-center h1">{{ __('website.home.our_clients_says') }}</h2>
                 <p class="fs-16px text-body text-opacity-50 text-center mb-0">
-                    Real testimonials from clients using our ERP System.
+                    {{ __('website.home.our_clients_says_subtitle') }}
                 </p>
             </div>
 
@@ -287,35 +292,43 @@
                 ];
             @endphp
             <div class="row g-3 g-lg-4 mb-4">
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">Daniel Carter</h5>
-                                <small class="text-muted">Senior Operations Director</small>
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="User Avatar" role="presentation">
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h3 class="h5 mb-0" itemprop="name">Daniel Carter</h3>
+                                <small class="text-muted" itemprop="jobTitle">Senior Operations Director</small>
                             </div>
                         </div>
 
                         <div class="d-flex">
-                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
+                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
-                                    <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
+                                    @for($i=0; $i<5; $i++)
+                                        <iconify-icon icon="ic:baseline-star" class="fs-18px" aria-hidden="true"></iconify-icon>
+                                    @endfor
                                 </div>
-                                The ERP system streamlined our workflow.
-                                Inventory, accounting, and POS finally work in harmony.
+                                <div itemprop="reviewBody">
+                                    The ERP system streamlined our workflow.
+                                    Inventory, accounting, and POS finally work in harmony.
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
-                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
+                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             </div>
                         </div>
 
-                        <div class="card-arrow">
+                        <div class="card-arrow" aria-hidden="true">
                             <div class="card-arrow-top-left"></div>
                             <div class="card-arrow-top-right"></div>
                             <div class="card-arrow-bottom-left"></div>
@@ -323,37 +336,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">محمد ياسر</h5>
-                                <small class="text-muted">مدير التطوير الرقمي</small>
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">محمد ياسر</h5>
+                                <small class="text-muted" itemprop="jobTitle">مدير التطوير الرقمي</small>
                             </div>
                         </div>
 
                         <div class="d-flex">
-                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
+                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                <span dir="rtl">
+                                <div itemprop="reviewBody" dir="rtl">
                                     نظام الـ ERP ساعدنا في تنظيم الحسابات والمخزون بشكل احترافي
                                     وأصبح اتخاذ القرار أسرع وأكثر دقة.
-                                </span>
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
-                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
+                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             </div>
                         </div>
 
-                        <div class="card-arrow">
+                        <div class="card-arrow" aria-hidden="true">
                             <div class="card-arrow-top-left"></div>
                             <div class="card-arrow-top-right"></div>
                             <div class="card-arrow-bottom-left"></div>
@@ -361,35 +382,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">Sophia Williams</h5>
-                                <small class="text-muted">Finance & Compliance Lead</small>
+                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">Sophia Williams</h5>
+                                <small class="text-muted" itemprop="jobTitle">Finance &amp; Compliance Lead</small>
                             </div>
                         </div>
 
                         <div class="d-flex">
-                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
+                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                A reliable system with perfect financial tracking.
-                                VAT, reports, and analytics are incredibly accurate.
+                                <div itemprop="reviewBody">
+                                    A reliable system with perfect financial tracking.
+                                    VAT, reports, and analytics are incredibly accurate.
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
-                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
+                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             </div>
                         </div>
 
-                        <div class="card-arrow">
+                        <div class="card-arrow" aria-hidden="true">
                             <div class="card-arrow-top-left"></div>
                             <div class="card-arrow-top-right"></div>
                             <div class="card-arrow-bottom-left"></div>
@@ -398,37 +429,45 @@
                     </div>
                 </div>
                 {{-- <div class="col-xl-2 d-none d-xl-block"></div> --}}
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">ليلى عمر</h5>
-                                <small class="text-muted">قائدة قسم الجودة</small>
+                            <img src="{{ $images['famale'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">ليلى عمر</h5>
+                                <small class="text-muted" itemprop="jobTitle">قائدة قسم الجودة</small>
                             </div>
                         </div>
 
                         <div class="d-flex">
-                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
+                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                <span dir="rtl">
+                                <div itemprop="reviewBody" dir="rtl">
                                     النظام سهّل علينا متابعة الفروع
                                     وربط جميع العمليات بشكل سلس وبدون تعقيد.
-                                </span>
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
-                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
+                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             </div>
                         </div>
 
-                        <div class="card-arrow">
+                        <div class="card-arrow" aria-hidden="true">
                             <div class="card-arrow-top-left"></div>
                             <div class="card-arrow-top-right"></div>
                             <div class="card-arrow-bottom-left"></div>
@@ -436,37 +475,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">خالد سمير</h5>
-                                <small class="text-muted">محلل نظم الأعمال</small>
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">خالد سمير</h5>
+                                <small class="text-muted" itemprop="jobTitle">محلل نظم الأعمال</small>
                             </div>
                         </div>
 
                         <div class="d-flex">
-                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
+                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                <span dir="rtl">
+                                <div itemprop="reviewBody" dir="rtl">
                                     نظام ممتاز وسلس،
                                     ويوفر تقارير قوية تساعد الإدارة في رؤية واضحة لكل تفاصيل العمل.
-                                </span>
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
-                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
+                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             </div>
                         </div>
 
-                        <div class="card-arrow">
+                        <div class="card-arrow" aria-hidden="true">
                             <div class="card-arrow-top-left"></div>
                             <div class="card-arrow-top-right"></div>
                             <div class="card-arrow-bottom-left"></div>
@@ -474,35 +521,45 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6" itemscope itemtype="https://schema.org/Review">
+                    <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <meta itemprop="name" content="Mohaaseb ERP">
+                        <meta itemprop="applicationCategory" content="BusinessApplication">
+                    </span>
                     <div class="card p-4 h-100">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px">
-                            <div>
-                                <h5 class="mb-0">Mark Henderson</h5>
-                                <small class="text-muted">Supply Chain Strategist</small>
+                            <img src="{{ $images['male'] }}" class="rounded-circle me-3 w-50px" alt="" role="presentation">
+                            <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h5 class="mb-0" itemprop="name">Mark Henderson</h5>
+                                <small class="text-muted" itemprop="jobTitle">Supply Chain Strategist</small>
                             </div>
                         </div>
 
                         <div class="d-flex">
-                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
+                            <i class="fa fa-quote-left fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             <div class="p-3">
-                                <div class="text-warning d-flex mb-2">
+                                <div class="text-warning d-flex mb-2" aria-label="5 star rating">
+                                    <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                                        <meta itemprop="ratingValue" content="5">
+                                        <meta itemprop="bestRating" content="5">
+                                    </span>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                     <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
                                 </div>
-                                Stock control accuracy improved by 300%.
-                                Perfect solution for multi-branch businesses.
+                                <div itemprop="reviewBody">
+                                    Stock control accuracy improved by 300%.
+                                    Perfect solution for multi-branch businesses.
+                                </div>
                             </div>
                             <div class="d-flex align-items-end">
-                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
+                                <i class="fa fa-quote-right fa-2x text-body text-opacity-15" aria-hidden="true"></i>
                             </div>
                         </div>
 
-                        <div class="card-arrow">
+                        <div class="card-arrow" aria-hidden="true">
                             <div class="card-arrow-top-left"></div>
                             <div class="card-arrow-top-right"></div>
                             <div class="card-arrow-bottom-left"></div>
@@ -512,205 +569,173 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
     <!-- END #testimonials -->
 
     <!-- BEGIN divider -->
     <div class="container-xxl px-3 px-lg-5">
-        <hr class="opacity-4 m-0" />
+        <hr class="opacity-4 m-0" aria-hidden="true" />
     </div>
     <!-- END divider -->
 
     <!-- BEGIN #blog -->
-    {{-- <div id="blog" class="py-5 bg-component">
-			<div class="container-xxl p-3 p-lg-5">
-				<div class="text-center mb-5">
-					<h1 class="mb-3 text-center">Our Latest Insights</h1>
-					<p class="fs-16px text-body text-opacity-50 text-center mb-0">
-						Dive into our blog for the latest trends, tips, and updates <br>
-						on web development, design, and industry best practices. Stay informed and inspired <br>
-						with expert insights and valuable resources.
-					</p>
-				</div>
-				<div class="row g-3 g-xl-4 mb-5">
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-1.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 px-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Web Design</span>
-								</div>
-								<h5>Mastering Responsive Design: A Guide for Beginners</h5>
-								<p>Explore the fundamentals of responsive web design and learn essential tips to create websites that look great on any device.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">July 15, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-2.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 p-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">UXUI Design</span>
-								</div>
-								<h5>The Future of UI/UX Trends in 2025</h5>
-								<p>Discover the latest trends shaping user interface and experience design in the digital landscape this year.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">July 11, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-3.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 p-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Search Engine</span>
-								</div>
-								<h5>Effective SEO Strategies for 2025</h5>
-								<p>Dive into actionable SEO strategies and tips to boost your website’s visibility and drive organic traffic.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">June 29, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-3 col-lg-4 col-sm-6">
-						<div class="card d-flex flex-column h-100 mb-5 mb-lg-0">
-							<div class="card-body">
-								<img src="assets/img/landing/blog-4.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-							</div>
-							<div class="flex-1 p-3 pb-0">
-								<div class="mb-2">
-									<span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Cyber Security</span>
-								</div>
-								<h5>Security Essentials: Protecting Your Website from Cyber Threats</h5>
-								<p>Essential security measures and best practices to safeguard your website and user data from cyber threats.</p>
-							</div>
-							<div class="p-3 pt-0 text-body text-opacity-50">June 27, 2025</div>
-							<div class="card-arrow">
-								<div class="card-arrow-top-left"></div>
-								<div class="card-arrow-top-right"></div>
-								<div class="card-arrow-bottom-left"></div>
-								<div class="card-arrow-bottom-right"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="text-center">
-					<a href="#" class="text-decoration-none text-body text-opacity-50 h6">See More Company Stories <i class="fa fa-arrow-right ms-3"></i></a>
-				</div>
-			</div>
-		</div> --}}
+    <section id="blog" class="py-5 bg-component" aria-labelledby="blog-heading">
+        <div class="container-xxl p-3 p-lg-5">
+            <div class="text-center mb-5">
+                <h2 id="blog-heading" class="mb-3 h1 text-center">{{ __('website.home.our_insights_title') }}</h2>
+                <p class="fs-16px text-body text-opacity-50 text-center mb-0">
+                    {!! __('website.home.our_insights_subtitle') !!}
+                </p>
+            </div>
+
+            <div class="row g-3 g-xl-4 mb-5">
+                @foreach ($blogs as $blog)
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <article class="card d-flex flex-column h-100 mb-5 mb-lg-0" itemscope itemtype="https://schema.org/BlogPosting">
+                            <div style="flex:none!important" class="card-body p-0 overflow-hidden">
+                                <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => app()->getLocale()]) }}" aria-label="Read more about {{ $blog->title }}">
+                                    <img
+                                        loading="lazy"
+                                        src="{{ $blog->thumb_image_path }}"
+                                        alt="{{ $blog->title }}"
+                                        itemprop="image"
+                                        width="400"
+                                        height="200"
+                                        class="object-fit-cover h-200px w-100 d-block">
+                                </a>
+                            </div>
+
+                            <div class="flex-1 px-3 pt-3 pb-0">
+                                <h3 class="h5 mb-2" itemprop="headline">
+                                    <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => app()->getLocale()]) }}" class="text-decoration-none text-body">
+                                        {{ $blog->title }}
+                                    </a>
+                                </h3>
+                                <p itemprop="description" class="mb-0 text-opacity-75">
+                                    {{ \Illuminate\Support\Str::limit($blog->excerpt ?: strip_tags($blog->content), 120) }}
+                                </p>
+                            </div>
+
+                            <div class="p-3 pt-2 d-flex justify-content-between align-items-center">
+                                <time itemprop="datePublished"
+                                    datetime="{{ optional($blog->published_at ?: $blog->created_at)->toIso8601String() }}"
+                                    class="small text-body text-opacity-50">
+                                    {{ optional($blog->published_at ?: $blog->created_at)->translatedFormat('M d, Y') }}
+                                </time>
+
+                                <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" class="d-none">
+                                    <meta itemprop="name" content="Mohaaseb">
+                                </div>
+                            </div>
+
+                            <div class="card-arrow" aria-hidden="true">
+                                <div class="card-arrow-top-left"></div>
+                                <div class="card-arrow-top-right"></div>
+                                <div class="card-arrow-bottom-left"></div>
+                                <div class="card-arrow-bottom-right"></div>
+                            </div>
+                        </article>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="text-center">
+                <a href="{{ route('blogs.index', ['lang' => app()->getLocale()]) }}" class="btn btn-link text-decoration-none text-body text-opacity-50 h6">
+                    {{ __('website.home.see_more_stories') }} <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </section>
     <!-- END #blog -->
 
     <!-- BEGIN divider -->
     <div class="container-xxl px-3 px-lg-5">
-        <hr class="opacity-4 m-0" />
+        <hr class="opacity-4 m-0" aria-hidden="true" />
     </div>
     <!-- END divider -->
 
     <!-- BEGIN #contact -->
-    <div id="contact" class="py-5 text-body text-opacity-75">
+    <section id="contact" class="py-5 text-body text-opacity-75" aria-labelledby="contact-heading">
         <div class="container-xl p-3 p-lg-5">
             <div class="text-center mb-5">
-                <h1 class="mb-3 text-center">Get in Touch</h1>
+                <h2 id="contact-heading" class="mb-3 text-center h1">{{ __('website.home.get_in_touch') }}</h2>
                 <p class="fs-16px text-body text-opacity-50 text-center mb-0">
-                    Contact us today to explore how our team can assist you. <br>
-                    Whether you have inquiries, need support, or want to discuss a partnership, <br>
-                    we're here to help. Reach out to us and let's start a conversation!
+                    {!! __('website.home.get_in_touch_p') !!}
                 </p>
             </div>
-            <div class="row gx-3 gx-lg-5">
+
+            <div class="row gx-3 gx-lg-5" itemscope itemtype="https://schema.org/Organization">
+                <meta itemprop="name" content="Mohaaseb ERP">
+
                 <div class="col-lg-6">
-                    <h4>Contact Us to Discuss Your Project</h4>
-                    <p>
-                        Do you have a project in mind? We’re eager to discuss it with you. Whether you’re looking for
-                        advice, have questions, or want to share your ideas, feel free to reach out.
-                    </p>
-                    <p>
+                    <h3 class="h4">{{ __('website.home.contacts_title') }}</h3>
+                    <div itemprop="description">
+                        <p>{!! __('website.home.contacts_description') !!}</p>
+                    </div>
 
-                        Saturday - Thursday: 9:00 AM - 6:00 PM<br>
-                        Friday : Closed<br> <br>
-
-                        Phone: <a href="tel:+201558099183" class="text-theme">+20 155 8099 183</a><br>
-                        Email:
-                        <a href="mailto:support@mohaaseb.com" class="text-theme">support@mohaaseb.com</a>
-                    </p>
+                    <div class="mt-4" itemprop="contactPoint" itemscope itemtype="https://schema.org/ContactPoint">
+                        <p class="mb-1">
+                            <strong>{{ __('website.home.working_hours') }}:</strong><br>
+                            {!! __('website.home.contacts_hours') !!}
+                        </p>
+                        <meta itemprop="contactType" content="customer service">
+                    </div>
                 </div>
+
                 <div class="col-lg-6">
                     <form action="{{ route('contact-us') }}" method="POST">
                         @csrf
                         <div class="row gy-3 mb-3">
                             <div class="col-6">
-                                <label class="form-label">First Name <span class="text-theme">*</span></label>
-                                <input type="text" class="form-control form-control-lg fs-15px" name="fname"
-                                    required>
-                                @if ($errors->has('fname'))
-                                    <div class="text-danger fs-13px mt-1">{{ $errors->first('fname') }}</div>
-                                @endif
+                                <label for="fname" class="form-label">{{ __('website.home.contact_us_first_name') }} <span class="text-theme">*</span></label>
+                                <input type="text" id="fname" class="form-control form-control-lg fs-15px" name="fname" required>
+                                @error('fname')
+                                    <div class="text-danger fs-13px mt-1" role="alert">{{ $message }}</div>
+                                @enderror
                             </div>
+
                             <div class="col-6">
-                                <label class="form-label">Last Name <span class="text-theme">*</span></label>
-                                <input type="text" class="form-control form-control-lg fs-15px" name="lname"
-                                    required>
-                                @if ($errors->has('lname'))
-                                    <div class="text-danger fs-13px mt-1">{{ $errors->first('lname') }}</div>
-                                @endif
+                                <label for="lname" class="form-label">{{ __('website.home.contact_us_last_name') }} <span class="text-theme">*</span></label>
+                                <input type="text" id="lname" class="form-control form-control-lg fs-15px" name="lname" required>
+                                @error('lname')
+                                    <div class="text-danger fs-13px mt-1" role="alert">{{ $message }}</div>
+                                @enderror
                             </div>
+
                             <div class="col-6">
-                                <label class="form-label">Email <span class="text-theme">*</span></label>
-                                <input type="text" class="form-control form-control-lg fs-15px" name="email"
-                                    required>
-                                @if ($errors->has('email'))
-                                    <div class="text-danger fs-13px mt-1">{{ $errors->first('email') }}</div>
-                                @endif
+                                <label for="email" class="form-label">{{ __('website.home.contact_us_email') }} <span class="text-theme">*</span></label>
+                                <input type="email" id="email" class="form-control form-control-lg fs-15px" name="email" required>
+                                @error('email')
+                                    <div class="text-danger fs-13px mt-1" role="alert">{{ $message }}</div>
+                                @enderror
                             </div>
+
                             <div class="col-6">
-                                <label class="form-label">Phone <span class="text-theme">*</span></label>
-                                <input type="text" class="form-control form-control-lg fs-15px" name="phone"
-                                    required>
-                                @if ($errors->has('phone'))
-                                    <div class="text-danger fs-13px mt-1">{{ $errors->first('phone') }}</div>
-                                @endif
+                                <label for="phone" class="form-label">{{ __('website.home.contact_us_phone') }} <span class="text-theme">*</span></label>
+                                <input type="tel" id="phone" class="form-control form-control-lg fs-15px" name="phone" required>
+                                @error('phone')
+                                    <div class="text-danger fs-13px mt-1" role="alert">{{ $message }}</div>
+                                @enderror
                             </div>
+
                             <div class="col-12">
-                                <label class="form-label">Message <span class="text-theme">*</span></label>
-                                <textarea class="form-control form-control-lg fs-15px" name="message" rows="8" required></textarea>
-                                @if ($errors->has('message'))
-                                    <div class="text-danger fs-13px mt-1">{{ $errors->first('message') }}</div>
-                                @endif
+                                <label for="message" class="form-label">{{ __('website.home.contact_us_message') }} <span class="text-theme">*</span></label>
+                                <textarea id="message" class="form-control form-control-lg fs-15px" name="message" rows="8" required></textarea>
+                                @error('message')
+                                    <div class="text-danger fs-13px mt-1" role="alert">{{ $message }}</div>
+                                @enderror
                             </div>
+
                             <div class="col-12">
-                                <button type="submit" class="btn btn-outline-theme btn-lg btn-block px-4 fs-15px">Send
-                                    Message</button>
+                                <button type="submit" class="btn btn-outline-theme btn-lg btn-block px-4 fs-15px">
+                                    {{ __('website.home.contact_us_send_message') }}
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
     <!-- END #contact -->
 @endsection

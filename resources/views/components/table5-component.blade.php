@@ -94,7 +94,7 @@
                 <tr class="fw-semibold table-light">
                     @if(isset($totals['total']))
                         <td colspan="{{ $totals['total']['colspan'] ?? count($columns) }}" class="{{ $totals['total']['class'] ?? '' }}">
-                            {{ $totals['total']['label'] ?? 'Totals' }}
+                            {{ $totals['total']['label'] ?? 'Total' }}
                         </td>
                     @endif
 

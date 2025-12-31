@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Admin\PaymentMethods;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\PaymentMethodService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -52,6 +55,8 @@ class PaymentMethodsList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_PAYMENT_METHOD_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this payment method', 'Yes, delete it!');
     }
 
@@ -61,7 +66,11 @@ class PaymentMethodsList extends Component
             return;
         }
 
-        $this->paymentMethodService->delete($this->current->id);
+        $id = $this->current->id;
+
+        $this->paymentMethodService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_PAYMENT_METHOD, ['id' => $id]);
 
         $this->popup('success', 'Payment method deleted successfully');
 
@@ -73,7 +82,23 @@ class PaymentMethodsList extends Component
     function save() {
         if (!$this->validator()) return;
 
-        $this->paymentMethodService->save($this->current?->id, $this->data);
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_PAYMENT_METHOD;
+        }else{
+            $action = AuditLogActionEnum::CREATE_PAYMENT_METHOD;
+        }
+
+        try{
+            DB::beginTransaction();
+            $paymentMethod = $this->paymentMethodService->save($this->current?->id, $this->data);
+            AuditLog::log($action, ['id' => $paymentMethod->id]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving payment method: '.$e->getMessage());
+            return;
+        }
+
 
         $this->popup('success', 'Payment method saved successfully');
 
@@ -100,6 +125,8 @@ class PaymentMethodsList extends Component
             $headers = ['#', 'Name', 'Branch', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'payment-methods');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_PAYMENT_METHODS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Stocks;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\StockTransferService;
 use App\Traits\LivewireOperations;
@@ -36,7 +38,7 @@ class StockTransferList extends Component
                     'to_branch' => $stockTransfer->toBranch ? $stockTransfer->toBranch->name : 'N/A',
                     'items_count' => $stockTransfer->items ? $stockTransfer->items->count() : 0,
                     'total_quantity' => $stockTransfer->items ? $stockTransfer->items->sum('qty') : 0,
-                    'transfer_date' => $stockTransfer->transfer_date,
+                    'transfer_date' => dateTimeFormat($stockTransfer->transfer_date),
                     'status' => $stockTransfer->status->label(),
                     'created_at' => $stockTransfer->created_at,
                 ];
@@ -45,6 +47,8 @@ class StockTransferList extends Component
             $headers = ['#', 'Ref No', 'From', 'To', 'Items Count', 'Total Quantity', 'Transfer Date', 'Status', 'Created At'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'stock_transfers');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_STOCK_TRANSFERS, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
 
@@ -59,11 +63,11 @@ class StockTransferList extends Component
                 'to_branch' => $st->toBranch ? $st->toBranch->name : 'N/A',
                 'items_count' => $st->items ? $st->items->count() : 0,
                 'total_quantity' => $st->items ? $st->items->sum('qty') : 0,
-                'transfer_date' => $st->transfer_date,
+                'transfer_date' => dateTimeFormat($st->transfer_date),
                 'ref_no' => $st->ref_no,
                 'status' => $st->status->label(),
                 'status_class' => $st->status->colorClass(),
-                'created_at' => $st->created_at,
+                'created_at' => dateTimeFormat($st->created_at),
             ];
         });
 
@@ -93,11 +97,11 @@ class StockTransferList extends Component
             'to_branch' => ['type'=>'text'],
             'items_count' => ['type'=>'number'],
             'total_quantity' => ['type'=>'number'],
-            'transfer_date' => ['type'=>'date'],
+            'transfer_date' => ['type'=>'text'],
             'status' => [
                 'type'=>'badge' , 'class' => fn($row) => $row['status_class']
             ],
-            'created_at' => ['type'=>'datetime'],
+            'created_at' => ['type'=>'text'],
             'actions' => [ 'type' => 'actions' , 'actions' => $actions],
         ];
 

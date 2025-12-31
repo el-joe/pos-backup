@@ -64,15 +64,15 @@ class Unit extends Model
             $q->where(function ($q) {
                 $q->where('parent_id',0)->orWhereNull('parent_id');
             });
-        })->when(isset($filters['parent_id']) && $filters['parent_id'] != 'all', function($q) use ($filters) {
+        })->when(($filters['parent_id']??'all') != 'all', function($q) use ($filters) {
             if($filters['parent_id'] == 0){
                 $q->where('parent_id',0);
             }else{
                 $q->where('parent_id',$filters['parent_id']);
             }
-        })->when($filters['active'] ?? null, function($q) use ($filters) {
+        })->when(isset($filters['active']), function($q) use ($filters) {
             if($filters['active'] != 'all'){
-                $q->where('active',$filters['active']);
+                $q->where('active', $filters['active']);
             }
         })
         ->when($filters['search'] ?? null, function($q) use ($filters) {

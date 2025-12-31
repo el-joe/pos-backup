@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\CashRegister;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +105,8 @@ class CashRegisterPage extends Component
             $admin->notifyCashRegisterOpened($cashRegister);
         });
 
+        AuditLog::log(AuditLogActionEnum::CASH_REGISTER_OPENED, ['id' => $cashRegister->id]);
+
         $this->opening_balance_input = null;
         $this->loadData();
         $this->alert('success', 'Cash register opened');
@@ -123,12 +127,20 @@ class CashRegisterPage extends Component
             return;
         }
 
-        $reg->update([
-            'closing_balance' => $this->closing_balance_input,
-            'closed_at' => now(),
-            'status' => 'closed',
-            'notes' => $this->closing_notes,
-        ]);
+        try{
+            DB::beginTransaction();
+            $reg->update([
+                'closing_balance' => $this->closing_balance_input,
+                'closed_at' => now(),
+                'status' => 'closed',
+                'notes' => $this->closing_notes,
+            ]);
+            DB::commit();
+        }catch (\Exception $e){
+            DB::rollBack();
+            $this->alert('error', 'Error occurred while closing cash register: '.$e->getMessage());
+            return;
+        }
 
         $this->transactionService->createOpenBalanceTransaction([
             'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
@@ -140,6 +152,7 @@ class CashRegisterPage extends Component
             $admin->notifyCashRegisterClosed($reg->fresh());
         });
 
+        AuditLog::log(AuditLogActionEnum::CASH_REGISTER_CLOSED, ['id' => $reg->id]);
 
         $this->closing_balance_input = null;
         $this->closing_notes = null;

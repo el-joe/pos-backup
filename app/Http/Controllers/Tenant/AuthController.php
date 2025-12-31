@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\Admin;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -17,8 +18,18 @@ class AuthController extends Controller
             'password'=>'required'
         ]);
 
+        $user = Admin::where('email',$request->email)->first();
+
+        if(!$user){
+            return back()->with('error','Email not found')->withInput();
+        }
+
+        if(!$user->active){
+            return back()->with('error','Your account is deactivated! Please contact the system administrator.')->withInput();
+        }
+
         if(!auth(TENANT_ADMINS_GUARD)->attempt($request->only(['email','password']))){
-            return back()->with('error','Invalid Credentials!')->withInput();
+            return back()->with('error','incorrect password!')->withInput();
         }
 
         return redirect('admin');

@@ -27,10 +27,10 @@
                     <div class="col-sm-4">
                         {{-- Branches List --}}
                         <label class="form-label">{{ __('general.pages.products.branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.branch_id">
+                        <select class="form-select select2" name="filters.branch_id">
                             <option value="all">{{ __('general.pages.products.all') }}</option>
                             @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ $branch->id == ($filters['branch_id']??0) ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     <div class="col-sm-4">
                         {{-- Brands List --}}
                         <label class="form-label">{{ __('general.pages.products.brand') }}</label>
-                        <select class="form-select" wire:model.live="filters.brand_id">
+                        <select class="form-select select2" name="filters.brand_id">
                             <option value="all">{{ __('general.pages.products.all') }}</option>
                             @foreach($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                <option value="{{ $brand->id }}" {{ $brand->id == ($filters['brand_id']??0) ? 'selected' : '' }}>{{ $brand->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -49,10 +49,10 @@
                     <div class="col-sm-4">
                         {{-- Categories List --}}
                         <label class="form-label">{{ __('general.pages.products.category') }}</label>
-                        <select class="form-select" wire:model.live="filters.category_id">
+                        <select class="form-select select2" name="filters.category_id">
                             <option value="all">{{ __('general.pages.products.all') }}</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" {{ $category->id == ($filters['category_id']??0) ? 'selected' : '' }}>{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -60,10 +60,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.products.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.products.all') }}</option>
-                            <option value="1">{{ __('general.pages.products.active') }}</option>
-                            <option value="0">{{ __('general.pages.products.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'all') === 'all' ? 'selected' : '' }}>{{ __('general.pages.products.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'all') === '1' ? 'selected' : '' }}>{{ __('general.pages.products.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'all') === '0' ? 'selected' : '' }}>{{ __('general.pages.products.inactive') }}</option>
                         </select>
                     </div>
 
@@ -180,5 +180,6 @@
     </div>
 </div>
 
-@push('styles')
+@push('scripts')
+@include('layouts.hud.partials.select2-script')
 @endpush

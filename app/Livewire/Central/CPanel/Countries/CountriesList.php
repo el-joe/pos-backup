@@ -77,7 +77,7 @@ class CountriesList extends Component
 
     public function render()
     {
-        $countries = Country::query()->orderBy('name', 'asc')->paginate(10);
+        $countries = Country::query()->orderBy('name', 'asc')->paginate(10)->withPath(route('cpanel.countries.list'));
         return view('livewire.central.cpanel.countries.countries-list', get_defined_vars());
     }
 }

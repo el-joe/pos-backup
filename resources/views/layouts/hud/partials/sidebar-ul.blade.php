@@ -10,18 +10,34 @@
             if(isset($child['route_params'])){
                 $checkRouteParams = checkRouteParams($child['route_params']);
             }
-        }
+            if(isset($child['request_params'])){
+                $checkRouteParams = checkRequestParams($child['request_params']);
+            }
 
-        foreach ($flattenToLastChild as $child){
-            if(request()->routeIs($child)){
-                $isActive = true;
+            if(isset($checkRouteParams) && $checkRouteParams){
                 break;
             }
         }
 
-        if(isset($checkRouteParams)){
-            $isActive = $isActive && $checkRouteParams;
+        foreach ($flattenToLastChild as $child){
+            $isActive = request()->routeIs($child['route']);
+
+            if(isset($child['route_params'])){
+                $checkRouteParams = checkRouteParams($child['route_params']);
+            }elseif(isset($child['request_params'])){
+                $checkRouteParams = checkRequestParams($child['request_params']);
+            }else{
+                $checkRouteParams = true;
+            }
+
+            $isActive = $checkRouteParams && $isActive;
+
+            if($isActive)break;
         }
+
+        // if(isset($checkRouteParams)){
+        //     $isActive = $isActive && $checkRouteParams;
+        // }
     ?>
     @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false)) && $canAccess)
         <div class="menu-item has-sub {{ $isActive ? 'active' : '' }} mb-1">
@@ -41,11 +57,27 @@
     @endif
 @else
     @php
-        $checkRouteParams = ($data['route_params'] ??false) ? checkRouteParams($data['route_params']) : true;
+        $checkRouteParams = true;
+
+        if(isset($data['route_params'])){
+            $checkRouteParams = checkRouteParams($data['route_params']);
+        }
+        if(isset($data['request_params'])){
+            $checkRouteParams = checkRequestParams($data['request_params']);
+        }
+        if(request()->routeIs($data['route'])){
+            $checkRouteParams = $checkRouteParams && true;
+        }else{
+            $checkRouteParams = false;
+        }
+        $enabled = true;
+        if(isset($data['enabled'])){
+            $enabled = !!tenantSetting($data['enabled']);
+        }
     @endphp
-    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false)) && $canAccess)
+    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false)) && $canAccess && $enabled)
         <div class="menu-item {{ request()->routeIs($data['route']) && $checkRouteParams ? 'active' : '' }}  mb-1">
-            <a href="{{ $data['route'] == "#" ? "#" : route($data['route'],$data['route_params']??null) }}" class="menu-link">
+            <a href="{{ $data['route'] == "#" ? "#" : route($data['route'],$data['route_params']??$data['request_params']??null) }}" class="menu-link">
                 <span class="menu-icon"><i class="{{$data['icon']}}"></i></span>
                 <span class="menu-text">{{__($data['translated_title'])}}</span>
             </a>

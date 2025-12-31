@@ -41,7 +41,7 @@ class Plan extends Model
 
     function encodedSlug($period = null)
     {
-        $newSlug = encodedSlug([
+        $newSlug = encodedData([
             'slug' => $this->slug,
             'period' => $period ?? 'month',
         ]);
@@ -51,6 +51,6 @@ class Plan extends Model
 
     static function decodedSlug($encoded)
     {
-        return decodedSlug($encoded);
+        return decodedData($encoded);
     }
 }

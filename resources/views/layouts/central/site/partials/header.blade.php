@@ -1,59 +1,85 @@
-<!-- BEGIN #header -->
-<div id="header" class="app-header navbar navbar-expand-lg p-0">
-    <div class="container-xxl px-3 px-lg-5">
+<header id="header" class="app-header navbar navbar-expand-lg p-0" role="banner">
+    <nav class="container-xxl px-3 px-lg-5" aria-label="Main Navigation">
 
-        <!-- Mobile Toggle -->
         <button class="navbar-toggler border-0 p-0 me-3 fs-24px shadow-none" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="h-2px w-25px bg-gray-500 d-block mb-1"></span>
             <span class="h-2px w-25px bg-gray-500 d-block"></span>
         </button>
 
-        <!-- LOGO -->
-        <a class="navbar-brand d-flex align-items-center me-auto px-0" href="/">
-            <img src="{{ asset('mohaaseb_en_dark.png') }}"
-                 alt="Mohaaseb Logo"
-                 class="d-inline-block"
-                 height="50">
+        <a class="navbar-brand d-flex align-items-center px-0 ms-auto ms-lg-0 me-lg-auto" href="/">
+            <img src="{{ asset('mohaaseb_en_dark_2.webp') }}"
+                loading="lazy"
+                alt="Mohaaseb Cloud ERP Logo"
+                class="navbar-logo"
+                fetchpriority="high"
+                >
         </a>
 
-        <!-- Navbar Links -->
         <div class="collapse navbar-collapse" id="navbarContent">
-            <div class="navbar-nav ms-auto mb-2 mb-lg-0 text-uppercase small fw-semibold">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-uppercase small fw-semibold">
+                <li class="nav-item me-2">
+                    <a href="{{ request()->is('/') ? '#home' : '/#home' }}" class="nav-link">{{ __('website.nav.home') }}</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ request()->is('/') ? '#about' : '/#about' }}" class="nav-link">{{ __('website.nav.about') }}</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ request()->is('/') ? '#features' : '/#features' }}" class="nav-link">{{ __('website.nav.features') }}</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ request()->is('/') ? '#testimonials' : '/#testimonials' }}" class="nav-link">{{ __('website.nav.testimonials') }}</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ request()->is('/') ? '#contact' : '/#contact' }}" class="nav-link">{{ __('website.nav.contact') }}</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ route('pricing') }}" class="nav-link">{{ __('website.nav.pricing') }}</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a href="{{ route('blogs.index', ['lang' => app()->getLocale()]) }}" class="nav-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}">{{ __('website.nav.blogs') }}</a>
+                </li>
+                <li class="nav-item dropdown ms-lg-3">
+                    <button
+                        class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2 rounded-pill px-3"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        aria-label="Select Language">
 
-                <div class="nav-item me-2">
-                    <a href="{{ request()->is('/') ? '#home' : '/#home' }}" class="nav-link">Home</a>
-                </div>
+                        <i class="bi bi-globe fs-14px"></i>
 
-                <div class="nav-item me-2">
-                    <a href="{{ request()->is('/') ? '#about' : '/#about' }}" class="nav-link">About</a>
-                </div>
+                        <span class="fw-semibold text-uppercase">
+                            {{ app()->getLocale() }}
+                        </span>
 
-                <div class="nav-item me-2">
-                    <a href="{{ request()->is('/') ? '#features' : '/#features' }}" class="nav-link">Features</a>
-                </div>
+                        <i class="bi bi-chevron-down fs-12px opacity-75"></i>
+                    </button>
 
-                <div class="nav-item me-2">
-                    <a href="{{ request()->is('/') ? '#pricing' : '/#pricing' }}" class="nav-link">Pricing</a>
-                </div>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2 p-1">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between rounded"
+                            href="{{ route('site.lang', ['locale' => 'en']) }}">
+                                <span>English</span>
+                                @if (app()->getLocale() === 'en')
+                                    <i class="bi bi-check2 text-primary"></i>
+                                @endif
+                            </a>
+                        </li>
 
-                <div class="nav-item me-2">
-                    <a href="{{ request()->is('/') ? '#testimonials' : '/#testimonials' }}" class="nav-link">Testimonials</a>
-                </div>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center justify-content-between rounded"
+                            href="{{ route('site.lang', ['locale' => 'ar']) }}">
+                                <span>العربية</span>
+                                @if (app()->getLocale() === 'ar')
+                                    <i class="bi bi-check2 text-primary"></i>
+                                @endif
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
-                <div class="nav-item me-2">
-                    <a href="{{ request()->is('/') ? '#contact' : '/#contact' }}" class="nav-link">Contact</a>
-                </div>
-            </div>
+            </ul>
         </div>
-
-        <!-- Button -->
-        <div class="ms-3 d-none d-lg-block">
-            <a href="index.html" class="btn btn-outline-theme btn-sm fw-semibold text-uppercase px-2 py-1 fs-10px">
-                Get started <i class="fa fa-arrow-right ms-1"></i>
-            </a>
-        </div>
-
-    </div>
-</div>
-<!-- END #header -->
+    </nav>
+</header>

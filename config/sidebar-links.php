@@ -23,6 +23,13 @@ return [
         'can' => 'pos.create'
     ],
     [
+        "title"     => "Imports",
+        'translated_title' => 'general.titles.imports',
+        "icon"      => "fa fa-file-import fa-fw",
+        "route"     => 'admin.imports',
+        // 'can' => 'imports.create'
+    ],
+    [
         "title"     => "Branches",
         'translated_title' => 'general.titles.branches',
         "icon"      => "fa fa-code-branch fa-fw",
@@ -48,14 +55,16 @@ return [
                 'translated_title' => 'general.titles.categories',
                 "route" => 'admin.categories.list',
                 "icon"  => "fa fa-list fa-fw",
-                'can' => 'categories.list,categories.create,categories.update,categories.delete,categories.export'
+                'can' => 'categories.list,categories.create,categories.update,categories.delete,categories.export',
+                'enabled' => 'enable_categories'
             ],
             [
                 "title" => "Brands",
                 'translated_title' => 'general.titles.brands',
                 "route" => 'admin.brands.list',
                 "icon"  => "fa fa-tag fa-fw",
-                'can' => 'brands.list,brands.create,brands.update,brands.delete,brands.export'
+                'can' => 'brands.list,brands.create,brands.update,brands.delete,brands.export',
+                'enabled' => 'enable_brands'
             ],
             [
                 "title" => "Units",
@@ -112,6 +121,14 @@ return [
                 "icon"  => "fa fa-user-friends fa-fw",
                 'can' => 'customers.list,customers.show,customers.create,customers.update,customers.delete,customers.export'
             ],
+            [
+                "title" => "Refunds",
+                'translated_title' => 'general.titles.refunds',
+                "route" => 'admin.refunds.list',
+                'request_params' => ['order_type' => 'sale'],
+                "icon"  => "fa fa-undo-alt fa-fw",
+                'can' => 'refunds.list,refunds.show,refunds.create,refunds.delete,refunds.export'
+            ]
         ],
     ],
     [
@@ -136,6 +153,14 @@ return [
                 "icon"  => "fa fa-shipping-fast fa-fw",
                 'can' => 'suppliers.list,suppliers.show,suppliers.create,suppliers.update,suppliers.delete,suppliers.export'
             ],
+            [
+                "title" => "Refunds",
+                'translated_title' => 'general.titles.refunds',
+                "route" => 'admin.refunds.list',
+                'request_params' => ['order_type' => 'purchase'],
+                "icon"  => "fa fa-undo-alt fa-fw",
+                'can' => 'refunds.list,refunds.show,refunds.create,refunds.delete,refunds.export'
+            ]
         ],
     ],
     [
@@ -253,6 +278,18 @@ return [
                         "route" => 'admin.reports.financial.general-ledger',
                         "icon"  => "fa fa-book fa-fw"
                     ],
+                    [
+                        "title" => "Balance Sheet",
+                        'translated_title' => 'general.titles.balance-sheet',
+                        "route" => 'admin.reports.financial.balance-sheet',
+                        "icon"  => "fa fa-balance-scale fa-fw"
+                    ],
+                    [
+                        "title" => "Audit Trail Report",
+                        'translated_title' => 'general.titles.audit-trail-report',
+                        "route" => "admin.reports.audit.report",
+                        "icon"  => "fa fa-user-secret fa-fw"
+                    ]
                 ],
             ],
             [
@@ -474,12 +511,6 @@ return [
                         'translated_title' => 'general.titles.withholding-tax-report',
                         "route" => 'admin.reports.taxes.withholding-tax',
                         "icon"  => "fa fa-file-invoice-dollar fa-fw"
-                    ],
-                    [
-                        "title" => "Audit Trail Report (Soon)",
-                        'translated_title' => 'general.titles.audit-trail-report',
-                        "route" => "#",
-                        "icon"  => "fa fa-user-secret fa-fw"
                     ]
                 ]
             ],
@@ -563,7 +594,7 @@ return [
             [
                 "title" => "General Settings",
                 'translated_title' => 'general.titles.general-settings',
-                "route" => "#",
+                "route" => "admin.settings",
                 "icon"  => "fa fa-cogs fa-fw",
                 'can' => 'general_settings.update'
             ]

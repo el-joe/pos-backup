@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Admin\Expenses;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\ExpenseCategory;
 use App\Services\ExpenseCategoryService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -44,6 +47,8 @@ class ExpenseCategoriesList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_CATEGORY_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this expense category', 'Yes, delete it!');
     }
 
@@ -53,7 +58,11 @@ class ExpenseCategoriesList extends Component
             return;
         }
 
-        $this->expenseCategoryService->delete($this->current->id);
+        $id = $this->current->id;
+
+        $this->expenseCategoryService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_CATEGORY, ['id' => $id]);
 
         $this->popup('success', 'Expense category deleted successfully');
 
@@ -65,7 +74,22 @@ class ExpenseCategoriesList extends Component
     function save() {
         if (!$this->validator()) return;
 
-        $this->expenseCategoryService->save($this->current?->id, $this->data);
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_EXPENSE_CATEGORY;
+        }else{
+            $action = AuditLogActionEnum::CREATE_EXPENSE_CATEGORY;
+        }
+        try{
+            DB::beginTransaction();
+            $expenseCat = $this->expenseCategoryService->save($this->current?->id, $this->data);
+            DB::commit();
+        }catch(\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving expense category: '.$e->getMessage());
+            return;
+        }
+
+        AuditLog::log($action, ['id' => $expenseCat->id]);
 
         $this->popup('success', 'Expense category saved successfully');
 
@@ -90,6 +114,8 @@ class ExpenseCategoriesList extends Component
             $headers = ['#', 'Name', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'expense_categories');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_EXPENSE_CATEGORIES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

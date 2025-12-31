@@ -2,14 +2,18 @@
 
 namespace App\Livewire\Admin\Stocks;
 
+use App\Enums\AuditLogActionEnum;
 use App\Enums\StockTransferStatusEnum;
 use App\Models\Tenant\Admin;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockService;
 use App\Services\StockTransferService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class AddStockTransfer extends Component
@@ -160,17 +164,28 @@ class AddStockTransfer extends Component
             }
         }
 
-        $stockTransfer = $this->stockTransferService->save($dataToSave);
+        try{
+            DB::beginTransaction();
+            $stockTransfer = $this->stockTransferService->save($dataToSave);
 
-        Admin::whereType('super_admin')->each(function($admin) use ($stockTransfer) {
-            $admin->notifyNewStockTransfer($stockTransfer);
-        });
+            Admin::whereType('super_admin')->each(function($admin) use ($stockTransfer) {
+                $admin->notifyNewStockTransfer($stockTransfer);
+            });
+
+            AuditLog::log(AuditLogActionEnum::CREATE_STOCK_TRANSFER, ['id' => $stockTransfer->id]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving stock transfer: '.$e->getMessage());
+            return;
+        }
 
         $this->alert('success','Stock Transfer created successfully');
 
         return $this->redirectWithTimeout(route('admin.stocks.transfers.details', $stockTransfer),1500);
     }
 
+    #[On('re-render')]
     public function render()
     {
         $branches = $this->branchService->activeList();

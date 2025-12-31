@@ -7,38 +7,38 @@
             <div class="card shadow-sm text-center">
                 @if($type == 'success')
                     <div class="card-header bg-success text-white">
-                        <h4 class="mb-0">Payment Successful</h4>
+                        <h4 class="mb-0">{{ __('website.payment.success_title') }}</h4>
                     </div>
 
                     <div class="card-body">
                         <i class="fa fa-check-circle fa-4x text-success mb-3"></i>
-                        <h5 class="mb-3">Your payment has been processed successfully!</h5>
+                        <h5 class="mb-3">{{ __('website.payment.success_subtitle') }}</h5>
 
                         <!-- Custom Message -->
                         <p class="text-muted">
-                            {{ $message ?? 'Thank you for your payment. Your order is now complete and under review.' }}
+                            {{ $message ?? __('website.payment.success_message') }}
                         </p>
 
                         <a href="/" class="btn btn-primary mt-3">
-                            <i class="fa fa-home"></i> Back to Home
+                            <i class="fa fa-home"></i> {{ __('website.payment.back_to_home') }}
                         </a>
                     </div>
                 @else
                     <div class="card-header bg-danger text-white">
-                        <h4 class="mb-0">Payment Failed</h4>
+                        <h4 class="mb-0">{{ __('website.payment.failed_title') }}</h4>
                     </div>
 
                     <div class="card-body">
                         <i class="fa fa-times-circle fa-4x text-danger mb-3"></i>
-                        <h5 class="mb-3">Unfortunately, your payment could not be processed.</h5>
+                        <h5 class="mb-3">{{ __('website.payment.failed_subtitle') }}</h5>
 
                         <!-- Custom Message -->
                         <p class="text-muted">
-                            {{ $message ?? 'Please try again or contact support if the issue persists.' }}
+                            {{ $message ?? __('website.payment.failed_message') }}
                         </p>
 
                         <a href="/payment/retry" class="btn btn-secondary mt-3">
-                            <i class="fa fa-redo"></i> Try Again
+                            <i class="fa fa-redo"></i> {{ __('website.payment.try_again') }}
                         </a>
                     </div>
                 @endif

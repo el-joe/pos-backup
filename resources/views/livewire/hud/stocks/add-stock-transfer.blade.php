@@ -11,12 +11,15 @@
                 <div class="col-md-4">
                     <label for="from_branch_id" class="form-label">{{ __('general.pages.stock-transfers.from_branch') }}</label>
                     @if(admin()->branch_id == null)
-                    <select id="from_branch_id" wire:model.change="data.from_branch_id" class="form-select">
-                        <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="from_branch_id" name="data.from_branch_id" class="form-select select2">
+                            <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ ($data['from_branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                    </div>
                     @else
                     <input type="text" class="form-control" value="{{ admin()->branch->name }}" disabled>
                     @endif
@@ -24,12 +27,15 @@
 
                 <div class="col-md-4">
                     <label for="to_branch_id" class="form-label">{{ __('general.pages.stock-transfers.to_branch') }}</label>
-                    <select id="to_branch_id" wire:model.change="data.to_branch_id" class="form-select">
-                        <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
-                        @foreach ($branches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="d-flex">
+                        <select id="to_branch_id" name="data.to_branch_id" class="form-select select2">
+                            <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ ($data['to_branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-theme me-2" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
+                    </div>
                 </div>
 
                 <div class="col-md-4">
@@ -47,20 +53,20 @@
 
                 <div class="col-md-4">
                     <label for="expense_paid_branch_id" class="form-label">{{ __('general.pages.stock-transfers.expense_payer_question') }}</label>
-                    <select id="expense_paid_branch_id" wire:model.change="data.expense_paid_branch_id" class="form-select">
+                    <select id="expense_paid_branch_id" name="data.expense_paid_branch_id" class="form-select select2">
                         <option value="">{{ __('general.pages.stock-transfers.select_branch') }}</option>
                         @foreach ($selectedBranches as $branch)
-                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            <option value="{{ $branch->id }}" {{ ($data['expense_paid_branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="col-md-4">
                     <label for="status" class="form-label">{{ __('general.pages.stock-transfers.status') }}</label>
-                    <select id="status" wire:model.change="data.status" class="form-select">
+                    <select id="status" name="data.status" class="form-select select2">
                         <option value="">{{ __('general.pages.stock-transfers.select_status') }}</option>
                         @foreach ($statuses as $status)
-                            <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                            <option value="{{ $status->value }}" {{ ($data['status']??'') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -127,8 +133,8 @@
                                     <input type="number" class="form-control" wire:model.blur="items.{{ $index }}.qty" step="any" min="1" max="{{ $product['max_stock'] ?? 0 }}" placeholder="0.00">
                                     <small class="text-muted">{{ __('general.pages.pos-page.max') }}: {{ $product['max_stock'] }}</small>
                                 </td>
-                                <td>{{ $product['unit_cost'] }}</td>
-                                <td>{{ $product['sell_price'] }}</td>
+                                <td>{{ currencyFormat($product['unit_cost'], true) }}</td>
+                                <td>{{ currencyFormat($product['sell_price'], true) }}</td>
                                 <td>
                                     <button class="btn btn-danger btn-sm" wire:click="delete({{ $index }})">
                                         <i class="fa fa-trash"></i>
@@ -239,6 +245,8 @@
 @endpush
 
 @push('scripts')
+@livewire('admin.branches.branch-modal')
+@include('layouts.hud.partials.select2-script')
 <script>
     window.addEventListener('reset-search-input', () => {
         const input = document.getElementById('product_search');

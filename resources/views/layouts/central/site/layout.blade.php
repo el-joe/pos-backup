@@ -1,45 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="{{ app()->getLocale() }}" data-bs-theme="dark" dir="{{ in_array(app()->getLocale(), ['ar', 'he', 'fa', 'ur']) ? 'rtl' : 'ltr' }}">
 <head>
 	<meta charset="utf-8">
-	<title>mohaaseb.com - Complete ERP & POS Solution for Businesses</title>
+    {{-- <title>@yield('title', __('website.titles.main'))</title> --}}
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="/favicon_io/site.webmanifest">
+    @isset($seoData)
+    {!! seo($seoData) !!}
+    @endisset
+
+    <meta name="keywords" content="mohaaseb.com, ERP software,mohaseb erp system, POS system, business management, inventory management, accounting software, sales management, purchase management, reporting software,erp,enterprise resource management software, enterprise resource planning software, enterprise resource planning software, enterprise resource software, erp enterprise resource planning software, erp software, erp system">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon_io/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon_io/android-chrome-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('favicon_io/android-chrome-512x512.png') }}">
+    <link rel="icon" href="{{ asset('favicon_io/favicon.ico') }}" type="image/x-icon">
+    <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="mohaaseb.com provides a comprehensive ERP & POS system to manage your business efficiently. Streamline sales, inventory, purchases, accounting, and reporting with ease.">
-    <meta name="keywords" content="mohaaseb.com, ERP software, POS system, business management, inventory management, accounting software, sales management, purchase management, reporting software">
-    <meta name="author" content="mohaaseb.com">
 
-    <meta property="og:title" content="mohaaseb.com - Complete ERP & POS Solution">
-    <meta property="og:description" content="Manage your business smarter with mohaaseb.com ERP & POS. Handle sales, inventory, purchases, and accounting with ease.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mohaaseb.com/">
-    <meta property="og:image" content="https://mohaaseb.com/images/erp-pos-og-image.png">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P9269JMGT5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="mohaaseb.com - Complete ERP & POS Solution">
-    <meta name="twitter:description" content="mohaaseb.com helps businesses manage sales, inventory, purchases, and accounting efficiently.">
-    <meta name="twitter:image" content="https://mohaaseb.com/images/erp-pos-twitter-image.png">
+        gtag('config', 'G-P9269JMGT5');
+    </script>
 
-    <!-- Robots -->
-    <meta name="robots" content="index, follow">
+    <script>
+        document.addEventListener("livewire:navigated", function () {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: "livewire:navigated",
+                page_path: window.location.pathname,
+                page_title: document.title
+            });
+        });
+    </script>
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://mohaaseb.com/">
-
-    <!-- Favicon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
-
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KH9FSZDD');</script>
+    <!-- End Google Tag Manager -->
 
     @include('layouts.central.site.partials.styles')
     @stack('styles')
 </head>
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KH9FSZDD"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 	<!-- BEGIN #app -->
 	<div id="app" class="app">
         @include('layouts.central.site.partials.header')

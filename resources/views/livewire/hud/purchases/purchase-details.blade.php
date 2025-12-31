@@ -59,7 +59,7 @@
                             <div class="col-md-3">
                                 <div class="border rounded p-3">
                                     <strong><i class="fa fa-calendar me-1"></i> {{ __('general.pages.purchases.order_date') }}:</strong>
-                                    <div>{{ carbon($purchase->order_date)->format('F j, Y') ?? 'N/A' }}</div>
+                                    <div>{{ dateTimeFormat($purchase->order_date) ?? 'N/A' }}</div>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                     <div class="card-body">
                                         <div class="fs-1 text-danger"><i class="fa fa-credit-card"></i></div>
                                         <h6>{{ __('general.pages.expenses.total_expense') ?? 'Expenses Total' }}</h6>
-                                        <h3>{{ number_format($purchase->expenses->sum('amount') ?? 0, 2) }}</h3>
+                                        <h3>{{ currencyFormat($purchase->expenses->sum('amount') ?? 0, true) }}</h3>
                                     </div>
                                     <div class="card-arrow">
                                         <div class="card-arrow-top-left"></div>
@@ -119,7 +119,7 @@
                                     <div class="card-body">
                                         <div class="fs-1 text-warning"><i class="fa fa-calculator"></i></div>
                                         <h6>{{ __('general.pages.purchases.subtotal_before_discount') }}</h6>
-                                        <h3>{{ number_format($orderSubTotal ?? 0, 2) }}</h3>
+                                        <h3>{{ currencyFormat($orderSubTotal ?? 0, true) }}</h3>
                                     </div>
                                     <div class="card-arrow">
                                         <div class="card-arrow-top-left"></div>
@@ -137,7 +137,7 @@
                                     <div class="card-body">
                                         <div class="fs-1 text-secondary"><i class="fa fa-minus-circle"></i></div>
                                         <h6>{{ __('general.pages.purchases.after_discount') }}</h6>
-                                        <h3>{{ number_format($orderTotalAfterDiscount ?? 0, 2) }}</h3>
+                                        <h3>{{ currencyFormat($orderTotalAfterDiscount ?? 0, true) }}</h3>
                                     </div>
                                     <div class="card-arrow">
                                         <div class="card-arrow-top-left"></div>
@@ -152,7 +152,7 @@
                                     <div class="card-body">
                                         <div class="fs-1 text-success"><i class="fa fa-percent"></i></div>
                                         <h6>{{ __('general.pages.purchases.tax_amount') }}</h6>
-                                        <h3>{{ number_format($orderTaxAmount ?? 0, 2) }}</h3>
+                                        <h3>{{ currencyFormat($orderTaxAmount ?? 0, true) }}</h3>
                                     </div>
                                     <div class="card-arrow">
                                         <div class="card-arrow-top-left"></div>
@@ -167,7 +167,7 @@
                                     <div class="card-body">
                                         <div class="fs-1 text-info"><i class="fa fa-dollar-sign"></i></div>
                                         <h6>{{ __('general.pages.purchases.grand_total') }}</h6>
-                                        <h3>{{ number_format($orderGrandTotal ?? 0, 2) }}</h3>
+                                        <h3>{{ currencyFormat($orderGrandTotal ?? 0, true) }}</h3>
                                     </div>
                                     <div class="card-arrow">
                                         <div class="card-arrow-top-left"></div>
@@ -208,15 +208,15 @@
                                             <td><strong>{{ $item?->product?->name }}</strong></td>
                                             <td>{{ $item?->unit?->name ?? 'N/A' }}</td>
                                             <td>{{ $item->actual_qty }}</td>
-                                            <td>{{ number_format($item->purchase_price, 2) }}</td>
+                                            <td>{{ currencyFormat($item->purchase_price, true) }}</td>
                                             <td>{{ number_format($item->discount_percentage, 2) }}%</td>
-                                            <td>{{ number_format($item->unit_cost_after_discount, 2) }}</td>
-                                            <td>{{ number_format($item->total_after_discount, 2) }}</td>
+                                            <td>{{ currencyFormat($item->unit_cost_after_discount, true) }}</td>
+                                            <td>{{ currencyFormat($item->total_after_discount, true) }}</td>
                                             <td>{{ $item->tax_percentage ? number_format($item->tax_percentage, 2) : 'N/A' }}%</td>
-                                            <td>{{ number_format($item->unit_amount_after_tax, 2) }}</td>
+                                            <td>{{ currencyFormat($item->unit_amount_after_tax, true) }}</td>
                                             <td>{{ number_format($item->x_margin, 2) }}%</td>
-                                            <td>{{ number_format($item->total_after_x_margin, 2) }}</td>
-                                            <td>{{ number_format($item->total_after_x_margin * $item->actual_qty, 2) }}</td>
+                                            <td>{{ currencyFormat($item->total_after_x_margin, true) }}</td>
+                                            <td>{{ currencyFormat($item->total_after_x_margin * $item->actual_qty, true) }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" wire:click="setCurrentItem({{ $item->id }})" data-bs-toggle="modal" data-bs-target="#refundModal">
                                                     <i class="fa fa-undo"></i> {{ __('general.pages.purchases.refund') }}
@@ -246,8 +246,8 @@
                                     @foreach ($purchase->expenses ?? [] as $expense)
                                         <tr>
                                             <td>{{ $expense->description ?? 'N/A' }}</td>
-                                            <td>{{ number_format($expense->amount ?? 0, 2) }}</td>
-                                            <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}</td>
+                                            <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
+                                            <td>{{ $expense->expense_date ? dateTimeFormat($expense->expense_date) : 'N/A' }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
                                                     <i class="fa fa-trash"></i>

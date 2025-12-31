@@ -76,6 +76,8 @@ class CashRegisterReport extends Component
 
     public function render()
     {
-        return layoutView('reports.cash-register-report');
+        $admins = app(\App\Services\AdminService::class)->activeList();
+        $branches = app(\App\Services\BranchService::class)->activeList();
+        return layoutView('reports.cash-register-report', get_defined_vars());
     }
 }

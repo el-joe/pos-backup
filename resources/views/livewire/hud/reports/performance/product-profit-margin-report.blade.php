@@ -6,13 +6,9 @@
         </div>
         <div class="card-body">
             <form class="row g-3 align-items-center">
-                <div class="col-md-2">
-                    <label for="from_date" class="form-label">{{ __('general.pages.reports.common.from') }}</label>
-                    <input type="date" id="from_date" wire:model.lazy="from_date" class="form-control form-control-sm bg-secondary text-light border-0">
-                </div>
-                <div class="col-md-2">
-                    <label for="to_date" class="form-label">{{ __('general.pages.reports.common.to') }}</label>
-                    <input type="date" id="to_date" wire:model.lazy="to_date" class="form-control form-control-sm bg-secondary text-light border-0">
+                <div class="col-sm-6">
+                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                    <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                 </div>
             </form>
         </div>
@@ -59,9 +55,9 @@
                             @endphp
                             <tr>
                                 <td>{{ $row->product_name }}</td>
-                                <td class="text-end">{{ number_format($row->total_sales, 2) }}</td>
-                                <td class="text-end">{{ number_format($row->total_cogs, 2) }}</td>
-                                <td class="text-end">{{ number_format($row->profit, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($row->total_sales, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($row->total_cogs, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($row->profit, true) }}</td>
                                 <td class="text-end">
                                     <span class="badge bg-success bg-opacity-75">{{ number_format($row->profit_margin_percent, 2) }}</span>
                                 </td>
@@ -75,9 +71,9 @@
                         @if(count($report))
                             <tr class="bg-success bg-opacity-25 fw-semibold">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
-                                <td class="text-end">{{ number_format($sum_sales, 2) }}</td>
-                                <td class="text-end">{{ number_format($sum_cogs, 2) }}</td>
-                                <td class="text-end">{{ number_format($sum_profit, 2) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_sales, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_cogs, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($sum_profit, true) }}</td>
                                 <td></td>
                             </tr>
                         @endif
@@ -94,3 +90,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

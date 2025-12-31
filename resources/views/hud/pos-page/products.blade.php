@@ -58,7 +58,7 @@
                                     <div class="info">
                                         <div class="title">{{ $product->name }}</div>
                                         <div class="desc">{{ $product->category?->name }}</div>
-                                        <div class="price">${{ $product->stockSellPrice($this->data['branch_id'] ?? null) }}</div>
+                                        <div class="price">{{ currencyFormat($product->stockSellPrice($this->data['branch_id'] ?? null), true) }}</div>
                                     </div>
                                 </a>
                             </div>
@@ -98,7 +98,7 @@
                                 <div class="img" style="background-image: url({{ $dataProduct['image'] }})"></div>
                                 <div class="flex-1">
                                     <div class="h6 mb-1">{{ $dataProduct['product_name'] }}</div>
-                                    <div class="small">${{ $dataProduct['sell_price'] }}</div>
+                                    <div class="small">{{ currencyFormat($dataProduct['sell_price'], true) }}</div>
                                     <div class="small mb-2">- {{ __('general.pages.pos-page.unit') }}: {{ $dataProduct['unit_name'] }}</div>
                                     <div class="d-flex">
                                         <a href="#" class="btn btn-outline-theme btn-sm" wire:click="updateQty({{ $key }} , -1)"><i class="fa fa-minus"></i></a>
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
                             <div class="pos-order-price">
-                                ${{ $dataProduct['subtotal'] }}
+                                {{ currencyFormat($dataProduct['subtotal'], true) }}
                             </div>
                         </div>
                     @empty
@@ -123,7 +123,7 @@
             <div class="pos-sidebar-footer">
                 <div class="d-flex align-items-center mb-2">
                     <div>{{ __('general.pages.pos-page.subtotal') }}</div>
-                    <div class="flex-1 text-end h6 mb-0">${{ $subTotal }}</div>
+                    <div class="flex-1 text-end h6 mb-0">{{ currencyFormat($subTotal, true) }}</div>
                 </div>
                 @if(!$discount || $discount == 0)
                     <div class="card border-0 shadow-sm mb-3">
@@ -160,12 +160,12 @@
                                         {{ __('general.pages.pos-page.code') }}: <strong>{{ $data['discount']['code'] ?? 'N/A' }}</strong> —
                                         <span class="text-success">{{ $data['discount']['value'] ?? 0 }}% Off</span>
                                         @if($data['discount']['max_discount_amount'] ?? 0)
-                                            <span class="text-muted">({{ __('general.pages.pos-page.max') }}: ${{ $data['discount']['max_discount_amount'] ?? 0 }})</span>
+                                            <span class="text-muted">({{ __('general.pages.pos-page.max') }}: {{ currencyFormat($data['discount']['max_discount_amount'] ?? 0, true) }})</span>
                                         @endif
                                     </small>
                                 </div>
                                 <div class="text-end">
-                                    <div class="fw-bold h6 mb-0 text-success">${{ $discount }}</div>
+                                    <div class="fw-bold h6 mb-0 text-success">{{ currencyFormat($discount, true) }}</div>
                                     <button class="btn btn-danger btn-sm mt-1" wire:click="removeDiscount">
                                         <i class="fa fa-times"></i>
                                     </button>
@@ -182,12 +182,12 @@
                 @endif
                 <div class="d-flex align-items-center">
                     <div>{{ __('general.pages.pos-page.taxes') }} ({{ $taxPercentage }}%)</div>
-                    <div class="flex-1 text-end h6 mb-0">${{ $tax }}</div>
+                    <div class="flex-1 text-end h6 mb-0">{{ currencyFormat($tax, true) }}</div>
                 </div>
                 <hr>
                 <div class="d-flex align-items-center mb-2">
                     <div>{{ __('general.pages.pos-page.total') }}</div>
-                    <div class="flex-1 text-end h4 mb-0">${{ $total }}</div>
+                    <div class="flex-1 text-end h4 mb-0">{{ currencyFormat($total, true) }}</div>
                 </div>
                 <div class="mt-3">
                     <div class="btn-group d-flex">

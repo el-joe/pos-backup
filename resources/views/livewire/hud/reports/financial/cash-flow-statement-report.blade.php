@@ -8,13 +8,9 @@
         </div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.from_date') }}</label>
-                    <input type="date" class="form-control form-control-sm" wire:model.lazy="from_date">
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.to_date') }}</label>
-                    <input type="date" class="form-control form-control-sm" wire:model.lazy="to_date">
+                <div class="col-sm-6">
+                    <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                    <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                 </div>
             </div>
         </div>
@@ -48,16 +44,16 @@
                         @foreach($report['cash_flows'] ?? [] as $type => $flow)
                         <tr>
                             <td>{{ ucfirst(str_replace('_', ' ', $type)) }}</td>
-                            <td>{{ number_format($flow['inflow'], 2) }}</td>
-                            <td>{{ number_format($flow['outflow'], 2) }}</td>
-                            <td>{{ number_format($flow['net'], 2) }}</td>
+                            <td>{{ currencyFormat($flow['inflow'], true) }}</td>
+                            <td>{{ currencyFormat($flow['outflow'], true) }}</td>
+                            <td>{{ currencyFormat($flow['net'], true) }}</td>
                         </tr>
                         @endforeach
                         <tr class="fw-bold bg-primary-subtle">
                             <td>{{ __('general.pages.reports.common.total') }}</td>
-                            <td>{{ number_format($report['total_inflow'] ?? 0, 2) }}</td>
-                            <td>{{ number_format($report['total_outflow'] ?? 0, 2) }}</td>
-                            <td>{{ number_format($report['net_cash_flow'] ?? 0, 2) }}</td>
+                            <td>{{ currencyFormat($report['total_inflow'] ?? 0, true) }}</td>
+                            <td>{{ currencyFormat($report['total_outflow'] ?? 0, true) }}</td>
+                            <td>{{ currencyFormat($report['net_cash_flow'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -71,3 +67,6 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

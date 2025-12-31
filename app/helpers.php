@@ -1,16 +1,24 @@
 <?php
 
+use App\Models\Currency;
 use App\Models\Tenant\Admin;
+use App\Models\Tenant\Setting;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use RalphJSmit\Laravel\SEO\SchemaCollection;
+use RalphJSmit\Laravel\SEO\Support\AlternateTag;
+use RalphJSmit\Laravel\SEO\Support\ImageMeta;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
+use RalphJSmit\Laravel\SEO\TagManager;
 
 const TENANT_ADMINS_GUARD = 'tenant_admin';
 const CPANEL_ADMINS_GUARD = 'cpanel_admin';
 
-if(!function_exists('settings')) {
-    function settings($key) {
-        return null;
-    }
+function cacheKey($key){
+    return tenant()->id . '_' . $key;
 }
 
 function defaultLayout(){
@@ -74,11 +82,6 @@ if(!function_exists('carbon')) {
     }
 }
 
-if(!function_exists('formattedDate')) {
-    function formattedDate($date): string {
-        return carbon($date)->translatedFormat('l , d-M-Y');
-    }
-}
 
 if(!function_exists('formattedDateTime')) {
     function formattedDateTime($date): string {
@@ -134,6 +137,21 @@ if(!function_exists('defaultPermissionsList')) {
     }
 }
 
+function generateSlug($model,$slug) {
+    if(!$slug){
+        $slug = uniqid();
+    }
+
+    $slug = Str::slug(trim($slug), '-');
+
+    $modelObj = $model::whereSlug($slug)->first();
+    if($modelObj){
+        return generateSlug($model,$slug.'-'.time());
+    }
+
+    return $slug;
+}
+
 function adminCan($permission) {
     if(admin()->type == 'super_admin'){
         return true;
@@ -172,7 +190,7 @@ function extractRoutes(array $items): array
 
     foreach ($items as $item) {
         if (!empty($item['route']) && $item['route'] !== '#') {
-            $routes[] = $item['route'];
+            $routes[] = $item;
         }
 
         if (!empty($item['children'])) {
@@ -186,13 +204,21 @@ function extractRoutes(array $items): array
 
 function checkRouteParams($routeParams = []){
     foreach ($routeParams as $key => $value) {
-        $route = request()->route($key);
-        if($route == null){
-            return true;
-        }
+        $routeCheck = request()->route($key);
 
-        if($route == $value) {
-            return true;
+        if(!empty($routeCheck)){
+            return $routeCheck == $value;
+        }
+    }
+
+    return false;
+}
+
+function checkRequestParams($requestParams = []){
+    foreach ($requestParams as $key => $value) {
+        $paramCheck = request()->has($key) ?? false;
+        if($paramCheck){
+            return request($key) == $value;
         }
     }
 
@@ -218,14 +244,141 @@ function superAdmins(){
     return Admin::where('type', 'super_admin')->get();
 }
 
-function encodedSlug($data)
+function encodedData($data)
 {
     $newSlug = base64_encode(json_encode($data));
 
     return $newSlug;
 }
 
-function decodedSlug($encoded)
+function decodedData($encoded)
 {
     return json_decode(base64_decode($encoded), true);
+}
+
+function lang(){
+    return app()->getLocale();
+}
+
+function currency(){
+    $key = cacheKey('currency');
+    return Cache::driver('file')->remember($key, 60*60, function() {
+        return Currency::find(tenantSetting('currency_id',1));
+    });
+}
+
+function currencyFormat($amount, $withComma = false){
+    $currency = currency();
+    $currencyPercision = tenantSetting('currency_precision',2);
+    return "$currency->symbol" . number_format((float)$amount, $currencyPercision, '.',$withComma ? ',' : '');
+}
+
+function dateTimeFormat($date,$dateFormat = true, $timeFormat = true){
+    $dateFormat = $dateFormat ? tenantSetting('date_format','Y-m-d') : '';
+    $timeFormat = $timeFormat ? tenantSetting('time_format','H:i:s') : '';
+    return carbon($date)->translatedFormat(trim("$dateFormat $timeFormat"));
+}
+
+function tenantSetting($key, $default = null) {
+    return Cache::driver('file')->remember(cacheKey('setting'), 60 * 60 * 24, function () {
+            return Setting::all()->pluck('value', 'key')->toArray();
+    })[$key] ?? $default;
+}
+
+if (! function_exists('seo')) {
+    function seo(Model | SEOData | null $source = null): TagManager
+    {
+        $tagManager = app(TagManager::class);
+
+        if ($source) {
+            $tagManager->for($source);
+        }
+
+        return $tagManager;
+    }
+    // if (! function_exists('defaultSeoData')) {
+
+    //     function defaultSeoData($newData = []){
+    //         $alternates = [
+    //             new AlternateTag('en', url('/en')),
+    //             new AlternateTag('ar', url('/ar')),
+    //         ];
+
+    //         $seoImage = asset('mohaaseb_en_dark_2.webp');
+
+    //         return new SEOData(
+    //             title: $newData['title'] ?? __('website.titles.home'),
+    //             description: $newData['description'] ?? __('website.meta_description'),
+    //             author: $newData['author'] ?? 'codefanz.com',
+
+    //             // ⭐ الصورة الأساسية
+    //             image: $newData['image'] ?? $seoImage,
+
+    //             url: url()->current(),
+    //             robots: 'index, follow',
+    //             canonical_url: url('/'),
+    //             enableTitleSuffix: true,
+    //             type: "website",
+    //             site_name: "Mohaaseb",
+
+    //             favicon: asset('favicon_io/favicon.ico'),
+
+    //             locale: app()->getLocale() === 'en' ? 'en_US' : 'ar_AR',
+
+    //             // ⭐ OpenGraph
+    //             openGraphTitle: $newData['title'] ?? __('website.titles.home'),
+    //             imageMeta: new ImageMeta($newData['imageMeta'] ?? $seoImage),
+
+    //             // ⭐ Twitter
+    //             twitter_username: "@mohaaseb",
+
+    //             published_time: $newData['published_time'] ?? Carbon::now(),
+    //             modified_time: $newData['modified_time'] ?? Carbon::now(),
+
+    //             tags: $newData['tags'] ?? ['ERP', 'POS', 'Accounting', 'Inventory', 'Business Management'],
+
+    //             // ⭐ Schema
+    //             schema: new SchemaCollection([
+    //                 [
+    //                     "@context" => "https://schema.org",
+    //                     "@type" => "SoftwareApplication",
+    //                     "name" => "Mohaaseb ERP",
+    //                     "applicationCategory" => "BusinessApplication",
+    //                     "operatingSystem" => "Web",
+    //                     "url" => url('/'),
+    //                     "image" => $newData['image'] ?? $seoImage,
+    //                     'logo' => $newData['image'] ?? $seoImage,
+    //                     "description" => $newData['description'] ?? __('website.meta_description'),
+    //                     "offers" => [
+    //                         "@type" => "Offer",
+    //                         "price" => "0",
+    //                         "priceCurrency" => "USD",
+    //                         'priceValidUntil' => Carbon::now()->addYear()->toDateString(),
+    //                         'shippingDetails' => null,
+    //                         'hasMerchantReturnPolicy' => null,
+    //                     ],
+    //                     "aggregateRating"=> [
+    //                         "@type" => "AggregateRating",
+    //                         "ratingValue" => "4.9",
+    //                         "ratingCount" => "1202"
+    //                     ],
+    //                     "review"=> [
+    //                         "@type" => "Review",
+    //                         "reviewRating" => [
+    //                             "@type" => "Rating",
+    //                             "ratingValue" => "5"
+    //                         ],
+    //                         "author" => [
+    //                                 "@type" => "Person",
+    //                                 "name" => "John Doe"
+    //                         ],
+    //                         "reviewBody" => __("website.seo.review_body")
+    //                     ]
+    //                 ]
+    //             ]),
+
+    //             alternates: $alternates
+    //         );
+    //     }
+    // }
 }

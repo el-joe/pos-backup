@@ -1,15 +1,23 @@
 <?php
 
 return [
+    'total' => 'Total',
     'titles' => [
         'statistics' => 'Statistics',
+        'audit_report' => 'Audit Report',
         'cash-register' => 'Cash Register',
         'pos' => 'POS',
+        'blogs' => 'Blogs',
+        'pages' => 'Pages',
+        'faqs' => 'FAQs',
+        'file_manager' => 'File Manager',
         'contacts' => 'Contacts',
         'branches' => 'Branches',
+        'imports' => 'Imports',
         'categories' => 'Categories',
         'brands' => 'Brands',
         'units' => 'Units',
+        'balance-sheet' => 'Balance Sheet',
         'taxes' => 'Taxes',
         'discounts' => 'Discounts',
         'expenses' => 'Expenses',
@@ -29,6 +37,8 @@ return [
         'stock-transfers' => 'Stock Transfers',
         'stock-adjustments' => 'Stock Adjustments',
         'sales' => 'Sales',
+        'refunds' => 'Refunds',
+        'add_refund' => 'Add Refund',
         'orders' => 'Orders',
         'accounting' => 'Accounting',
         'shipping-companies' => 'Shipping Companies (SOON)',
@@ -109,7 +119,10 @@ return [
         'reports' => [
             'common' => [
                 'filter_options' => 'Filter Options',
+                'date_range' => 'Date Range',
                 'from_date' => 'From Date',
+                'admin' => 'Admin',
+                'all' => 'All',
                 'to_date' => 'To Date',
                 'from' => 'From',
                 'to' => 'To',
@@ -132,6 +145,16 @@ return [
                 'metric' => 'Metric',
                 'amount' => 'Amount',
                 'status' => 'Status',
+            ],
+            'audit_report'=> [
+                'action' => 'Action',
+                'title' => 'Audit Report',
+                'total' => 'Total',
+                'date_time' => 'Date & Time',
+                'admin' => 'Admin',
+                'description' => 'Description',
+                'system' => 'System',
+                'no_records' => 'No audit records found for the selected filters.',
             ],
             'sales' => [
                 'summary' => [
@@ -451,8 +474,8 @@ return [
         ],
         'statistics' => [
             'total_sales' => 'Total Sales',
-            'net_sales' => 'Net',
-            'due_amount' => 'Invoice due',
+            'net_sales' => 'Net Sales',
+            'due_amount' => 'Due Sales',
             'total_sales_return' => 'Total Sell Return',
             'total_purchases' => 'Total purchase',
             'purchase_due' => 'Purchase due',
@@ -885,6 +908,7 @@ return [
         'sales' => [
             'filters' => 'Filters',
             'show_hide' => 'Show / Hide',
+            'refund_qty' => 'Refund Qty',
             'invoice_no' => 'Invoice No',
             'search_placeholder' => 'Search ...',
             'customer' => 'Customer',
@@ -1006,6 +1030,19 @@ return [
             'cancel' => 'Cancel',
             'transferred_products' => 'Transferred Products',
             'stock_transfer_expenses' => 'Stock Transfer Expenses',
+        ],
+        'refunds' => [
+            'add_new_refund_order' => 'Add New Refund Order',
+            'branch' => 'Branch',
+            'select_branch' => 'Select Branch',
+            'order_type' => 'Order Type',
+            'select_type' => 'Select Type',
+            'orders' => 'Orders',
+            'select_order' => 'Select Order',
+            'reason' => 'Reason',
+            'order_products' => 'Order Products',
+            'save_refund' => 'Save Refund',
+            'refund' => 'Refund',
         ],
         'stock-taking' => [
             'filters' => 'Filters',
@@ -1224,6 +1261,16 @@ return [
             'enter_name' => 'Enter account name',
             'enter_code' => 'Enter account code',
         ],
+        'settings' => [
+            'settings_groups' => 'Settings Groups',
+            'business' => 'Business Settings',
+            'product' => 'Product Settings',
+            'pos' => 'POS Settings',
+            'general' => 'General Settings',
+            'system' => 'System Settings',
+            'saving' => 'Saving...',
+            'save' => 'Save Settings',
+        ]
     ],
     'features' => [
         'branches' => 'Branches count',
@@ -1242,5 +1289,7 @@ return [
     ],
     'messages' => [
         'you_do_not_have_permission_to_access' => 'You do not have permission to access this module.',
+        'created_successfully' => 'Created successfully.',
+        'invalid_refund_quantity' => 'Invalid refund quantity for :item product.',
     ]
 ];

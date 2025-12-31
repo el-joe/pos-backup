@@ -41,10 +41,10 @@
                     <!-- Filter by Status -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.discounts.status') }}</label>
-                        <select class="form-select" wire:model.live="filters.active">
-                            <option value="all">{{ __('general.pages.discounts.all') }}</option>
-                            <option value="1">{{ __('general.pages.discounts.active') }}</option>
-                            <option value="0">{{ __('general.pages.discounts.inactive') }}</option>
+                        <select class="form-select select2" name="filters.active">
+                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.discounts.all') }}</option>
+                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.discounts.active') }}</option>
+                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.discounts.inactive') }}</option>
                         </select>
                     </div>
 
@@ -109,9 +109,9 @@
                             <td>{{ $discount->id }}</td>
                             <td>{{ $discount->name }}</td>
                             <td>{{ $discount->code }}</td>
-                            <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : '' }}</td>
-                            <td>{{ formattedDate($discount->start_date) }}</td>
-                            <td>{{ formattedDate($discount->end_date) }}</td>
+                            <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
+                            <td>{{ dateTimeFormat($discount->start_date,true,false) }}</td>
+                            <td>{{ dateTimeFormat($discount->end_date,true,false) }}</td>
                             <td>
                                 <span class="badge bg-{{ $discount->active ? 'success' : 'danger' }}">
                                     {{ $discount->active ? __('general.pages.discounts.active') : __('general.pages.discounts.inactive') }}
@@ -173,19 +173,19 @@
                         </div>
                         <div class="col-md-6">
                             <label for="discountBranch" class="form-label">{{ __('general.pages.discounts.branch') }}</label>
-                            <select class="form-select" wire:model.live="data.branch_id" id="discountBranch">
+                            <select class="form-select select2" name="data.branch_id" id="discountBranch">
                                 <option value="">{{ __('general.pages.discounts.all_branches_option') }}</option>
                                 @foreach ($branches as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                    <option value="{{ $branch->id }}" {{ ($data['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="discountType" class="form-label">{{ __('general.pages.discounts.type') }}</label>
-                            <select class="form-select" wire:model.live="data.type" id="discountType">
+                            <select class="form-select select2" name="data.type" id="discountType">
                                 <option value="">{{ __('general.pages.discounts.select_type') }}</option>
-                                <option value="rate">{{ __('general.pages.discounts.rate') }}</option>
-                                <option value="fixed">{{ __('general.pages.discounts.fixed') }}</option>
+                                <option value="rate" {{ ($data['type']??'') == 'rate' ? 'selected' : '' }}>{{ __('general.pages.discounts.rate') }}</option>
+                                <option value="fixed" {{ ($data['type']??'') == 'fixed' ? 'selected' : '' }}>{{ __('general.pages.discounts.fixed') }}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -279,3 +279,6 @@
     </div>
 
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+@endpush

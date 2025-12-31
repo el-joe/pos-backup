@@ -27,10 +27,10 @@
                     <!-- Filter by Customer -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.sales.customer') }}</label>
-                        <select class="form-select" wire:model.live="filters.customer_id">
+                        <select class="form-select select2" name="filters.customer_id">
                             <option value="">{{ __('general.pages.sales.all_customers') }}</option>
                             @foreach ($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                <option value="{{ $customer->id }}" {{ ($filters['customer_id']??'') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -38,10 +38,10 @@
                     {{-- Filter by Branch --}}
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.sales.branch') }}</label>
-                        <select class="form-select" wire:model.live="filters.branch_id">
+                        <select class="form-select select2" name="filters.branch_id">
                             <option value="">{{ __('general.pages.sales.all_branches_option') }}</option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -118,10 +118,10 @@
                                 <td>{{ $sale->invoice_number }}</td>
                                 <td>{{ $sale->customer?->name }}</td>
                                 <td>{{ $sale->branch?->name }}</td>
-                                <td>{{ $sale->grand_total_amount ?? 0 }}</td>
+                                <td>{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
                                 <td>
                                     <span class="badge bg-danger">
-                                        {{ number_format($sale->due_amount ?? 0, 2) }}
+                                        {{ currencyFormat($sale->due_amount ?? 0, true) }}
                                     </span>
                                 </td>
                                 <td>
@@ -147,13 +147,13 @@
                                     @endadminCan
                                     @adminCan('sales.show-invoice')
                                     {{-- create 2 btn one for print and one for export to pdf --}}
-                                    <a href="{{ route('generate.invoice', ['type' => 'sales','id'=>$sale->id, 'action' => 'print']) }}"
+                                    <a href="{{ route('sales.invoice', encodedData(['type' => '80mm','order_id'=>$sale->id, 'action' => 'print'])) }}"
                                        class="btn btn-sm btn-info ms-1"
                                        title="{{ __('general.pages.sales.print') }}"
                                        target="_blank">
                                         <i class="fa fa-print"></i>
                                     </a>
-                                    <a href="{{ route('generate.invoice', ['type' => 'sales','id'=>$sale->id, 'action' => 'pdf']) }}"
+                                    <a href="{{ route('sales.invoice', encodedData(['type' => 'a4','order_id'=>$sale->id, 'action' => 'pdf'])) }}"
                                        class="btn btn-sm btn-warning ms-1"
                                        title="{{ __('general.pages.sales.export_pdf') }}"
                                        target="_blank">
@@ -194,7 +194,7 @@
                         <div class="col-md-6">
                             <label for="paymentAmount" class="form-label fw-bold">{{ __('general.pages.sales.amount') }}</label>
                             <div class="input-group">
-                                <span class="input-group-text">$</span>
+                                <span class="input-group-text">{{ currency()->symbol }}</span>
                                 <input type="number" class="form-control" id="paymentAmount" wire:model="payment.amount" placeholder="{{ __('general.pages.sales.amount') }}">
                                 <span class="input-group-text">
                                     {{ __('general.pages.sales.due') ?? 'Due' }}:
@@ -259,8 +259,8 @@
                                 ?>
                                 @forelse($payments as $payment)
                                     <tr>
-                                        <td>{{ carbon($payment->created_at)->format('Y-m-d') }}</td>
-                                        <td><span class="badge bg-success">{{ $payment->amount }}</span></td>
+                                        <td>{{ dateTimeFormat($payment->created_at,true,false) }}</td>
+                                        <td><span class="badge bg-success">{{ currencyFormat($payment->amount, true) }}</span></td>
                                         <td>{{ $payment->account() ? ($payment->account('credit')->paymentMethod?->name ? $payment->account('credit')->paymentMethod?->name .' - '  : '' ) . $payment->account('credit')->name : 'N/A' }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>
@@ -285,5 +285,6 @@
 </div>
 
 
-@push('styles')
+@push('scripts')
+@include('layouts.hud.partials.select2-script')
 @endpush

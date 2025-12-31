@@ -8,23 +8,17 @@
             </div>
             <div class="card-body">
                 <form wire:submit.prevent="applyFilter" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="from_date" class="form-label">{{ __('general.pages.reports.common.from_date') }}</label>
-                        <input type="date" id="from_date" wire:model.defer="from_date" class="form-control form-control-sm">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="to_date" class="form-label">{{ __('general.pages.reports.common.to_date') }}</label>
-                        <input type="date" id="to_date" wire:model.defer="to_date" class="form-control form-control-sm">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
                     </div>
                     <div class="col-md-3">
                         <label for="branch_id" class="form-label">{{ __('general.pages.reports.branch_profitability.branch') }}</label>
-                        <select id="branch_id" wire:model.defer="branch_id" class="form-select form-select-sm">
+                        <select id="branch_id" name="branch_id" class="form-select form-select-sm select2">
                             <option value="">{{ __('general.pages.reports.branch_profitability.all_branches') }}</option>
-                            @if(function_exists('branches'))
-                                @foreach(branches() as $branch)
-                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                @endforeach
-                            @endif
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch->id }}" {{ $branch->id == $branch_id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
@@ -97,12 +91,12 @@
                                         <strong>{{ $row->branch_name }}</strong>
                                         <small class="text-muted d-block">(ID: {{ $row->branch_id ?? '-' }})</small>
                                     </td>
-                                    <td class="text-end">{{ number_format($row->sales_revenue ?? 0, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->cogs ?? 0, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->expenses ?? 0, 2) }}</td>
-                                    <td class="text-end">{{ number_format($row->other_income ?? 0, 2) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->sales_revenue ?? 0, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->cogs ?? 0, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->expenses ?? 0, true) }}</td>
+                                    <td class="text-end">{{ currencyFormat($row->other_income ?? 0, true) }}</td>
                                     <td class="text-end fw-bold text-{{ $isProfit ? 'success' : 'danger' }}">
-                                        {{ number_format($row->net_profit ?? 0, 2) }}
+                                        {{ currencyFormat($row->net_profit ?? 0, true) }}
                                     </td>
                                 </tr>
                             @empty
@@ -116,11 +110,11 @@
                         <tfoot class="table-light fw-bold">
                             <tr>
                                 <th class="">{{ __('general.pages.reports.branch_profitability.totals') }}</th>
-                                <th class="text-end">{{ number_format($totals['sales_revenue'], 2) }}</th>
-                                <th class="text-end">{{ number_format($totals['cogs'], 2) }}</th>
-                                <th class="text-end">{{ number_format($totals['expenses'], 2) }}</th>
-                                <th class="text-end">{{ number_format($totals['other_income'], 2) }}</th>
-                                <th class="text-end text-primary">{{ number_format($totals['net_profit'], 2) }}</th>
+                                <th class="text-end">{{ currencyFormat($totals['sales_revenue'], true) }}</th>
+                                <th class="text-end">{{ currencyFormat($totals['cogs'], true) }}</th>
+                                <th class="text-end">{{ currencyFormat($totals['expenses'], true) }}</th>
+                                <th class="text-end">{{ currencyFormat($totals['other_income'], true) }}</th>
+                                <th class="text-end text-primary">{{ currencyFormat($totals['net_profit'], true) }}</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -135,3 +129,7 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    @include('layouts.hud.partials.select2-script')
+    @include('layouts.hud.partials.daterange-picker-script')
+@endpush

@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Admin\Expenses;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\ExpenseCategoryService;
 use App\Services\ExpenseService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -53,6 +56,8 @@ class ExpensesList extends Component
     {
         $this->setCurrent($id);
 
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_TRY, ['id' => $id]);
+
         $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this expense category', 'Yes, delete it!');
     }
 
@@ -69,8 +74,11 @@ class ExpensesList extends Component
             $this->cashRegisterService->increment($cashRegister->id, 'total_expense_refunds', $getTotalRefunded);
         }
 
+        $id = $this->current->id;
 
-        $this->expenseService->delete($this->current->id);
+        $this->expenseService->delete($id);
+
+        AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE, ['id' => $id]);
 
         $this->popup('success', 'Expense deleted successfully');
 
@@ -82,7 +90,23 @@ class ExpensesList extends Component
     function save()  {
         if (!$this->validator()) return;
 
-        $expense = $this->expenseService->save($this->current?->id, $this->data);
+        if($this->current){
+            $action = AuditLogActionEnum::UPDATE_EXPENSE;
+        } else {
+            $action = AuditLogActionEnum::CREATE_EXPENSE;
+        }
+
+        try{
+            DB::beginTransaction();
+            $expense = $this->expenseService->save($this->current?->id, $this->data);
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while saving expense: '.$e->getMessage());
+            return;
+        }
+
+        AuditLog::log($action, ['id' => $expense->id]);
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
@@ -126,6 +150,8 @@ class ExpensesList extends Component
             $headers = ['#', 'Branch', 'Target', 'Category', 'Amount', 'Tax Percentage', 'Total', 'Date', 'Note', 'Created At'];
             $fullPath = exportToExcel($data, $columns, $headers, 'expenses');
 
+            AuditLog::log(AuditLogActionEnum::EXPORT_EXPENSES, ['url' => $fullPath]);
+
             $this->redirectToDownload($fullPath);
         }
 
@@ -138,12 +164,12 @@ class ExpensesList extends Component
                 'branch' => $expense->branch?->name ?? 'N/A',
                 'target' => $expense->model_type ? (new $expense->model_type)->getTable() : 'N/A',
                 'category' => $expense->category?->name ?? 'N/A',
-                'amount' => $expense->amount,
+                'amount' => currencyFormat($expense->amount, true),
                 'tax_percentage' => $expense->tax_percentage,
-                'total' => $expense->total,
+                'total' => currencyFormat($expense->total, true),
                 'date' => $expense->expense_date,
                 'note' => $expense->note ?? 'N/A',
-                'created_at' => $expense->created_at,
+                'created_at' => dateTimeFormat($expense->created_at,true,false),
                 'deleted' => $expense->deleted_at != null,
             ];
         });
@@ -181,7 +207,7 @@ class ExpensesList extends Component
             'total' => [ 'type' => 'decimal'],
             'date' => [ 'type' => 'date'],
             'note' => [ 'type' => 'text'],
-            'created_at' => [ 'type' => 'datetime'],
+            'created_at' => [ 'type' => 'text'],
             'actions' => [ 'type' => 'actions' , 'actions' => $actions],
         ];
 
