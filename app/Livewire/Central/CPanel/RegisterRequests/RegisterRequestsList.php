@@ -33,6 +33,12 @@ class RegisterRequestsList extends Component
         }
     }
 
+    function markAllAsRead()
+    {
+        RegisterRequest::where('read_at', null)->update([
+            'read_at' => Carbon::now(),
+        ]);
+    }
 
     function changeStatus($id, $status)
     {
