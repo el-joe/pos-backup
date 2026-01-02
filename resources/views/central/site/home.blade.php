@@ -593,7 +593,7 @@
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <article class="card d-flex flex-column h-100 mb-5 mb-lg-0" itemscope itemtype="https://schema.org/BlogPosting">
                             <div style="flex:none!important" class="card-body p-0 overflow-hidden">
-                                <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => app()->getLocale()]) }}" aria-label="Read more about {{ $blog->title }}">
+                                <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => urlLang()]) }}" aria-label="Read more about {{ $blog->title }}">
                                     <img
                                         loading="lazy"
                                         src="{{ $blog->thumb_image_path }}"
@@ -607,7 +607,7 @@
 
                             <div class="flex-1 px-3 pt-3 pb-0">
                                 <h3 class="h5 mb-2" itemprop="headline">
-                                    <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => app()->getLocale()]) }}" class="text-decoration-none text-body">
+                                    <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => urlLang()]) }}" class="text-decoration-none text-body">
                                         {{ $blog->title }}
                                     </a>
                                 </h3>
@@ -640,7 +640,7 @@
             </div>
 
             <div class="text-center">
-                <a href="{{ route('blogs.index', ['lang' => app()->getLocale()]) }}" class="btn btn-link text-decoration-none text-body text-opacity-50 h6">
+                <a href="{{ route('blogs.index', ['lang' => urlLang()]) }}" class="btn btn-link text-decoration-none text-body text-opacity-50 h6">
                     {{ __('website.home.see_more_stories') }} <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
                 </a>
             </div>

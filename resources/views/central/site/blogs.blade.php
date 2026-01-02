@@ -16,7 +16,7 @@
                 <div class="row g-3 g-xl-4 mb-5" itemscope itemtype="https://schema.org/ItemList">
                     @foreach($blogs as $index => $blog)
                         <div class="col-xl-3 col-lg-4 col-sm-6" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                            <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => app()->getLocale()]) }}"
+                            <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => urlLang()]) }}"
                                class="text-decoration-none text-body d-block h-100"
                                aria-label="{{ __('website.blogs.read_more_about') }}: {{ $blog->title }}">
 
@@ -46,7 +46,7 @@
                                     </div>
 
                                     <meta itemprop="position" content="{{ $index + 1 }}" />
-                                    <meta itemprop="url" content="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => app()->getLocale()]) }}" />
+                                    <meta itemprop="url" content="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => urlLang()]) }}" />
 
                                     <div class="card-arrow" aria-hidden="true">
                                         <div class="card-arrow-top-left"></div>

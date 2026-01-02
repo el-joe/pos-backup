@@ -381,4 +381,8 @@ if (! function_exists('seo')) {
     //         );
     //     }
     // }
+
+    function urlLang(){
+        return app()->getLocale() . '-' . session('country', 'eg');
+    }
 }
