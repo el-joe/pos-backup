@@ -17,11 +17,11 @@ class PlanSection extends Component
 
     function mount()
     {
-        $countryCode = old('data.country_id') ?? strtoupper(session('country'));
-        $currencyCode = old('data.currency_id') ?? strtoupper(session('country'));
+        $countryCode = strtoupper(session('country'));
+        $currencyCode = strtoupper(session('country'));
 
-        $this->country_id = Country::where((old('data.country_id') != null ? 'id' : 'code'), $countryCode)->first()?->id;
-        $this->currency_id = Currency::where((old('data.currency_id') != null ? 'id' : 'country_code'), $currencyCode)->first()?->id;
+        $this->country_id = Country::where('code', $countryCode)->first()?->id;
+        $this->currency_id = Currency::where('country_code', $currencyCode)->first()?->id;
     }
 
     function updatingYearly($value)
@@ -34,7 +34,7 @@ class PlanSection extends Component
         $plans = Plan::where('active', true)
             ->orderBy('price_month')->get();
 
-        $currentCurrency = Currency::find($this->data['currency_id'] ?? null);
+        $currentCurrency = Currency::find($this->currency_id ?? null);
 
         return view('livewire.central.site.plan-section',get_defined_vars());
     }
