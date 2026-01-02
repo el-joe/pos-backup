@@ -83,6 +83,7 @@ class CheckoutPage extends Component
         $this->plan = Plan::whereSlug($slug)->firstOrFail();
 
         $this->data['country_id'] = Country::where((old('data.country_id') != null ? 'id' : 'code'), strtoupper(old('data.country_id') ?? session('country')))->first()?->id;
+        $this->data['currency_id'] = Currency::where((old('data.currency_id') != null ? 'id' : 'country_code'), strtoupper(old('data.country_id') ?? 'US'))->first()?->id;
     }
 
     function completeSubscription()
