@@ -32,7 +32,11 @@
                                         @php
                                             $convertedPrice = $plan->{'price_'.$period} * ($currentCurrency->conversion_rate ?? 1);
                                         @endphp
-                                        <span itemprop="priceCurrency" content="{{ $currentCurrency->code ?? 'USD' }}">{{ $currentCurrency->symbol ?? '$' }}</span>
+                                        @if((float) $convertedPrice === 0.0)
+                                            <meta itemprop="priceCurrency" content="{{ $currentCurrency->code ?? 'USD' }}">
+                                        @else
+                                            <span itemprop="priceCurrency" content="{{ $currentCurrency->code ?? 'USD' }}">{{ $currentCurrency->symbol ?? '$' }}</span>
+                                        @endif
                                         <span itemprop="price" content="{{ $convertedPrice }}">{{ (float) $convertedPrice === 0.0 ? __('website.pricing.free') : $convertedPrice }}</span>
                                         <small class="h6 text-body text-opacity-50">/{{ $period }}</small>
                                     </div>
