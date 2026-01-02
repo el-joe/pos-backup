@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Country extends Model
 {
     protected $connection = 'central';
-    protected $fillable = ['name', 'code'];
+    protected $fillable = ['name', 'code','default_language'];
 }

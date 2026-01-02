@@ -29,6 +29,7 @@ class SeoHelper
             $_locale = implode('-', $_locale);
             $this->alternates[] = new AlternateTag($_locale, url("/{$locale}"));
         }
+        $this->alternates[] = new AlternateTag('x-default', url('/'));
         $this->defaults = [
             'author' => 'codefanz.com',
             'robots' => 'index, follow',
@@ -311,15 +312,11 @@ class SeoHelper
 
     public static function getAllLocalesWithCountry(): array
     {
-        $languages = Language::pluck('code')->toArray();
-        $countries = Country::pluck('code')->toArray();
+        $countries = Country::select('code','default_language')->get()->toArray();
 
         $locales = [];
-        foreach ($languages as $language) {
-            foreach ($countries as $country) {
-                $country = strtolower($country);
-                $locales[] = "{$language}-{$country}";
-            }
+        foreach ($countries as $country) {
+            $locales[] = "{$country['default_language']}-{$country['code']}";
         }
 
         return $locales;
