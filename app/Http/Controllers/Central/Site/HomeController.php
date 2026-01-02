@@ -65,7 +65,7 @@ class HomeController extends Controller
     function faqs($lang = null)
     {
         if($lang == null){
-            $lang = app()->getLocale();
+            $lang = app()->getLocale() . '-' . session('country', 'eg');
         }
         $faqs = Faq::published()
             ->orderBy('sort_order')
@@ -135,16 +135,18 @@ class HomeController extends Controller
 
         // redirect to same route but with new lang parameter
         $previousUrl = url()->previous();
-        if(str_contains($previousUrl, '/en/') || str_contains($previousUrl, '/ar/')){
-            $newUrl = preg_replace('/\/(en|ar)\//', '/' . $locale . '/', $previousUrl);
-        }else{
-            if($previousUrl == url('/')){
-                $newUrl = url('/' . $locale);
-            }else{
-                $newUrl = $previousUrl;
-            }
-        }
+        // refactor this to be like en-us or ar-eg
+        $newUrl = preg_replace('/\/(en|ar)(-[a-zA-Z]{2})?/', '/' . $locale . '-' . session('country', 'eg'), $previousUrl);
 
+        // if(str_contains($previousUrl, '/en/') || str_contains($previousUrl, '/ar/')){
+        //     $newUrl = preg_replace('/\/(en|ar)\//', '/' . $locale . '/', $previousUrl);
+        // }else{
+        //     if($previousUrl == url('/')){
+        //         $newUrl = url('/' . $locale);
+        //     }else{
+        //         $newUrl = $previousUrl;
+        //     }
+        // }
         return redirect($newUrl);
     }
 }

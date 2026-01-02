@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\SeoHelper;
 use App\Models\Blog;
+use App\Models\Country;
+use App\Models\Language;
 use App\Models\Page;
 use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
@@ -30,27 +33,33 @@ class GenerateSitemap extends Command
     {
         $sitemap = Sitemap::create();
 
+        $locales = SeoHelper::getAllLocalesWithCountry();
+
         // الصفحات الثابتة
         $sitemap->add(url('/'));
-        $sitemap->add(url('/ar'));
-        $sitemap->add(url('/en'));
+        foreach ($locales as $locale) {
+            $sitemap->add(url("/{$locale}"));
+            $sitemap->add(url("/{$locale}/faqs"));
+        }
+        // $sitemap->add(url('/ar'));
+        // $sitemap->add(url('/en'));
         $sitemap->add(url('/pricing'));
         $sitemap->add(url('/pricing/compare'));
         $sitemap->add(url('/blogs'));
         $sitemap->add(url('/faqs'));
-        $sitemap->add(url('/ar/faqs'));
-        $sitemap->add(url('/en/faqs'));
 
-        Page::published()->get()->each(function (Page $page) use ($sitemap) {
+        Page::published()->get()->each(function (Page $page) use ($sitemap,$locales) {
             $sitemap->add(url("/{$page->slug}"));
-            $sitemap->add(url("/ar/{$page->slug}"));
-            $sitemap->add(url("/en/{$page->slug}"));
+            foreach ($locales as $locale) {
+                $sitemap->add(url("/{$locale}/{$page->slug}"));
+            }
         });
 
         // الصفحات الديناميكية
-        Blog::all()->each(function($blog) use ($sitemap) {
-            $sitemap->add(url("ar/blogs/{$blog->slug}"));
-            $sitemap->add(url("en/blogs/{$blog->slug}"));
+        Blog::all()->each(function($blog) use ($sitemap, $locales) {
+            foreach ($locales as $locale) {
+                $sitemap->add(url("/{$locale}/blogs/{$blog->slug}"));
+            }
         });
 
         // حفظ الـ sitemap
