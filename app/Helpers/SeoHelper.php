@@ -24,8 +24,8 @@ class SeoHelper
 
         $this->alternates = [];
         foreach ($locales as $locale) {
-            $locale = explode('-', $locale)[0] ?? 'ar';
-            $this->alternates[] = new AlternateTag($locale, url("/{$locale}"));
+            $_locale = explode('-', $locale)[0] ?? 'ar';
+            $this->alternates[] = new AlternateTag($_locale, url("/{$locale}"));
         }
         $this->defaults = [
             'author' => 'codefanz.com',
@@ -208,7 +208,7 @@ class SeoHelper
     {
         $helper = new self();
 
-        $localeWithCountry = app()->getLocale() . '-' . (session('country', 'us'));
+        $localeWithCountry = app()->getLocale() . '-' . (session('country', 'eg'));
 
         switch ($page) {
             case 'home':
