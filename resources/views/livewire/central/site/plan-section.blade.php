@@ -30,7 +30,7 @@
                                     <h3 class="h6 font-monospace">{{ $plan->name }} Plan</h3>
                                     <div class="display-6 fw-bold mb-0">
                                         <span itemprop="priceCurrency" content="{{ $currentCurrency->code ?? 'USD' }}">{{ $currentCurrency->symbol ?? '$' }}</span>
-                                        <span itemprop="price" content="{{ currencySymbolPosition($plan->{'price_'.$period}, $currentCurrency->symbol ?? '$') }}">{{ currencySymbolPosition($plan->{'price_'.$period}, $currentCurrency->symbol ?? '$') }}</span>
+                                        <span itemprop="price" content="{{ $plan->{'price_'.$period} }}">{{ $plan->{'price_'.$period} }}</span>
                                         <small class="h6 text-body text-opacity-50">/{{ $period }}</small>
                                     </div>
                                     <link itemprop="availability" href="https://schema.org/InStock" />
