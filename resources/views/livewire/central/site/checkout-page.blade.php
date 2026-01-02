@@ -31,7 +31,7 @@
                         <div class="text-end">
                             <small class="text-muted">{{ __('website.checkout.price') }}</small>
                             <h5 class="mb-0">
-                                {{ $plan->{"price_".$period} }}$
+                                {{ currencySymbolPosition($plan->{"price_".$period} * $currentCurrency->conversion_rate, $currentCurrency->symbol) }}
                                 <small class="text-muted">/ {{ __('website.checkout.periods.' . $period) }}</small>
                             </h5>
                         </div>
@@ -154,7 +154,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label">{{ __('website.checkout.currency') }}</label>
-                            <select class="form-select" wire:model="data.currency_id" required>
+                            <select class="form-select" wire:model.live="data.currency_id" required>
                                 <option value="">{{ __('website.checkout.select_currency') }}</option>
                                 @foreach($currencies as $currency)
                                     <option value="{{ $currency->id }}">{{ $currency->name }} ( {{ $currency->code }} )</option>
@@ -250,11 +250,25 @@
                             </tr>
                             <tr>
                                 <td>{{ __('website.checkout.price') }}:</td>
-                                <td>${{ $plan->{"price_" . $period} }}</td>
+                                @if($currentCurrency->conversion_rate && $currentCurrency->conversion_rate != 1)
+                                    <td>
+                                        {{ currencySymbolPosition(number_format($plan->{"price_" . $period} * $currentCurrency->conversion_rate, 2), $currentCurrency->symbol) }}
+                                    </td>
+                                @else
+                                    <td>
+                                        {{ currencySymbolPosition($plan->{"price_" . $period} * $currentCurrency->conversion_rate, '$') }}
+                                    </td>
+                                @endif
                             </tr>
                             <tr>
                                 <td>{{ __('website.checkout.discount') }}:</td>
-                                <td id="discount_amount">$0</td>
+                                <td id="discount_amount">
+                                    @if($currentCurrency->conversion_rate && $currentCurrency->conversion_rate != 1)
+                                        {{ currencySymbolPosition(0, $currentCurrency->symbol) }}
+                                    @else
+                                        {{ currencySymbolPosition(0, '$') }}
+                                    @endif
+                                </td>
                             </tr>
                             {{-- <tr>
                                 <td>VAT:</td>
@@ -262,9 +276,15 @@
                             </tr> --}}
                             <tr class="table-dark fw-bold">
                                 <td>{{ __('website.checkout.total') }}:</td>
-                                <td id="total_amount">${{ $plan->{"price_" . $period} }}</td>
+                                <td id="total_amount">{{ currencySymbolPosition($plan->{"price_" . $period} * $currentCurrency->conversion_rate, $currentCurrency->symbol) }}</td>
                             </tr>
                         </table>
+                        @if($currentCurrency->country_code != 'EGP')
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i>
+                                {{ __('website.checkout.currency_conversion_note', ['currency' => $currentCurrency->code, 'symbol' => $currentCurrency->symbol,'usd' => $plan->{"price_" . $period}]) }}
+                            </div>
+                        @endif
                     @endif
 
                         <!-- Agreements: Privacy Policy & Terms -->

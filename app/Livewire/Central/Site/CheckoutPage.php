@@ -84,6 +84,7 @@ class CheckoutPage extends Component
 
         $countryCode = old('data.country_id') ?? strtoupper(session('country'));
         $currencyCode = old('data.currency_id') ?? strtoupper(session('country'));
+
         $this->data['country_id'] = Country::where((old('data.country_id') != null ? 'id' : 'code'), $countryCode)->first()?->id;
         $this->data['currency_id'] = Currency::where((old('data.currency_id') != null ? 'id' : 'country_code'), $currencyCode)->first()?->id;
     }
@@ -132,6 +133,7 @@ class CheckoutPage extends Component
     {
         $countries = Country::orderBy('name')->get();
         $currencies = Currency::orderBy('name')->get();
+        $currentCurrency = Currency::find($this->data['currency_id'] ?? null);
         return view('livewire.central.site.checkout-page', get_defined_vars());
     }
 }
