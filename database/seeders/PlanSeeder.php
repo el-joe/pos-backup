@@ -6,6 +6,7 @@ use App\Enums\PlanFeaturesEnum;
 use App\Models\Plan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PlanSeeder extends Seeder
 {
@@ -191,10 +192,14 @@ class PlanSeeder extends Seeder
         ];
 
         foreach ($plans as $plan) {
-            Plan::firstOrCreate(
+            DB::table('plans')->upsert(
                 ['slug' => $plan['slug']],
                 $plan
             );
+            // Plan::firstOrCreate(
+            //     ['slug' => $plan['slug']],
+            //     $plan
+            // );
         }
     }
 }
