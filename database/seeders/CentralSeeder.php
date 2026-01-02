@@ -23,7 +23,7 @@ class CentralSeeder extends Seeder
                     ['code' => $c['code']],
                     [
                         'name' => $c['name'],
-                        'default_language' => 'en',
+                        'default_language' => $c['default_language'] ?? null,
                     ]
                 );
             }
@@ -38,7 +38,6 @@ class CentralSeeder extends Seeder
                         'name' => $cur['name'],
                         'symbol' => $cur['symbol'] ?? null,
                         'country_code' => $cur['country_code'] ?? null,
-                        'conversion_rate' => 1,
                     ]
                 );
             }
