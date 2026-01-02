@@ -17,6 +17,9 @@ class PlanSection extends Component
 
     function mount()
     {
+        $countryCode = old('data.country_id') ?? strtoupper(session('country'));
+        $currencyCode = old('data.currency_id') ?? strtoupper(session('country'));
+
         $this->country_id = Country::where((old('data.country_id') != null ? 'id' : 'code'), $countryCode)->first()?->id;
         $this->currency_id = Currency::where((old('data.currency_id') != null ? 'id' : 'country_code'), $currencyCode)->first()?->id;
     }
