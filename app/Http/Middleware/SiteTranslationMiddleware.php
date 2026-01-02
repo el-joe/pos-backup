@@ -22,6 +22,7 @@ class SiteTranslationMiddleware
 
         view()->share('__locale', app()->getLocale());
         view()->share('__country', session('country', 'eg'));
+        view()->share('__currentLang', SeoHelper::UrlLang());
         view()->share('seoData', $seoData);
 
         return $next($request);

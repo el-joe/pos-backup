@@ -322,4 +322,13 @@ class SeoHelper
 
         return $locales;
     }
+
+
+    static function UrlLang()
+    {
+        $lang = app()->getLocale();
+        $country = session('country', 'eg');
+        return "{$lang}-{$country}";
+    }
+
 }

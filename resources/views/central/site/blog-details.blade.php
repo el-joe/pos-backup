@@ -6,7 +6,7 @@
     <div class="py-5 bg-component">
         <div class="container-xxl p-3 p-lg-5">
             <div class="mb-4">
-                <a href="{{ route('blogs.index', ['lang' => urlLang()]) }}" class="text-decoration-none text-body text-opacity-50 h6">
+                <a href="{{ route('blogs.index', ['lang' => $__currentLang]) }}" class="text-decoration-none text-body text-opacity-50 h6">
                     <i class="fa fa-arrow-left me-2"></i>{{ __('website.blogs.back_to_all') }}
                 </a>
             </div>

@@ -37,7 +37,7 @@
                     <a href="{{ route('pricing') }}" class="nav-link">{{ __('website.nav.pricing') }}</a>
                 </li>
                 <li class="nav-item me-2">
-                    <a href="{{ route('blogs.index', ['lang' => urlLang()]) }}" class="nav-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}">{{ __('website.nav.blogs') }}</a>
+                    <a href="{{ route('blogs.index', ['lang' => $__currentLang]) }}" class="nav-link {{ request()->routeIs('blogs.*') ? 'active' : '' }}">{{ __('website.nav.blogs') }}</a>
                 </li>
                 <li class="nav-item dropdown ms-lg-3">
                     <button
