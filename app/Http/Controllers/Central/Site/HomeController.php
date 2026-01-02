@@ -102,7 +102,7 @@ class HomeController extends Controller
             'message'=>$request->message,
         ]);
 
-        Mail::to(env('ADMIN_EMAIL','support@codefanz.com'))->send(new \App\Mail\ContactUsMail($contact));
+        Mail::to(env('ADMIN_EMAIL','eljoe1717@gmail.com'))->send(new \App\Mail\ContactUsMail($contact));
 
         return redirect()->back()->with('success','Your message has been sent successfully.');
     }
