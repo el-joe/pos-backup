@@ -316,7 +316,7 @@ class SeoHelper
         foreach ($languages as $language) {
             foreach ($countries as $country) {
                 $country = strtolower($country);
-                $locales[] = "{$language}_{$country}";
+                $locales[] = "{$language}-{$country}";
             }
         }
 
