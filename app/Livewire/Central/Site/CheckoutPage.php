@@ -81,6 +81,8 @@ class CheckoutPage extends Component
         $this->period = $data['period'] ?? 'month';
         $this->slug = $slug = $data['slug'] ?? null;
         $this->plan = Plan::whereSlug($slug)->firstOrFail();
+
+        $this->data['country_id'] = Country::where((old('data.country_id') != null ? 'id' : 'code'), strtoupper(old('data.country_id') ?? session('country')))->first()?->id;
     }
 
     function completeSubscription()

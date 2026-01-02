@@ -146,7 +146,7 @@
                             <select class="form-select" wire:model="data.country_id" required>
                                 <option value="">{{ __('website.checkout.select_country') }}</option>
                                 @foreach($countries as $country)
-                                    <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
+                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
                                 @endforeach
                             </select>
                             @error('data.country_id') <small class="text-danger">{{ $message }}</small> @enderror
