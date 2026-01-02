@@ -25,7 +25,8 @@ class SeoHelper
         $this->alternates = [];
         foreach ($locales as $locale) {
             $_locale = explode('-', $locale);
-            $_locale[1] = strtoupper($locale[1] ?? 'eg');
+            $_locale[1] = strtoupper($_locale[1] ?? 'eg');
+            $_locale = implode('-', $_locale);
             $this->alternates[] = new AlternateTag($_locale, url("/{$locale}"));
         }
         $this->defaults = [
