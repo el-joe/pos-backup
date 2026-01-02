@@ -64,6 +64,7 @@ return [
         'name_content' => 'Mohaaseb ERP Software Plans',
         'description_content' => 'Flexible pricing plans for businesses of all sizes.',
         'get_started' => 'Get Started',
+        'free' => 'Free',
     ],
 
     'pricing_compare' => [

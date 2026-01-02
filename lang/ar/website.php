@@ -63,6 +63,7 @@ return [
         'name_content' => 'خطط أسعار برنامج Mohaaseb ERP',
         'description_content' => 'خطط تسعير مرنة للشركات بمختلف الأحجام.',
         'get_started' => 'ابدأ الآن',
+        'free' => 'مجاني',
     ],
 
     'pricing_compare' => [
