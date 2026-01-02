@@ -15,7 +15,7 @@ class CentralWebsitesetLocal
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->segment(1); // Gets 'en' or 'ar' from the URL
+        $locale = explode('-', $request->segment(1))[0];
 
         if (in_array($locale, ['en', 'ar'])) {
             app()->setLocale($locale);

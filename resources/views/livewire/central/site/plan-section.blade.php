@@ -29,8 +29,15 @@
                                 <div class="flex-1">
                                     <h3 class="h6 font-monospace">{{ $plan->name }} Plan</h3>
                                     <div class="display-6 fw-bold mb-0">
-                                        <span itemprop="priceCurrency" content="USD">$</span>
-                                        <span itemprop="price" content="{{ $plan->{'price_'.$period} }}">{{ $plan->{"price_".$period} }}</span>
+                                        @php
+                                            $convertedPrice = $plan->{'price_'.$period} * ($currentCurrency->conversion_rate ?? 1);
+                                        @endphp
+                                        @if((float) $convertedPrice === 0.0)
+                                            <meta itemprop="priceCurrency" content="{{ $currentCurrency->code ?? 'USD' }}">
+                                        @else
+                                            <span itemprop="priceCurrency" content="{{ $currentCurrency->code ?? 'USD' }}">{{ $currentCurrency->symbol ?? '$' }}</span>
+                                        @endif
+                                        <span itemprop="price" content="{{ $convertedPrice }}">{{ (float) $convertedPrice === 0.0 ? __('website.pricing.free') : $convertedPrice }}</span>
                                         <small class="h6 text-body text-opacity-50">/{{ $period }}</small>
                                     </div>
                                     <link itemprop="availability" href="https://schema.org/InStock" />

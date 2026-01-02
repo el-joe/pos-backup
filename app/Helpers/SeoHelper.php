@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\Country;
+use App\Models\Language;
 use Carbon\Carbon;
 use RalphJSmit\Laravel\SEO\SchemaCollection;
 use RalphJSmit\Laravel\SEO\Support\AlternateTag;
@@ -12,16 +14,22 @@ class SeoHelper
 {
     protected array $defaults;
     protected array $alternates;
+    protected array $locales;
     protected string $defaultImage;
 
     public function __construct()
     {
         $this->defaultImage = asset('mohaaseb_en_dark_2.webp');
-        $this->alternates = [
-            new AlternateTag('en', url('/en')),
-            new AlternateTag('ar', url('/ar')),
-        ];
+        $this->locales = $locales = self::getAllLocalesWithCountry();
 
+        $this->alternates = [];
+        foreach ($locales as $locale) {
+            $_locale = explode('-', $locale);
+            $_locale[1] = strtoupper($_locale[1] ?? 'eg');
+            $_locale = implode('-', $_locale);
+            $this->alternates[] = new AlternateTag($_locale, url("/{$locale}"));
+        }
+        $this->alternates[] = new AlternateTag('x-default', url('/'));
         $this->defaults = [
             'author' => 'codefanz.com',
             'robots' => 'index, follow',
@@ -187,7 +195,7 @@ class SeoHelper
             enableTitleSuffix: $data['enableTitleSuffix'] ?? true,
             type: $data['type'] ?? 'website',
             site_name: $data['site_name'] ?? $this->defaults['site_name'],
-            locale: app()->getLocale() === 'en' ? 'en_US' : 'ar_AR',
+            locale: app()->getLocale() . '_' . strtoupper(session('country', 'eg')),
             openGraphTitle: $data['openGraphTitle'] ?? $data['title'],
             imageMeta: new ImageMeta($image),
             twitter_username: $data['twitter_username'] ?? $this->defaults['twitter_username'],
@@ -202,6 +210,8 @@ class SeoHelper
     static function render($page,array $data = []) : SEOData
     {
         $helper = new self();
+
+        $localeWithCountry = app()->getLocale() . '-' . (session('country', 'eg'));
 
         switch ($page) {
             case 'home':
@@ -246,7 +256,7 @@ class SeoHelper
                 $data = array_merge([
                     'title' => __('website.titles.blog'),
                     'description' => __('website.meta_description_blog'),
-                    'canonical_url' => url(app()->getLocale() .'/blogs'),
+                    'canonical_url' => url($localeWithCountry .'/blogs'),
                     'type' => 'website',
                     'tags' => ['Blog', 'Articles', 'Business Tips', 'ERP Guide', 'POS Tips'],
                     'schema_type' => 'Blog',
@@ -256,7 +266,7 @@ class SeoHelper
                 $data = array_merge([
                     'title' => __('website.titles.faqs'),
                     'description' => __('website.meta_description_faqs'),
-                    'canonical_url' => url(app()->getLocale() .'/faqs'),
+                    'canonical_url' => url($localeWithCountry .'/faqs'),
                     'type' => 'website',
                     'tags' => ['FAQs', 'Support', 'Help Center', 'Mohaaseb'],
                     'schema_type' => 'FAQPage',
@@ -264,10 +274,11 @@ class SeoHelper
                 break;
             case 'blog-details':
                 // Build alternates for this specific blog
-                $blogAlternates = [
-                    new AlternateTag('en', url("/en/blogs/{$data['slug']}")),
-                    new AlternateTag('ar', url("/ar/blogs/{$data['slug']}")),
-                ];
+                $locales = self::getAllLocalesWithCountry();
+                $blogAlternates = [];
+                foreach ($locales as $locale) {
+                    $blogAlternates[] = new AlternateTag($locale, url("/{$locale}/blogs/{$data['slug']}"));
+                }
 
                 $data = array_merge([
                     'title' => $data['title'],
@@ -298,4 +309,25 @@ class SeoHelper
 
         return $helper->buildSEOData($data);
     }
+
+    public static function getAllLocalesWithCountry(): array
+    {
+        $countries = Country::select('code','default_language')->get()->toArray();
+
+        $locales = [];
+        foreach ($countries as $country) {
+            $locales[] = "{$country['default_language']}-{$country['code']}";
+        }
+
+        return $locales;
+    }
+
+
+    static function UrlLang()
+    {
+        $lang = app()->getLocale();
+        $country = session('country', 'eg');
+        return "{$lang}-{$country}";
+    }
+
 }

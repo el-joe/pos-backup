@@ -12,13 +12,23 @@ class SiteTranslationMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $lang = in_array($request->lang, ['en', 'ar']) ? $request->lang : session('locale',config('app.locale'));
-        session(['locale' => $lang]);
-        app()->setLocale($lang);
+        $langAndCountryFromRequest = explode('-', $request->lang);
 
+        if(in_array($langAndCountryFromRequest[0], ['en', 'ar'])){
+            $lang = $langAndCountryFromRequest[0];
+            $country = $langAndCountryFromRequest[1] ?? null;
+        }else{
+            $lang = session('locale','en');
+            $country = session('country','eg');
+        }
+        session(['locale' => $lang]);
+        session(['country' => $country]);
+        app()->setLocale($lang);
         $seoData = SeoHelper::render('home');
 
-        view()->share('__locale', app()->getLocale());
+        view()->share('__locale', $lang);
+        view()->share('__country', strtolower($country));
+        view()->share('__currentLang', SeoHelper::UrlLang());
         view()->share('seoData', $seoData);
 
         return $next($request);

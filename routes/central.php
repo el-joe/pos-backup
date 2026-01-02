@@ -25,7 +25,8 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
     Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');
     Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
 
-    Route::group(['prefix'=>'{lang?}','where' => ['lang' => 'en|ar'],'middleware'=>[CentralWebsitesetLocal::class]],function(){
+    // lang: en|ar with optional BCP47-style subtags, e.g. ar-eg, ar-sa, en-us
+    Route::group(['prefix'=>'{lang?}','where' => ['lang' => '(?:en|ar)(?:-[A-Za-z]{2,8})*'],'middleware'=>[CentralWebsitesetLocal::class]],function(){
         Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
         Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
         Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');

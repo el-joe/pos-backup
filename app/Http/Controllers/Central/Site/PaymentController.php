@@ -47,7 +47,7 @@ class PaymentController extends Controller
 
         if($type == 'success'){
             try{
-                $data = decodedData($data);
+                $data = decodedData($data ?? $request->query('data'));
                 $registerRequest = RegisterRequest::create([
                     'data'=>[
                         'company' => [
@@ -78,7 +78,7 @@ class PaymentController extends Controller
                     'name' => $data['company_name'],
                 ]));
 
-                Mail::to(env('ADMIN_EMAIL','support@codefanz.com'))->send(new AdminRegisterRequestMail(
+                Mail::to(env('ADMIN_EMAIL','eljoe1717@gmail.com'))->send(new AdminRegisterRequestMail(
                     registerRequest: $registerRequest
                 ));
             }catch(\Exception $e){

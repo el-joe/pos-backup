@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +23,7 @@ class CentralSeeder extends Seeder
                     ['code' => $c['code']],
                     [
                         'name' => $c['name'],
+                        'default_language' => $c['default_language'] ?? null,
                     ]
                 );
             }
@@ -37,7 +37,7 @@ class CentralSeeder extends Seeder
                     [
                         'name' => $cur['name'],
                         'symbol' => $cur['symbol'] ?? null,
-                        'conversion_rate' => 1,
+                        'country_code' => $cur['country_code'] ?? null,
                     ]
                 );
             }

@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Models\Currency;
 use App\Models\Tenant\Admin;
 use App\Models\Tenant\Setting;
@@ -14,23 +15,33 @@ use RalphJSmit\Laravel\SEO\Support\ImageMeta;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 use RalphJSmit\Laravel\SEO\TagManager;
 
-const TENANT_ADMINS_GUARD = 'tenant_admin';
-const CPANEL_ADMINS_GUARD = 'cpanel_admin';
-
-function cacheKey($key){
-    return tenant()->id . '_' . $key;
+if(!defined('TENANT_ADMINS_GUARD')){
+    define('TENANT_ADMINS_GUARD','tenant_admin');
+}
+if(!defined('CPANEL_ADMINS_GUARD')){
+    define('CPANEL_ADMINS_GUARD','cpanel_admin');
 }
 
-function defaultLayout(){
-    return 'hud';
+if(!function_exists('cacheKey')) {
+    function cacheKey($key){
+        return tenant()->id . '_' . $key;
+    }
 }
 
-function layoutView($pageName,$with = [],$isSubPage = false){
-    $defaultView = "livewire." . defaultLayout();
-    $defaultLayout = 'layouts.' . defaultLayout();
-    $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
-    return view("$defaultView.$pageName", $with)
-            ->layout($isSubPage ? null : $defaultLayout, $layoutData);
+if(!function_exists('defaultLayout')) {
+    function defaultLayout(){
+        return 'hud';
+    }
+}
+
+if(!function_exists('layoutView')) {
+    function layoutView($pageName,$with = [],$isSubPage = false){
+        $defaultView = "livewire." . defaultLayout();
+        $defaultLayout = 'layouts.' . defaultLayout();
+        $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
+        return view("$defaultView.$pageName", $with)
+                ->layout($isSubPage ? null : $defaultLayout, $layoutData);
+    }
 }
 
 
@@ -89,19 +100,21 @@ if(!function_exists('formattedDateTime')) {
     }
 }
 
-function getMonthsBetween($from, $to)
-{
-    $from = Carbon::parse($from)->startOfMonth();
-    $to = Carbon::parse($to)->startOfMonth();
+if(!function_exists('getMonthsBetween')) {
+    function getMonthsBetween($from, $to)
+    {
+        $from = Carbon::parse($from)->startOfMonth();
+        $to = Carbon::parse($to)->startOfMonth();
 
-    $months = [];
+        $months = [];
 
-    while ($from <= $to) {
-        $months[] = $from->copy();
-        $from->addMonth();
+        while ($from <= $to) {
+            $months[] = $from->copy();
+            $from->addMonth();
+        }
+
+        return $months;
     }
-
-    return $months;
 }
 if(!function_exists('defaultPermissionsList')) {
     function defaultPermissionsList() {
@@ -137,152 +150,184 @@ if(!function_exists('defaultPermissionsList')) {
     }
 }
 
-function generateSlug($model,$slug) {
-    if(!$slug){
-        $slug = uniqid();
+if(!function_exists('generateSlug')) {
+    function generateSlug($model,$slug) {
+        if(!$slug){
+            $slug = uniqid();
+        }
+
+        $slug = Str::slug(trim($slug), '-');
+
+        $modelObj = $model::whereSlug($slug)->first();
+        if($modelObj){
+            return generateSlug($model,$slug.'-'.time());
+        }
+
+        return $slug;
     }
-
-    $slug = Str::slug(trim($slug), '-');
-
-    $modelObj = $model::whereSlug($slug)->first();
-    if($modelObj){
-        return generateSlug($model,$slug.'-'.time());
-    }
-
-    return $slug;
 }
 
-function adminCan($permission) {
-    if(admin()->type == 'super_admin'){
-        return true;
-    }
-
-    $permissions = session()->get('admin.permissions');
-    if(!$permissions){
-        $permissions = admin()->getPermissionsViaRoles()->pluck('name')->toArray();
-        session()->put('admin.permissions',$permissions);
-    }
-
-    // set permissions values as keys too
-    $permissions = array_flip($permissions);
-
-    $permissionArr = explode(',',$permission);
-
-    foreach ($permissionArr as $p) {
-        if(isset($permissions[$p])){
+if(!function_exists('adminCan')) {
+    function adminCan($permission) {
+        if(admin()->type == 'super_admin'){
             return true;
         }
-    }
-    return false;
-}
 
-function sidebarHud($data){
-    return view('layouts.hud.partials.sidebar-ul',get_defined_vars())->render();
-}
-
-function sidebarCpanel($data){
-    return view('layouts.cpanel.partials.sidebar-ul',get_defined_vars())->render();
-}
-
-function extractRoutes(array $items): array
-{
-    $routes = [];
-
-    foreach ($items as $item) {
-        if (!empty($item['route']) && $item['route'] !== '#') {
-            $routes[] = $item;
+        $permissions = session()->get('admin.permissions');
+        if(!$permissions){
+            $permissions = admin()->getPermissionsViaRoles()->pluck('name')->toArray();
+            session()->put('admin.permissions',$permissions);
         }
 
-        if (!empty($item['children'])) {
-            $routes = array_merge($routes, extractRoutes($item['children']));
+        // set permissions values as keys too
+        $permissions = array_flip($permissions);
+
+        $permissionArr = explode(',',$permission);
+
+        foreach ($permissionArr as $p) {
+            if(isset($permissions[$p])){
+                return true;
+            }
         }
+        return false;
     }
-
-    return $routes;
 }
 
+if(!function_exists('sidebarHud')) {
+    function sidebarHud($data){
+        return view('layouts.hud.partials.sidebar-ul',get_defined_vars())->render();
+    }
+}
 
-function checkRouteParams($routeParams = []){
-    foreach ($routeParams as $key => $value) {
-        $routeCheck = request()->route($key);
+if(!function_exists('sidebarCpanel')) {
+    function sidebarCpanel($data){
+        return view('layouts.cpanel.partials.sidebar-ul',get_defined_vars())->render();
+    }
+}
 
-        if(!empty($routeCheck)){
-            return $routeCheck == $value;
+if(!function_exists('extractRoutes')) {
+    function extractRoutes(array $items): array
+    {
+        $routes = [];
+
+        foreach ($items as $item) {
+            if (!empty($item['route']) && $item['route'] !== '#') {
+                $routes[] = $item;
+            }
+
+            if (!empty($item['children'])) {
+                $routes = array_merge($routes, extractRoutes($item['children']));
+            }
         }
-    }
 
-    return false;
+        return $routes;
+    }
 }
 
-function checkRequestParams($requestParams = []){
-    foreach ($requestParams as $key => $value) {
-        $paramCheck = request()->has($key) ?? false;
-        if($paramCheck){
-            return request($key) == $value;
+
+if(!function_exists('checkRouteParams')) {
+    function checkRouteParams($routeParams = []){
+        foreach ($routeParams as $key => $value) {
+            $routeCheck = request()->route($key);
+
+            if(!empty($routeCheck)){
+                return $routeCheck == $value;
+            }
         }
+
+        return false;
     }
-
-    return false;
 }
 
-function exportToExcel($data, $columns, $headers, $fileName) {
-    $filePath = "exports/{$fileName}-" . now()->format('Y-m-d_H-i-s') . ".xlsx";
-    Excel::store(
-        new \App\Exports\GeneralExport(
-            data: $data,
-            columns: $columns,
-            headers: $headers
-        ),
-        $filePath,
-        'public'
-    );
+if(!function_exists('checkRequestParams')) {
+    function checkRequestParams($requestParams = []){
+        foreach ($requestParams as $key => $value) {
+            $paramCheck = request()->has($key) ?? false;
+            if($paramCheck){
+                return request($key) == $value;
+            }
+        }
 
-    return public_path("storage/{$filePath}");
+        return false;
+    }
 }
 
-function superAdmins(){
-    return Admin::where('type', 'super_admin')->get();
+if(!function_exists('exportToExcel')) {
+    function exportToExcel($data, $columns, $headers, $fileName) {
+        $filePath = "exports/{$fileName}-" . now()->format('Y-m-d_H-i-s') . ".xlsx";
+        Excel::store(
+            new \App\Exports\GeneralExport(
+                data: $data,
+                columns: $columns,
+                headers: $headers
+            ),
+            $filePath,
+            'public'
+        );
+
+        return public_path("storage/{$filePath}");
+    }
 }
 
-function encodedData($data)
-{
-    $newSlug = base64_encode(json_encode($data));
-
-    return $newSlug;
+if(!function_exists('superAdmins')) {
+    function superAdmins(){
+        return Admin::where('type', 'super_admin')->get();
+    }
 }
 
-function decodedData($encoded)
-{
-    return json_decode(base64_decode($encoded), true);
+if(!function_exists('encodedData')) {
+    function encodedData($data)
+    {
+        $newSlug = base64_encode(json_encode($data));
+
+        return $newSlug;
+    }
 }
 
-function lang(){
-    return app()->getLocale();
+if(!function_exists('decodedData')) {
+    function decodedData($encoded)
+    {
+        return json_decode(base64_decode($encoded), true);
+    }
 }
 
-function currency(){
-    $key = cacheKey('currency');
-    return Cache::driver('file')->remember($key, 60*60, function() {
-        return Currency::find(tenantSetting('currency_id',1));
-    });
+if(!function_exists('lang')) {
+    function lang(){
+        return app()->getLocale();
+    }
 }
 
-function currencyFormat($amount, $withComma = false){
-    $currency = currency();
-    $currencyPercision = tenantSetting('currency_precision',2);
-    return "$currency->symbol" . number_format((float)$amount, $currencyPercision, '.',$withComma ? ',' : '');
+if(!function_exists('currency')) {
+    function currency(){
+        $key = cacheKey('currency');
+        return Cache::driver('file')->remember($key, 60*60, function() {
+            return Currency::find(tenantSetting('currency_id',1));
+        });
+    }
 }
 
-function dateTimeFormat($date,$dateFormat = true, $timeFormat = true){
-    $dateFormat = $dateFormat ? tenantSetting('date_format','Y-m-d') : '';
-    $timeFormat = $timeFormat ? tenantSetting('time_format','H:i:s') : '';
-    return carbon($date)->translatedFormat(trim("$dateFormat $timeFormat"));
+if(!function_exists('currencyFormat')) {
+    function currencyFormat($amount, $withComma = false){
+        $currency = currency();
+        $currencyPercision = tenantSetting('currency_precision',2);
+        return "$currency->symbol" . number_format((float)$amount, $currencyPercision, '.',$withComma ? ',' : '');
+    }
 }
 
-function tenantSetting($key, $default = null) {
-    return Cache::driver('file')->remember(cacheKey('setting'), 60 * 60 * 24, function () {
-            return Setting::all()->pluck('value', 'key')->toArray();
-    })[$key] ?? $default;
+if(!function_exists('dateTimeFormat')) {
+    function dateTimeFormat($date,$dateFormat = true, $timeFormat = true){
+        $dateFormat = $dateFormat ? tenantSetting('date_format','Y-m-d') : '';
+        $timeFormat = $timeFormat ? tenantSetting('time_format','H:i:s') : '';
+        return carbon($date)->translatedFormat(trim("$dateFormat $timeFormat"));
+    }
+}
+
+if(!function_exists('tenantSetting')) {
+    function tenantSetting($key, $default = null) {
+        return Cache::driver('file')->remember(cacheKey('setting'), 60 * 60 * 24, function () {
+                return Setting::all()->pluck('value', 'key')->toArray();
+        })[$key] ?? $default;
+    }
 }
 
 if (! function_exists('seo')) {
@@ -381,4 +426,16 @@ if (! function_exists('seo')) {
     //         );
     //     }
     // }
+
+}
+
+if (! function_exists('currencySymbolPosition')) {
+    function currencySymbolPosition($price,$symbol){
+        if(app()->getLocale() == 'ar'){
+            return $price . ' ' . $symbol;
+        }
+        else{
+            return $symbol . ' ' . $price;
+        }
+    }
 }

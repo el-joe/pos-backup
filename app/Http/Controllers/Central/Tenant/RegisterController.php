@@ -39,7 +39,7 @@ class RegisterController extends Controller
             'name' => $data['id'],
         ]));
 
-        Mail::to(env('ADMIN_EMAIL','support@codefanz.com'))->send(new AdminRegisterRequestMail(
+        Mail::to(env('ADMIN_EMAIL','eljoe1717@gmail.com'))->send(new AdminRegisterRequestMail(
             registerRequest: $registerRequest
         ));
 

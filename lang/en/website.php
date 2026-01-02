@@ -64,6 +64,7 @@ return [
         'name_content' => 'Mohaaseb ERP Software Plans',
         'description_content' => 'Flexible pricing plans for businesses of all sizes.',
         'get_started' => 'Get Started',
+        'free' => 'Free',
     ],
 
     'pricing_compare' => [
@@ -93,7 +94,7 @@ return [
         'limits_features' => 'Limits & Features',
         'change_plan' => 'Change Plan',
         'compare_plans' => 'Compare Plans',
-
+        'currency_conversion_note' => 'Note: All payments will be processed in USD. The total amount displayed is converted from :currency to USD using the current exchange rate. The final charge will be in USD = :usd $.',
         'company_details_title' => 'Company Details',
         'company_details_subtitle' => 'Enter your company information to create an account',
         'company_name' => 'Company Name',
