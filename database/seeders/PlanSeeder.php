@@ -46,7 +46,7 @@ class PlanSeeder extends Seeder
                     'status' => true
                 ],
                 PlanFeaturesEnum::PURCHASES->value => [
-                    'status' => false
+                    'status' => true
                 ],
                 PlanFeaturesEnum::DOUBLE_ENTRY_ACCOUNTING->value => [
                     'status' => false
