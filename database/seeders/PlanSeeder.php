@@ -21,7 +21,7 @@ class PlanSeeder extends Seeder
             'name' => 'Basic',
             'price_month' => 0,
             'price_year' => 0,
-            'features' => [
+            'features' => json_encode([
                 PlanFeaturesEnum::BRANCHES->value => [
                     'limit' => 1,
                     'status' => true,
@@ -68,7 +68,7 @@ class PlanSeeder extends Seeder
                     'status' => true,
                     'description' => 'Email Support'
                 ],
-            ],
+            ]),
             'slug' => 'basic',
             'active' => true,
             'icon' => 'bi bi-star',
@@ -78,7 +78,7 @@ class PlanSeeder extends Seeder
             'name' => 'Pro',
             'price_month' => 19,
             'price_year' => 190,
-            'features' => [
+            'features' => json_encode([
                 PlanFeaturesEnum::BRANCHES->value => [
                     'limit' => 5,
                     'status' => true,
@@ -126,7 +126,7 @@ class PlanSeeder extends Seeder
                     'status' => true,
                     'description' => 'Standard'
                 ],
-            ],
+            ]),
             'slug' => 'pro',
             'active' => true,
             'icon' => 'bi bi-lightning-charge-fill',
@@ -137,7 +137,7 @@ class PlanSeeder extends Seeder
             'name' => 'Enterprise',
             'price_month' => 39,
             'price_year' => 390,
-            'features' => [
+            'features' => json_encode([
                 PlanFeaturesEnum::BRANCHES->value => [
                     'limit' => null,
                     'status' => true,
@@ -185,7 +185,7 @@ class PlanSeeder extends Seeder
                     'status' => true,
                     'description' => 'VIP'
                 ],
-            ],
+            ]),
             'slug' => 'enterprise',
             'active' => true,
             'icon' => 'bi bi-gem',
@@ -193,7 +193,8 @@ class PlanSeeder extends Seeder
 
         foreach ($plans as $plan) {
             DB::table('plans')->upsert(
-                ['slug' => $plan['slug']],
+                $plan,
+                ['slug'],
                 $plan
             );
             // Plan::firstOrCreate(
