@@ -86,6 +86,8 @@
                             <th>{{ __('general.pages.users.address') }}</th>
                             @if($type == 'customer')
                             <th>{{ __('general.pages.users.sales_threshold') }}</th>
+                            @elseif($type == 'supplier')
+                            <th>{{ __('general.pages.users.vat_number') }}</th>
                             @endif
                             <th>{{ __('general.pages.users.active') }}</th>
                             <th class="text-nowrap">{{ __('general.pages.users.action') }}</th>
@@ -101,6 +103,8 @@
                                 <td>{{ $user->address }}</td>
                                 @if($type == 'customer')
                                 <td>{{ currencyFormat($user->sales_threshold, true) }}</td>
+                                @elseif($type == 'supplier')
+                                <td>{{ $user->vat_number }}</td>
                                 @endif
                                 <td>
                                     <span class="badge bg-{{ $user->active ? 'success' : 'danger' }}">
