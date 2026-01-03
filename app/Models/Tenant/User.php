@@ -18,7 +18,8 @@ class User extends Model
         'active',
         'type',
         'deleted_at',
-        'sales_threshold'
+        'sales_threshold',
+        'vat_number'
     ];
 
     protected $casts = [

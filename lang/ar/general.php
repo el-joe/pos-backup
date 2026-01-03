@@ -683,6 +683,7 @@ return [
             'branch' => 'الفرع',
             'category' => 'الفئة',
             'date' => 'التاريخ',
+            'total_expense' => 'إجمالي المصروف',
             'reset' => 'إعادة تعيين',
             'export' => 'تصدير',
             'new_expense' => 'مصروف جديد',

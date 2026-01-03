@@ -130,9 +130,9 @@
                                             @if($item->actual_qty <= 0)
                                                 <button class="btn btn-sm btn-secondary" disabled><i class="fa fa-undo"></i> {{ __('general.pages.sales.refund') }}</button>
                                             @else
-                                                <button class="btn btn-sm btn-danger" wire:click="setCurrentItem({{ $item->id }})" data-bs-toggle="modal" data-bs-target="#refundModal">
+                                                <a class="btn btn-sm btn-danger" href="{{ route('admin.refunds.create',['order_type'=>'sale','order_id'=>$order->id]) }}">
                                                     <i class="fa fa-undo"></i> {{ __('general.pages.sales.refund') }}
-                                                </button>
+                                                </a>
                                             @endif
                                         </td>
                                     </tr>

@@ -218,9 +218,9 @@
                                             <td>{{ currencyFormat($item->total_after_x_margin, true) }}</td>
                                             <td>{{ currencyFormat($item->total_after_x_margin * $item->actual_qty, true) }}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-danger" wire:click="setCurrentItem({{ $item->id }})" data-bs-toggle="modal" data-bs-target="#refundModal">
+                                                <a class="btn btn-sm btn-danger" href="{{ route('admin.refunds.create',['order_type'=>'purchase','order_id'=>$purchase->id]) }}">
                                                     <i class="fa fa-undo"></i> {{ __('general.pages.purchases.refund') }}
-                                                </button>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
