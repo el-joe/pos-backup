@@ -107,7 +107,7 @@ class PurchaseService
         // fill stock data
         foreach ($data['orderProducts'] as $item) {
             // add Stock
-            $this->stockService->addStock(productId: $item['id'],unitId: $item['unit_id'],qty: $item['qty'],sellPrice: $item['sell_price'],unitCost: $item['purchase_price'],branchId: $data['branch_id']);
+            $this->stockService->addStock(productId: $item['id'],unitId: $item['unit_id'],qty: $item['qty'],sellPrice: $item['sell_price'],unitCost: $item['sub_total'],branchId: $data['branch_id']);
         }
         // fill purchase payments data
         // Grouped by type = Purchase Invoice
@@ -242,7 +242,7 @@ class PurchaseService
         }
         // get sub total from order products = product qty * purchase price
         $subTotal = array_sum(array_map(function($item) {
-            return (float)$item['qty'] * (float)($item['purchase_price']);
+            return (float)$item['sub_total'] * (float)($item['qty']);
         }, $data['orderProducts']));
 
         //`transaction_id`, `account_id`, `type`, `amount`
