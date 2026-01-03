@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Helpers\SeoHelper;
 use Closure;
 use Illuminate\Http\Request;
-use RalphJSmit\Laravel\SEO\Support\AlternateTag;
+use Stevebauman\Location\Facades\Location;
 use Symfony\Component\HttpFoundation\Response;
 
 class SiteTranslationMiddleware
@@ -13,6 +13,11 @@ class SiteTranslationMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $langAndCountryFromRequest = explode('-', $request->lang);
+
+        $countryCode = $request->header('CF-IPCountry') ?? Location::get($request->ip())?->countryCode;
+        if($request->has('dd')){
+            dd($countryCode);
+        }
 
         if(in_array($langAndCountryFromRequest[0], ['en', 'ar'])){
             $lang = $langAndCountryFromRequest[0];
