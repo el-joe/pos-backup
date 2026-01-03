@@ -16,27 +16,31 @@ class RegisterRequest extends Model
         parent::boot();
 
         static::updated(function ($model) {
-            if($model->status == 'approved'){
-                $data = $model->data;
+            if ($model->status == 'approved' && $model->wasChanged('status')) {
 
-                $request = (object)$data;
+                $data = $model->data;
+                $request = (object) $data;
                 // make request id is valid for database name
                 $id = Str::slug($request->company['name'], '_');
                 $id = preg_replace('/[^a-zA-Z0-9_]/', '_', $id);
+
+                if (Tenant::find($id)) {
+                    return;
+                }
 
                 $plan = Plan::find($request->plan['id']);
                 $period = $request->plan['period'] ?? 'month';
 
                 $tenant = Tenant::create([
-                    'id'=>$id,
-                    'name'=> $request->company['name'],
-                    'phone'=>$request->company['phone'],
-                    'email'=>$request->company['email'],
-                    'country_id'=>$request->company['country_id'],
-                    'currency_id'=>$request->company['currency_id'],
-                    'address'=>$request->company['address'] ?? null,
-                    'tax_number'=>$request->company['tax_number'] ?? null,
-                    'active'=>false,
+                    'id' => $id,
+                    'name' => $request->company['name'],
+                    'phone' => $request->company['phone'],
+                    'email' => $request->company['email'],
+                    'country_id' => $request->company['country_id'],
+                    'currency_id' => $request->company['currency_id'],
+                    'address' => $request->company['address'] ?? null,
+                    'tax_number' => $request->company['tax_number'] ?? null,
+                    'active' => false,
                 ]);
 
                 Subscription::create([
@@ -55,27 +59,27 @@ class RegisterRequest extends Model
                 ]);
 
                 $domain = $tenant->domains()->create([
-                    'domain'=> $request->company['domain']
+                    'domain' => $request->company['domain']
                 ]);
 
 
-                Artisan::call('tenants:seed',[
-                    '--tenants'=>[$tenant['id']],
+                Artisan::call('tenants:seed', [
+                    '--tenants' => [$tenant['id']],
                 ]);
 
                 $_request = json_encode([
-                    'name'=>$request->admin['name'],
-                    'phone'=>$request->admin['phone'],
-                    'email'=>$request->admin['email'],
-                    'password'=>$request->admin['password'],
-                    'type'=>'super_admin',
-                    'country_id'=>$request->admin['country_id'] ?? null,
+                    'name' => $request->admin['name'],
+                    'phone' => $request->admin['phone'],
+                    'email' => $request->admin['email'],
+                    'password' => $request->admin['password'],
+                    'type' => 'super_admin',
+                    'country_id' => $request->admin['country_id'] ?? null,
                 ]);
 
-                Artisan::call('tenants:run',[
-                    'commandname'=>'app:tenant-create-admin',
-                    '--tenants'=>[$tenant['id']],
-                    '--argument'=>["request=$_request"]
+                Artisan::call('tenants:run', [
+                    'commandname' => 'app:tenant-create-admin',
+                    '--tenants' => [$tenant['id']],
+                    '--argument' => ["request=$_request"]
                 ]);
 
                 Mail::to($request->company['email'])->send(new RegisterRequestAcceptMail([
@@ -90,6 +94,7 @@ class RegisterRequest extends Model
     protected $fillable = [
         'data',
         'status',
+        'read_at',
     ];
 
     protected $casts = [
