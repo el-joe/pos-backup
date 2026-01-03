@@ -17,6 +17,7 @@ use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use App\Http\Middleware\InitializeTenancyByDomain;
+use App\Listeners\SetTenantMailConfig;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -75,6 +76,7 @@ class TenancyServiceProvider extends ServiceProvider
             Events\InitializingTenancy::class => [],
             Events\TenancyInitialized::class => [
                 Listeners\BootstrapTenancy::class,
+                SetTenantMailConfig::class,
             ],
 
             Events\EndingTenancy::class => [],
@@ -166,7 +168,7 @@ class TenancyServiceProvider extends ServiceProvider
     protected function mapRoutes()
     {
         $this->app->booted(function () {
-            if (file_exists(base_path('routes/tenant.php'))) {
+            if (file_exists(filename: base_path('routes/tenant.php'))) {
                 Route::namespace(static::$controllerNamespace)
                     ->group(base_path('routes/tenant.php'));
             }
