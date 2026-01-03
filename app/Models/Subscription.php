@@ -90,9 +90,9 @@ class Subscription extends Model
         $now = now();
 
         if ($this->billing_cycle === 'monthly') {
-            return $endDate->diffInDays($now) <= 3;
+            return $now->diffInDays($endDate) <= 3;
         } elseif ($this->billing_cycle === 'yearly') {
-            return $endDate->diffInDays($now) <= 14;
+            return $now->diffInDays($endDate) <= 14;
         }
 
         return false;
