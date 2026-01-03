@@ -24,6 +24,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        config([
+            'mail.default' => 'smtp',
+            'mail.mailers.smtp.host' => env('MAIL_HOST', 'smtp.hostinger.com'),
+            'mail.mailers.smtp.port' => env('MAIL_PORT', 587),
+            'mail.mailers.smtp.username' => env('MAIL_USERNAME', 'youssef@codefanz.com'),
+            'mail.mailers.smtp.password' => env('MAIL_PASSWORD', 'Anaeljoe@1230'),
+            'mail.mailers.smtp.encryption' => env('MAIL_ENCRYPTION', 'TLS'),
+            'mail.from.address' => env('MAIL_FROM_ADDRESS', 'no-reply@codefanz.com'),
+            'mail.from.name' => env('MAIL_FROM_NAME', 'Mohaaseb'),
+        ]);
+
         $defaultLayout = defaultLayout();
 
         Paginator::defaultView('vendor.pagination.default' . ($defaultLayout == 'hud' ? '5' : ''));

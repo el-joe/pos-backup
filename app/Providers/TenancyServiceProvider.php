@@ -17,7 +17,6 @@ use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use App\Http\Middleware\InitializeTenancyByDomain;
-use App\Listeners\SetTenantMailConfig;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -76,7 +75,6 @@ class TenancyServiceProvider extends ServiceProvider
             Events\InitializingTenancy::class => [],
             Events\TenancyInitialized::class => [
                 Listeners\BootstrapTenancy::class,
-                SetTenantMailConfig::class,
             ],
 
             Events\EndingTenancy::class => [],
