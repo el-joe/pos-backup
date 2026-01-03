@@ -114,7 +114,7 @@
                                         <td class="fw-semibold">{{ $product['name'] }}</td>
                                         <td>
                                             <select
-                                                id="unit_id"
+                                                id="unit_id_{{ $index }}"
                                                 name="orderProducts.{{ $index }}.unit_id"
                                                 class="form-select select2">
                                                 <option value="">{{ __('general.pages.purchases.unit') }}</option>
@@ -142,7 +142,7 @@
                                         <td class="text-muted">{{ currencyFormat($product['unit_cost_after_discount'] * $product['qty'], true) }}</td>
                                         <td>
                                             <select
-                                                id="tax_percentage"
+                                                id="tax_percentage_{{ $index }}"
                                                 name="orderProducts.{{ $index }}.tax_percentage"
                                                 class="form-select select2">
                                                 <option value="">{{ __('general.pages.purchases.select_tax') }}</option>
