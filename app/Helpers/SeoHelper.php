@@ -20,16 +20,21 @@ class SeoHelper
     public function __construct()
     {
         $this->defaultImage = asset('mohaaseb_en_dark_2.webp');
-        $this->locales = $locales = self::getAllLocalesWithCountry();
+        // $this->locales = $locales = self::getAllLocalesWithCountry();
 
-        $this->alternates = [];
-        foreach ($locales as $locale) {
-            $_locale = explode('-', $locale);
-            $_locale[1] = strtoupper($_locale[1] ?? 'eg');
-            $_locale = implode('-', $_locale);
-            $this->alternates[] = new AlternateTag($_locale, url("/{$locale}"));
-        }
-        $this->alternates[] = new AlternateTag('x-default', url('/'));
+        // $this->alternates = [];
+        // foreach ($locales as $locale) {
+        //     $_locale = explode('-', $locale);
+        //     $_locale[1] = strtoupper($_locale[1] ?? 'eg');
+        //     $_locale = implode('-', $_locale);
+        //     $this->alternates[] = new AlternateTag($_locale, url("/{$locale}"));
+        // }
+        // $this->alternates[] = new AlternateTag('x-default', url('/'));
+
+        $this->alternates = [
+            new AlternateTag('en', url('/en')),
+            new AlternateTag('ar', url('/ar')),
+        ];
         $this->defaults = [
             'author' => 'codefanz.com',
             'robots' => 'index, follow',
@@ -195,7 +200,7 @@ class SeoHelper
             enableTitleSuffix: $data['enableTitleSuffix'] ?? true,
             type: $data['type'] ?? 'website',
             site_name: $data['site_name'] ?? $this->defaults['site_name'],
-            locale: app()->getLocale() . '_' . strtoupper(session('country', 'eg')),
+            locale: app()->getLocale(),
             openGraphTitle: $data['openGraphTitle'] ?? $data['title'],
             imageMeta: new ImageMeta($image),
             twitter_username: $data['twitter_username'] ?? $this->defaults['twitter_username'],
@@ -211,7 +216,7 @@ class SeoHelper
     {
         $helper = new self();
 
-        $localeWithCountry = app()->getLocale() . '-' . (session('country', 'eg'));
+        $localeWithCountry = app()->getLocale();
 
         switch ($page) {
             case 'home':
@@ -274,7 +279,7 @@ class SeoHelper
                 break;
             case 'blog-details':
                 // Build alternates for this specific blog
-                $locales = self::getAllLocalesWithCountry();
+                $locales = Language::pluck('code')->toArray();
                 $blogAlternates = [];
                 foreach ($locales as $locale) {
                     $blogAlternates[] = new AlternateTag($locale, url("/{$locale}/blogs/{$data['slug']}"));

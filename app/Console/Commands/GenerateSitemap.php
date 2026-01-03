@@ -33,11 +33,11 @@ class GenerateSitemap extends Command
     {
         $sitemap = Sitemap::create();
 
-        $locales = SeoHelper::getAllLocalesWithCountry();
+        $locales = Language::pluck('code')->toArray();
 
         // الصفحات الثابتة
         $sitemap->add(url('/'));
-        foreach ($locales as $locale) {
+        foreach($locales as $locale) {
             $sitemap->add(url("/{$locale}"));
             $sitemap->add(url("/{$locale}/faqs"));
         }
