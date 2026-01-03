@@ -24,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
         $defaultLayout = defaultLayout();
 
         Paginator::defaultView('vendor.pagination.default' . ($defaultLayout == 'hud' ? '5' : ''));
