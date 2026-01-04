@@ -47,7 +47,7 @@ class PaymentController extends Controller
 
         if($type == 'success'){
             try{
-                $data = decodedData($data ?? $request->query('data'));
+                $data = decodedData($data ?? $request->query('data') ?? null);
                 $registerRequest = RegisterRequest::create([
                     'data'=>[
                         'company' => [
