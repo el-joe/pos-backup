@@ -69,7 +69,8 @@ class PaymentController extends Controller
                         'plan' => [
                             'id' => $data['plan_id'] ?? 1,
                             'period' => $data['period'] ?? 'month',
-                        ]
+                        ],
+                        'partner_id' => $data['partner_id'] ?? null,
                     ],
                     'status'=>'pending'
                 ]);
