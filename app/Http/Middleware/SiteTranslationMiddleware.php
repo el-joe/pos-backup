@@ -21,6 +21,11 @@ class SiteTranslationMiddleware
         }else{
             $lang = session('locale','en');
         }
+
+        if($request->has('p_ref')){
+            session(['p_ref' => $request->p_ref]);
+        }
+
         session(['locale' => $lang]);
         session(['country' => $countryCode]);
         app()->setLocale($lang);

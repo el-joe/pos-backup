@@ -4,6 +4,7 @@ namespace App\Livewire\Central\Site;
 
 use App\Models\Country;
 use App\Models\Currency;
+use App\Models\Partner;
 use App\Models\PaymentTransaction;
 use App\Models\Plan;
 use App\Payments\Providers\Paypal;
@@ -97,6 +98,11 @@ class CheckoutPage extends Component
             'period' => $this->period,
             'amount' => (float)$this->plan->{'price_' . $this->period} ?? 0,
         ];
+
+        if(session()->has('p_ref')){
+            $newData['partner_id'] = Partner::where('referral_code',session('p_ref'))->first()?->id;
+        }
+
         $dataToString = encodedData($newData);
 
         // else proceed to payment gateway
