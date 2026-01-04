@@ -149,24 +149,49 @@
                         <table class="table table-bordered align-middle">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>{{ __('general.pages.sales.id') }}</th>
-                                    <th>{{ __('general.pages.sales.type') }}</th>
-                                    <th>{{ __('general.pages.sales.amount') }}</th>
-                                    <th>{{ __('general.pages.sales.date') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.id') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.transaction_id') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.type') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.branch') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.reference') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.note') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.date') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.account') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.debit') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.credit') }}</th>
+                                    <th>{{ __('general.pages.purchases.transaction_lines.created_at') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($order->transactions->whereIn('type',[
-                                    App\Enums\TransactionTypeEnum::SALE_PAYMENT,
-                                    App\Enums\TransactionTypeEnum::SALE_PAYMENT_REFUND
-                                ]) as $transaction)
+                                @php $totals = ['debit' => 0, 'credit' => 0]; @endphp
+                                @foreach($transactionLines as $transaction)
                                     <tr>
-                                        <td>#{{ $transaction->id }}</td>
-                                        <td>{{ $transaction->type->label() }}</td>
-                                        <td>{{ currencyFormat($transaction->amount, true) }}</td>
-                                        <td>{{ dateTimeFormat($transaction->created_at) }}</td>
+                                        <td>{{ $transaction->id }}</td>
+                                        <td>{{ $transaction->transaction_id ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->type ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->branch ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->reference ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->note ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->date ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->account ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                        <td>{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                        <td>{{ $transaction->created_at ?? 'N/A' }}</td>
                                     </tr>
+                                    @php
+                                        if ($transaction->line_type == 'debit') {
+                                            $totals['debit'] += $transaction->amount_raw;
+                                        } elseif ($transaction->line_type == 'credit') {
+                                            $totals['credit'] += $transaction->amount_raw;
+                                        }
+                                    @endphp
                                 @endforeach
+                                <tr class="table-secondary fw-bold">
+                                    <td colspan="8" class="text-{{ app()->getLocale() == 'ar' ? 'end' : 'start' }}">{{ __('general.pages.purchases.transaction_lines.total') }}</td>
+                                    <td>{{ currencyFormat($totals['debit'], true) }}</td>
+                                    <td>{{ currencyFormat($totals['credit'], true) }}</td>
+                                    <td colspan="2"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

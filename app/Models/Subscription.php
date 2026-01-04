@@ -8,12 +8,84 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
+    // boot method to set partner commission on create and update
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($subscription) {
+            if($subscription->status === 'paid'){
+                $tenant = $subscription->tenant;
+                if($tenant && !!$tenant->partner_id){
+                    $partner = $tenant->partner;
+                    if($partner){
+                        $commissionRate = $partner->commission_rate ?? 0;
+                        $commissionAmount = ($subscription->price * $commissionRate) / 100;
+                        $partner->commissions()->firstOrCreate([
+                            'tenant_id' => $tenant->id,
+                            'subscription_id' => $subscription->id,
+                        ], [
+                            'amount' => $commissionAmount,
+                            'status' => 'pending',
+                            'subscription_id' => $subscription->id,
+                            'currency_id' => $subscription->currency_id,
+                            'commission_date' => now(),
+                        ]);
+
+                    }
+                }
+            }
+        });
+
+        static::updated(function ($subscription) {
+            if($subscription->isDirty('status') && $subscription->status === 'paid'){
+                $tenant = $subscription->tenant;
+                if($tenant && !!$tenant->partner_id){
+                    $partner = $tenant->partner;
+                    if($partner){
+                        $commissionRate = $partner->commission_rate ?? 0;
+                        $commissionAmount = ($subscription->price * $commissionRate) / 100;
+                        $partner->commissions()->updateOrCreate([
+                            'tenant_id' => $tenant->id,
+                            'subscription_id' => $subscription->id,
+                        ], [
+                            'amount' => $commissionAmount,
+                            'status' => 'pending',
+                            'currency_id' => $subscription->currency_id,
+                            'commission_date' => now(),
+                        ]);
+                    }
+                }
+            }elseif($subscription->isDirty('status') && $subscription->status !== 'paid'){
+                $tenant = $subscription->tenant;
+                if($tenant && !!$tenant->partner_id){
+                    $partner = $tenant->partner;
+                    if($partner){
+                        $partner->commissions()->where('subscription_id', $subscription->id)->delete();
+                    }
+                }
+            }
+        });
+
+        static::deleted(function ($subscription) {
+            $tenant = $subscription->tenant;
+            if($tenant && !!$tenant->partner_id){
+                $partner = $tenant->partner;
+                if($partner){
+                    $partner->commissions()->where('subscription_id', $subscription->id)->delete();
+                }
+            }
+        });
+    }
+
     protected $connection = 'central';
 
     protected $fillable = [
         'tenant_id',
         'plan_id',
         'plan_details',
+        'currency_id',
         'price',
         'systems_allowed',
         'start_date',
@@ -34,6 +106,11 @@ class Subscription extends Model
     function tenant()
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    function currency()
+    {
+        return $this->belongsTo(Currency::class);
     }
 
     function plan()
@@ -150,5 +227,12 @@ class Subscription extends Model
             return true;
         }
         return false;
+    }
+
+    function withEndAfterDays($days)
+    {
+        $endDate = carbon($this->end_date);
+        $now = now();
+        return $endDate->greaterThan($now) && $endDate->lessThanOrEqualTo($now->copy()->addDays($days));
     }
 }

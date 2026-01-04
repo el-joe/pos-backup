@@ -22,11 +22,11 @@
                         @foreach ($subscriptions as $subscription)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $subscription->tenant->name }}</td>
-                            <td>{{ $subscription->plan->name }}</td>
+                            <td>{{ $subscription->tenant?->name }}</td>
+                            <td>{{ $subscription->plan?->name }}</td>
                             <td>{{ $subscription->price }} $</td>
                             <td>{{ $subscription->start_date }}</td>
-                            <td>{{ $subscription->end_date }}</td>
+                            <td class="{{ $subscription->withEndAfterDays(3) ? 'bg-warning' : '' }}">{{ $subscription->end_date }}</td>
                             <td>
                                 <span class="badge bg-{{ $subscription->statusColor() }}">
                                     {{ ucfirst($subscription->status) }}

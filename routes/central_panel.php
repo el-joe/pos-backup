@@ -13,6 +13,9 @@ use App\Livewire\Central\CPanel\Blogs\BlogForm;
 use App\Livewire\Central\CPanel\Blogs\BlogsList;
 use App\Livewire\Central\CPanel\Pages\PageForm;
 use App\Livewire\Central\CPanel\Pages\PagesList;
+use App\Livewire\Central\CPanel\Partners\PartnerCommissionsList;
+use App\Livewire\Central\CPanel\Partners\PartnerForm;
+use App\Livewire\Central\CPanel\Partners\PartnersList;
 use App\Livewire\Central\CPanel\FileManager\FileManagerPage;
 use App\Livewire\Central\CPanel\HomePage;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
@@ -51,5 +54,10 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('customers', CustomersList::class)->name('customers.list');
         Route::get('plans', CpanelPlansList::class)->name('plans.list');
         Route::get('sliders', SliderList::class)->name('sliders.list');
+
+        Route::get('partners', PartnersList::class)->name('partners.list');
+        Route::get('partners/create', PartnerForm::class)->name('partners.create');
+        Route::get('partners/{id}', PartnerForm::class)->whereNumber('id')->name('partners.edit');
+        Route::get('partner-commissions', PartnerCommissionsList::class)->name('partner-commissions.list');
     });
 });

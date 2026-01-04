@@ -91,4 +91,16 @@ return [
         "icon"      => "fa fa-image fa-fw",
         "route"     => 'cpanel.sliders.list'
     ],
+    [
+        "title"     => "Partners",
+        'translated_title' => 'general.titles.partners',
+        "icon"      => "fa fa-handshake fa-fw",
+        "route"     => 'cpanel.partners.list'
+    ],
+    [
+        "title"     => "Partner Commissions",
+        'translated_title' => 'general.titles.partner-commissions',
+        "icon"      => "fa fa-coins fa-fw",
+        "route"     => 'cpanel.partner-commissions.list'
+    ],
 ];

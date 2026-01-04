@@ -98,6 +98,8 @@ return [
         'currency.edit' => 'تعديل العملة',
         'languages' => 'اللغات',
         'register-requests' => 'طلبات التسجيل',
+        'partners' => 'الشركاء',
+        'partner-commissions' => 'عمولات الشركاء',
         // 'customers' => 'العملاء' - Duplicated, keeping the first one for consistency unless context dictates otherwise
     ],
     'layout' => [

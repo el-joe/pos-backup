@@ -29,6 +29,12 @@
                             <i class="fa fa-credit-card me-1"></i> {{ __('general.pages.purchases.expenses_tab') }}
                         </button>
                     </li>
+                    <li class="nav-item">
+                        <button class="nav-link {{ $activeTab === 'transactions' ? 'active' : '' }}" wire:click="$set('activeTab', 'transactions')" data-bs-toggle="tab" type="button">
+                            <i class="fa fa-exchange me-1"></i> {{ __('general.pages.sales.transactions_tab') }}
+                        </button>
+                    </li>
+
                 </ul>
 
                 <!-- Tab Content -->
@@ -259,6 +265,62 @@
                             </table>
                         </div>
                     </div>
+
+                    {{-- Transactions Tab --}}
+                    <div class="tab-pane fade {{ $activeTab === 'transactions' ? 'show active' : '' }}">
+                        <h5 class="fw-bold mb-3"><i class="fa fa-exchange me-2"></i> {{ __('general.pages.sales.order_transactions') }}</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.id') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.transaction_id') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.type') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.branch') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.reference') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.note') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.date') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.account') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.debit') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.credit') }}</th>
+                                        <th>{{ __('general.pages.purchases.transaction_lines.created_at') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $totals = ['debit' => 0, 'credit' => 0]; @endphp
+                                    @foreach($transactionLines as $transaction)
+                                        <tr>
+                                            <td>{{ $transaction->id }}</td>
+                                            <td>{{ $transaction->transaction_id ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->type ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->branch ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->reference ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->note ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->date ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->account ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                            <td>{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                            <td>{{ $transaction->created_at ?? 'N/A' }}</td>
+                                        </tr>
+                                        @php
+                                            if ($transaction->line_type == 'debit') {
+                                                $totals['debit'] += $transaction->amount_raw;
+                                            } elseif ($transaction->line_type == 'credit') {
+                                                $totals['credit'] += $transaction->amount_raw;
+                                            }
+                                        @endphp
+                                    @endforeach
+                                    <tr class="table-secondary fw-bold">
+                                        <td colspan="8" class="text-{{ app()->getLocale() == 'ar' ? 'end' : 'start' }}">{{ __('general.pages.purchases.transaction_lines.total') }}</td>
+                                        <td>{{ currencyFormat($totals['debit'], true) }}</td>
+                                        <td>{{ currencyFormat($totals['credit'], true) }}</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>

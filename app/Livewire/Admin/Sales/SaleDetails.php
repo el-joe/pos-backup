@@ -5,7 +5,9 @@ namespace App\Livewire\Admin\Sales;
 use App\Enums\AuditLogActionEnum;
 use App\Helpers\SaleHelper;
 use App\Models\Tenant\AuditLog;
+use App\Models\Tenant\Sale;
 use App\Models\Tenant\SaleItem;
+use App\Models\Tenant\TransactionLine;
 use App\Services\CashRegisterService;
 use App\Services\SellService;
 use App\Traits\LivewireOperations;
@@ -95,6 +97,33 @@ class SaleDetails extends Component
         return get_defined_vars();
     }
 
+    function purchaseTransactionLines(){
+        return  TransactionLine::with(['transaction','account','transaction.branch'])
+            ->whereHas('transaction', function($query){
+                $query->where('reference_type', Sale::class)
+                      ->where('reference_id', $this->order->id);
+            })
+            ->orderByDesc('transaction_id')
+            ->orderByDesc('id')
+            ->get()
+            ->map(function($line) {
+                return (object)[
+                    'id' => $line->id,
+                    'transaction_id' => $line->transaction_id,
+                    'type' => $line->transaction?->type?->label(),
+                    'branch' => $line->transaction?->branch?->name ?? 'N/A',
+                    'reference' => $line->ref,
+                    'note' => $line->transaction?->note,
+                    'date' => dateTimeFormat($line->transaction?->date, true, false),
+                    'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
+                    'line_type' => $line->type,
+                    'amount' => currencyFormat($line->amount, true),
+                    'amount_raw' => $line->amount,
+                    'created_at' => dateTimeFormat($line->created_at),
+                ];
+            });
+    }
+
     public function render()
     {
 
@@ -103,6 +132,8 @@ class SaleDetails extends Component
         }
 
         extract($this->calcTotals());
+
+        $transactionLines = $this->purchaseTransactionLines();
 
         return layoutView('sales.sale-details',get_defined_vars());
     }

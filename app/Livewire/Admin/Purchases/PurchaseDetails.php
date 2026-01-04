@@ -6,7 +6,9 @@ use App\Enums\AuditLogActionEnum;
 use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Expense;
+use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
+use App\Models\Tenant\TransactionLine;
 use App\Services\CashRegisterService;
 use App\Services\ExpenseService;
 use App\Services\PurchaseService;
@@ -175,10 +177,39 @@ class PurchaseDetails extends Component
         return $totalRefunded;
     }
 
+    function purchaseTransactionLines(){
+        return  TransactionLine::with(['transaction','account','transaction.branch'])
+            ->whereHas('transaction', function($query){
+                $query->where('reference_type', Purchase::class)
+                      ->where('reference_id', $this->purchase->id);
+            })
+            ->orderByDesc('transaction_id')
+            ->orderByDesc('id')
+            ->get()
+            ->map(function($line) {
+                return (object)[
+                    'id' => $line->id,
+                    'transaction_id' => $line->transaction_id,
+                    'type' => $line->transaction?->type?->label(),
+                    'branch' => $line->transaction?->branch?->name ?? 'N/A',
+                    'reference' => $line->ref,
+                    'note' => $line->transaction?->note,
+                    'date' => dateTimeFormat($line->transaction?->date, true, false),
+                    'account' => $line->account?->paymentMethod?->name . ' - ' . ($line->account?->name ?? 'N/A'),
+                    'line_type' => $line->type,
+                    'amount' => currencyFormat($line->amount, true),
+                    'amount_raw' => $line->amount,
+                    'created_at' => dateTimeFormat($line->created_at),
+                ];
+            });
+    }
+
     public function render()
     {
         $actualQty = $this->purchase->purchaseItems->sum(fn($q)=>$q->actual_qty);
         list($orderSubTotal,$orderDiscountAmount,$orderTotalAfterDiscount,$orderTaxAmount,$orderGrandTotal) = array_values($this->purchaseCalculations());
+
+        $transactionLines = $this->purchaseTransactionLines();
 
         return layoutView('purchases.purchase-details', get_defined_vars());
     }
