@@ -277,7 +277,7 @@ class PurchaseService
         $getBranchCashAccount = Account::default('Branch Cash',AccountTypeEnum::BRANCH_CASH->value,$data['branch_id']);
 
         // get paid amount from data
-        $paidAmount = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
+        $paidAmount = $data['payment_amount'] ?? $data['grand_total'] ?? 0;
 
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
