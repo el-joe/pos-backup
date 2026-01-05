@@ -9,6 +9,7 @@ become partner page
 free trial period
 subscription Renewal email and notification (command to send notification for all tenants with expiring subscription in next 7 days)
 parcode on product details page
+make sure commands into crontab works fine
 --------------------
 
 Notifications
