@@ -8,7 +8,16 @@ enum AccountTypeEnum : string
     case OWNER_ACCOUNT = 'owner_account';
     case CUSTOMER = 'customer';
     case SUPPLIER = 'supplier';
+    // Expenses accounts
     case EXPENSE = 'expense';
+    case FINANCE_EXPENSE = 'finance_expense';
+    case MARKETING_EXPENSE = 'marketing_expense';
+    case OPERATING_EXPENSE = 'operating_expense';
+    case GENERAL_AND_ADMINISTRATIVE_EXPENSE = 'general_and_administrative_expense';
+    case MAINTENANCE_AND_DEPRECIATION_EXPENSE = 'maintenance_and_depreciation_expense';
+    case INVENTORY_EXPENSE = 'inventory_expense'; // NON-COGS
+
+    // --------------------------------------------------------------------------------
     case SALES = 'sales'; // revenue from sales -> sell price for product stock
     case INVENTORY = 'inventory'; // inventory purchases
     case COGS = 'cogs'; // cost of goods sold
@@ -31,6 +40,12 @@ enum AccountTypeEnum : string
             AccountTypeEnum::CUSTOMER => 'Customer', // customer transactions
             AccountTypeEnum::SUPPLIER => 'Supplier', // supplier transactions
             AccountTypeEnum::EXPENSE => 'Expense', // expense transactions
+            AccountTypeEnum::FINANCE_EXPENSE => 'Finance Expense',
+            AccountTypeEnum::MARKETING_EXPENSE => 'Marketing Expense',
+            AccountTypeEnum::OPERATING_EXPENSE => 'Operating Expense',
+            AccountTypeEnum::GENERAL_AND_ADMINISTRATIVE_EXPENSE => 'General & Administrative Expense',
+            AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'Maintenance & Depreciation Expense',
+            AccountTypeEnum::INVENTORY_EXPENSE => 'Inventory Expense',
             // AccountTypeEnum::FIXED_ASSET => 'Fixed Asset', // fixed asset transactions && depreciation
             // AccountTypeEnum::CURRENT_ASSET => 'Current Asset', // purchase cash transactions && bank transactions
             // AccountTypeEnum::CURRENT_LIABILITY => 'Current Liability', // Current liabilities transactions
@@ -56,6 +71,12 @@ enum AccountTypeEnum : string
             AccountTypeEnum::CUSTOMER => 'primary',
             AccountTypeEnum::SUPPLIER => 'warning',
             AccountTypeEnum::EXPENSE => 'danger',
+            AccountTypeEnum::FINANCE_EXPENSE => 'danger',
+            AccountTypeEnum::MARKETING_EXPENSE => 'danger',
+            AccountTypeEnum::OPERATING_EXPENSE => 'danger',
+            AccountTypeEnum::GENERAL_AND_ADMINISTRATIVE_EXPENSE => 'danger',
+            AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'danger',
+            AccountTypeEnum::INVENTORY_EXPENSE => 'danger',
             // AccountTypeEnum::FIXED_ASSET => 'info',
             // AccountTypeEnum::CURRENT_ASSET => 'secondary',
             // AccountTypeEnum::CURRENT_LIABILITY => 'dark',
@@ -90,5 +111,169 @@ enum AccountTypeEnum : string
 
     function isInvalided(): bool {
         return in_array($this, [self::CUSTOMER, self::SUPPLIER]);
+    }
+
+    function expensesAccountsTranslation(){
+        return match($this) {
+            self::FINANCE_EXPENSE => 'مصروفات تمويلية',
+            self::MARKETING_EXPENSE => 'مصروفات تسويقية',
+            self::OPERATING_EXPENSE => 'مصروفات تشغيلية',
+            self::GENERAL_AND_ADMINISTRATIVE_EXPENSE => 'مصروفات عامة وإدارية',
+            self::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'مصروفات صيانة واستهلاك',
+            self::INVENTORY_EXPENSE => 'مصروفات المخزون (غير تكلفة بضاعة)',
+        };
+    }
+
+    static function defaultExpensesAccounts(): array {
+        return [
+            self::FINANCE_EXPENSE->value => [
+                'en' => [
+                    'Loan Interest Expense',
+                    'Bank Facility Interest',
+                    'Bank Charges & Commissions',
+                    'Letter of Credit Fees',
+                    'Bank Guarantee Fees',
+                    'Exchange Rate Loss',
+                    'Payment Gateway Fees',
+                ],
+                'ar' => [
+                    'مصروف فوائد القروض',
+                    'فوائد التسهيلات البنكية',
+                    'رسوم وعمولات بنكية',
+                    'رسوم الاعتماد المستندي',
+                    'رسوم خطاب الضمان',
+                    'خسائر فروق العملة',
+                    'رسوم بوابة الدفع',
+                ],
+            ],
+            self::MARKETING_EXPENSE->value => [
+                'en' => [
+                    'Advertising Expense',
+                    'Digital Marketing',
+                    'Facebook Ads',
+                    'Google Ads',
+                    'TikTok Ads',
+                    'Promotional Materials',
+                    'Printing & Brochures',
+                    'Marketing Campaigns',
+                    'Sales Promotions',
+                    'Sales Commissions',
+                ],
+                'ar' => [
+                    'مصروفات إعلان',
+                    'التسويق الرقمي',
+                    'إعلانات فيسبوك',
+                    'إعلانات جوجل',
+                    'إعلانات تيك توك',
+                    'مواد ترويجية',
+                    'طباعة وبروشورات',
+                    'حملات تسويقية',
+                    'عروض ترويجية للمبيعات',
+                    'عمولات المبيعات',
+                ],
+            ],
+            self::OPERATING_EXPENSE->value => [
+                'en' => [
+                    'Rent Expense',
+                    'Electricity Expense',
+                    'Water Expense',
+                    'Gas Expense',
+                    'Internet & Communication',
+                    'Salaries & Wages',
+                    'Bonuses & Incentives',
+                    'Social Insurance',
+                    'Equipment Operating Expense',
+                    'Spare Parts',
+                    'Fuel Expense',
+                    'Transportation Expense',
+                    'Operating Supplies',
+                    'Cleaning Supplies',
+                    'Daily Operating Expenses',
+                ],
+                'ar' => [
+                    'مصروف إيجار',
+                    'مصروف كهرباء',
+                    'مصروف مياه',
+                    'مصروف غاز',
+                    'مصروفات الإنترنت والاتصالات',
+                    'الرواتب والأجور',
+                    'مكافآت وحوافز',
+                    'التأمينات الاجتماعية',
+                    'مصروف تشغيل المعدات',
+                    'قطع غيار',
+                    'مصروف وقود',
+                    'مصروف نقل ومواصلات',
+                    'مستلزمات التشغيل',
+                    'مستلزمات النظافة',
+                    'مصروفات تشغيل يومية',
+                ],
+            ],
+            self::GENERAL_AND_ADMINISTRATIVE_EXPENSE->value => [
+                'en' => [
+                    'Administrative Salaries',
+                    'Accounting & Audit Fees',
+                    'Legal Fees',
+                    'Consulting Fees',
+                    'Software Subscriptions',
+                    'Office Expenses',
+                    'Stationery',
+                    'Licenses & Renewals',
+                    'Government Fees',
+                    'Fines & Penalties',
+                    'Donations',
+                    'Miscellaneous Expenses',
+                ],
+                'ar' => [
+                    'رواتب إدارية',
+                    'أتعاب محاسبة ومراجعة',
+                    'أتعاب قانونية',
+                    'أتعاب استشارات',
+                    'اشتراكات البرامج',
+                    'مصروفات مكتبية',
+                    'قرطاسية',
+                    'تراخيص وتجديدات',
+                    'رسوم حكومية',
+                    'غرامات وجزاءات',
+                    'تبرعات',
+                    'مصروفات متنوعة',
+                ],
+            ],
+            self::MAINTENANCE_AND_DEPRECIATION_EXPENSE->value => [
+                'en' => [
+                    'Building Maintenance',
+                    'Vehicle Maintenance',
+                    'Equipment Maintenance',
+                    'System Maintenance',
+                    'Depreciation – Buildings',
+                    'Depreciation – Vehicles',
+                    'Depreciation – Equipment',
+                    'Depreciation – Furniture',
+                ],
+                'ar' => [
+                    'صيانة المباني',
+                    'صيانة المركبات',
+                    'صيانة المعدات',
+                    'صيانة الأنظمة',
+                    'إهلاك - مبانٍ',
+                    'إهلاك - مركبات',
+                    'إهلاك - معدات',
+                    'إهلاك - أثاث',
+                ],
+            ],
+            self::INVENTORY_EXPENSE->value => [
+                'en' => [
+                    'Inventory Damage Expense',
+                    'Inventory Shortage Expense',
+                    'Storage & Warehouse Expense',
+                    'Internal Inventory Transportation',
+                ],
+                'ar' => [
+                    'مصروف تلف المخزون',
+                    'مصروف عجز المخزون',
+                    'مصروفات التخزين والمستودعات',
+                    'نقل داخلي للمخزون',
+                ],
+            ],
+        ];
     }
 }

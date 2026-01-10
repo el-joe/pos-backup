@@ -87,9 +87,9 @@ class AddEditProduct extends Component
         }
 
         if(!$this->product) {
-            $rules['image'] = str_replace('nullable','required',$rules['image'] ?? '');
-            $rules['gallery'] = str_replace('nullable','required',$rules['gallery'] ?? '');
-            $rules['gallery.*'] = str_replace('nullable','required',$rules['gallery.*'] ?? '');
+            // $rules['image'] = str_replace('nullable','required',$rules['image'] ?? '');
+            // $rules['gallery'] = str_replace('nullable','required',$rules['gallery'] ?? '');
+            // $rules['gallery.*'] = str_replace('nullable','required',$rules['gallery.*'] ?? '');
 
             $currentSubscription = Subscription::currentTenantSubscriptions()->first();
             $limit = $currentSubscription?->plan?->features['products']['limit'] ?? 999999;

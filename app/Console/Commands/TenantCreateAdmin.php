@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\AccountTypeEnum;
 use App\Enums\TenantSettingEnum;
 use App\Models\Tenant;
 use App\Models\Tenant\Admin;
 use App\Models\Tenant\Branch;
+use App\Models\Tenant\ExpenseCategory;
 use App\Models\Tenant\Setting;
 use App\Services\BranchService;
 use App\Services\PaymentMethodService;
@@ -42,6 +44,7 @@ class TenantCreateAdmin extends Command
         $this->defaultPaymentMethods();
         $this->defaultBranch();
         $this->defaultSettings();
+        $this->setExpenseCategories();
     }
 
     function defaultBranch() {
@@ -272,6 +275,34 @@ class TenantCreateAdmin extends Command
                 ['key' => $item['key']],
                 $item
             );
+        }
+    }
+
+    function setExpenseCategories() {
+        foreach (AccountTypeEnum::defaultExpensesAccounts() as $parentAccountType => $childAccounts) {
+            $parentAccount = AccountTypeEnum::from($parentAccountType);
+            // create expense category
+            $parent = ExpenseCategory::create([
+                'name' => $parentAccount->label(),
+                'ar_name' => $parentAccount->expensesAccountsTranslation(),
+                'parent_id' => null,
+                'active' => true,
+                'default' => true,
+                'key' => $parentAccount->value,
+            ]);
+
+            $en = $childAccounts['en'];
+            $ar = $childAccounts['ar'];
+            foreach ($en as $index => $childAccountName) {
+                ExpenseCategory::create([
+                    'name' => $childAccountName,
+                    'ar_name' => $ar[$index],
+                    'parent_id' => $parent->id,
+                    'active' => true,
+                    'default' => true,
+                    'key' => $parentAccount->value,
+                ]);
+            }
         }
     }
 }

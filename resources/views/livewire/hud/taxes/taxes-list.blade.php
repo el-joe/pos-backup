@@ -79,7 +79,7 @@
                         <tr>
                             <th>{{ __('general.pages.taxes.id') }}</th>
                             <th>{{ __('general.pages.taxes.name') }}</th>
-                            <th>{{ __('general.pages.taxes.vat_number') }}</th>
+                            <th>{{ __('general.pages.taxes.tax_registeration_number') }}</th>
                             <th>{{ __('general.pages.taxes.percentage') }}</th>
                             <th>{{ __('general.pages.taxes.status') }}</th>
                             <th class="text-nowrap">{{ __('general.pages.taxes.actions') }}</th>
@@ -150,8 +150,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="taxVatNumber" class="form-label">{{ __('general.pages.taxes.vat_number') }}</label>
-                        <input type="text" class="form-control" wire:model="data.vat_number" id="taxVatNumber" placeholder="{{ __('general.pages.taxes.enter_vat_number') }}">
+                        <label for="taxVatNumber" class="form-label">{{ __('general.pages.taxes.tax_registeration_number') }}</label>
+                        <input type="text" class="form-control" wire:model="data.vat_number" id="taxVatNumber" placeholder="{{ __('general.pages.taxes.enter_tax_registration_number') }}">
 
                     <div class="mb-3">
                         <label for="taxRate" class="form-label">{{ __('general.pages.taxes.rate') }}</label>

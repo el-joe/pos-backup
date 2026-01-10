@@ -27,6 +27,7 @@ class ExpenseCategoriesList extends Component
 
     public $rules = [
         'name' => 'required|string|max:255',
+        'ar_name' => 'required|string|max:255',
     ];
 
     function boot() {
@@ -81,7 +82,7 @@ class ExpenseCategoriesList extends Component
         }
         try{
             DB::beginTransaction();
-            $expenseCat = $this->expenseCategoryService->save($this->current?->id, $this->data);
+            $expenseCat = $this->expenseCategoryService->save($this->current?->id, $this->data + ['default'=>0]);
             DB::commit();
         }catch(\Exception $e) {
             DB::rollBack();
@@ -107,11 +108,12 @@ class ExpenseCategoriesList extends Component
                 return [
                     'loop' => $loop + 1,
                     'name' => $expenseCategory->name,
+                    'ar_name' => $expenseCategory->ar_name,
                     'status' => $expenseCategory->active ? 'Active' : 'Inactive',
                 ];
             })->toArray();
-            $columns = ['loop', 'name','status'];
-            $headers = ['#', 'Name', 'Status'];
+            $columns = ['loop', 'name','ar_name','status'];
+            $headers = ['#', 'Name', 'Arabic Name', 'Status'];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'expense_categories');
 
@@ -119,7 +121,7 @@ class ExpenseCategoriesList extends Component
 
             $this->redirectToDownload($fullPath);
         }
-        $expenseCategories = $this->expenseCategoryService->list(perPage : 10 , orderByDesc : 'id', filter : $this->filters);
+        $expenseCategories = $this->expenseCategoryService->list(orderByDesc : 'id', filter : $this->filters + ['parent_only' => 1]);
 
         return layoutView('expenses.expense-categories-list', get_defined_vars())
             ->title(__( 'general.titles.categories'));

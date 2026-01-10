@@ -79,6 +79,7 @@
                     <thead class="table-light">
                         <tr>
                             <th>{{ __('general.pages.expense-categories.id') }}</th>
+                            <th>{{ __('general.pages.expense-categories.ar_name') }}</th>
                             <th>{{ __('general.pages.expense-categories.name') }}</th>
                             <th>{{ __('general.pages.expense-categories.status_label') }}</th>
                             <th class="text-nowrap text-center">{{ __('general.pages.expense-categories.actions') }}</th>
@@ -88,32 +89,63 @@
                         @foreach ($expenseCategories as $expenseCategory)
                         <tr>
                             <td>{{ $expenseCategory->id }}</td>
-                            <td>{{ $expenseCategory->name }}</td>
+                            <td class="h5">{{ $expenseCategory->ar_name }}</td>
+                            <td class="h5">{{ $expenseCategory->name }}</td>
                             <td>
                                 <span class="badge bg-{{ $expenseCategory->active ? 'success' : 'danger' }}">
                                     {{ $expenseCategory->active ? __('general.pages.expense-categories.active') : __('general.pages.expense-categories.inactive') }}
                                 </span>
                             </td>
                             <td class="text-nowrap text-center">
-                                @adminCan('expense_categories.update')
-                                <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal"
-                                    wire:click="setCurrent({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.edit') }}">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                @endadminCan
-                                @adminCan('expense_categories.delete')
-                                <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.delete') }}">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                @endadminCan
+                                @if($expenseCategory->default != 1)
+                                    @adminCan('expense_categories.update')
+                                    <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal"
+                                        wire:click="setCurrent({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.edit') }}">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    @endadminCan
+                                    @adminCan('expense_categories.delete')
+                                    <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.delete') }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                    @endadminCan
+                                @else
+                                    <i class="fas fa-ban"></i>
+                                @endif
                             </td>
                         </tr>
+                            @foreach ($expenseCategory->children as $child)
+                                <tr>
+                                    <td>----{{ $child->id }}</td>
+                                    <td>{{ $child->name }}</td>
+                                    <td>{{ $child->ar_name }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ $child->active ? 'success' : 'danger' }}">
+                                            {{ $child->active ? __('general.pages.expense-categories.active') : __('general.pages.expense-categories.inactive') }}
+                                        </span>
+                                    </td>
+                                    <td class="text-nowrap text-center">
+                                        @if($child->default != 1)
+                                            @adminCan('expense_categories.update')
+                                            <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal"
+                                                wire:click="setCurrent({{ $child->id }})" title="{{ __('general.pages.expense-categories.edit') }}">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            @endadminCan
+                                            @adminCan('expense_categories.delete')
+                                            <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $child->id }})" title="{{ __('general.pages.expense-categories.delete') }}">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                            @endadminCan
+                                        @else
+                                            <i class="fas fa-ban"></i>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-center mt-3">
-                    {{ $expenseCategories->links() }}
-                </div>
             </div>
         </div>
 
@@ -137,6 +169,10 @@
                     <div class="col-md-12">
                         <label for="expenseCategoryName" class="form-label">{{ __('general.pages.expense-categories.name') }}</label>
                         <input type="text" class="form-control" wire:model="data.name" id="expenseCategoryName" placeholder="{{ __('general.pages.expense-categories.enter_expense_category_name') }}">
+                    </div>
+                    <div class="col-md-12">
+                        <label for="expenseCategoryArName" class="form-label">{{ __('general.pages.expense-categories.ar_name') }}</label>
+                        <input type="text" class="form-control" wire:model="data.ar_name" id="expenseCategoryArName" placeholder="{{ __('general.pages.expense-categories.enter_expense_category_ar_name') }}">
                     </div>
                     <div class="col-12">
                         <div class="form-check mt-3">

@@ -10,7 +10,7 @@
             <div class="row g-3">
                 <!-- Product Name -->
                 <div class="col-md-4">
-                    <label for="name" class="form-label">{{ __('general.pages.products.name') }}</label>
+                    <label for="name" class="form-label">{{ __('general.pages.products.name') }} *</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-product-hunt"></i></span>
                         <input type="text" id="name" class="form-control" placeholder="{{ __('general.pages.products.enter_product_name') }}" wire:model="data.name">
@@ -19,7 +19,7 @@
 
                 <!-- SKU -->
                 <div class="col-md-4">
-                    <label for="sku" class="form-label">{{ __('general.pages.products.sku') }}</label>
+                    <label for="sku" class="form-label">{{ __('general.pages.products.sku') }} *</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-barcode"></i></span>
                         <input type="text" id="sku" class="form-control" placeholder="{{ __('general.pages.products.enter_sku') }}" wire:model="data.sku">
@@ -28,7 +28,7 @@
 
                 <!-- Code -->
                 <div class="col-md-4">
-                    <label for="code" class="form-label">{{ __('general.pages.products.code') }}</label>
+                    <label for="code" class="form-label">{{ __('general.pages.products.code') }} *</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-key"></i></span>
                         <input type="text" id="code" class="form-control" placeholder="{{ __('general.pages.products.enter_code') }}" wire:model="data.code">
@@ -37,7 +37,7 @@
 
                 <!-- Description -->
                 <div class="col-12">
-                    <label for="description" class="form-label">{{ __('general.pages.products.description') }}</label>
+                    <label for="description" class="form-label">{{ __('general.pages.products.description') }} *</label>
                     <textarea id="description" wire:model="data.description" class="form-control" rows="4" placeholder="{{ __('general.pages.products.enter_description') }}"></textarea>
                 </div>
 
@@ -61,7 +61,7 @@
 
                 <!-- Brand -->
                 <div class="col-md-4">
-                    <label for="brand_id" class="form-label">{{ __('general.pages.products.brand') }}</label>
+                    <label for="brand_id" class="form-label">{{ __('general.pages.products.brand') }} *</label>
                     <div class="d-flex">
                         <select id="brand_id" name="data.brand_id" class="form-select select2">
                             <option value="">{{ __('general.pages.products.select_brand') }}</option>
@@ -77,7 +77,7 @@
 
                 <!-- Category -->
                 <div class="col-md-4">
-                    <label for="category_id" class="form-label">{{ __('general.pages.products.category') }}</label>
+                    <label for="category_id" class="form-label">{{ __('general.pages.products.category') }} *</label>
                     <div class="d-flex">
                         <select id="category_id" name="data.category_id" class="form-select select2">
                             <option value="">{{ __('general.pages.products.select_category') }}</option>
@@ -92,7 +92,7 @@
 
                 <!-- Unit -->
                 <div class="col-md-4">
-                    <label for="unit_id" class="form-label">{{ __('general.pages.products.unit') }}</label>
+                    <label for="unit_id" class="form-label">{{ __('general.pages.products.unit') }} *</label>
                     <div class="d-flex">
                         <select id="unit_id" name="data.unit_id" class="form-select select2">
                             <option value="">{{ __('general.pages.products.select_unit') }}</option>
@@ -117,7 +117,7 @@
 
                 <!-- Alert Quantity -->
                 <div class="col-md-4">
-                    <label for="alert_quantity" class="form-label">{{ __('general.pages.products.alert_quantity') }}</label>
+                    <label for="alert_quantity" class="form-label">{{ __('general.pages.products.alert_quantity') }} *</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-exclamation-triangle"></i></span>
                         <input type="number" step="any" id="alert_quantity" wire:model="data.alert_qty" class="form-control" placeholder="0.00">

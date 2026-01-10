@@ -104,7 +104,7 @@ class Product extends Model
     }
 
     function getGalleryPathAttribute() {
-        return $this->gallery ? $this->gallery->pluck('full_path') : null;
+        return $this->gallery ? $this->gallery->pluck('full_path') : asset('hud/assets/img/pos/logo-white.svg');
     }
 
     public function units()

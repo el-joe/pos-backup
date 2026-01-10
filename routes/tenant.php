@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\AccountTypeEnum;
 use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Tenant\AuthController;
@@ -48,6 +49,7 @@ use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Transactions\TransactionList;
 use App\Livewire\Admin\Units\{UnitsList};
 use App\Livewire\Admin\Users\{UserDetails,UsersList};
+use App\Models\Tenant\ExpenseCategory;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -259,6 +261,37 @@ Route::view('refund-invoice-a4-ar','invoices.refund-invoice-a4-ar');
 Route::view('refund-invoice-a4','invoices.refund-invoice-a4');
 Route::view('refund-invoice-80mm','invoices.refund-invoice-80mm');
 Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
+
+Route::get('test/{tenant}',function($tenant){
+    tenancy()->initialize( $tenant);
+    // initaialize tenant
+    foreach (AccountTypeEnum::defaultExpensesAccounts() as $parentAccountType => $childAccounts) {
+            $parentAccount = AccountTypeEnum::from($parentAccountType);
+            // create expense category
+            $parent = ExpenseCategory::create([
+                'name' => $parentAccount->label(),
+                'ar_name' => $parentAccount->expensesAccountsTranslation(),
+                'parent_id' => null,
+                'active' => true,
+                'default' => true,
+                'key' => $parentAccount->value,
+            ]);
+
+            $en = $childAccounts['en'];
+            $ar = $childAccounts['ar'];
+            foreach ($en as $index => $childAccountName) {
+                ExpenseCategory::create([
+                    'name' => $childAccountName,
+                    'ar_name' => $ar[$index],
+                    'parent_id' => $parent->id,
+                    'active' => true,
+                    'default' => true,
+                    'key' => $parentAccount->value,
+                ]);
+            }
+        }
+    tenancy()->end();
+});
 
 
 // Import Excel,CSV ---- #DONE  -> Add it into Subscriptions
