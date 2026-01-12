@@ -163,7 +163,7 @@ class ExpensesList extends Component
                 'id' => $expense->id,
                 'branch' => $expense->branch?->name ?? 'N/A',
                 'target' => $expense->model_type ? (new $expense->model_type)->getTable() : 'N/A',
-                'category' => $expense->category?->name ?? 'N/A',
+                'category' => (app()->getLocale() == 'ar' ? $expense->category?->ar_name : $expense->category?->name) ?? $expense->category?->ar_name ?? $expense->category?->name ?? 'N/A',
                 'amount' => currencyFormat($expense->amount, true),
                 'tax_percentage' => $expense->tax_percentage,
                 'total' => currencyFormat($expense->total, true),

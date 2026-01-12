@@ -196,6 +196,7 @@
                 <table class="table table-bordered align-middle">
                     <thead class="table-light">
                         <tr>
+                            <th>{{ __('general.pages.purchases.expense_category') }}</th>
                             <th>{{ __('general.pages.purchases.description') }}</th>
                             <th>{{ __('general.pages.purchases.amount') }}</th>
                             <th>{{ __('general.pages.purchases.expense_date') }}</th>
@@ -205,6 +206,23 @@
                     <tbody>
                         @foreach ($data['expenses'] ?? [] as $index => $expense)
                             <tr>
+                                <td>
+                                    <select
+                                        id="expense_category_{{ $index }}"
+                                        name="data.expenses.{{ $index }}.expense_category_id"
+                                        class="form-select select2">
+                                        <option value="">{{ __('general.pages.purchases.select_expense_category') }}</option>
+                                        @foreach ($expenseCategories as $category)
+                                            <option value="{{ $category->id }}" {{ ($expense['expense_category_id']??null) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->{app()->getLocale() == 'ar' ? 'ar_name' : 'name'} ?? $category->name }}
+                                            </option>
+                                            @foreach ($category->children as $child)
+                                                <option value="{{ $child->id }}" {{ ($expense['expense_category_id']??null) == $child->id ? 'selected' : '' }}>
+                                                    &nbsp;&nbsp;-- {{ $child->{app()->getLocale() == 'ar' ? 'ar_name' : 'name'} ?? $child->name }}
+                                                </option>
+                                            @endforeach
+                                        @endforeach
+                                </td>
                                 <td>
                                     <input type="text" class="form-control" wire:model="data.expenses.{{ $index }}.description" placeholder="{{ __('general.pages.purchases.description') }}">
                                 </td>

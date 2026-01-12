@@ -28,6 +28,8 @@ class ExpenseCategoriesList extends Component
     public $rules = [
         'name' => 'required|string|max:255',
         'ar_name' => 'required|string|max:255',
+        'parent_id' => 'nullable|exists:expense_categories,id',
+        'active' => 'boolean',
     ];
 
     function boot() {
@@ -122,6 +124,8 @@ class ExpenseCategoriesList extends Component
             $this->redirectToDownload($fullPath);
         }
         $expenseCategories = $this->expenseCategoryService->list(orderByDesc : 'id', filter : $this->filters + ['parent_only' => 1]);
+
+        $parentCategories = $expenseCategories;
 
         return layoutView('expenses.expense-categories-list', get_defined_vars())
             ->title(__( 'general.titles.categories'));

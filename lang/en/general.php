@@ -221,6 +221,7 @@ return [
                 ],
             ],
             'purchases' => [
+                'select_expense_category' => 'Select Expense Category',
                 'summary' => [
                     'title' => 'Purchases Per Period',
                     'date' => 'Date',
@@ -725,6 +726,8 @@ return [
             'name' => 'Name',
             'ar_name' => 'Arabic Name',
             'status_label' => 'Status',
+            'parent_category' => 'Parent Category',
+            'select_parent_category' => 'Select Parent Category',
             'actions' => 'Actions',
             'action' => 'Action',
             'is_active' => 'Is Active',
@@ -880,6 +883,7 @@ return [
             'grand_total_incl' => 'Grand Total (Incl. Tax & Profit)',
             'order_expenses' => 'Order Expenses',
             'description' => 'Description',
+            'expense_category' => 'Expense Category',
             'expense_date' => 'Expense Date',
             'remove' => 'Remove',
             'add_new_expense' => 'Add New Expense',

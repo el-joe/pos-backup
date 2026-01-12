@@ -86,18 +86,26 @@ class PurchaseService
 
         // fill expenses data
         $defaultExpenseCategory = $this->expenseCategoryService->getDefaultCategory('purchase');
-        if(!$defaultExpenseCategory){
-            $defaultExpenseCategory = $this->expenseCategoryService->save(null,[
-                'name' => 'purchase',
-                'default' => 1,
-            ]);
-        }
         foreach ($data['expenses']??[] as $item) {
+            if($item['expense_category_id']??false){
+                $cat_id = $item['expense_category_id'];
+            }else{
+                $cat_id = $defaultExpenseCategory?->id;
+                if(!$cat_id){
+                    $defaultExpenseCategory = $this->expenseCategoryService->save(null,[
+                        'name' => 'purchase',
+                        'ar_name' => 'المشتريات',
+                        'default' => 1,
+                    ]);
+                    $cat_id = $defaultExpenseCategory->id;
+                }
+            }
+
             $purchase->expenses()->create([
                 'branch_id' => $data['branch_id'],
                 'model_type' => Purchase::class,
                 'model_id' => $purchase->id,
-                'expense_category_id' => $defaultExpenseCategory?->id,
+                'expense_category_id' => $cat_id,
                 'amount' => $item['amount'],
                 'note' => $item['description'],
                 'expense_date' => $item['expense_date'],

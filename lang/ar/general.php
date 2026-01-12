@@ -219,6 +219,7 @@ return [
                 ],
             ],
             'purchases' => [
+                'select_expense_category' => 'اختر فئة المصروفات',
                 'summary' => [
                     'title' => 'المشتريات حسب الفترة',
                     'date' => 'التاريخ',
@@ -720,6 +721,8 @@ return [
             'edit_expense_category' => 'تعديل فئة المصروفات',
             'enter_expense_category_ar_name' => 'أدخل اسم فئة المصروفات بالعربية',
             'id' => '#',
+            'parent_category' => 'الفئة الرئيسية',
+            'select_parent_category' => 'اختر الفئة الرئيسية',
             'name' => 'الاسم',
             'ar_name' => 'الاسم بالعربية',
             'status_label' => 'الحالة',
@@ -811,6 +814,7 @@ return [
         'purchases' => [
             'filters' => 'الفلاتر',
             'show_hide' => 'إظهار / إخفاء',
+            'select_expense_category' => 'اختر فئة المصروفات',
             'ref_no' => 'رقم المرجع',
             'search_placeholder' => 'بحث ...',
             'supplier' => 'المورد',
@@ -863,6 +867,7 @@ return [
             'order_expenses' => 'مصروفات الطلب',
             'description' => 'الوصف',
             'expense_date' => 'تاريخ المصروف',
+            'expense_category' => 'فئة المصروف',
             'remove' => 'إزالة',
             'add_new_expense' => 'إضافة مصروف جديد',
             'order_adjustments' => 'تعديلات الطلب',

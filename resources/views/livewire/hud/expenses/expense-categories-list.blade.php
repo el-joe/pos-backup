@@ -117,8 +117,8 @@
                             @foreach ($expenseCategory->children as $child)
                                 <tr>
                                     <td>----{{ $child->id }}</td>
-                                    <td>{{ $child->name }}</td>
                                     <td>{{ $child->ar_name }}</td>
+                                    <td>{{ $child->name }}</td>
                                     <td>
                                         <span class="badge bg-{{ $child->active ? 'success' : 'danger' }}">
                                             {{ $child->active ? __('general.pages.expense-categories.active') : __('general.pages.expense-categories.inactive') }}
@@ -173,6 +173,16 @@
                     <div class="col-md-12">
                         <label for="expenseCategoryArName" class="form-label">{{ __('general.pages.expense-categories.ar_name') }}</label>
                         <input type="text" class="form-control" wire:model="data.ar_name" id="expenseCategoryArName" placeholder="{{ __('general.pages.expense-categories.enter_expense_category_ar_name') }}">
+                    </div>
+                    {{-- select parent category --}}
+                    <div class="col-md-12">
+                        <label for="expenseCategoryParent" class="form-label">{{ __('general.pages.expense-categories.parent_category') }}</label>
+                        <select class="form-select select2" id="expenseCategoryParent" wire:model="data.parent_id">
+                            <option value="">{{ __('general.pages.expense-categories.select_parent_category') }}</option>
+                            @foreach($parentCategories as $parentCategory)
+                                <option value="{{ $parentCategory->id }}">{{ $parentCategory->{app()->getLocale() === 'ar' ? 'ar_name' : 'name'} ?? $parentCategory->name ?? '---' }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-12">
                         <div class="form-check mt-3">

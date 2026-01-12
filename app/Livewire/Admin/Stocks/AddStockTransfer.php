@@ -6,6 +6,7 @@ use App\Enums\AuditLogActionEnum;
 use App\Enums\StockTransferStatusEnum;
 use App\Models\Tenant\Admin;
 use App\Models\Tenant\AuditLog;
+use App\Models\Tenant\ExpenseCategory;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\StockService;
@@ -191,6 +192,9 @@ class AddStockTransfer extends Component
         $branches = $this->branchService->activeList();
         $statuses = StockTransferStatusEnum::cases();
         $selectedBranches = $branches->whereIn('id',[$this->data['from_branch_id']??0,$this->data['to_branch_id']??0]);
+        $expenseCategories = ExpenseCategory::where(function($q){
+            $q->whereNull('parent_id')->orWhere('parent_id',0);
+        })->with('children')->get();
 
         return layoutView('stocks.add-stock-transfer', get_defined_vars());
     }

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Purchases;
 use App\Enums\AuditLogActionEnum;
 use App\Helpers\PurchaseHelper;
 use App\Models\Tenant\AuditLog;
+use App\Models\Tenant\ExpenseCategory;
 use App\Models\Tenant\Product;
 use App\Services\AccountService;
 use App\Services\BranchService;
@@ -245,6 +246,10 @@ class AddPurchase extends Component
 
         $totalQuantity = array_sum(array_column($this->orderProducts,'qty'));
         list($orderSubTotal,$orderDiscountAmount,$orderTotalAfterDiscount,$orderTaxAmount,$orderGrandTotal) = array_values($this->purchaseCalculations());
+
+        $expenseCategories = ExpenseCategory::where(function($q){
+            $q->whereNull('parent_id')->orWhere('parent_id',0);
+        })->with('children')->get();
 
         return layoutView('purchases.add-purchase', get_defined_vars())
             ->title(__( 'general.titles.add_purchase' ));
