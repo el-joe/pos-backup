@@ -33,6 +33,9 @@ enum AccountTypeEnum : string
     case SALES_RETURN = 'sales_return';
     case PURCHASE_RETURN = 'purchase_return';
 
+    case UNEARNED_REVENUE = 'unearned_revenue'; // advance payments from customers---- new
+    case ACCRUED_REVENUE = 'accrued_revenue'; // revenue earned but not yet received---- new
+
 
     function label(): string
     {
