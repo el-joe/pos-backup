@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('sale_request_items', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('sale_request_id')->index();
+            $table->unsignedBigInteger('product_id')->index();
+            $table->unsignedBigInteger('unit_id')->index();
+            $table->integer('qty')->default(0);
+            $table->boolean('taxable')->default(true);
+            $table->decimal('unit_cost', 10, 2)->default(0);
+            $table->decimal('sell_price', 10, 2)->default(0);
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('sale_request_items');
+    }
+};

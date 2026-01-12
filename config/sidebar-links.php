@@ -108,10 +108,17 @@ return [
         "children"  => [
             [
                 "title" => "Orders",
-                'translated_title' => 'general.titles.orders',
+                'translated_title' => 'general.titles.sales_orders',
                 "route" => 'admin.sales.index',
                 "icon"  => "fa fa-receipt fa-fw",
                 'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export'
+            ],
+            [
+                "title" => "Requests",
+                'translated_title' => 'general.titles.sale-requests',
+                "route" => 'admin.sale-requests.list',
+                "icon"  => "fa fa-file-alt fa-fw",
+                'can' => 'sales.list,sales.show,sales.update,sales.delete'
             ],
             [
                 "title" => "Customers",
@@ -140,10 +147,17 @@ return [
         "children"  => [
             [
                 "title" => "Orders",
-                'translated_title' => 'general.titles.orders',
+                'translated_title' => 'general.titles.purchases_orders',
                 "route" => 'admin.purchases.list',
                 "icon"  => "fa fa-file-invoice-dollar fa-fw",
                 'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export'
+            ],
+            [
+                "title" => "Requests",
+                'translated_title' => 'general.titles.purchase-requests',
+                "route" => 'admin.purchase-requests.list',
+                "icon"  => "fa fa-file-alt fa-fw",
+                'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete'
             ],
             [
                 "title" => "Suppliers",

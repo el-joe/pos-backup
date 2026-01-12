@@ -22,6 +22,7 @@ use App\Livewire\Admin\Plans\{PlansList,SubscriptionsPage};
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\{AddEditProduct,ProductsList};
 use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
+use App\Livewire\Admin\PurchaseRequests\{AddPurchaseRequest,PurchaseRequestDetails,PurchaseRequestsList};
 use App\Livewire\Admin\Refunds\AddRefund;
 use App\Livewire\Admin\Refunds\RefundsList;
 use App\Livewire\Admin\Reports\{
@@ -39,6 +40,7 @@ use App\Livewire\Admin\Reports\{
 };
 
 use App\Livewire\Admin\Sales\{SaleDetails,SalesList};
+use App\Livewire\Admin\SaleRequests\{AddSaleRequest,SaleRequestDetails,SaleRequestsList};
 use App\Livewire\Admin\Settings\SettingsPage;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Stocks\{AddStockTransfer,StockTransferDetails,StockTransferList};
@@ -116,9 +118,19 @@ Route::middleware([
             Route::get('purchases',PurchasesList::class)->name('purchases.list');
             Route::get('purchases/create',AddPurchase::class)->name('purchases.add');
             Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
+
+            // Purchase Requests (Internal)
+            Route::get('purchase-requests', PurchaseRequestsList::class)->name('purchase-requests.list');
+            Route::get('purchase-requests/create', AddPurchaseRequest::class)->name('purchase-requests.create');
+            Route::get('purchase-requests/{id}', PurchaseRequestDetails::class)->name('purchase-requests.details');
             // Sales
             Route::get('sales',SalesList::class)->name('sales.index');
             Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
+
+            // Sale Requests (Client Inquiry / Quotation)
+            Route::get('sale-requests', SaleRequestsList::class)->name('sale-requests.list');
+            Route::get('sale-requests/create', AddSaleRequest::class)->name('sale-requests.create');
+            Route::get('sale-requests/{id}', SaleRequestDetails::class)->name('sale-requests.details');
             // Transactions
             Route::get('transactions',TransactionList::class)->name('transactions.list');
             // TODO : Shipping Companies
