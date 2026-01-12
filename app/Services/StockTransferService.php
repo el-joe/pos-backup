@@ -157,21 +157,28 @@ class StockTransferService
             $amount = array_sum(array_column($data['expenses'], 'amount'));
 
             $defaultExpenseCategory = $this->expenseCategoryService->getDefaultCategory('purchase');
-            if(!$defaultExpenseCategory){
-                $defaultExpenseCategory = $this->expenseCategoryService->save(null,[
-                    'name' => 'stock transfer expenses',
-                    'default' => 1,
-                ]);
-            }
 
             $stockTransfer = $this->find($data['stock_transfer_id'] ?? null);
             if(!$reverse){
                 foreach ($data['expenses'] as $item) {
+                    if($item['expense_category_id']??false){
+                        $cat_id = $item['expense_category_id'];
+                    }else{
+                        $cat_id = $defaultExpenseCategory?->id;
+                        if(!$cat_id){
+                            $defaultExpenseCategory = $this->expenseCategoryService->save(null,[
+                                'name' => 'stock transfer expenses',
+                                'ar_name' => 'مصروفات نقل المخزون',
+                                'default' => 1,
+                            ]);
+                            $cat_id = $defaultExpenseCategory->id;
+                        }
+                    }
                     $stockTransfer->expenses()->create([
                         'branch_id' => $expenseBranchId,
                         'model_type' => StockTransfer::class,
                         'model_id' => $stockTransfer->id,
-                        'expense_category_id' => $defaultExpenseCategory?->id,
+                        'expense_category_id' => $cat_id,
                         'amount' => $item['amount'],
                         'note' => $item['description'] ?? $item['note'],
                         'expense_date' => $item['expense_date'],
