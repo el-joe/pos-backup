@@ -47,13 +47,12 @@
     </div>
 
     @php
-        $reportData = $report ?? collect();
-        $count = $reportData->count();
+        $count = $report?->count() ?? 0;
         $totalCost = 0;
         $totalAccum = 0;
         $totalNBV = 0;
 
-        foreach($reportData as $asset) {
+        foreach(($report ?? []) as $asset) {
             $acc = (float) ($asset->expenses_sum_amount ?? 0);
             $cost = (float) ($asset->cost ?? 0);
             $totalCost += $cost;
@@ -120,7 +119,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($reportData as $asset)
+                            @forelse($report as $asset)
                                 @php
                                     $acc = (float) ($asset->expenses_sum_amount ?? 0);
                                     $cost = (float) ($asset->cost ?? 0);
@@ -137,15 +136,7 @@
                                     <td class="text-end">{{ currencyFormat($nbv, true) }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-{{ $asset->status === 'active' ? 'success' : ($asset->status === 'sold' ? 'info' : 'secondary') }}">
-                                            @if($asset->status === 'active')
-                                                {{ __('general.pages.fixed_assets.status_active') }}
-                                            @elseif($asset->status === 'disposed')
-                                                {{ __('general.pages.fixed_assets.status_disposed') }}
-                                            @elseif($asset->status === 'sold')
-                                                {{ __('general.pages.fixed_assets.status_sold') }}
-                                            @else
-                                                {{ ucfirst((string) $asset->status) }}
-                                            @endif
+                                            {{ ucfirst($asset->status) }}
                                         </span>
                                     </td>
                                 </tr>

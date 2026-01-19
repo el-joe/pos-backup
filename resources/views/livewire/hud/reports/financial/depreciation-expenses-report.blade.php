@@ -56,10 +56,9 @@
     </div>
 
     @php
-        $reportData = $report ?? collect();
-        $count = $reportData->count();
+        $count = $report?->count() ?? 0;
         $totalAmount = 0;
-        foreach($reportData as $row) {
+        foreach(($report ?? []) as $row) {
             $totalAmount += (float) ($row->amount ?? 0);
         }
         $avg = $count ? ($totalAmount / $count) : 0;
@@ -123,13 +122,6 @@
                     </table>
                 </div>
             </div>
-
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
-            </div>
         </div>
     </div>
 
@@ -154,7 +146,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($reportData as $expense)
+                            @forelse($report as $expense)
                                 <tr>
                                     <td>{{ $expense->id }}</td>
                                     <td>{{ $expense->branch?->name ?? '—' }}</td>
@@ -162,7 +154,7 @@
                                     <td>{{ $expense->category?->name ?? '—' }}</td>
                                     <td class="text-end">{{ currencyFormat($expense->amount ?? 0, true) }}</td>
                                     <td class="text-end">{{ $expense->tax_percentage ?? 0 }}%</td>
-                                    <td>{{ $expense->expense_date ? dateTimeFormat($expense->expense_date, true, false) : '—' }}</td>
+                                    <td>{{ $expense->expense_date }}</td>
                                     <td>{{ $expense->note ?? '—' }}</td>
                                 </tr>
                             @empty
