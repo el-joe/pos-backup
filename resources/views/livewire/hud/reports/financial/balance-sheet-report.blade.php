@@ -1,10 +1,14 @@
 <div class="col-12">
     <!-- Filter Options Card -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light d-flex align-items-center">
+        <div class="card-header bg-light d-flex align-items-center justify-content-between">
             <h5 class="mb-0">
                 <i class="fa fa-filter me-2"></i> {{ __('general.pages.reports.common.filter_options') }}
             </h5>
+
+            <button type="button" wire:click="resetFilters" class="btn btn-sm btn-secondary">
+                <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
+            </button>
         </div>
         <div class="card-body">
             <div class="row g-3">

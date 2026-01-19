@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Reports\Financial;
 
 use Illuminate\Support\Facades\DB;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 class BalanceSheetReport extends Component
@@ -22,9 +21,18 @@ class BalanceSheetReport extends Component
     public function updatedFromDate() { $this->loadReport(); }
     public function updatedToDate() { $this->loadReport(); }
 
+    public function resetFilters(): void
+    {
+        $this->from_date = now()->startOfMonth()->format('Y-m-d');
+        $this->to_date = now()->format('Y-m-d');
+        $this->loadReport();
+    }
+
     public function loadReport()
     {
+        $fromDate = carbon($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = carbon($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
+
         $rows = DB::table('transaction_lines')
             ->join('accounts', 'accounts.id', '=', 'transaction_lines.account_id')
             ->select(
@@ -32,7 +40,7 @@ class BalanceSheetReport extends Component
                 DB::raw('SUM(CASE WHEN transaction_lines.type = "debit" THEN transaction_lines.amount ELSE 0 END) as debit_total'),
                 DB::raw('SUM(CASE WHEN transaction_lines.type = "credit" THEN transaction_lines.amount ELSE 0 END) as credit_total')
             )
-            ->whereBetween('transaction_lines.created_at', [$this->from_date, $toDate])
+            ->whereBetween('transaction_lines.created_at', [$fromDate, $toDate])
             ->groupBy('accounts.type')
             ->get();
 
@@ -44,24 +52,33 @@ class BalanceSheetReport extends Component
             ];
         }
 
+        $net = function (string $accountType, string $normalSide = 'debit') use ($accounts): float {
+            $debit = (float) ($accounts[$accountType]['debit'] ?? 0);
+            $credit = (float) ($accounts[$accountType]['credit'] ?? 0);
+
+            return $normalSide === 'credit'
+                ? ($credit - $debit)
+                : ($debit - $credit);
+        };
+
         // Asset accounts
         $assets = [
-            'Fixed Asset' => ($accounts['fixed_asset']['debit'] ?? 0) - ($accounts['fixed_asset']['credit'] ?? 0),
-            'Current Asset' => ($accounts['current_asset']['debit'] ?? 0) - ($accounts['current_asset']['credit'] ?? 0),
-            'Inventory' => ($accounts['inventory']['debit'] ?? 0) - ($accounts['inventory']['credit'] ?? 0),
-            'VAT Receivable' => ($accounts['vat_receivable']['debit'] ?? 0) - ($accounts['vat_receivable']['credit'] ?? 0),
-            'Owner Account' => ($accounts['owner_account']['debit'] ?? 0) - ($accounts['owner_account']['credit'] ?? 0),
+            'Fixed Asset' => $net('fixed_asset', 'debit'),
+            'Current Asset' => $net('current_asset', 'debit'),
+            'Inventory' => $net('inventory', 'debit'),
+            'VAT Receivable' => $net('vat_receivable', 'debit'),
         ];
 
         // Liability accounts
         $liabilities = [
-            'Long-term Liability' => ($accounts['longterm_liability']['credit'] ?? 0) - ($accounts['longterm_liability']['debit'] ?? 0),
-            'VAT Payable' => ($accounts['vat_payable']['credit'] ?? 0) - ($accounts['vat_payable']['debit'] ?? 0),
+            'Long-term Liability' => $net('longterm_liability', 'credit'),
+            'VAT Payable' => $net('vat_payable', 'credit'),
+            'Unearned Revenue' => $net('unearned_revenue', 'credit'),
         ];
 
         // Equity
         $equity = [
-            'Owner Account' => ($accounts['owner_account']['credit'] ?? 0) - ($accounts['owner_account']['debit'] ?? 0),
+            'Owner Account' => $net('owner_account', 'credit'),
         ];
 
         $total_assets = array_sum($assets);
