@@ -37,6 +37,9 @@ class ExpenseCategory extends Model
         })->when($filters['name']??false, function($q) use ($filters) {
             $q->where('name', $filters['name']);
         })
+        ->when($filters['key'] ?? false, function($q) use ($filters) {
+            $q->where('key', $filters['key']);
+        })
         ->when(isset($filters['active']), function($q) use ($filters) {
             if($filters['active'] == 'all') return $q;
             $q->where('active', $filters['active']);

@@ -215,6 +215,22 @@ return [
                 'can' => 'payment_methods.list,payment_methods.create,payment_methods.update,payment_methods.delete,payment_methods.export'
             ],
             [
+                "title" => "Fixed Assets",
+                'translated_title' => 'general.titles.fixed-assets',
+                "route" => 'admin.fixed-assets.list',
+                "icon"  => "fa fa-building fa-fw",
+                'subscription_check' => 'double_entry_accounting',
+                'can' => 'fixed_assets.list,fixed_assets.show,fixed_assets.create,fixed_assets.update,fixed_assets.delete,fixed_assets.export'
+            ],
+            [
+                "title" => "Depreciation Expenses",
+                'translated_title' => 'general.titles.depreciation-expenses',
+                "route" => 'admin.depreciation-expenses.list',
+                "icon"  => "fa fa-chart-area fa-fw",
+                'subscription_check' => 'double_entry_accounting',
+                'can' => 'depreciation_expenses.list,depreciation_expenses.show,depreciation_expenses.create,depreciation_expenses.update,depreciation_expenses.delete,depreciation_expenses.export'
+            ],
+            [
                 "title" => "Shipping Companies (SOON)",
                 'translated_title' => 'general.titles.shipping-companies',
                 "route" => "#",

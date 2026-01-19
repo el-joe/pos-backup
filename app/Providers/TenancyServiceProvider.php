@@ -17,6 +17,7 @@ use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use App\Http\Middleware\InitializeTenancyByDomain;
+use Spatie\Permission\Models\Permission;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -91,6 +92,18 @@ class TenancyServiceProvider extends ServiceProvider
                 function (Events\TenancyBootstrapped $event) {
                     $permissionRegistrar = app(\Spatie\Permission\PermissionRegistrar::class);
                     $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.' . $event->tenancy->tenant->getTenantKey();
+
+                    // Keep tenant permissions in sync with the codebase (e.g. new modules/pages).
+                    $permissions = defaultPermissionsList();
+                    $permissionsData = [];
+                    foreach ($permissions as $key => $value) {
+                        foreach ($value as $permission) {
+                            $permissionsData[] = ['name' => $key . '.' . $permission, 'guard_name' => 'tenant_admin'];
+                        }
+                    }
+
+                    Permission::upsert($permissionsData, ['name', 'guard_name']);
+                    $permissionRegistrar->forgetCachedPermissions();
                 }
             ],
             Events\RevertingToCentralContext::class => [],

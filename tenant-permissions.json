@@ -19,6 +19,8 @@
 	"expenses_list": ["list", "create", "update", "delete"],
 	"payment_methods": ["list", "create", "update", "delete"],
 	"transactions": ["list"],
+	"fixed_assets": ["list", "show", "create", "update", "delete"],
+	"depreciation_expenses": ["list", "show", "create", "update", "delete"],
 	"user_management": ["list", "create", "update", "delete"],
 	"role_management": ["list", "create", "update", "delete"],
 	"reports": ["list", "create", "update", "delete"],

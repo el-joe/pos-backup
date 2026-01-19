@@ -41,6 +41,8 @@ use App\Livewire\Admin\Reports\{
 
 use App\Livewire\Admin\Sales\{SaleDetails,SalesList};
 use App\Livewire\Admin\SaleRequests\{AddSaleRequest,SaleRequestDetails,SaleRequestsList};
+use App\Livewire\Admin\FixedAssets\{AddFixedAsset,FixedAssetDetails,FixedAssetsList};
+use App\Livewire\Admin\DepreciationExpenses\{AddDepreciationExpense,DepreciationExpenseDetails,DepreciationExpensesList};
 use App\Livewire\Admin\Settings\SettingsPage;
 use App\Livewire\Admin\Statistics;
 use App\Livewire\Admin\Stocks\{AddStockTransfer,StockTransferDetails,StockTransferList};
@@ -105,6 +107,15 @@ Route::middleware([
 
             Route::get('payment-methods',PaymentMethodsList::class)->name('payment-methods.list');
             Route::get('accounts',AccountsList::class)->name('accounts.list');
+
+            // Fixed Assets + Depreciation
+            Route::get('fixed-assets', FixedAssetsList::class)->name('fixed-assets.list');
+            Route::get('fixed-assets/create', AddFixedAsset::class)->name('fixed-assets.create');
+            Route::get('fixed-assets/{id}', FixedAssetDetails::class)->name('fixed-assets.details');
+
+            Route::get('depreciation-expenses', DepreciationExpensesList::class)->name('depreciation-expenses.list');
+            Route::get('depreciation-expenses/create', AddDepreciationExpense::class)->name('depreciation-expenses.create');
+            Route::get('depreciation-expenses/{id}', DepreciationExpenseDetails::class)->name('depreciation-expenses.details');
 
 
             // Users (Customer,Supplier)

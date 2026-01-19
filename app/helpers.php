@@ -137,6 +137,8 @@ if(!function_exists('defaultPermissionsList')) {
             "expenses"=> ["list", "create", "update", "delete",'export'],
             "payment_methods"=> ["list", "create", "update", "delete",'export'],
             "transactions"=> ["list",'export'],
+            "fixed_assets"=> ["list", "show", "create", "update", "delete", "export"],
+            "depreciation_expenses"=> ["list", "show", "create", "update", "delete", "export"],
             "user_management"=> ["list", "create", "update", "delete",'export'],
             "role_management"=> ["list", "create", "update", "delete",'export'],
             "reports"=> ["list",'export'],

@@ -29,6 +29,14 @@ class Expense extends Model
             $q->where('branch_id', $filter['branch_id']);
         })->when(isset($filter['expense_category_id']) && $filter['expense_category_id'], function($q) use ($filter) {
             $q->where('expense_category_id', $filter['expense_category_id']);
+        })->when(isset($filter['model_type']) && $filter['model_type'], function($q) use ($filter) {
+            $q->where('model_type', $filter['model_type']);
+        })->when(isset($filter['model_id']) && $filter['model_id'], function($q) use ($filter) {
+            $q->where('model_id', $filter['model_id']);
+        })->when(isset($filter['category_key']) && $filter['category_key'], function($q) use ($filter) {
+            $q->whereHas('category', function($q) use ($filter) {
+                $q->where('key', $filter['category_key']);
+            });
         })->when(isset($filter['date_from']) && $filter['date_from'], function($q) use ($filter) {
             $q->whereDate('expense_date', '>=', $filter['date_from']);
         })->when(isset($filter['date_to']) && $filter['date_to'], function($q) use ($filter) {
