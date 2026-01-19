@@ -30,6 +30,7 @@ use App\Livewire\Admin\Reports\{
     AuditReport,
     BranchProfitability,CashRegisterReport,
     Financial\BalanceSheetReport,Financial\CashFlowStatementReport,Financial\GeneralLedgerReport,Financial\IncomeStatmentReport,Financial\TrailBalanceReport,
+    Financial\FixedAssetsReport,Financial\DepreciationExpensesReport,
     Inventory\CogsReport,Inventory\ShortageReport,Inventory\StockMovementReport,Inventory\StockValuationReport,
     Performance\CustomerOutstandingReport,Performance\DiscountImpactReport,Performance\ExpenseBreakdownReport,Performance\ProductProfitMarginReport,
     Performance\RevenueBreakdownByBranchReport,Performance\SalesThresholdReport,Performance\SupplierPayableReport,
@@ -162,6 +163,8 @@ Route::middleware([
                     Route::get('balance-sheet', BalanceSheetReport::class)->name('balance-sheet');
                     Route::get('cash-flow-statement', CashFlowStatementReport::class)->name('cash-flow-statement');
                     Route::get('general-ledger', GeneralLedgerReport::class)->name('general-ledger');
+                    Route::get('fixed-assets', FixedAssetsReport::class)->name('fixed-assets');
+                    Route::get('depreciation-expenses', DepreciationExpensesReport::class)->name('depreciation-expenses');
                 });
 
 

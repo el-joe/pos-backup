@@ -309,6 +309,18 @@ return [
                         "icon"  => "fa fa-book fa-fw"
                     ],
                     [
+                        "title" => "Fixed Assets Report",
+                        'translated_title' => 'general.titles.fixed-assets-report',
+                        "route" => 'admin.reports.financial.fixed-assets',
+                        "icon"  => "fa fa-building fa-fw"
+                    ],
+                    [
+                        "title" => "Depreciation Expenses Report",
+                        'translated_title' => 'general.titles.depreciation-expenses-report',
+                        "route" => 'admin.reports.financial.depreciation-expenses',
+                        "icon"  => "fa fa-chart-area fa-fw"
+                    ],
+                    [
                         "title" => "Balance Sheet",
                         'translated_title' => 'general.titles.balance-sheet',
                         "route" => 'admin.reports.financial.balance-sheet',
