@@ -82,9 +82,9 @@ class DepreciationExpensesReport extends Component
             $query->where('branch_id', $this->branch_id);
         }
 
-        // if ($this->fixed_asset_id) {
-        //     $query->where('model_id', $this->fixed_asset_id);
-        // }
+        if ($this->fixed_asset_id) {
+            $query->where('model_id', $this->fixed_asset_id);
+        }
 
         if ($this->expense_category_id) {
             $query->where('expense_category_id', $this->expense_category_id);

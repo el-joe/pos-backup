@@ -19,6 +19,7 @@ return [
         'units' => 'الوحدات',
         'taxes' => 'الضرائب',
         'discounts' => 'الخصومات',
+        'balance-sheet' => 'الميزانية العمومية',
         'expenses' => 'المصروفات',
         'expense-categories' => 'فئات المصروفات',
         'payment-methods' => 'طرق الدفع',
