@@ -19,9 +19,11 @@ use App\Livewire\Admin\Imports\ImportsPage;
 use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\Plans\{PlansList,SubscriptionsPage};
+use App\Livewire\Admin\DeferredPosPage;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\{AddEditProduct,ProductsList};
 use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
+use App\Livewire\Admin\Purchases\DeferredPurchasesList;
 use App\Livewire\Admin\PurchaseRequests\{AddPurchaseRequest,PurchaseRequestDetails,PurchaseRequestsList};
 use App\Livewire\Admin\Refunds\AddRefund;
 use App\Livewire\Admin\Refunds\RefundsList;
@@ -41,6 +43,7 @@ use App\Livewire\Admin\Reports\{
 };
 
 use App\Livewire\Admin\Sales\{SaleDetails,SalesList};
+use App\Livewire\Admin\Sales\DeferredSalesList;
 use App\Livewire\Admin\SaleRequests\{AddSaleRequest,SaleRequestDetails,SaleRequestsList};
 use App\Livewire\Admin\FixedAssets\{AddFixedAsset,FixedAssetDetails,FixedAssetsList};
 use App\Livewire\Admin\DepreciationExpenses\{AddDepreciationExpense,DepreciationExpenseDetails,DepreciationExpensesList};
@@ -101,6 +104,7 @@ Route::middleware([
             Route::get('units',UnitsList::class)->name('units.list');
             Route::get('taxes',TaxesList::class)->name('taxes.list');
             Route::get('pos',PosPage::class)->name('pos');
+            Route::get('pos/deferred',DeferredPosPage::class)->name('pos.deferred');
             Route::get('discounts', DiscountsList::class)->name('discounts.list');
             Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
             // TODO : expenses will be saved without payments and we can add payments later
@@ -128,6 +132,7 @@ Route::middleware([
             Route::get('products/{id}',AddEditProduct::class)->name('products.add-edit');
             // Purchases
             Route::get('purchases',PurchasesList::class)->name('purchases.list');
+            Route::get('purchases/deferred',DeferredPurchasesList::class)->name('purchases.deferred');
             Route::get('purchases/create',AddPurchase::class)->name('purchases.add');
             Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
 
@@ -137,6 +142,7 @@ Route::middleware([
             Route::get('purchase-requests/{id}', PurchaseRequestDetails::class)->name('purchase-requests.details');
             // Sales
             Route::get('sales',SalesList::class)->name('sales.index');
+            Route::get('sales/deferred',DeferredSalesList::class)->name('sales.deferred');
             Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
 
             // Sale Requests (Client Inquiry / Quotation)

@@ -109,6 +109,9 @@ return [
         'register-requests' => 'طلبات التسجيل',
         'partners' => 'الشركاء',
         'partner-commissions' => 'عمولات الشركاء',
+        'deferred_pos' => 'نقاط بيع مؤجلة',
+        'deferred_sales' => 'مبيعات مؤجلة',
+        'deferred_purchases' => 'مشتريات مؤجلة',
         // 'customers' => 'العملاء' - Duplicated, keeping the first one for consistency unless context dictates otherwise
     ],
     'layout' => [
@@ -542,6 +545,8 @@ return [
             'customer' => 'العميل',
             'order_date' => 'تاريخ الطلب',
             'due_date' => 'تاريخ الاستحقاق',
+            'deferred_order' => 'طلب مؤجل',
+            'deferred_order_hint' => 'تم وضع علامة على هذا الطلب كمؤجل. يمكن إكمال الدفع لاحقًا.',
             'invoice_number' => 'رقم الفاتورة',
             'leave_blank_for_auto_generated' => 'اترك فارغًا للتوليد التلقائي',
             'payment_note' => 'ملاحظة الدفع',
@@ -573,6 +578,7 @@ return [
             'quantity' => 'الكمية',
             'add_to_cart' => 'أضف إلى العربة',
             'confirm_leave' => 'هل أنت متأكد أنك تريد مغادرة هذه الصفحة؟ ستفقد التغييرات غير المحفوظة.',
+            'deferred_revenue' => 'إيراد مؤجل',
         ],
         'branches' => [
             'filters' => 'الفلاتر',
@@ -942,6 +948,11 @@ return [
             'quantity_to_refund' => 'الكمية المراد استردادها',
             'max_refundable' => 'الحد الأقصى للكمية القابلة للاسترداد:',
             'confirm_refund' => 'تأكيد الاسترداد',
+            'deferred_purchase' => 'مشتريات مؤجلة',
+            'all_purchases' => 'جميع المشتريات',
+            'receive_inventory' => 'استلام المخزون',
+            'confirm_receive_inventory_now' => 'هل تريد استلام المخزون الآن؟',
+            'no_deferred_purchases_pending_receipt' => 'لا توجد مشتريات مؤجلة بانتظار الاستلام.',
         ],
         'sales' => [
             'filters' => 'الفلاتر',
@@ -1008,6 +1019,11 @@ return [
             'max_refundable' => 'الحد الأقصى للكمية القابلة للاسترداد:',
             'confirm_refund' => 'تأكيد الاسترداد',
             'cancel' => 'إلغاء',
+            'new_deferred_sale' => 'بيع مؤجل جديد',
+            'all_sales' => 'جميع المبيعات',
+            'deliver_inventory' => 'تسليم المخزون',
+            'confirm_deliver_inventory_now' => 'هل تريد تسليم المخزون الآن؟',
+            'no_deferred_sales_pending_delivery' => 'لا توجد مبيعات مؤجلة بانتظار التسليم.',
         ],
         'sale_requests' => [
             'filters' => 'الفلاتر',
@@ -1482,5 +1498,10 @@ return [
     ],
     'messages' => [
         'you_do_not_have_permission_to_access' => 'ليس لديك إذن للوصول إلى هذه الوحدة.',
+        'payment_added_successfully' => 'تمت إضافة الدفعة بنجاح!',
+        'inventory_delivered_successfully' => 'تم تسليم المخزون بنجاح.',
+        'inventory_received_successfully' => 'تم استلام المخزون بنجاح.',
+        'failed_to_deliver_inventory' => 'فشل تسليم المخزون: :message',
+        'failed_to_receive_inventory' => 'فشل استلام المخزون: :message',
     ]
 ];

@@ -4,11 +4,13 @@ More Blogs
 # Add New Google analytics events
 # static pages
 # purchase details page -> add transactions tab
+remove depreciation accounts from expenses
+add opening stock journal entry
 tenant balance and charge balance
 become partner page
 free trial period
 subscription Renewal email and notification (command to send notification for all tenants with expiring subscription in next 7 days)
-parcode on product details page
+barcode on product details page
 make sure commands into crontab works fine
 --------------------
 

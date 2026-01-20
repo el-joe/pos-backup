@@ -14,6 +14,7 @@ use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\User;
 use App\Repositories\PurchaseRepository;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseService
 {
@@ -52,6 +53,8 @@ class PurchaseService
             $purchase = new Purchase();
         }
 
+        $isDeferred = (bool)($data['is_deferred'] ?? false);
+
         // fill purchase data
         $status = PurchaseStatusEnum::from($data['payment_status'] ?? 'pending')->value;
         $purchase->fill([
@@ -66,6 +69,7 @@ class PurchaseService
             // 'paid_amount' => $status == 'full_paid' ? $data['grand_total'] : ($data['payment_amount'] ?? $data['paid_amount'] ?? 0),
             'paid_amount' => 0,
             'status' => $status,
+            'is_deferred' => $isDeferred,
         ])->save();
 
         // fill purchase items data
@@ -112,25 +116,26 @@ class PurchaseService
             ]);
         }
 
-        // fill stock data
-        foreach ($data['orderProducts'] as $item) {
-            // add Stock
-            $this->stockService->addStock(productId: $item['id'],unitId: $item['unit_id'],qty: $item['qty'],sellPrice: $item['sell_price'],unitCost: $item['sub_total'],branchId: $data['branch_id']);
-        }
-        // fill purchase payments data
-        // Grouped by type = Purchase Invoice
-        $transactionData = [
-            'description' => 'Purchase Payment for #'.$purchase->ref_no,
-            'type' => TransactionTypeEnum::PURCHASE_INVOICE->value,
-            'reference_type' => Purchase::class,
-            'reference_id' => $purchase->id,
-            'branch_id' => $purchase->branch_id,
-            'note' => $data['payment_note'] ?? '',
-            'amount' => $data['grand_total'] ?? 0,
-            'lines' => $this->purchaseInvoiceLines($data,'create')
-        ];
+        if(!$isDeferred){
+            // fill stock data
+            foreach ($data['orderProducts'] as $item) {
+                $this->stockService->addStock(productId: $item['id'],unitId: $item['unit_id'],qty: $item['qty'],sellPrice: $item['sell_price'],unitCost: $item['sub_total'],branchId: $data['branch_id']);
+            }
 
-        $this->transactionService->create($transactionData);
+            // Grouped by type = Purchase Invoice
+            $transactionData = [
+                'description' => 'Purchase Payment for #'.$purchase->ref_no,
+                'type' => TransactionTypeEnum::PURCHASE_INVOICE->value,
+                'reference_type' => Purchase::class,
+                'reference_id' => $purchase->id,
+                'branch_id' => $purchase->branch_id,
+                'note' => $data['payment_note'] ?? '',
+                'amount' => $data['grand_total'] ?? 0,
+                'lines' => $this->purchaseInvoiceLines($data,'create')
+            ];
+
+            $this->transactionService->create($transactionData);
+        }
 
         if(($data['payment_status'] ?? 'pending') == 'pending'){
             return $purchase;
@@ -139,6 +144,119 @@ class PurchaseService
         $this->addPayment($purchase->id, $data);
 
         return $purchase;
+    }
+
+    public function receiveDeferredInventory(int $purchaseId): Purchase
+    {
+        $purchase = $this->repo->find($purchaseId);
+        if(!$purchase){
+            throw new \RuntimeException('Purchase not found');
+        }
+
+        if(!(bool)$purchase->is_deferred){
+            throw new \RuntimeException('Purchase is not deferred');
+        }
+
+        if($purchase->inventory_received_at){
+            return $purchase;
+        }
+
+        $purchase->loadMissing(['purchaseItems', 'expenses']);
+
+        $orderProducts = $purchase->purchaseItems->map(function($item){
+            $unitCostAfterDiscount = (float)$item->purchase_price - ((float)$item->purchase_price * ((float)($item->discount_percentage ?? 0)) / 100);
+            $subTotal = $unitCostAfterDiscount + ($unitCostAfterDiscount * ((float)($item->tax_percentage ?? 0)) / 100);
+            $sellPrice = (float)$item->sell_price;
+            if($sellPrice <= 0){
+                $sellPrice = $subTotal + ($subTotal * ((float)($item->x_margin ?? 0)) / 100);
+            }
+
+            return [
+                'id' => $item->product_id,
+                'unit_id' => $item->unit_id,
+                'qty' => $item->actual_qty,
+                'purchase_price' => (float)$item->purchase_price,
+                'discount_percentage' => (float)($item->discount_percentage ?? 0),
+                'tax_percentage' => (float)($item->tax_percentage ?? 0),
+                'x_margin' => (float)($item->x_margin ?? 0),
+                'sub_total' => $subTotal,
+                'sell_price' => $sellPrice,
+            ];
+        })->values()->toArray();
+
+        $expenses = $purchase->expenses->map(function($e){
+            return [
+                'description' => $e->note,
+                'amount' => (float)$e->amount,
+                'expense_date' => $e->expense_date,
+                'expense_category_id' => $e->expense_category_id,
+            ];
+        })->values()->toArray();
+
+        $orderProductsTotal = array_sum(array_map(fn($p) => (float)$p['sub_total'] * (float)$p['qty'], $orderProducts));
+        $expensesTotal = array_sum(array_column($expenses, 'amount'));
+        $orderSubTotal = PurchaseHelper::calcSubtotal($orderProductsTotal, $expensesTotal);
+        $discountAmount = PurchaseHelper::calcDiscount($orderSubTotal, $purchase->discount_type, $purchase->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($orderSubTotal, $discountAmount);
+        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchase->tax_percentage);
+        $grandTotal = PurchaseHelper::calcGrandTotal($totalAfterDiscount, $taxAmount);
+
+        $data = [
+            'supplier_id' => $purchase->supplier_id,
+            'branch_id' => $purchase->branch_id,
+            'ref_no' => $purchase->ref_no,
+            'order_date' => $purchase->order_date,
+            'discount_type' => $purchase->discount_type,
+            'discount_value' => $purchase->discount_value,
+            'tax_id' => $purchase->tax_id,
+            'tax_percentage' => $purchase->tax_percentage,
+            'tax_rate' => $purchase->tax_percentage,
+            'payment_note' => 'Deferred inventory received for #'.$purchase->ref_no,
+            'orderProducts' => $orderProducts,
+            'expenses' => $expenses,
+            'sub_total' => $orderSubTotal,
+            'discount_amount' => $discountAmount,
+            'total_after_discount' => $totalAfterDiscount,
+            'tax_amount' => $taxAmount,
+            'grand_total' => $grandTotal,
+        ];
+
+        DB::beginTransaction();
+        try{
+            foreach ($orderProducts as $item) {
+                $this->stockService->addStock(
+                    productId: $item['id'],
+                    unitId: $item['unit_id'],
+                    qty: $item['qty'],
+                    sellPrice: $item['sell_price'],
+                    unitCost: $item['sub_total'],
+                    branchId: $purchase->branch_id
+                );
+            }
+
+            $transactionData = [
+                'description' => 'Deferred Purchase Invoice for #'.$purchase->ref_no,
+                'type' => TransactionTypeEnum::PURCHASE_INVOICE->value,
+                'reference_type' => Purchase::class,
+                'reference_id' => $purchase->id,
+                'branch_id' => $purchase->branch_id,
+                'note' => $data['payment_note'],
+                'amount' => $data['grand_total'] ?? 0,
+                'lines' => $this->purchaseInvoiceLines($data,'create')
+            ];
+            $this->transactionService->create($transactionData);
+
+            $purchase->update([
+                'inventory_received_at' => now(),
+            ]);
+
+            DB::commit();
+        }catch(\Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $purchase->refresh();
     }
 
     function addPayment($purchaseId, $data , $reverse = false) {

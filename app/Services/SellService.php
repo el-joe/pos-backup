@@ -47,6 +47,8 @@ class SellService
         }else{
             $sell = new Sale();
         }
+
+        $isDeferred = (bool)($data['is_deferred'] ?? false);
         // fill purchase data
         $sell->fill([
             'customer_id' => $data['customer_id'],
@@ -60,6 +62,7 @@ class SellService
             'discount_value' => $data['discount_value'] ?? 0,
             'paid_amount' => 0,
             'due_date' => $data['due_date'] ?? null,
+            'is_deferred' => $isDeferred,
         ])->save();
 
         // fill sale items data
@@ -76,10 +79,11 @@ class SellService
             ]);
         }
 
-        // fill stock data
-        foreach ($data['products'] as $item) {
-            // add Stock
-            $this->stockService->removeFromStock(productId: $item['id'],unitId: $item['unit_id'],qty: ($item['qty']??$item['quantity']),branchId: $data['branch_id']);
+        if(!$isDeferred){
+            // fill stock data
+            foreach ($data['products'] as $item) {
+                $this->stockService->removeFromStock(productId: $item['id'],unitId: $item['unit_id'],qty: ($item['qty']??$item['quantity']),branchId: $data['branch_id']);
+            }
         }
 
         // Save history of discount if applied
@@ -90,42 +94,133 @@ class SellService
             }
         }
 
-        // fill purchase payments data
-        // Grouped by type = Purchase Invoice
-        $transactionData = [
-            'description' => 'Sale Payment for #'.$sell->invoice_number,
-            'type' => TransactionTypeEnum::SALE_INVOICE->value,
-            'reference_type' => Sale::class,
-            'reference_id' => $sell->id,
-            'branch_id' => $sell->branch_id,
-            'note' => $data['payment_note'] ?? '',
-            'amount' => $data['payment_amount'] ?? 0,
-            'lines' => $this->saleInvoiceLines($data,'create')
-        ];
+        if(!$isDeferred){
+            // Grouped by type = Sale Invoice
+            $transactionData = [
+                'description' => 'Sale Payment for #'.$sell->invoice_number,
+                'type' => TransactionTypeEnum::SALE_INVOICE->value,
+                'reference_type' => Sale::class,
+                'reference_id' => $sell->id,
+                'branch_id' => $sell->branch_id,
+                'note' => $data['payment_note'] ?? '',
+                'amount' => $data['payment_amount'] ?? 0,
+                'lines' => $this->saleInvoiceLines($data,'create')
+            ];
 
-        $this->transactionService->create($transactionData);
+            $this->transactionService->create($transactionData);
 
-        $transactionData = [
-            'description' => 'Sale Payment Inventory for #'.$sell->invoice_number,
-            'type' => TransactionTypeEnum::SALE_INVOICE->value,
-            'reference_type' => Sale::class,
-            'reference_id' => $sell->id,
-            'branch_id' => $sell->branch_id,
-            'note' => $data['payment_note'] ?? '',
-            'amount' => $data['payment_amount'] ?? 0,
-            'lines' => $this->saleInventoryLines($data,'create')
-        ];
+            $transactionData = [
+                'description' => 'Sale Payment Inventory for #'.$sell->invoice_number,
+                'type' => TransactionTypeEnum::SALE_INVOICE->value,
+                'reference_type' => Sale::class,
+                'reference_id' => $sell->id,
+                'branch_id' => $sell->branch_id,
+                'note' => $data['payment_note'] ?? '',
+                'amount' => $data['payment_amount'] ?? 0,
+                'lines' => $this->saleInventoryLines($data,'create')
+            ];
 
-        $this->transactionService->create($transactionData);
-
-
-        if(count($data['payments']??[]) == 0){
-            return $sell;
+            $this->transactionService->create($transactionData);
         }
-        // Grouped by type = Payments
-        $this->addPayment($sell->id, $data);
+
+
+        if(count($data['payments']??[]) > 0){
+            // Grouped by type = Payments
+            $this->addPayment($sell->id, $data);
+        }
 
         return $sell->refresh();
+    }
+
+    public function deliverDeferredInventory(int $saleId): Sale
+    {
+        /** @var Sale $sale */
+        $sale = $this->repo->find($saleId);
+
+        if(!$sale){
+            throw new \RuntimeException('Sale not found');
+        }
+
+        if(!(bool)$sale->is_deferred){
+            throw new \RuntimeException('Sale is not deferred');
+        }
+
+        if($sale->inventory_delivered_at){
+            return $sale;
+        }
+
+        $sale->loadMissing(['saleItems', 'branch.tax']);
+
+        $data = [
+            'branch_id' => $sale->branch_id,
+            'customer_id' => $sale->customer_id,
+            'payment_note' => 'Deferred inventory delivered for #'.$sale->invoice_number,
+            'discount_id' => $sale->discount_id,
+            'discount_type' => $sale->discount_type,
+            'discount_value' => $sale->discount_value,
+            'tax_amount' => $sale->tax_amount,
+            'discount_amount' => $sale->discount_amount,
+            'payment_amount' => $sale->grand_total_amount,
+            'products' => $sale->saleItems->map(function($item){
+                return [
+                    'id' => $item->product_id,
+                    'unit_id' => $item->unit_id,
+                    'qty' => $item->actual_qty,
+                    'quantity' => $item->actual_qty,
+                    'unit_cost' => $item->unit_cost,
+                    'sell_price' => $item->sell_price,
+                    'taxable' => $item->taxable,
+                ];
+            })->values()->toArray(),
+        ];
+
+        DB::beginTransaction();
+        try{
+            // Post the deferred invoice + inventory entries at delivery time
+            $transactionData = [
+                'description' => 'Deferred Sale Invoice for #'.$sale->invoice_number,
+                'type' => TransactionTypeEnum::SALE_INVOICE->value,
+                'reference_type' => Sale::class,
+                'reference_id' => $sale->id,
+                'branch_id' => $sale->branch_id,
+                'note' => $data['payment_note'],
+                'amount' => $data['payment_amount'] ?? 0,
+                'lines' => $this->saleInvoiceLines($data,'create')
+            ];
+            $this->transactionService->create($transactionData);
+
+            $transactionData = [
+                'description' => 'Deferred Sale Inventory for #'.$sale->invoice_number,
+                'type' => TransactionTypeEnum::SALE_INVOICE->value,
+                'reference_type' => Sale::class,
+                'reference_id' => $sale->id,
+                'branch_id' => $sale->branch_id,
+                'note' => $data['payment_note'],
+                'amount' => $data['payment_amount'] ?? 0,
+                'lines' => $this->saleInventoryLines($data,'create')
+            ];
+            $this->transactionService->create($transactionData);
+
+            foreach ($data['products'] as $item) {
+                $this->stockService->removeFromStock(
+                    productId: $item['id'],
+                    unitId: $item['unit_id'],
+                    qty: ($item['qty'] ?? $item['quantity']),
+                    branchId: $sale->branch_id
+                );
+            }
+
+            $sale->update([
+                'inventory_delivered_at' => now(),
+            ]);
+
+            DB::commit();
+        }catch(\Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
+
+        return $sale->refresh();
     }
 
     function addPayment($sellId, $data , $reverse = false) {

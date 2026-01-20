@@ -82,6 +82,13 @@
                         @enderror
                     </div>
 
+                    <div class="col-sm-3 d-flex align-items-end d-none">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isDeferredSwitch" wire:model="data.is_deferred" @if(($deferredMode ?? false) === true) disabled @endif>
+                            <label class="form-check-label fw-semibold" for="isDeferredSwitch">{{ __('general.pages.pos-page.deferred_revenue') }}</label>
+                        </div>
+                    </div>
+
                     <div class="col-sm-3">
                         <label for="invoiceNumber" class="fw-semibold">{{ __('general.pages.pos-page.invoice_number') }}:</label>
                         <input type="text" class="form-control" id="invoiceNumber" wire:model="data.invoice_number">

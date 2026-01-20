@@ -39,6 +39,8 @@ class PosPage extends Component
     public $customers;
     public $branches;
 
+    public bool $deferredMode = false;
+
     function boot() {
         $this->productService = app(ProductService::class);
         $this->userService = app(UserService::class);
@@ -52,6 +54,7 @@ class PosPage extends Component
     function mount() {
         $this->data['order_date'] = $this->data['order_date'] ?? now()->format('Y-m-d');
         $this->data['due_date'] = $this->data['due_date'] ?? now()->format('Y-m-d');
+        $this->data['is_deferred'] = $this->data['is_deferred'] ?? ($this->deferredMode ? 1 : 0);
         if(admin()->branch_id){
             $this->data['branch_id'] = admin()->branch_id;
             $this->updatingDataBranchId(admin()->branch_id);
@@ -265,6 +268,7 @@ class PosPage extends Component
             "discount_id" => $this->data['discount']['id'] ?? null,
             "discount_type" => $this->data['discount']['type'] ?? null,
             "discount_value" => $this->data['discount']['value'] ?? 0,
+            'is_deferred' => (bool)($this->data['is_deferred'] ?? $this->deferredMode),
             "payment_note" => $this->data['payment_note'] ?? null,
             "payment_amount" => $total ?? 0,
             'payments' => $payments ?? [],

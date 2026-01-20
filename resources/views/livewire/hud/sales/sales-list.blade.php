@@ -92,6 +92,12 @@
                 <a class="btn btn-primary btn-sm" href="{{ route('admin.pos') }}">
                     <i class="fa fa-plus"></i> {{ __('general.pages.sales.new_selling_order') }}
                 </a>
+                <a class="btn btn-warning btn-sm" href="{{ route('admin.pos.deferred') }}">
+                    <i class="fa fa-clock"></i> {{ __('general.titles.deferred_pos') }}
+                </a>
+                <a class="btn btn-outline-warning btn-sm" href="{{ route('admin.sales.deferred') }}">
+                    <i class="fa fa-truck"></i> {{ __('general.titles.deferred_sales') }}
+                </a>
                 @endadminCan
             </div>
         </div>

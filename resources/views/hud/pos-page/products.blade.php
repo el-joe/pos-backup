@@ -180,6 +180,30 @@
                         </div>
                     </div>
                 @endif
+
+                @if($deferredMode ?? false)
+                    <div class="card border-warning bg-warning-subtle shadow-sm mb-3">
+                        <div class="card-body p-2">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-clock me-2 text-warning fa-lg"></i>
+                                <div class="flex-1">
+                                    <div class="fw-semibold text-warning">
+                                        {{ __('general.pages.pos-page.deferred_order') }}
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ __('general.pages.pos-page.deferred_order_hint') }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <div class="card-arrow-top-left"></div>
+                            <div class="card-arrow-top-right"></div>
+                            <div class="card-arrow-bottom-left"></div>
+                            <div class="card-arrow-bottom-right"></div>
+                        </div>
+                    </div>
+                @endif
                 <div class="d-flex align-items-center">
                     <div>{{ __('general.pages.pos-page.taxes') }} ({{ $taxPercentage }}%)</div>
                     <div class="flex-1 text-end h6 mb-0">{{ currencyFormat($tax, true) }}</div>

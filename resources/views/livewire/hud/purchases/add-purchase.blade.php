@@ -51,6 +51,13 @@
                         <input type="date" id="order_date" class="form-control" placeholder="{{ __('general.pages.purchases.order_date') }}" wire:model="data.order_date">
                     </div>
                 </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="purchaseDeferredSwitch" wire:model="data.is_deferred">
+                        <label class="form-check-label fw-semibold" for="purchaseDeferredSwitch">{{ __('general.pages.purchases.deferred_purchase') }}</label>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -23,6 +23,13 @@ return [
         'can' => 'pos.create'
     ],
     [
+        "title"     => "Deferred POS",
+        'translated_title' => 'general.titles.deferred_pos',
+        "icon"      => "fa fa-hourglass-half fa-fw",
+        "route"     => 'admin.pos.deferred',
+        'can' => 'pos.create'
+    ],
+    [
         "title"     => "Imports",
         'translated_title' => 'general.titles.imports',
         "icon"      => "fa fa-file-import fa-fw",
@@ -114,6 +121,13 @@ return [
                 'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export'
             ],
             [
+                "title" => "Deferred Sales",
+                'translated_title' => 'general.titles.deferred_sales',
+                "route" => 'admin.sales.deferred',
+                "icon"  => "fa fa-hourglass-half fa-fw",
+                'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export'
+            ],
+            [
                 "title" => "Requests",
                 'translated_title' => 'general.titles.sale-requests',
                 "route" => 'admin.sale-requests.list',
@@ -150,6 +164,13 @@ return [
                 'translated_title' => 'general.titles.purchases_orders',
                 "route" => 'admin.purchases.list',
                 "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export'
+            ],
+            [
+                "title" => "Deferred Purchases",
+                'translated_title' => 'general.titles.deferred_purchases',
+                "route" => 'admin.purchases.deferred',
+                "icon"  => "fa fa-hourglass-half fa-fw",
                 'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export'
             ],
             [

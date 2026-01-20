@@ -110,6 +110,9 @@ return [
         'sliders' => 'Sliders',
         'partners' => 'Partners',
         'partner-commissions' => 'Partner Commissions',
+        'deferred_pos' => 'Deferred POS',
+        'deferred_sales' => 'Deferred Sales',
+        'deferred_purchases' => 'Deferred Purchases',
     ],
     'layout' => [
         'notifications' => 'Notifications',
@@ -540,6 +543,8 @@ return [
             'order_details' => 'Order Details',
             'order_products' => 'Order Products',
             'branch' => 'Branch',
+            'deferred_order' => 'Deferred Order',
+            'deferred_order_hint' => 'This order is marked as deferred. Payment can be completed later.',
             'customer' => 'Customer',
             'order_date' => 'Order Date',
             'due_date' => 'Due Date',
@@ -574,6 +579,7 @@ return [
             'quantity' => 'Quantity',
             'add_to_cart' => 'Add to cart',
             'confirm_leave' => 'Are you sure you want to leave this page? Unsaved changes will be lost.',
+            'deferred_revenue' => 'Deferred Revenue',
         ],
         'branches' => [
             'filters' => 'Filters',
@@ -958,6 +964,11 @@ return [
             'quantity_to_refund' => 'Quantity to Refund',
             'max_refundable' => 'Max refundable quantity:',
             'confirm_refund' => 'Confirm Refund',
+            'deferred_purchase' => 'Deferred Purchase',
+            'all_purchases' => 'All Purchases',
+            'receive_inventory' => 'Receive Inventory',
+            'confirm_receive_inventory_now' => 'Receive inventory now?',
+            'no_deferred_purchases_pending_receipt' => 'No deferred purchases pending receipt.',
         ],
         'sales' => [
             'filters' => 'Filters',
@@ -1025,6 +1036,11 @@ return [
             'max_refundable' => 'Max refundable quantity:',
             'confirm_refund' => 'Confirm Refund',
             'cancel' => 'Cancel',
+            'new_deferred_sale' => 'New Deferred Sale',
+            'all_sales' => 'All Sales',
+            'deliver_inventory' => 'Deliver Inventory',
+            'confirm_deliver_inventory_now' => 'Deliver inventory now?',
+            'no_deferred_sales_pending_delivery' => 'No deferred sales pending delivery.',
         ],
         'sale_requests' => [
             'filters' => 'Filters',
@@ -1505,5 +1521,10 @@ return [
         'you_do_not_have_permission_to_access' => 'You do not have permission to access this module.',
         'created_successfully' => 'Created successfully.',
         'invalid_refund_quantity' => 'Invalid refund quantity for :item product.',
+        'payment_added_successfully' => 'Payment added successfully!',
+        'inventory_delivered_successfully' => 'Inventory delivered successfully.',
+        'inventory_received_successfully' => 'Inventory received successfully.',
+        'failed_to_deliver_inventory' => 'Failed to deliver inventory: :message',
+        'failed_to_receive_inventory' => 'Failed to receive inventory: :message',
     ]
 ];

@@ -14,11 +14,14 @@ class Purchase extends Model
 {
     protected $fillable = [
         'supplier_id','branch_id','ref_no','order_date','paid_amount','status',
-        'discount_type' , 'discount_value' , 'tax_id' , 'tax_percentage'
+        'discount_type' , 'discount_value' , 'tax_id' , 'tax_percentage',
+        'is_deferred','inventory_received_at'
     ];
 
     protected $casts = [
         'status' => PurchaseStatusEnum::class,
+        'is_deferred' => 'boolean',
+        'inventory_received_at' => 'datetime',
     ];
 
     function supplier(){
@@ -103,6 +106,12 @@ class Purchase extends Model
             ->when($filters['supplier_id'] ?? false , fn($q,$supplier_id) => $q->where('supplier_id',$supplier_id) )
             ->when($filters['branch_id'] ?? false , fn($q,$branch_id) => $q->where('branch_id',$branch_id) )
             ->when($filters['status'] ?? false , fn($q,$status) => $q->where('status',$status) )
+            ->when(array_key_exists('is_deferred', $filters), fn($q)=> $q->where('is_deferred', (bool)$filters['is_deferred']))
+            ->when(array_key_exists('inventory_received', $filters), function($q) use ($filters){
+                return (bool)$filters['inventory_received']
+                    ? $q->whereNotNull('inventory_received_at')
+                    : $q->whereNull('inventory_received_at');
+            })
             ->when($filters['date_from'] ?? false , fn($q,$date_from) => $q->whereDate('order_date','>=',$date_from) )
             ->when($filters['date_to'] ?? false , fn($q,$date_to) => $q->whereDate('order_date','<=',$date_to) );
     }

@@ -37,6 +37,7 @@ class AddPurchase extends Component
         'supplier_id' => 'required|integer',
         'order_date' => 'required|date',
         'ref_no' => 'required|string|max:255',
+        'is_deferred' => 'nullable|boolean',
         // Products Section
         'orderProducts' => 'required|array|min:1',
         'orderProducts.*.id' => 'required|integer',
@@ -78,6 +79,8 @@ class AddPurchase extends Component
         if(admin()->branch_id){
             $this->data['branch_id'] = admin()->branch_id;
         }
+
+        $this->data['is_deferred'] = $this->data['is_deferred'] ?? !!request()->get('is_deferred', false);
     }
 
     public function updatingProductSearch($value)

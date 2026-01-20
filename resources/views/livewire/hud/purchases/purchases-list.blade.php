@@ -92,6 +92,9 @@
                 <a href="{{ route('admin.purchases.add') }}" class="btn btn-primary">
                     <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
                 </a>
+                <a href="{{ route('admin.purchases.deferred') }}" class="btn btn-outline-warning">
+                    <i class="fa fa-truck"></i> {{ __('general.titles.deferred_purchases') }}
+                </a>
                 @endadminCan
             </div>
         </div>

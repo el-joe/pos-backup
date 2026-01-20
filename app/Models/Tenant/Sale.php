@@ -12,7 +12,13 @@ class Sale extends Model
     protected $fillable = [
         'customer_id','branch_id','invoice_number','order_date','created_by',
         'tax_id','tax_percentage','discount_id','discount_type','discount_value',
-        'paid_amount','max_discount_amount','due_date'
+        'paid_amount','max_discount_amount','due_date',
+        'is_deferred','inventory_delivered_at'
+    ];
+
+    protected $casts = [
+        'is_deferred' => 'boolean',
+        'inventory_delivered_at' => 'datetime',
     ];
 
     // boot method to update discount max value to 0 if null
@@ -126,6 +132,12 @@ class Sale extends Model
             ->when($filters['customer_id'] ?? null, fn($q,$v)=> $q->where('customer_id',$v))
             ->when($filters['from_date'] ?? null, fn($q,$v)=> $q->whereDate('order_date','>=',$v))
             ->when($filters['to_date'] ?? null, fn($q,$v)=> $q->whereDate('order_date','<=',$v))
+            ->when(array_key_exists('is_deferred', $filters), fn($q)=> $q->where('is_deferred', (bool)$filters['is_deferred']))
+            ->when(array_key_exists('inventory_delivered', $filters), function($q) use ($filters){
+                return (bool)$filters['inventory_delivered']
+                    ? $q->whereNotNull('inventory_delivered_at')
+                    : $q->whereNull('inventory_delivered_at');
+            })
             ->when($filters['search'] ?? null, function($q,$v){
                 $q->where(function($q) use ($v) {
                     $q->where('invoice_number','like','%'.$v.'%')
