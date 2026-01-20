@@ -21,7 +21,9 @@ class PurchasesList extends Component
     private $purchaseService, $cashRegisterService,$branchService,$userService;
     public $current;
 
-    public $filters = [];
+    public $filters = [
+        'is_deferred' => 0,
+    ];
     public $collapseFilters = false;
     public $export = null;
 

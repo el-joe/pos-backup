@@ -26,7 +26,9 @@ class SalesList extends Component
     public $collapseFilters = false;
     public $export = null;
 
-    public $filters = [];
+    public $filters = [
+        'is_deferred' => 0,
+    ];
 
     function boot() {
         $this->sellService = app(SellService::class);

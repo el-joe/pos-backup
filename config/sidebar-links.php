@@ -91,6 +91,13 @@ return [
         'can' => 'stock_transfers.list,stock_transfers.show,stock_transfers.create,stock_transfers.update,stock_transfers.delete,stock_transfers.export,stock_adjustments.list,stock_adjustments.show,stock_adjustments.create,stock_adjustments.update,stock_adjustments.delete,stock_adjustments.export',
         "children"  => [
             [
+                "title" => "Stocks",
+                'translated_title' => 'general.titles.stocks',
+                "route" => 'admin.stocks.list',
+                "icon"  => "fa fa-layer-group fa-fw",
+                'can' => 'products.list,products.show'
+            ],
+            [
                 "title" => "Stock Transfers",
                 'translated_title' => 'general.titles.stock-transfers',
                 "route" => 'admin.stocks.transfers.list',

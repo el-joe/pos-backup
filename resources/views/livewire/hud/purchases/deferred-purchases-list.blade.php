@@ -4,8 +4,8 @@
             <h5 class="mb-0">{{ __('general.titles.deferred_purchases') }}</h5>
             <div class="d-flex align-items-center gap-2">
                 @adminCan('purchases.create')
-                <a href="{{ route('admin.purchases.add') }}" class="btn btn-primary btn-sm">
-                    <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
+                <a href="{{ route('admin.purchases.add', ['is_deferred' => 1]) }}" class="btn btn-primary btn-sm">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.purchases.add_deferred_purchase') }}
                 </a>
                 @endadminCan
                 <a href="{{ route('admin.purchases.list') }}" class="btn btn-outline-secondary btn-sm">

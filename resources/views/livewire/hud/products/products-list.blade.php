@@ -92,6 +92,9 @@
             <h5 class="mb-0"><i class="fa fa-cubes me-2"></i>{{ __('general.pages.products.products') }}</h5>
 
             <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('admin.stocks.list') }}" class="btn btn-outline-primary">
+                    <i class="fa fa-warehouse me-1"></i> {{ __('general.titles.stocks') }}
+                </a>
                 @adminCan('products.export')
                 <!-- Export Button -->
                 <button class="btn btn-outline-success"
@@ -154,7 +157,7 @@
                                     </button>
                                     @endadminCan
                                     @adminCan('products.show')
-                                    <a href="#" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="{{ __('general.pages.products.view') }}">
+                                    <a href="{{ route('admin.products.details', $product->id) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="{{ __('general.pages.products.view') }}">
                                         <i class="fa fa-eye"></i>
                                     </a>
                                     @endadminCan

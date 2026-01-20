@@ -21,7 +21,7 @@ use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\Plans\{PlansList,SubscriptionsPage};
 use App\Livewire\Admin\DeferredPosPage;
 use App\Livewire\Admin\PosPage;
-use App\Livewire\Admin\Products\{AddEditProduct,ProductsList};
+use App\Livewire\Admin\Products\{AddEditProduct,ProductsList,ProductDetails};
 use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
 use App\Livewire\Admin\Purchases\DeferredPurchasesList;
 use App\Livewire\Admin\PurchaseRequests\{AddPurchaseRequest,PurchaseRequestDetails,PurchaseRequestsList};
@@ -49,7 +49,7 @@ use App\Livewire\Admin\FixedAssets\{AddFixedAsset,FixedAssetDetails,FixedAssetsL
 use App\Livewire\Admin\DepreciationExpenses\{AddDepreciationExpense,DepreciationExpenseDetails,DepreciationExpensesList};
 use App\Livewire\Admin\Settings\SettingsPage;
 use App\Livewire\Admin\Statistics;
-use App\Livewire\Admin\Stocks\{AddStockTransfer,StockTransferDetails,StockTransferList};
+use App\Livewire\Admin\Stocks\{AddStockTransfer,StockTransferDetails,StockTransferList,StocksList};
 
 use App\Livewire\Admin\StockTaking\{AddStockTaking,StockTakingDetails,StockTakingList};
 
@@ -130,6 +130,7 @@ Route::middleware([
             // Products
             Route::get('products',ProductsList::class)->name('products.list'); // TODO : -> Add Product Details Page contains Stock info , Purchases , Sales , Stock Transfers , Adjustments
             Route::get('products/{id}',AddEditProduct::class)->name('products.add-edit');
+            Route::get('products/{id}/details',ProductDetails::class)->name('products.details');
             // Purchases
             Route::get('purchases',PurchasesList::class)->name('purchases.list');
             Route::get('purchases/deferred',DeferredPurchasesList::class)->name('purchases.deferred');
@@ -245,6 +246,9 @@ Route::middleware([
             Route::get('stock-transfers', StockTransferList::class)->name('stocks.transfers.list');
             Route::get('stock-transfers/create', AddStockTransfer::class)->name('stocks.transfers.create');
             Route::get('stock-transfers/{id}/details', StockTransferDetails::class)->name('stocks.transfers.details');
+
+            // Stocks
+            Route::get('stocks', StocksList::class)->name('stocks.list');
 
             Route::get('admins',AdminsList::class)->name('admins.list');
             Route::get('roles',RolesList::class)->name('roles.list');
