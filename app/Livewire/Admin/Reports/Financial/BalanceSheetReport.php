@@ -64,7 +64,7 @@ class BalanceSheetReport extends Component
         // Asset accounts
         $assets = [
             'Fixed Asset' => $net('fixed_asset', 'debit'),
-            'Current Asset' => $net('current_asset', 'debit'),
+            // 'Current Asset' => $net('current_asset', 'debit'),
             'Inventory' => $net('inventory', 'debit'),
             'VAT Receivable' => $net('vat_receivable', 'debit'),
         ];
