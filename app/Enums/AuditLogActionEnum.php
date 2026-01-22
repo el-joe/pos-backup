@@ -43,6 +43,7 @@ enum AuditLogActionEnum : string
     case CREATE_STOCK_TRANSFER = 'create_stock_transfer';
     case DELETE_EXPENSE_INTO_STOCK_TRANSFER = 'delete_expense_into_stock_transfer';
     case DELETE_EXPENSE_INTO_STOCK_TRANSFER_TRY = 'delete_expense_into_stock_transfer_try';
+    case PAY_EXPENSE = 'pay_expense';
     case EXPORT_STOCK_TAKINGS = 'export_stock_takings';
     case CREATE_STOCK_TAKING = 'create_stock_taking';
     case RETURN_STOCK_TAKING_PRODUCT = 'return_stock_taking_product';

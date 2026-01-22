@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\AccountTypeEnum;
+use App\Enums\Tenant\ExpenseTypeEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Expense;
@@ -40,24 +41,40 @@ class ExpenseService
             $expense = $this->repo->create($data);
         }
 
-        $paymentData = [
-            'note'=>'Expense #'. $expense->id,
-            'type' => TransactionTypeEnum::EXPENSE->value,
-            'reference_type' => Expense::class,
-            'reference_id' => $expense->id,
-            'branch_id' => $expense->branch_id,
-            'amount' => $expense->total,
-            'lines' => $this->expenseLines([
+        if($expense && $expense->type->value == ExpenseTypeEnum::ACCRUED->value) {
+            return $expense;
+        }
+
+        return $this->payExpense($expense->id, $expense->total);
+    }
+
+    function payExpense($expenseId,$amount = 0) {
+        $expense = $this->repo->find($expenseId);
+        if($expense) {
+            $newAmount = $amount > 0 ? $amount : $expense->total;
+            $paymentData = [
+                'note'=>'Expense #'. $expense->id,
+                'type' => TransactionTypeEnum::EXPENSE->value,
+                'reference_type' => Expense::class,
+                'reference_id' => $expense->id,
                 'branch_id' => $expense->branch_id,
-                'amount'=> $expense->amount,
-                'tax_percentage' => $expense->tax_percentage,
-                'total' => $expense->total,
-            ])
-        ];
+                'amount' => $newAmount,
+                'lines' => $this->expenseLines([
+                    'branch_id' => $expense->branch_id,
+                    'amount'=> $newAmount,
+                    'tax_percentage' => $expense->tax_percentage,
+                    'total' => $expense->total,
+                ])
+            ];
 
-        $this->transactionService->create($paymentData);
+            $this->transactionService->create($paymentData);
 
-        return $expense;
+            $expense->increment('total_paid', $newAmount);
+
+            return $expense;
+        }
+
+        return false;
     }
 
     function delete($id) {
@@ -69,10 +86,10 @@ class ExpenseService
                 'reference_type' => Expense::class,
                 'reference_id' => $expense->id,
                 'branch_id' => $expense->branch_id,
-                'amount' => $expense->total,
+                'amount' => $expense->total_paid,
                 'lines' => $this->expenseLines([
                     'branch_id' => $expense->branch_id,
-                    'amount'=> $expense->total
+                    'amount'=> $expense->total_paid
                 ],true)
             ];
 

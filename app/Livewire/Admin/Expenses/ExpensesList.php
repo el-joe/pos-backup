@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Expenses;
 
 use App\Enums\AuditLogActionEnum;
+use App\Enums\Tenant\ExpenseTypeEnum;
 use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
@@ -122,6 +123,31 @@ class ExpensesList extends Component
         $this->reset('data', 'current');
     }
 
+    function payExpense($id) {
+        $this->setCurrent($id);
+
+        if (!$this->current) {
+            $this->popup('error', 'Expense not found');
+            return;
+        }
+
+        try{
+            DB::beginTransaction();
+            $this->expenseService->payExpense($this->current->id,$this->current->total);
+            DB::commit();
+        }catch (\Exception $e) {
+            DB::rollBack();
+            $this->popup('error','Error occurred while paying expense: '.$e->getMessage());
+            return;
+        }
+
+        AuditLog::log(AuditLogActionEnum::PAY_EXPENSE, ['id' => $id]);
+
+        $this->popup('success', 'Expense paid successfully');
+
+        $this->reset('current');
+    }
+
     public function render()
     {
 
@@ -141,13 +167,14 @@ class ExpensesList extends Component
                     'amount' => $expense->amount,
                     'tax_percentage' => $expense->tax_percentage,
                     'total' => $expense->total,
+                    'total_paid' => $expense->total_paid,
                     'date' => $expense->expense_date,
                     'note' => $expense->note ?? 'N/A',
                     'created_at' => $expense->created_at,
                 ];
             })->toArray();
-            $columns = ['loop', 'branch', 'target', 'category', 'amount', 'tax_percentage', 'total', 'date', 'note', 'created_at'];
-            $headers = ['#', 'Branch', 'Target', 'Category', 'Amount', 'Tax Percentage', 'Total', 'Date', 'Note', 'Created At'];
+            $columns = ['loop', 'branch', 'target', 'category', 'amount', 'tax_percentage', 'total', 'total_paid', 'date', 'note', 'created_at'];
+            $headers = ['#', 'Branch', 'Target', 'Category', 'Amount', 'Tax Percentage', 'Total', 'Total Paid', 'Date', 'Note', 'Created At'];
             $fullPath = exportToExcel($data, $columns, $headers, 'expenses');
 
             AuditLog::log(AuditLogActionEnum::EXPORT_EXPENSES, ['url' => $fullPath]);
@@ -167,7 +194,10 @@ class ExpensesList extends Component
                 'amount' => currencyFormat($expense->amount, true),
                 'tax_percentage' => $expense->tax_percentage,
                 'total' => currencyFormat($expense->total, true),
-                'date' => $expense->expense_date,
+                'total_paid' => currencyFormat($expense->total_paid, true),
+                'date' => dateTimeFormat($expense->expense_date),
+                'type' => $expense->type?->value,
+                'type_label' => $expense->type?->label(),
                 'note' => $expense->note ?? 'N/A',
                 'created_at' => dateTimeFormat($expense->created_at,true,false),
                 'deleted' => $expense->deleted_at != null,
@@ -175,7 +205,7 @@ class ExpensesList extends Component
         });
 
         $headers = [
-            '#' , 'Branch' ,'Target' , 'Category' , 'Amount' , 'Tax Percentage' , 'Total' , 'Date' , 'Note' , 'Created At' , 'Actions'
+            '#' , 'Branch' ,'Target' , 'Category' , 'Amount' , 'Tax Percentage' , 'Total' , 'Total Paid' , 'Date' , 'Type' , 'Note' , 'Created At' , 'Actions'
         ];
 
         $actions = [];
@@ -197,6 +227,25 @@ class ExpensesList extends Component
             ];
         }
 
+        // add action to pay expense if type is Accrued and not deleted
+        if(adminCan('expenses.pay')){
+            $actions[] = [
+                'title' => fn($row) => 'Pay Expense',
+                'icon' => 'fa fa-credit-card',
+                'class' => 'btn btn-success btn-sm',
+                'wire:click' => fn($row) => "payExpense({$row['id']})",
+                'hide' => function($row) {
+                    return $row['type'] != ExpenseTypeEnum::ACCRUED->value || $row['deleted'] || $row['total_paid'] >= $row['total'];
+                },
+                'disabled' => fn($row) => $row['deleted'],
+                'attributes' => [
+                    'data-toggle' => 'tooltip',
+                    'data-placement' => 'top',
+                    'data-original-title' => fn($row) => 'Pay Expense',
+                ],
+            ];
+        }
+
         $columns = [
             'id' => [ 'type' => 'number'],
             'branch' => [ 'type' => 'text'],
@@ -205,7 +254,9 @@ class ExpensesList extends Component
             'amount' => [ 'type' => 'text'],
             'tax_percentage' => [ 'type' => 'decimal'],
             'total' => [ 'type' => 'text'],
-            'date' => [ 'type' => 'date'],
+            'total_paid' => [ 'type' => 'text'],
+            'date' => [ 'type' => 'text'],
+            'type_label' => [ 'type' => 'text'],
             'note' => [ 'type' => 'text'],
             'created_at' => [ 'type' => 'text'],
             'actions' => [ 'type' => 'actions' , 'actions' => $actions],

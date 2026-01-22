@@ -20,6 +20,7 @@ enum TransactionTypeEnum : string
     case STOCK_ADJUSTMENT_REFUND = 'stock_adjustment_refund';
     case OPENING_BALANCE = 'opening_balance';
     case CLOSING_BALANCE = 'closing_balance';
+    case FIXED_ASSETS = 'fixed_assets';
 
     public function label(): string
     {
@@ -40,6 +41,7 @@ enum TransactionTypeEnum : string
             self::STOCK_ADJUSTMENT_REFUND => 'Stock Adjustment Refund',
             self::OPENING_BALANCE => 'Opening Balance',
             self::CLOSING_BALANCE => 'Closing Balance',
+            self::FIXED_ASSETS => 'Fixed Assets',
         };
     }
 }

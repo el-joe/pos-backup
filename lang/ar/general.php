@@ -739,6 +739,11 @@ return [
             'enter_note' => 'أدخل ملاحظة',
             'close' => 'إغلاق',
             'save' => 'حفظ',
+            'types' => [
+                'normal' => 'مصروف عادي',
+                'prepaid' => 'مصروف مدفوع مقدما',
+                'accrued' => 'مصروف مستحق',
+            ]
         ],
         'expense-categories' => [
             'filters' => 'الفلاتر',

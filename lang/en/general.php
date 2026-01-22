@@ -740,6 +740,13 @@ return [
             'enter_note' => 'Enter note',
             'close' => 'Close',
             'save' => 'Save',
+            'type' => 'Type',
+            'types' => [
+                'normal' => 'Normal Expense',
+                'prepaid' => 'Prepaid Expense',
+                'accrued' => 'Accrued Expense',
+                'all_types' => 'All Types',
+            ]
         ],
         'expense-categories' => [
             'filters' => 'Filters',

@@ -39,6 +39,16 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="col-sm-4">
+                        <label class="form-label">{{ __('general.pages.expenses.type') }}</label>
+                        <select class="form-select select2"
+                                wire:model="filters.type">
+                            <option value="">{{ __('general.pages.expenses.types.all_types') }}</option>
+                            <option value="normal">{{ __('general.pages.expenses.types.normal') }}</option>
+                            <option value="prepaid">{{ __('general.pages.expenses.types.prepaid') }}</option>
+                            <option value="accrued">{{ __('general.pages.expenses.types.accrued') }}</option>
+                        </select>
+                    </div>
                     <!-- Filter by Date -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.expenses.date') }}</label>
@@ -131,6 +141,16 @@
                                 <option value="">{{ __('general.pages.expenses.select_category') }}</option>
                                 @foreach($expenseCategories as $cat)
                                     <option value="{{ $cat->id }}" {{ ($data['expense_category_id']??'') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="expenseType" class="form-label">{{ __('general.pages.expenses.type') }}</label>
+                            <select id="expenseType" name="data.type" class="form-select select2">
+                                <option value="">{{ __('general.pages.expenses.types.all_types') }}</option>
+                                @foreach(\App\Enums\Tenant\ExpenseTypeEnum::cases() as $type)
+                                    <option value="{{ $type->value }}" {{ ($data['type']??'') == $type->value ? 'selected' : '' }}>{{ $type->label() }}</option>
                                 @endforeach
                             </select>
                         </div>
