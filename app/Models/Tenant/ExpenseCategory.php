@@ -46,6 +46,13 @@ class ExpenseCategory extends Model
         })
         ->when($filters['parent_only']??false, function($q) use ($filters) {
             $q->whereNull('parent_id');
+        })
+        ->when($filters['without_account_types'] ?? false, function($q) use ($filters) {
+            $q->whereNotIn('key', $filters['without_account_types']);
         });
+    }
+
+    function getDisplayNameAttribute() {
+        return app()->getLocale() == 'ar' && $this->ar_name ? $this->ar_name : $this->name;
     }
 }

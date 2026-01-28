@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Expenses;
 
+use App\Enums\AccountTypeEnum;
 use App\Enums\AuditLogActionEnum;
 use App\Enums\Tenant\ExpenseTypeEnum;
 use App\Models\Tenant\AuditLog;
@@ -184,6 +185,7 @@ class ExpensesList extends Component
 
         $expenses = $this->expenseService->list(['category'],[
             'with_trashed' => true,
+            'without_account_types' => [AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE,AccountTypeEnum::FIXED_ASSET],
             ... $this->filters
         ],10,'id')->through(function($expense) {
             return [
@@ -262,7 +264,7 @@ class ExpensesList extends Component
             'actions' => [ 'type' => 'actions' , 'actions' => $actions],
         ];
 
-        $expenseCategories = $this->expenseCategoryService->list([],['active'=>true]);
+        $expenseCategories = $this->expenseCategoryService->list([],['active'=>true,'without_account_types' => [AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE,AccountTypeEnum::FIXED_ASSET]]);
 
         $branches = $this->branchService->activeList();
 

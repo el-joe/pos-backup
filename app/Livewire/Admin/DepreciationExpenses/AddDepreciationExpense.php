@@ -62,6 +62,7 @@ class AddDepreciationExpense extends Component
 
         $expense = $this->expenseService->save(null, [
             'branch_id' => $this->data['branch_id'],
+            'type' => 'normal',
             'expense_category_id' => $this->data['expense_category_id'],
             'amount' => $this->data['amount'],
             'tax_percentage' => $this->data['tax_percentage'] ?? 0,

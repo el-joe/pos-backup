@@ -53,6 +53,11 @@ class Expense extends Model
         })
         ->when(isset($filter['date']) && $filter['date'], function($q) use ($filter) {
             $q->whereDate('expense_date', $filter['date']);
+        })
+        ->when(isset($filter['without_account_types']) && $filter['without_account_types'], function($q) use ($filter) {
+            $q->whereHas('category', function($q) use ($filter) {
+                $q->whereNotIn('key', $filter['without_account_types']);
+            });
         });
     }
 

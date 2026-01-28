@@ -2,10 +2,15 @@
 
 namespace App\Livewire\Admin\FixedAssets;
 
+use App\Enums\AccountTypeEnum;
+use App\Enums\TransactionTypeEnum;
+use App\Models\Tenant\Account;
 use App\Models\Tenant\FixedAsset;
 use App\Services\BranchService;
 use App\Services\FixedAssetService;
+use App\Services\TransactionService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class AddFixedAsset extends Component
@@ -14,6 +19,7 @@ class AddFixedAsset extends Component
 
     private FixedAssetService $fixedAssetService;
     private BranchService $branchService;
+    private TransactionService $transactionService;
 
     public array $data = [];
 
@@ -21,6 +27,7 @@ class AddFixedAsset extends Component
     {
         $this->fixedAssetService = app(FixedAssetService::class);
         $this->branchService = app(BranchService::class);
+        $this->transactionService = app(TransactionService::class);
     }
 
     public function mount(): void
@@ -55,20 +62,57 @@ class AddFixedAsset extends Component
             'data.note' => 'nullable|string',
         ]);
 
-        $asset = $this->fixedAssetService->save(null, [
-            'created_by' => admin()->id ?? null,
-            'branch_id' => $this->data['branch_id'] ?? null,
-            'code' => $this->data['code'],
-            'name' => $this->data['name'],
-            'purchase_date' => $this->data['purchase_date'] ?? null,
-            'cost' => $this->data['cost'] ?? 0,
-            'salvage_value' => $this->data['salvage_value'] ?? 0,
-            'useful_life_months' => $this->data['useful_life_months'] ?? 0,
-            'depreciation_method' => $this->data['depreciation_method'] ?? 'straight_line',
-            'depreciation_start_date' => $this->data['depreciation_start_date'] ?? null,
-            'status' => $this->data['status'] ?? 'active',
-            'note' => $this->data['note'] ?? null,
-        ]);
+        $asset = DB::transaction(function () {
+            $branchId = $this->data['branch_id'] ?? (admin()->branch_id ?? null);
+            $cost = (float)($this->data['cost'] ?? 0);
+
+            $asset = $this->fixedAssetService->save(null, [
+                'created_by' => admin()->id ?? null,
+                'branch_id' => $branchId,
+                'code' => $this->data['code'],
+                'name' => $this->data['name'],
+                'purchase_date' => $this->data['purchase_date'] ?? null,
+                'cost' => $cost,
+                'salvage_value' => $this->data['salvage_value'] ?? 0,
+                'useful_life_months' => $this->data['useful_life_months'] ?? 0,
+                'depreciation_method' => $this->data['depreciation_method'] ?? 'straight_line',
+                'depreciation_start_date' => $this->data['depreciation_start_date'] ?? null,
+                'status' => $this->data['status'] ?? 'active',
+                'note' => $this->data['note'] ?? null,
+            ]);
+
+            // Save transaction and transaction lines if needed
+            // Debit: Fixed Asset account, Credit: Branch Cash account
+            if ($cost > 0) {
+                $fixedAssetAccount = Account::default('Fixed Asset', AccountTypeEnum::FIXED_ASSET->value, $branchId);
+                $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
+
+                $this->transactionService->create([
+                    'date' => $asset->purchase_date ?? now(),
+                    'description' => 'Fixed Asset Purchase for #'.$asset->code.' - '.$asset->name,
+                    'type' => TransactionTypeEnum::FIXED_ASSETS->value,
+                    'reference_type' => FixedAsset::class,
+                    'reference_id' => $asset->id,
+                    'branch_id' => $branchId,
+                    'note' => $this->data['note'] ?? '',
+                    'amount' => $cost,
+                    'lines' => [
+                        [
+                            'account_id' => $fixedAssetAccount->id,
+                            'type' => 'debit',
+                            'amount' => $cost,
+                        ],
+                        [
+                            'account_id' => $branchCashAccount->id,
+                            'type' => 'credit',
+                            'amount' => $cost,
+                        ],
+                    ],
+                ]);
+            }
+
+            return $asset;
+        });
 
         $this->alert('success', __('general.pages.fixed_assets.asset_saved'));
         $this->redirect(route('admin.fixed-assets.details', $asset->id));

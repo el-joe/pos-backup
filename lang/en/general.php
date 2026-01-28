@@ -545,7 +545,7 @@ return [
             'order_products' => 'Order Products',
             'branch' => 'Branch',
             'deferred_order' => 'Deferred Order',
-            'deferred_order_hint' => 'This order is marked as deferred. Payment can be completed later.',
+            'deferred_order_hint' => 'This order is marked as deferred. Payment is received from the customer but the goods have not been delivered yet.',
             'customer' => 'Customer',
             'order_date' => 'Order Date',
             'due_date' => 'Due Date',

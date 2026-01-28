@@ -88,7 +88,7 @@
                         @forelse($depreciationExpenses as $expense)
                             <tr>
                                 <td>{{ $expense->id }}</td>
-                                <td>{{ $expense->category?->name ?? '—' }}</td>
+                                <td>{{ $expense->category?->display_name ?? '—' }}</td>
                                 <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
                                 <td>{{ $expense->expense_date }}</td>
                                 <td>{{ $expense->note ?? '—' }}</td>

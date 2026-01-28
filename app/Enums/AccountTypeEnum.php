@@ -22,7 +22,7 @@ enum AccountTypeEnum : string
     case INVENTORY = 'inventory'; // inventory purchases
     case COGS = 'cogs'; // cost of goods sold
     case INVENTORY_SHORTAGE = 'inventory_shortage'; // inventory loss adjustments
-    // case FIXED_ASSET = 'fixed_asset'; // fixed asset transactions && depreciation
+    case FIXED_ASSET = 'fixed_asset'; // fixed asset transactions && depreciation
     // case CURRENT_ASSET = 'current_asset'; // sales credits , bank transactions
     // case CURRENT_LIABILITY = 'current_liability'; // purchase credits , expenses due within a year
     case LONGTERM_LIABILITY = 'longterm_liability'; // Long-term debts and liabilities
@@ -49,7 +49,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::GENERAL_AND_ADMINISTRATIVE_EXPENSE => 'General & Administrative Expense',
             AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'Maintenance & Depreciation Expense',
             AccountTypeEnum::INVENTORY_EXPENSE => 'Inventory Expense',
-            // AccountTypeEnum::FIXED_ASSET => 'Fixed Asset', // fixed asset transactions && depreciation
+            AccountTypeEnum::FIXED_ASSET => 'Fixed Asset', // fixed asset transactions && depreciation
             // AccountTypeEnum::CURRENT_ASSET => 'Current Asset', // purchase cash transactions && bank transactions
             // AccountTypeEnum::CURRENT_LIABILITY => 'Current Liability', // Current liabilities transactions
             AccountTypeEnum::LONGTERM_LIABILITY => 'Long-term Liability', // Long-term liabilities transactions
@@ -80,7 +80,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::GENERAL_AND_ADMINISTRATIVE_EXPENSE => 'danger',
             AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'danger',
             AccountTypeEnum::INVENTORY_EXPENSE => 'danger',
-            // AccountTypeEnum::FIXED_ASSET => 'info',
+            AccountTypeEnum::FIXED_ASSET => 'info',
             // AccountTypeEnum::CURRENT_ASSET => 'secondary',
             // AccountTypeEnum::CURRENT_LIABILITY => 'dark',
             AccountTypeEnum::LONGTERM_LIABILITY => 'dark',

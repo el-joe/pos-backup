@@ -140,7 +140,7 @@
                             <select id="expenseCategory" name="data.expense_category_id" class="form-select select2">
                                 <option value="">{{ __('general.pages.expenses.select_category') }}</option>
                                 @foreach($expenseCategories as $cat)
-                                    <option value="{{ $cat->id }}" {{ ($data['expense_category_id']??'') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                                    <option value="{{ $cat->id }}" {{ ($data['expense_category_id']??'') == $cat->id ? 'selected' : '' }}>{{ $cat->display_name }}</option>
                                 @endforeach
                             </select>
                         </div>

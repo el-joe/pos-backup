@@ -24,7 +24,7 @@
 
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.depreciation_expenses.category') }}</div>
-                    <div>{{ $expense->category?->name ?? '—' }}</div>
+                    <div>{{ $expense->category?->display_name ?? '—' }}</div>
                 </div>
 
                 <div class="col-md-4">

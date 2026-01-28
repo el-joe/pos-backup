@@ -100,7 +100,7 @@
                                 <td>{{ $expense->id }}</td>
                                 <td>{{ $expense->branch?->name ?? '—' }}</td>
                                 <td>{{ $expense->model?->code ?? '' }} {{ $expense->model?->name ?? $expense->model_id }}</td>
-                                <td>{{ $expense->category?->name ?? '—' }}</td>
+                                <td>{{ $expense->category?->display_name ?? '—' }}</td>
                                 <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
                                 <td>{{ $expense->expense_date }}</td>
                                 <td class="text-center">
