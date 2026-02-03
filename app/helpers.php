@@ -146,7 +146,17 @@ if(!function_exists('defaultPermissionsList')) {
             'subscriptions' => ['list','cancel','renew'],
             "discounts"=> ["list", "create", "update", "delete",'export'],
             "taxes"=> ["list", "create", "update", "delete",'export'],
-            "general_settings"=> ["update"]
+            "general_settings"=> ["update"],
+
+            // HRM
+            "hrm_employees" => ["list", "show", "create", "update", "delete", "export"],
+            "hrm_departments" => ["list", "create", "update", "delete"],
+            "hrm_attendance" => ["list", "create", "update", "delete", "clock"],
+            "hrm_leaves" => ["list", "create", "update", "delete", "approve", "reject"],
+            "hrm_payroll" => ["list", "create", "update", "delete", "generate", "approve", "pay"],
+            "hrm_recruitment" => ["list", "show", "create", "update", "delete", "schedule"],
+            "hrm_performance" => ["list", "show", "create", "update", "delete"],
+            "hrm_training" => ["list", "show", "create", "update", "delete"],
         ];
 
     }

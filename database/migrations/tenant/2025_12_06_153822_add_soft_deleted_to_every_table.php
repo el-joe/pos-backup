@@ -25,6 +25,9 @@ return new class extends Migration
 
                     // تحقق إذا الموديل فيه SoftDeletes
                     if (in_array('Illuminate\\Database\\Eloquent\\SoftDeletes', class_uses($model))) {
+                        if (! Schema::hasTable($tableName)) {
+                            continue;
+                        }
                         if(Schema::hasColumn($tableName, 'deleted_at')) {
                             continue; // تخطى إذا العمود موجود بالفعل
                         }

@@ -639,6 +639,71 @@ return [
         ]
     ],
     [
+        "title"     => "HRM",
+        'translated_title' => 'hrm.hrm',
+        "icon"      => "fa fa-users fa-fw",
+        "route"     => "#",
+        'can' => 'hrm_employees.list,hrm_employees.create,hrm_employees.update,hrm_employees.delete,hrm_departments.list,hrm_attendance.list,hrm_leaves.list,hrm_payroll.list,hrm_recruitment.list,hrm_performance.list,hrm_training.list',
+        "children"  => [
+            [
+                "title" => "Employees",
+                'translated_title' => 'hrm.employees',
+                "route" => 'admin.hrm.employees.list',
+                "icon"  => "fa fa-id-badge fa-fw",
+                'can' => 'hrm_employees.list'
+            ],
+            [
+                "title" => "Departments",
+                'translated_title' => 'hrm.departments',
+                "route" => 'admin.hrm.departments.list',
+                "icon"  => "fa fa-sitemap fa-fw",
+                'can' => 'hrm_departments.list'
+            ],
+            [
+                "title" => "Attendance",
+                'translated_title' => 'hrm.attendance',
+                "route" => 'admin.hrm.attendance.list',
+                "icon"  => "fa fa-clock fa-fw",
+                'can' => 'hrm_attendance.list'
+            ],
+            [
+                "title" => "Clock In/Out",
+                'translated_title' => 'hrm.clock_in',
+                "route" => 'admin.hrm.clock-in-out',
+                "icon"  => "fa fa-user-clock fa-fw",
+                'can' => 'hrm_attendance.clock'
+            ],
+            [
+                "title" => "Leave Requests",
+                'translated_title' => 'hrm.leave_requests',
+                "route" => 'admin.hrm.leave-requests.list',
+                "icon"  => "fa fa-plane-departure fa-fw",
+                'can' => 'hrm_leaves.list'
+            ],
+            [
+                "title" => "Payslips",
+                'translated_title' => 'hrm.payslips',
+                "route" => 'admin.hrm.payslips.list',
+                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                'can' => 'hrm_payroll.list'
+            ],
+            [
+                "title" => "Job Applications",
+                'translated_title' => 'hrm.job_applications',
+                "route" => 'admin.hrm.job-applications.list',
+                "icon"  => "fa fa-briefcase fa-fw",
+                'can' => 'hrm_recruitment.list'
+            ],
+            [
+                "title" => "Appraisals",
+                'translated_title' => 'hrm.performance_appraisals',
+                "route" => 'admin.hrm.appraisals.list',
+                "icon"  => "fa fa-star fa-fw",
+                'can' => 'hrm_performance.list'
+            ],
+        ]
+    ],
+    [
         "title"     => "Settings",
         'translated_title' => 'general.titles.settings',
         "icon"      => "fa fa-cogs fa-fw",

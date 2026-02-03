@@ -57,6 +57,16 @@ use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Transactions\TransactionList;
 use App\Livewire\Admin\Units\{UnitsList};
 use App\Livewire\Admin\Users\{UserDetails,UsersList};
+
+// HRM Livewire Components
+use App\Livewire\Admin\HRM\Employees\{EmployeesList, AddEditEmployee, EmployeeDetails};
+use App\Livewire\Admin\HRM\Departments\DepartmentsList;
+use App\Livewire\Admin\HRM\Attendance\{AttendanceList, ClockInOut};
+use App\Livewire\Admin\HRM\Leaves\LeaveRequestsList;
+use App\Livewire\Admin\HRM\Payroll\PayslipsList;
+use App\Livewire\Admin\HRM\Recruitment\JobApplicationsList;
+use App\Livewire\Admin\HRM\Performance\AppraisalsList;
+
 use App\Models\Tenant\ExpenseCategory;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -257,6 +267,41 @@ Route::middleware([
             Route::get('plans', PlansList::class)->name('plans.list');
             Route::get('subscriptions', SubscriptionsPage::class)->name('subscriptions.list');
 
+            // HRM Routes
+            Route::group(['prefix' => 'hrm', 'as' => 'hrm.'], function () {
+
+                // Employee Management
+                Route::get('employees', EmployeesList::class)->name('employees.list');
+                Route::get('employees/create', AddEditEmployee::class)->name('employees.create');
+                Route::get('employees/{id}/edit', AddEditEmployee::class)->name('employees.edit');
+                Route::get('employees/{id}/details', EmployeeDetails::class)->name('employees.details');
+
+                // Departments & Designations
+                Route::get('departments', DepartmentsList::class)->name('departments.list');
+
+                // Attendance & Time Tracking
+                Route::get('attendance', AttendanceList::class)->name('attendance.list');
+                Route::get('clock-in-out', ClockInOut::class)->name('clock-in-out');
+
+                // Leave Management
+                Route::get('leave-requests', LeaveRequestsList::class)->name('leave-requests.list');
+
+                // Payroll
+                Route::get('payslips', PayslipsList::class)->name('payslips.list');
+
+                // Recruitment
+                Route::get('job-applications', JobApplicationsList::class)->name('job-applications.list');
+
+                // Performance Management
+                Route::get('appraisals', AppraisalsList::class)->name('appraisals.list');
+
+                // HRM Reports (to be implemented)
+                // Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
+                //     Route::get('attendance-summary', AttendanceSummaryReport::class)->name('attendance-summary');
+                //     Route::get('leave-summary', LeaveSummaryReport::class)->name('leave-summary');
+                //     Route::get('payroll-summary', PayrollSummaryReport::class)->name('payroll-summary');
+                // });
+            });
 
             Route::get('imports',ImportsPage::class)->name('imports');
             Route::get('settings',SettingsPage::class)->name('settings');

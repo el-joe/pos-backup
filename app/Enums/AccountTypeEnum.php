@@ -36,6 +36,14 @@ enum AccountTypeEnum : string
     case UNEARNED_REVENUE = 'unearned_revenue'; // advance payments from customers---- new
     case ACCRUED_REVENUE = 'accrued_revenue'; // revenue earned but not yet received---- new
 
+    // HRM/Payroll Related Accounts
+    case SALARY_PAYABLE = 'salary_payable'; // salaries to be paid
+    case SALARY_EXPENSE = 'salary_expense'; // salary expenses
+    case EMPLOYEE_BENEFITS = 'employee_benefits'; // employee benefits
+    case PAYROLL_TAX_PAYABLE = 'payroll_tax_payable'; // payroll taxes
+    case EMPLOYEE_LOANS = 'employee_loans'; // loans to employees
+    case EMPLOYEE_ADVANCES = 'employee_advances'; // salary advances
+
 
     function label(): string
     {
@@ -65,6 +73,12 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_DISCOUNT => 'Purchase Discount',
             AccountTypeEnum::SALES_RETURN => 'Sales Return',
             AccountTypeEnum::PURCHASE_RETURN => 'Purchase Return',
+            AccountTypeEnum::SALARY_PAYABLE => 'Salary Payable',
+            AccountTypeEnum::SALARY_EXPENSE => 'Salary Expense',
+            AccountTypeEnum::EMPLOYEE_BENEFITS => 'Employee Benefits',
+            AccountTypeEnum::PAYROLL_TAX_PAYABLE => 'Payroll Tax Payable',
+            AccountTypeEnum::EMPLOYEE_LOANS => 'Employee Loans',
+            AccountTypeEnum::EMPLOYEE_ADVANCES => 'Employee Advances',
         };
     }
 
@@ -90,6 +104,12 @@ enum AccountTypeEnum : string
             AccountTypeEnum::INVENTORY => 'info',
             AccountTypeEnum::COGS => 'warning',
             AccountTypeEnum::INVENTORY_SHORTAGE => 'danger',
+            AccountTypeEnum::SALARY_PAYABLE => 'warning',
+            AccountTypeEnum::SALARY_EXPENSE => 'danger',
+            AccountTypeEnum::EMPLOYEE_BENEFITS => 'info',
+            AccountTypeEnum::PAYROLL_TAX_PAYABLE => 'warning',
+            AccountTypeEnum::EMPLOYEE_LOANS => 'primary',
+            AccountTypeEnum::EMPLOYEE_ADVANCES => 'warning',
             AccountTypeEnum::VAT_PAYABLE => 'secondary',
             AccountTypeEnum::VAT_RECEIVABLE => 'secondary',
             AccountTypeEnum::SALES_DISCOUNT => 'info',
