@@ -38,6 +38,7 @@ class CentralSeeder extends Seeder
                         'name' => $cur['name'],
                         'symbol' => $cur['symbol'] ?? null,
                         'country_code' => $cur['country_code'] ?? null,
+                        'conversion_rate' => $cur['conversion_rate'] ?? 1.0,
                     ]
                 );
             }

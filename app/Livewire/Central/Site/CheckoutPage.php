@@ -111,6 +111,7 @@ class CheckoutPage extends Component
         }
 
         $paymentService = new PaymentService(new Paypal());
+
         $requestPayload = $paymentService->pay([
             'amount' => $newData['amount'],
             'currency' => 'USD',
