@@ -112,6 +112,15 @@
                                     </span>
                                 </td>
                                 <td class="text-nowrap">
+                                    @if($type == 'customer')
+                                        <a href="{{ route('admin.customers.pay', $user->id) }}" class="btn btn-sm btn-success me-1" title="{{ __('general.pages.users.pay') }}">
+                                            <i class="fa fa-money-bill"></i>
+                                        </a>
+                                    @elseif($type == 'supplier')
+                                        <a href="{{ route('admin.suppliers.pay', $user->id) }}" class="btn btn-sm btn-success me-1" title="{{ __('general.pages.users.pay') }}">
+                                            <i class="fa fa-money-bill"></i>
+                                        </a>
+                                    @endif
                                     @adminCan($_name . '.update')
                                     <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editUserModal" wire:click="$dispatch('user-set-current', {id : {{ $user->id }}, type: '{{ $type }}' })" title="{{ __('general.pages.users.edit') }}">
                                         <i class="fa fa-edit"></i>

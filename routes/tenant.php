@@ -58,6 +58,8 @@ use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Transactions\TransactionList;
 use App\Livewire\Admin\Units\{UnitsList};
 use App\Livewire\Admin\Users\{UserDetails,UsersList};
+use App\Livewire\Admin\Payables\CustomerPayable;
+use App\Livewire\Admin\Payables\SupplierPayable;
 use App\Models\Tenant\ExpenseCategory;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -127,6 +129,9 @@ Route::middleware([
             // Users (Customer,Supplier)
             Route::get('users/{type?}', UsersList::class)->name('users.list');
             Route::get('users/{id}/details', UserDetails::class)->name('users.details');
+
+            Route::get('customers/{id}/pay', CustomerPayable::class)->name('customers.pay');
+            Route::get('suppliers/{id}/pay', SupplierPayable::class)->name('suppliers.pay');
 
             // Products
             Route::get('products',ProductsList::class)->name('products.list'); // TODO : -> Add Product Details Page contains Stock info , Purchases , Sales , Stock Transfers , Adjustments
