@@ -130,6 +130,24 @@ return [
         'no_new_notifications' => 'لا توجد إشعارات جديدة',
     ],
     'pages' => [
+        'hrm' => [
+            'filters' => 'الفلاتر',
+            'show_hide' => 'إظهار/إخفاء',
+            'search' => 'بحث',
+            'all' => 'الكل',
+            'status' => 'الحالة',
+            'actions' => 'الإجراءات',
+            'reset' => 'إعادة تعيين',
+            'from' => 'من',
+            'to' => 'إلى',
+            'date' => 'التاريخ',
+            'back' => 'رجوع',
+            'save' => 'حفظ',
+            'close' => 'إغلاق',
+            'edit' => 'تعديل',
+            'delete' => 'حذف',
+            'are_you_sure' => 'هل أنت متأكد؟',
+        ],
         'reports' => [
             'common' => [
                 'filter_options' => 'خيارات التصفية',

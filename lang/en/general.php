@@ -130,6 +130,24 @@ return [
         'no_new_notifications' => 'No new notifications',
     ],
     'pages' => [
+        'hrm' => [
+            'filters' => 'Filters',
+            'show_hide' => 'Show/Hide',
+            'search' => 'Search',
+            'all' => 'All',
+            'status' => 'Status',
+            'actions' => 'Actions',
+            'reset' => 'Reset',
+            'from' => 'From',
+            'to' => 'To',
+            'date' => 'Date',
+            'back' => 'Back',
+            'save' => 'Save',
+            'close' => 'Close',
+            'edit' => 'Edit',
+            'delete' => 'Delete',
+            'are_you_sure' => 'Are you sure?',
+        ],
         'reports' => [
             'common' => [
                 'filter_options' => 'Filter Options',

@@ -93,6 +93,10 @@ return [
     'upload_document' => 'Upload Document',
     'issue_date' => 'Issue Date',
     'expiry_date' => 'Expiry Date',
+    'photo' => 'Photo',
+    'bio' => 'Bio',
+    'year' => 'Year',
+    'month' => 'Month',
 
     // Departments
     'department_list' => 'Department List',

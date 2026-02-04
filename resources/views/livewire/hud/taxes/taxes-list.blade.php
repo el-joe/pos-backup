@@ -152,6 +152,7 @@
                     <div class="mb-3">
                         <label for="taxVatNumber" class="form-label">{{ __('general.pages.taxes.tax_registeration_number') }}</label>
                         <input type="text" class="form-control" wire:model="data.vat_number" id="taxVatNumber" placeholder="{{ __('general.pages.taxes.enter_tax_registration_number') }}">
+                    </div>
 
                     <div class="mb-3">
                         <label for="taxRate" class="form-label">{{ __('general.pages.taxes.rate') }}</label>

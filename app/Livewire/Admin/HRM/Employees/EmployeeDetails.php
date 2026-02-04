@@ -32,6 +32,7 @@ class EmployeeDetails extends Component
 
     public function render()
     {
-        return view('livewire.admin.hrm.employees.employee-details');
+        return layoutView('hrm.employees.employee-details', get_defined_vars())
+            ->title(__('hrm.employee_details'));
     }
 }

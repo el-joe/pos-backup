@@ -14,6 +14,8 @@ class AttendanceList extends Component
 {
     use WithPagination;
 
+    public $collapseFilters = false;
+
     public $date_from;
     public $date_to;
     public $employee_filter = '';
@@ -25,6 +27,14 @@ class AttendanceList extends Component
     {
         $this->date_from = Carbon::now()->startOfMonth()->format('Y-m-d');
         $this->date_to = Carbon::now()->format('Y-m-d');
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('employee_filter', 'branch_filter', 'status_filter', 'search');
+        $this->date_from = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $this->date_to = Carbon::now()->format('Y-m-d');
+        $this->resetPage();
     }
 
     public function render()
@@ -45,11 +55,11 @@ class AttendanceList extends Component
             ->latest('date')
             ->paginate(25);
 
-        return view('livewire.admin.hrm.attendance.attendance-list', [
-            'attendances' => $attendances,
-            'employees' => Employee::where('status', 'active')->get(),
-            'branches' => Branch::where('active', true)->get(),
-            'statuses' => AttendanceStatusEnum::cases(),
-        ]);
+        $employees = Employee::where('status', 'active')->get();
+        $branches = Branch::where('active', true)->get();
+        $statuses = AttendanceStatusEnum::cases();
+
+        return layoutView('hrm.attendance.attendance-list', get_defined_vars())
+            ->title(__('hrm.attendance'));
     }
 }

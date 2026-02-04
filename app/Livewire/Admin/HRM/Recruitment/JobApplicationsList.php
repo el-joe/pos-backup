@@ -12,9 +12,17 @@ class JobApplicationsList extends Component
 {
     use WithPagination;
 
+    public $collapseFilters = false;
+
     public $search = '';
     public $job_opening_filter = '';
     public $status_filter = '';
+
+    public function resetFilters(): void
+    {
+        $this->reset('search', 'job_opening_filter', 'status_filter');
+        $this->resetPage();
+    }
 
     public function updateStatus($id, $status)
     {
@@ -53,10 +61,10 @@ class JobApplicationsList extends Component
             ->latest()
             ->paginate(25);
 
-        return view('livewire.admin.hrm.recruitment.job-applications-list', [
-            'applications' => $applications,
-            'jobOpenings' => JobOpening::where('is_active', true)->get(),
-            'statuses' => JobApplicationStatusEnum::cases(),
-        ]);
+        $jobOpenings = JobOpening::where('is_active', true)->get();
+        $statuses = JobApplicationStatusEnum::cases();
+
+        return layoutView('hrm.recruitment.job-applications-list', get_defined_vars())
+            ->title(__('hrm.job_applications'));
     }
 }

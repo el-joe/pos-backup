@@ -81,6 +81,7 @@ class ClockInOut extends Component
 
     public function render()
     {
-        return view('livewire.admin.hrm.attendance.clock-in-out');
+        return layoutView('hrm.attendance.clock-in-out', get_defined_vars())
+            ->title(__('hrm.clock_in'));
     }
 }

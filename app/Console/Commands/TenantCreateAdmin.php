@@ -45,6 +45,7 @@ class TenantCreateAdmin extends Command
         $this->defaultBranch();
         $this->defaultSettings();
         $this->setExpenseCategories();
+        $this->runTenantSeeder();
     }
 
     function defaultBranch() {
@@ -304,5 +305,12 @@ class TenantCreateAdmin extends Command
                 ]);
             }
         }
+    }
+
+    function runTenantSeeder() {
+        $this->call('tenants:seed', [
+            '--class' => 'TenantDatabaseSeeder',
+            '--force' => true,
+        ]);
     }
 }

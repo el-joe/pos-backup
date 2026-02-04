@@ -93,6 +93,10 @@ return [
     'upload_document' => 'رفع مستند',
     'issue_date' => 'تاريخ الإصدار',
     'expiry_date' => 'تاريخ الانتهاء',
+    'photo' => 'الصورة',
+    'bio' => 'نبذة',
+    'year' => 'السنة',
+    'month' => 'الشهر',
 
     // Departments
     'department_list' => 'قائمة الأقسام',

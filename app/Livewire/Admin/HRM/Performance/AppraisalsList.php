@@ -11,9 +11,17 @@ class AppraisalsList extends Component
 {
     use WithPagination;
 
+    public $collapseFilters = false;
+
     public $search = '';
     public $employee_filter = '';
     public $period_filter = '';
+
+    public function resetFilters(): void
+    {
+        $this->reset('search', 'employee_filter', 'period_filter');
+        $this->resetPage();
+    }
 
     public function render()
     {
@@ -30,9 +38,9 @@ class AppraisalsList extends Component
             ->latest()
             ->paginate(25);
 
-        return view('livewire.admin.hrm.performance.appraisals-list', [
-            'appraisals' => $appraisals,
-            'employees' => Employee::where('status', 'active')->get(),
-        ]);
+        $employees = Employee::where('status', 'active')->get();
+
+        return layoutView('hrm.performance.appraisals-list', get_defined_vars())
+            ->title(__('hrm.performance_appraisals'));
     }
 }

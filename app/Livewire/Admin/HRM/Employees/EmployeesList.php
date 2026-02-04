@@ -16,6 +16,8 @@ class EmployeesList extends Component
 {
     use WithPagination, WithFileUploads;
 
+    public $collapseFilters = false;
+
     public $search = '';
     public $department_filter = '';
     public $designation_filter = '';
@@ -35,6 +37,19 @@ class EmployeesList extends Component
 
     public function updatingSearch()
     {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset(
+            'search',
+            'department_filter',
+            'designation_filter',
+            'branch_filter',
+            'status_filter',
+            'employment_type_filter'
+        );
         $this->resetPage();
     }
 
@@ -59,14 +74,14 @@ class EmployeesList extends Component
             ->latest()
             ->paginate($this->perPage);
 
-        return view('livewire.admin.hrm.employees.employees-list', [
-            'employees' => $employees,
-            'departments' => Department::where('active', true)->get(),
-            'designations' => Designation::where('active', true)->get(),
-            'branches' => Branch::where('active', true)->get(),
-            'statuses' => EmployeeStatusEnum::cases(),
-            'employment_types' => EmploymentTypeEnum::cases(),
-        ]);
+        $departments = Department::where('active', true)->get();
+        $designations = Designation::where('active', true)->get();
+        $branches = Branch::where('active', true)->get();
+        $statuses = EmployeeStatusEnum::cases();
+        $employment_types = EmploymentTypeEnum::cases();
+
+        return layoutView('hrm.employees.employees-list', get_defined_vars())
+            ->title(__('hrm.employees'));
     }
 
     public function deleteEmployee($id)

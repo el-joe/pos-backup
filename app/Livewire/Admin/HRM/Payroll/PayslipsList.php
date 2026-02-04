@@ -15,6 +15,8 @@ class PayslipsList extends Component
 {
     use WithPagination;
 
+    public $collapseFilters = false;
+
     public $search = '';
     public $employee_filter = '';
     public $year_filter;
@@ -25,6 +27,14 @@ class PayslipsList extends Component
     {
         $this->year_filter = Carbon::now()->year;
         $this->month_filter = Carbon::now()->month;
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('search', 'employee_filter', 'status_filter');
+        $this->year_filter = Carbon::now()->year;
+        $this->month_filter = Carbon::now()->month;
+        $this->resetPage();
     }
 
     public function generatePayslips()
@@ -110,10 +120,10 @@ class PayslipsList extends Component
             ->latest()
             ->paginate(25);
 
-        return view('livewire.admin.hrm.payroll.payslips-list', [
-            'payslips' => $payslips,
-            'employees' => Employee::where('status', 'active')->get(),
-            'statuses' => PayslipStatusEnum::cases(),
-        ]);
+        $employees = Employee::where('status', 'active')->get();
+        $statuses = PayslipStatusEnum::cases();
+
+        return layoutView('hrm.payroll.payslips-list', get_defined_vars())
+            ->title(__('hrm.payslips'));
     }
 }

@@ -11,6 +11,8 @@ class DepartmentsList extends Component
 {
     use WithPagination;
 
+    public $collapseFilters = false;
+
     public $search = '';
     public $showModal = false;
     public $department_id;
@@ -109,6 +111,12 @@ class DepartmentsList extends Component
         session()->flash('success', __('hrm.department_deleted_successfully'));
     }
 
+    public function resetFilters(): void
+    {
+        $this->reset('search');
+        $this->resetPage();
+    }
+
     public function render()
     {
         $departments = Department::query()
@@ -120,10 +128,10 @@ class DepartmentsList extends Component
             ->latest()
             ->paginate(25);
 
-        return view('livewire.admin.hrm.departments.departments-list', [
-            'departments' => $departments,
-            'parent_departments' => Department::where('active', true)->whereNull('parent_id')->get(),
-            'employees' => Employee::where('active', true)->get(),
-        ]);
+        $parent_departments = Department::where('active', true)->whereNull('parent_id')->get();
+        $employees = Employee::where('active', true)->get();
+
+        return layoutView('hrm.departments.departments-list', get_defined_vars())
+            ->title(__('hrm.departments'));
     }
 }

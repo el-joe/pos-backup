@@ -177,13 +177,16 @@ class AddEditEmployee extends Component
 
     public function render()
     {
-        return view('livewire.admin.hrm.employees.add-edit-employee', [
-            'departments' => Department::where('active', true)->get(),
-            'designations' => Designation::where('active', true)->get(),
-            'branches' => Branch::where('active', true)->get(),
-            'managers' => Employee::where('active', true)->get(),
-            'statuses' => EmployeeStatusEnum::cases(),
-            'employment_types' => EmploymentTypeEnum::cases(),
-        ]);
+        $departments = Department::where('active', true)->get();
+        $designations = Designation::where('active', true)->get();
+        $branches = Branch::where('active', true)->get();
+        $managers = Employee::where('active', true)->get();
+        $statuses = EmployeeStatusEnum::cases();
+        $employment_types = EmploymentTypeEnum::cases();
+
+        $title = $this->employee_id ? __('hrm.edit_employee') : __('hrm.add_employee');
+
+        return layoutView('hrm.employees.add-edit-employee', get_defined_vars())
+            ->title($title);
     }
 }

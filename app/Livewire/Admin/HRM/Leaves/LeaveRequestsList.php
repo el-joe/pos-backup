@@ -13,12 +13,20 @@ class LeaveRequestsList extends Component
 {
     use WithPagination;
 
+    public $collapseFilters = false;
+
     public $search = '';
     public $employee_filter = '';
     public $leave_type_filter = '';
     public $status_filter = '';
     public $date_from;
     public $date_to;
+
+    public function resetFilters(): void
+    {
+        $this->reset('search', 'employee_filter', 'leave_type_filter', 'status_filter', 'date_from', 'date_to');
+        $this->resetPage();
+    }
 
     public function approveLeave($id)
     {
@@ -91,11 +99,11 @@ class LeaveRequestsList extends Component
             ->latest()
             ->paginate(25);
 
-        return view('livewire.admin.hrm.leaves.leave-requests-list', [
-            'leaveRequests' => $leaveRequests,
-            'employees' => Employee::where('status', 'active')->get(),
-            'leaveTypes' => LeaveType::where('active', true)->get(),
-            'statuses' => LeaveStatusEnum::cases(),
-        ]);
+        $employees = Employee::where('status', 'active')->get();
+        $leaveTypes = LeaveType::where('active', true)->get();
+        $statuses = LeaveStatusEnum::cases();
+
+        return layoutView('hrm.leaves.leave-requests-list', get_defined_vars())
+            ->title(__('hrm.leave_requests'));
     }
 }

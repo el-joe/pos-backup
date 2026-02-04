@@ -7,7 +7,13 @@
     <loc>http://pos.loc/ar</loc>
             </url>
     <url>
+    <loc>http://pos.loc/ar/faqs</loc>
+            </url>
+    <url>
     <loc>http://pos.loc/en</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/faqs</loc>
             </url>
     <url>
     <loc>http://pos.loc/pricing</loc>
@@ -22,10 +28,49 @@
     <loc>http://pos.loc/faqs</loc>
             </url>
     <url>
-    <loc>http://pos.loc/ar/faqs</loc>
+    <loc>http://pos.loc/about-us</loc>
             </url>
     <url>
-    <loc>http://pos.loc/en/faqs</loc>
+    <loc>http://pos.loc/ar/about-us</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/about-us</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/privacy-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/privacy-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/privacy-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/refund-cancellation-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/refund-cancellation-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/refund-cancellation-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/fair-usage-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/fair-usage-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/fair-usage-policy</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/terms-conditions</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/terms-conditions</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/terms-conditions</loc>
             </url>
     <url>
     <loc>http://pos.loc/ar/blogs/getting-started-smart-erp-pos</loc>
@@ -164,5 +209,47 @@
             </url>
     <url>
     <loc>http://pos.loc/en/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/ar/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports</loc>
+            </url>
+    <url>
+    <loc>http://pos.loc/en/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports</loc>
             </url>
 </urlset>
