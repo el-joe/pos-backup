@@ -35,4 +35,10 @@ class Refund extends Model
     {
         return $this->morphTo();
     }
+
+    function getTotalAttribute(){
+        return $this->items->sum(function($item){
+            return $item->qty * ($item->refundable?->unit_amount_after_tax ?? 0);
+        });
+    }
 }

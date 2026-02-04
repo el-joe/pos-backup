@@ -26,6 +26,7 @@ use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
 use App\Livewire\Admin\Purchases\DeferredPurchasesList;
 use App\Livewire\Admin\PurchaseRequests\{AddPurchaseRequest,PurchaseRequestDetails,PurchaseRequestsList};
 use App\Livewire\Admin\Refunds\AddRefund;
+use App\Livewire\Admin\Refunds\RefundDetails;
 use App\Livewire\Admin\Refunds\RefundsList;
 use App\Livewire\Admin\Reports\{
     Admins\CashierReport,
@@ -262,6 +263,7 @@ Route::middleware([
             Route::get('settings',SettingsPage::class)->name('settings');
 
             Route::get('refunds', RefundsList::class)->name('refunds.list');
+            Route::get('refunds/{id}/details', RefundDetails::class)->name('refunds.details');
             Route::get('refunds/create', AddRefund::class)->name('refunds.create');
         });
     });

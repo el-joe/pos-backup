@@ -75,15 +75,15 @@ class AddRefund extends Component
     }
 
     function updatingOrderType(){
-        $this->reset('refundItems');
+        $this->refundItems = [];
     }
 
     function updatingOrderId(){
-        $this->reset('refundItems');
+        $this->refundItems = [];
     }
 
     function updatingDataBranchId(){
-        $this->reset('refundItems');
+        $this->refundItems = [];
     }
 
     function saveRefund(){
@@ -104,20 +104,28 @@ class AddRefund extends Component
             'refundItems.*' => 'required|integer|min:1',
         ]))return;
 
-        foreach ($this->refundItems??[] as $itemId => $qty) {
+        $orderItems = $this->getOrder()->{$this->order_type == 'sale' ? 'saleItems' : 'purchaseItems'}()->pluck('id')->toArray();
+
+        $refundItems = collect($this->refundItems)->filter(function($qty, $key) use($orderItems){
+            return in_array($key, $orderItems) && $qty > 0;
+        });
+
+        foreach ($refundItems??[] as $itemId => $qty) {
             $orderItem = $this->getOrder()->{$this->order_type == 'sale' ? 'saleItems' : 'purchaseItems'}()->where('id',$itemId)->first();
             if(($orderItem->actual_qty ?? 0) == 0){
-                $this->alert('error', __('general.messages.invalid_refund_quantity', ['item' => $orderItem->product->name ?? '']));
+                $this->alert('error', __('general.messages.invalid_refund_quantity', ['item' => $orderItem->product->name]));
                 return;
             }
         }
+
+        $this->refundItems = $refundItems->toArray();
 
         DB::beginTransaction();
         try {
             $data = $this->data;
             $data['order_type'] = $this->order_type == 'sale' ? Sale::class : Purchase::class;
             $refund = Refund::create($data);
-            foreach($this->refundItems as $itemId => $qty){
+            foreach($refundItems as $itemId => $qty){
                 if($qty == 0){
                     continue;
                 }
@@ -134,6 +142,7 @@ class AddRefund extends Component
                     'refundable_id' => $orderItem->id,
                 ]);
             }
+
             if($this->order_type === 'sale'){
                 $this->refundSaleItem($refund->id);
             } elseif($this->order_type === 'purchase'){
@@ -141,7 +150,7 @@ class AddRefund extends Component
             }
 
             $this->alert('success', __('general.messages.created_successfully', ['type' => __('general.pages.refunds.refund')]));
-            $this->redirectWithTimeout(route('admin.refunds.list'));
+            $this->redirectWithTimeout(route('admin.refunds.list',['order_type' => $this->order_type]), 1500);
 
             DB::commit();
         } catch (\Exception $e) {

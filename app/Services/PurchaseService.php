@@ -589,7 +589,8 @@ class PurchaseService
             'orderProducts' => [
                 [
                     'qty' => (float)$qty,
-                    'purchase_price' => (float)$purchaseItem->unit_amount_after_tax
+                    'purchase_price' => (float)$purchaseItem->unit_amount_after_tax,
+                    'sub_total' => (float)$purchaseItem->unit_amount_after_tax,
                 ]
             ],
             'tax_amount' => $taxAmount,
