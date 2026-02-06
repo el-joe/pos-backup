@@ -119,7 +119,7 @@ class HomeController extends Controller
 
     function checkout()
     {
-        return view('central.site.checkout',get_defined_vars());
+        return landingLayoutView('checkout',get_defined_vars());
     }
 
     function pricingCompare()
