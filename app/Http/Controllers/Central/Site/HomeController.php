@@ -27,7 +27,7 @@ class HomeController extends Controller
             ->limit(4)
             ->get();
 
-        return view('central.site.home',get_defined_vars());
+        return landingLayoutView('home',get_defined_vars());
     }
 
     function blogs($lang = null)
@@ -38,7 +38,14 @@ class HomeController extends Controller
 
         $seoData = SeoHelper::render('blogs');
 
-        return view('central.site.blogs', get_defined_vars());
+        return landingLayoutView('blogs', get_defined_vars());
+    }
+
+    function blogDetailsNoLang($slug)
+    {
+        return $this->blogDetails(app()->getLocale(), $slug);
+
+        return landingLayoutView('blog-details', get_defined_vars());
     }
 
     function blogDetails($lang, $slug)
@@ -59,7 +66,7 @@ class HomeController extends Controller
             'content' => $blog->content,
         ]);
 
-        return view('central.site.blog-details', get_defined_vars());
+        return landingLayoutView('blog-details', get_defined_vars());
     }
 
     function faqs($lang = null)
