@@ -4,6 +4,8 @@ namespace App\Livewire\Admin\Users;
 
 use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
+use App\Models\Tenant\Purchase;
+use App\Models\Tenant\Sale;
 use App\Services\UserService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
@@ -89,6 +91,35 @@ class UsersList extends Component
         }
 
         $users = $this->userService->list(perPage : 10 , orderByDesc: 'id',filter : ['type' => $this->type , ...$this->filters]);
+
+        $dueTotals = [];
+        if (in_array($this->type, ['customer', 'supplier'], true)) {
+            $userIds = $users->pluck('id')->filter()->values();
+
+            if ($userIds->isNotEmpty() && $this->type === 'customer') {
+                $sales = Sale::with(['saleItems'])
+                    ->whereIn('customer_id', $userIds)
+                    ->where('is_deferred', 0)
+                    ->get();
+
+                $dueTotals = $sales
+                    ->groupBy('customer_id')
+                    ->map(fn($items) => round((float) $items->sum(fn($sale) => (float) $sale->due_amount), 2))
+                    ->toArray();
+            }
+
+            if ($userIds->isNotEmpty() && $this->type === 'supplier') {
+                $purchases = Purchase::with(['purchaseItems', 'expenses'])
+                    ->whereIn('supplier_id', $userIds)
+                    ->where('is_deferred', 0)
+                    ->get();
+
+                $dueTotals = $purchases
+                    ->groupBy('supplier_id')
+                    ->map(fn($items) => round((float) $items->sum(fn($purchase) => (float) $purchase->due_amount), 2))
+                    ->toArray();
+            }
+        }
 
         return layoutView('users.users-list', get_defined_vars())
             ->title(__('general.titles.' . $this->type . 's'));

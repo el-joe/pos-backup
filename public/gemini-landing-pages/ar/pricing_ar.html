@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>باقات الأسعار | نظام محاسب السحابي</title>
+    <meta name="description" content="أسعار شفافة تناسب جميع مراحل نمو عملك. اختر من بين الباقة الأساسية، المحترفة، أو باقة المؤسسات. بدون رسوم خفية.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Cairo"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1', 
+                            400: '#2dd4bf', 
+                            500: '#00d2b4', // Primary
+                            600: '#0d9488', // Hover
+                            900: '#134e4a', 
+                            accent: '#fbbf24', 
+                            dark: '#0f172a', 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 210, 180, 0.1);
+        }
+        /* Toggle Switch RTL Fixes */
+        .toggle-checkbox:checked {
+            left: 0;
+            right: auto;
+            border-color: #00d2b4;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #00d2b4;
+        }
+        .toggle-checkbox {
+            right: 1px; /* Start position in RTL */
+        }
+        /* RTL Spacing Fixes */
+        .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-600 antialiased">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            
+            <a href="index_ar.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <span class="text-2xl font-extrabold text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">
+                    محاسب<span class="text-brand-500">.</span>
+                </span>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 space-x-reverse font-bold text-slate-600">
+                <a href="index_ar.html" class="hover:text-brand-500 transition-colors">الرئيسية</a>
+                <a href="blog_ar.html" class="hover:text-brand-500 transition-colors">المدونة</a>
+                <a href="#" class="text-brand-500">الأسعار</a>
+                <a href="index_ar.html#features" class="hover:text-brand-500 transition-colors">المميزات</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="index_ar.html#contact" class="px-6 py-2.5 bg-brand-500 text-white rounded-full font-bold shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-all transform hover:-translate-y-0.5">
+                    ابدأ الآن
+                </a>
+            </div>
+
+            <button id="mobile-menu-btn" class="lg:hidden text-2xl text-slate-800"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 absolute w-full top-full right-0 shadow-xl p-6 flex flex-col gap-4">
+            <a href="index_ar.html" class="font-medium hover:text-brand-500">الرئيسية</a>
+            <a href="#" class="font-medium text-brand-500">الأسعار</a>
+            <a href="index_ar.html#contact" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">ابدأ الآن</a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 text-center bg-gradient-to-b from-brand-50 to-slate-50">
+        <div class="container mx-auto px-6" data-aos="fade-up">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-brand-dark mb-4">خطط أسعار بسيطة وشفافة</h1>
+            <p class="text-lg text-slate-500 mb-8 max-w-2xl mx-auto">
+                لا رسوم خفية. لا تكاليف تأسيس. اختر الباقة التي تناسب حجم منشأتك واحتياجاتك.
+            </p>
+
+            <div class="flex items-center justify-center gap-4 mb-12" dir="ltr">
+                <span class="text-slate-400 font-semibold cursor-pointer" id="yearly-text">سنوي <span class="text-brand-500 text-xs font-bold bg-brand-100 px-2 py-0.5 rounded-full ml-1">وفر 20%</span></span>
+                <div class="relative inline-block w-14 h-8 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="billing-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer top-1 transition-all duration-300"/>
+                    <label for="billing-toggle" class="toggle-label block overflow-hidden h-8 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                </div>
+                <span class="text-slate-600 font-semibold" id="monthly-text">شهري</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="pb-24 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 relative group" data-aos="fade-up" data-aos-delay="0">
+                    <h3 class="text-xl font-bold text-brand-dark mb-2">الباقة الأساسية</h3>
+                    <p class="text-sm text-slate-500 mb-6">المحاسبة الأساسية للمنشآت الصغيرة.</p>
+                    <div class="flex items-baseline mb-6" dir="rtl">
+                        <span class="text-4xl font-extrabold text-slate-800 price-amount" data-monthly="115" data-yearly="99">115</span>
+                        <span class="text-xl font-bold text-slate-800 mr-1">ر.س</span>
+                        <span class="text-slate-500 mr-1">/ شهرياً</span>
+                    </div>
+                    <a href="#" class="block w-full py-3 px-4 bg-slate-100 text-slate-700 font-bold text-center rounded-xl hover:bg-slate-200 transition mb-8">بدء تجربة مجانية</a>
+                    
+                    <ul class="space-y-4 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> مستخدم واحد</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> المحاسبة العامة</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> 50 فاتورة/شهر</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> تتبع المصروفات</li>
+                        <li class="flex items-center gap-3 opacity-50"><i class="fa-solid fa-xmark text-slate-400"></i> <del>نقاط البيع (POS)</del></li>
+                        <li class="flex items-center gap-3 opacity-50"><i class="fa-solid fa-xmark text-slate-400"></i> <del>الموارد البشرية</del></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 shadow-2xl border-2 border-brand-500 relative transform md:-translate-y-4 z-10" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">الأكثر طلباً</div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-2">الباقة المحترفة</h3>
+                    <p class="text-sm text-slate-500 mb-6">كل ما تحتاجه لتنمية أعمالك.</p>
+                    <div class="flex items-baseline mb-6" dir="rtl">
+                        <span class="text-5xl font-extrabold text-brand-500 price-amount" data-monthly="299" data-yearly="249">299</span>
+                        <span class="text-2xl font-bold text-brand-500 mr-1">ر.س</span>
+                        <span class="text-slate-500 mr-1">/ شهرياً</span>
+                    </div>
+                    <a href="#" class="block w-full py-4 px-4 bg-brand-500 text-white font-bold text-center rounded-xl hover:bg-brand-600 transition shadow-lg shadow-brand-500/30 mb-8">اشترك الآن</a>
+                    
+                    <ul class="space-y-4 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> <strong>5 مستخدمين</strong></li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> فواتير غير محدودة</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> <strong>نقطة بيع سحابية (كاشير واحد)</strong></li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> إدارة المخزون</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> الربط مع هيئة الزكاة</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> تعدد العملات</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-xl font-bold text-brand-dark mb-2">المؤسسات</h3>
+                    <p class="text-sm text-slate-500 mb-6">للمنشآت الكبيرة والشركات.</p>
+                    <div class="flex items-baseline mb-6" dir="rtl">
+                        <span class="text-4xl font-extrabold text-slate-800 price-amount" data-monthly="750" data-yearly="600">750</span>
+                        <span class="text-xl font-bold text-slate-800 mr-1">ر.س</span>
+                        <span class="text-slate-500 mr-1">/ شهرياً</span>
+                    </div>
+                    <a href="#" class="block w-full py-3 px-4 bg-slate-800 text-white font-bold text-center rounded-xl hover:bg-slate-700 transition mb-8">تواصل مع المبيعات</a>
+                    
+                    <ul class="space-y-4 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> مستخدمين غير محدودين</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> <strong>نظام موارد بشرية ورواتب كامل</strong></li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> تقارير مالية متقدمة</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> الوصول للواجهة البرمجية (API)</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> مدير حساب مخصص</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> دعم الفروع المتعددة</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-6 max-w-5xl">
+            <h2 class="text-3xl font-bold text-center text-brand-dark mb-12">مقارنة المزايا</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="border-b-2 border-slate-100">
+                            <th class="py-4 px-6 text-slate-500 font-medium">المزايا</th>
+                            <th class="py-4 px-6 text-center font-bold text-slate-800">الأساسية</th>
+                            <th class="py-4 px-6 text-center font-bold text-brand-500">المحترفة</th>
+                            <th class="py-4 px-6 text-center font-bold text-slate-800">المؤسسات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-slate-600">
+                        <tr class="border-b border-slate-50 hover:bg-slate-50">
+                            <td class="py-4 px-6 font-semibold">المحاسبة والفواتير</td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-slate-50">
+                            <td class="py-4 px-6 font-semibold">إدارة المخزون</td>
+                            <td class="py-4 px-6 text-center text-slate-300"><i class="fa-solid fa-minus"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-slate-50">
+                            <td class="py-4 px-6 font-semibold">نقاط البيع (POS)</td>
+                            <td class="py-4 px-6 text-center text-slate-300"><i class="fa-solid fa-minus"></i></td>
+                            <td class="py-4 px-6 text-center">كاشير واحد</td>
+                            <td class="py-4 px-6 text-center">غير محدود</td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-slate-50">
+                            <td class="py-4 px-6 font-semibold">الموارد البشرية والرواتب</td>
+                            <td class="py-4 px-6 text-center text-slate-300"><i class="fa-solid fa-minus"></i></td>
+                            <td class="py-4 px-6 text-center text-slate-300"><i class="fa-solid fa-minus"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-slate-50">
+                            <td class="py-4 px-6 font-semibold">الربط مع الفاتورة الإلكترونية</td>
+                            <td class="py-4 px-6 text-center text-slate-300"><i class="fa-solid fa-minus"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                        </tr>
+                        <tr class="border-b border-slate-50 hover:bg-slate-50">
+                            <td class="py-4 px-6 font-semibold">أولوية الدعم الفني</td>
+                            <td class="py-4 px-6 text-center">بريد إلكتروني</td>
+                            <td class="py-4 px-6 text-center">محادثة وبريد</td>
+                            <td class="py-4 px-6 text-center">هاتف 24/7 ومدير حساب</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-50 border-t border-slate-200 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="index_ar.html" class="flex items-center gap-2.5 mb-6 group">
+                        <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-md text-white">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-800 tracking-tight">محاسب<span class="text-brand-500">.</span></span>
+                    </a>
+                    <p class="text-sm text-slate-500 max-w-xs">النظام السحابي الأول المصمم لقابلية التوسع، الأمان، والسهولة.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">المنتج</h4>
+                    <ul class="space-y-2 text-sm text-slate-500"><li>المميزات</li><li>الأسعار</li><li>الربط التقني</li></ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">قانوني</h4>
+                    <ul class="space-y-2 text-sm text-slate-500"><li>الخصوصية</li><li>الشروط</li><li>الدعم</li></ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 pt-8 text-center text-xs text-slate-400">&copy; 2024 شركة محاسب. جميع الحقوق محفوظة.</div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        
+        // Mobile Menu
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+
+        // Navbar Scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('glass-nav', 'shadow-sm', 'py-3');
+                navbar.classList.remove('py-4', 'bg-white/80');
+            } else {
+                navbar.classList.remove('glass-nav', 'shadow-sm', 'py-3');
+                navbar.classList.add('py-4', 'bg-white/80');
+            }
+        });
+
+        // Pricing Toggle Logic
+        const toggle = document.getElementById('billing-toggle');
+        const prices = document.querySelectorAll('.price-amount');
+        const monthlyText = document.getElementById('monthly-text');
+        const yearlyText = document.getElementById('yearly-text');
+
+        toggle.addEventListener('change', () => {
+            const isYearly = toggle.checked;
+            
+            if(isYearly) {
+                yearlyText.classList.replace('text-slate-400', 'text-brand-dark');
+                monthlyText.classList.replace('text-slate-600', 'text-slate-400');
+            } else {
+                monthlyText.classList.replace('text-slate-400', 'text-slate-600');
+                yearlyText.classList.replace('text-brand-dark', 'text-slate-400');
+            }
+
+            prices.forEach(price => {
+                price.textContent = isYearly ? price.dataset.yearly : price.dataset.monthly;
+            });
+        });
+    </script>
+</body>
+</html>

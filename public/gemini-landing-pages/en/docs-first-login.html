@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Login & Dashboard - Documentation | Mohaaseb ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable Dark Mode
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { brand: { 50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 500: '#00d2b4', 600: '#0d9488', 900: '#134e4a', dark: '#0f172a' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+    </style>
+</head>
+<body class="bg-white text-slate-600 antialiased dark:bg-slate-900 dark:text-slate-300 transition-colors duration-300">
+
+    <nav class="fixed w-full z-50 bg-white border-b border-slate-200 h-16 flex items-center dark:bg-slate-900 dark:border-slate-800 transition-colors duration-300">
+        <div class="w-full px-6 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <a href="index.html" class="flex items-center gap-2.5 group">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center text-white">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                    </div>
+                    <span class="text-xl font-extrabold text-slate-800 tracking-tight dark:text-white">Mohaaseb <span class="text-slate-400 font-medium">Docs</span></span>
+                </a>
+                <div class="hidden md:flex items-center bg-slate-100 rounded-lg px-3 py-1.5 w-64 border border-transparent focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500 transition dark:bg-slate-800 dark:text-slate-300">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
+                    <input type="text" placeholder="Search docs..." class="bg-transparent border-none focus:ring-0 text-sm w-full ml-2 text-slate-700 dark:text-slate-200 placeholder-slate-400">
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="w-8 h-8 rounded-full border border-slate-200 bg-white hover:border-brand-500 hover:text-brand-500 transition flex items-center justify-center text-slate-500 shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-yellow-400">
+                    <i class="fa-regular fa-moon text-sm"></i>
+                </button>
+                <a href="docs.html" class="text-sm font-bold text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-white">Home</a>
+                <a href="#" class="px-4 py-2 bg-brand-500 text-white rounded-lg font-bold text-sm hover:bg-brand-600 transition">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 flex max-w-screen-2xl mx-auto">
+
+        <aside class="w-64 fixed h-[calc(100vh-4rem)] overflow-y-auto sidebar-scroll border-r border-slate-200 hidden lg:block bg-slate-50/50 pb-10 dark:bg-slate-900/50 dark:border-slate-800 transition-colors duration-300">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 dark:text-slate-200">Getting Started</h5>
+                    <ul class="space-y-1">
+                        <li><a href="docs.html" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800">Introduction</a></li>
+                        <li><a href="docs-installation.html" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800">Installation & Setup</a></li>
+                        <li><a href="#" class="block px-3 py-2 rounded-lg bg-brand-50 text-brand-600 font-bold border-l-4 border-brand-500 dark:bg-slate-800 dark:text-brand-400 dark:border-brand-400">First Login</a></li>
+                    </ul>
+                </div>
+                <div class="mb-8">
+                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4 dark:text-slate-200">Core Modules</h5>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800">Accounting</a></li>
+                        <li><a href="#" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800">HR & Payroll</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 lg:ml-64 min-w-0 py-10 px-6 lg:px-12 bg-white dark:bg-slate-900 transition-colors duration-300">
+            
+            <div class="flex items-center gap-2 text-sm text-slate-400 mb-6 dark:text-slate-500">
+                <span>Docs</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                <span>Getting Started</span>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                <span class="text-brand-600 font-bold dark:text-brand-400">First Login</span>
+            </div>
+
+            <h1 class="text-4xl font-extrabold text-brand-dark mb-6 dark:text-white">First Login & Dashboard Tour</h1>
+            
+            <p class="text-lg text-slate-600 mb-8 leading-relaxed dark:text-slate-300">
+                Welcome to your workspace. This guide explains how to access your account for the first time, secure your profile, and navigate the main dashboard.
+            </p>
+
+            <h2 class="text-2xl font-bold text-brand-dark mt-12 mb-4 dark:text-white" id="accessing">1. Accessing Your Account</h2>
+            <p class="mb-4 dark:text-slate-300">After completing the registration or checkout process, check your email inbox for a welcome email from <strong>noreply@mohaaseb.com</strong>.</p>
+            
+            <div class="bg-slate-50 border-l-4 border-slate-400 p-4 mb-6 dark:bg-slate-800 dark:border-slate-600">
+                <p class="text-sm text-slate-700 dark:text-slate-300"><strong>Tip:</strong> If you don't see the email within 5 minutes, please check your Spam/Junk folder.</p>
+            </div>
+            
+            <ol class="list-decimal pl-6 mb-6 space-y-2 marker:text-brand-500 marker:font-bold dark:text-slate-300">
+                <li>Click the <strong>"Verify Email"</strong> button in the email.</li>
+                <li>You will be redirected to the login page.</li>
+                <li>Enter the email and password you created during checkout.</li>
+            </ol>
+
+            <h2 class="text-2xl font-bold text-brand-dark mt-12 mb-4 dark:text-white" id="security">2. Setting up Security (2FA)</h2>
+            <p class="mb-4 dark:text-slate-300">For financial data security, we highly recommend enabling Two-Factor Authentication immediately.</p>
+            <ol class="list-decimal pl-6 mb-6 space-y-2 marker:text-brand-500 marker:font-bold dark:text-slate-300">
+                <li>Click on your <strong>Avatar</strong> in the top right corner.</li>
+                <li>Select <strong>Account Security</strong>.</li>
+                <li>Toggle <strong>Two-Factor Authentication</strong> to ON.</li>
+                <li>Scan the QR code using Google Authenticator or Authy.</li>
+            </ol>
+
+            <h2 class="text-2xl font-bold text-brand-dark mt-12 mb-4 dark:text-white" id="dashboard">3. The Dashboard Overview</h2>
+            <p class="mb-6 dark:text-slate-300">Once logged in, you will land on the Dashboard. This is your command center.</p>
+
+            <div class="bg-slate-900 rounded-xl p-4 shadow-2xl mb-8 border border-slate-800">
+                <div class="flex gap-2 mb-4">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="bg-slate-800 p-4 rounded text-slate-300">
+                        <span class="block text-xs uppercase opacity-50">Total Revenue</span>
+                        <span class="block text-xl font-bold text-white mt-1">$24,500</span>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded text-slate-300">
+                        <span class="block text-xs uppercase opacity-50">Expenses</span>
+                        <span class="block text-xl font-bold text-white mt-1">$8,200</span>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded text-slate-300">
+                        <span class="block text-xs uppercase opacity-50">Net Profit</span>
+                        <span class="block text-xl font-bold text-brand-400 mt-1">$16,300</span>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="space-y-4 dark:text-slate-300">
+                <li class="flex gap-3">
+                    <div class="w-6 h-6 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 text-xs font-bold dark:bg-brand-900 dark:text-brand-300">A</div>
+                    <div>
+                        <strong class="text-slate-800 dark:text-white">Quick Actions:</strong> Located at the top right, use the <span class="bg-slate-100 px-2 py-0.5 rounded text-xs font-mono dark:bg-slate-800">+ New</span> button to quickly create an Invoice, Bill, or Customer.
+                    </div>
+                </li>
+                <li class="flex gap-3">
+                    <div class="w-6 h-6 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 text-xs font-bold dark:bg-brand-900 dark:text-brand-300">B</div>
+                    <div>
+                        <strong class="text-slate-800 dark:text-white">Financial Widgets:</strong> Real-time charts showing your Cash Flow, Income vs Expense, and Accounts Receivable.
+                    </div>
+                </li>
+                <li class="flex gap-3">
+                    <div class="w-6 h-6 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 text-xs font-bold dark:bg-brand-900 dark:text-brand-300">C</div>
+                    <div>
+                        <strong class="text-slate-800 dark:text-white">Side Menu:</strong> Navigate between modules (Accounting, Inventory, HR, Reports). You can collapse this menu on smaller screens.
+                    </div>
+                </li>
+            </ul>
+
+            <div class="mt-16 pt-8 border-t border-slate-200 flex justify-between text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                <span>Last updated: Jan 24, 2026</span>
+                <div class="flex gap-4">
+                    <a href="docs-installation.html" class="hover:text-brand-500">&larr; Previous: Setup</a>
+                    <a href="#" class="hover:text-brand-500">Next: Accounting Basics &rarr;</a>
+                </div>
+            </div>
+        </main>
+
+        <aside class="w-64 hidden xl:block p-6 sticky top-20 h-fit">
+            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 dark:text-slate-500">On this page</h5>
+            <ul class="space-y-3 text-sm border-l border-slate-200 pl-4 dark:border-slate-800">
+                <li><a href="#accessing" class="text-slate-500 hover:text-brand-500 block dark:text-slate-400 dark:hover:text-brand-400">Accessing Account</a></li>
+                <li><a href="#security" class="text-slate-500 hover:text-brand-500 block dark:text-slate-400 dark:hover:text-brand-400">Security (2FA)</a></li>
+                <li><a href="#dashboard" class="text-slate-500 hover:text-brand-500 block dark:text-slate-400 dark:hover:text-brand-400">Dashboard Overview</a></li>
+            </ul>
+        </aside>
+
+    </div>
+
+    <script>
+        const html = document.documentElement;
+        const toggleBtn = document.getElementById('theme-toggle');
+
+        function updateIcon(isDark) {
+            if(!toggleBtn) return;
+            const icon = toggleBtn.querySelector('i');
+            if (isDark) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                html.classList.add('dark');
+                updateIcon(true);
+            } else {
+                html.classList.remove('dark');
+                updateIcon(false);
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        applyTheme(savedTheme);
+
+        if(toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+        }
+    </script>
+
+</body>
+</html>

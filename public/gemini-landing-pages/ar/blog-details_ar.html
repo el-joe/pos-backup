@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>الدليل الشامل للامتثال للفاتورة الإلكترونية (المرحلة الثانية) 2026 | مدونة محاسب</title>
+    <meta name="description" content="دليل شامل لفهم متطلبات المرحلة الثانية من الفاتورة الإلكترونية (مرحلة الربط)، خطوات التكامل، وكيفية تجنب الغرامات مع هيئة الزكاة.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Cairo"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1', 
+                            400: '#2dd4bf', 
+                            500: '#00d2b4', // Primary
+                            600: '#0d9488', // Hover
+                            900: '#134e4a', 
+                            accent: '#fbbf24', 
+                            dark: '#0f172a', 
+                        }
+                    },
+                    typography: (theme) => ({
+                        DEFAULT: {
+                            css: {
+                                color: theme('colors.slate.600'),
+                                h2: {
+                                    color: theme('colors.brand.dark'),
+                                    fontFamily: theme('fontFamily.sans'),
+                                },
+                                h3: {
+                                    color: theme('colors.brand.dark'),
+                                    fontFamily: theme('fontFamily.sans'),
+                                },
+                                strong: {
+                                    color: theme('colors.brand.dark'),
+                                },
+                            },
+                        },
+                    }),
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 210, 180, 0.1);
+        }
+        /* RTL Spacing Fixes */
+        .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+        
+        /* Custom Article Styling */
+        .prose p { margin-bottom: 1.5rem; line-height: 1.9; font-size: 1.125rem; }
+        .prose h2 { font-size: 1.75rem; font-weight: 800; margin-top: 2.5rem; margin-bottom: 1rem; color: #0f172a; }
+        .prose h3 { font-size: 1.4rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; color: #0f172a; }
+        .prose ul, .prose ol { padding-right: 1.5rem; margin-bottom: 1.5rem; }
+        .prose ul { list-style-type: disc; }
+        .prose ol { list-style-type: decimal; }
+        .prose li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body class="bg-white text-slate-600 antialiased">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            
+            <a href="index_ar.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <span class="text-2xl font-extrabold text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">
+                    محاسب<span class="text-brand-500">.</span>
+                </span>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 space-x-reverse font-bold text-slate-600">
+                <a href="index_ar.html" class="hover:text-brand-500 transition-colors">الرئيسية</a>
+                <a href="blog_ar.html" class="text-brand-500 hover:text-brand-600">المدونة</a>
+                <a href="index_ar.html#features" class="hover:text-brand-500 transition-colors">المميزات</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="index_ar.html#contact" class="px-5 py-2 bg-brand-500 text-white rounded-full font-bold shadow-md hover:bg-brand-600 transition">ابدأ الآن</a>
+            </div>
+
+             <button id="mobile-menu-btn" class="lg:hidden text-2xl text-slate-800"><i class="fa-solid fa-bars"></i></button>
+        </div>
+         <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 absolute w-full top-full right-0 shadow-xl p-6 flex flex-col gap-4">
+            <a href="index_ar.html" class="font-medium hover:text-brand-500">الرئيسية</a>
+            <a href="blog_ar.html" class="font-medium text-brand-500">المدونة</a>
+            <a href="index_ar.html#contact" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">ابدأ الآن</a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 bg-slate-50">
+        <div class="container mx-auto px-6 max-w-4xl text-center" data-aos="fade-up">
+            
+            <div class="flex items-center justify-center gap-2 text-sm text-slate-400 mb-6 font-medium">
+                <a href="blog_ar.html" class="hover:text-brand-500">المدونة</a>
+                <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                <a href="#" class="text-brand-500 font-bold">المحاسبة والضرائب</a>
+            </div>
+
+            <h1 class="text-3xl md:text-5xl font-extrabold text-brand-dark mb-6 leading-tight">
+                الدليل الشامل للامتثال للفاتورة الإلكترونية (المرحلة الثانية) 2026
+            </h1>
+
+            <div class="flex items-center justify-center gap-4 mb-8">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Author" class="w-12 h-12 rounded-full border-2 border-white shadow-sm">
+                <div class="text-right">
+                    <p class="font-bold text-slate-800 text-sm">كتب بواسطة: عمر خالد</p>
+                    <p class="text-xs text-slate-500">مستشار ضريبي • 8 دقائق قراءة</p>
+                </div>
+            </div>
+
+            <div class="rounded-2xl overflow-hidden shadow-2xl relative group">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="صورة المقال" class="w-full h-auto transform group-hover:scale-105 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-12 max-w-6xl">
+        <div class="flex flex-col lg:flex-row gap-12">
+            
+            <div class="lg:w-1/12 hidden lg:flex flex-col items-center gap-6 sticky top-32 h-fit">
+                <span class="text-xs font-bold text-slate-400 uppercase rotate-90 whitespace-nowrap" style="writing-mode: vertical-rl;">شارك المقال</span>
+                <div class="h-8 w-[1px] bg-slate-200"></div>
+                <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-[#1877F2] hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-[#1DA1F2] hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-[#0A66C2] hover:text-white transition"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-green-500 hover:text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+
+            <article class="lg:w-8/12 prose max-w-none text-slate-600">
+                <p class="lead text-xl md:text-2xl text-slate-800 font-medium mb-8">
+                    تحولت الفوترة الإلكترونية من مجرد مصطلح تقني إلى متطلب إلزامي لجميع المنشآت في المملكة العربية السعودية. مع بدء تطبيق "مرحلة الربط والتكامل" (المرحلة الثانية) بشكل كامل، فإن عدم الامتثال لم يعد مجرد خطأ تقني، بل هو مخاطرة مالية وقانونية.
+                </p>
+
+                <p>
+                    في هذا الدليل، سنشرح بالتفصيل ما تعنيه المرحلة الثانية من نظام "فاتورة" لهيئة الزكاة والضريبة والجمارك (ZATCA)، المتطلبات التقنية للربط، وكيف يمكن لنظام سحابي مثل <strong>محاسب</strong> أتمتة العملية بالكامل نيابة عنك.
+                </p>
+
+                <h2 id="what-is-phase-2">ما هي المرحلة الثانية (مرحلة الربط والكامل)؟</h2>
+                <p>
+                    بخلاف المرحلة الأولى التي كانت تتطلب فقط إصدار فواتير إلكترونية وحفظها، تتطلب المرحلة الثانية أن تكون أنظمتك <strong>متصلة مباشرة مع منصة فاتورة</strong> التابعة للهيئة. هذا يعني أن كل فاتورة تصدرها يجب أن يتم اعتمادها (للتعاملات بين الشركات B2B) أو الإبلاغ عنها (للأفراد B2C) في الوقت الفعلي أو شبه الفعلي.
+                </p>
+
+                <h3 id="key-differences">أبرز الفروقات عن المرحلة الأولى</h3>
+                <ul>
+                    <li><strong>الصيغة:</strong> يجب أن تكون الفواتير بصيغة XML أو PDF/A-3 يحتوي على XML مدمج.</li>
+                    <li><strong>الاتصال:</strong> يتطلب وجود اتصال دائم بالإنترنت لإرسال الفواتير للاعتماد.</li>
+                    <li><strong>الأمان:</strong> الختم الرقمي (Cryptographic Stamp) والمعرف الفريد (UUID) أصبحا إلزامييْن لمنع التلاعب.</li>
+                </ul>
+
+                <blockquote class="border-r-4 border-brand-500 pr-6 italic my-8 bg-slate-50 py-4 pl-4 rounded-l-lg">
+                    "الامتثال لم يعد يتعلق بتقديم الإقرارات في نهاية العام، بل بجودة البيانات لحظة حدوث المعاملة."
+                    <br><span class="text-sm font-bold text-brand-dark not-italic mt-2 block">- إرشادات هيئة الزكاة والضريبة والجمارك</span>
+                </blockquote>
+
+                <h2 id="how-to-prepare">كيف تجهز منشأتك؟</h2>
+                <p>
+                    يبدأ التجهيز بمراجعة البنية التقنية الحالية لديك. إذا كنت لا تزال تعتمد على ملفات إكسل يدوية أو برامج سطح مكتب قديمة لا تدعم الاتصال بالواجهات البرمجية (APIs)، فستواجه تحديات كبيرة.
+                </p>
+                <p>
+                    تشمل قائمة التحقق للجاهزية ما يلي:
+                </p>
+                <ol>
+                    <li>تسجيل الأجهزة (Onboarding) على منصة فاتورة.</li>
+                    <li>التأكد من أن نظام ERP الخاص بك يولد المعرفات الفريدة والأختام الرقمية بشكل صحيح.</li>
+                    <li>تدريب الموظفين على الحقول الإلزامية الجديدة (مثل العنوان الوطني للعميل في الفواتير الضريبية).</li>
+                </ol>
+
+                <h2 id="solution">الحل المؤتمت: لماذا نظام "محاسب"؟</h2>
+                <p>
+                    بدلاً من بناء تكامل مخصص مكلف ويتطلب صيانة مستمرة، فإن الانتقال إلى نظام ERP سحابي معتمد هو الخطوة الأذكى.
+                    نظام <strong>محاسب</strong> يأتي جاهزاً ومربوطاً مسبقاً مع هيئة الزكاة.
+                </p>
+                
+                <div class="bg-brand-50 border border-brand-100 rounded-xl p-6 my-8">
+                    <h4 class="font-bold text-brand-dark mb-2 text-lg"><i class="fa-solid fa-lightbulb text-brand-500 ml-2"></i> لماذا تختار محاسب؟</h4>
+                    <p class="text-base mb-0">
+                        نحن نتولى توليد ملفات XML، والاتصال المشفر مع الهيئة، وتضمين رمز الاستجابة السريعة (QR Code) تلقائياً. كل ما عليك فعله هو الضغط على "حفظ الفاتورة"، ونحن نتكفل بالامتثال في الخلفية.
+                    </p>
+                </div>
+
+                <h2 id="conclusion">الخلاصة</h2>
+                <p>
+                    التحول الرقمي للضرائب أمر حتمي. من خلال تبني هذه التغييرات مبكراً واختيار الأدوات الصحيحة، يمكنك تحويل هذا العبء التنظيمي إلى ميزة تشغيلية تزيد من كفاءة عملك. هل أنت جاهز لأتمتة فواتيرك؟
+                </p>
+            </article>
+
+            <aside class="lg:w-3/12 space-y-8">
+                
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 sticky top-32">
+                    <h4 class="font-bold text-brand-dark mb-4 uppercase text-xs tracking-wider">جدول المحتويات</h4>
+                    <ul class="space-y-3 text-sm text-slate-500">
+                        <li><a href="#what-is-phase-2" class="hover:text-brand-500 transition block border-r-2 border-transparent hover:border-brand-500 pr-3">ما هي المرحلة الثانية؟</a></li>
+                        <li><a href="#key-differences" class="hover:text-brand-500 transition block border-r-2 border-transparent hover:border-brand-500 pr-3">أبرز الفروقات</a></li>
+                        <li><a href="#how-to-prepare" class="hover:text-brand-500 transition block border-r-2 border-transparent hover:border-brand-500 pr-3">كيف تجهز منشأتك</a></li>
+                        <li><a href="#solution" class="hover:text-brand-500 transition block border-r-2 border-transparent hover:border-brand-500 pr-3">الحل المؤتمت</a></li>
+                        <li><a href="#conclusion" class="hover:text-brand-500 transition block border-r-2 border-transparent hover:border-brand-500 pr-3">الخلاصة</a></li>
+                    </ul>
+                </div>
+
+                <div class="bg-brand-900 text-white p-8 rounded-2xl text-center">
+                    <div class="w-12 h-12 bg-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">
+                        <i class="fa-regular fa-paper-plane"></i>
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">النشرة الأسبوعية</h4>
+                    <p class="text-brand-100 text-sm mb-4">انضم لأكثر من 5000 مشترك يطورون أعمالهم.</p>
+                    <input type="email" placeholder="البريد الإلكتروني" class="w-full px-4 py-3 rounded-lg text-slate-800 mb-3 text-sm focus:outline-none">
+                    <button class="w-full bg-brand-500 py-3 rounded-lg font-bold text-sm hover:bg-brand-400 transition">اشترك الآن</button>
+                </div>
+
+            </aside>
+        </div>
+    </div>
+
+    <section class="py-16 bg-slate-50 border-t border-slate-200">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <h3 class="text-2xl font-bold text-brand-dark mb-8">اقرأ أيضاً</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <a href="#" class="group block">
+                    <div class="overflow-hidden rounded-xl mb-4 h-48">
+                        <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-slate-800 group-hover:text-brand-500 transition">فهم الإقرارات الضريبية</h4>
+                </a>
+                <a href="#" class="group block">
+                    <div class="overflow-hidden rounded-xl mb-4 h-48">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-slate-800 group-hover:text-brand-500 transition">مؤشرات الأداء لقطاع التجزئة</h4>
+                </a>
+                <a href="#" class="group block">
+                    <div class="overflow-hidden rounded-xl mb-4 h-48">
+                        <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="font-bold text-slate-800 group-hover:text-brand-500 transition">أساسيات الأمن السحابي</h4>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="index_ar.html" class="flex items-center gap-2.5 mb-6 group">
+                        <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-md text-white">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-800 tracking-tight">محاسب<span class="text-brand-500">.</span></span>
+                    </a>
+                    <p class="text-sm text-slate-500 max-w-xs">النظام السحابي الأول المصمم لقابلية التوسع، الأمان، والسهولة.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">المنتج</h4>
+                    <ul class="space-y-2 text-sm text-slate-500"><li>المميزات</li><li>الأسعار</li><li>الربط التقني</li></ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">قانوني</h4>
+                    <ul class="space-y-2 text-sm text-slate-500"><li>الخصوصية</li><li>الشروط</li><li>الدعم</li></ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 pt-8 text-center text-xs text-slate-400">&copy; 2024 شركة محاسب. جميع الحقوق محفوظة.</div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+    </script>
+</body>
+</html>

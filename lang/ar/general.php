@@ -1448,6 +1448,7 @@ return [
             'phone' => 'الهاتف',
             'address' => 'العنوان',
             'sales_threshold' => 'حد المبيعات',
+            'due_amount' => 'المستحق',
             'action' => 'الإجراء',
             'edit' => 'تعديل',
             'delete' => 'حذف',

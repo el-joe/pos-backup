@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>الأسئلة الشائعة | مركز مساعدة محاسب</title>
+    <meta name="description" content="إجابات على الأسئلة الشائعة حول نظام محاسب ERP، الأسعار، الامتثال لهيئة الزكاة والضريبة، والدعم الفني.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Cairo"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1', 
+                            400: '#2dd4bf', 
+                            500: '#00d2b4', // Primary
+                            600: '#0d9488', // Hover
+                            900: '#134e4a', 
+                            accent: '#fbbf24', 
+                            dark: '#0f172a', 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 210, 180, 0.1);
+        }
+        /* RTL Spacing Fixes */
+        .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+
+        /* Accordion Styles */
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+        }
+        .faq-item.active .faq-content {
+            max-height: 500px;
+            opacity: 1;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: #00d2b4;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-600 antialiased">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            
+            <a href="index_ar.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <span class="text-2xl font-extrabold text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">
+                    محاسب<span class="text-brand-500">.</span>
+                </span>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 space-x-reverse font-bold text-slate-600">
+                <a href="index_ar.html" class="hover:text-brand-500 transition-colors">الرئيسية</a>
+                <a href="blog_ar.html" class="hover:text-brand-500 transition-colors">المدونة</a>
+                <a href="#" class="text-brand-500">الأسئلة الشائعة</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="index_ar.html#contact" class="px-6 py-2.5 bg-brand-500 text-white rounded-full font-bold shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-all transform hover:-translate-y-0.5">
+                    ابدأ الآن
+                </a>
+            </div>
+
+            <button id="mobile-menu-btn" class="lg:hidden text-2xl text-slate-800">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 absolute w-full top-full right-0 shadow-xl p-6 flex flex-col gap-4">
+            <a href="index_ar.html" class="font-medium hover:text-brand-500">الرئيسية</a>
+            <a href="blog_ar.html" class="font-medium hover:text-brand-500">المدونة</a>
+            <a href="#" class="font-medium text-brand-500">الأسئلة الشائعة</a>
+            <a href="index_ar.html#contact" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">ابدأ الآن</a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 bg-gradient-to-b from-brand-50 to-white text-center">
+        <div class="container mx-auto px-6" data-aos="fade-up">
+            <p class="text-brand-500 font-bold uppercase tracking-wide text-sm mb-2">مركز المساعدة</p>
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-brand-dark mb-6">الأسئلة الشائعة</h1>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-8">
+                كل ما تحتاج معرفته عن نظام محاسب. لم تجد إجابة لسؤالك؟ تحدث مع فريقنا مباشرة.
+            </p>
+        </div>
+    </header>
+
+    <section class="py-16 bg-white min-h-screen">
+        <div class="container mx-auto px-6 max-w-4xl">
+            
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-brand-dark mb-6 border-b border-slate-100 pb-2">عام والبدء</h3>
+                <div class="space-y-4">
+                    
+                    <div class="faq-item bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 hover:text-brand-600 transition">
+                            <span>ما هو نظام محاسب ERP؟</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 border-t border-slate-200 border-opacity-50">
+                            <p class="pt-3">محاسب هو نظام تخطيط موارد المؤسسات (ERP) سحابي شامل مصمم للشركات في الشرق الأوسط. يدمج المحاسبة، الموارد البشرية، نقاط البيع، وإدارة الحجوزات في منصة واحدة، مما يضمن لك السيطرة الكاملة على عملياتك.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 hover:text-brand-600 transition">
+                            <span>هل نظام محاسب معتمد من هيئة الزكاة والضريبة؟</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 border-t border-slate-200 border-opacity-50">
+                            <p class="pt-3">نعم، بالتأكيد. نظام محاسب متوافق تماماً مع متطلبات الفاتورة الإلكترونية للمرحلة الأولى (الإصدار) والمرحلة الثانية (الربط والتكامل). نحن نتولى إصدار ملفات XML والأختام الرقمية ورموز QR تلقائياً.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 hover:text-brand-600 transition">
+                            <span>هل يمكنني استخدام النظام بدون إنترنت؟</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 border-t border-slate-200 border-opacity-50">
+                            <p class="pt-3">نعم، وحدة نقاط البيع (POS) لدينا تعمل حتى عند انقطاع الاتصال. يمكنك متابعة البيع، وستتم مزامنة البيانات تلقائياً مع السحابة بمجرد عودة الاتصال.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-brand-dark mb-6 border-b border-slate-100 pb-2">الأسعار والباقات</h3>
+                <div class="space-y-4">
+                    
+                    <div class="faq-item bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 hover:text-brand-600 transition">
+                            <span>هل توجد فترة تجربة مجانية؟</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 border-t border-slate-200 border-opacity-50">
+                            <p class="pt-3">نعم، نقدم تجربة مجانية كاملة المزايا لمدة 14 يوماً. لا يتطلب الأمر بطاقة ائتمان. يمكنك تجربة جميع الوحدات بما في ذلك المحاسبة والموارد البشرية للتأكد من ملاءمتها لاحتياجاتك.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 hover:text-brand-600 transition">
+                            <span>هل توجد رسوم تأسيس أو تكاليف مخفية؟</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 border-t border-slate-200 border-opacity-50">
+                            <p class="pt-3">باقات الاشتراك لدينا شفافة تماماً. لا توجد رسوم تأسيس للباقات السحابية ذاتية الخدمة. قد تنطبق رسوم اختيارية فقط إذا طلبت تركيب أجهزة في الموقع أو تدريب مخصص لفريق كبير.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-brand-dark mb-6 border-b border-slate-100 pb-2">الدعم الفني والأمان</h3>
+                <div class="space-y-4">
+                    
+                    <div class="faq-item bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 hover:text-brand-600 transition">
+                            <span>ما مدى أمان بياناتي؟</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 border-t border-slate-200 border-opacity-50">
+                            <p class="pt-3">نستخدم تشفير SSL بمعايير بنكية (256-bit). بياناتك مستضافة على خوادم AWS آمنة مع نسخ احتياطي يومي تلقائي. كما نوفر نظام صلاحيات دقيق للتحكم في من يمكنه رؤية ماذا داخل مؤسستك.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 border border-slate-200 rounded-xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 hover:text-brand-600 transition">
+                            <span>هل يمكن نقل البيانات من نظامي القديم؟</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 border-t border-slate-200 border-opacity-50">
+                            <p class="pt-3">نعم، يدعم "محاسب" استيراد ملفات Excel/CSV للعملاء، الموردين، أصناف المخزون، والأرصدة الافتتاحية. فريق الدعم لدينا مستعد لمساعدتك في عملية النقل لضمان انتقال سلس.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-50">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-3xl mx-auto" data-aos="zoom-in">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl text-brand-500 shadow-md">
+                    <i class="fa-regular fa-comments"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-brand-dark mb-4">هل لديك أسئلة أخرى؟</h2>
+                <p class="text-slate-500 mb-8">لم تجد الإجابة التي تبحث عنها؟ تواصل مع فريقنا الودود.</p>
+                <div class="flex justify-center gap-4">
+                    <a href="index_ar.html#contact" class="px-8 py-3 bg-brand-500 text-white font-bold rounded-lg hover:bg-brand-600 transition shadow-lg">تواصل مع الدعم</a>
+                    <a href="#" class="px-8 py-3 bg-white text-slate-700 font-bold rounded-lg hover:text-brand-500 border border-slate-200 transition">واتساب</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="index_ar.html" class="flex items-center gap-2.5 mb-6 group">
+                        <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-md text-white">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-800 tracking-tight">محاسب<span class="text-brand-500">.</span></span>
+                    </a>
+                    <p class="text-sm text-slate-500 max-w-xs">النظام السحابي الأول المصمم لقابلية التوسع، الأمان، والسهولة.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">المنتج</h4>
+                    <ul class="space-y-2 text-sm text-slate-500"><li>المميزات</li><li>الأسعار</li><li>الربط التقني</li></ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">قانوني</h4>
+                    <ul class="space-y-2 text-sm text-slate-500"><li>الخصوصية</li><li>الشروط</li><li>الدعم</li></ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 pt-8 text-center text-xs text-slate-400">&copy; 2024 شركة محاسب. جميع الحقوق محفوظة.</div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        
+        // Mobile Menu
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+
+        // Navbar Scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navbar.classList.add('glass-nav', 'shadow-sm', 'py-3');
+                navbar.classList.remove('py-4', 'bg-white/80');
+            } else {
+                navbar.classList.remove('glass-nav', 'shadow-sm', 'py-3');
+                navbar.classList.add('py-4', 'bg-white/80');
+            }
+        });
+
+        // Accordion Logic
+        function toggleFaq(element) {
+            // Close all others
+            const allFaqs = document.querySelectorAll('.faq-item');
+            allFaqs.forEach(item => {
+                if (item !== element) {
+                    item.classList.remove('active');
+                }
+            });
+            // Toggle clicked
+            element.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

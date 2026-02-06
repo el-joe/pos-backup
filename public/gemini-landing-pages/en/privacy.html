@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Privacy Policy | Mohaaseb Cloud ERP</title>
+    <meta name="description" content="Read Mohaaseb's Privacy Policy to understand how we collect, use, and protect your personal and business data.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable Dark Mode
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 
+                            500: '#00d2b4', // Primary
+                            600: '#0d9488', // Hover
+                            900: '#134e4a', dark: '#0f172a', 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-nav { backdrop-filter: blur(10px); }
+        
+        /* Legal Content Styling */
+        .legal-content h2 { color: #0f172a; font-size: 1.5rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .legal-content p { margin-bottom: 1rem; line-height: 1.7; color: #475569; }
+        .legal-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.5rem; color: #475569; }
+        .legal-content li { margin-bottom: 0.5rem; }
+        .legal-content a { color: #00d2b4; text-decoration: underline; }
+        .legal-content a:hover { color: #0d9488; }
+
+        /* Dark Mode Overrides for Legal Content */
+        .dark .legal-content h2 { color: #f8fafc; }
+        .dark .legal-content p { color: #cbd5e1; }
+        .dark .legal-content ul { color: #cbd5e1; }
+        .dark .legal-content strong { color: #f1f5f9; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-600 antialiased dark:bg-slate-900 dark:text-slate-300 transition-colors duration-300">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md border-b border-slate-200 dark:bg-slate-900/90 dark:border-slate-800">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            
+            <a href="index.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                </div>
+                <span class="text-2xl font-extrabold text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors dark:text-white">
+                    Mohaaseb<span class="text-brand-500">.</span>
+                </span>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 font-semibold text-slate-600 dark:text-slate-300">
+                <a href="index.html" class="hover:text-brand-500 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-brand-500 transition-colors">About</a>
+                <a href="pricing.html" class="hover:text-brand-500 transition-colors">Pricing</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-3">
+                <button id="theme-toggle" class="w-10 h-10 rounded-full border border-slate-200 bg-white hover:border-brand-500 hover:text-brand-500 transition flex items-center justify-center text-slate-600 shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-yellow-400">
+                    <i class="fa-regular fa-moon text-lg"></i>
+                </button>
+                <a href="checkout.html" class="px-6 py-2.5 bg-brand-500 text-white rounded-full font-bold shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-all transform hover:-translate-y-0.5 ml-2">
+                    Get Started
+                </a>
+            </div>
+
+            <button id="mobile-menu-btn" class="lg:hidden text-2xl text-slate-800 dark:text-white"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 absolute w-full top-full left-0 shadow-xl p-6 flex flex-col gap-4">
+            <a href="index.html" class="font-medium hover:text-brand-500 dark:text-slate-300">Home</a>
+            <a href="about.html" class="font-medium hover:text-brand-500 dark:text-slate-300">About</a>
+            <a href="pricing.html" class="font-medium hover:text-brand-500 dark:text-slate-300">Pricing</a>
+            
+            <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
+                <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Appearance</span>
+                <button id="mobile-theme-toggle" class="flex items-center gap-2 px-3 py-1 bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-yellow-400"><i class="fa-regular fa-moon"></i><span class="text-sm font-bold dark:text-white">Switch</span></button>
+            </div>
+
+            <a href="checkout.html" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">Get Started</a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 bg-white dark:bg-slate-900 text-center border-b border-slate-100 dark:border-slate-800 transition-colors duration-300">
+        <div class="container mx-auto px-6" data-aos="fade-up">
+            <h1 class="text-3xl lg:text-4xl font-extrabold text-brand-dark dark:text-white mb-4">Privacy Policy</h1>
+            <p class="text-slate-500 dark:text-slate-400">Last updated: January 24, 2026</p>
+        </div>
+    </header>
+
+    <main class="py-16 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 legal-content transition-colors duration-300" data-aos="fade-up" data-aos-delay="100">
+                
+                <p>At <strong>Mohaaseb</strong> ("we", "us", or "our"), we respect your privacy and are committed to protecting the personal information you share with us. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our cloud ERP services.</p>
+
+                <h2>1. Information We Collect</h2>
+                <p>We collect information that identifies, relates to, describes, references, is capable of being associated with, or could reasonably be linked, directly or indirectly, with a particular consumer or device.</p>
+                <ul>
+                    <li><strong>Personal Identifiers:</strong> Name, email address, phone number, billing address, and IP address.</li>
+                    <li><strong>Business Data:</strong> Company name, tax identification numbers (VAT/TIN), and financial data entered into the system.</li>
+                    <li><strong>Usage Data:</strong> Information on how you interact with our services, including access times, pages viewed, and the device used.</li>
+                </ul>
+
+                <h2>2. How We Use Your Information</h2>
+                <p>We use the collected data for various purposes:</p>
+                <ul>
+                    <li>To provide and maintain our Service (Accounting, HR, POS).</li>
+                    <li>To notify you about changes to our Service.</li>
+                    <li>To provide customer support and technical assistance.</li>
+                    <li>To process payments and generate invoices.</li>
+                    <li>To comply with legal obligations (e.g., ZATCA tax reporting requirements).</li>
+                </ul>
+
+                <h2>3. Data Security</h2>
+                <p>The security of your data is important to us. We implement industry-standard security measures including <strong>256-bit SSL encryption</strong>, regular malware scanning, and secure cloud hosting on AWS servers. However, please remember that no method of transmission over the Internet is 100% secure.</p>
+
+                <h2>4. Sharing of Data</h2>
+                <p>We do not sell your personal data. We may share your information with:</p>
+                <ul>
+                    <li><strong>Service Providers:</strong> Third-party companies that perform services on our behalf (e.g., payment processors, email delivery services).</li>
+                    <li><strong>Legal Authorities:</strong> If required by law or in response to valid requests by public authorities (e.g., a court or a government agency).</li>
+                </ul>
+
+                <h2>5. Your Data Rights</h2>
+                <p>Depending on your location, you may have the right to:</p>
+                <ul>
+                    <li>Access the personal data we hold about you.</li>
+                    <li>Request correction of any incomplete or inaccurate data.</li>
+                    <li>Request deletion of your personal data.</li>
+                    <li>Object to the processing of your data.</li>
+                </ul>
+
+                <h2>6. Changes to This Policy</h2>
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.</p>
+
+                <h2>7. Contact Us</h2>
+                <p>If you have any questions about this Privacy Policy, please contact us:</p>
+                <ul>
+                    <li>By email: <a href="mailto:privacy@mohaaseb.com">privacy@mohaaseb.com</a></li>
+                    <li>By visiting this page on our website: <a href="contact.html">Contact Page</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 pt-16 pb-8 transition-colors duration-300">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="index.html" class="flex items-center gap-2.5 mb-6 group">
+                        <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-md text-white">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-800 tracking-tight dark:text-white">Mohaaseb<span class="text-brand-500">.</span></span>
+                    </a>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 max-w-xs">The #1 Cloud ERP solution designed for scalability, security, and simplicity.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark dark:text-white mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400"><li>Features</li><li>Pricing</li><li>Integrations</li></ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark dark:text-white mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400">
+                        <li><a href="#" class="text-brand-500 font-semibold">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-brand-500">Terms of Service</a></li>
+                        <li><a href="contact.html" class="hover:text-brand-500">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 dark:border-slate-700 pt-8 text-center text-xs text-slate-400">&copy; 2024 Mohaaseb Inc. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        
+        // Theme Logic
+        const html = document.documentElement;
+        const toggleBtns = [document.getElementById('theme-toggle'), document.getElementById('mobile-theme-toggle')];
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        function updateIcons(isDark) {
+            toggleBtns.forEach(btn => {
+                if(!btn) return;
+                const icon = btn.querySelector('i');
+                if (isDark) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                html.classList.add('dark');
+                updateIcons(true);
+            } else {
+                html.classList.remove('dark');
+                updateIcons(false);
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        applyTheme(savedTheme);
+
+        toggleBtns.forEach(btn => {
+            if(btn) {
+                btn.addEventListener('click', () => {
+                    const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    applyTheme(newTheme);
+                });
+            }
+        });
+
+        if(menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+</html>

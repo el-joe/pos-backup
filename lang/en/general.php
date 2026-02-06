@@ -1468,6 +1468,7 @@ return [
             'address' => 'Address',
             'sales_threshold' => 'Sales Threshold',
             'vat_number' => 'VAT Number',
+            'due_amount' => 'Due Amount',
             'action' => 'Action',
             'edit' => 'Edit',
             'delete' => 'Delete',

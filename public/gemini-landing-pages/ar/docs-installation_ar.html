@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التثبيت والإعداد - التوثيق | نظام محاسب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Cairo"', 'sans-serif'] },
+                    colors: { brand: { 50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 500: '#00d2b4', 600: '#0d9488', 900: '#134e4a', dark: '#0f172a' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        /* RTL Spacing Fixes */
+        .space-x-reverse > :not([hidden]) ~ :not([hidden]) { --tw-space-x-reverse: 1; }
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+    </style>
+</head>
+<body class="bg-white text-slate-600 antialiased">
+
+    <nav class="fixed w-full z-50 bg-white border-b border-slate-200 h-16 flex items-center">
+        <div class="w-full px-6 flex justify-between items-center">
+            <div class="flex items-center gap-8">
+                <a href="index_ar.html" class="flex items-center gap-2.5 group">
+                    <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center text-white">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                    </div>
+                    <span class="text-xl font-extrabold text-slate-800 tracking-tight">محاسب <span class="text-slate-400 font-medium">Docs</span></span>
+                </a>
+                <div class="hidden md:flex items-center bg-slate-100 rounded-lg px-3 py-1.5 w-64 border border-transparent focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500 transition">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm ml-2"></i>
+                    <input type="text" placeholder="ابحث في التوثيق..." class="bg-transparent border-none focus:ring-0 text-sm w-full text-slate-700 placeholder-slate-400">
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="docs_ar.html" class="text-sm font-bold text-slate-500 hover:text-brand-600">الرئيسية</a>
+                <a href="#" class="px-4 py-2 bg-brand-500 text-white rounded-lg font-bold text-sm hover:bg-brand-600 transition">دخول النظام</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 flex max-w-screen-2xl mx-auto">
+
+        <aside class="w-64 fixed h-[calc(100vh-4rem)] overflow-y-auto sidebar-scroll border-l border-slate-200 hidden lg:block bg-slate-50/50 pb-10">
+            <div class="p-6">
+                <div class="mb-8">
+                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4">البداية</h5>
+                    <ul class="space-y-1">
+                        <li><a href="docs_ar.html" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition">مقدمة</a></li>
+                        <li><a href="#" class="block px-3 py-2 rounded-lg bg-brand-50 text-brand-600 font-bold border-r-4 border-brand-500">التثبيت والإعداد</a></li>
+                        <li><a href="#" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition">تسجيل الدخول الأول</a></li>
+                    </ul>
+                </div>
+                <div class="mb-8">
+                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4">الوحدات الأساسية</h5>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition">المحاسبة</a></li>
+                        <li><a href="#" class="block px-3 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition">الفواتير (هيئة الزكاة)</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 lg:mr-64 min-w-0 py-10 px-6 lg:px-12">
+            
+            <div class="flex items-center gap-2 text-sm text-slate-400 mb-6">
+                <span>التوثيق</span>
+                <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                <span>البداية</span>
+                <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                <span class="text-brand-600 font-bold">التثبيت والإعداد</span>
+            </div>
+
+            <h1 class="text-4xl font-extrabold text-brand-dark mb-6">دليل التثبيت والإعداد الأولي</h1>
+            
+            <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                بما أن "محاسب" هو نظام سحابي، لا توجد برامج لتثبيتها على جهاز الكمبيوتر الخاص بك. يغطي هذا الدليل التكوين الأولي المطلوب لجعل حسابك متوافقاً ضريبياً وجاهزاً للعمل.
+            </p>
+
+            <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-4 mb-8 flex gap-4">
+                <i class="fa-solid fa-triangle-exclamation text-yellow-600 mt-1"></i>
+                <div>
+                    <h4 class="font-bold text-yellow-900 text-sm">متطلبات مسبقة</h4>
+                    <p class="text-sm text-yellow-800 mt-1">تأكد من توفر السجل التجاري والرقم الضريبي الخاص بالمنشأة قبل البدء.</p>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-brand-dark mt-12 mb-4" id="company-profile">1. إعداد ملف الشركة</h2>
+            <p class="mb-4">انتقل إلى <strong>الإعدادات > الإعدادات العامة</strong>. دقة المعلومات هنا حاسمة للتحقق من قبل هيئة الزكاة.</p>
+            
+            <ol class="list-decimal pr-6 mb-6 space-y-3 marker:text-brand-500 marker:font-bold">
+                <li>قم برفع <strong>شعار الشركة</strong> (الحجم الموصى به: 300x100 بكسل).</li>
+                <li>أدخل <strong>الرقم الضريبي</strong> (15 خانة تبدأ وتنتهي بالرقم 3).</li>
+                <li>املأ <strong>العنوان الوطني</strong> (رقم المبنى، الشارع، الحي، المدينة، الرمز البريدي).</li>
+            </ol>
+
+            <h2 class="text-2xl font-bold text-brand-dark mt-12 mb-4" id="pos-hardware">2. إعداد أجهزة نقاط البيع</h2>
+            <p class="mb-4">يعمل نظام نقاط البيع مع معظم الطابعات الحرارية التي تدعم USB أو الشبكة. نوصي بطابعات <strong>Epson TM-T20III</strong> أو أي طابعة تدعم أوامر ESC/POS.</p>
+
+            <h3 class="text-xl font-bold text-slate-700 mt-6 mb-3">توصيل طابعة USB</h3>
+            <p class="mb-4">إذا كنت تستخدم طريقة الطباعة المباشرة عبر QZ Tray:</p>
+
+            <div class="rounded-xl overflow-hidden mb-8 shadow-lg" dir="ltr">
+                <div class="bg-slate-800 text-slate-300 px-4 py-2 text-xs font-mono flex justify-between">
+                    <span>POS Config JSON</span>
+                    <button class="hover:text-white"><i class="fa-regular fa-copy"></i></button>
+                </div>
+                <pre><code class="language-json">{
+  "printer_name": "EPSON_TM_T20III",
+  "paper_width": "80mm",
+  "auto_cut": true,
+  "cash_drawer_kick": true,
+  "print_logo": true
+}</code></pre>
+            </div>
+
+            <h2 class="text-2xl font-bold text-brand-dark mt-12 mb-4" id="zatca-device">3. تسجيل جهاز الفاتورة (CSID)</h2>
+            <p class="mb-4">لتفعيل التكامل مع المرحلة الثانية، يجب عليك توليد معرف الختم الرقمي (CSID).</p>
+            <ul class="list-disc pr-6 mb-6 space-y-2 marker:text-brand-500">
+                <li>اذهب إلى <strong>الإعدادات > الربط مع هيئة الزكاة</strong>.</li>
+                <li>اضغط على <strong>إنشاء CSR</strong>.</li>
+                <li>أدخل رمز التحقق (OTP) المرسل إلى هاتفك المسجل في منصة فاتورة.</li>
+                <li>اضغط على <strong>طلب CSID إنتاجي</strong>.</li>
+            </ul>
+
+            <div class="mt-16 pt-8 border-t border-slate-200 flex justify-between text-sm text-slate-500">
+                <span>آخر تحديث: 24 يناير 2026</span>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-brand-500">&larr; السابق: مقدمة</a>
+                    <a href="#" class="hover:text-brand-500">التالي: تسجيل الدخول الأول &rarr;</a>
+                </div>
+            </div>
+        </main>
+
+        <aside class="w-64 hidden xl:block p-6 sticky top-20 h-fit">
+            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">في هذه الصفحة</h5>
+            <ul class="space-y-3 text-sm border-r border-slate-200 pr-4">
+                <li><a href="#company-profile" class="text-slate-500 hover:text-brand-500 block">ملف الشركة</a></li>
+                <li><a href="#pos-hardware" class="text-slate-500 hover:text-brand-500 block">أجهزة نقاط البيع</a></li>
+                <li><a href="#zatca-device" class="text-slate-500 hover:text-brand-500 block">تسجيل جهاز الفاتورة</a></li>
+            </ul>
+        </aside>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

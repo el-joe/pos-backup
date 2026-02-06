@@ -89,6 +89,9 @@
                             @elseif($type == 'supplier')
                             <th>{{ __('general.pages.users.vat_number') }}</th>
                             @endif
+                            @if(in_array($type, ['customer','supplier']))
+                            <th>{{ __('general.pages.users.due_amount') }}</th>
+                            @endif
                             <th>{{ __('general.pages.users.active') }}</th>
                             <th class="text-nowrap">{{ __('general.pages.users.action') }}</th>
                         </tr>
@@ -106,17 +109,23 @@
                                 @elseif($type == 'supplier')
                                 <td>{{ $user->vat_number }}</td>
                                 @endif
+                                @if(in_array($type, ['customer','supplier']))
+                                    @php($totalDue = (float)($dueTotals[$user->id] ?? 0))
+                                    <td>
+                                        <span class="badge bg-{{ $totalDue > 0 ? 'danger' : 'secondary' }}">{{ currencyFormat($totalDue, true) }}</span>
+                                    </td>
+                                @endif
                                 <td>
                                     <span class="badge bg-{{ $user->active ? 'success' : 'danger' }}">
                                         {{ $user->active ? __('general.pages.users.active') : __('general.pages.users.inactive') }}
                                     </span>
                                 </td>
                                 <td class="text-nowrap">
-                                    @if($type == 'customer')
+                                    @if($type == 'customer' && currencyFormat((float)($dueTotals[$user->id] ?? 0)) > 0)
                                         <a href="{{ route('admin.customers.pay', $user->id) }}" class="btn btn-sm btn-success me-1" title="{{ __('general.pages.users.pay') }}">
                                             <i class="fa fa-money-bill"></i>
                                         </a>
-                                    @elseif($type == 'supplier')
+                                    @elseif($type == 'supplier' && currencyFormat((float)($dueTotals[$user->id] ?? 0)) > 0)
                                         <a href="{{ route('admin.suppliers.pay', $user->id) }}" class="btn btn-sm btn-success me-1" title="{{ __('general.pages.users.pay') }}">
                                             <i class="fa fa-money-bill"></i>
                                         </a>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>اتصل بنا | نظام محاسب</title>
+    <meta name="description" content="تواصل مع فريق مبيعات ودعم محاسب. نحن هنا لمساعدتك في تنمية أعمالك.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Cairo"', 'sans-serif'], },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 
+                            500: '#00d2b4', // Primary
+                            600: '#0d9488', // Hover
+                            900: '#134e4a', dark: '#0f172a', 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        /* RTL Spacing Fixes */
+        .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-600 antialiased flex flex-col min-h-screen">
+
+    <nav class="bg-white/80 backdrop-blur-md border-b border-slate-200 py-4 fixed w-full z-50">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index_ar.html" class="flex items-center gap-2.5 group">
+                <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center text-white">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                </div>
+                <span class="text-xl font-extrabold text-slate-800 tracking-tight">محاسب<span class="text-brand-500">.</span></span>
+            </a>
+            <div class="hidden lg:flex items-center space-x-8 space-x-reverse font-bold text-slate-600">
+                <a href="index_ar.html" class="hover:text-brand-500 transition-colors">الرئيسية</a>
+                <a href="about_ar.html" class="hover:text-brand-500 transition-colors">عن النظام</a>
+                <a href="#" class="text-brand-500">اتصل بنا</a>
+            </div>
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="checkout_ar.html" class="px-6 py-2.5 bg-brand-500 text-white rounded-full font-bold shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition">ابدأ الآن</a>
+            </div>
+            <button class="lg:hidden text-2xl text-slate-800"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 bg-white text-center">
+        <div class="container mx-auto px-6">
+            <p class="text-brand-500 font-bold uppercase tracking-wide text-sm mb-2">نحن هنا للمساعدة</p>
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-brand-dark mb-4">ابدأ المحادثة معنا</h1>
+            <p class="text-lg text-slate-500 max-w-xl mx-auto">هل لديك أسئلة حول الأسعار، الميزات، أو تحتاج إلى عرض مخصص؟ فريقنا مستعد للإجابة على جميع استفساراتك.</p>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            
+            <div class="bg-white p-8 lg:p-10 rounded-3xl shadow-xl border border-slate-100">
+                <h2 class="text-2xl font-bold text-brand-dark mb-6">أرسل لنا رسالة</h2>
+                <form class="space-y-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">الاسم الأول</label>
+                            <input type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-brand-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">اسم العائلة</label>
+                            <input type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-brand-500 transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">بريد العمل</label>
+                        <input type="email" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-brand-500 transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">الموضوع</label>
+                        <select class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-brand-500 transition text-slate-600">
+                            <option>أريد شراء نظام محاسب (المبيعات)</option>
+                            <option>أحتاج مساعدة تقنية (الدعم الفني)</option>
+                            <option>طلب شراكة</option>
+                            <option>أخرى</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">الرسالة</label>
+                        <textarea rows="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-brand-500 transition"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-brand-500 text-white font-bold rounded-xl hover:bg-brand-600 transition shadow-lg shadow-brand-500/30 transform hover:-translate-y-0.5">
+                        إرسال الرسالة
+                    </button>
+                </form>
+            </div>
+
+            <div class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-brand-500 transition">
+                        <div class="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center text-brand-500 mb-4 text-xl"><i class="fa-solid fa-envelope"></i></div>
+                        <h3 class="font-bold text-slate-800 mb-1">مراسلة المبيعات</h3>
+                        <p class="text-sm text-slate-500 mb-2">للاستفسار عن الأسعار والديمو.</p>
+                        <a href="mailto:sales@mohaaseb.com" class="text-brand-600 font-bold text-sm hover:underline">sales@mohaaseb.com</a>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-brand-500 transition">
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-500 mb-4 text-xl"><i class="fa-solid fa-headset"></i></div>
+                        <h3 class="font-bold text-slate-800 mb-1">الدعم الفني</h3>
+                        <p class="text-sm text-slate-500 mb-2">للمشاكل التقنية للعملاء الحاليين.</p>
+                        <a href="mailto:support@mohaaseb.com" class="text-blue-600 font-bold text-sm hover:underline">support@mohaaseb.com</a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-800 mb-6 text-lg">مواقعنا</h3>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <i class="fa-solid fa-location-dot text-brand-500 mt-1 pl-1"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-700">المقر الرئيسي - الرياض</h4>
+                                <p class="text-sm text-slate-500">شارع العليا، حي الملك فهد<br>الرياض 12211، المملكة العربية السعودية</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <i class="fa-solid fa-location-dot text-brand-500 mt-1 pl-1"></i>
+                            <div>
+                                <h4 class="font-bold text-slate-700">مكتب القاهرة</h4>
+                                <p class="text-sm text-slate-500">كايرو بيزنس بارك، التجمع الخامس<br>القاهرة، مصر</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 h-48 bg-slate-200 rounded-xl overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-60">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <button class="bg-white px-4 py-2 rounded-full shadow-lg font-bold text-xs hover:bg-slate-50">عرض على خرائط جوجل</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8 mt-auto">
+        <div class="container mx-auto px-6 text-center text-sm text-slate-400">
+            <p>&copy; 2024 شركة محاسب. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

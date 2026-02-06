@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans | Mohaaseb Cloud ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enabled
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { brand: { 50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 500: '#00d2b4', 600: '#0d9488', 900: '#134e4a', dark: '#0f172a' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-nav { backdrop-filter: blur(10px); }
+        .toggle-checkbox:checked { right: 0; border-color: #00d2b4; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #00d2b4; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-600 antialiased dark:bg-slate-900 dark:text-slate-300 transition-colors duration-300">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md dark:bg-slate-900/90 dark:border-b dark:border-slate-800">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center text-white">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                </div>
+                <span class="text-2xl font-extrabold text-slate-800 tracking-tight dark:text-white">Mohaaseb<span class="text-brand-500">.</span></span>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 font-semibold text-slate-600 dark:text-slate-300">
+                <a href="index.html" class="hover:text-brand-500 transition-colors">Home</a>
+                <a href="blog.html" class="hover:text-brand-500 transition-colors">Blog</a>
+                <a href="#" class="text-brand-500">Pricing</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-3">
+                <div class="relative group">
+                    <button class="flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:border-brand-500 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <img src="https://flagcdn.com/w40/us.png" class="w-5 h-5 rounded-full object-cover">
+                        <span class="text-sm font-bold">English</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                    </button>
+                    <div class="absolute top-full right-0 mt-2 w-32 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 hidden group-hover:block p-1">
+                        <a href="pricing_ar.html" class="flex items-center gap-3 px-3 py-2 hover:bg-brand-50 dark:hover:bg-slate-700 rounded-lg transition"><img src="https://flagcdn.com/w40/sa.png" class="w-5 h-5 rounded-full"><span class="text-sm font-semibold text-slate-600 dark:text-slate-300">العربية</span></a>
+                    </div>
+                </div>
+                <button id="theme-toggle" class="w-10 h-10 rounded-full border border-slate-200 bg-white hover:border-brand-500 hover:text-brand-500 transition flex items-center justify-center text-slate-600 shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-yellow-400">
+                    <i class="fa-regular fa-moon text-lg"></i>
+                </button>
+                <a href="checkout.html" class="px-6 py-2.5 bg-brand-500 text-white rounded-full font-bold shadow-lg hover:bg-brand-600 transition ml-2">Get Started</a>
+            </div>
+            <button id="mobile-menu-btn" class="lg:hidden text-2xl text-slate-800 dark:text-white"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 absolute w-full top-full left-0 shadow-xl p-6 flex flex-col gap-4">
+            <a href="index.html" class="font-medium hover:text-brand-500 dark:text-slate-300">Home</a>
+            <a href="pricing.html" class="font-medium text-brand-500">Pricing</a>
+            <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
+                <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Appearance</span>
+                <button id="mobile-theme-toggle" class="flex items-center gap-2 px-3 py-1 bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-yellow-400"><i class="fa-regular fa-moon"></i><span class="text-sm font-bold dark:text-white">Switch</span></button>
+            </div>
+            <a href="checkout.html" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">Get Started</a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 text-center bg-gradient-to-b from-brand-50 to-slate-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-brand-dark dark:text-white mb-4">Simple, Transparent Pricing</h1>
+            <p class="text-lg text-slate-500 dark:text-slate-400 mb-8 max-w-2xl mx-auto">No hidden fees. No setup charges. Choose the plan that fits your business.</p>
+            <div class="flex items-center justify-center gap-4 mb-12">
+                <span class="text-slate-600 dark:text-slate-300 font-semibold" id="monthly-text">Monthly</span>
+                <div class="relative inline-block w-14 h-8 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" id="billing-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer top-1 left-1 transition-all duration-300"/>
+                    <label for="billing-toggle" class="toggle-label block overflow-hidden h-8 rounded-full bg-slate-300 dark:bg-slate-700 cursor-pointer transition-colors duration-300"></label>
+                </div>
+                <span class="text-slate-400 dark:text-slate-500 font-semibold" id="yearly-text">Yearly <span class="text-brand-500 text-xs font-bold bg-brand-100 dark:bg-slate-800 px-2 py-0.5 rounded-full ml-1">-20%</span></span>
+            </div>
+        </div>
+    </header>
+
+    <section class="pb-24 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
+                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-2">Starter</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Essential accounting for small businesses.</p>
+                    <div class="flex items-baseline mb-6">
+                        <span class="text-4xl font-extrabold text-slate-800 dark:text-white price-amount" data-monthly="29" data-yearly="24">$29</span>
+                        <span class="text-slate-500 dark:text-slate-400 ml-1">/mo</span>
+                    </div>
+                    <a href="#" class="block w-full py-3 px-4 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white font-bold text-center rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition mb-8">Start Free Trial</a>
+                    <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> 1 User</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> Basic Accounting</li>
+                        <li class="flex items-center gap-3 opacity-50"><i class="fa-solid fa-xmark text-slate-400"></i> <del>POS System</del></li>
+                    </ul>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-2xl border-2 border-brand-500 relative transform md:-translate-y-4 z-10">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase">Most Popular</div>
+                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-2">Professional</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Everything you need to grow.</p>
+                    <div class="flex items-baseline mb-6">
+                        <span class="text-5xl font-extrabold text-brand-500 price-amount" data-monthly="79" data-yearly="65">$79</span>
+                        <span class="text-slate-500 dark:text-slate-400 ml-1">/mo</span>
+                    </div>
+                    <a href="#" class="block w-full py-4 px-4 bg-brand-500 text-white font-bold text-center rounded-xl hover:bg-brand-600 transition shadow-lg mb-8">Get Started</a>
+                    <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> <strong>5 Users</strong></li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> Cloud POS</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> ZATCA Integration</li>
+                    </ul>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300">
+                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-2">Enterprise</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">For large organizations.</p>
+                    <div class="flex items-baseline mb-6">
+                        <span class="text-4xl font-extrabold text-slate-800 dark:text-white price-amount" data-monthly="199" data-yearly="159">$199</span>
+                        <span class="text-slate-500 dark:text-slate-400 ml-1">/mo</span>
+                    </div>
+                    <a href="#" class="block w-full py-3 px-4 bg-slate-800 dark:bg-slate-700 text-white font-bold text-center rounded-xl hover:bg-slate-700 dark:hover:bg-slate-600 transition mb-8">Contact Sales</a>
+                    <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> Unlimited Users</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> Full HR & Payroll</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-500"></i> API Access</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white dark:bg-slate-900 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-5xl">
+            <h2 class="text-3xl font-bold text-center text-brand-dark dark:text-white mb-12">Compare Features</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b-2 border-slate-100 dark:border-slate-800">
+                            <th class="py-4 px-6 text-slate-500 dark:text-slate-400 font-medium">Features</th>
+                            <th class="py-4 px-6 text-center font-bold text-slate-800 dark:text-white">Starter</th>
+                            <th class="py-4 px-6 text-center font-bold text-brand-500">Professional</th>
+                            <th class="py-4 px-6 text-center font-bold text-slate-800 dark:text-white">Enterprise</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-slate-600 dark:text-slate-300">
+                        <tr class="border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            <td class="py-4 px-6 font-semibold">Accounting</td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                        </tr>
+                        <tr class="border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            <td class="py-4 px-6 font-semibold">Inventory</td>
+                            <td class="py-4 px-6 text-center text-slate-300 dark:text-slate-600"><i class="fa-solid fa-minus"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                            <td class="py-4 px-6 text-center"><i class="fa-solid fa-check text-brand-500"></i></td>
+                        </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 pt-16 pb-8 transition-colors duration-300">
+        <div class="container mx-auto px-6 text-center text-sm text-slate-400">
+            <p>&copy; 2024 Mohaaseb Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const html = document.documentElement;
+        const toggleBtns = [document.getElementById('theme-toggle'), document.getElementById('mobile-theme-toggle')];
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        function updateIcons(isDark) {
+            toggleBtns.forEach(btn => {
+                if(!btn) return;
+                const icon = btn.querySelector('i');
+                if (isDark) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); } 
+                else { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+            });
+        }
+        function applyTheme(theme) {
+            if (theme === 'dark') { html.classList.add('dark'); updateIcons(true); } 
+            else { html.classList.remove('dark'); updateIcons(false); }
+            localStorage.setItem('theme', theme);
+        }
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        applyTheme(savedTheme);
+        toggleBtns.forEach(btn => { if(btn) btn.addEventListener('click', () => { applyTheme(html.classList.contains('dark') ? 'light' : 'dark'); }); });
+        menuBtn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+
+        // Pricing Toggle
+        const billingToggle = document.getElementById('billing-toggle');
+        const prices = document.querySelectorAll('.price-amount');
+        billingToggle.addEventListener('change', () => {
+            const isYearly = billingToggle.checked;
+            prices.forEach(price => { price.textContent = '$' + (isYearly ? price.dataset.yearly : price.dataset.monthly); });
+        });
+    </script>
+</body>
+</html>

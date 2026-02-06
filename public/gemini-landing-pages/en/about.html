@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>About Mohaaseb | Empowering Business Growth</title>
+    <meta name="description" content="Learn about Mohaaseb's mission to simplify business management for companies in the MENA region through innovative Cloud ERP technology.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enabled
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 
+                            500: '#00d2b4', 600: '#0d9488', 900: '#134e4a', dark: '#0f172a' 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-nav { backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-600 antialiased dark:bg-slate-900 dark:text-slate-300 transition-colors duration-300">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md dark:bg-slate-900/90 dark:border-b dark:border-slate-800">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            
+            <a href="index.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                </div>
+                <span class="text-2xl font-extrabold text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors dark:text-white">
+                    Mohaaseb<span class="text-brand-500">.</span>
+                </span>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 font-semibold text-slate-600 dark:text-slate-300">
+                <a href="index.html" class="hover:text-brand-500 transition-colors">Home</a>
+                <a href="#" class="text-brand-500">About Us</a>
+                <a href="index.html#features" class="hover:text-brand-500 transition-colors">Features</a>
+                <a href="blog.html" class="hover:text-brand-500 transition-colors">Blog</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-3">
+                <div class="relative group">
+                    <button class="flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:border-brand-500 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
+                        <img src="https://flagcdn.com/w40/us.png" alt="English" class="w-5 h-5 rounded-full object-cover">
+                        <span class="text-sm font-bold">English</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                    </button>
+                    <div class="absolute top-full right-0 mt-2 w-32 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 hidden group-hover:block p-1">
+                        <a href="about_ar.html" class="flex items-center gap-3 px-3 py-2 hover:bg-brand-50 dark:hover:bg-slate-700 rounded-lg transition"><img src="https://flagcdn.com/w40/sa.png" class="w-5 h-5 rounded-full"><span class="text-sm font-semibold text-slate-600 dark:text-slate-300">العربية</span></a>
+                    </div>
+                </div>
+                <button id="theme-toggle" class="w-10 h-10 rounded-full border border-slate-200 bg-white hover:border-brand-500 hover:text-brand-500 transition flex items-center justify-center text-slate-600 shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-yellow-400">
+                    <i class="fa-regular fa-moon text-lg"></i>
+                </button>
+                <a href="checkout.html" class="px-6 py-2.5 bg-brand-500 text-white rounded-full font-bold shadow-lg hover:bg-brand-600 transition ml-2">Get Started</a>
+            </div>
+
+            <button id="mobile-menu-btn" class="lg:hidden text-2xl text-slate-800 dark:text-white"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 absolute w-full top-full left-0 shadow-xl p-6 flex flex-col gap-4">
+            <a href="index.html" class="font-medium hover:text-brand-500 dark:text-slate-300">Home</a>
+            <a href="#" class="font-medium text-brand-500">About</a>
+            <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
+                <span class="text-sm font-bold text-slate-500 dark:text-slate-400">Appearance</span>
+                <button id="mobile-theme-toggle" class="flex items-center gap-2 px-3 py-1 bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-yellow-400"><i class="fa-regular fa-moon"></i><span class="text-sm font-bold dark:text-white">Switch</span></button>
+            </div>
+            <a href="checkout.html" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">Get Started</a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-20 relative overflow-hidden bg-white dark:bg-slate-900 text-center transition-colors duration-300">
+        <div class="absolute top-0 right-0 -z-10 w-1/2 h-full bg-brand-50 dark:bg-slate-800/50 blur-[100px] rounded-bl-full"></div>
+        
+        <div class="container mx-auto px-6 max-w-4xl" data-aos="fade-up">
+            <p class="text-brand-500 font-bold uppercase tracking-wide text-sm mb-4">Our Story</p>
+            <h1 class="text-4xl lg:text-6xl font-extrabold text-brand-dark dark:text-white mb-6 leading-tight">
+                We are building the operating system for <span class="text-brand-500">modern business.</span>
+            </h1>
+            <p class="text-xl text-slate-500 dark:text-slate-400 mb-10 leading-relaxed">
+                Mohaaseb was founded with a single belief: Enterprise-grade technology should be accessible to everyone. We simplify the complex world of finance, HR, and operations.
+            </p>
+        </div>
+        
+        <div class="container mx-auto px-6 mt-8" data-aos="fade-up" data-aos-delay="200">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-64 md:h-80 overflow-hidden rounded-3xl">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-90 dark:opacity-80">
+                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover mt-8 opacity-90 dark:opacity-80">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-90 dark:opacity-80">
+                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover mt-8 opacity-90 dark:opacity-80">
+            </div>
+        </div>
+    </header>
+
+    <section class="py-24 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <h2 class="text-3xl font-bold text-brand-dark dark:text-white mb-6">Our Mission</h2>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+                        To empower businesses in the Middle East with intuitive, compliant, and powerful tools that replace chaos with clarity. We strive to automate the mundane so entrepreneurs can focus on what truly matters—growth.
+                    </p>
+                    <div class="flex gap-8 border-t border-slate-200 dark:border-slate-800 pt-8">
+                        <div>
+                            <h3 class="text-4xl font-bold text-brand-500">5k+</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 uppercase font-semibold">Active Companies</p>
+                        </div>
+                        <div>
+                            <h3 class="text-4xl font-bold text-brand-500">$2B+</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 uppercase font-semibold">Transactions Processed</p>
+                        </div>
+                        <div>
+                            <h3 class="text-4xl font-bold text-brand-500">99%</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 uppercase font-semibold">Customer Retention</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700" data-aos="fade-left">
+                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-4">Why we started</h3>
+                    <p class="text-slate-500 dark:text-slate-400 mb-6">
+                        In 2020, we noticed a gap. Legacy ERP systems were clunky, expensive, and required months to implement. Simple accounting apps were too basic for growing teams.
+                    </p>
+                    <p class="text-slate-500 dark:text-slate-400">
+                        We built <strong>Mohaaseb</strong> to be the middle ground—powerful enough for enterprises, yet simple enough for startups. Fully integrated with ZATCA and local regulations from day one.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white dark:bg-slate-900 transition-colors duration-300">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-brand-dark dark:text-white mb-4">Our Core Values</h2>
+                <p class="text-slate-500 dark:text-slate-400">The principles that guide every line of code we write and every customer we serve.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-brand-50 dark:bg-slate-800 border border-brand-100 dark:border-slate-700 text-center hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="0">
+                    <div class="w-14 h-14 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center text-2xl text-brand-500 mx-auto mb-6 shadow-sm">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3">Customer Obsession</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">We don't just build software; we build relationships. Your success is our primary metric.</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-brand-50 dark:bg-slate-800 border border-brand-100 dark:border-slate-700 text-center hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-14 h-14 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center text-2xl text-brand-500 mx-auto mb-6 shadow-sm">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3">Uncompromising Trust</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">We handle your most sensitive data. Security and transparency are not optional features.</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-brand-50 dark:bg-slate-800 border border-brand-100 dark:border-slate-700 text-center hover:-translate-y-2 transition-transform duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-14 h-14 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center text-2xl text-brand-500 mx-auto mb-6 shadow-sm">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3">Simplicity First</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Complexity is the enemy of execution. We strive to make the complex feel simple.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-brand-dark dark:text-white mb-16">Meet the Leadership</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="group text-center" data-aos="fade-up">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 w-full aspect-square">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="text-lg font-bold text-brand-dark dark:text-white">Omar Al-Fayed</h4>
+                    <p class="text-brand-500 text-sm font-semibold">Founder & CEO</p>
+                </div>
+                <div class="group text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 w-full aspect-square">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="text-lg font-bold text-brand-dark dark:text-white">Sarah Johnson</h4>
+                    <p class="text-brand-500 text-sm font-semibold">Chief Product Officer</p>
+                </div>
+                <div class="group text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 w-full aspect-square">
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="text-lg font-bold text-brand-dark dark:text-white">Khalid Hassan</h4>
+                    <p class="text-brand-500 text-sm font-semibold">CTO</p>
+                </div>
+                <div class="group text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="relative overflow-hidden rounded-2xl mb-4 w-full aspect-square">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <h4 class="text-lg font-bold text-brand-dark dark:text-white">Layla Mahmoud</h4>
+                    <p class="text-brand-500 text-sm font-semibold">Head of Success</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 pt-16 pb-8 transition-colors duration-300">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="index.html" class="flex items-center gap-2.5 mb-6 group">
+                        <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-md text-white">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-800 tracking-tight dark:text-white">Mohaaseb<span class="text-brand-500">.</span></span>
+                    </a>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 max-w-xs">The #1 Cloud ERP solution designed for scalability, security, and simplicity.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark dark:text-white mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400"><li>Features</li><li>Pricing</li><li>Integrations</li></ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark dark:text-white mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-slate-500 dark:text-slate-400"><li>Privacy</li><li>Terms</li><li>Support</li></ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 dark:border-slate-700 pt-8 text-center text-xs text-slate-400">&copy; 2024 Mohaaseb Inc. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        
+        // Theme Logic
+        const html = document.documentElement;
+        const toggleBtns = [document.getElementById('theme-toggle'), document.getElementById('mobile-theme-toggle')];
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        function updateIcons(isDark) {
+            toggleBtns.forEach(btn => {
+                if(!btn) return;
+                const icon = btn.querySelector('i');
+                if (isDark) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); } 
+                else { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+            });
+        }
+        function applyTheme(theme) {
+            if (theme === 'dark') { html.classList.add('dark'); updateIcons(true); } 
+            else { html.classList.remove('dark'); updateIcons(false); }
+            localStorage.setItem('theme', theme);
+        }
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        applyTheme(savedTheme);
+        toggleBtns.forEach(btn => { if(btn) btn.addEventListener('click', () => { applyTheme(html.classList.contains('dark') ? 'light' : 'dark'); }); });
+        
+        if(menuBtn) menuBtn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+    </script>
+</body>
+</html>

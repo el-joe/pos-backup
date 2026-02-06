@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>سياسة الخصوصية | نظام محاسب السحابي</title>
+    <meta name="description" content="اقرأ سياسة الخصوصية لنظام محاسب لفهم كيفية جمعنا واستخدامنا وحمايتنا لبياناتك الشخصية والتجارية.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Cairo"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1', 
+                            400: '#2dd4bf', 
+                            500: '#00d2b4', // Primary
+                            600: '#0d9488', // Hover
+                            900: '#134e4a', 
+                            accent: '#fbbf24', 
+                            dark: '#0f172a', 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 210, 180, 0.1);
+        }
+        /* RTL Spacing Fixes */
+        .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+        /* Legal Content Styling */
+        .legal-content h2 { color: #0f172a; font-size: 1.5rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; }
+        .legal-content p { margin-bottom: 1rem; line-height: 1.8; color: #475569; }
+        .legal-content ul { list-style-type: disc; padding-right: 1.5rem; margin-bottom: 1.5rem; color: #475569; }
+        .legal-content li { margin-bottom: 0.5rem; }
+        .legal-content a { color: #00d2b4; text-decoration: underline; }
+        .legal-content a:hover { color: #0d9488; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-600 antialiased">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            
+            <a href="index_ar.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <span class="text-2xl font-extrabold text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors">
+                    محاسب<span class="text-brand-500">.</span>
+                </span>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 space-x-reverse font-bold text-slate-600">
+                <a href="index_ar.html" class="hover:text-brand-500 transition-colors">الرئيسية</a>
+                <a href="about_ar.html" class="hover:text-brand-500 transition-colors">عن النظام</a>
+                <a href="pricing_ar.html" class="hover:text-brand-500 transition-colors">الأسعار</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="index_ar.html#contact" class="px-6 py-2.5 bg-brand-500 text-white rounded-full font-bold shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-all transform hover:-translate-y-0.5">
+                    ابدأ الآن
+                </a>
+            </div>
+
+            <button id="mobile-menu-btn" class="lg:hidden text-2xl text-slate-800"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 absolute w-full top-full right-0 shadow-xl p-6 flex flex-col gap-4">
+            <a href="index_ar.html" class="font-medium hover:text-brand-500">الرئيسية</a>
+            <a href="about_ar.html" class="font-medium hover:text-brand-500">عن النظام</a>
+            <a href="pricing_ar.html" class="font-medium hover:text-brand-500">الأسعار</a>
+            <a href="index_ar.html#contact" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">ابدأ الآن</a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 bg-white text-center border-b border-slate-100">
+        <div class="container mx-auto px-6" data-aos="fade-up">
+            <h1 class="text-3xl lg:text-4xl font-extrabold text-brand-dark mb-4">سياسة الخصوصية</h1>
+            <p class="text-slate-500">آخر تحديث: 24 يناير 2026</p>
+        </div>
+    </header>
+
+    <main class="py-16 bg-slate-50">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-100 legal-content" data-aos="fade-up" data-aos-delay="100">
+                
+                <p>في <strong>محاسب</strong> ("نحن" أو "لنا")، نحترم خصوصيتك ونلتزم بحماية المعلومات الشخصية التي تشاركها معنا. توضح سياسة الخصوصية هذه كيفية جمع واستخدام والكشف عن وحماية معلوماتك عند زيارة موقعنا الإلكتروني أو استخدام خدماتنا السحابية.</p>
+
+                <h2>1. المعلومات التي نجمعها</h2>
+                <p>نقوم بجمع المعلومات التي تحدد الهوية، أو تتعلق، أو تصف، أو يمكن ربطها بشكل معقول، بشكل مباشر أو غير مباشر، بمستهلك أو جهاز معين.</p>
+                <ul>
+                    <li><strong>المعرفات الشخصية:</strong> الاسم، البريد الإلكتروني، رقم الهاتف، عنوان الفواتير، وعنوان بروتوكول الإنترنت (IP).</li>
+                    <li><strong>بيانات الأعمال:</strong> اسم الشركة، الأرقام الضريبية (ضريبة القيمة المضافة/السجل التجاري)، والبيانات المالية المدخلة في النظام.</li>
+                    <li><strong>بيانات الاستخدام:</strong> معلومات حول كيفية تفاعلك مع خدماتنا، بما في ذلك أوقات الدخول، الصفحات التي تمت مشاهدتها، والجهاز المستخدم.</li>
+                </ul>
+
+                <h2>2. كيف نستخدم معلوماتك</h2>
+                <p>نستخدم البيانات التي تم جمعها للأغراض التالية:</p>
+                <ul>
+                    <li>لتقديم وصيانة خدماتنا (المحاسبة، الموارد البشرية، نقاط البيع).</li>
+                    <li>لإشعارك بالتغييرات التي تطرأ على خدماتنا.</li>
+                    <li>لتقديم دعم العملاء والمساعدة الفنية.</li>
+                    <li>لمعالجة المدفوعات وإصدار الفواتير.</li>
+                    <li>للامتثال للالتزامات القانونية (مثل متطلبات هيئة الزكاة والضريبة والجمارك).</li>
+                </ul>
+
+                <h2>3. أمن البيانات</h2>
+                <p>أمن بياناتك مهم جداً بالنسبة لنا. نحن نطبق معايير أمان صناعية تشمل <strong>تشفير SSL بقوة 256-bit</strong>، وفحص دوري للبرمجيات الخبيثة، واستضافة سحابية آمنة على خوادم AWS. ومع ذلك، يرجى تذكر أنه لا توجد وسيلة نقل عبر الإنترنت آمنة بنسبة 100%.</p>
+
+                <h2>4. مشاركة البيانات</h2>
+                <p>نحن لا نبيع بياناتك الشخصية. قد نشارك معلوماتك مع:</p>
+                <ul>
+                    <li><strong>مقدمي الخدمات:</strong> شركات الطرف الثالث التي تؤدي خدمات نيابة عنا (مثل معالجات الدفع، وخدمات البريد الإلكتروني).</li>
+                    <li><strong>الجهات القانونية:</strong> إذا كان ذلك مطلوباً بموجب القانون أو استجابة لطلبات صالحة من السلطات العامة (مثل محكمة أو وكالة حكومية).</li>
+                </ul>
+
+                <h2>5. حقوق بياناتك</h2>
+                <p>بناءً على موقعك الجغرافي، قد يكون لديك الحق في:</p>
+                <ul>
+                    <li>الوصول إلى البيانات الشخصية التي نحتفظ بها عنك.</li>
+                    <li>طلب تصحيح أي بيانات غير دقيقة.</li>
+                    <li>طلب حذف بياناتك الشخصية.</li>
+                    <li>الاعتراض على معالجة بياناتك.</li>
+                </ul>
+
+                <h2>6. التغييرات على هذه السياسة</h2>
+                <p>قد نقوم بتحديث سياسة الخصوصية الخاصة بنا من وقت لآخر. سنخطرك بأي تغييرات عن طريق نشر السياسة الجديدة على هذه الصفحة وتحديث تاريخ "آخر تحديث".</p>
+
+                <h2>7. اتصل بنا</h2>
+                <p>إذا كان لديك أي أسئلة حول سياسة الخصوصية هذه، يرجى الاتصال بنا:</p>
+                <ul>
+                    <li>عبر البريد الإلكتروني: <a href="mailto:privacy@mohaaseb.com">privacy@mohaaseb.com</a></li>
+                    <li>من خلال زيارة صفحة اتصل بنا: <a href="index_ar.html#contact">صفحة التواصل</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="index_ar.html" class="flex items-center gap-2.5 mb-6 group">
+                        <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-md text-white">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        </div>
+                        <span class="text-xl font-extrabold text-slate-800 tracking-tight">محاسب<span class="text-brand-500">.</span></span>
+                    </a>
+                    <p class="text-sm text-slate-500 max-w-xs">النظام السحابي الأول المصمم لقابلية التوسع، الأمان، والسهولة.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">المنتج</h4>
+                    <ul class="space-y-2 text-sm text-slate-500"><li>المميزات</li><li>الأسعار</li><li>الربط التقني</li></ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-brand-dark mb-4">قانوني</h4>
+                    <ul class="space-y-2 text-sm text-slate-500">
+                        <li><a href="#" class="text-brand-500 font-semibold">سياسة الخصوصية</a></li>
+                        <li><a href="#" class="hover:text-brand-500">شروط الاستخدام</a></li>
+                        <li><a href="#" class="hover:text-brand-500">الدعم الفني</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-200 pt-8 text-center text-xs text-slate-400">&copy; 2024 شركة محاسب. جميع الحقوق محفوظة.</div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+    </script>
+</body>
+</html>
