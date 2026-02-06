@@ -34,6 +34,12 @@ if(!function_exists('defaultLayout')) {
     }
 }
 
+if(!function_exists('defaultLandingLayout')) {
+    function defaultLandingLayout(){
+        return 'site';
+    }
+}
+
 if(!function_exists('layoutView')) {
     function layoutView($pageName,$with = [],$isSubPage = false){
         $defaultView = "livewire." . defaultLayout();
@@ -41,6 +47,12 @@ if(!function_exists('layoutView')) {
         $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
         return view("$defaultView.$pageName", $with)
                 ->layout($isSubPage ? null : $defaultLayout, $layoutData);
+    }
+}
+
+if(!function_exists('landingLayoutView')) {
+    function landingLayoutView($pageName,$with = []){
+        return view("central." . defaultLandingLayout() . ".home", $with);
     }
 }
 
