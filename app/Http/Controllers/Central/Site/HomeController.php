@@ -85,7 +85,12 @@ class HomeController extends Controller
             ])->all(),
         ]);
 
-        return view('central.site.faqs', get_defined_vars());
+        return landingLayoutView('faqs', get_defined_vars());
+    }
+
+    function contactUsView()
+    {
+        return landingLayoutView('contact', get_defined_vars());
     }
 
     function contactUs(Request $request)

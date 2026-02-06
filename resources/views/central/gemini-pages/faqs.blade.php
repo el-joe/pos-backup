@@ -1,0 +1,125 @@
+@extends('layouts.central.gemini.layout')
+
+@section('content')
+    <header class="pt-32 pb-16 bg-gradient-to-b from-brand-50 to-white dark:from-slate-900 dark:to-slate-800 text-center transition-colors duration-300">
+        <div class="container mx-auto px-6" data-aos="fade-up">
+            <p class="text-brand-500 font-bold uppercase tracking-wide text-sm mb-2">Help Center</p>
+            <h1 class="text-4xl lg:text-5xl font-extrabold text-brand-dark dark:text-white mb-6">Frequently Asked Questions</h1>
+            <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-8">
+                Everything you need to know about Mohaaseb. Can't find the answer you're looking for? Chat with our team.
+            </p>
+        </div>
+    </header>
+
+    <section class="py-16 bg-white dark:bg-slate-900 min-h-screen transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-4xl">
+
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6 border-b border-slate-100 dark:border-slate-800 pb-2">General & Getting Started</h3>
+                <div class="space-y-4">
+
+                    <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
+                            <span>What is Mohaaseb ERP?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
+                            <p class="pt-3">Mohaaseb is a comprehensive cloud-based Enterprise Resource Planning (ERP) system designed for businesses in the MENA region. It integrates Accounting, HR, POS, and Booking management into one single platform, ensuring you have total control over your business operations.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
+                            <span>Is Mohaaseb compliant with ZATCA E-Invoicing?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
+                            <p class="pt-3">Yes, absolutely. Mohaaseb is fully compliant with ZATCA Phase 1 (Generation) and Phase 2 (Integration/Fatoora Portal). We handle the XML generation, cryptographic stamping, and QR code embedding automatically.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
+                            <span>Can I use Mohaaseb offline?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
+                            <p class="pt-3">Our POS (Point of Sale) module has offline capabilities. You can continue to sell even if your internet drops. The data will automatically sync with the cloud ERP once the connection is restored.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6 border-b border-slate-100 dark:border-slate-800 pb-2">Pricing & Plans</h3>
+                <div class="space-y-4">
+
+                    <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
+                            <span>Do you offer a free trial?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
+                            <p class="pt-3">Yes, we offer a 14-day full-access free trial. No credit card is required. You can test all modules including Accounting, HR, and POS to see if it fits your business needs.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
+                            <span>Are there setup fees or hidden costs?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
+                            <p class="pt-3">Our subscription plans are transparent. We do not charge setup fees for the self-service cloud plans. Optional costs may apply if you require on-site hardware installation or dedicated training sessions for large teams.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6 border-b border-slate-100 dark:border-slate-800 pb-2">Technical Support & Security</h3>
+                <div class="space-y-4">
+
+                    <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
+                            <span>How secure is my data?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
+                            <p class="pt-3">We use bank-grade 256-bit SSL encryption. Your data is hosted on secure AWS servers with daily automated backups. We also implement strict role-based access control (RBAC) so you control who sees what within your organization.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
+                            <span>Can I migrate data from my old system?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
+                        </div>
+                        <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
+                            <p class="pt-3">Yes, Mohaaseb supports Excel/CSV import for Customers, Suppliers, Inventory Items, and Opening Balances. Our support team can assist you with the migration process to ensure a smooth transition.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-20 bg-brand-50 dark:bg-slate-800 transition-colors duration-300">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-3xl mx-auto" data-aos="zoom-in">
+                <div class="w-16 h-16 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl text-brand-500 shadow-md">
+                    <i class="fa-regular fa-comments"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-brand-dark dark:text-white mb-4">Still have questions?</h2>
+                <p class="text-slate-500 dark:text-slate-400 mb-8">Can't find the answer you're looking for? Please chat to our friendly team.</p>
+                <div class="flex justify-center gap-4">
+                    <a href="index.html#contact" class="px-8 py-3 bg-brand-500 text-white font-bold rounded-lg hover:bg-brand-600 transition shadow-lg">Contact Support</a>
+                    <a href="#" class="px-8 py-3 bg-white dark:bg-slate-700 text-slate-700 dark:text-white font-bold rounded-lg hover:text-brand-500 border border-slate-200 dark:border-slate-600 transition">WhatsApp Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection

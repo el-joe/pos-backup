@@ -16,6 +16,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
     Route::post('register',[RegisterController::class,'postRegister'])->name('register-domain')->middleware('throttle:5,10');
     Route::get('register/accept/{id}', [RegisterController::class, 'acceptRegistration'])->name('register-accept');
 
+    Route::get('contact',[HomeController::class,'contactUsView'])->name('contact-us');
     Route::post('contact-us',[HomeController::class,'contactUs'])->name('contact-us');
 
     Route::get('checkout-page', [HomeController::class,'checkout'])->name('tenant-checkout');
