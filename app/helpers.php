@@ -36,7 +36,9 @@ if(!function_exists('defaultLayout')) {
 
 if(!function_exists('defaultLandingLayout')) {
     function defaultLandingLayout(){
-        return 'site';
+        // Central (marketing) landing pages layout.
+        // Folder name under: resources/views/central/{layout}/
+        return 'gemini-pages';
     }
 }
 
@@ -52,7 +54,14 @@ if(!function_exists('layoutView')) {
 
 if(!function_exists('landingLayoutView')) {
     function landingLayoutView($pageName,$with = []){
-        return view("central." . defaultLandingLayout() . ".home", $with);
+        $layout = defaultLandingLayout();
+
+        // Allow passing either "home" or a fully qualified view name.
+        if (is_string($pageName) && str_contains($pageName, '.')) {
+            return view($pageName, $with);
+        }
+
+        return view("central.{$layout}.{$pageName}", $with);
     }
 }
 
