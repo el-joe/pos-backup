@@ -19,6 +19,7 @@
     <link rel="icon" href="{{ asset('favicon_io/favicon.ico') }}" type="image/x-icon">
     <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
 
+    @if(config('app.env') === 'production')
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P9269JMGT5"></script>
     <script>
@@ -47,17 +48,18 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KH9FSZDD');</script>
     <!-- End Google Tag Manager -->
-
+    @endif
     @include('layouts.central.gemini.partials.styles')
     @stack('styles')
 
 </head>
 <body class="bg-slate-50 text-slate-600 antialiased overflow-x-hidden dark:bg-slate-900 dark:text-slate-300 transition-colors duration-300">
+    @if(config('app.env') === 'production')
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KH9FSZDD"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
+    @endif
     @include('layouts.central.gemini.partials.header')
 
     @yield('content')

@@ -127,13 +127,13 @@ class HomeController extends Controller
         $plans = Plan::all();
 
         $seoData = SeoHelper::render('pricing-compare');
-        return view('central.site.pricing-compare',get_defined_vars());
+        return landingLayoutView('pricing-compare',get_defined_vars());
     }
 
     function pricing()
     {
         $seoData = SeoHelper::render('pricing');
-        return view('central.site.pricing',get_defined_vars());
+        return landingLayoutView('pricing',get_defined_vars());
     }
 
     function changeLanguage($locale) {

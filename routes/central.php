@@ -16,7 +16,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
     Route::post('register',[RegisterController::class,'postRegister'])->name('register-domain')->middleware('throttle:5,10');
     Route::get('register/accept/{id}', [RegisterController::class, 'acceptRegistration'])->name('register-accept');
 
-    Route::get('contact',[HomeController::class,'contactUsView'])->name('contact-us');
+    Route::get('contact',[HomeController::class,'contactUsView'])->name('contact');
     Route::post('contact-us',[HomeController::class,'contactUs'])->name('contact-us');
 
     Route::get('checkout-page', [HomeController::class,'checkout'])->name('tenant-checkout');
@@ -28,7 +28,7 @@ Route::group(['prefix'=> '/','middleware' => [SiteTranslationMiddleware::class,R
     Route::get('blogs/{slug}', [HomeController::class, 'blogDetailsNoLang'])->name('blogs.show');
 
     // lang: en|ar with optional BCP47-style subtags, e.g. ar-eg, ar-sa, en-us
-    Route::group(['prefix'=>'{lang?}','where' => ['lang' => '(?:en|ar)(?:-[A-Za-z]{2,8})*'],'middleware'=>[CentralWebsitesetLocal::class]],function(){
+    Route::group(['prefix'=>'{lang?}','as'=>'lang.','where' => ['lang' => '(?:en|ar)(?:-[A-Za-z]{2,8})*'],'middleware'=>[CentralWebsitesetLocal::class]],function(){
         Route::get('blogs', [HomeController::class, 'blogs'])->name('blogs.index');
         Route::get('blogs/{slug}', [HomeController::class, 'blogDetails'])->name('blogs.show');
         Route::get('faqs', [HomeController::class, 'faqs'])->name('faqs.index');
