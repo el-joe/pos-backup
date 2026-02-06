@@ -44,8 +44,6 @@ class HomeController extends Controller
     function blogDetailsNoLang($slug)
     {
         return $this->blogDetails(app()->getLocale(), $slug);
-
-        return landingLayoutView('blog-details', get_defined_vars());
     }
 
     function blogDetails($lang, $slug)
