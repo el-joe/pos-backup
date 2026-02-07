@@ -30,10 +30,11 @@ class CpanelPlansList extends Component
 
     function setCurrent($id)
     {
-        $this->current = Plan::with('plan_features')->find($id);
+        $this->current = Plan::with('plan_features.feature')->find($id);
 
         if ($this->current) {
             $this->data = $this->current->toArray();
+            $this->data['recommended'] = !!$this->current->recommended;
         }
 
         $this->data['module_name'] = $this->data['module_name'] ?? ModulesEnum::POS->value;
@@ -42,8 +43,9 @@ class CpanelPlansList extends Component
         if ($this->current) {
             foreach ($this->current->plan_features as $row) {
                 $this->data['plan_features'][$row->feature_id] = [
-                    'value' => (int) $row->value,
-                    'content' => $row->content,
+                    'value' => $row->feature->type == 'boolean' ? !!$row->value : $row->value,
+                    'content_ar' => $row->content_ar,
+                    'content_en' => $row->content_en,
                 ];
             }
         }
@@ -72,10 +74,15 @@ class CpanelPlansList extends Component
         $plan = $plan->fill($this->data);
         $plan->save();
 
-        $features = Feature::query()->where('active', true)->orderBy('id')->get();
+        $features = Feature::query()
+            ->where('active', true)
+            ->where('module_name', $plan->module_name)
+            ->orderBy('id')
+            ->get();
         foreach ($features as $feature) {
             $rawValue = $this->data['plan_features'][$feature->id]['value'] ?? 0;
-            $rawContent = $this->data['plan_features'][$feature->id]['content'] ?? null;
+            $rawContentAr = $this->data['plan_features'][$feature->id]['content_ar'] ?? null;
+            $rawContentEn = $this->data['plan_features'][$feature->id]['content_en'] ?? null;
 
             $value = 0;
             if ($feature->type === 'boolean') {
@@ -86,8 +93,23 @@ class CpanelPlansList extends Component
 
             PlanFeature::updateOrCreate(
                 ['plan_id' => $plan->id, 'feature_id' => $feature->id],
-                ['value' => $value, 'content' => is_string($rawContent) ? $rawContent : null]
+                [
+                    'value' => $value,
+                    'content_ar' => is_string($rawContentAr) ? $rawContentAr : null,
+                    'content_en' => is_string($rawContentEn) ? $rawContentEn : null,
+                ]
             );
+        }
+
+        $otherModuleFeatureIds = Feature::query()
+            ->where('module_name', '!=', $plan->module_name)
+            ->pluck('id');
+
+        if ($otherModuleFeatureIds->isNotEmpty()) {
+            PlanFeature::query()
+                ->where('plan_id', $plan->id)
+                ->whereIn('feature_id', $otherModuleFeatureIds)
+                ->delete();
         }
 
         $this->popup('success', 'Plan saved successfully');
@@ -109,7 +131,12 @@ class CpanelPlansList extends Component
     public function render()
     {
         $plans = Plan::orderBy('id', 'desc')->paginate(10);
-        $features = Feature::query()->where('active', true)->orderBy('id')->get();
+        $moduleName = $this->data['module_name'] ?? ModulesEnum::POS->value;
+        $features = Feature::query()
+            ->where('active', true)
+            ->where('module_name', $moduleName)
+            ->orderBy('id')
+            ->get();
         $modules = ModulesEnum::cases();
         return view('livewire.central.cpanel.plans.cpanel-plans-list', get_defined_vars());
     }

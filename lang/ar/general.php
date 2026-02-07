@@ -105,6 +105,7 @@ return [
         'general-settings' => 'الإعدادات العامة',
         'plans-subscriptions' => 'الخطط والاشتراكات',
         'plans' => 'الخطط',
+        'features' => 'الميزات',
         'subscriptions' => 'الاشتراكات',
         'countries' => 'الدول',
         'currencies' => 'العملات',
@@ -117,6 +118,41 @@ return [
         'deferred_sales' => 'مبيعات مؤجلة',
         'deferred_purchases' => 'مشتريات مؤجلة',
         // 'customers' => 'العملاء' - Duplicated, keeping the first one for consistency unless context dictates otherwise
+    ],
+
+    'cpanel' => [
+        'features' => [
+            'list_title' => 'قائمة الميزات',
+            'add' => 'إضافة ميزة',
+            'add_new' => 'إضافة ميزة جديدة',
+            'edit' => 'تعديل الميزة',
+            'code' => 'الرمز',
+            'module' => 'النظام',
+            'name_en' => 'الاسم (EN)',
+            'name_ar' => 'الاسم (AR)',
+            'type' => 'النوع',
+            'active' => 'نشط',
+            'inactive' => 'غير نشط',
+            'actions' => 'الإجراءات',
+            'delete' => 'حذف',
+            'close' => 'إغلاق',
+            'save' => 'حفظ',
+            'is_active' => 'هل هي نشطة',
+            'placeholders' => [
+                'code' => 'مثال: products, branches',
+                'name_en' => 'الاسم بالإنجليزية',
+                'name_ar' => 'الاسم بالعربية',
+            ],
+            'types' => [
+                'boolean' => 'نعم/لا',
+                'text' => 'رقمي/نصي',
+            ],
+            'messages' => [
+                'saved' => 'تم حفظ الميزة بنجاح',
+                'deleted' => 'تم حذف الميزة بنجاح',
+                'not_found' => 'الميزة غير موجودة',
+            ],
+        ],
     ],
     'layout' => [
         'notifications' => 'الإشعارات',

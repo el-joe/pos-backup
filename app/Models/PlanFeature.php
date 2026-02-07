@@ -14,7 +14,8 @@ class PlanFeature extends Model
         'plan_id',
         'feature_id',
         'value',
-        'content',
+        'content_ar',
+        'content_en',
     ];
 
     protected $casts = [

@@ -72,14 +72,16 @@ class Plan extends Model
         return is_numeric($value) ? (int) $value : $default;
     }
 
-    public function featureContent(string $code, string $default = ''): string
+    public function featureContent(string $code, string $default = '', ?string $locale = null): string
     {
         $featureId = $this->resolveFeatureId($code);
         if (!$featureId) {
             return $default;
         }
 
-        $content = $this->plan_features()->where('feature_id', $featureId)->value('content');
+        $locale = $locale ?: app()->getLocale();
+        $column = $locale === 'ar' ? 'content_ar' : 'content_en';
+        $content = $this->plan_features()->where('feature_id', $featureId)->value($column);
         return is_string($content) ? $content : $default;
     }
 

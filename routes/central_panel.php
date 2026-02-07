@@ -18,6 +18,7 @@ use App\Livewire\Central\CPanel\Partners\PartnerForm;
 use App\Livewire\Central\CPanel\Partners\PartnersList;
 use App\Livewire\Central\CPanel\FileManager\FileManagerPage;
 use App\Livewire\Central\CPanel\HomePage;
+use App\Livewire\Central\CPanel\Features\FeaturesList;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
 use App\Livewire\Central\CPanel\Plans\CpanelPlansList;
 use App\Livewire\Central\CPanel\RegisterRequests\RegisterRequestsList;
@@ -49,6 +50,7 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('countries', CountriesList::class)->name('countries.list');
         Route::get('currencies', CurrenciesList::class)->name('currencies.list');
         Route::get('languages', LanguagesList::class)->name('languages.list');
+        Route::get('features', FeaturesList::class)->name('features.list');
         Route::get('subscriptions', SubscriptionsList::class)->name('subscriptions.list');
         Route::get('register-requests', RegisterRequestsList::class)->name('register-requests.list');
         Route::get('customers', CustomersList::class)->name('customers.list');

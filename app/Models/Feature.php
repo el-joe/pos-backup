@@ -10,6 +10,7 @@ class Feature extends Model
 
     protected $fillable = [
         'code',
+        'module_name',
         'name_ar',
         'name_en',
         'type',

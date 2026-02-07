@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">Module</label>
-                            <select class="form-select" wire:model="data.module_name">
+                            <select class="form-select" wire:model.live="data.module_name">
                                 @foreach ($modules as $module)
                                     <option value="{{ $module->value }}">{{ strtoupper($module->value) }}</option>
                                 @endforeach
@@ -128,19 +128,28 @@
                                             <label class="form-label">{{ $label }}</label>
 
                                             @if ($feature->type === 'boolean')
-                                                <div class="input-group mb-1">
-                                                    <span class="input-group-text">
-                                                        <input class="form-check-input mt-0" type="checkbox" wire:model="data.plan_features.{{ $feature->id }}.value">
-                                                    </span>
-                                                    <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content" placeholder="Content (optional)">
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" wire:model="data.plan_features.{{ $feature->id }}.value" id="feature_{{ $feature->id }}">
+                                                    <label class="form-check-label" for="feature_{{ $feature->id }}">Enabled</label>
+                                                </div>
+                                                <div class="row g-2">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content_en" placeholder="Content (EN)">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content_ar" placeholder="Content (AR)">
+                                                    </div>
                                                 </div>
                                             @else
                                                 <div class="row g-2">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <input type="number" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.value" placeholder="Value">
                                                     </div>
-                                                    <div class="col-md-8">
-                                                        <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content" placeholder="Content (optional)">
+                                                    <div class="col-md-4">
+                                                        <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content_en" placeholder="Content (EN)">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content_ar" placeholder="Content (AR)">
                                                     </div>
                                                 </div>
                                             @endif
