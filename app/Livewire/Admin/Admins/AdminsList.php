@@ -90,7 +90,7 @@ class AdminsList extends Component
             $action = AuditLogActionEnum::UPDATE_ADMIN;
         }else{
             $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-            $limit = $currentSubscription?->plan?->features['admins']['limit'] ?? 999999;
+            $limit = $currentSubscription?->plan?->featureValue('admins', 999999) ?? 999999;
             $totalAdmins = $this->adminService->count();
 
             if($totalAdmins >= $limit){

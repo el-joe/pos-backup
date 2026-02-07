@@ -87,11 +87,19 @@
                             <label class="form-label">Plan Name</label>
                             <input type="text" class="form-control" wire:model="data.name" placeholder="Plan name">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
+                            <label class="form-label">Module</label>
+                            <select class="form-select" wire:model="data.module_name">
+                                @foreach ($modules as $module)
+                                    <option value="{{ $module->value }}">{{ strtoupper($module->value) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
                             <label class="form-label">Price per Month</label>
                             <input type="number" class="form-control" wire:model="data.price_month" placeholder="Monthly price">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label">Price per Year</label>
                             <input type="number" class="form-control" wire:model="data.price_year" placeholder="Yearly price">
                         </div>
@@ -113,14 +121,29 @@
                                 <div class="accordion-body">
                                     @foreach ($features as $feature)
                                         <div class="mb-3">
-                                            <label class="form-label">{{ $feature->label() }}</label>
-                                            <div class="input-group mb-1">
-                                                <span class="input-group-text">
-                                                    <input class="form-check-input mt-0" type="checkbox" wire:model="data.features.{{ $feature->value }}.status">
-                                                </span>
-                                                <input type="text" class="form-control" wire:model="data.features.{{ $feature->value }}.description" placeholder="Description (optional)">
-                                            </div>
-                                            <input type="number" class="form-control" wire:model="data.features.{{ $feature->value }}.limit" placeholder="Limit (optional)">
+                                            @php
+                                                $label = app()->getLocale() === 'ar' ? $feature->name_ar : $feature->name_en;
+                                            @endphp
+
+                                            <label class="form-label">{{ $label }}</label>
+
+                                            @if ($feature->type === 'boolean')
+                                                <div class="input-group mb-1">
+                                                    <span class="input-group-text">
+                                                        <input class="form-check-input mt-0" type="checkbox" wire:model="data.plan_features.{{ $feature->id }}.value">
+                                                    </span>
+                                                    <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content" placeholder="Content (optional)">
+                                                </div>
+                                            @else
+                                                <div class="row g-2">
+                                                    <div class="col-md-4">
+                                                        <input type="number" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.value" placeholder="Value">
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" wire:model="data.plan_features.{{ $feature->id }}.content" placeholder="Content (optional)">
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>

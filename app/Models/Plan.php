@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\ModulesEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class Plan extends Model
@@ -11,16 +13,16 @@ class Plan extends Model
 
     protected $fillable = [
         'name',
+        'module_name',
         'price_month',
         'price_year',
-        'features',
         'slug',
         'active',
         'recommended'
     ];
 
     protected $casts = [
-        'features' => 'array'
+        'module_name' => ModulesEnum::class,
     ];
 
     protected static function boot()
@@ -52,5 +54,44 @@ class Plan extends Model
     static function decodedSlug($encoded)
     {
         return decodedData($encoded);
+    }
+
+    public function plan_features()
+    {
+        return $this->hasMany(PlanFeature::class, 'plan_id');
+    }
+
+    public function featureValue(string $code, int $default = 0): int
+    {
+        $featureId = $this->resolveFeatureId($code);
+        if (!$featureId) {
+            return $default;
+        }
+
+        $value = $this->plan_features()->where('feature_id', $featureId)->value('value');
+        return is_numeric($value) ? (int) $value : $default;
+    }
+
+    public function featureContent(string $code, string $default = ''): string
+    {
+        $featureId = $this->resolveFeatureId($code);
+        if (!$featureId) {
+            return $default;
+        }
+
+        $content = $this->plan_features()->where('feature_id', $featureId)->value('content');
+        return is_string($content) ? $content : $default;
+    }
+
+    private function resolveFeatureId(string $code): ?int
+    {
+        $code = trim($code);
+        if ($code === '') {
+            return null;
+        }
+
+        return Cache::remember('features.id_by_code.' . $code, 3600, function () use ($code) {
+            return Feature::query()->where('code', $code)->value('id');
+        });
     }
 }

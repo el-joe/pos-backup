@@ -24,7 +24,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation
     public function collection($rows)
     {
         $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-        $limit = $currentSubscription?->plan?->features['products']['limit'] ?? 999999;
+        $limit = $currentSubscription?->plan?->featureValue('products', 999999) ?? 999999;
         $totalProducts = Product::count() + count($rows);
 
         if($totalProducts > $limit){

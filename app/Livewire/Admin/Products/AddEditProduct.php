@@ -92,7 +92,7 @@ class AddEditProduct extends Component
             // $rules['gallery.*'] = str_replace('nullable','required',$rules['gallery.*'] ?? '');
 
             $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-            $limit = $currentSubscription?->plan?->features['products']['limit'] ?? 999999;
+            $limit = $currentSubscription?->plan?->featureValue('products', 999999) ?? 999999;
             $totalProducts = $this->productService->count();
 
             if($totalProducts >= $limit){
