@@ -140,6 +140,6 @@ class CheckoutPage extends Component
         $countries = Country::orderBy('name')->get();
         $currencies = Currency::orderBy('name')->get();
         $currentCurrency = Currency::find($this->data['currency_id'] ?? null);
-        return view('livewire.central.site.checkout-page', get_defined_vars());
+        return view('livewire.central.'. defaultLandingLayout() .'.checkout-page', get_defined_vars());
     }
 }

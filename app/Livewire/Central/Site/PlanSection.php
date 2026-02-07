@@ -36,6 +36,6 @@ class PlanSection extends Component
 
         $currentCurrency = Currency::find($this->currency_id ?? null);
 
-        return view('livewire.central.site.plan-section',get_defined_vars());
+        return view('livewire.central.'. defaultLandingLayout() .'.plan-section',get_defined_vars());
     }
 }
