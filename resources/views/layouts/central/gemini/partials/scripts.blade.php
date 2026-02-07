@@ -29,10 +29,7 @@
         }
     </script>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
-
         // Theme Logic
         const html = document.documentElement;
         const toggleBtns = [document.getElementById('theme-toggle'), document.getElementById('mobile-theme-toggle')];

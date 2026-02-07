@@ -94,36 +94,36 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-500 group" data-aos="fade-up" data-aos-delay="0">
+                <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-500 group" data-aos="fade-up" data-aos-delay="0">
                     <div class="w-16 h-16 bg-blue-50 dark:bg-slate-800 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-user-tie"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3">HR Management</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Automate payroll, attendance tracking, and employee performance reviews.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">HR Management</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Automate payroll, attendance tracking, and employee performance reviews.</p>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-accent group" data-aos="fade-up" data-aos-delay="100">
+                <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-accent group" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-16 h-16 bg-yellow-50 dark:bg-slate-800 text-yellow-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3">Booking System</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Smart reservation management for services, resources, and appointments.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">Booking System</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Smart reservation management for services, resources, and appointments.</p>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-500 group" data-aos="fade-up" data-aos-delay="200">
+                <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-500 group" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-16 h-16 bg-brand-100 dark:bg-slate-800 text-brand-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-brand-500 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-cash-register"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3">Cloud POS</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Fast, offline-capable Point of Sale that syncs inventory in real-time.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">Cloud POS</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Fast, offline-capable Point of Sale that syncs inventory in real-time.</p>
                 </div>
 
-                <div class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-slate-800 dark:border-slate-600 group" data-aos="fade-up" data-aos-delay="300">
+                <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-slate-800 dark:border-slate-600 group" data-aos="fade-up" data-aos-delay="300">
                     <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-slate-800 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-layer-group"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3">Full ERP</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Comprehensive financial reporting, supply chain, and inventory control.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">Full ERP</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Comprehensive financial reporting, supply chain, and inventory control.</p>
                 </div>
             </div>
         </div>
@@ -140,42 +140,101 @@
                 </div>
             </div>
 
+            @php
+                $images = [
+                    'male' => "data:image/svg+xml;utf8,
+                            <svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'>
+                            <circle cx='12' cy='7' r='4'/>
+                            <path d='M5.5 21a6.5 6.5 0 0 1 13 0'/>
+                            </svg>",
+                    'famale' => "data:image/svg+xml;utf8,
+                            <svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'>
+                            <circle cx='12' cy='7' r='4'/>
+                            <path d='M4 21c0-4 3-7 8-7s8 3 8 7'/>
+                            <path d='M8 11c0-3 2-6 4-6s4 3 4 6'/>
+                            </svg>",
+                ];
+
+                $reviews = [
+                    [
+                        'avatar' => $images['male'],
+                        'name' => 'Daniel Carter',
+                        'job_title' => 'Senior Operations Director',
+                        'rating' => 5,
+                        'dir' => 'ltr',
+                        'body' => "The ERP system streamlined our workflow.\nInventory, accounting, and POS finally work in harmony.",
+                    ],
+                    [
+                        'avatar' => $images['male'],
+                        'name' => 'محمد ياسر',
+                        'job_title' => 'مدير التطوير الرقمي',
+                        'rating' => 5,
+                        'dir' => 'rtl',
+                        'body' => "نظام الـ ERP ساعدنا في تنظيم الحسابات والمخزون بشكل احترافي\nوأصبح اتخاذ القرار أسرع وأكثر دقة.",
+                    ],
+                    [
+                        'avatar' => $images['famale'],
+                        'name' => 'Sophia Williams',
+                        'job_title' => 'Finance & Compliance Lead',
+                        'rating' => 5,
+                        'dir' => 'ltr',
+                        'body' => "A reliable system with perfect financial tracking.\nVAT, reports, and analytics are incredibly accurate.",
+                    ],
+                    [
+                        'avatar' => $images['famale'],
+                        'name' => 'ليلى عمر',
+                        'job_title' => 'قائدة قسم الجودة',
+                        'rating' => 5,
+                        'dir' => 'rtl',
+                        'body' => "النظام سهّل علينا متابعة الفروع\nوربط جميع العمليات بشكل سلس وبدون تعقيد.",
+                    ],
+                    [
+                        'avatar' => $images['male'],
+                        'name' => 'خالد سمير',
+                        'job_title' => 'محلل نظم الأعمال',
+                        'rating' => 5,
+                        'dir' => 'rtl',
+                        'body' => "نظام ممتاز وسلس،\nويوفر تقارير قوية تساعد الإدارة في رؤية واضحة لكل تفاصيل العمل.",
+                    ],
+                    [
+                        'avatar' => $images['male'],
+                        'name' => 'Mark Henderson',
+                        'job_title' => 'Supply Chain Strategist',
+                        'rating' => 5,
+                        'dir' => 'ltr',
+                        'body' => "Stock control accuracy improved by 300%.\nPerfect solution for multi-branch businesses.",
+                    ],
+                ];
+            @endphp
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10" data-aos="fade-up">
-                    <div class="flex text-brand-accent mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <p class="text-brand-50 italic mb-6">"Mohaaseb revolutionized how we handle our accounts. The POS system is incredibly fast and the reports are detailed."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center font-bold text-white">SJ</div>
-                        <div>
-                            <h4 class="font-bold text-white">Sarah Jenkins</h4>
-                            <p class="text-xs text-brand-100">Retail Manager</p>
+                @foreach ($reviews as $review)
+                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10" itemscope itemtype="https://schema.org/Review" dir="{{ $review['dir'] }}">
+                        <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                            <meta itemprop="name" content="Mohaaseb ERP">
+                            <meta itemprop="applicationCategory" content="BusinessApplication">
+                        </span>
+                        <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
+                            <meta itemprop="ratingValue" content="5">
+                            <meta itemprop="bestRating" content="5">
+                        </span>
+                        <div class="flex text-brand-accent mb-4">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-brand-50 italic mb-6"  itemprop="reviewBody">"{{ $review['body'] }}"</p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center font-bold text-white">{{ substr($review['name'], 0, 2) }}</div>
+                            <div  itemprop="author" itemscope itemtype="https://schema.org/Person">
+                                <h4 class="font-bold text-white"  itemprop="name">{{ $review['name'] }}</h4>
+                                <p class="text-xs text-brand-100"  itemprop="jobTitle">{{ $review['job_title'] }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex text-brand-accent mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                    <p class="text-brand-50 italic mb-6">"The HR module saved us hours of paperwork. Finally, an ERP that feels modern and easy to use."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center font-bold text-white">AH</div>
-                        <div>
-                            <h4 class="font-bold text-white">Ahmed Hassan</h4>
-                            <p class="text-xs text-brand-100">Operations Director</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10" data-aos="fade-up" data-aos-delay="200">
-                    <div class="flex text-brand-accent mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                    <p class="text-brand-50 italic mb-6">"Support is fantastic. They helped us migrate our data seamlessly. Highly recommended for growing companies."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center font-bold text-white">MR</div>
-                        <div>
-                            <h4 class="font-bold text-white">Michael Ross</h4>
-                            <p class="text-xs text-brand-100">CEO, TechFlow</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -188,35 +247,20 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <article class="group cursor-pointer" data-aos="fade-up">
-                    <div class="overflow-hidden rounded-2xl mb-4 h-52">
-                        <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="Finance">
-                    </div>
-                    <span class="text-xs font-bold text-brand-500 uppercase">Accounting</span>
-                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mt-2 mb-2 group-hover:text-brand-500 transition-colors">Mastering VAT Compliance in 2025</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2">A comprehensive guide to understanding new tax regulations and how Mohaaseb automates it.</p>
-                    <a href="blog.html" class="inline-block mt-4 text-brand-600 dark:text-brand-400 font-bold hover:underline">Read More &rarr;</a>
-                </article>
-
-                <article class="group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
-                    <div class="overflow-hidden rounded-2xl mb-4 h-52">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="Analytics">
-                    </div>
-                    <span class="text-xs font-bold text-brand-500 uppercase">Strategy</span>
-                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mt-2 mb-2 group-hover:text-brand-500 transition-colors">5 KPIs Every Retailer Must Track</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2">Discover the key metrics that drive profitability in the retail sector using POS data.</p>
-                    <a href="blog.html" class="inline-block mt-4 text-brand-600 dark:text-brand-400 font-bold hover:underline">Read More &rarr;</a>
-                </article>
-
-                <article class="group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
-                    <div class="overflow-hidden rounded-2xl mb-4 h-52">
-                        <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="Tech">
-                    </div>
-                    <span class="text-xs font-bold text-brand-500 uppercase">Technology</span>
-                    <h3 class="text-xl font-bold text-brand-dark dark:text-white mt-2 mb-2 group-hover:text-brand-500 transition-colors">Cloud vs. On-Premise ERP</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2">Why moving to the cloud is safer, cheaper, and more efficient for your business.</p>
-                    <a href="blog.html" class="inline-block mt-4 text-brand-600 dark:text-brand-400 font-bold hover:underline">Read More &rarr;</a>
-                </article>
+                @foreach ($blogs as $blog)
+                    <article class="group cursor-pointer" data-aos="fade-up"  itemscope itemtype="https://schema.org/BlogPosting">
+                        <div class="overflow-hidden rounded-2xl mb-4 h-52">
+                            <img itemprop="image" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="Finance">
+                        </div>
+                        <span class="text-xs font-bold text-brand-500 uppercase">{{ $blog->category?->name ?? 'Accounting' }}</span>
+                        <h3  itemprop="headline" class="text-xl font-bold text-brand-dark dark:text-white mt-2 mb-2 group-hover:text-brand-500 transition-colors">{{ $blog->title }}</h3>
+                        <p  itemprop="description" class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2">{{ \Illuminate\Support\Str::limit($blog->excerpt ?: strip_tags($blog->content), 120) }}</p>
+                        <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => $__currentLang]) }}" aria-label="Read more about {{ $blog->title }}" class="inline-block mt-4 text-brand-600 dark:text-brand-400 font-bold hover:underline">Read More &rarr;</a>
+                        <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" class="d-none">
+                            <meta itemprop="name" content="Mohaaseb">
+                        </div>
+                    </article>
+                @endforeach
             </div>
         </div>
     </section>
@@ -249,25 +293,45 @@
                 </div>
 
                 <div class="lg:w-1/2" data-aos="fade-left">
-                    <form class="bg-white dark:bg-slate-800 p-8 rounded-3xl text-slate-700 dark:text-slate-300 shadow-2xl transition-colors duration-300">
+                    <form  action="{{ route('contact-us') }}" method="POST" class="bg-white dark:bg-slate-800 p-8 rounded-3xl text-slate-700 dark:text-slate-300 shadow-2xl transition-colors duration-300">
+                        @csrf
                         <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6">Book a Demo</h3>
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Name</label>
-                                <input type="text" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Your Name">
+                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">First Name</label>
+                                <input type="text" name="fname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Your First Name" required>
+                                @error('fname')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Company</label>
-                                <input type="text" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Company Name">
+                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Last Name</label>
+                                <input type="text" name="lname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Your Last Name" required>
+                                @error('lname')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Phone</label>
+                                <input type="text" name="phone" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Your Phone Number" required>
+                                @error('phone')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                         <div class="mb-4">
                             <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Email</label>
-                            <input type="email" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="you@example.com">
+                            <input type="email" name="email" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="you@example.com" required>
+                            @error('email')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="mb-6">
                             <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Message</label>
-                            <textarea rows="3" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Tell us about your needs..."></textarea>
+                            <textarea name="message" rows="3" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Tell us about your needs..."></textarea>
+                            @error('message')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         <button type="button" class="w-full py-4 bg-brand-500 text-white font-bold rounded-xl hover:bg-brand-600 transition shadow-lg">Submit Request</button>
                     </form>
