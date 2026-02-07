@@ -6,7 +6,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['"{{ app()->getLocale() == "ar" ? "Cairo" : "Plus Jakarta Sans"  }}"', 'sans-serif'],
                     },
                     colors: {
                         brand: {
@@ -28,6 +28,30 @@
             }
         }
     </script>
+<script>
+    const langBtn = document.getElementById('lang-menu-btn');
+    const langDropdown = document.getElementById('lang-dropdown');
+    const langChevron = document.getElementById('lang-chevron');
+
+    langBtn.addEventListener('click', (e) => {
+        // Stops the click from immediately triggering the "click outside" listener
+        e.stopPropagation();
+
+        // Toggle visibility
+        langDropdown.classList.toggle('hidden');
+
+        // Rotate the arrow icon
+        langChevron.classList.toggle('rotate-180');
+    });
+
+    // Close menu when clicking anywhere else on the page
+    document.addEventListener('click', (event) => {
+        if (!langBtn.contains(event.target)) {
+            langDropdown.classList.add('hidden');
+            langChevron.classList.remove('rotate-180');
+        }
+    });
+</script>
 
     <script>
         // Theme Logic

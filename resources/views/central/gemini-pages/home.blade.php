@@ -1,6 +1,6 @@
 @extends('layouts.central.gemini.layout')
 
-@section('title',__('website.home.title'))
+@section('title', __('gemini-landing.home.page_title'))
 
 @section('content')
 <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-gradient-to-b from-brand-50 to-white dark:from-slate-900 dark:to-slate-800 transition-colors duration-300">
@@ -11,21 +11,27 @@
 
                 <div class="lg:w-1/2" data-aos="fade-right" data-aos-duration="1000">
                     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-brand-100 dark:border-slate-700 shadow-sm text-brand-600 dark:text-brand-400 text-sm font-bold mb-6">
-                        <i class="fa-solid fa-check-circle"></i> VAT Compliant & Secure
+                        <i class="fa-solid fa-check-circle"></i> {{ __('gemini-landing.home.badge_vat_secure') }}
                     </div>
                     <h1 class="text-5xl lg:text-7xl font-extrabold text-brand-dark dark:text-white leading-tight mb-6">
-                        Empower Your Business with <br>
-                        <span class="text-gradient">Mohaaseb ERP</span>
+                        {{ __('gemini-landing.home.hero_title_prefix') }} <br>
+                        <span class="text-gradient">{{ __('gemini-landing.home.hero_title_product') }}</span>
                     </h1>
                     <p class="text-lg text-slate-500 dark:text-slate-400 mb-8 max-w-lg leading-relaxed">
-                        The all-in-one cloud ecosystem. Seamlessly integrate your <strong>Accounting</strong>, <strong>HR</strong>, <strong>POS</strong>, and <strong>Booking</strong> operations into one powerful dashboard.
+                        {{ __('gemini-landing.home.hero_subtitle_prefix') }}
+                        <strong>{{ __('gemini-landing.home.accounting') }}</strong>,
+                        <strong>{{ __('gemini-landing.home.hr') }}</strong>,
+                        <strong>{{ __('gemini-landing.home.pos') }}</strong>,
+                        {{ __('gemini-landing.home.hero_subtitle_and') }}
+                        <strong>{{ __('gemini-landing.home.booking') }}</strong>
+                        {{ __('gemini-landing.home.hero_subtitle_suffix') }}
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <a href="contact.html" class="px-8 py-4 bg-brand-500 text-white rounded-xl font-bold hover:bg-brand-600 transition shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2">
-                            Request Demo <i class="fa-solid fa-arrow-right"></i>
+                            {{ __('gemini-landing.home.cta_request_demo') }} <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="#features" class="px-8 py-4 bg-white dark:bg-slate-800 text-brand-dark dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl font-bold hover:border-brand-500 hover:text-brand-500 transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-play"></i> Watch Video
+                            <i class="fa-solid fa-play"></i> {{ __('gemini-landing.home.cta_watch_video') }}
                         </a>
                     </div>
                 </div>
@@ -34,7 +40,7 @@
                     <div class="relative z-10 animate-float">
                         <div class="rounded-2xl shadow-2xl overflow-hidden border-4 border-white dark:border-slate-700 bg-slate-900">
                             <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                                 alt="Mohaaseb ERP Financial Analytics Dashboard"
+                                 alt="{{ __('gemini-landing.home.hero_image_alt') }}"
                                  class="w-full h-auto object-cover opacity-90 hover:opacity-100 transition duration-500">
                         </div>
 
@@ -43,7 +49,7 @@
                                 <i class="fa-solid fa-chart-line"></i>
                             </div>
                             <div>
-                                <p class="text-xs text-slate-400 font-bold uppercase">Growth</p>
+                                <p class="text-xs text-slate-400 font-bold uppercase">{{ __('gemini-landing.home.growth_label') }}</p>
                                 <p class="text-lg font-bold text-brand-dark dark:text-white">+128%</p>
                             </div>
                         </div>
@@ -57,28 +63,28 @@
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row items-center gap-16">
                 <div class="md:w-1/2" data-aos="fade-up">
-                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Team analyzing data" class="rounded-3xl shadow-2xl opacity-90 dark:opacity-80">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="{{ __('gemini-landing.home.about_image_alt') }}" class="rounded-3xl shadow-2xl opacity-90 dark:opacity-80">
                 </div>
                 <div class="md:w-1/2" data-aos="fade-up" data-aos-delay="200">
-                    <h2 class="text-3xl lg:text-4xl font-bold text-brand-dark dark:text-white mb-6">About Our ERP System</h2>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-brand-dark dark:text-white mb-6">{{ __('gemini-landing.home.about_heading') }}</h2>
                     <p class="text-slate-500 dark:text-slate-400 text-lg mb-6 leading-relaxed">
-                        Mohaaseb isn't just software; it's the engine of your enterprise. We replace disconnected tools with a unified platform that speaks one language: <strong>Efficiency</strong>.
+                        {!! __('gemini-landing.home.about_p1', ['efficiency' => __('gemini-landing.home.efficiency')]) !!}
                     </p>
                     <p class="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
-                        Our cloud-based solution is designed for the Middle Eastern market, ensuring full compliance with local tax regulations (VAT/ZATCA) while providing world-class performance for global scalability.
+                        {{ __('gemini-landing.home.about_p2') }}
                     </p>
                     <ul class="space-y-4">
                         <li class="flex items-center gap-3">
                             <i class="fa-solid fa-check-circle text-brand-500 text-xl"></i>
-                            <span class="font-semibold text-brand-dark dark:text-white">Real-time Data Sync</span>
+                            <span class="font-semibold text-brand-dark dark:text-white">{{ __('gemini-landing.home.about_bullet_1') }}</span>
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fa-solid fa-check-circle text-brand-500 text-xl"></i>
-                            <span class="font-semibold text-brand-dark dark:text-white">Bank-Grade Security</span>
+                            <span class="font-semibold text-brand-dark dark:text-white">{{ __('gemini-landing.home.about_bullet_2') }}</span>
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fa-solid fa-check-circle text-brand-500 text-xl"></i>
-                            <span class="font-semibold text-brand-dark dark:text-white">Multi-Branch Management</span>
+                            <span class="font-semibold text-brand-dark dark:text-white">{{ __('gemini-landing.home.about_bullet_3') }}</span>
                         </li>
                     </ul>
                 </div>
@@ -89,8 +95,8 @@
     <section id="features" class="py-24 bg-slate-50 dark:bg-slate-800 transition-colors duration-300">
         <div class="container mx-auto px-6 relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
-                <h2 class="text-3xl lg:text-4xl font-bold text-brand-dark dark:text-white mb-4">Our Unique ERP Features</h2>
-                <p class="text-slate-500 dark:text-slate-400">Four pillars of success integrated into one seamless application.</p>
+                <h2 class="text-3xl lg:text-4xl font-bold text-brand-dark dark:text-white mb-4">{{ __('gemini-landing.home.features_heading') }}</h2>
+                <p class="text-slate-500 dark:text-slate-400">{{ __('gemini-landing.home.features_subtitle') }}</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -98,32 +104,32 @@
                     <div class="w-16 h-16 bg-blue-50 dark:bg-slate-800 text-blue-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-user-tie"></i>
                     </div>
-                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">HR Management</h3>
-                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Automate payroll, attendance tracking, and employee performance reviews.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">{{ __('gemini-landing.home.feature_hr_title') }}</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{{ __('gemini-landing.home.feature_hr_desc') }}</p>
                 </div>
 
                 <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-accent group" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-16 h-16 bg-yellow-50 dark:bg-slate-800 text-yellow-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
-                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">Booking System</h3>
-                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Smart reservation management for services, resources, and appointments.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">{{ __('gemini-landing.home.feature_booking_title') }}</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{{ __('gemini-landing.home.feature_booking_desc') }}</p>
                 </div>
 
                 <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-brand-500 group" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-16 h-16 bg-brand-100 dark:bg-slate-800 text-brand-600 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-brand-500 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-cash-register"></i>
                     </div>
-                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">Cloud POS</h3>
-                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Fast, offline-capable Point of Sale that syncs inventory in real-time.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">{{ __('gemini-landing.home.feature_pos_title') }}</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{{ __('gemini-landing.home.feature_pos_desc') }}</p>
                 </div>
 
                 <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-b-4 border-slate-800 dark:border-slate-600 group" data-aos="fade-up" data-aos-delay="300">
                     <div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:bg-slate-800 group-hover:text-white transition-colors">
                         <i class="fa-solid fa-layer-group"></i>
                     </div>
-                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">Full ERP</h3>
-                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Comprehensive financial reporting, supply chain, and inventory control.</p>
+                    <h3 itemprop="name" class="text-xl font-bold text-brand-dark dark:text-white mb-3">{{ __('gemini-landing.home.feature_erp_title') }}</h3>
+                    <p itemprop="description" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{{ __('gemini-landing.home.feature_erp_desc') }}</p>
                 </div>
             </div>
         </div>
@@ -135,8 +141,8 @@
         <div class="container mx-auto px-6 relative z-10">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12">
                 <div>
-                    <h2 class="text-3xl lg:text-4xl font-bold text-white">What Our Clients Say</h2>
-                    <p class="text-brand-100 mt-2">Trusted by 5,000+ businesses across the region.</p>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-white">{{ __('gemini-landing.home.testimonials_heading') }}</h2>
+                    <p class="text-brand-100 mt-2">{{ __('gemini-landing.home.testimonials_subtitle') }}</p>
                 </div>
             </div>
 
@@ -155,56 +161,20 @@
                             </svg>",
                 ];
 
-                $reviews = [
-                    [
-                        'avatar' => $images['male'],
-                        'name' => 'Daniel Carter',
-                        'job_title' => 'Senior Operations Director',
-                        'rating' => 5,
-                        'dir' => 'ltr',
-                        'body' => "The ERP system streamlined our workflow.\nInventory, accounting, and POS finally work in harmony.",
-                    ],
-                    [
-                        'avatar' => $images['male'],
-                        'name' => 'محمد ياسر',
-                        'job_title' => 'مدير التطوير الرقمي',
-                        'rating' => 5,
-                        'dir' => 'rtl',
-                        'body' => "نظام الـ ERP ساعدنا في تنظيم الحسابات والمخزون بشكل احترافي\nوأصبح اتخاذ القرار أسرع وأكثر دقة.",
-                    ],
-                    [
-                        'avatar' => $images['famale'],
-                        'name' => 'Sophia Williams',
-                        'job_title' => 'Finance & Compliance Lead',
-                        'rating' => 5,
-                        'dir' => 'ltr',
-                        'body' => "A reliable system with perfect financial tracking.\nVAT, reports, and analytics are incredibly accurate.",
-                    ],
-                    [
-                        'avatar' => $images['famale'],
-                        'name' => 'ليلى عمر',
-                        'job_title' => 'قائدة قسم الجودة',
-                        'rating' => 5,
-                        'dir' => 'rtl',
-                        'body' => "النظام سهّل علينا متابعة الفروع\nوربط جميع العمليات بشكل سلس وبدون تعقيد.",
-                    ],
-                    [
-                        'avatar' => $images['male'],
-                        'name' => 'خالد سمير',
-                        'job_title' => 'محلل نظم الأعمال',
-                        'rating' => 5,
-                        'dir' => 'rtl',
-                        'body' => "نظام ممتاز وسلس،\nويوفر تقارير قوية تساعد الإدارة في رؤية واضحة لكل تفاصيل العمل.",
-                    ],
-                    [
-                        'avatar' => $images['male'],
-                        'name' => 'Mark Henderson',
-                        'job_title' => 'Supply Chain Strategist',
-                        'rating' => 5,
-                        'dir' => 'ltr',
-                        'body' => "Stock control accuracy improved by 300%.\nPerfect solution for multi-branch businesses.",
-                    ],
-                ];
+                $images['female'] = $images['famale'];
+
+                $reviewsRaw = trans('gemini-landing.home.reviews');
+                if (!is_array($reviewsRaw)) {
+                    $reviewsRaw = [];
+                }
+
+                $reviews = array_map(function ($review) use ($images) {
+                    $avatarKey = $review['avatar'] ?? 'male';
+                    $review['avatar'] = $images[$avatarKey] ?? $images['male'];
+                    $review['rating'] = $review['rating'] ?? 5;
+                    $review['dir'] = $review['dir'] ?? 'ltr';
+                    return $review;
+                }, $reviewsRaw);
             @endphp
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -242,20 +212,20 @@
     <section id="blog" class="py-24 bg-white dark:bg-slate-900 transition-colors duration-300">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-4xl font-bold text-brand-dark dark:text-white">Our Latest Insights</h2>
-                <p class="text-slate-500 dark:text-slate-400 mt-2">Expert advice on finance, management, and technology.</p>
+                <h2 class="text-3xl lg:text-4xl font-bold text-brand-dark dark:text-white">{{ __('gemini-landing.home.blog_heading') }}</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">{{ __('gemini-landing.home.blog_subtitle') }}</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach ($blogs as $blog)
                     <article class="group cursor-pointer" data-aos="fade-up"  itemscope itemtype="https://schema.org/BlogPosting">
                         <div class="overflow-hidden rounded-2xl mb-4 h-52">
-                            <img itemprop="image" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="Finance">
+                            <img itemprop="image" src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="{{ __('gemini-landing.home.blog_image_alt') }}">
                         </div>
-                        <span class="text-xs font-bold text-brand-500 uppercase">{{ $blog->category?->name ?? 'Accounting' }}</span>
+                        <span class="text-xs font-bold text-brand-500 uppercase">{{ $blog->category?->name ?? __('gemini-landing.home.blog_fallback_category') }}</span>
                         <h3  itemprop="headline" class="text-xl font-bold text-brand-dark dark:text-white mt-2 mb-2 group-hover:text-brand-500 transition-colors">{{ $blog->title }}</h3>
                         <p  itemprop="description" class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2">{{ \Illuminate\Support\Str::limit($blog->excerpt ?: strip_tags($blog->content), 120) }}</p>
-                        <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => $__currentLang]) }}" aria-label="Read more about {{ $blog->title }}" class="inline-block mt-4 text-brand-600 dark:text-brand-400 font-bold hover:underline">Read More &rarr;</a>
+                        <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => $__currentLang]) }}" aria-label="{{ __('gemini-landing.home.blog_read_more_aria', ['title' => $blog->title]) }}" class="inline-block mt-4 text-brand-600 dark:text-brand-400 font-bold hover:underline">{{ __('gemini-landing.home.blog_read_more') }}</a>
                         <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" class="d-none">
                             <meta itemprop="name" content="Mohaaseb">
                         </div>
@@ -271,21 +241,21 @@
         <div class="container mx-auto px-6 relative z-10">
             <div class="flex flex-col lg:flex-row gap-16">
                 <div class="lg:w-1/2" data-aos="fade-right">
-                    <h2 class="text-4xl font-bold mb-6">Get in Touch</h2>
-                    <p class="text-slate-300 text-lg mb-8">Ready to transform your business? Schedule a free demo with our solution architects.</p>
+                    <h2 class="text-4xl font-bold mb-6">{{ __('gemini-landing.home.contact_heading') }}</h2>
+                    <p class="text-slate-300 text-lg mb-8">{{ __('gemini-landing.home.contact_subtitle') }}</p>
 
                     <div class="space-y-6">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-brand-400 text-xl"><i class="fa-solid fa-phone"></i></div>
                             <div>
-                                <p class="text-xs text-slate-400 uppercase">Call Us</p>
+                                <p class="text-xs text-slate-400 uppercase">{{ __('gemini-landing.home.contact_call_us') }}</p>
                                 <p class="text-lg font-bold">+966 55 123 4567</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-brand-400 text-xl"><i class="fa-solid fa-envelope"></i></div>
                             <div>
-                                <p class="text-xs text-slate-400 uppercase">Email Us</p>
+                                <p class="text-xs text-slate-400 uppercase">{{ __('gemini-landing.home.contact_email_us') }}</p>
                                 <p class="text-lg font-bold">sales@mohaaseb.com</p>
                             </div>
                         </div>
@@ -295,45 +265,45 @@
                 <div class="lg:w-1/2" data-aos="fade-left">
                     <form  action="{{ route('contact-us') }}" method="POST" class="bg-white dark:bg-slate-800 p-8 rounded-3xl text-slate-700 dark:text-slate-300 shadow-2xl transition-colors duration-300">
                         @csrf
-                        <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6">Book a Demo</h3>
+                        <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6">{{ __('gemini-landing.home.contact_form_heading') }}</h3>
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">First Name</label>
-                                <input type="text" name="fname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Your First Name" required>
+                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_first_name') }}</label>
+                                <input type="text" name="fname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_first_name') }}" required>
                                 @error('fname')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Last Name</label>
-                                <input type="text" name="lname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Your Last Name" required>
+                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_last_name') }}</label>
+                                <input type="text" name="lname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_last_name') }}" required>
                                 @error('lname')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Phone</label>
-                                <input type="text" name="phone" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Your Phone Number" required>
+                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_phone') }}</label>
+                                <input type="text" name="phone" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_phone') }}" required>
                                 @error('phone')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Email</label>
-                            <input type="email" name="email" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="you@example.com" required>
-                            @error('email')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_email') }}</label>
+                                <input type="email" name="email" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_email') }}" required>
+                                @error('email')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                         <div class="mb-6">
-                            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Message</label>
-                            <textarea name="message" rows="3" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="Tell us about your needs..."></textarea>
+                            <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_message') }}</label>
+                            <textarea name="message" rows="3" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_message') }}"></textarea>
                             @error('message')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
-                        <button type="button" class="w-full py-4 bg-brand-500 text-white font-bold rounded-xl hover:bg-brand-600 transition shadow-lg">Submit Request</button>
+                        <button type="submit" class="w-full py-4 bg-brand-500 text-white font-bold rounded-xl hover:bg-brand-600 transition shadow-lg">{{ __('gemini-landing.home.contact_submit') }}</button>
                     </form>
                 </div>
             </div>

@@ -146,7 +146,7 @@ class HomeController extends Controller
         // redirect to same route but with new lang parameter
         $previousUrl = url()->previous();
         // refactor this to be like en-us or ar-eg
-        $newUrl = preg_replace('/\/(en|ar)(-[a-zA-Z]{2})?/', '/' . $locale . '-' . session('country', 'eg'), $previousUrl);
+        $newUrl = preg_replace('/\/(en|ar)(-[a-zA-Z]{2})?/', '/' . $locale, $previousUrl);
 
         // if(str_contains($previousUrl, '/en/') || str_contains($previousUrl, '/ar/')){
         //     $newUrl = preg_replace('/\/(en|ar)\//', '/' . $locale . '/', $previousUrl);
