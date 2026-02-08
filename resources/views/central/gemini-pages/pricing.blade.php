@@ -43,7 +43,7 @@
                 <div class="module-card bg-white dark:bg-slate-800 rounded-2xl p-8 border-2 border-transparent transition-all" id="card-hrm">
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <i class="fa-solid fa-users-gears text-3xl text-blue-500 mb-4"></i>
+                            <i class="fa-solid fa-users text-3xl text-blue-500 mb-4"></i>
                             <h3 class="text-xl font-bold dark:text-white">HRM System</h3>
                         </div>
                         <input type="checkbox" class="module-checkbox w-6 h-6 accent-blue-500" id="check-hrm" onchange="calculateTotal()">

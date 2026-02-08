@@ -249,14 +249,14 @@
                             <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-brand-400 text-xl"><i class="fa-solid fa-phone"></i></div>
                             <div>
                                 <p class="text-xs text-slate-400 uppercase">{{ __('gemini-landing.home.contact_call_us') }}</p>
-                                <p class="text-lg font-bold">+966 55 123 4567</p>
+                                <p class="text-lg font-bold">{{ __('gemini-landing.contact_info.phone') }}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center text-brand-400 text-xl"><i class="fa-solid fa-envelope"></i></div>
                             <div>
                                 <p class="text-xs text-slate-400 uppercase">{{ __('gemini-landing.home.contact_email_us') }}</p>
-                                <p class="text-lg font-bold">sales@mohaaseb.com</p>
+                                <p class="text-lg font-bold">{{ __('gemini-landing.contact_info.sales_email') }}</p>
                             </div>
                         </div>
                     </div>

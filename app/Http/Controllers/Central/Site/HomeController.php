@@ -32,10 +32,6 @@ class HomeController extends Controller
 
     function blogs($lang = null)
     {
-        $blogs = Blog::published()
-            ->orderByDesc('id')
-            ->paginate(12);
-
         $seoData = SeoHelper::render('blogs');
 
         return landingLayoutView('blogs', get_defined_vars());
@@ -52,6 +48,12 @@ class HomeController extends Controller
 
         $imageUrl = $blog->og_image_path;
         $publishedAt = $blog->published_at ?: $blog->created_at;
+
+        $readNextBlogs = Blog::published()
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('id')
+            ->limit(3)
+            ->get();
 
         $seoData = SeoHelper::render('blog-details', [
             'title' => $blog->title,

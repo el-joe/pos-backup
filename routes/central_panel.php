@@ -20,6 +20,7 @@ use App\Livewire\Central\CPanel\FileManager\FileManagerPage;
 use App\Livewire\Central\CPanel\HomePage;
 use App\Livewire\Central\CPanel\Features\FeaturesList;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
+use App\Livewire\Central\CPanel\Translations\TranslationsEditor;
 use App\Livewire\Central\CPanel\Plans\CpanelPlansList;
 use App\Livewire\Central\CPanel\RegisterRequests\RegisterRequestsList;
 use App\Livewire\Central\CPanel\Slider\SliderList;
@@ -50,6 +51,7 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('countries', CountriesList::class)->name('countries.list');
         Route::get('currencies', CurrenciesList::class)->name('currencies.list');
         Route::get('languages', LanguagesList::class)->name('languages.list');
+        Route::get('translations', TranslationsEditor::class)->name('translations');
         Route::get('features', FeaturesList::class)->name('features.list');
         Route::get('subscriptions', SubscriptionsList::class)->name('subscriptions.list');
         Route::get('register-requests', RegisterRequestsList::class)->name('register-requests.list');

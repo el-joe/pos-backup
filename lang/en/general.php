@@ -111,6 +111,7 @@ return [
         'currencies' => 'Currencies',
         'currency.edit' => 'Edit Currency',
         'languages' => 'Languages',
+        'translations' => 'Translations',
         'register-requests' => 'Register Requests',
         'sliders' => 'Sliders',
         'partners' => 'Partners',

@@ -124,6 +124,11 @@ return [
 
         'contact_submit' => 'Submit Request',
     ],
+    'blogs'=>[
+        'reading_time' => ':time min read',
+        'read_full' => 'Read Full Article',
+        'no_blogs' => 'No blogs found.'
+    ],
     'nav' => [
         'home' => 'Home',
         'blogs' => 'Blogs',
@@ -138,4 +143,77 @@ return [
         'brand_description' => 'Mohaaseb ERP is your complete solution for managing business operations efficiently. From inventory, sales, and purchases to accounting and reporting, our platform helps businesses streamline processes and make smarter decisions.',
         'all_rights_reserved' => 'All Rights Reserved',
     ],
+
+    'common' => [
+        'admin' => 'Admin',
+    ],
+
+    'contact_info' => [
+        'phone' => '+966 55 123 4567',
+        'sales_email' => 'sales@mohaaseb.com',
+        'support_email' => 'support@mohaaseb.com',
+    ],
+
+    'blogs_page' => [
+        'badge' => 'Knowledge Hub',
+        'title' => 'Insights & Resources',
+        'subtitle' => 'Expert advice on scaling your business, managing finances, and optimizing HR operations with the latest cloud technology.',
+        'search_placeholder' => 'Search articles...',
+        'featured_alt' => 'Featured',
+        'featured_label' => 'Featured',
+        'categories' => [
+            'all' => 'All',
+            'accounting' => 'Accounting',
+            'hr_payroll' => 'HR & Payroll',
+            'retail_pos' => 'Retail / POS',
+            'success_stories' => 'Success Stories',
+        ],
+        'card_category' => 'Accounting',
+        'by_admin' => 'By Admin',
+    ],
+
+    'blog_details' => [
+        'breadcrumb_blog' => 'Blog',
+        'breadcrumb_category' => 'Accounting',
+        'author_alt' => 'Author',
+        'share_article' => 'Share Article',
+        'weekly_insights_title' => 'Weekly Insights',
+        'weekly_insights_subtitle' => 'Join 5,000+ subscribers growing their business.',
+        'email_address' => 'Email address',
+        'subscribe' => 'Subscribe',
+        'read_next' => 'Read Next',
+    ],
+
+    'faqs_page' => [
+        'badge' => 'Help Center',
+        'title' => 'Frequently Asked Questions',
+        'subtitle' => "Everything you need to know about Mohaaseb. Can't find the answer you're looking for? Chat with our team.",
+        'section_general' => 'General & Getting Started',
+        'cta_title' => 'Still have questions?',
+        'cta_subtitle' => "Can't find the answer you're looking for? Please chat to our friendly team.",
+        'cta_contact_support' => 'Contact Support',
+        'cta_whatsapp' => 'WhatsApp Us',
+        'whatsapp_url' => 'https://wa.me/+201558099183',
+    ],
+
+    'contact_page' => [
+        'badge' => "We're here to help",
+        'title' => "Let's Start a Conversation",
+        'subtitle' => 'Have questions about pricing, features, or need a custom demo? Our team is ready to answer all your questions.',
+
+        'email_sales_title' => 'Email Sales',
+        'email_sales_subtitle' => 'For demos and pricing inquiries.',
+        'help_support_title' => 'Help & Support',
+        'help_support_subtitle' => 'For existing technical issues.',
+
+        'locations_title' => 'Our Locations',
+        'riyadh_title' => 'Riyadh HQ',
+        'riyadh_address_html' => 'Olaya Street, King Fahad District<br>Riyadh 12211, Saudi Arabia',
+        'cairo_title' => 'Cairo Office',
+        'cairo_address_html' => 'Business Park, New Cairo<br>Cairo, Egypt',
+        'view_maps' => 'View on Google Maps',
+
+        'form_title' => 'Send us a message',
+    ],
+    'mohaaseb' => 'Mohaaseb',
 ];

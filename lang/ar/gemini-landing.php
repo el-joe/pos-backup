@@ -124,6 +124,11 @@ return [
 
         'contact_submit' => 'إرسال الطلب',
     ],
+    'blogs'=>[
+        'reading_time' => ':time دقيقة قراءة',
+        'read_full' => 'اقرأ المقال كاملاً',
+        'no_blogs' => 'لا توجد مقالات حالياً',
+    ],
     'nav' => [
         'home' => 'الرئيسية',
         'blogs' => 'المدونة',
@@ -138,4 +143,77 @@ return [
         'brand_description' => 'Mohaaseb ERP هو الحل الكامل لإدارة عمليات الأعمال بكفاءة. من المخزون والمبيعات والمشتريات إلى المحاسبة والتقارير، تساعد منصتنا الشركات على تبسيط العمليات واتخاذ قرارات أذكى.',
         'all_rights_reserved' => 'جميع الحقوق محفوظة.',
     ],
+
+    'common' => [
+        'admin' => 'الإدارة',
+    ],
+
+    'contact_info' => [
+        'phone' => '+966 55 123 4567',
+        'sales_email' => 'sales@mohaaseb.com',
+        'support_email' => 'support@mohaaseb.com',
+    ],
+
+    'blogs_page' => [
+        'badge' => 'مركز المعرفة',
+        'title' => 'مقالات وموارد',
+        'subtitle' => 'نصائح وخبرات لتطوير أعمالك وإدارة المال وتحسين عمليات الموارد البشرية باستخدام أحدث التقنيات السحابية.',
+        'search_placeholder' => 'ابحث في المقالات...',
+        'featured_alt' => 'مميز',
+        'featured_label' => 'مميز',
+        'categories' => [
+            'all' => 'الكل',
+            'accounting' => 'المحاسبة',
+            'hr_payroll' => 'الموارد البشرية والرواتب',
+            'retail_pos' => 'التجزئة / نقاط البيع',
+            'success_stories' => 'قصص نجاح',
+        ],
+        'card_category' => 'المحاسبة',
+        'by_admin' => 'بواسطة الإدارة',
+    ],
+
+    'blog_details' => [
+        'breadcrumb_blog' => 'المدونة',
+        'breadcrumb_category' => 'المحاسبة',
+        'author_alt' => 'الكاتب',
+        'share_article' => 'مشاركة المقال',
+        'weekly_insights_title' => 'ملخص أسبوعي',
+        'weekly_insights_subtitle' => 'انضم إلى أكثر من 5,000 مشترك لتطوير أعمالهم.',
+        'email_address' => 'البريد الإلكتروني',
+        'subscribe' => 'اشترك',
+        'read_next' => 'اقرأ التالي',
+    ],
+
+    'faqs_page' => [
+        'badge' => 'مركز المساعدة',
+        'title' => 'الأسئلة الشائعة',
+        'subtitle' => 'كل ما تحتاج معرفته عن محاسب. لم تجد الإجابة التي تبحث عنها؟ تواصل مع فريقنا.',
+        'section_general' => 'عام والبدء',
+        'cta_title' => 'هل لديك سؤال؟',
+        'cta_subtitle' => 'لم تجد الإجابة التي تبحث عنها؟ تواصل مع فريقنا بكل سهولة.',
+        'cta_contact_support' => 'تواصل مع الدعم',
+        'cta_whatsapp' => 'راسلنا واتساب',
+        'whatsapp_url' => 'https://wa.me/+201558099183',
+    ],
+
+    'contact_page' => [
+        'badge' => 'نحن هنا لمساعدتك',
+        'title' => 'ابدأ محادثة معنا',
+        'subtitle' => 'هل لديك أسئلة حول الأسعار أو المزايا أو تحتاج عرضًا مخصصًا؟ فريقنا جاهز للإجابة على جميع استفساراتك.',
+
+        'email_sales_title' => 'بريد المبيعات',
+        'email_sales_subtitle' => 'للعروض التجريبية واستفسارات الأسعار.',
+        'help_support_title' => 'الدعم الفني',
+        'help_support_subtitle' => 'للمشكلات التقنية الحالية.',
+
+        'locations_title' => 'مواقعنا',
+        'riyadh_title' => 'مقر الرياض',
+        'riyadh_address_html' => 'شارع العليا، حي الملك فهد<br>الرياض 12211، المملكة العربية السعودية',
+        'cairo_title' => 'مكتب القاهرة',
+        'cairo_address_html' => 'بيزنس بارك، القاهرة الجديدة<br>القاهرة، مصر',
+        'view_maps' => 'عرض على خرائط جوجل',
+
+        'form_title' => 'أرسل لنا رسالة',
+    ],
+    'mohaaseb' => 'محاسب',
 ];

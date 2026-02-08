@@ -62,6 +62,12 @@ return [
         "route"     => 'cpanel.languages.list'
     ],
     [
+        "title"     => "Translations",
+        'translated_title' => 'general.titles.translations',
+        "icon"      => "fa fa-pen-to-square fa-fw",
+        "route"     => 'cpanel.translations'
+    ],
+    [
         "title"     => "Register Requests",
         'translated_title' => 'general.titles.register-requests',
         "icon"      => "fa fa-user-plus fa-fw",

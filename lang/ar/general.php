@@ -111,6 +111,7 @@ return [
         'currencies' => 'العملات',
         'currency.edit' => 'تعديل العملة',
         'languages' => 'اللغات',
+        'translations' => 'الترجمات',
         'register-requests' => 'طلبات التسجيل',
         'partners' => 'الشركاء',
         'partner-commissions' => 'عمولات الشركاء',
