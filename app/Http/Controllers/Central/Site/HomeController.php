@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\Contact;
 use App\Models\Faq;
+use App\Models\Feature;
 use App\Models\Plan;
 use App\Models\Slider;
 use Carbon\Carbon;
@@ -126,7 +127,113 @@ class HomeController extends Controller
 
     function pricingCompare()
     {
-        $plans = Plan::all();
+        $plans = Plan::query()
+            ->active()
+            ->with(['plan_features.feature' => function ($query) {
+                $query->where('active', true);
+            }])
+            ->orderBy('price_month')
+            ->orderBy('id')
+            ->get();
+
+        $plansByModule = $plans->groupBy(fn (Plan $plan) => $plan->module_name->value);
+
+        $features = Feature::query()
+            ->where('active', true)
+            ->orderBy('id')
+            ->get();
+        $featuresByModule = $features->groupBy('module_name');
+
+        $locale = app()->getLocale();
+        $modules = ['pos', 'hrm', 'booking'];
+        $systemData = [];
+
+        foreach ($modules as $module) {
+            $modulePlans = ($plansByModule[$module] ?? collect())->values();
+            $moduleFeatures = ($featuresByModule[$module] ?? collect())->values();
+
+            $systemData[$module] = [
+                'title' => match ($module) {
+                    'pos' => 'POS & ERP Systems',
+                    'hrm' => 'HRM & Payroll',
+                    'booking' => 'Reservation System',
+                    default => ucfirst($module),
+                },
+                'plans' => $modulePlans->map(function (Plan $plan) use ($locale, $moduleFeatures) {
+                    $featureNames = $plan->plan_features
+                        ->filter(function ($planFeature) {
+                            if (!$planFeature->feature) {
+                                return false;
+                            }
+
+                            if ($planFeature->feature->type === 'boolean') {
+                                return (int) $planFeature->value === 1;
+                            }
+
+                            return ((int) $planFeature->value > 0)
+                                || (is_string($planFeature->content_en) && trim($planFeature->content_en) !== '')
+                                || (is_string($planFeature->content_ar) && trim($planFeature->content_ar) !== '');
+                        })
+                        ->sortBy('feature_id')
+                        ->map(function ($planFeature) use ($locale) {
+                            $feature = $planFeature->feature;
+                            $name = $locale === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
+                            return $name ?: ($feature->name_en ?: $feature->code);
+                        })
+                        ->unique()
+                        ->values()
+                        ->take(3)
+                        ->all();
+
+                    // If a plan has no enabled/non-empty features yet, fall back to first features of the module.
+                    if (count($featureNames) === 0) {
+                        $featureNames = $moduleFeatures
+                            ->take(3)
+                            ->map(function (Feature $feature) use ($locale) {
+                                $name = $locale === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
+                                return $name ?: ($feature->name_en ?: $feature->code);
+                            })
+                            ->values()
+                            ->all();
+                    }
+
+                    return [
+                        'id' => $plan->id,
+                        'name' => $plan->name,
+                        'desc' => '',
+                        'price' => (float) $plan->price_month,
+                        'yearly' => (float) $plan->price_year,
+                        'features' => $featureNames,
+                        'popular' => (bool) $plan->recommended,
+                    ];
+                })->all(),
+                'table' => $moduleFeatures->map(function (Feature $feature) use ($modulePlans, $locale) {
+                    $label = $locale === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
+                    $label = $label ?: ($feature->name_en ?: $feature->code);
+
+                    $values = $modulePlans->map(function (Plan $plan) use ($feature, $locale) {
+                        $planFeature = $plan->plan_features->firstWhere('feature_id', $feature->id);
+                        if (!$planFeature) {
+                            return $feature->type === 'boolean' ? '×' : '—';
+                        }
+
+                        if ($feature->type === 'boolean') {
+                            return (int) $planFeature->value === 1 ? '✓' : '×';
+                        }
+
+                        $content = $locale === 'ar' ? $planFeature->content_ar : $planFeature->content_en;
+                        if (is_string($content) && trim($content) !== '') {
+                            return trim($content);
+                        }
+
+                        $value = $planFeature->value;
+                        return is_numeric($value) && (int) $value !== 0 ? (string) (int) $value : '—';
+                    })->values()->all();
+
+                    return array_merge([$label], $values);
+                })->values()->all(),
+            ];
+        }
 
         $seoData = SeoHelper::render('pricing-compare');
         return landingLayoutView('pricing-compare',get_defined_vars());
@@ -134,6 +241,35 @@ class HomeController extends Controller
 
     function pricing()
     {
+        $plans = Plan::query()
+            ->active()
+            ->orderBy('price_month')
+            ->orderBy('id')
+            ->get();
+
+        $plansByModule = $plans->groupBy(fn (Plan $plan) => $plan->module_name->value);
+
+        $features = Feature::query()
+            ->where('active', true)
+            ->orderBy('id')
+            ->get();
+
+        $featuresByModule = $features->groupBy('module_name');
+
+        $locale = app()->getLocale();
+        $cardFeaturesByModule = collect(['pos', 'hrm', 'booking'])->mapWithKeys(function (string $module) use ($featuresByModule, $locale) {
+            $items = ($featuresByModule[$module] ?? collect())
+                ->take(2)
+                ->map(function (Feature $feature) use ($locale) {
+                    $name = $locale === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
+                    return $name ?: ($feature->name_en ?: $feature->code);
+                })
+                ->values()
+                ->all();
+
+            return [$module => $items];
+        })->all();
+
         $seoData = SeoHelper::render('pricing');
         return landingLayoutView('pricing',get_defined_vars());
     }

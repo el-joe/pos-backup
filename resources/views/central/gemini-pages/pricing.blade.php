@@ -30,13 +30,23 @@
                         <input type="checkbox" class="module-checkbox w-6 h-6 accent-brand-500" id="check-pos" onchange="calculateTotal()">
                     </div>
                     <select id="tier-pos" class="w-full p-2 rounded-lg bg-slate-100 dark:bg-slate-700 dark:text-white mb-4" onchange="calculateTotal()">
-                        <option value="starter">Starter ($29/mo)</option>
-                        <option value="pro" selected>Professional ($79/mo)</option>
-                        <option value="ent">Enterprise ($149/mo)</option>
+                        @php
+                            $posPlans = ($plansByModule['pos'] ?? collect());
+                            $posDefault = $posPlans->firstWhere('recommended', true) ?? $posPlans->first();
+                        @endphp
+                        @foreach($posPlans as $plan)
+                            <option
+                                value="{{ $plan->id }}"
+                                data-month="{{ (float) $plan->price_month }}"
+                                data-year="{{ (float) $plan->price_year }}"
+                                @selected($posDefault && $posDefault->id === $plan->id)
+                            >{{ $plan->name }} (${{ (float) $plan->price_month }}/mo)</option>
+                        @endforeach
                     </select>
                     <ul class="text-sm text-slate-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Inventory Management</li>
-                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>ZATCA / Tax Ready</li>
+                        @foreach(($cardFeaturesByModule['pos'] ?? []) as $featureName)
+                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>{{ $featureName }}</li>
+                        @endforeach
                     </ul>
                 </div>
 
@@ -49,13 +59,23 @@
                         <input type="checkbox" class="module-checkbox w-6 h-6 accent-blue-500" id="check-hrm" onchange="calculateTotal()">
                     </div>
                     <select id="tier-hrm" class="w-full p-2 rounded-lg bg-slate-100 dark:bg-slate-700 dark:text-white mb-4" onchange="calculateTotal()">
-                        <option value="starter">Starter ($19/mo)</option>
-                        <option value="pro" selected>Professional ($59/mo)</option>
-                        <option value="ent">Enterprise ($99/mo)</option>
+                        @php
+                            $hrmPlans = ($plansByModule['hrm'] ?? collect());
+                            $hrmDefault = $hrmPlans->firstWhere('recommended', true) ?? $hrmPlans->first();
+                        @endphp
+                        @foreach($hrmPlans as $plan)
+                            <option
+                                value="{{ $plan->id }}"
+                                data-month="{{ (float) $plan->price_month }}"
+                                data-year="{{ (float) $plan->price_year }}"
+                                @selected($hrmDefault && $hrmDefault->id === $plan->id)
+                            >{{ $plan->name }} (${{ (float) $plan->price_month }}/mo)</option>
+                        @endforeach
                     </select>
                     <ul class="text-sm text-slate-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-blue-500 mr-2"></i>Payroll & Attendance</li>
-                        <li><i class="fa-solid fa-check text-blue-500 mr-2"></i>Employee Portal</li>
+                        @foreach(($cardFeaturesByModule['hrm'] ?? []) as $featureName)
+                            <li><i class="fa-solid fa-check text-blue-500 mr-2"></i>{{ $featureName }}</li>
+                        @endforeach
                     </ul>
                 </div>
 
@@ -68,13 +88,23 @@
                         <input type="checkbox" class="module-checkbox w-6 h-6 accent-purple-500" id="check-booking" onchange="calculateTotal()">
                     </div>
                     <select id="tier-booking" class="w-full p-2 rounded-lg bg-slate-100 dark:bg-slate-700 dark:text-white mb-4" onchange="calculateTotal()">
-                        <option value="starter">Starter ($25/mo)</option>
-                        <option value="pro" selected>Professional ($69/mo)</option>
-                        <option value="ent">Enterprise ($119/mo)</option>
+                        @php
+                            $bookingPlans = ($plansByModule['booking'] ?? collect());
+                            $bookingDefault = $bookingPlans->firstWhere('recommended', true) ?? $bookingPlans->first();
+                        @endphp
+                        @foreach($bookingPlans as $plan)
+                            <option
+                                value="{{ $plan->id }}"
+                                data-month="{{ (float) $plan->price_month }}"
+                                data-year="{{ (float) $plan->price_year }}"
+                                @selected($bookingDefault && $bookingDefault->id === $plan->id)
+                            >{{ $plan->name }} (${{ (float) $plan->price_month }}/mo)</option>
+                        @endforeach
                     </select>
                     <ul class="text-sm text-slate-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-purple-500 mr-2"></i>Online Appointments</li>
-                        <li><i class="fa-solid fa-check text-purple-500 mr-2"></i>Customer CRM</li>
+                        @foreach(($cardFeaturesByModule['booking'] ?? []) as $featureName)
+                            <li><i class="fa-solid fa-check text-purple-500 mr-2"></i>{{ $featureName }}</li>
+                        @endforeach
                     </ul>
                 </div>
 
@@ -102,11 +132,14 @@
 
 @push('scripts')
     <script>
-        const prices = {
-            pos: { starter: 29, pro: 79, ent: 149 },
-            hrm: { starter: 19, pro: 59, ent: 99 },
-            booking: { starter: 25, pro: 69, ent: 119 }
-        };
+        function getSelectedPrice(moduleKey, isYearly) {
+            const select = document.getElementById('tier-' + moduleKey);
+            if (!select || !select.options || select.selectedIndex < 0) return 0;
+            const option = select.options[select.selectedIndex];
+            const month = parseFloat(option.dataset.month || '0');
+            const year = parseFloat(option.dataset.year || '0');
+            return isYearly ? year : month;
+        }
 
         function calculateTotal() {
             let total = 0;
@@ -120,12 +153,10 @@
 
             ['pos', 'hrm', 'booking'].forEach(mod => {
                 const checkbox = document.getElementById('check-' + mod);
-                const tier = document.getElementById('tier-' + mod).value;
                 const card = document.getElementById('card-' + mod);
 
                 if (checkbox.checked) {
-                    let price = prices[mod][tier];
-                    if (isYearly) price = price * 0.8; // 20% off
+                    let price = getSelectedPrice(mod, isYearly);
                     total += price;
                     count++;
                     card.classList.add('border-brand-500', 'ring-4', 'ring-brand-500/10');

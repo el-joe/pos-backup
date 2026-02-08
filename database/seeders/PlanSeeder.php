@@ -190,7 +190,7 @@ class PlanSeeder extends Seeder
             'active' => true,
             'icon' => 'bi bi-gem',
         ];
-
+        return;
         foreach ($plans as $plan) {
             DB::table('plans')->upsert(
                 $plan,

@@ -40,14 +40,7 @@
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
-                        <thead>
-                            <tr class="text-slate-400 dark:text-slate-500 text-xs uppercase tracking-wider">
-                                <th class="py-4 px-8 font-medium">Core Features</th>
-                                <th class="py-4 px-8 text-center">Starter</th>
-                                <th class="py-4 px-8 text-center text-brand-500">Business</th>
-                                <th class="py-4 px-8 text-center">Enterprise</th>
-                            </tr>
-                        </thead>
+                        <thead id="feature-table-head"></thead>
                         <tbody id="feature-table-body" class="text-slate-600 dark:text-slate-300">
                             </tbody>
                     </table>
@@ -66,50 +59,7 @@
     </style>
 
     <script>
-        const systemData = {
-            pos: {
-                title: "POS & ERP Systems",
-                plans: [
-                    { name: "Starter", desc: "For single kiosks", price: 29, yearly: 24, features: ["1 Terminal", "Offline Mode", "Basic Reports"] },
-                    { name: "Business", desc: "For retail stores", price: 79, yearly: 65, features: ["5 Terminals", "Inventory Management", "ZATCA E-Invoicing"], popular: true },
-                    { name: "Enterprise", desc: "Multi-branch chains", price: 199, yearly: 159, features: ["Unlimited Terminals", "Central ERP", "Custom API"] }
-                ],
-                table: [
-                    ["Inventory Tracking", "Basic", "Advanced", "Full Suite"],
-                    ["Multi-Branch", "×", "Up to 3", "Unlimited"],
-                    ["Warehouse Mgmt", "×", "×", "✓"],
-                    ["ZATCA Integration", "✓", "✓", "✓"]
-                ]
-            },
-            hrm: {
-                title: "HRM & Payroll",
-                plans: [
-                    { name: "Starter", desc: "Up to 10 employees", price: 19, yearly: 15, features: ["Attendance", "Leave Mgmt", "Mobile App"] },
-                    { name: "Business", desc: "Up to 100 employees", price: 59, yearly: 49, features: ["Payroll Calc", "Documents", "Performance"], popular: true },
-                    { name: "Enterprise", desc: "Large workforce", price: 129, yearly: 99, features: ["Unlimited Staff", "Custom Workflows", "Dedicated Support"] }
-                ],
-                table: [
-                    ["Employee Records", "10 Staff", "100 Staff", "Unlimited"],
-                    ["Payroll Engine", "Manual", "Automated", "Custom Rules"],
-                    ["Self-Service Portal", "✓", "✓", "✓"],
-                    ["Asset Tracking", "×", "×", "✓"]
-                ]
-            },
-            booking: {
-                title: "Reservation System",
-                plans: [
-                    { name: "Starter", desc: "Personal use", price: 25, yearly: 20, features: ["50 Bookings", "Email Sync", "1 User"] },
-                    { name: "Business", desc: "Small clinics/salons", price: 69, yearly: 55, features: ["Unlimited Bookings", "SMS Alerts", "5 Staff"], popular: true },
-                    { name: "Enterprise", desc: "Hotel & Centers", price: 119, yearly: 95, features: ["White-label", "Global Payments", "Advanced Analytics"] }
-                ],
-                table: [
-                    ["Monthly Bookings", "50", "Unlimited", "Unlimited"],
-                    ["Payment Processing", "Standard", "Priority", "Custom Gateway"],
-                    ["Staff Members", "1 Account", "5 Accounts", "Unlimited"],
-                    ["Custom Branding", "×", "✓", "✓"]
-                ]
-            }
-        };
+        const systemData = @json($systemData ?? []);
 
         let activeSystem = 'pos';
 
@@ -130,13 +80,15 @@
             const data = systemData[activeSystem];
             const isYearly = document.getElementById('billing-toggle').checked;
 
+            if (!data) return;
+
             // 1. Update Plan Cards
             const grid = document.getElementById('pricing-grid');
             grid.innerHTML = data.plans.map(plan => `
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 border-2 ${plan.popular ? 'border-brand-500 scale-105 shadow-xl' : 'border-transparent shadow-sm'} relative transition-all duration-300">
                     ${plan.popular ? '<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase">Best Value</div>' : ''}
                     <h3 class="text-xl font-bold dark:text-white mb-2">${plan.name}</h3>
-                    <p class="text-sm text-slate-500 mb-6">${plan.desc}</p>
+                    ${plan.desc ? `<p class="text-sm text-slate-500 mb-6">${plan.desc}</p>` : '<div class="mb-6"></div>'}
                     <div class="flex items-baseline mb-6">
                         <span class="text-4xl font-extrabold dark:text-white">$${isYearly ? plan.yearly : plan.price}</span>
                         <span class="text-slate-500 ml-1">/mo</span>
@@ -150,13 +102,34 @@
 
             // 2. Update Table
             document.getElementById('table-title').textContent = data.title + ' Comparison';
+
+            const thead = document.getElementById('feature-table-head');
+            const recommendedIndex = Math.max(0, data.plans.findIndex(p => p.popular));
+            thead.innerHTML = `
+                <tr class="text-slate-400 dark:text-slate-500 text-xs uppercase tracking-wider">
+                    <th class="py-4 px-8 font-medium">Core Features</th>
+                    ${data.plans.map((plan, idx) => `
+                        <th class="py-4 px-8 text-center ${idx === recommendedIndex ? 'text-brand-500' : ''}">${plan.name}</th>
+                    `).join('')}
+                </tr>
+            `;
+
             const tableBody = document.getElementById('feature-table-body');
             tableBody.innerHTML = data.table.map(row => `
                 <tr class="border-t border-slate-50 dark:border-slate-700/50">
                     <td class="py-4 px-8 font-semibold">${row[0]}</td>
-                    <td class="py-4 px-8 text-center text-sm">${row[1] === '✓' ? '<i class="fa-solid fa-circle-check text-green-500"></i>' : (row[1] === '×' ? '<i class="fa-solid fa-circle-xmark text-slate-300"></i>' : row[1])}</td>
-                    <td class="py-4 px-8 text-center text-sm font-bold text-brand-500">${row[2] === '✓' ? '<i class="fa-solid fa-circle-check text-brand-500"></i>' : (row[2] === '×' ? '<i class="fa-solid fa-circle-xmark text-slate-300"></i>' : row[2])}</td>
-                    <td class="py-4 px-8 text-center text-sm">${row[3] === '✓' ? '<i class="fa-solid fa-circle-check text-green-500"></i>' : (row[3] === '×' ? '<i class="fa-solid fa-circle-xmark text-slate-300"></i>' : row[3])}</td>
+                    ${row.slice(1).map((cell, idx) => {
+                        const columnIdx = idx;
+                        const isRecommended = columnIdx === recommendedIndex;
+                        const checkIcon = isRecommended
+                            ? '<i class="fa-solid fa-circle-check text-brand-500"></i>'
+                            : '<i class="fa-solid fa-circle-check text-green-500"></i>';
+                        const crossIcon = '<i class="fa-solid fa-circle-xmark text-slate-300"></i>';
+
+                        const rendered = cell === '✓' ? checkIcon : (cell === '×' ? crossIcon : cell);
+                        const classes = isRecommended ? 'font-bold text-brand-500' : '';
+                        return `<td class="py-4 px-8 text-center text-sm ${classes}">${rendered}</td>`;
+                    }).join('')}
                 </tr>
             `).join('');
         }
