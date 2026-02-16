@@ -17,6 +17,7 @@ use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use App\Http\Middleware\InitializeTenancyByDomain;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Permission;
 
 class TenancyServiceProvider extends ServiceProvider
@@ -90,6 +91,7 @@ class TenancyServiceProvider extends ServiceProvider
             Events\BootstrappingTenancy::class => [],
             Events\TenancyBootstrapped::class => [
                 function (Events\TenancyBootstrapped $event) {
+                    if(!Schema::hasTable('permissions'))return;
                     $permissionRegistrar = app(\Spatie\Permission\PermissionRegistrar::class);
                     $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.' . $event->tenancy->tenant->getTenantKey();
 
@@ -155,6 +157,7 @@ class TenancyServiceProvider extends ServiceProvider
 
 
         View::composer('*', function ($view) {
+            if(!Schema::hasTable('branches'))return;
             if(tenant()){
                 $branchesService = app(BranchService::class);
                 $branches = $branchesService->activeList();
