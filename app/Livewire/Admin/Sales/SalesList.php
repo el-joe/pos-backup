@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Sales;
 use App\Enums\AuditLogActionEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\AuditLog;
+use App\Services\AccountService;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\SellService;
@@ -18,7 +19,7 @@ class SalesList extends Component
 {
 
     use LivewireOperations,WithPagination;
-    private $sellService,$cashRegisterService,$branchService,$userService;
+    private $sellService,$cashRegisterService,$branchService,$userService,$accountService;
     public $current;
 
     public $payment = [];
@@ -35,6 +36,7 @@ class SalesList extends Component
         $this->cashRegisterService = app(CashRegisterService::class);
         $this->branchService = app(BranchService::class);
         $this->userService = app(UserService::class);
+        $this->accountService = app(AccountService::class);
     }
 
     function setCurrent($id) {
@@ -111,6 +113,7 @@ class SalesList extends Component
 
         $branches = $this->branchService->activeList();
         $customers = $this->userService->customersList();
+        $paymentAccounts = $this->accountService->getBranchPaymentAccounts($this->current?->branch_id);
 
         return layoutView('sales.sales-list',get_defined_vars());
     }

@@ -6,6 +6,7 @@ use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\User;
+use App\Services\AccountService;
 use App\Services\CashRegisterService;
 use App\Services\PurchaseService;
 use App\Traits\LivewireOperations;
@@ -28,11 +29,13 @@ class SupplierPayable extends Component
 
     private PurchaseService $purchaseService;
     private CashRegisterService $cashRegisterService;
+    private AccountService $accountService;
 
     public function boot(): void
     {
         $this->purchaseService = app(PurchaseService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+        $this->accountService = app(AccountService::class);
     }
 
     public function mount(int $id): void
@@ -120,6 +123,8 @@ class SupplierPayable extends Component
         $supplier = $this->supplier;
         $purchases = $this->duePurchases();
         $totalDue = (float) $purchases->sum(fn (Purchase $purchase) => (float) $purchase->due_amount);
+        $branchIds = $purchases->pluck('branch_id')->filter()->unique()->values()->all();
+        $paymentAccounts = $this->accountService->getPaymentAccountsForBranchIds($branchIds);
 
         return layoutView('payables.supplier-payable', get_defined_vars())
             ->title(__('general.titles.supplier_payable'));

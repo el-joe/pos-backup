@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Enums\AccountTypeEnum;
+use App\Enums\CheckDirectionEnum;
+use App\Enums\CheckStatusEnum;
 use App\Enums\PurchaseStatusEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Helpers\PurchaseHelper;
@@ -15,6 +17,7 @@ use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\SaleItem;
+use App\Models\Tenant\Check;
 use App\Models\Tenant\User;
 use App\Repositories\SellRepository;
 use Illuminate\Support\Facades\DB;
@@ -227,7 +230,8 @@ class SellService
         $sell = $this->repo->find($sellId);
         if(!$sell) return;
 
-        $amount = $data['paid_amount'] ?? $data['payment_amount'] ?? 0;
+        $payments = $data['payments'] ?? [];
+        $amount = $data['paid_amount'] ?? $data['payment_amount'] ?? array_sum(array_map(fn($p) => (float)($p['amount'] ?? 0), $payments));
 
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
@@ -246,18 +250,42 @@ class SellService
         }else{
             $sell->decrement('paid_amount',$amount);
         }
-        foreach ($data['payments'] as $payment) {
+        foreach ($payments as $payment) {
+            $orderPaymentData = [];
             $orderPaymentData['account_id'] = $payment['account_id'] ?? $payment['payment_account'] ?? null;
-            $orderPaymentData['amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
+            $orderPaymentData['amount'] = (float)($payment['amount'] ?? 0);
 
-            OrderPayment::create([
+            $orderPayment = OrderPayment::create([
                 'payable_type' => Sale::class,
                 'payable_id' => $sellId,
                 'refunded' => $reverse ? 1 : 0,
                 'note' => $data['payment_note'] ?? '',
-                'account_id' => $this->getCustomerAccount($data['customer_id'] ?? null, $orderPaymentData['account_id'] ?? null)->id,
+                'account_id' => $orderPaymentData['account_id'],
                 ... $orderPaymentData
             ]);
+
+            // If selected payment account uses CHECK method, create a check record
+            if(!$reverse && ($orderPaymentData['account_id'] ?? null)) {
+                $account = Account::with('paymentMethod')->find($orderPaymentData['account_id']);
+                $slug = $account?->paymentMethod?->slug;
+                if($slug === 'check') {
+                    Check::create([
+                        'branch_id' => $sell->branch_id,
+                        'direction' => CheckDirectionEnum::RECEIVED->value,
+                        'status' => CheckStatusEnum::UNDER_COLLECTION->value,
+                        'payable_type' => Sale::class,
+                        'payable_id' => $sell->id,
+                        'order_payment_id' => $orderPayment->id,
+                        'customer_id' => $sell->customer_id,
+                        'amount' => (float)($orderPaymentData['amount'] ?? 0),
+                        'check_number' => $payment['check_number'] ?? null,
+                        'bank_name' => $payment['bank_name'] ?? null,
+                        'check_date' => $payment['check_date'] ?? null,
+                        'due_date' => $payment['due_date'] ?? null,
+                        'note' => $payment['note'] ?? ($data['payment_note'] ?? null),
+                    ]);
+                }
+            }
         }
 
         return $sell->refresh();
@@ -320,22 +348,52 @@ class SellService
     }
 
     function salePaymentLines($data,$event = 'create' ,$reverse = false) {
-        // ------------------------- Payment entry --------------------------------
-        foreach ($data['payments'] as $payment) {
-            $payment['branch_id'] = $data['branch_id'];
-            $payment['customer_id'] = $data['customer_id'] ?? null;
-            $payment['payment_account'] = $payment['account_id'] ?? null;
-            $payment['payment_amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
-            $branchCashLine = $this->createBranchCashLine($payment,'partial_paid', $reverse);
+        $payments = $data['payments'] ?? [];
+        $totalPaid = array_sum(array_map(fn($p) => (float)($p['amount'] ?? 0), $payments));
 
-            $customerCreditLine = $this->createCustomerLine($payment,'credit', $reverse);
+        if($totalPaid <= 0) {
+            return [];
         }
 
-        return [
-            // Payment entry --------------------------------
-            $branchCashLine,        // CR Branch Cash (if payment is made)
-            $customerCreditLine,     // CR Customer (reduce receivable by paid amount)
+        $lines = [];
+
+        // Debit payment side (cash / checks under collection)
+        foreach ($payments as $payment) {
+            $paymentAmount = (float)($payment['amount'] ?? 0);
+            if($paymentAmount <= 0) continue;
+
+            $paymentAccountId = $payment['account_id'] ?? $payment['payment_account'] ?? null;
+            $methodSlug = null;
+            if($paymentAccountId) {
+                $acc = Account::with('paymentMethod')->find($paymentAccountId);
+                $methodSlug = $acc?->paymentMethod?->slug;
+            }
+
+            if($methodSlug === 'check') {
+                $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $data['branch_id']);
+                $lines[] = [
+                    'account_id' => $checksUnderCollection->id,
+                    'type' => $reverse ? 'credit' : 'debit',
+                    'amount' => $paymentAmount,
+                ];
+            } else {
+                $branchCashLine = $this->createBranchCashLine([
+                    'branch_id' => $data['branch_id'],
+                    'payment_amount' => $paymentAmount,
+                ], 'partial_paid', $reverse);
+                $lines[] = $branchCashLine;
+            }
+        }
+
+        // Credit customer receivable by total paid
+        $customerAccount = $this->getCustomerAccount($data['customer_id'] ?? null, null);
+        $lines[] = [
+            'account_id' => $customerAccount->id,
+            'type' => $reverse ? 'debit' : 'credit',
+            'amount' => $totalPaid,
         ];
+
+        return $lines;
     }
 
     function createInventoryLine($data,$reverse = false) {

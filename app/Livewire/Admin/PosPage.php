@@ -17,6 +17,7 @@ use App\Services\CategoryService;
 use App\Services\ProductService;
 use App\Services\SellService;
 use App\Services\UserService;
+use App\Services\AccountService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,7 @@ class PosPage extends Component
 {
     use LivewireOperations;
 
-    private $productService, $userService, $sellService, $branchService, $cashRegisterService, $categoryService;
+    private $productService, $userService, $sellService, $branchService, $cashRegisterService, $categoryService, $accountService;
     public $currentProduct,$selectedUnitId,$selectedQuantity = 1,$maxQuantity,$discountCode,$selectedCustomerId;
     public $data = [];
     public $payments = [];
@@ -48,6 +49,7 @@ class PosPage extends Component
         $this->branchService = app(BranchService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
         $this->categoryService = app(CategoryService::class);
+        $this->accountService = app(AccountService::class);
     }
 
     #[On('re-render')]
@@ -372,6 +374,7 @@ class PosPage extends Component
         ]);
 
         $selectedCustomer = $this->customers->firstWhere('id',$this->selectedCustomerId);
+        $paymentAccounts = $this->accountService->getBranchPaymentAccounts($this->data['branch_id'] ?? null);
         extract($this->calculateTotals());
 
         $withoutSidebar = true;

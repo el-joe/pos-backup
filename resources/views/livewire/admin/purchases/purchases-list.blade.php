@@ -97,10 +97,10 @@
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label for="paymentMethod" class="control-label">Supplier Account</label>
+                            <label for="paymentMethod" class="control-label">Payment Account</label>
                             <select class="form-control" id="paymentMethod" wire:model="payment.account_id">
                                 <option value="">-- Select Account --</option>
-                                @foreach (($current?->supplier?->accounts??[]) as $acc)
+                                @foreach (($paymentAccounts ?? []) as $acc)
                                     <option value="{{ $acc->id }}">{{ $acc->paymentMethod?->name }} - {{ $acc->name }}</option>
                                 @endforeach
                             </select>

@@ -21,6 +21,9 @@ enum TransactionTypeEnum : string
     case OPENING_BALANCE = 'opening_balance';
     case CLOSING_BALANCE = 'closing_balance';
     case FIXED_ASSETS = 'fixed_assets';
+    case CHECK_COLLECTION = 'check_collection';
+    case CHECK_CLEARING = 'check_clearing';
+    case CHECK_BOUNCE = 'check_bounce';
 
     public function label(): string
     {
@@ -42,6 +45,9 @@ enum TransactionTypeEnum : string
             self::OPENING_BALANCE => 'Opening Balance',
             self::CLOSING_BALANCE => 'Closing Balance',
             self::FIXED_ASSETS => 'Fixed Assets',
+            self::CHECK_COLLECTION => 'Check Collection',
+            self::CHECK_CLEARING => 'Check Clearing',
+            self::CHECK_BOUNCE => 'Bounced Check',
         };
     }
 }

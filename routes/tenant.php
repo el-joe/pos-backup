@@ -13,6 +13,7 @@ use App\Livewire\Admin\Branches\BranchesList;
 use App\Livewire\Admin\Brands\BrandsList;
 use App\Livewire\Admin\CashRegister\CashRegisterPage;
 use App\Livewire\Admin\Categories\CategoriesList;
+use App\Livewire\Admin\Checks\ChecksList;
 use App\Livewire\Admin\Discounts\DiscountsList;
 use App\Livewire\Admin\Expenses\{ExpenseCategoriesList,ExpensesList};
 use App\Livewire\Admin\Imports\ImportsPage;
@@ -60,7 +61,10 @@ use App\Livewire\Admin\Units\{UnitsList};
 use App\Livewire\Admin\Users\{UserDetails,UsersList};
 use App\Livewire\Admin\Payables\CustomerPayable;
 use App\Livewire\Admin\Payables\SupplierPayable;
+use App\Models\Tenant\Account;
+use App\Models\Tenant\Branch;
 use App\Models\Tenant\ExpenseCategory;
+use App\Services\BranchService;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -158,6 +162,9 @@ Route::middleware([
             Route::get('sale-requests/{id}', SaleRequestDetails::class)->name('sale-requests.details');
             // Transactions
             Route::get('transactions',TransactionList::class)->name('transactions.list');
+
+            // Checks
+            Route::get('checks', ChecksList::class)->name('checks.list');
             // TODO : Shipping Companies
 
             // Reports
@@ -307,32 +314,15 @@ Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
 
 Route::get('test/{tenant}',function($tenant){
     tenancy()->initialize( $tenant);
+    $branchService = app(BranchService::class );
     // initaialize tenant
-    foreach (AccountTypeEnum::defaultExpensesAccounts() as $parentAccountType => $childAccounts) {
-            $parentAccount = AccountTypeEnum::from($parentAccountType);
-            // create expense category
-            $parent = ExpenseCategory::create([
-                'name' => $parentAccount->label(),
-                'ar_name' => $parentAccount->expensesAccountsTranslation(),
-                'parent_id' => null,
-                'active' => true,
-                'default' => true,
-                'key' => $parentAccount->value,
-            ]);
+    $branch = Branch::first();
 
-            $en = $childAccounts['en'];
-            $ar = $childAccounts['ar'];
-            foreach ($en as $index => $childAccountName) {
-                ExpenseCategory::create([
-                    'name' => $childAccountName,
-                    'ar_name' => $ar[$index],
-                    'parent_id' => $parent->id,
-                    'active' => true,
-                    'default' => true,
-                    'key' => $parentAccount->value,
-                ]);
-            }
-        }
+    // Seed default check accounts for this branch
+    if($branch) {
+        Account::defaultForPaymentMethodSlug('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branch->id, 'check');
+        Account::defaultForPaymentMethodSlug('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branch->id, 'check');
+    }
     tenancy()->end();
 });
 

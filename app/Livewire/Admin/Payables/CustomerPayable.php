@@ -6,6 +6,7 @@ use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\User;
+use App\Services\AccountService;
 use App\Services\CashRegisterService;
 use App\Services\SellService;
 use App\Traits\LivewireOperations;
@@ -28,11 +29,13 @@ class CustomerPayable extends Component
 
     private SellService $sellService;
     private CashRegisterService $cashRegisterService;
+    private AccountService $accountService;
 
     public function boot(): void
     {
         $this->sellService = app(SellService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+        $this->accountService = app(AccountService::class);
     }
 
     public function mount(int $id): void
@@ -125,6 +128,8 @@ class CustomerPayable extends Component
         $customer = $this->customer;
         $sales = $this->dueSales();
         $totalDue = (float) $sales->sum(fn (Sale $sale) => (float) $sale->due_amount);
+        $branchIds = $sales->pluck('branch_id')->filter()->unique()->values()->all();
+        $paymentAccounts = $this->accountService->getPaymentAccountsForBranchIds($branchIds);
 
         return layoutView('payables.customer-payable', get_defined_vars())
             ->title(__('general.titles.customer_payable'));

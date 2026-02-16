@@ -23,6 +23,13 @@ return [
         'can' => 'pos.create'
     ],
     [
+        "title"     => "Checks",
+        'translated_title' => 'general.titles.checks',
+        "icon"      => "fa fa-money-check fa-fw",
+        "route"     => 'admin.checks.list',
+        'can' => 'checks.list,checks.collect,checks.bounce,checks.clear'
+    ],
+    [
         "title"     => "Deferred POS",
         'translated_title' => 'general.titles.deferred_pos',
         "icon"      => "fa fa-hourglass-half fa-fw",

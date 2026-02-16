@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Purchases;
 use App\Enums\AuditLogActionEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\AuditLog;
+use App\Services\AccountService;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\PurchaseService;
@@ -18,7 +19,7 @@ class PurchasesList extends Component
 {
 
     use LivewireOperations,WithPagination;
-    private $purchaseService, $cashRegisterService,$branchService,$userService;
+    private $purchaseService, $cashRegisterService,$branchService,$userService,$accountService;
     public $current;
 
     public $filters = [
@@ -34,6 +35,7 @@ class PurchasesList extends Component
         $this->cashRegisterService = app(CashRegisterService::class);
         $this->branchService = app(BranchService::class);
         $this->userService = app(UserService::class);
+        $this->accountService = app(AccountService::class);
     }
 
     function setCurrent($id) {
@@ -103,6 +105,7 @@ class PurchasesList extends Component
         $purchases = $this->purchaseService->list(relations: [],filter: $this->filters,perPage: 10,orderByDesc: 'id');
         $branches = $this->branchService->activeList();
         $suppliers = $this->userService->suppliersList();
+        $paymentAccounts = $this->accountService->getBranchPaymentAccounts($this->current?->branch_id);
 
         return layoutView('purchases.purchases-list', get_defined_vars())
             ->title(__('general.titles.purchases'));

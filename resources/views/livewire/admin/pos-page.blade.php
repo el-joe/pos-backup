@@ -226,7 +226,7 @@
                                 <td>
                                     <select class="form-control" wire:model="payments.{{ $index }}.account_id">
                                         <option value="">-- Select Payment Method --</option>
-                                        @foreach ($selectedCustomer?->accounts ?? [] as $account)
+                                        @foreach ($paymentAccounts ?? [] as $account)
                                             <option value="{{ $account->id }}" {{ $payment['account_id'] == $account->id ? 'selected' : '' }}>{{ $account->paymentMethod?->name }} - {{ $account->name }}</option>
                                         @endforeach
                                     </select>

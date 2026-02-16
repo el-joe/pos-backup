@@ -11,6 +11,7 @@ use App\Models\Tenant\ExpenseCategory;
 use App\Models\Tenant\Setting;
 use App\Services\BranchService;
 use App\Services\PaymentMethodService;
+use App\Models\Tenant\Account;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -58,7 +59,13 @@ class TenantCreateAdmin extends Command
             'active' => true,
         ];
 
-        $branchService->save(null, $branchData);
+        $branch = $branchService->save(null, $branchData);
+
+        // Seed default check accounts for this branch
+        if($branch) {
+            Account::defaultForPaymentMethodSlug('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branch->id, 'check');
+            Account::defaultForPaymentMethodSlug('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branch->id, 'check');
+        }
     }
 
     function defaultPaymentMethods() {
@@ -67,6 +74,7 @@ class TenantCreateAdmin extends Command
         $paymentMethods = [
             ['name' => 'Cash' , 'slug' => 'cash', 'active' => true],
             ['name' => 'Bank Transfer', 'slug' => 'bank-transfer', 'active' => true],
+            ['name' => 'Check', 'slug' => 'check', 'active' => true],
         ];
 
         foreach ($paymentMethods as $method) {

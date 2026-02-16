@@ -244,8 +244,9 @@ class AddPurchase extends Component
         $taxes = $this->taxService->activeList([],[],null,'name');
         $paymentAccounts = [];
 
-        if($this->data['supplier_id'] ?? null)
+        if($this->data['supplier_id'] ?? null){
             $paymentAccounts = $this->accountService->getSupplierAccounts($this->data['supplier_id']);
+        }
 
         $totalQuantity = array_sum(array_column($this->orderProducts,'qty'));
         list($orderSubTotal,$orderDiscountAmount,$orderTotalAfterDiscount,$orderTaxAmount,$orderGrandTotal) = array_values($this->purchaseCalculations());

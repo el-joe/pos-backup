@@ -8,6 +8,9 @@ enum AccountTypeEnum : string
     case OWNER_ACCOUNT = 'owner_account';
     case CUSTOMER = 'customer';
     case SUPPLIER = 'supplier';
+    case CHECKS_UNDER_COLLECTION = 'checks_under_collection'; // current assets
+    case ISSUED_CHECKS = 'issued_checks'; // current liabilities
+
     // Expenses accounts
     case EXPENSE = 'expense';
     case FINANCE_EXPENSE = 'finance_expense';
@@ -55,6 +58,8 @@ enum AccountTypeEnum : string
             AccountTypeEnum::LONGTERM_LIABILITY => 'Long-term Liability', // Long-term liabilities transactions
             AccountTypeEnum::BRANCH_CASH => 'Branch Cash',
             AccountTypeEnum::OWNER_ACCOUNT => 'Owner Account',
+            AccountTypeEnum::CHECKS_UNDER_COLLECTION => 'Checks Under Collection',
+            AccountTypeEnum::ISSUED_CHECKS => 'Issued Checks',
             AccountTypeEnum::SALES => 'Sales',
             AccountTypeEnum::INVENTORY => 'Inventory',
             AccountTypeEnum::COGS => 'Cost of Goods Sold',
@@ -65,6 +70,8 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_DISCOUNT => 'Purchase Discount',
             AccountTypeEnum::SALES_RETURN => 'Sales Return',
             AccountTypeEnum::PURCHASE_RETURN => 'Purchase Return',
+            self::UNEARNED_REVENUE => 'Unearned Revenue',
+            self::ACCRUED_REVENUE => 'Accrued Revenue',
         };
     }
 
@@ -73,6 +80,8 @@ enum AccountTypeEnum : string
         return match($this) {
             AccountTypeEnum::CUSTOMER => 'primary',
             AccountTypeEnum::SUPPLIER => 'warning',
+            AccountTypeEnum::CHECKS_UNDER_COLLECTION => 'danger',
+            AccountTypeEnum::ISSUED_CHECKS => 'danger',
             AccountTypeEnum::EXPENSE => 'danger',
             AccountTypeEnum::FINANCE_EXPENSE => 'danger',
             AccountTypeEnum::MARKETING_EXPENSE => 'danger',
@@ -96,6 +105,8 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_DISCOUNT => 'info',
             AccountTypeEnum::SALES_RETURN => 'warning',
             AccountTypeEnum::PURCHASE_RETURN => 'warning',
+            self::UNEARNED_REVENUE => 'secondary',
+            self::ACCRUED_REVENUE => 'secondary',
         };
     }
 

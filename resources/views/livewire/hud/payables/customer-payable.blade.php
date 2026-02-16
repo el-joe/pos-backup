@@ -31,8 +31,8 @@
                     <label class="form-label">{{ __('general.pages.payables.account') }}</label>
                     <select class="form-select" wire:model="payment.account_id">
                         <option value="">{{ __('general.pages.payables.select_account') }}</option>
-                        @foreach (($customer?->accounts ?? []) as $acc)
-                            <option value="{{ $acc->id }}">{{ $acc->paymentMethod?->name }} - {{ $acc->name }}</option>
+                        @foreach (($paymentAccounts ?? []) as $acc)
+                            <option value="{{ $acc->id }}">{{ $acc->branch?->name ? ($acc->branch?->name . ' - ') : '' }}{{ $acc->paymentMethod?->name }} - {{ $acc->name }}</option>
                         @endforeach
                     </select>
                     @error('payment.account_id')

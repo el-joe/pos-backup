@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Enums\AccountTypeEnum;
+use App\Enums\CheckDirectionEnum;
+use App\Enums\CheckStatusEnum;
 use App\Enums\PurchaseStatusEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Helpers\PurchaseHelper;
@@ -12,6 +14,7 @@ use App\Models\Tenant\Expense;
 use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
+use App\Models\Tenant\Check;
 use App\Models\Tenant\User;
 use App\Repositories\PurchaseRepository;
 use Illuminate\Support\Facades\DB;
@@ -262,6 +265,7 @@ class PurchaseService
     function addPayment($purchaseId, $data , $reverse = false) {
         $purchase = $this->repo->find($purchaseId);
         if(!$purchase) return;
+
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Purchase Payment for #'.$purchase->ref_no,
             'type' => $reverse ? TransactionTypeEnum::PURCHASE_PAYMENT_REFUND->value : TransactionTypeEnum::PURCHASE_PAYMENT->value,
@@ -284,10 +288,11 @@ class PurchaseService
             $getSupplierAccount = Account::find($data['payment_account']);
         }
 
+        $orderPaymentData = [];
         $orderPaymentData['account_id'] = $getSupplierAccount->id ?? null;
-        $orderPaymentData['amount'] = $data['grand_total'] ?? $data['payment_amount'] ?? 0;
+        $orderPaymentData['amount'] = (float)($data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
 
-        OrderPayment::create([
+        $orderPayment = OrderPayment::create([
             'payable_type' => Purchase::class,
             'payable_id' => $purchaseId,
             'refunded' => $reverse ? 1 : 0,
@@ -295,6 +300,29 @@ class PurchaseService
             'account_id' => $getSupplierAccount->id ?? null,
             ... $orderPaymentData
         ]);
+
+        // If supplier account payment method is CHECK, create issued check record
+        if(!$reverse && ($getSupplierAccount?->id ?? null)) {
+            $account = Account::with('paymentMethod')->find($getSupplierAccount->id);
+            $slug = $account?->paymentMethod?->slug;
+            if($slug === 'check') {
+                Check::create([
+                    'branch_id' => $purchase->branch_id,
+                    'direction' => CheckDirectionEnum::ISSUED->value,
+                    'status' => CheckStatusEnum::ISSUED->value,
+                    'payable_type' => Purchase::class,
+                    'payable_id' => $purchase->id,
+                    'order_payment_id' => $orderPayment->id,
+                    'supplier_id' => $purchase->supplier_id,
+                    'amount' => (float)($orderPaymentData['amount'] ?? 0),
+                    'check_number' => $data['check_number'] ?? null,
+                    'bank_name' => $data['bank_name'] ?? null,
+                    'check_date' => $data['check_date'] ?? null,
+                    'due_date' => $data['due_date'] ?? null,
+                    'note' => $data['payment_note'] ?? null,
+                ]);
+            }
+        }
 
 
         $purchase = $purchase->refresh();
@@ -345,18 +373,41 @@ class PurchaseService
         // 3 status (pending, partial_paid, full_paid)
         if(($data['payment_status'] ?? 'pending') == 'pending'){
             return;
-        }else{
-            // Credit Branch Cash (if you paid now – reduce your cash balance)
-            $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid', $reverse);
-
-            // Debit Supplier (reduce liability when you make payment to supplier)
-            $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid', $reverse);
         }
 
+        $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid', $reverse);
+
+        $paymentAccountId = $data['payment_account'] ?? null;
+        $methodSlug = null;
+        if($paymentAccountId) {
+            $acc = Account::with('paymentMethod')->find($paymentAccountId);
+            $methodSlug = $acc?->paymentMethod?->slug;
+        }
+
+        if($methodSlug === 'check') {
+            $issuedChecks = Account::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $data['branch_id']);
+            $paidAmount = ($data['payment_status'] ?? 'full_paid') == 'full_paid'
+                ? (float)($data['grand_total'] ?? 0)
+                : (float)($data['payment_amount'] ?? 0);
+
+            $issuedChecksLine = [
+                'account_id' => $issuedChecks->id,
+                'type' => $reverse ? 'debit' : 'credit',
+                'amount' => $paidAmount,
+            ];
+
+            return [
+                $issuedChecksLine,
+                $supplierDebitLine,
+            ];
+        }
+
+        // Default: credit branch cash
+        $branchCashLine = $this->createBranchCashLine($data,$data['payment_status'] ?? 'full_paid', $reverse);
+
         return [
-            // Payment entry --------------------------------
-            $branchCashLine,        // CR Branch Cash (if payment is made)
-            $supplierDebitLine,     // DR Supplier (reduce payable by paid amount)
+            $branchCashLine,
+            $supplierDebitLine,
         ];
     }
 

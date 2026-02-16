@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use App\Enums\AccountTypeEnum;
+use App\Models\Tenant\Account;
+use App\Models\Tenant\Branch;
 use App\Models\Tenant\User;
 use App\Repositories\AccountRepository;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 
 class AccountService
 {
@@ -30,6 +33,42 @@ class AccountService
             'type' => AccountTypeEnum::SUPPLIER->value,
             'active' => 1,
         ], null, 'name');
+    }
+
+    public function getBranchPaymentAccounts(?int $branchId): Collection
+    {
+        if (!$branchId) {
+            return collect();
+        }
+
+        return Account::query()
+            ->with(['paymentMethod'])
+            ->where('model_type', Branch::class)
+            ->where('model_id', $branchId)
+            ->where('branch_id', $branchId)
+            ->where('active', 1)
+            ->whereNotNull('payment_method_id')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getPaymentAccountsForBranchIds(array $branchIds): Collection
+    {
+        $branchIds = collect($branchIds)->filter()->unique()->values()->all();
+        if (empty($branchIds)) {
+            return collect();
+        }
+
+        return Account::query()
+            ->with(['paymentMethod', 'branch'])
+            ->where('model_type', Branch::class)
+            ->whereIn('model_id', $branchIds)
+            ->whereIn('branch_id', $branchIds)
+            ->where('active', 1)
+            ->whereNotNull('payment_method_id')
+            ->orderBy('branch_id')
+            ->orderBy('name')
+            ->get();
     }
 
     function find($id = null, $relations = [])
