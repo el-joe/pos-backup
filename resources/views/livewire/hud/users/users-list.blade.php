@@ -86,9 +86,8 @@
                             <th>{{ __('general.pages.users.address') }}</th>
                             @if($type == 'customer')
                             <th>{{ __('general.pages.users.sales_threshold') }}</th>
-                            @elseif($type == 'supplier')
-                            <th>{{ __('general.pages.users.vat_number') }}</th>
                             @endif
+                            <th>{{ __('general.pages.users.vat_number') }}</th>
                             @if(in_array($type, ['customer','supplier']))
                             <th>{{ __('general.pages.users.due_amount') }}</th>
                             @endif
@@ -106,9 +105,8 @@
                                 <td>{{ $user->address }}</td>
                                 @if($type == 'customer')
                                 <td>{{ currencyFormat($user->sales_threshold, true) }}</td>
-                                @elseif($type == 'supplier')
-                                <td>{{ $user->vat_number }}</td>
                                 @endif
+                                <td>{{ $user->vat_number }}</td>
                                 @if(in_array($type, ['customer','supplier']))
                                     @php($totalDue = (float)($dueTotals[$user->id] ?? 0))
                                     <td>

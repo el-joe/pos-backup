@@ -31,12 +31,11 @@
                         <label for="userSalesThreshold" class="form-label">{{ __('general.pages.users.sales_threshold') }}</label>
                         <input type="number" class="form-control" wire:model="data.sales_threshold" id="userSalesThreshold" placeholder="{{ __('general.pages.users.enter_sales_threshold') }}" min="0" step="0.01" required>
                     </div>
-                    @elseif($type == 'supplier')
+                    @endif
                     <div class="mb-3">
                         <label for="userVatNumber" class="form-label">{{ __('general.pages.users.vat_number') }}</label>
                         <input type="text" class="form-control" wire:model="data.vat_number" id="userVatNumber" placeholder="{{ __('general.pages.users.enter_vat_number') }}">
                     </div>
-                    @endif
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="userActive" wire:model="data.active">
                         <label class="form-check-label" for="userActive">{{ __('general.pages.users.is_active') }}</label>
