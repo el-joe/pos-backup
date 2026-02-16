@@ -23,6 +23,8 @@ return new class extends Migration
                     $model = new $modelClass;
                     $tableName = $model->getTable();
 
+                    
+
                     // تحقق إذا الموديل فيه SoftDeletes
                     if (in_array('Illuminate\\Database\\Eloquent\\SoftDeletes', class_uses($model))) {
                         if(Schema::hasColumn($tableName, 'deleted_at')) {
