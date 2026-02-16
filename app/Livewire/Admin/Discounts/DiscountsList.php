@@ -60,12 +60,18 @@ class DiscountsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_DISCOUNT_TRY, ['id' => $id]);
 
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this discount', 'Yes, delete it!');
+        $this->confirm(
+            'delete',
+            'warning',
+            __('general.messages.are_you_sure'),
+            __('general.messages.confirm_delete_discount'),
+            __('general.messages.yes_delete_it')
+        );
     }
 
     function delete() {
         if (!$this->current) {
-            $this->popup('error', 'Discount not found');
+            $this->popup('error', __('general.messages.discount_not_found'));
             return;
         }
 
@@ -75,7 +81,7 @@ class DiscountsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_DISCOUNT, ['id' => $id]);
 
-        $this->popup('success', 'Discount deleted successfully');
+        $this->popup('success', __('general.messages.discount_deleted_successfully'));
 
         $this->dismiss();
 
@@ -96,13 +102,13 @@ class DiscountsList extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->popup('error','Error occurred while saving discount: '.$e->getMessage());
+            $this->popup('error', __('general.messages.error_saving_discount', ['message' => $e->getMessage()]));
             return;
         }
 
         AuditLog::log($action, ['id' => $discount->id]);
 
-        $this->popup('success', 'Discount saved successfully');
+        $this->popup('success', __('general.messages.discount_saved_successfully'));
 
         $this->dismiss();
 

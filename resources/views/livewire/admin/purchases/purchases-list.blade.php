@@ -2,13 +2,24 @@
     <div class="white-box">
         <div class="row mb-3" style="margin-bottom:15px;">
             <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Purchase Orders</h3>
+                <h3 class="box-title m-b-0" style="margin:0;">{{ __('general.pages.purchases.purchase_orders') }}</h3>
             </div>
             <div class="col-xs-6 text-right">
                 {{-- add toggle for edit branch --}}
                 <a class="btn btn-primary" href="#">
-                    <i class="fa fa-plus"></i> New Purchase Order
+                    <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
                 </a>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-sm-3">
+                <label class="control-label">{{ __('general.pages.purchases.due_filter') }}</label>
+                <select class="form-control" wire:model.live="filters.due_filter">
+                    <option value="all">{{ __('general.pages.purchases.due_filter_all') }}</option>
+                    <option value="paid">{{ __('general.pages.purchases.due_filter_paid') }}</option>
+                    <option value="unpaid">{{ __('general.pages.purchases.due_filter_unpaid') }}</option>
+                </select>
             </div>
         </div>
 
@@ -16,15 +27,15 @@
             <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Ref No.</th>
-                        <th>Supplier</th>
-                        <th>Branch</th>
-                        <th>Status</th>
-                        <th>Total Amount</th>
-                        <th>Due Amount</th>
-                        <th>Refund Status</th>
-                        <th class="text-nowrap">Action</th>
+                        <th>{{ __('general.pages.purchases.id') }}</th>
+                        <th>{{ __('general.pages.purchases.ref_no') }}</th>
+                        <th>{{ __('general.pages.purchases.supplier') }}</th>
+                        <th>{{ __('general.pages.purchases.branch') }}</th>
+                        <th>{{ __('general.pages.purchases.status') }}</th>
+                        <th>{{ __('general.pages.purchases.total_amount') }}</th>
+                        <th>{{ __('general.pages.purchases.due_amount') }}</th>
+                        <th>{{ __('general.pages.purchases.refund_status') }}</th>
+                        <th class="text-nowrap">{{ __('general.pages.purchases.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

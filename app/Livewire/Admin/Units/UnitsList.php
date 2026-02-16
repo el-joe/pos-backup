@@ -36,12 +36,18 @@ class UnitsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_UNIT_TRY, ['id' => $id]);
 
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this Unit', 'Yes, delete it!');
+        $this->confirm(
+            'delete',
+            'warning',
+            __('general.messages.are_you_sure'),
+            __('general.messages.confirm_delete_unit'),
+            __('general.messages.yes_delete_it')
+        );
     }
 
     function delete() {
         if (!$this->current) {
-            $this->popup('error', 'Unit not found');
+            $this->popup('error', __('general.messages.unit_not_found'));
             return;
         }
 
@@ -51,7 +57,7 @@ class UnitsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_UNIT, ['id' => $id]);
 
-        $this->popup('success', 'Unit deleted successfully');
+        $this->popup('success', __('general.messages.unit_deleted_successfully'));
 
         $this->dismiss();
 

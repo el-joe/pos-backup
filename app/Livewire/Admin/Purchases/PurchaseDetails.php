@@ -77,8 +77,9 @@ class PurchaseDetails extends Component
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
+        $getTotalRefunded = $this->getTotalRefunded($this->currentItem->id, $this->refundedQty);
+
         if($cashRegister){
-            $getTotalRefunded = $this->getTotalRefunded($this->currentItem->id, $this->refundedQty);
             $this->cashRegisterService->increment($cashRegister->id, 'total_purchase_refunds', $getTotalRefunded);
         }
 
@@ -87,11 +88,16 @@ class PurchaseDetails extends Component
 
         AuditLog::log(AuditLogActionEnum::REFUND_PURCHASE_ITEM, ['id' => $this->currentItem->id, 'purchase_id' => $this->purchase->id]);
 
+        $purchaseForNotify = $this->purchase->loadMissing(['branch','supplier']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($purchaseForNotify, $getTotalRefunded){
+            $admin->notifyPurchaseItemRefunded($purchaseForNotify, $getTotalRefunded);
+        });
+
         $this->mount();
 
         $this->dismiss();
 
-        $this->popup('success','Purchase item refunded successfully.');
+        $this->popup('success', __('general.messages.purchase_item_refunded_successfully'));
 
         $this->reset('refundedQty','currentItem');
     }
@@ -115,18 +121,24 @@ class PurchaseDetails extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_INTO_PURCHASE_TRY, ['id' => $id, 'purchase_id' => $this->purchase->id]);
 
-        $this->confirm('deleteExpense','error','Delete Expense','Are you sure you want to delete this expense? This action cannot be undone.','Do it!' );
+        $this->confirm(
+            'deleteExpense',
+            'error',
+            __('general.messages.delete_expense_title'),
+            __('general.messages.delete_expense_confirmation'),
+            __('general.messages.do_it')
+        );
     }
 
     function deleteExpense() {
         $expense = $this->currentExpense;
         if(!$expense) {
-            $this->popup('error','Expense not found.');
+            $this->popup('error', __('general.messages.expense_not_found'));
             return;
         }
 
         if($expense->refunded) {
-            $this->popup('error','Expense already refunded.');
+            $this->popup('error', __('general.messages.expense_already_refunded'));
             return;
         }
 
@@ -144,7 +156,7 @@ class PurchaseDetails extends Component
 
         $this->mount();
 
-        $this->popup('success','Expense deleted successfully.');
+        $this->popup('success', __('general.messages.expense_deleted_successfully'));
     }
 
     function getTotalExpenseRefunded($id){

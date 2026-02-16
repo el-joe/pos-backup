@@ -24,6 +24,7 @@ class PurchasesList extends Component
 
     public $filters = [
         'is_deferred' => 0,
+        'due_filter' => 'all',
     ];
     public $collapseFilters = false;
     public $export = null;
@@ -71,7 +72,12 @@ class PurchasesList extends Component
 
         AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE_PAYMENT, ['id' => $this->current->id]);
 
-        $this->alert('success','Payment added successfully!');
+        $purchaseForNotify = $this->current->loadMissing(['branch','supplier']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($purchaseForNotify){
+            $admin->notifyPurchasePaymentMade($purchaseForNotify, $this->payment['amount']);
+        });
+
+        $this->alert('success', __('general.messages.payment_added_successfully'));
         $this->reset('payment');
     }
 

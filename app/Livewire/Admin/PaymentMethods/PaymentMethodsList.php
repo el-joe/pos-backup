@@ -57,12 +57,18 @@ class PaymentMethodsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_PAYMENT_METHOD_TRY, ['id' => $id]);
 
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this payment method', 'Yes, delete it!');
+        $this->confirm(
+            'delete',
+            'warning',
+            __('general.messages.are_you_sure'),
+            __('general.messages.confirm_delete_payment_method'),
+            __('general.messages.yes_delete_it')
+        );
     }
 
     function delete() {
         if (!$this->current) {
-            $this->popup('error', 'Payment method not found');
+            $this->popup('error', __('general.messages.payment_method_not_found'));
             return;
         }
 
@@ -72,7 +78,7 @@ class PaymentMethodsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_PAYMENT_METHOD, ['id' => $id]);
 
-        $this->popup('success', 'Payment method deleted successfully');
+        $this->popup('success', __('general.messages.payment_method_deleted_successfully'));
 
         $this->dismiss();
 
@@ -95,12 +101,12 @@ class PaymentMethodsList extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->popup('error','Error occurred while saving payment method: '.$e->getMessage());
+            $this->popup('error', __('general.messages.error_saving_payment_method', ['message' => $e->getMessage()]));
             return;
         }
 
 
-        $this->popup('success', 'Payment method saved successfully');
+        $this->popup('success', __('general.messages.payment_method_saved_successfully'));
 
         $this->dismiss();
 

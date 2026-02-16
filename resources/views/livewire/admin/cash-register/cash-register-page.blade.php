@@ -65,6 +65,31 @@
                 <p><strong>Open since:</strong> {{ $currentRegister->opened_at }}</p>
                 <p><strong>Opening balance:</strong> {{ number_format($currentRegister->opening_balance, 2) }}</p>
 
+                <hr>
+                <h5>Cash Deposit</h5>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" class="form-control" wire:model="deposit_amount_input">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea class="form-control" wire:model="deposit_notes"></textarea>
+                </div>
+                <button wire:click="depositCash" class="btn btn-primary">Record Deposit</button>
+
+                <hr>
+                <h5>Cash Withdrawal</h5>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" class="form-control" wire:model="withdrawal_amount_input">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea class="form-control" wire:model="withdrawal_notes"></textarea>
+                </div>
+                <button wire:click="withdrawCash" class="btn btn-warning">Record Withdrawal</button>
+
+                <hr>
                 <div class="form-group">
                     <label>Closing Balance</label>
                     <input type="number" class="form-control" wire:model="closing_balance_input">

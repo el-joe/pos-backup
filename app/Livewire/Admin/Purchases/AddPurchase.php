@@ -87,7 +87,7 @@ class AddPurchase extends Component
     {
         $product = $this->productService->search($value);
         if(!$product) {
-            $this->alert('warning','Product not found');
+            $this->alert('warning', __('general.messages.product_not_found'));
             return;
         }
 
@@ -146,7 +146,7 @@ class AddPurchase extends Component
     function delete($index) {
         unset($this->orderProducts[$index]);
         $this->orderProducts = array_values($this->orderProducts);
-        $this->alert('success','Product removed from the list');
+        $this->alert('success', __('general.messages.product_removed_from_list'));
     }
 
     public function addExpense()
@@ -163,7 +163,7 @@ class AddPurchase extends Component
             unset($this->data['expenses'][$index]);
             $this->data['expenses'] = array_values($this->data['expenses']);
         }
-        $this->alert('success','Expense removed from the list');
+        $this->alert('success', __('general.messages.expense_removed_from_list'));
     }
 
     function calcOrderProductsTotal() : float {
@@ -201,11 +201,20 @@ class AddPurchase extends Component
         $calcDetails = $this->purchaseCalculations();
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+        $paymentStatus = $this->data['payment_status'] ?? 'pending';
+        $paidAmountForRegister = 0.0;
+        if($paymentStatus === 'full_paid'){
+            $paidAmountForRegister = (float)($calcDetails['orderGrandTotal'] ?? 0);
+        } elseif($paymentStatus === 'partial_paid'){
+            $paidAmountForRegister = (float)($this->data['payment_amount'] ?? 0);
+        }
 
         try{
             DB::beginTransaction();
             if($cashRegister){
-                $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $calcDetails['orderGrandTotal']);
+                if($paidAmountForRegister > 0){
+                    $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $paidAmountForRegister);
+                }
             }
 
             // save purchase
@@ -226,12 +235,19 @@ class AddPurchase extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->popup('error','Error occurred while creating purchase: '.$e->getMessage());
+            $this->popup('error', __('general.messages.error_creating_purchase', ['message' => $e->getMessage()]));
             return;
         }
 
+        if($paidAmountForRegister > 0){
+            $purchaseForNotify = $purchase->loadMissing(['branch','supplier']);
+            superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($purchaseForNotify, $paidAmountForRegister){
+                $admin->notifyPurchasePaymentMade($purchaseForNotify, $paidAmountForRegister);
+            });
+        }
+
         // alert success
-        $this->alert('success','Purchase created successfully');
+        $this->alert('success', __('general.messages.purchase_created_successfully'));
         // redirect to purchases list
         return $this->redirectWithTimeout(route('admin.purchases.list'),1000);
     }

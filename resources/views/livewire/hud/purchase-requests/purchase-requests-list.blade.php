@@ -89,7 +89,7 @@
                             <tr>
                                 <td>{{ $request->id }}</td>
                                 <td>{{ $request->request_number }}</td>
-                                <td>{{ $request->supplier?->name ?? 'N/A' }}</td>
+                                <td>{{ $request->supplier?->name ?? __('general.messages.n_a') }}</td>
                                 <td>{{ $request->branch?->name }}</td>
                                 <td>
                                     <span class="badge bg-{{ $request->status?->colorClass() ?? 'secondary' }}">

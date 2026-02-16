@@ -61,35 +61,35 @@
                             <div class="col-md-3">
                                 <div class="border rounded p-3 bg-dark text-light">
                                     <h6><i class="fa fa-building me-2"></i>{{ __('general.pages.stock-transfers.from_branch') }}</h6>
-                                    <p class="mb-0">{{ $stockTransfer->fromBranch?->name ?? 'N/A' }}</p>
+                                    <p class="mb-0">{{ $stockTransfer->fromBranch?->name ?? __('general.messages.n_a') }}</p>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="border rounded p-3 bg-dark text-light">
                                     <h6><i class="fa fa-building me-2"></i>{{ __('general.pages.stock-transfers.to_branch') }}</h6>
-                                    <p class="mb-0">{{ $stockTransfer->toBranch?->name ?? 'N/A' }}</p>
+                                    <p class="mb-0">{{ $stockTransfer->toBranch?->name ?? __('general.messages.n_a') }}</p>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="border rounded p-3 bg-dark text-light">
                                     <h6><i class="fa fa-hashtag me-2"></i>{{ __('general.pages.stock-transfers.ref_no') }}</h6>
-                                    <p class="mb-0">{{ $stockTransfer->ref_no ?? 'N/A' }}</p>
+                                    <p class="mb-0">{{ $stockTransfer->ref_no ?? __('general.messages.n_a') }}</p>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="border rounded p-3 bg-dark text-light">
                                     <h6><i class="fa fa-calendar me-2"></i>{{ __('general.pages.stock-transfers.transfer_date') }}</h6>
-                                    <p class="mb-0">{{ dateTimeFormat($stockTransfer->transfer_date, true, false) ?? 'N/A' }}</p>
+                                    <p class="mb-0">{{ dateTimeFormat($stockTransfer->transfer_date, true, false) ?? __('general.messages.n_a') }}</p>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="border rounded p-3 bg-dark text-light">
                                     <h6><i class="fa fa-info-circle me-2"></i>{{ __('general.pages.stock-transfers.status') }}</h6>
-                                    <p class="mb-0">{{ $stockTransfer->status->label() ?? 'N/A' }}</p>
+                                    <p class="mb-0">{{ $stockTransfer->status->label() ?? __('general.messages.n_a') }}</p>
                                 </div>
                             </div>
 
@@ -118,7 +118,7 @@
                                     @foreach ($stockTransfer->items as $item)
                                     <tr>
                                         <td><strong>{{ $item?->product?->name }}</strong></td>
-                                        <td>{{ $item?->unit?->name ?? 'N/A' }}</td>
+                                        <td>{{ $item?->unit?->name ?? __('general.messages.n_a') }}</td>
                                         <td>{{ $item->qty }}</td>
                                         <td>{{ currencyFormat($item->unit_cost, true) }}</td>
                                         <td>{{ currencyFormat($item->sell_price, true) }}</td>
@@ -149,9 +149,9 @@
                                 <tbody>
                                     @foreach ($stockTransfer->expenses ?? [] as $expense)
                                     <tr>
-                                        <td>{{ $expense->description ?? $expense->note ?? 'N/A' }}</td>
+                                        <td>{{ $expense->description ?? $expense->note ?? __('general.messages.n_a') }}</td>
                                         <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
-                                        <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : 'N/A' }}</td>
+                                        <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : __('general.messages.n_a') }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
                                                 <i class="fa fa-trash"></i>
@@ -185,7 +185,7 @@
             <div class="modal-content refund-modal-content">
 
                 <div class="modal-header refund-modal-header">
-                    <h5 class="modal-title mx-auto"><i class="fa fa-undo"></i> Refund Item</h5>
+                    <h5 class="modal-title mx-auto"><i class="fa fa-undo"></i> {{ __('general.pages.stock-transfers.refund_item') }}</h5>
                     <button type="button" class="close refund-close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -193,24 +193,24 @@
                     <div class="refund-warning">
                         <i class="fa fa-exclamation-circle"></i>
                         <div>
-                            <p class="mb-1">You are about to refund the product:</p>
+                            <p class="mb-1">{{ __('general.pages.stock-transfers.refund_warning') }}</p>
                             <strong class="refund-product-name">{{ $currentItem?->product?->name }}</strong>
                         </div>
                     </div>
 
                     <div class="form-group mt-3">
-                        <label><strong>Quantity to Refund</strong></label>
+                        <label><strong>{{ __('general.pages.stock-transfers.quantity_to_refund') }}</strong></label>
                         <input type="number" min="1" max="{{ $currentItem?->actual_qty ?? 1 }}" wire:model="refundedQty" class="form-control refund-input">
-                        <small class="form-text text-muted">Max: {{ $currentItem?->actual_qty ?? 1 }}</small>
+                        <small class="form-text text-muted">{{ __('general.pages.stock-transfers.max', ['qty' => $currentItem?->actual_qty ?? 1]) }}</small>
                     </div>
                 </div>
 
                 <div class="modal-footer justify-content-end">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('general.pages.stock-transfers.cancel') }}</button>
 
                     @if ($currentItem)
                     <button type="button" class="btn btn-danger" wire:click="refundPurchaseItem">
-                        <i class="fa fa-check"></i> Confirm Refund
+                        <i class="fa fa-check"></i> {{ __('general.pages.stock-transfers.confirm_refund') }}
                     </button>
                     @endif
                 </div>

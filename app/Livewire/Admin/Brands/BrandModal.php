@@ -55,14 +55,14 @@ class BrandModal extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->popup('error','Error occurred while saving brand: '.$e->getMessage());
+            $this->popup('error', __('general.messages.error_saving_brand', ['message' => $e->getMessage()]));
             return;
         }
 
 
         AuditLog::log($action, ['id' => $brand->id]);
 
-        $this->popup('success', 'Brand saved successfully');
+        $this->popup('success', __('general.messages.brand_saved_successfully'));
 
         $this->dismiss();
 

@@ -12,11 +12,11 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.sale_requests.customer') }}</div>
-                    <div>{{ $request->customer?->name ?? 'N/A' }}</div>
+                    <div>{{ $request->customer?->name ?? __('general.messages.n_a') }}</div>
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.sale_requests.branch') }}</div>
-                    <div>{{ $request->branch?->name ?? 'N/A' }}</div>
+                    <div>{{ $request->branch?->name ?? __('general.messages.n_a') }}</div>
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.sale_requests.status') }}</div>
@@ -35,11 +35,11 @@
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.sale_requests.request_date') }}</div>
-                    <div>{{ $request->request_date ? dateTimeFormat($request->request_date, true, false) : 'N/A' }}</div>
+                    <div>{{ $request->request_date ? dateTimeFormat($request->request_date, true, false) : __('general.messages.n_a') }}</div>
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.sale_requests.valid_until') }}</div>
-                    <div>{{ $request->valid_until ? dateTimeFormat($request->valid_until, true, false) : 'N/A' }}</div>
+                    <div>{{ $request->valid_until ? dateTimeFormat($request->valid_until, true, false) : __('general.messages.n_a') }}</div>
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.sale_requests.total') }}</div>

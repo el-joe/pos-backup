@@ -69,16 +69,21 @@ class ExpensesList extends Component
             return;
         }
 
+        $expenseForNotify = $this->current->loadMissing(['branch','category']);
+
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
         if($cashRegister){
-            $getTotalRefunded = $this->current->total;
+            $getTotalRefunded = $this->current->total_paid;
             $this->cashRegisterService->increment($cashRegister->id, 'total_expense_refunds', $getTotalRefunded);
         }
 
         $id = $this->current->id;
 
         $this->expenseService->delete($id);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($expenseForNotify){
+            $admin->notifyExpenseRefunded($expenseForNotify);
+        });
 
         AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE, ['id' => $id]);
 
@@ -98,6 +103,8 @@ class ExpensesList extends Component
             $action = AuditLogActionEnum::CREATE_EXPENSE;
         }
 
+        $wasCreating = !$this->current;
+
         try{
             DB::beginTransaction();
             $expense = $this->expenseService->save($this->current?->id, $this->data);
@@ -112,9 +119,13 @@ class ExpensesList extends Component
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
-        if($cashRegister){
-            $getTotalRefunded = $expense->total;
-            $this->cashRegisterService->increment($cashRegister->id, 'total_expenses', $getTotalRefunded);
+        if($wasCreating && $cashRegister && (float)$expense->total_paid > 0){
+            $this->cashRegisterService->increment($cashRegister->id, 'total_expenses', (float)$expense->total_paid);
+
+            $expenseForNotify = $expense->fresh(['branch','category']);
+            superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($expenseForNotify){
+                $admin->notifyExpensePaid($expenseForNotify);
+            });
         }
 
         $this->popup('success', 'Expense saved successfully');
@@ -143,6 +154,16 @@ class ExpensesList extends Component
         }
 
         AuditLog::log(AuditLogActionEnum::PAY_EXPENSE, ['id' => $id]);
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+        if($cashRegister){
+            $this->cashRegisterService->increment($cashRegister->id, 'total_expenses', (float)$this->current->total);
+        }
+
+        $expenseForNotify = $this->current->fresh(['branch','category']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($expenseForNotify){
+            $admin->notifyExpensePaid($expenseForNotify);
+        });
 
         $this->popup('success', 'Expense paid successfully');
 

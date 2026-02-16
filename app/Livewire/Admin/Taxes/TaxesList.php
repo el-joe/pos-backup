@@ -51,12 +51,18 @@ class TaxesList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_TAX_TRY, ['id' => $id]);
 
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this tax', 'Yes, delete it!');
+        $this->confirm(
+            'delete',
+            'warning',
+            __('general.messages.are_you_sure'),
+            __('general.messages.confirm_delete_tax'),
+            __('general.messages.yes_delete_it')
+        );
     }
 
     function delete() {
         if (!$this->current) {
-            $this->popup('error', 'Tax not found');
+            $this->popup('error', __('general.messages.tax_not_found'));
             return;
         }
 
@@ -66,7 +72,7 @@ class TaxesList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_TAX, ['id' => $id]);
 
-        $this->popup('success', 'Tax deleted successfully');
+        $this->popup('success', __('general.messages.tax_deleted_successfully'));
 
         $this->dismiss();
 
@@ -90,11 +96,11 @@ class TaxesList extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->popup('error','Error occurred while saving tax: '.$e->getMessage());
+            $this->popup('error', __('general.messages.error_saving_tax', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Tax saved successfully');
+        $this->popup('success', __('general.messages.tax_saved_successfully'));
 
         $this->dismiss();
 

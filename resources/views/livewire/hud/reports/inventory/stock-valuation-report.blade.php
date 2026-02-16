@@ -29,7 +29,7 @@
                                     $total_value += $row->stock_value;
                                 @endphp
                                 <tr>
-                                    <td>{{ $row->branch_name ?? 'N/A' }}</td>
+                                    <td>{{ $row->branch_name ?? __('general.messages.n_a') }}</td>
                                     <td>{{ $row->product_name }}</td>
                                     <td>{{ $row->stock_qty }}</td>
                                     <td>{{ currencyFormat($row->unit_cost, true) }}</td>

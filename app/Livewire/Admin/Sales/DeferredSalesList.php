@@ -75,6 +75,11 @@ class DeferredSalesList extends Component
 
         AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER_PAYMENT,  ['id' => $this->current->id]);
 
+        $saleForNotify = $this->current->loadMissing(['branch','customer']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($saleForNotify){
+            $admin->notifySalePaymentReceived($saleForNotify, $this->payment['amount']);
+        });
+
         $this->alert('success', __('general.messages.payment_added_successfully'));
         $this->reset('payment');
 

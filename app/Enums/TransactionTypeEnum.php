@@ -20,6 +20,8 @@ enum TransactionTypeEnum : string
     case STOCK_ADJUSTMENT_REFUND = 'stock_adjustment_refund';
     case OPENING_BALANCE = 'opening_balance';
     case CLOSING_BALANCE = 'closing_balance';
+    case CASH_DEPOSIT = 'cash_deposit';
+    case CASH_WITHDRAWAL = 'cash_withdrawal';
     case FIXED_ASSETS = 'fixed_assets';
     case CHECK_COLLECTION = 'check_collection';
     case CHECK_CLEARING = 'check_clearing';
@@ -44,6 +46,8 @@ enum TransactionTypeEnum : string
             self::STOCK_ADJUSTMENT_REFUND => 'Stock Adjustment Refund',
             self::OPENING_BALANCE => 'Opening Balance',
             self::CLOSING_BALANCE => 'Closing Balance',
+            self::CASH_DEPOSIT => 'Cash Deposit',
+            self::CASH_WITHDRAWAL => 'Cash Withdrawal',
             self::FIXED_ASSETS => 'Fixed Assets',
             self::CHECK_COLLECTION => 'Check Collection',
             self::CHECK_CLEARING => 'Check Clearing',

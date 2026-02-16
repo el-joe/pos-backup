@@ -24,6 +24,15 @@
                             wire:model.blur="filters.ref_no">
                     </div>
 
+                    <div class="col-md-4">
+                        <label class="form-label">{{ __('general.pages.purchases.due_filter') }}</label>
+                        <select class="form-select select2" name="filters.due_filter">
+                            <option value="all">{{ __('general.pages.purchases.due_filter_all') }}</option>
+                            <option value="paid">{{ __('general.pages.purchases.due_filter_paid') }}</option>
+                            <option value="unpaid">{{ __('general.pages.purchases.due_filter_unpaid') }}</option>
+                        </select>
+                    </div>
+
                     <!-- Filter by Supplier -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.purchases.supplier') }}</label>
@@ -238,7 +247,7 @@
                                     <tr>
                                         <td>{{ dateTimeFormat($payment->created_at) }}</td>
                                         <td><span class="badge bg-success">{{ currencyFormat($payment->amount, true) }}</span></td>
-                                        <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name ? $payment->account()->paymentMethod?->name .' - '  : '' ) . $payment->account()->name : 'N/A' }}</td>
+                                        <td>{{ $payment->account() ?  ($payment->account()->paymentMethod?->name ? $payment->account()->paymentMethod?->name .' - '  : '' ) . $payment->account()->name : __('general.messages.n_a') }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>
                                 @empty

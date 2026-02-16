@@ -18,7 +18,7 @@
                 <div class="bg-primary text-white px-4 py-3 d-flex justify-content-between align-items-center">
                     <div>
                         <i class="fa fa-crown me-2"></i>
-                        <strong>Active Subscription</strong>
+                        <strong>{{ __('general.pages.subscriptions.active_subscription') }}</strong>
                     </div>
                     <span class="badge bg-light text-primary">
                         {{ ucfirst($currentSubscription->status) }}
@@ -30,28 +30,28 @@
                     {{-- PLAN INFO --}}
                     <div class="row text-center mb-4">
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="text-muted small">Plan</div>
+                            <div class="text-muted small">{{ __('general.pages.subscriptions.plan') }}</div>
                             <div class="fw-bold fs-5">
                                 {{ $currentSubscription->plan?->name }}
                             </div>
                         </div>
 
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="text-muted small">Price</div>
+                            <div class="text-muted small">{{ __('general.pages.subscriptions.price') }}</div>
                             <div class="fw-bold fs-5">
                                 {{ currencyFormat($currentSubscription->price, true) }}
                             </div>
                         </div>
 
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="text-muted small">Start Date</div>
+                            <div class="text-muted small">{{ __('general.pages.subscriptions.start_date') }}</div>
                             <div class="fw-semibold">
                                 {{ dateTimeFormat($currentSubscription->start_date,true,false) }}
                             </div>
                         </div>
 
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="text-muted small">End Date</div>
+                            <div class="text-muted small">{{ __('general.pages.subscriptions.end_date') }}</div>
                             <div class="fw-semibold">
                                 {{ dateTimeFormat($currentSubscription->end_date,true,false) }}
                             </div>
@@ -61,9 +61,9 @@
                     {{-- PROGRESS --}}
                     <div class="mb-4">
                         <div class="d-flex justify-content-between mb-1">
-                            <small class="text-muted">Subscription Progress</small>
+                            <small class="text-muted">{{ __('general.pages.subscriptions.subscription_progress') }}</small>
                             <small class="fw-semibold text-primary">
-                                {{ $remainingDays }} days remaining
+                                {{ __('general.pages.subscriptions.days_remaining', ['days' => $remainingDays]) }}
                             </small>
                         </div>
                         <div class="progress" style="height: 8px;">
@@ -78,13 +78,13 @@
                     <div class="d-flex flex-wrap gap-2">
                         @if($currentSubscription->canRenew() && adminCan('subscriptions.renew'))
                             <button class="btn btn-success" wire:click="renewSubscription">
-                                <i class="fa fa-sync me-1"></i> Renew
+                                <i class="fa fa-sync me-1"></i> {{ __('general.pages.subscriptions.renew') }}
                             </button>
                         @endif
 
                         @if($currentSubscription->canCancel() && adminCan('subscriptions.cancel'))
                             <button class="btn btn-outline-danger" wire:click="cancelSubscription">
-                                <i class="fa fa-times me-1"></i> Cancel & Refund
+                                <i class="fa fa-times me-1"></i> {{ __('general.pages.subscriptions.cancel_and_refund') }}
                             </button>
                         @endif
                     </div>
@@ -109,12 +109,12 @@
             <div class="card shadow-sm h-100 text-center">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fa fa-wallet me-2"></i> Account Balance
+                        <i class="fa fa-wallet me-2"></i> {{ __('general.pages.subscriptions.account_balance') }}
                     </h5>
                 </div>
 
                 <div class="card-body d-flex flex-column justify-content-center">
-                    <div class="text-muted mb-2">Available Balance</div>
+                    <div class="text-muted mb-2">{{ __('general.pages.subscriptions.available_balance') }}</div>
                     <div class="display-6 fw-bold text-primary">
                         {{ currencyFormat($accountBalance,true) }}
                     </div>
@@ -136,7 +136,7 @@
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fa fa-history me-2"></i> Previous Subscriptions
+                        <i class="fa fa-history me-2"></i> {{ __('general.pages.subscriptions.previous_subscriptions') }}
                     </h5>
                 </div>
 
@@ -145,11 +145,11 @@
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
-                                <th>Plan</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Status</th>
-                                <th class="text-end">Total</th>
+                                <th>{{ __('general.pages.subscriptions.plan') }}</th>
+                                <th>{{ __('general.pages.subscriptions.start_date') }}</th>
+                                <th>{{ __('general.pages.subscriptions.end_date') }}</th>
+                                <th>{{ __('general.pages.subscriptions.status') }}</th>
+                                <th class="text-end">{{ __('general.pages.subscriptions.total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,7 +171,7 @@
                             @empty
                                 <tr>
                                     <td colspan="6" class="text-center text-muted py-4">
-                                        No previous subscriptions found
+                                        {{ __('general.pages.subscriptions.no_previous_subscriptions_found') }}
                                     </td>
                                 </tr>
                             @endforelse

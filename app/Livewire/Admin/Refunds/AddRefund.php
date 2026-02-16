@@ -71,6 +71,10 @@ class AddRefund extends Component
             if($order){
                 $this->data['branch_id'] = $order->branch_id;
             }
+        }else{
+            if(admin()->branch_id != null){
+                $this->data['branch_id'] = admin()->branch_id;
+            }
         }
     }
 
@@ -182,6 +186,11 @@ class AddRefund extends Component
         }
 
         AuditLog::log(AuditLogActionEnum::RETURN_SALE_ORDER, ['order_id' => $refundId, 'route' => route('admin.refunds.list')]);
+
+        $route = route('admin.refunds.list', ['order_type' => 'sale']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($refundId, $route){
+            $admin->notifyReturnSaleOrder($refundId, $route);
+        });
     }
 
     function getSaleTotalRefundedCalc($saleItemId, $qty) {
@@ -223,6 +232,11 @@ class AddRefund extends Component
         }
 
         AuditLog::log(AuditLogActionEnum::RETURN_PURCHASE_ORDER, ['order_id' => $refundId, 'route' => route('admin.refunds.list')]);
+
+        $route = route('admin.refunds.list', ['order_type' => 'purchase']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($refundId, $route){
+            $admin->notifyReturnPurchaseOrder($refundId, $route);
+        });
     }
 
     function getPurchaseTotalRefunded($purchaseItemId, $qty) {

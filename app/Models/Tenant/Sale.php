@@ -133,6 +133,44 @@ class Sale extends Model
             ->when($filters['from_date'] ?? null, fn($q,$v)=> $q->whereDate('order_date','>=',$v))
             ->when($filters['to_date'] ?? null, fn($q,$v)=> $q->whereDate('order_date','<=',$v))
             ->when(array_key_exists('is_deferred', $filters), fn($q)=> $q->where('is_deferred', (bool)$filters['is_deferred']))
+            ->when(isset($filters['due_filter']) && in_array($filters['due_filter'], ['paid', 'unpaid'], true), function($q) use ($filters) {
+                $saleItemsSummary = DB::table('sale_items')
+                    ->selectRaw("sale_id,
+                        SUM((qty - COALESCE(refunded_qty,0)) * sell_price) AS sale_subtotal,
+                        SUM(CASE WHEN taxable = 1 THEN (qty - COALESCE(refunded_qty,0)) * sell_price ELSE 0 END) AS taxable_subtotal
+                    ")
+                    ->groupBy('sale_id');
+
+                $q->leftJoinSub($saleItemsSummary, 'si', fn($join) => $join->on('si.sale_id', '=', 'sales.id'));
+
+                $discountExpr = "(CASE
+                    WHEN sales.discount_type = 'fixed' THEN
+                        CASE WHEN COALESCE(si.sale_subtotal,0) > COALESCE(sales.max_discount_amount,0) THEN COALESCE(sales.discount_value,0) ELSE 0 END
+                    WHEN sales.discount_type = 'percentage' THEN
+                        CASE
+                            WHEN COALESCE(sales.max_discount_amount,0) = 0 THEN COALESCE(si.sale_subtotal,0) * COALESCE(sales.discount_value,0) / 100
+                            WHEN COALESCE(si.sale_subtotal,0) * COALESCE(sales.discount_value,0) / 100 > COALESCE(sales.max_discount_amount,0) THEN COALESCE(sales.max_discount_amount,0)
+                            ELSE COALESCE(si.sale_subtotal,0) * COALESCE(sales.discount_value,0) / 100
+                        END
+                    ELSE 0
+                END)";
+
+                $taxBaseExpr = "GREATEST(0,
+                    COALESCE(si.taxable_subtotal,0)
+                    - ({$discountExpr}) * (CASE WHEN COALESCE(si.sale_subtotal,0) > 0 THEN COALESCE(si.taxable_subtotal,0) / COALESCE(si.sale_subtotal,0) ELSE 0 END)
+                )";
+
+                $taxExpr = "(CASE WHEN COALESCE(sales.tax_percentage,0) > 0 THEN ({$taxBaseExpr}) * (COALESCE(sales.tax_percentage,0) / 100) ELSE 0 END)";
+
+                $grandTotalExpr = "(COALESCE(si.sale_subtotal,0) - ({$discountExpr}) + ({$taxExpr}))";
+                $dueExpr = "({$grandTotalExpr} - COALESCE(sales.paid_amount,0))";
+
+                if (($filters['due_filter'] ?? 'all') === 'paid') {
+                    $q->whereRaw("{$dueExpr} <= 0.01");
+                } else {
+                    $q->whereRaw("{$dueExpr} > 0.01");
+                }
+            })
             ->when(array_key_exists('inventory_delivered', $filters), function($q) use ($filters){
                 return (bool)$filters['inventory_delivered']
                     ? $q->whereNotNull('inventory_delivered_at')

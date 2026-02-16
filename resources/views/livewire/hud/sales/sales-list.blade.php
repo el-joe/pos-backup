@@ -24,6 +24,15 @@
                             wire:model.blur="filters.search">
                     </div>
 
+                    <div class="col-md-4">
+                        <label class="form-label">{{ __('general.pages.sales.due_filter') }}</label>
+                        <select class="form-select select2" name="filters.due_filter">
+                            <option value="all">{{ __('general.pages.sales.due_filter_all') }}</option>
+                            <option value="paid">{{ __('general.pages.sales.due_filter_paid') }}</option>
+                            <option value="unpaid">{{ __('general.pages.sales.due_filter_unpaid') }}</option>
+                        </select>
+                    </div>
+
                     <!-- Filter by Customer -->
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.sales.customer') }}</label>
@@ -267,7 +276,7 @@
                                     <tr>
                                         <td>{{ dateTimeFormat($payment->created_at,true,false) }}</td>
                                         <td><span class="badge bg-success">{{ currencyFormat($payment->amount, true) }}</span></td>
-                                        <td>{{ $payment->account() ? ($payment->account('credit')->paymentMethod?->name ? $payment->account('credit')->paymentMethod?->name .' - '  : '' ) . $payment->account('credit')->name : 'N/A' }}</td>
+                                        <td>{{ $payment->account() ? ($payment->account('credit')->paymentMethod?->name ? $payment->account('credit')->paymentMethod?->name .' - '  : '' ) . $payment->account('credit')->name : __('general.messages.n_a') }}</td>
                                         <td>{{ $payment->note }}</td>
                                     </tr>
                                 @empty

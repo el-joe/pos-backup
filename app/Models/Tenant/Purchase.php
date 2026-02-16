@@ -107,6 +107,28 @@ class Purchase extends Model
             ->when($filters['branch_id'] ?? false , fn($q,$branch_id) => $q->where('branch_id',$branch_id) )
             ->when($filters['status'] ?? false , fn($q,$status) => $q->where('status',$status) )
             ->when(array_key_exists('is_deferred', $filters), fn($q)=> $q->where('is_deferred', (bool)$filters['is_deferred']))
+            ->when(isset($filters['due_filter']) && in_array($filters['due_filter'], ['paid', 'unpaid'], true), function($q) use ($filters) {
+                $unitCostAfterDiscountExpr = '(purchase_items.purchase_price - (purchase_items.purchase_price * COALESCE(purchase_items.discount_percentage,0) / 100))';
+                $unitAmountAfterTaxExpr = '('.$unitCostAfterDiscountExpr.' + ('.$unitCostAfterDiscountExpr.' * COALESCE(purchase_items.tax_percentage,0) / 100))';
+                $actualQtyExpr = '(purchase_items.qty - COALESCE(purchase_items.refunded_qty,0))';
+                $totalAfterTaxExpr = '('.$unitAmountAfterTaxExpr.' * '.$actualQtyExpr.')';
+
+                $itemsTotalExpr = '(SELECT COALESCE(SUM('.$totalAfterTaxExpr.'),0) FROM purchase_items WHERE purchase_items.purchase_id = purchases.id)';
+                $expensesTotalExpr = 'COALESCE((SELECT SUM(amount) FROM expenses WHERE expenses.model_type = \'".Purchase::class."\' AND expenses.model_id = purchases.id),0)';
+                $subTotalExpr = '('.$itemsTotalExpr.' + '.$expensesTotalExpr.')';
+
+                $discountExpr = '(CASE WHEN discount_type = \'percentage\' THEN ('.$subTotalExpr.' * discount_value / 100) ELSE discount_value END)';
+                $totalAfterDiscountExpr = '('.$subTotalExpr.' - '.$discountExpr.')';
+                $taxExpr = '('.$totalAfterDiscountExpr.' * tax_percentage / 100)';
+                $totalAmountExpr = '('.$totalAfterDiscountExpr.' + '.$taxExpr.')';
+
+                $dueExpr = '(COALESCE('.$totalAmountExpr.',0) - COALESCE(paid_amount,0))';
+                if (($filters['due_filter'] ?? 'all') === 'paid') {
+                    $q->whereRaw("{$dueExpr} <= 0.01");
+                } else {
+                    $q->whereRaw("{$dueExpr} > 0.01");
+                }
+            })
             ->when(array_key_exists('inventory_received', $filters), function($q) use ($filters){
                 return (bool)$filters['inventory_received']
                     ? $q->whereNotNull('inventory_received_at')

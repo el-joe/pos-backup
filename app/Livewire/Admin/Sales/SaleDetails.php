@@ -50,11 +50,19 @@ class SaleDetails extends Component
 
         $this->sellService->refundSaleItem($this->currentItem?->id,$this->refundedQty);
 
+        $totalRefunded = $this->getTotalRefundedCalc($this->currentItem?->id, $this->refundedQty);
+
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
         if($cashRegister){
-            $totalRefunded = $this->getTotalRefundedCalc($this->currentItem?->id, $this->refundedQty);
             $this->cashRegisterService->increment($cashRegister->id, 'total_sale_refunds', $totalRefunded);
+        }
+
+        if($this->order){
+            $saleForNotify = $this->order->loadMissing(['branch','customer']);
+            superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($saleForNotify, $totalRefunded){
+                $admin->notifySaleItemRefunded($saleForNotify, $totalRefunded);
+            });
         }
 
         AuditLog::log(AuditLogActionEnum::RETURN_SALE_ITEM, ['id' => $this->currentItem?->id]);
@@ -63,7 +71,7 @@ class SaleDetails extends Component
 
         $this->dismiss();
 
-        $this->popup('success','Purchase item refunded successfully.');
+        $this->popup('success', __('general.messages.sale_item_refunded_successfully'));
 
         $this->reset('refundedQty','currentItem');
     }

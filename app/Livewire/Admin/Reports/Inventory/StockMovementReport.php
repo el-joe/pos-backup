@@ -63,6 +63,7 @@ class StockMovementReport extends Component
                     'inflow' => $inflow + $transferReceived,
                     'outflow' => $outflow + $transferSent,
                     'adjustment' => $stockTakingAdjustment,
+                    'current_stock' => $inflow - $outflow + $stockTakingAdjustment,
                 ];
             }
         }

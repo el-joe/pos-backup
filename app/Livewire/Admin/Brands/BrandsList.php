@@ -36,12 +36,18 @@ class BrandsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_BRAND_TRY, ['id' => $id]);
 
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this brand', 'Yes, delete it!');
+        $this->confirm(
+            'delete',
+            'warning',
+            __('general.messages.are_you_sure'),
+            __('general.messages.confirm_delete_brand'),
+            __('general.messages.yes_delete_it')
+        );
     }
 
     function delete() {
         if (!$this->current) {
-            $this->popup('error', 'Brand not found');
+            $this->popup('error', __('general.messages.brand_not_found'));
             return;
         }
 
@@ -51,7 +57,7 @@ class BrandsList extends Component
 
         AuditLog::log(AuditLogActionEnum::DELETE_BRAND, ['id' => $id]);
 
-        $this->popup('success', 'Brand deleted successfully');
+        $this->popup('success', __('general.messages.brand_deleted_successfully'));
 
         $this->dismiss();
 

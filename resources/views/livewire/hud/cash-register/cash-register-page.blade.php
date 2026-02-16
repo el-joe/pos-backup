@@ -78,6 +78,32 @@
                     <p><strong>{{ __('general.pages.cash_register.open_since') }}:</strong> {{ dateTimeFormat($currentRegister->opened_at) }}</p>
                     <p><strong>{{ __('general.pages.cash_register.opening_balance') }}:</strong> {{ currencyFormat($currentRegister->opening_balance, true) }}</p>
 
+                    <div class="border-top pt-3 mt-3">
+                        <h6 class="mb-2">{{ __('general.pages.cash_register.cash_deposit') }}</h6>
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('general.pages.cash_register.amount') }}</label>
+                            <input type="number" class="form-control" wire:model="deposit_amount_input">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('general.pages.cash_register.notes') }}</label>
+                            <textarea class="form-control" wire:model="deposit_notes" rows="2"></textarea>
+                        </div>
+                        <button wire:click="depositCash" class="btn btn-primary w-100">{{ __('general.pages.cash_register.record_deposit') }}</button>
+                    </div>
+
+                    <div class="border-top pt-3 mt-3">
+                        <h6 class="mb-2">{{ __('general.pages.cash_register.cash_withdrawal') }}</h6>
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('general.pages.cash_register.amount') }}</label>
+                            <input type="number" class="form-control" wire:model="withdrawal_amount_input">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ __('general.pages.cash_register.notes') }}</label>
+                            <textarea class="form-control" wire:model="withdrawal_notes" rows="2"></textarea>
+                        </div>
+                        <button wire:click="withdrawCash" class="btn btn-warning w-100">{{ __('general.pages.cash_register.record_withdrawal') }}</button>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">{{ __('general.pages.cash_register.closing_balance') }}</label>
                         <input type="number" class="form-control" wire:model="closing_balance_input">

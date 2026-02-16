@@ -35,13 +35,13 @@
                         <div class="col-md-3">
                             <div class="p-3 bg-dark-subtle rounded">
                                 <h6><i class="fa fa-user me-1"></i> {{ __('general.pages.sales.customer') }}</h6>
-                                <p class="mb-0">{{ $order->customer->name ?? 'N/A' }}</p>
+                                <p class="mb-0">{{ $order->customer->name ?? __('general.messages.n_a') }}</p>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="p-3 bg-dark-subtle rounded">
                                 <h6><i class="fa fa-building me-1"></i> {{ __('general.pages.sales.branch') }}</h6>
-                                <p class="mb-0">{{ $order->branch->name ?? 'N/A' }}</p>
+                                <p class="mb-0">{{ $order->branch->name ?? __('general.messages.n_a') }}</p>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -167,16 +167,16 @@
                                 @foreach($transactionLines as $transaction)
                                     <tr>
                                         <td>{{ $transaction->id }}</td>
-                                        <td>{{ $transaction->transaction_id ?? 'N/A' }}</td>
-                                        <td>{{ $transaction->type ?? 'N/A' }}</td>
-                                        <td>{{ $transaction->branch ?? 'N/A' }}</td>
-                                        <td>{{ $transaction->reference ?? 'N/A' }}</td>
-                                        <td>{{ $transaction->note ?? 'N/A' }}</td>
-                                        <td>{{ $transaction->date ?? 'N/A' }}</td>
-                                        <td>{{ $transaction->account ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->transaction_id ?? __('general.messages.n_a') }}</td>
+                                        <td>{{ $transaction->type ?? __('general.messages.n_a') }}</td>
+                                        <td>{{ $transaction->branch ?? __('general.messages.n_a') }}</td>
+                                        <td>{{ $transaction->reference ?? __('general.messages.n_a') }}</td>
+                                        <td>{{ $transaction->note ?? __('general.messages.n_a') }}</td>
+                                        <td>{{ $transaction->date ?? __('general.messages.n_a') }}</td>
+                                        <td>{{ $transaction->account ?? __('general.messages.n_a') }}</td>
                                         <td>{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
                                         <td>{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
-                                        <td>{{ $transaction->created_at ?? 'N/A' }}</td>
+                                        <td>{{ $transaction->created_at ?? __('general.messages.n_a') }}</td>
                                     </tr>
                                     @php
                                         if ($transaction->line_type == 'debit') {

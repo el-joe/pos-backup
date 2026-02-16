@@ -12,11 +12,11 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.purchase_requests.supplier') }}</div>
-                    <div>{{ $request->supplier?->name ?? 'N/A' }}</div>
+                    <div>{{ $request->supplier?->name ?? __('general.messages.n_a') }}</div>
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.purchase_requests.branch') }}</div>
-                    <div>{{ $request->branch?->name ?? 'N/A' }}</div>
+                    <div>{{ $request->branch?->name ?? __('general.messages.n_a') }}</div>
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.purchase_requests.status') }}</div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.purchase_requests.request_date') }}</div>
-                    <div>{{ $request->request_date ? dateTimeFormat($request->request_date, true, false) : 'N/A' }}</div>
+                    <div>{{ $request->request_date ? dateTimeFormat($request->request_date, true, false) : __('general.messages.n_a') }}</div>
                 </div>
                 <div class="col-md-4">
                     <div class="fw-semibold">{{ __('general.pages.purchase_requests.total') }}</div>

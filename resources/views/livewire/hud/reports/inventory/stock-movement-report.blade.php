@@ -15,6 +15,7 @@
                                 <th>{{ __('general.pages.reports.inventory.stock_movement.inflow_purchases') }}</th>
                                 <th>{{ __('general.pages.reports.inventory.stock_movement.outflow_sales') }}</th>
                                 <th>{{ __('general.pages.reports.inventory.stock_movement.adjustments') }}</th>
+                                <th>{{ __('general.pages.reports.inventory.stock_movement.current_stock') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -22,22 +23,25 @@
                                 $total_inflow = 0;
                                 $total_outflow = 0;
                                 $total_adjustment = 0;
+                                $total_current_stock = 0;
                             @endphp
                             @forelse($report as $row)
                                 @php
                                     $total_inflow += $row['inflow'];
                                     $total_outflow += $row['outflow'];
                                     $total_adjustment += $row['adjustment'];
+                                    $total_current_stock += $row['current_stock'];
                                 @endphp
                                 <tr>
                                     <td>{{ $row['product_name'] }}</td>
                                     <td>{{ $row['inflow'] }}</td>
                                     <td>{{ $row['outflow'] }}</td>
                                     <td>{{ $row['adjustment'] }}</td>
+                                    <td>{{ $row['current_stock'] }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted">{{ __('general.pages.reports.inventory.stock_movement.no_data') }}</td>
+                                    <td colspan="5" class="text-center text-muted">{{ __('general.pages.reports.inventory.stock_movement.no_data') }}</td>
                                 </tr>
                             @endforelse
                             @if(count($report))
@@ -46,6 +50,7 @@
                                     <td>{{ $total_inflow }}</td>
                                     <td>{{ $total_outflow }}</td>
                                     <td>{{ $total_adjustment }}</td>
+                                    <td>{{ $total_current_stock }}</td>
                                 </tr>
                             @endif
                         </tbody>

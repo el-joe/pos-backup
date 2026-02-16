@@ -84,6 +84,62 @@ class TransactionService
         return $transaction;
     }
 
+    function createCashDepositTransaction($data) {
+        $ownerAccount = Account::default('owner_account', AccountTypeEnum::OWNER_ACCOUNT->value);
+        $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $data['branch_id']);
+
+        return $this->create([
+            'date' => $data['date'] ?? now(),
+            'description' => $data['description'] ?? 'Cash Deposit',
+            'type' => TransactionTypeEnum::CASH_DEPOSIT->value,
+            'branch_id' => $data['branch_id'] ?? null,
+            'note' => $data['note'] ?? '',
+            'amount' => $data['amount'] ?? 0,
+            'reference_type' => Branch::class,
+            'reference_id' => $data['branch_id'] ?? null,
+            'lines' => [
+                [
+                    'account_id' => $branchCashAccount->id,
+                    'type' => 'debit',
+                    'amount' => $data['amount'] ?? 0,
+                ],
+                [
+                    'account_id' => $ownerAccount->id,
+                    'type' => 'credit',
+                    'amount' => $data['amount'] ?? 0,
+                ],
+            ],
+        ]);
+    }
+
+    function createCashWithdrawalTransaction($data) {
+        $ownerAccount = Account::default('owner_account', AccountTypeEnum::OWNER_ACCOUNT->value);
+        $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $data['branch_id']);
+
+        return $this->create([
+            'date' => $data['date'] ?? now(),
+            'description' => $data['description'] ?? 'Cash Withdrawal',
+            'type' => TransactionTypeEnum::CASH_WITHDRAWAL->value,
+            'branch_id' => $data['branch_id'] ?? null,
+            'note' => $data['note'] ?? '',
+            'amount' => $data['amount'] ?? 0,
+            'reference_type' => Branch::class,
+            'reference_id' => $data['branch_id'] ?? null,
+            'lines' => [
+                [
+                    'account_id' => $branchCashAccount->id,
+                    'type' => 'credit',
+                    'amount' => $data['amount'] ?? 0,
+                ],
+                [
+                    'account_id' => $ownerAccount->id,
+                    'type' => 'debit',
+                    'amount' => $data['amount'] ?? 0,
+                ],
+            ],
+        ]);
+    }
+
 
     function createInventoryShortageLine($data,$reverse = false) {
         $getInventoryShortageAccount = Account::default('inventory_shortage', AccountTypeEnum::INVENTORY_SHORTAGE->value,  $data['branch_id']);

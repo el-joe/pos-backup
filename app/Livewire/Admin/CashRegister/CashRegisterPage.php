@@ -43,6 +43,12 @@ class CashRegisterPage extends Component
     public $closing_notes;
     public $branchId;
 
+    // Deposit / Withdrawal fields
+    public $deposit_amount_input;
+    public $deposit_notes;
+    public $withdrawal_amount_input;
+    public $withdrawal_notes;
+
     function boot() {
         $this->branchService = app(BranchService::class);
         $this->transactionService = app(TransactionService::class);
@@ -101,7 +107,7 @@ class CashRegisterPage extends Component
             'date' => now(),
         ]);
 
-        superAdmins()->map(function($admin) use($cashRegister){
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use($cashRegister){
             $admin->notifyCashRegisterOpened($cashRegister);
         });
 
@@ -109,7 +115,7 @@ class CashRegisterPage extends Component
 
         $this->opening_balance_input = null;
         $this->loadData();
-        $this->alert('success', 'Cash register opened');
+        $this->alert('success', __('general.messages.cash_register_opened'));
     }
 
     public function closeRegister()
@@ -123,7 +129,7 @@ class CashRegisterPage extends Component
         $reg = $this->cashRegisterService->getOpenedCashRegister();
 
         if (! $reg) {
-            $this->alert('error', 'No open register found.');
+            $this->alert('error', __('general.messages.no_open_register_found'));
             return;
         }
 
@@ -138,7 +144,7 @@ class CashRegisterPage extends Component
             DB::commit();
         }catch (\Exception $e){
             DB::rollBack();
-            $this->alert('error', 'Error occurred while closing cash register: '.$e->getMessage());
+            $this->alert('error', __('general.messages.error_closing_cash_register', ['message' => $e->getMessage()]));
             return;
         }
 
@@ -148,7 +154,7 @@ class CashRegisterPage extends Component
             'date' => now(),
         ],true);
 
-        superAdmins()->map(function($admin) use($reg){
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use($reg){
             $admin->notifyCashRegisterClosed($reg->fresh());
         });
 
@@ -157,6 +163,92 @@ class CashRegisterPage extends Component
         $this->closing_balance_input = null;
         $this->closing_notes = null;
         $this->loadData();
-        $this->alert('success', 'Cash register closed');
+        $this->alert('success', __('general.messages.cash_register_closed'));
+    }
+
+    public function depositCash()
+    {
+        if(!$this->validator([
+            'deposit_amount_input' => $this->deposit_amount_input,
+        ],[
+            'deposit_amount_input' => 'required|numeric|min:0.01',
+        ])) return;
+
+        $reg = $this->cashRegisterService->getOpenedCashRegister();
+        if (! $reg) {
+            $this->alert('error', __('general.messages.no_open_register_found'));
+            return;
+        }
+
+        try {
+            DB::beginTransaction();
+            $this->cashRegisterService->increment($reg->id, 'total_deposits', (float)$this->deposit_amount_input);
+            $this->transactionService->createCashDepositTransaction([
+                'branch_id' => $reg->branch_id,
+                'amount' => (float)$this->deposit_amount_input,
+                'date' => now(),
+                'note' => $this->deposit_notes,
+            ]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->alert('error', __('general.messages.error_processing_request', ['message' => $e->getMessage()]));
+            return;
+        }
+
+        $reg = $reg->fresh(['branch', 'admin']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use($reg){
+            $admin->notifyCashRegisterDeposit($reg, $this->deposit_amount_input, $this->deposit_notes);
+        });
+
+        AuditLog::log(AuditLogActionEnum::CASH_REGISTER_DEPOSIT, ['id' => $reg->id, 'amount' => (float)$this->deposit_amount_input]);
+
+        $this->deposit_amount_input = null;
+        $this->deposit_notes = null;
+        $this->loadData();
+        $this->alert('success', __('general.messages.deposit_recorded_successfully'));
+    }
+
+    public function withdrawCash()
+    {
+        if(!$this->validator([
+            'withdrawal_amount_input' => $this->withdrawal_amount_input,
+        ],[
+            'withdrawal_amount_input' => 'required|numeric|min:0.01',
+        ])) return;
+
+        $reg = $this->cashRegisterService->getOpenedCashRegister();
+        if (! $reg) {
+            $this->alert('error', __('general.messages.no_open_register_found'));
+            return;
+        }
+
+        try {
+            DB::beginTransaction();
+            $this->cashRegisterService->increment($reg->id, 'total_withdrawals', (float)$this->withdrawal_amount_input);
+            $this->transactionService->createCashWithdrawalTransaction([
+                'branch_id' => $reg->branch_id,
+                'amount' => (float)$this->withdrawal_amount_input,
+                'date' => now(),
+                'note' => $this->withdrawal_notes,
+            ]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->alert('error', __('general.messages.error_processing_request', ['message' => $e->getMessage()]));
+            return;
+        }
+
+        $reg = $reg->fresh(['branch', 'admin']);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use($reg){
+            $admin->notifyCashRegisterWithdrawal($reg, $this->withdrawal_amount_input, $this->withdrawal_notes);
+        });
+
+        AuditLog::log(AuditLogActionEnum::CASH_REGISTER_WITHDRAWAL, ['id' => $reg->id, 'amount' => (float)$this->withdrawal_amount_input]);
+
+        $this->withdrawal_amount_input = null;
+        $this->withdrawal_notes = null;
+        $this->loadData();
+        $this->alert('success', __('general.messages.withdrawal_recorded_successfully'));
     }
 }

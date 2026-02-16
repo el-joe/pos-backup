@@ -118,6 +118,13 @@ class CustomerPayable extends Component
 
         $this->reset('payment');
 
+        if($applied > 0 && $this->customer){
+            $customerForNotify = $this->customer;
+            superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($customerForNotify, $applied){
+                $admin->notifyCustomerPaymentReceived($customerForNotify, $applied);
+            });
+        }
+
         $this->popup('success', __('general.pages.payables.payment_applied', ['amount' => currencyFormat($applied, true)]));
 
         $this->loadCustomer();

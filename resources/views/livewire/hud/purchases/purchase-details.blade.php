@@ -47,25 +47,25 @@
                             <div class="col-md-3">
                                 <div class="border rounded p-3">
                                     <strong><i class="fa fa-building me-1"></i> {{ __('general.pages.purchases.branch') }}:</strong>
-                                    <div>{{ $purchase->branch?->name ?? 'N/A' }}</div>
+                                    <div>{{ $purchase->branch?->name ?? __('general.messages.n_a') }}</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="border rounded p-3">
                                     <strong><i class="fa fa-truck me-1"></i> {{ __('general.pages.purchases.supplier') }}:</strong>
-                                    <div>{{ $purchase->supplier?->name ?? 'N/A' }}</div>
+                                    <div>{{ $purchase->supplier?->name ?? __('general.messages.n_a') }}</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="border rounded p-3">
                                     <strong><i class="fa fa-hashtag me-1"></i> {{ __('general.pages.purchases.ref_no') }}:</strong>
-                                    <div>{{ $purchase->ref_no ?? 'N/A' }}</div>
+                                    <div>{{ $purchase->ref_no ?? __('general.messages.n_a') }}</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="border rounded p-3">
                                     <strong><i class="fa fa-calendar me-1"></i> {{ __('general.pages.purchases.order_date') }}:</strong>
-                                    <div>{{ dateTimeFormat($purchase->order_date) ?? 'N/A' }}</div>
+                                    <div>{{ dateTimeFormat($purchase->order_date) ?? __('general.messages.n_a') }}</div>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                 <div class="card text-center border-1 shadow-sm">
                                     <div class="card-body">
                                         <div class="fs-1 text-danger"><i class="fa fa-credit-card"></i></div>
-                                        <h6>{{ __('general.pages.expenses.total_expense') ?? 'Expenses Total' }}</h6>
+                                        <h6>{{ __('general.pages.expenses.total_expense') }}</h6>
                                         <h3>{{ currencyFormat($purchase->expenses->sum('amount') ?? 0, true) }}</h3>
                                     </div>
                                     <div class="card-arrow">
@@ -212,13 +212,13 @@
                                     @foreach ($purchase->purchaseItems as $item)
                                         <tr>
                                             <td><strong>{{ $item?->product?->name }}</strong></td>
-                                            <td>{{ $item?->unit?->name ?? 'N/A' }}</td>
+                                            <td>{{ $item?->unit?->name ?? __('general.messages.n_a') }}</td>
                                             <td>{{ $item->actual_qty }}</td>
                                             <td>{{ currencyFormat($item->purchase_price, true) }}</td>
                                             <td>{{ number_format($item->discount_percentage, 2) }}%</td>
                                             <td>{{ currencyFormat($item->unit_cost_after_discount, true) }}</td>
                                             <td>{{ currencyFormat($item->total_after_discount, true) }}</td>
-                                            <td>{{ $item->tax_percentage ? number_format($item->tax_percentage, 2) : 'N/A' }}%</td>
+                                            <td>{{ $item->tax_percentage ? number_format($item->tax_percentage, 2) : __('general.messages.n_a') }}%</td>
                                             <td>{{ currencyFormat($item->unit_amount_after_tax, true) }}</td>
                                             <td>{{ number_format($item->x_margin, 2) }}%</td>
                                             <td>{{ currencyFormat($item->total_after_x_margin, true) }}</td>
@@ -251,9 +251,9 @@
                                 <tbody>
                                     @foreach ($purchase->expenses ?? [] as $expense)
                                         <tr>
-                                            <td>{{ $expense->description ?? 'N/A' }}</td>
+                                            <td>{{ $expense->description ?? __('general.messages.n_a') }}</td>
                                             <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
-                                            <td>{{ $expense->expense_date ? dateTimeFormat($expense->expense_date) : 'N/A' }}</td>
+                                            <td>{{ $expense->expense_date ? dateTimeFormat($expense->expense_date) : __('general.messages.n_a') }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" wire:click="deleteExpenseConfirm({{ $expense->id }})">
                                                     <i class="fa fa-trash"></i>
@@ -291,16 +291,16 @@
                                     @foreach($transactionLines as $transaction)
                                         <tr>
                                             <td>{{ $transaction->id }}</td>
-                                            <td>{{ $transaction->transaction_id ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->type ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->branch ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->reference ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->note ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->date ?? 'N/A' }}</td>
-                                            <td>{{ $transaction->account ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->transaction_id ?? __('general.messages.n_a') }}</td>
+                                            <td>{{ $transaction->type ?? __('general.messages.n_a') }}</td>
+                                            <td>{{ $transaction->branch ?? __('general.messages.n_a') }}</td>
+                                            <td>{{ $transaction->reference ?? __('general.messages.n_a') }}</td>
+                                            <td>{{ $transaction->note ?? __('general.messages.n_a') }}</td>
+                                            <td>{{ $transaction->date ?? __('general.messages.n_a') }}</td>
+                                            <td>{{ $transaction->account ?? __('general.messages.n_a') }}</td>
                                             <td>{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
                                             <td>{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
-                                            <td>{{ $transaction->created_at ?? 'N/A' }}</td>
+                                            <td>{{ $transaction->created_at ?? __('general.messages.n_a') }}</td>
                                         </tr>
                                         @php
                                             if ($transaction->line_type == 'debit') {

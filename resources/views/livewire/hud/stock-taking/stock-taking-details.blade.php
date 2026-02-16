@@ -33,7 +33,7 @@
                         <div class="col-md-3">
                             <div class="p-3 border rounded text-center">
                                 <h6><i class="fa fa-building me-1"></i> {{ __('general.pages.stock-taking.branch') }}</h6>
-                                <p class="mb-0">{{ $stockTake->branch?->name ?? 'N/A' }}</p>
+                                <p class="mb-0">{{ $stockTake->branch?->name ?? __('general.messages.n_a') }}</p>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -51,7 +51,7 @@
                         <div class="col-md-3">
                             <div class="p-3 border rounded text-center">
                                 <h6><i class="fa fa-sticky-note me-1"></i> {{ __('general.pages.stock-taking.note') }}</h6>
-                                <p class="mb-0">{{ $stockTake->note ?? 'N/A' }}</p>
+                                <p class="mb-0">{{ $stockTake->note ?? __('general.messages.n_a') }}</p>
                             </div>
                         </div>
                     </div>

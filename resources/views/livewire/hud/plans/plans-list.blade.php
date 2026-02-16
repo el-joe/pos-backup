@@ -1,13 +1,13 @@
 <div>
     @if(adminCan('plans.list'))
     <!-- BEGIN page-header -->
-    <h1 class="page-header">Pricing Page</h1>
+    <h1 class="page-header">{{ __('general.pages.plans.pricing_page') }}</h1>
 
     <div class="d-flex justify-content-center mb-4">
         <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" id="planToggleSwitch" wire:model.live="yearly">
             <label class="form-check-label ms-2" for="planToggleSwitch">
-                <span class="{{ $yearly ? 'fw-bold text-primary' : '' }}">Yearly Billing</span>
+                <span class="{{ $yearly ? 'fw-bold text-primary' : '' }}">{{ __('general.pages.plans.yearly_billing') }}</span>
             </label>
         </div>
     </div>
@@ -20,8 +20,8 @@
                 <div class="card-body p-30px d-flex flex-column">
                     <div class="d-flex align-items-center">
                         <div class="flex-1">
-                            <div class="h6 font-monospace">{{ $plan->name }} Plan</div>
-                            <div class="display-6 fw-bold mb-0">${{ $plan->{"price_".$period} }}<small class="h6 text-body text-opacity-50">/{{ $period }}</small></div>
+                            <div class="h6 font-monospace">{{ __('general.pages.plans.plan_name', ['name' => $plan->name]) }}</div>
+                            <div class="display-6 fw-bold mb-0">${{ $plan->{"price_".$period} }}<small class="h6 text-body text-opacity-50">/{{ __('general.pages.plans.period_'.$period) }}</small></div>
                         </div>
                         <div>
                             <span class="{{ $plan->icon }} display-4 text-body text-opacity-50 rounded-3"></span>
@@ -43,7 +43,7 @@
                         @endforeach
                     </div>
                     <div class="mx-n2">
-                        <a href="#" class="btn {{ $plan->recommended == 1 ? 'btn-theme text-black' : 'btn-outline-default' }}  btn-lg w-100 font-monospace">Get Started <i class="fa fa-arrow-right"></i></a>
+                        <a href="#" class="btn {{ $plan->recommended == 1 ? 'btn-theme text-black' : 'btn-outline-default' }}  btn-lg w-100 font-monospace">{{ __('general.pages.plans.get_started') }} <i class="fa fa-arrow-right"></i></a>
                     </div>
                 </div>
                 <div class="card-arrow">

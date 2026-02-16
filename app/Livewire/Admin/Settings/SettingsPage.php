@@ -265,7 +265,7 @@ class SettingsPage extends Component
         cache()->driver('file')->forget(cacheKey('setting'));
         cache()->driver('file')->forget(cacheKey('currency'));
 
-        $this->alert('success', 'Settings saved successfully!');
+        $this->alert('success', __('general.messages.settings_saved_successfully'));
         $this->js('setTimeout(() => { location.reload(); }, 1000);');
     }
 
@@ -302,6 +302,6 @@ class SettingsPage extends Component
     public function render()
     {
         return layoutView('settings.settings-page')
-            ->title('Settings');
+            ->title(__('general.titles.settings'));
     }
 }

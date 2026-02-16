@@ -106,7 +106,7 @@ class PosPage extends Component
 
     function validateDiscountCode() {
         if(!$this->discountCode) {
-            $this->alert('error', 'Please enter a discount code');
+            $this->alert('error', __('general.messages.please_enter_discount_code'));
             return;
         }
 
@@ -115,7 +115,7 @@ class PosPage extends Component
             ->first();
 
         if(!$discount) {
-            $this->alert('error', 'Invalid or expired discount code');
+            $this->alert('error', __('general.messages.invalid_or_expired_discount_code'));
             $this->data['discount'] = null;
             return;
         }
@@ -127,12 +127,12 @@ class PosPage extends Component
             ->count();
 
             if($discount->usage_limit && $history >= $discount->usage_limit) {
-                $this->alert('error', 'Coupon usage limit has been reached');
+                $this->alert('error', __('general.messages.coupon_usage_limit_reached'));
                 $this->data['discount'] = null;
                 return;
             }
         }else{
-            $this->alert('error', 'Please select a customer to apply this coupon');
+            $this->alert('error', __('general.messages.please_select_customer_to_apply_coupon'));
             $this->data['discount'] = null;
             return;
         }
@@ -148,13 +148,13 @@ class PosPage extends Component
             'max' => $discount->type == 'fixed' ? ($discount->sales_threshold ?? 0) : ($discount->max_discount_amount ?? 0),
         ];
 
-        $this->alert('success', 'Discount code applied');
+        $this->alert('success', __('general.messages.discount_code_applied'));
         $this->reset('discountCode');
     }
 
     function removeCoupon() {
         $this->data['discount'] = null;
-        $this->alert('success', 'Discount removed');
+        $this->alert('success', __('general.messages.discount_removed'));
     }
 
     function refactorProductData($productId,$unitId = null,$quantity = 1) {
@@ -175,7 +175,7 @@ class PosPage extends Component
         $quantity = ($quantity ?? 1) + ($dataProduct['quantity'] ?? 0);
 
         if($stock->qty < $quantity) {
-            $this->alert('error', 'Maximum available quantity is ' . $stock->qty);
+            $this->alert('error', __('general.messages.maximum_available_quantity_is', ['qty' => $stock->qty]));
             return false;
         }
 
@@ -306,10 +306,17 @@ class PosPage extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->alert('error', 'Error placing order: ' . $e->getMessage());
+            $this->alert('error', __('general.messages.error_placing_order', ['message' => $e->getMessage()]));
             return;
         }
         AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER,['invoice_number' => $saleOrder->invoice_number]);
+
+        if(($dataToSave['paid_amount'] ?? 0) > 0){
+            $saleForNotify = $saleOrder->loadMissing(['branch','customer']);
+            superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($saleForNotify, $dataToSave){
+                $admin->notifySalePaymentReceived($saleForNotify, $dataToSave['paid_amount']);
+            });
+        }
 
         Artisan::call('app:stock-quantity-alert-check', [
             '--branch_id' => $this->branch?->id,
@@ -317,7 +324,7 @@ class PosPage extends Component
         ]);
 
         $this->dismiss();
-        $this->popup('success', 'Order placed successfully');
+        $this->popup('success', __('general.messages.order_placed_successfully'));
         $this->reset(['data','payments','selectedCustomerId']);
 
         $this->redirectWithTimeout(route('admin.sales.index'), 1000);
@@ -325,7 +332,7 @@ class PosPage extends Component
 
     function validation() {
         if(!($this->data['branch_id']??false)){
-            $this->alert('error', 'Please select a branch');
+            $this->alert('error', __('general.messages.please_select_branch'));
             return false;
         }
         if(!($this->data['invoice_number']??false)){
@@ -333,14 +340,14 @@ class PosPage extends Component
             $this->data['invoice_number'] = Sale::generateInvoiceNumber();
         }
         if(empty($this->data['products'] ?? [])) {
-            $this->alert('error', 'Please add products to the cart');
+            $this->alert('error', __('general.messages.please_add_products_to_cart'));
             return false;
         }
 
         foreach ($this->data['products'] as $key => $value) {
             $stock = Stock::find($value['stock_id'] ?? 0);
             if($value['quantity'] > $stock->qty) {
-                $this->alert('error', 'Product ' . $value['name'] . ' is out of stock');
+                $this->alert('error', __('general.messages.product_out_of_stock', ['name' => $value['name']]));
                 return false;
             }
         }
@@ -348,17 +355,17 @@ class PosPage extends Component
         extract($this->calculateTotals());
 
         if(!$this->selectedCustomerId) {
-            $this->alert('error', 'Please select a customer');
+            $this->alert('error', __('general.messages.please_select_customer'));
             return false;
         }
 
         foreach ($this->payments as $payment) {
             if(!$payment['account_id']) {
-                $this->alert('error', 'Please select payment method for all payments');
+                $this->alert('error', __('general.messages.please_select_payment_method_for_all_payments'));
                 return false;
             }
             if($payment['amount'] <= 0) {
-                $this->alert('error', 'Please enter valid amount for all payments');
+                $this->alert('error', __('general.messages.please_enter_valid_amount_for_all_payments'));
                 return false;
             }
         }

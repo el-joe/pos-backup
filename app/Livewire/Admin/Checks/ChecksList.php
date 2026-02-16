@@ -32,13 +32,13 @@ class ChecksList extends Component
     public function collect(int $id): void
     {
         if (!adminCan('checks.collect')) {
-            $this->popup('error', 'Unauthorized');
+            $this->popup('error', __('general.messages.unauthorized'));
             return;
         }
 
         try {
             $this->checkService->collect($id);
-            $this->alert('success', 'Check collected successfully');
+            $this->alert('success', __('general.messages.check_collected_successfully'));
         } catch (\Throwable $e) {
             $this->alert('error', $e->getMessage());
         }
@@ -47,13 +47,13 @@ class ChecksList extends Component
     public function bounce(int $id): void
     {
         if (!adminCan('checks.bounce')) {
-            $this->popup('error', 'Unauthorized');
+            $this->popup('error', __('general.messages.unauthorized'));
             return;
         }
 
         try {
             $this->checkService->bounce($id);
-            $this->alert('success', 'Check bounced successfully');
+            $this->alert('success', __('general.messages.check_bounced_successfully'));
         } catch (\Throwable $e) {
             $this->alert('error', $e->getMessage());
         }
@@ -62,13 +62,13 @@ class ChecksList extends Component
     public function clearIssued(int $id): void
     {
         if (!adminCan('checks.clear')) {
-            $this->popup('error', 'Unauthorized');
+            $this->popup('error', __('general.messages.unauthorized'));
             return;
         }
 
         try {
             $this->checkService->clearIssued($id);
-            $this->alert('success', 'Issued check cleared successfully');
+            $this->alert('success', __('general.messages.issued_check_cleared_successfully'));
         } catch (\Throwable $e) {
             $this->alert('error', $e->getMessage());
         }

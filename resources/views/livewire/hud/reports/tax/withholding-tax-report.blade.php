@@ -51,7 +51,7 @@
                                 <td>{{ $row->id }}</td>
                                 <td>{{ $row->account_name }}</td>
                                 <td>{{ $row->party_type }}</td>
-                                <td>{{ $row->party_name ?? 'N/A' }}</td>
+                                <td>{{ $row->party_name ?? __('general.messages.n_a') }}</td>
                                 <td class="text-end">{{ currencyFormat($row->withholding_amount, true) }}</td>
                             </tr>
                         @empty

@@ -163,22 +163,22 @@
                     <form>
                         <div class="mb-3">
                             <label for="adminName" class="form-label">{{ __('general.pages.admins.name') }}</label>
-                            <input type="text" class="form-control" wire:model="data.name" id="adminName" placeholder="Enter admin name">
+                            <input type="text" class="form-control" wire:model="data.name" id="adminName" placeholder="{{ __('general.pages.admins.enter_admin_name') }}">
                         </div>
 
                         <div class="mb-3">
                             <label for="adminPhone" class="form-label">{{ __('general.pages.admins.phone') }}</label>
-                            <input type="text" class="form-control" wire:model="data.phone" id="adminPhone" placeholder="Enter admin phone">
+                            <input type="text" class="form-control" wire:model="data.phone" id="adminPhone" placeholder="{{ __('general.pages.admins.enter_admin_phone') }}">
                         </div>
 
                         <div class="mb-3">
                             <label for="adminEmail" class="form-label">{{ __('general.pages.admins.email') }}</label>
-                            <input type="email" class="form-control" wire:model="data.email" id="adminEmail" placeholder="Enter admin email">
+                            <input type="email" class="form-control" wire:model="data.email" id="adminEmail" placeholder="{{ __('general.pages.admins.enter_admin_email') }}">
                         </div>
 
                         <div class="mb-3">
-                            <label for="adminPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" wire:model="data.password" id="adminPassword" placeholder="Enter admin password">
+                            <label for="adminPassword" class="form-label">{{ __('general.pages.admins.password') }}</label>
+                            <input type="password" class="form-control" wire:model="data.password" id="adminPassword" placeholder="{{ __('general.pages.admins.enter_admin_password') }}">
                         </div>
 
                         <div class="row">

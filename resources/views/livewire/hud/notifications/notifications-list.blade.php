@@ -1,7 +1,7 @@
 <div class="col-12">
     <div class="card shadow-sm">
         <div class="card-header">
-            <h5 class="card-title mb-0">Notifications</h5>
+            <h5 class="card-title mb-0">{{ __('general.layout.notifications') }}</h5>
         </div>
 
         <div class="card-body">
