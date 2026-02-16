@@ -100,15 +100,47 @@
 
         @php
             $currentBranch = admin()->branch_id;
+
+            // Default name
+            $currentBranchName = __('general.layout.all_branches');
+
+            // Find the active branch name from the collection
+            $activeBranchObj = $__branches->where('id', $currentBranch)->first();
+            if($activeBranchObj) {
+                $currentBranchName = $activeBranchObj->name;
+            }
         @endphp
 
-        <select id="branch-switcher" class="" style="display:inline-block; width:auto; min-width:180px;">
-            <option value="">{{ __('general.layout.all_branches') }}</option>
-            @foreach($__branches as $b)
-                <option value="{{ $b->id }}" @if($currentBranch == $b->id) selected @endif>{{ $b->name }}</option>
-            @endforeach
-        </select>
+        <div class="menu-item dropdown dropdown-mobile-full">
+            {{-- Added title attribute here --}}
+            <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link" title="{{ $currentBranchName }}">
+                <div class="menu-icon"><i class="bi bi-shop nav-icon"></i></div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-{{ $__locale == 'en' ? 'end' : 'start' }} mt-1 w-300px fs-11px pt-1" style="max-height: 400px; overflow-y: auto;">
+                <h6 class="dropdown-header fs-10px mb-1">{{ __('general.layout.all_branches') }}</h6>
+                <div class="dropdown-divider mt-1"></div>
 
+                {{-- Option: All Branches --}}
+                <a href="{{ url('/admin/switch-branch/') }}" class="dropdown-item d-flex align-items-center @if(empty($currentBranch)) text-theme fw-bold @endif">
+                    <i class="bi bi-grid me-2 fs-14px"></i> {{ __('general.layout.all_branches') }}
+                    @if(empty($currentBranch))
+                        <i class="bi bi-check-lg ms-auto text-theme"></i>
+                    @endif
+                </a>
+
+                <div class="dropdown-divider my-1"></div>
+
+                {{-- Option: Specific Branches --}}
+                @foreach($__branches as $b)
+                    <a href="{{ url('/admin/switch-branch/' . $b->id) }}" class="dropdown-item d-flex align-items-center @if($currentBranch == $b->id) text-theme fw-bold @endif">
+                        <i class="bi bi-shop-window me-2 fs-14px"></i> {{ $b->name }}
+                        @if($currentBranch == $b->id)
+                            <i class="bi bi-check-lg ms-auto text-theme"></i>
+                        @endif
+                    </a>
+                @endforeach
+            </div>
+        </div>
         <div class="menu-item dropdown dropdown-mobile-full">
             <a href="#" data-bs-toggle="dropdown" data-bs-display="static" class="menu-link">
                 <div class="menu-icon"><i class="bi bi-bell nav-icon"></i></div>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 44" fill="none">
+  <style>
+    /* Default (Light Mode) Color */
+    .responsive-stroke { stroke: #1e293b; }
+
+    /* Dark Mode Override */
+    @media (prefers-color-scheme: dark) {
+      .responsive-stroke { stroke: #ffffff; }
+    }
+  </style>
+
+  <path class="responsive-stroke" d="M21 2L38.32 12V32L21 42L3.68 32V12L21 2Z" fill="none" stroke-width="2" stroke-linejoin="round"/>
+
+  <rect x="11" y="20" width="4" height="12" rx="1" fill="#94a3b8"/>
+  <rect x="19" y="14" width="4" height="18" rx="1" fill="#3b82f6"/>
+  <rect x="27" y="8" width="4" height="24" rx="1" fill="#10b981"/>
+
+  <circle cx="35" cy="8" r="2.5" fill="#10b981">
+    <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>
