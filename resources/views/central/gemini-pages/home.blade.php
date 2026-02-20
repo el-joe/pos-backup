@@ -172,7 +172,7 @@
                 $reviews = array_map(function ($review) use ($images) {
                     $avatarKey = $review['avatar'] ?? 'male';
                     $review['avatar'] = $images[$avatarKey] ?? $images['male'];
-                    $review['rating'] = $review['rating'] ?? 5;
+                    $review['rating'] = max(1, min(5, (int) ($review['rating'] ?? 5)));
                     $review['dir'] = $review['dir'] ?? 'ltr';
                     return $review;
                 }, $reviewsRaw);
@@ -181,20 +181,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach ($reviews as $review)
                     <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/10" itemscope itemtype="https://schema.org/Review" dir="{{ $review['dir'] }}">
-                        <span class="d-none" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
+                        <span class="hidden" itemprop="itemReviewed" itemscope itemtype="https://schema.org/SoftwareApplication">
                             <meta itemprop="name" content="Mohaaseb ERP">
                             <meta itemprop="applicationCategory" content="BusinessApplication">
                         </span>
                         <span itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating">
-                            <meta itemprop="ratingValue" content="5">
+                            <meta itemprop="ratingValue" content="{{ $review['rating'] }}">
                             <meta itemprop="bestRating" content="5">
                         </span>
                         <div class="flex text-brand-accent mb-4">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="fa-{{ $i <= $review['rating'] ? 'solid' : 'regular' }} fa-star"></i>
+                            @endfor
                         </div>
                         <p class="text-brand-50 italic mb-6"  itemprop="reviewBody">"{{ $review['body'] }}"</p>
                         <div class="flex items-center gap-3">
@@ -227,7 +225,7 @@
                         <h3  itemprop="headline" class="text-xl font-bold text-brand-dark dark:text-white mt-2 mb-2 group-hover:text-brand-500 transition-colors">{{ $blog->title }}</h3>
                         <p  itemprop="description" class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2">{{ \Illuminate\Support\Str::limit($blog->excerpt ?: strip_tags($blog->content), 120) }}</p>
                         <a href="{{ route('blogs.show', ['slug' => $blog->slug, 'lang' => $__currentLang]) }}" aria-label="{{ __('gemini-landing.home.blog_read_more_aria', ['title' => $blog->title]) }}" class="inline-block mt-4 text-brand-600 dark:text-brand-400 font-bold hover:underline">{{ __('gemini-landing.home.blog_read_more') }}</a>
-                        <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" class="d-none">
+                        <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" class="hidden">
                             <meta itemprop="name" content="Mohaaseb">
                         </div>
                     </article>
@@ -311,4 +309,4 @@
         </div>
     </section>
 </main>
-    @endsection
+@endsection
