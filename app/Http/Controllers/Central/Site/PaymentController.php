@@ -17,11 +17,6 @@ use function Laravel\Prompts\info;
 class PaymentController extends Controller
 {
     function callback(Request $request,$type) {
-
-        info('PaymentController callback check called with type : ' . $type);
-        info(json_encode($request->all()));
-        info('------------');
-
         if($type == 'check'){
             $pt = PaymentTransaction::where('transaction_reference',$request->token)->first();
 

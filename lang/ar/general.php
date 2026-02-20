@@ -27,6 +27,7 @@ return [
         'suppliers' => 'الموردون',
         'customers' => 'العملاء',
         'customer_details' => 'تفاصيل العميل',
+        'tenants' => 'المستأجرون',
         'supplier_details' => 'تفاصيل المورد',
         'products' => 'المنتجات',
         'add_product' => 'إضافة منتج',

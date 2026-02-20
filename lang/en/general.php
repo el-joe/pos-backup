@@ -27,6 +27,7 @@ return [
         'suppliers' => 'Suppliers',
         'customers' => 'Customers',
         'customer_details' => 'Customer Details',
+        'tenants' => 'Tenants',
         'supplier_details' => 'Supplier Details',
         'products' => 'Products',
         'add_product' => 'Add Product',

@@ -1,7 +1,10 @@
 <div class="col-12">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Customers List</h5>
+            <h5 class="mb-0">Tenants List</h5>
+            <a class="btn btn-primary btn-sm" href="{{ route('cpanel.customers.create') }}">
+                <i class="fa fa-plus"></i> Create Tenant
+            </a>
         </div>
 
         <div class="card-body">
@@ -15,6 +18,7 @@
                             <th>phone</th>
                             <th>Country</th>
                             <th>domain</th>
+                            <th>Action</th>
 
                         </tr>
                     </thead>
@@ -27,6 +31,11 @@
                             <td>{{ $tenant->phone ?? '-' }}</td>
                             <td>{{ $tenant->country()?->name ?? '-' }}</td>
                             <td>{{ $tenant->domains->first()->domain ?? '-'}}
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" href="{{ route('cpanel.customers.details', ['id' => $tenant->id]) }}">
+                                    Details
+                                </a>
                             </td>
                         </tr>
                         @endforeach

@@ -80,8 +80,8 @@ return [
         "route"     => 'cpanel.subscriptions.list'
     ],
     [
-        "title"     => "Customers",
-        'translated_title' => 'general.titles.customers',
+        "title"     => "Tenants",
+        'translated_title' => 'general.titles.tenants',
         "icon"      => "fa fa-users fa-fw",
         "route"     => 'cpanel.customers.list'
     ],

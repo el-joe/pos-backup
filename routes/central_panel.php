@@ -6,6 +6,8 @@ use App\Livewire\Central\CPanel\Admins\AdminsList;
 use App\Livewire\Central\CPanel\Contacts\ContactsList;
 use App\Livewire\Central\CPanel\Countries\CountriesList;
 use App\Livewire\Central\CPanel\Currencies\CurrenciesList;
+use App\Livewire\Central\CPanel\Customers\CustomerCreate;
+use App\Livewire\Central\CPanel\Customers\CustomerDetails;
 use App\Livewire\Central\CPanel\Customers\CustomersList;
 use App\Livewire\Central\CPanel\Faqs\FaqForm;
 use App\Livewire\Central\CPanel\Faqs\FaqsList;
@@ -56,6 +58,8 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('subscriptions', SubscriptionsList::class)->name('subscriptions.list');
         Route::get('register-requests', RegisterRequestsList::class)->name('register-requests.list');
         Route::get('customers', CustomersList::class)->name('customers.list');
+        Route::get('customers/create', CustomerCreate::class)->name('customers.create');
+        Route::get('customers/{id}', CustomerDetails::class)->name('customers.details');
         Route::get('plans', CpanelPlansList::class)->name('plans.list');
         Route::get('sliders', SliderList::class)->name('sliders.list');
 
