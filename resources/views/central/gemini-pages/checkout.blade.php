@@ -7,8 +7,8 @@
             <div class="lg:w-2/3">
                 <h1 class="text-2xl font-bold text-brand-dark dark:text-white mb-2">Complete your registration</h1>
                 <p class="text-slate-500 dark:text-slate-400 mb-8">
-                    @if(($selectedPricing['free_trial_months'] ?? 0) > 0)
-                        Start your {{ (int) ($selectedPricing['free_trial_months'] ?? 0) }} month free trial. No payment required during trial.
+                    @if($hasAnyFreeTrial ?? false)
+                        Selected plans with 3 months free trial will be free now, and only non-trial plans are charged today.
                     @else
                         Choose your plan and complete registration.
                     @endif
@@ -121,16 +121,28 @@
                     <h3 class="text-lg font-bold text-brand-dark dark:text-white mb-4 border-b border-slate-100 dark:border-slate-700 pb-4">Order Summary</h3>
 
                     <div class="bg-brand-50 dark:bg-slate-700 border border-brand-100 dark:border-slate-600 rounded-xl p-4 mb-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wide">Selected Plan</span>
-                                <h4 class="text-xl font-extrabold text-brand-900 dark:text-white mt-1">{{ $selectedPlan?->name ?? 'Starter' }}</h4>
-                            </div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wide">Selected Systems</span>
                             <a href="{{ route('pricing') }}" class="text-xs font-bold text-slate-400 hover:text-brand-500 underline">Change</a>
                         </div>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-brand-600 dark:text-brand-400">${{ number_format((float) ($selectedPrice ?? 0), 2) }}</span>
-                            <span class="text-sm text-brand-600 dark:text-brand-400">/ {{ ($period ?? 'month') === 'year' ? 'year' : 'month' }}</span>
+                        <div class="space-y-2">
+                            @foreach(($selectedSystemsSummary ?? []) as $systemSummary)
+                                <div class="flex items-center justify-between text-sm">
+                                    <div>
+                                        <div class="font-semibold text-brand-900 dark:text-white">{{ $systemSummary['module_title'] ?? 'System' }}</div>
+                                        <div class="text-slate-500 dark:text-slate-300">{{ $systemSummary['plan_name'] ?? 'Plan' }}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        @if(((int) ($systemSummary['free_trial_months'] ?? 0)) > 0)
+                                            <div class="font-bold text-green-600 dark:text-green-400">Free now</div>
+                                            <div class="text-xs text-slate-500 dark:text-slate-300">3 months trial</div>
+                                        @else
+                                            <div class="font-bold text-brand-700 dark:text-brand-300">${{ number_format((float) ($systemSummary['price'] ?? 0), 2) }}</div>
+                                            <div class="text-xs text-slate-500 dark:text-slate-300">/{{ ($period ?? 'month') === 'year' ? 'yr' : 'mo' }}</div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -148,16 +160,20 @@
                     <div class="border-t border-slate-100 dark:border-slate-700 pt-4 flex justify-between items-center mb-2">
                         <span class="font-bold text-slate-700 dark:text-white">Total due today</span>
                         <span class="text-2xl font-extrabold text-brand-dark dark:text-white">
-                            ${{ number_format(((int) ($selectedPricing['free_trial_months'] ?? 0) > 0) ? 0 : (float) ($selectedPrice ?? 0), 2) }}
+                            @if(((float) ($selectedDueNow ?? 0)) <= 0)
+                                Free
+                            @else
+                                ${{ number_format((float) ($selectedDueNow ?? 0), 2) }}
+                            @endif
                         </span>
                     </div>
-                    @if(($selectedPricing['free_trial_months'] ?? 0) > 0)
+                    @if($hasAnyFreeTrial ?? false)
                         <p class="text-xs text-right text-slate-400 mb-6">
-                            {{ (int) ($selectedPricing['free_trial_months'] ?? 0) }} month(s) free trial, then ${{ number_format((float) ($selectedPrice ?? 0), 2) }}/{{ ($period ?? 'month') === 'year' ? 'yr' : 'mo' }} billed {{ ($period ?? 'month') === 'year' ? 'yearly' : 'monthly' }}.
+                            Plans with 3 months free trial are free today. Non-trial plans are billed now.
                         </p>
                     @else
                         <p class="text-xs text-right text-slate-400 mb-6">
-                            Due today: ${{ number_format((float) ($selectedPrice ?? 0), 2) }}, billed {{ ($period ?? 'month') === 'year' ? 'yearly' : 'monthly' }}.
+                            Due today: ${{ number_format((float) ($selectedDueNow ?? 0), 2) }}, billed {{ ($period ?? 'month') === 'year' ? 'yearly' : 'monthly' }}.
                         </p>
                     @endif
 

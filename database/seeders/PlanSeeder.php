@@ -39,23 +39,23 @@ class PlanSeeder extends Seeder
         );
 
         $plans = [
-            ['name' => 'POS Basic', 'module_name' => 'pos', 'price_month' => 0, 'price_year' => 0, 'discount_percent' => 0, 'multi_system_discount_percent' => 0, 'free_trial_months' => 1, 'slug' => 'pos-basic', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-star'],
-            ['name' => 'POS Pro', 'module_name' => 'pos', 'price_month' => 19, 'price_year' => 190, 'discount_percent' => 10, 'multi_system_discount_percent' => 5, 'free_trial_months' => 1, 'slug' => 'pos-pro', 'active' => true, 'recommended' => true, 'icon' => 'bi bi-lightning-charge-fill'],
-            ['name' => 'POS Enterprise', 'module_name' => 'pos', 'price_month' => 39, 'price_year' => 390, 'discount_percent' => 12, 'multi_system_discount_percent' => 8, 'free_trial_months' => 2, 'slug' => 'pos-enterprise', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-gem'],
+            ['name' => 'POS Basic', 'module_name' => 'pos', 'price_month' => 0, 'price_year' => 0, 'three_months_free' => true, 'slug' => 'pos-basic', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-star'],
+            ['name' => 'POS Pro', 'module_name' => 'pos', 'price_month' => 19, 'price_year' => 190, 'three_months_free' => false, 'slug' => 'pos-pro', 'active' => true, 'recommended' => true, 'icon' => 'bi bi-lightning-charge-fill'],
+            ['name' => 'POS Enterprise', 'module_name' => 'pos', 'price_month' => 39, 'price_year' => 390, 'three_months_free' => false, 'slug' => 'pos-enterprise', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-gem'],
 
-            ['name' => 'HRM Basic', 'module_name' => 'hrm', 'price_month' => 9, 'price_year' => 90, 'discount_percent' => 5, 'multi_system_discount_percent' => 3, 'free_trial_months' => 1, 'slug' => 'hrm-basic', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-people'],
-            ['name' => 'HRM Pro', 'module_name' => 'hrm', 'price_month' => 29, 'price_year' => 290, 'discount_percent' => 10, 'multi_system_discount_percent' => 5, 'free_trial_months' => 1, 'slug' => 'hrm-pro', 'active' => true, 'recommended' => true, 'icon' => 'bi bi-people-fill'],
-            ['name' => 'HRM Enterprise', 'module_name' => 'hrm', 'price_month' => 59, 'price_year' => 590, 'discount_percent' => 15, 'multi_system_discount_percent' => 10, 'free_trial_months' => 2, 'slug' => 'hrm-enterprise', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-person-badge'],
+            ['name' => 'HRM Basic', 'module_name' => 'hrm', 'price_month' => 9, 'price_year' => 90, 'three_months_free' => false, 'slug' => 'hrm-basic', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-people'],
+            ['name' => 'HRM Pro', 'module_name' => 'hrm', 'price_month' => 29, 'price_year' => 290, 'three_months_free' => false, 'slug' => 'hrm-pro', 'active' => true, 'recommended' => true, 'icon' => 'bi bi-people-fill'],
+            ['name' => 'HRM Enterprise', 'module_name' => 'hrm', 'price_month' => 59, 'price_year' => 590, 'three_months_free' => false, 'slug' => 'hrm-enterprise', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-person-badge'],
 
-            ['name' => 'Booking Basic', 'module_name' => 'booking', 'price_month' => 7, 'price_year' => 70, 'discount_percent' => 5, 'multi_system_discount_percent' => 2, 'free_trial_months' => 1, 'slug' => 'booking-basic', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-calendar2-week'],
-            ['name' => 'Booking Pro', 'module_name' => 'booking', 'price_month' => 17, 'price_year' => 170, 'discount_percent' => 10, 'multi_system_discount_percent' => 5, 'free_trial_months' => 1, 'slug' => 'booking-pro', 'active' => true, 'recommended' => true, 'icon' => 'bi bi-calendar-check'],
-            ['name' => 'Booking Enterprise', 'module_name' => 'booking', 'price_month' => 34, 'price_year' => 340, 'discount_percent' => 12, 'multi_system_discount_percent' => 8, 'free_trial_months' => 2, 'slug' => 'booking-enterprise', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-calendar-event'],
+            ['name' => 'Booking Basic', 'module_name' => 'booking', 'price_month' => 7, 'price_year' => 70, 'three_months_free' => false, 'slug' => 'booking-basic', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-calendar2-week'],
+            ['name' => 'Booking Pro', 'module_name' => 'booking', 'price_month' => 17, 'price_year' => 170, 'three_months_free' => false, 'slug' => 'booking-pro', 'active' => true, 'recommended' => true, 'icon' => 'bi bi-calendar-check'],
+            ['name' => 'Booking Enterprise', 'module_name' => 'booking', 'price_month' => 34, 'price_year' => 340, 'three_months_free' => false, 'slug' => 'booking-enterprise', 'active' => true, 'recommended' => false, 'icon' => 'bi bi-calendar-event'],
         ];
 
         Plan::query()->upsert(
             $plans,
             ['slug'],
-            ['name', 'module_name', 'price_month', 'price_year', 'discount_percent', 'multi_system_discount_percent', 'free_trial_months', 'active', 'recommended', 'icon', 'updated_at']
+            ['name', 'module_name', 'price_month', 'price_year', 'three_months_free', 'active', 'recommended', 'icon', 'updated_at']
         );
 
         $plansBySlug = Plan::query()->whereIn('slug', collect($plans)->pluck('slug'))->get()->keyBy('slug');

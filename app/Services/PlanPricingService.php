@@ -11,19 +11,17 @@ class PlanPricingService
         $normalizedPeriod = $period === 'year' ? 'year' : 'month';
         $basePrice = (float) ($normalizedPeriod === 'year' ? $plan->price_year : $plan->price_month);
 
-        $planDiscountPercent = max(0, min(100, (float) ($plan->discount_percent ?? 0)));
-        $planDiscountAmount = round($basePrice * ($planDiscountPercent / 100), 2);
-        $afterPlanDiscount = max(0, $basePrice - $planDiscountAmount);
+        $planDiscountPercent = 0.0;
+        $planDiscountAmount = 0.0;
+        $afterPlanDiscount = $basePrice;
 
-        $multiSystemDiscountPercent = $systemsCount > 1
-            ? max(0, min(100, (float) ($plan->multi_system_discount_percent ?? 0)))
-            : 0.0;
+        $multiSystemDiscountPercent = 0.0;
         $multiSystemDiscountAmount = round($afterPlanDiscount * ($multiSystemDiscountPercent / 100), 2);
 
         $totalDiscountAmount = round($planDiscountAmount + $multiSystemDiscountAmount, 2);
         $finalPrice = max(0, round($basePrice - $totalDiscountAmount, 2));
 
-        $freeTrialMonths = max(0, (int) ($plan->free_trial_months ?? 0));
+        $freeTrialMonths = !empty($plan->three_months_free) ? 3 : 0;
 
         return [
             'period' => $normalizedPeriod,

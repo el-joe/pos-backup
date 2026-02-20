@@ -21,9 +21,7 @@ class PlanDiscountsPage extends Component
         $plan = Plan::query()->findOrFail($planId);
         $this->editingPlanId = $plan->id;
         $this->data = [
-            'discount_percent' => (float) ($plan->discount_percent ?? 0),
-            'multi_system_discount_percent' => (float) ($plan->multi_system_discount_percent ?? 0),
-            'free_trial_months' => (int) ($plan->free_trial_months ?? 0),
+            'is_three_month_trial' => (bool) ($plan->three_months_free ?? false),
         ];
     }
 
@@ -35,15 +33,11 @@ class PlanDiscountsPage extends Component
         }
 
         $this->validate([
-            'data.discount_percent' => ['required', 'numeric', 'min:0', 'max:100'],
-            'data.multi_system_discount_percent' => ['required', 'numeric', 'min:0', 'max:100'],
-            'data.free_trial_months' => ['required', 'integer', 'min:0', 'max:24'],
+            'data.is_three_month_trial' => ['required', 'boolean'],
         ]);
 
         Plan::query()->whereKey($this->editingPlanId)->update([
-            'discount_percent' => (float) $this->data['discount_percent'],
-            'multi_system_discount_percent' => (float) $this->data['multi_system_discount_percent'],
-            'free_trial_months' => (int) $this->data['free_trial_months'],
+            'three_months_free' => !empty($this->data['is_three_month_trial']),
         ]);
 
         $this->popup('success', 'Plan discount settings saved');
@@ -51,7 +45,7 @@ class PlanDiscountsPage extends Component
 
     public function render()
     {
-        $plans = Plan::query()->orderBy('module_name')->orderBy('name')->paginate(12)->withPath(route('cpanel.plans.discounts'));
+        $plans = Plan::query()->orderBy('module_name')->orderBy('name')->paginate(12)->withPath(route('cpanel.plans.list'));
 
         return view('livewire.central.cpanel.plans.plan-discounts-page', get_defined_vars());
     }

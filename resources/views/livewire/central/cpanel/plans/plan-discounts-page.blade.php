@@ -1,7 +1,7 @@
 <div class="col-12">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Plan Discounts & Free Trial</h5>
+            <h5 class="mb-0">Plan Free Trial Settings</h5>
             <a class="btn btn-outline-theme" href="{{ route('cpanel.plans.list') }}">
                 <i class="fa fa-gem"></i> Plans
             </a>
@@ -17,9 +17,7 @@
                             <th>Module</th>
                             <th>Monthly</th>
                             <th>Yearly</th>
-                            <th>Plan Discount %</th>
-                            <th>Multi-System Discount %</th>
-                            <th>Free Trial Months</th>
+                            <th>3 Months Free</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -31,9 +29,13 @@
                                 <td>{{ strtoupper((string) $plan->module_name?->value) }}</td>
                                 <td>${{ $plan->price_month }}</td>
                                 <td>${{ $plan->price_year }}</td>
-                                <td>{{ number_format((float) ($plan->discount_percent ?? 0), 2) }}</td>
-                                <td>{{ number_format((float) ($plan->multi_system_discount_percent ?? 0), 2) }}</td>
-                                <td>{{ (int) ($plan->free_trial_months ?? 0) }}</td>
+                                <td>
+                                    @if($plan->three_months_free)
+                                        <span class="badge bg-success">Enabled</span>
+                                    @else
+                                        <span class="badge bg-secondary">Disabled</span>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#discountModal" wire:click="edit({{ $plan->id }})">
                                         <i class="fa fa-edit"></i>
@@ -59,19 +61,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Plan Discount %</label>
-                        <input type="number" step="0.01" class="form-control" wire:model.defer="data.discount_percent" min="0" max="100">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Multi-System Discount %</label>
-                        <input type="number" step="0.01" class="form-control" wire:model.defer="data.multi_system_discount_percent" min="0" max="100">
-                    </div>
-
-                    <div class="mb-0">
-                        <label class="form-label">Free Trial Months</label>
-                        <input type="number" class="form-control" wire:model.defer="data.free_trial_months" min="0" max="24">
+                    <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" id="threeMonthsFreeCheck" wire:model.defer="data.is_three_month_trial">
+                        <label class="form-check-label" for="threeMonthsFreeCheck">
+                            Enable 3 months free
+                        </label>
                     </div>
                 </div>
                 <div class="modal-footer">

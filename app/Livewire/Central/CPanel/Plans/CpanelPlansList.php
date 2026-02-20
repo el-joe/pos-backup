@@ -24,9 +24,7 @@ class CpanelPlansList extends Component
         'module_name' => 'required|in:pos,hrm,booking',
         'price_month' => 'required|numeric|min:0',
         'price_year' => 'required|numeric|min:0',
-        'discount_percent' => 'nullable|numeric|min:0|max:100',
-        'multi_system_discount_percent' => 'nullable|numeric|min:0|max:100',
-        'free_trial_months' => 'nullable|integer|min:0|max:24',
+        'three_months_free' => 'boolean',
         'plan_features' => 'nullable|array',
         'recommended' => 'boolean',
     ];
@@ -41,9 +39,7 @@ class CpanelPlansList extends Component
         }
 
         $this->data['module_name'] = $this->data['module_name'] ?? ModulesEnum::POS->value;
-        $this->data['discount_percent'] = $this->data['discount_percent'] ?? 0;
-        $this->data['multi_system_discount_percent'] = $this->data['multi_system_discount_percent'] ?? 0;
-        $this->data['free_trial_months'] = $this->data['free_trial_months'] ?? 0;
+        $this->data['three_months_free'] = (bool) ($this->data['three_months_free'] ?? false);
         $this->data['plan_features'] = $this->data['plan_features'] ?? [];
 
         if ($this->current) {

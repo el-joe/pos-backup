@@ -121,23 +121,69 @@ class HomeController extends Controller
         return redirect()->back()->with('success','Your message has been sent successfully.');
     }
 
-    function checkout(Request $request)
+    function checkout(Request $request, ?string $token = null)
     {
-        $period = $request->query('period') === 'year' ? 'year' : 'month';
-        $requestedSlug = trim((string) $request->query('plan', ''));
+        $moduleTitles = [
+            'pos' => 'POS & ERP System',
+            'hrm' => 'HRM System',
+            'booking' => 'Booking & Reservations',
+        ];
 
-        $selectedPlan = Plan::query()
-            ->active()
-            ->when($requestedSlug !== '', fn ($query) => $query->where('slug', $requestedSlug))
-            ->with(['plan_features.feature' => function ($query) {
-                $query->where('active', true);
-            }])
-            ->orderByDesc('recommended')
-            ->orderBy('price_month')
-            ->first();
+        $decodedToken = is_string($token) && trim($token) !== '' ? decodedData($token) : null;
+        if (!is_array($decodedToken)) {
+            $decodedToken = [];
+        }
 
-        if (!$selectedPlan && $requestedSlug !== '') {
-            $selectedPlan = Plan::query()
+        $period = ($decodedToken['period'] ?? $request->query('period')) === 'year' ? 'year' : 'month';
+        $requestedSlug = trim((string) ($decodedToken['slug'] ?? $request->query('plan', '')));
+        $requestedSystems = collect($decodedToken['systems'] ?? [])->filter(fn ($item) => is_array($item))->values();
+
+        $selectedSystemsSummary = [];
+        $selectedFeatureNames = [];
+        $selectedPlans = collect();
+
+        if ($requestedSystems->isNotEmpty()) {
+            foreach ($requestedSystems as $requestedSystem) {
+                $module = (string) ($requestedSystem['module'] ?? '');
+                $planSlug = trim((string) ($requestedSystem['slug'] ?? ''));
+
+                if (!in_array($module, ['pos', 'hrm', 'booking'], true) || $planSlug === '') {
+                    continue;
+                }
+
+                $plan = Plan::query()
+                    ->active()
+                    ->where('module_name', $module)
+                    ->where('slug', $planSlug)
+                    ->with(['plan_features.feature' => function ($query) {
+                        $query->where('active', true);
+                    }])
+                    ->first();
+
+                if (!$plan) {
+                    continue;
+                }
+
+                $selectedPlans->push($plan);
+            }
+        }
+
+        if ($selectedPlans->isEmpty() && $requestedSlug !== '') {
+            $fallbackPlan = Plan::query()
+                ->active()
+                ->where('slug', $requestedSlug)
+                ->with(['plan_features.feature' => function ($query) {
+                    $query->where('active', true);
+                }])
+                ->first();
+
+            if ($fallbackPlan) {
+                $selectedPlans->push($fallbackPlan);
+            }
+        }
+
+        if ($selectedPlans->isEmpty()) {
+            $fallbackPlan = Plan::query()
                 ->active()
                 ->with(['plan_features.feature' => function ($query) {
                     $query->where('active', true);
@@ -145,15 +191,28 @@ class HomeController extends Controller
                 ->orderByDesc('recommended')
                 ->orderBy('price_month')
                 ->first();
+
+            if ($fallbackPlan) {
+                $selectedPlans->push($fallbackPlan);
+            }
         }
 
-        $selectedPrice = 0.0;
-        $selectedPricing = null;
-        $selectedFeatureNames = [];
-        if ($selectedPlan) {
-            $selectedPricing = app(PlanPricingService::class)->calculate($selectedPlan, $period, 1);
-            $selectedPrice = (float) ($selectedPricing['final_price'] ?? 0);
-            $selectedFeatureNames = $selectedPlan->plan_features
+        $selectedSystemsCount = max(1, $selectedPlans->count());
+        foreach ($selectedPlans as $plan) {
+            $pricing = app(PlanPricingService::class)->calculate($plan, $period, $selectedSystemsCount);
+            $price = (float) ($pricing['final_price'] ?? 0);
+            $freeTrialMonths = (int) ($pricing['free_trial_months'] ?? 0);
+
+            $selectedSystemsSummary[] = [
+                'module' => is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name,
+                'module_title' => $moduleTitles[is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name] ?? ucfirst((string) $plan->module_name),
+                'plan_name' => $plan->name,
+                'price' => $price,
+                'free_trial_months' => $freeTrialMonths,
+                'payable_now' => $freeTrialMonths > 0 ? 0.0 : $price,
+            ];
+
+            $featureNames = $plan->plan_features
                 ->filter(function ($planFeature) {
                     if (!$planFeature->feature) {
                         return false;
@@ -177,7 +236,15 @@ class HomeController extends Controller
                 ->values()
                 ->take(4)
                 ->all();
+
+            $selectedFeatureNames = array_values(array_unique(array_merge($selectedFeatureNames, $featureNames)));
         }
+
+        $selectedPlan = $selectedPlans->first();
+        $selectedPricing = $selectedPlan ? app(PlanPricingService::class)->calculate($selectedPlan, $period, $selectedSystemsCount) : null;
+        $selectedPrice = (float) collect($selectedSystemsSummary)->sum('price');
+        $selectedDueNow = (float) collect($selectedSystemsSummary)->sum('payable_now');
+        $hasAnyFreeTrial = collect($selectedSystemsSummary)->contains(fn ($item) => (int) ($item['free_trial_months'] ?? 0) > 0);
 
         return landingLayoutView('checkout',get_defined_vars());
     }
@@ -261,9 +328,8 @@ class HomeController extends Controller
                         'desc' => '',
                         'price' => (float) (app(PlanPricingService::class)->calculate($plan, 'month', 1)['final_price'] ?? 0),
                         'yearly' => (float) (app(PlanPricingService::class)->calculate($plan, 'year', 1)['final_price'] ?? 0),
-                        'discount_percent' => (float) ($plan->discount_percent ?? 0),
-                        'multi_system_discount_percent' => (float) ($plan->multi_system_discount_percent ?? 0),
-                        'free_trial_months' => (int) ($plan->free_trial_months ?? 0),
+                        'three_months_free' => (bool) ($plan->three_months_free ?? false),
+                        'free_trial_months' => (int) (($plan->three_months_free ?? false) ? 3 : 0),
                         'features' => $featureNames,
                         'popular' => (bool) $plan->recommended,
                     ];
@@ -304,6 +370,9 @@ class HomeController extends Controller
     {
         $plans = Plan::query()
             ->active()
+            ->with(['plan_features.feature' => function ($query) {
+                $query->where('active', true);
+            }])
             ->orderBy('price_month')
             ->orderBy('id')
             ->get();

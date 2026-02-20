@@ -16,9 +16,7 @@ class Plan extends Model
         'module_name',
         'price_month',
         'price_year',
-        'discount_percent',
-        'multi_system_discount_percent',
-        'free_trial_months',
+        'three_months_free',
         'slug',
         'active',
         'recommended'
@@ -26,9 +24,7 @@ class Plan extends Model
 
     protected $casts = [
         'module_name' => ModulesEnum::class,
-        'discount_percent' => 'float',
-        'multi_system_discount_percent' => 'float',
-        'free_trial_months' => 'integer',
+        'three_months_free' => 'boolean',
         'active' => 'boolean',
         'recommended' => 'boolean',
     ];
