@@ -27,7 +27,7 @@ class FixedAssetDetails extends Component
 
     public function mount(): void
     {
-        $this->asset = $this->fixedAssetService->first($this->id, ['branch', 'createdBy']);
+        $this->asset = $this->fixedAssetService->first($this->id, ['branch', 'createdBy', 'lifespanExtensions']);
         if (!$this->asset) {
             abort(404);
         }
@@ -40,10 +40,13 @@ class FixedAssetDetails extends Component
             filter: [
                 'model_type' => FixedAsset::class,
                 'model_id' => $this->asset->id,
+                'fixed_asset_entry_type' => 'depreciation',
             ],
             perPage: 10,
             orderByDesc: 'id'
         );
+
+        $lifespanExtensions = $this->asset->lifespanExtensions()->orderByDesc('id')->get();
 
         return layoutView('fixed-assets.fixed-asset-details', get_defined_vars())
             ->title(__('general.pages.fixed_assets.fixed_asset_details'));

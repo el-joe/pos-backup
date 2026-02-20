@@ -55,8 +55,7 @@ class FixedAssetsReport extends Component
     public function loadReport(): void
     {
         $query = FixedAsset::query()
-            ->with(['branch'])
-            ->withSum('expenses', 'amount');
+            ->with(['branch']);
 
         if ($this->from_date) {
             $query->whereDate('purchase_date', '>=', $this->from_date);

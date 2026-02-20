@@ -42,6 +42,7 @@ class FixedAssetService
                 'cost' => $data['cost'] ?? 0,
                 'salvage_value' => $data['salvage_value'] ?? 0,
                 'useful_life_months' => $data['useful_life_months'] ?? 0,
+                'depreciation_rate' => $data['depreciation_rate'] ?? null,
                 'depreciation_method' => $data['depreciation_method'] ?? 'straight_line',
                 'depreciation_start_date' => $data['depreciation_start_date'] ?? null,
                 'status' => $data['status'] ?? 'active',

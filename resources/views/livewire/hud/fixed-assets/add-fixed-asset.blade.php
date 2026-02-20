@@ -51,6 +51,20 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label class="form-label">{{ __('general.pages.fixed_assets.depreciation_rate') }}</label>
+                        <input type="number" step="0.0001" min="0" max="100" class="form-control" wire:model="data.depreciation_rate">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">{{ __('general.pages.fixed_assets.depreciation_method') }}</label>
+                        <select class="form-select select2" name="data.depreciation_method">
+                            <option value="straight_line" {{ ($data['depreciation_method'] ?? 'straight_line') == 'straight_line' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.method_straight_line') }}</option>
+                            <option value="declining_balance" {{ ($data['depreciation_method'] ?? '') == 'declining_balance' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.method_declining_balance') }}</option>
+                            <option value="double_declining_balance" {{ ($data['depreciation_method'] ?? '') == 'double_declining_balance' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.method_double_declining_balance') }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.fixed_assets.depreciation_start_date') }}</label>
                         <input type="date" class="form-control" wire:model="data.depreciation_start_date">
                     </div>
@@ -59,6 +73,7 @@
                         <label class="form-label">{{ __('general.pages.fixed_assets.status') }}</label>
                         <select class="form-select select2" name="data.status">
                             <option value="active" {{ ($data['status']??'active') == 'active' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_active') }}</option>
+                            <option value="under_construction" {{ ($data['status']??'') == 'under_construction' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_under_construction') }}</option>
                             <option value="disposed" {{ ($data['status']??'') == 'disposed' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_disposed') }}</option>
                             <option value="sold" {{ ($data['status']??'') == 'sold' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_sold') }}</option>
                         </select>

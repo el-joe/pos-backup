@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\FixedAssets;
 
 use App\Enums\AccountTypeEnum;
-use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\FixedAsset;
 use App\Services\BranchService;
@@ -35,11 +34,12 @@ class AddFixedAsset extends Component
         $this->data['code'] = $this->data['code'] ?? FixedAsset::generateCode();
         $this->data['purchase_date'] = $this->data['purchase_date'] ?? now()->format('Y-m-d');
         $this->data['depreciation_start_date'] = $this->data['depreciation_start_date'] ?? now()->format('Y-m-d');
-        $this->data['depreciation_method'] = $this->data['depreciation_method'] ?? 'straight_line';
+        $this->data['depreciation_method'] = $this->data['depreciation_method'] ?? FixedAsset::METHOD_STRAIGHT_LINE;
+        $this->data['depreciation_rate'] = $this->data['depreciation_rate'] ?? null;
         $this->data['useful_life_months'] = $this->data['useful_life_months'] ?? 0;
         $this->data['cost'] = $this->data['cost'] ?? 0;
         $this->data['salvage_value'] = $this->data['salvage_value'] ?? 0;
-        $this->data['status'] = $this->data['status'] ?? 'active';
+        $this->data['status'] = $this->data['status'] ?? FixedAsset::STATUS_ACTIVE;
 
         if (admin()->branch_id) {
             $this->data['branch_id'] = admin()->branch_id;
@@ -56,9 +56,10 @@ class AddFixedAsset extends Component
             'data.cost' => 'required|numeric|min:0',
             'data.salvage_value' => 'nullable|numeric|min:0',
             'data.useful_life_months' => 'nullable|integer|min:0',
-            'data.depreciation_method' => 'required|string|max:255',
+            'data.depreciation_rate' => 'nullable|numeric|min:0|max:100',
+            'data.depreciation_method' => 'required|in:straight_line,declining_balance,double_declining_balance',
             'data.depreciation_start_date' => 'nullable|date',
-            'data.status' => 'required|string|max:255',
+            'data.status' => 'required|in:active,under_construction,disposed,sold',
             'data.note' => 'nullable|string',
         ]);
 
@@ -75,9 +76,10 @@ class AddFixedAsset extends Component
                 'cost' => $cost,
                 'salvage_value' => $this->data['salvage_value'] ?? 0,
                 'useful_life_months' => $this->data['useful_life_months'] ?? 0,
-                'depreciation_method' => $this->data['depreciation_method'] ?? 'straight_line',
+                'depreciation_rate' => $this->data['depreciation_rate'] ?? null,
+                'depreciation_method' => $this->data['depreciation_method'] ?? FixedAsset::METHOD_STRAIGHT_LINE,
                 'depreciation_start_date' => $this->data['depreciation_start_date'] ?? null,
-                'status' => $this->data['status'] ?? 'active',
+                'status' => $this->data['status'] ?? FixedAsset::STATUS_ACTIVE,
                 'note' => $this->data['note'] ?? null,
             ]);
 
@@ -90,7 +92,7 @@ class AddFixedAsset extends Component
                 $this->transactionService->create([
                     'date' => $asset->purchase_date ?? now(),
                     'description' => 'Fixed Asset Purchase for #'.$asset->code.' - '.$asset->name,
-                    'type' => TransactionTypeEnum::FIXED_ASSETS->value,
+                    'type' => 'fixed_assets',
                     'reference_type' => FixedAsset::class,
                     'reference_id' => $asset->id,
                     'branch_id' => $branchId,

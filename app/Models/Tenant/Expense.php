@@ -11,7 +11,7 @@ class Expense extends Model
     use SoftDeletes;
     protected $fillable = [
         'branch_id','expense_category_id','amount','expense_date','note',
-        'created_by','model_type','model_id','tax_percentage','type','total_paid'
+        'created_by','model_type','model_id','fixed_asset_entry_type','tax_percentage','type','total_paid'
     ];
 
     protected $casts = [
@@ -39,6 +39,15 @@ class Expense extends Model
             $q->where('model_type', $filter['model_type']);
         })->when(isset($filter['model_id']) && $filter['model_id'], function($q) use ($filter) {
             $q->where('model_id', $filter['model_id']);
+        })->when(isset($filter['fixed_asset_entry_type']) && $filter['fixed_asset_entry_type'], function($q) use ($filter) {
+            if ($filter['fixed_asset_entry_type'] === 'depreciation') {
+                $q->where(function($subQ) {
+                    $subQ->where('fixed_asset_entry_type', 'depreciation')
+                        ->orWhereNull('fixed_asset_entry_type');
+                });
+            } else {
+                $q->where('fixed_asset_entry_type', $filter['fixed_asset_entry_type']);
+            }
         })->when(isset($filter['category_key']) && $filter['category_key'], function($q) use ($filter) {
             $q->whereHas('category', function($q) use ($filter) {
                 $q->where('key', $filter['category_key']);
