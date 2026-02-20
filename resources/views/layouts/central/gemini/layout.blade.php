@@ -62,8 +62,11 @@
     @endif
     @include('layouts.central.gemini.partials.header')
 
+    @if(isset($slot))
+    {{ $slot }}
+    @else
     @yield('content')
-
+    @endif
     @include('layouts.central.gemini.partials.footer')
 
     @include('layouts.central.gemini.partials.scripts')
