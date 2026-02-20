@@ -1,5 +1,7 @@
 @extends('layouts.central.gemini.layout')
 
 @section('content')
-    @livewire('central.site.blogs-list')
+    <main itemscope itemtype="https://schema.org/Blog">
+        @livewire('central.site.blogs-list')
+    </main>
 @endsection

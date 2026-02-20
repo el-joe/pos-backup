@@ -31,9 +31,12 @@
                         <div class="text-end">
                             <small class="text-muted">{{ __('website.checkout.price') }}</small>
                             <h5 class="mb-0">
-                                {{ currencySymbolPosition($plan->{"price_".$period} * $currentCurrency->conversion_rate, $currentCurrency->symbol) }}
+                                {{ currencySymbolPosition(($pricingSummary['final_price'] ?? 0) * ($currentCurrency->conversion_rate ?? 1), $currentCurrency->symbol) }}
                                 <small class="text-muted">/ {{ __('website.checkout.periods.' . $period) }}</small>
                             </h5>
+                            @if(($pricingSummary['free_trial_months'] ?? 0) > 0)
+                                <small class="text-success d-block">Free for {{ (int) $pricingSummary['free_trial_months'] }} month(s). Pay nothing during trial.</small>
+                            @endif
                         </div>
                     </div>
 
@@ -43,9 +46,9 @@
                     <h6 class="fw-bold">{{ __('website.checkout.limits_features') }}</h6>
                     <table class="table table-borderless mb-0">
                         @foreach ($plan->features as $title=>$feature)
-                            @php $featureEnum = \App\Enums\PlanFeaturesEnum::from($title); @endphp
+                            @php $featureEnum = \App\Enums\PlanFeaturesEnum::tryFrom($title); @endphp
                             <tr>
-                                <td class="text-muted">{{ $featureEnum->label() }}</td>
+                                <td class="text-muted">{{ $featureEnum?->label() ?? \Illuminate\Support\Str::headline(str_replace('_', ' ', (string) $title)) }}</td>
                                 @if(!($feature['description'] ?? false))
                                     <td><i class="{{ $feature['status'] ? 'fa fa-check text-theme' : 'fa fa-times text-body text-opacity-25' }} fa-lg"></i></td>
                                 @else
@@ -111,7 +114,7 @@
                         </div>
 
                         <!-- Domain Selection -->
-                        @if($plan->{'price_'.$period} > 0)
+                        @if(($pricingSummary['final_price'] ?? 0) > 0)
                         <div class="col-12">
                             <label class="form-label">{{ __('website.checkout.domain_type') }}</label>
                             <div class="d-flex gap-3">
@@ -167,6 +170,25 @@
                             <label class="form-label">{{ __('website.checkout.vat_number_optional') }}</label>
                             <input wire:model="data.tax_number" class="form-control">
                             @error('data.tax_number') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label d-block">Systems *</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="pos" wire:model.live="data.systems_allowed" id="checkoutSystemPos">
+                                    <label class="form-check-label" for="checkoutSystemPos">POS</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="hrm" wire:model.live="data.systems_allowed" id="checkoutSystemHrm">
+                                    <label class="form-check-label" for="checkoutSystemHrm">HRM</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="booking" wire:model.live="data.systems_allowed" id="checkoutSystemBooking">
+                                    <label class="form-check-label" for="checkoutSystemBooking">Booking</label>
+                                </div>
+                            </div>
+                            @error('data.systems_allowed') <small class="text-danger">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="col-12">
@@ -238,7 +260,7 @@
                         </div>
                     </div> --}}
 
-                    @if($plan->{'price_'.$period} > 0)
+                    @if(($pricingSummary['base_price'] ?? 0) > 0)
                         <table class="table">
                             <tr>
                                 <td>{{ __('website.checkout.plan') }}:</td>
@@ -252,11 +274,11 @@
                                 <td>{{ __('website.checkout.price') }}:</td>
                                 @if($currentCurrency->conversion_rate && $currentCurrency->conversion_rate != 1)
                                     <td>
-                                        {{ currencySymbolPosition(number_format($plan->{"price_" . $period} * $currentCurrency->conversion_rate, 2), $currentCurrency->symbol) }}
+                                        {{ currencySymbolPosition(number_format(($pricingSummary['base_price'] ?? 0) * $currentCurrency->conversion_rate, 2), $currentCurrency->symbol) }}
                                     </td>
                                 @else
                                     <td>
-                                        {{ currencySymbolPosition($plan->{"price_" . $period} * $currentCurrency->conversion_rate, '$') }}
+                                        {{ currencySymbolPosition(($pricingSummary['base_price'] ?? 0) * ($currentCurrency->conversion_rate ?? 1), '$') }}
                                     </td>
                                 @endif
                             </tr>
@@ -264,25 +286,35 @@
                                 <td>{{ __('website.checkout.discount') }}:</td>
                                 <td id="discount_amount">
                                     @if($currentCurrency->conversion_rate && $currentCurrency->conversion_rate != 1)
-                                        {{ currencySymbolPosition(0, $currentCurrency->symbol) }}
+                                        {{ currencySymbolPosition(number_format(($pricingSummary['total_discount_amount'] ?? 0) * $currentCurrency->conversion_rate, 2), $currentCurrency->symbol) }}
                                     @else
-                                        {{ currencySymbolPosition(0, '$') }}
+                                        {{ currencySymbolPosition(($pricingSummary['total_discount_amount'] ?? 0) * ($currentCurrency->conversion_rate ?? 1), '$') }}
                                     @endif
                                 </td>
                             </tr>
+                            @if(($pricingSummary['free_trial_months'] ?? 0) > 0)
+                            <tr>
+                                <td>Free Trial:</td>
+                                <td>{{ (int) $pricingSummary['free_trial_months'] }} month(s)</td>
+                            </tr>
+                            @endif
                             {{-- <tr>
                                 <td>VAT:</td>
                                 <td id="vat_amount">$0</td>
                             </tr> --}}
                             <tr class="table-dark fw-bold">
                                 <td>{{ __('website.checkout.total') }}:</td>
-                                <td id="total_amount">{{ currencySymbolPosition($plan->{"price_" . $period} * $currentCurrency->conversion_rate, $currentCurrency->symbol) }}</td>
+                                <td id="total_amount">{{ currencySymbolPosition(($pricingSummary['final_price'] ?? 0) * ($currentCurrency->conversion_rate ?? 1), $currentCurrency->symbol) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Due now:</td>
+                                <td>{{ currencySymbolPosition(((int) ($pricingSummary['free_trial_months'] ?? 0) > 0 ? 0 : (($pricingSummary['final_price'] ?? 0) * ($currentCurrency->conversion_rate ?? 1))), $currentCurrency->symbol) }}</td>
                             </tr>
                         </table>
                         @if($currentCurrency->country_code != 'EGP')
                             <div class="alert alert-info">
                                 <i class="fa fa-info-circle"></i>
-                                {{ __('website.checkout.currency_conversion_note', ['currency' => $currentCurrency->code, 'symbol' => $currentCurrency->symbol,'usd' => $plan->{"price_" . $period}]) }}
+                                {{ __('website.checkout.currency_conversion_note', ['currency' => $currentCurrency->code, 'symbol' => $currentCurrency->symbol,'usd' => ($pricingSummary['final_price'] ?? 0)]) }}
                             </div>
                         @endif
                     @endif

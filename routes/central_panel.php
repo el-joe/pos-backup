@@ -24,6 +24,7 @@ use App\Livewire\Central\CPanel\Features\FeaturesList;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
 use App\Livewire\Central\CPanel\Translations\TranslationsEditor;
 use App\Livewire\Central\CPanel\Plans\CpanelPlansList;
+use App\Livewire\Central\CPanel\Plans\PlanDiscountsPage;
 use App\Livewire\Central\CPanel\RegisterRequests\RegisterRequestsList;
 use App\Livewire\Central\CPanel\Slider\SliderList;
 use App\Livewire\Central\CPanel\Subscriptions\SubscriptionsList;
@@ -61,6 +62,7 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('customers/create', CustomerCreate::class)->name('customers.create');
         Route::get('customers/{id}', CustomerDetails::class)->name('customers.details');
         Route::get('plans', CpanelPlansList::class)->name('plans.list');
+        Route::get('plans/discounts', PlanDiscountsPage::class)->name('plans.discounts');
         Route::get('sliders', SliderList::class)->name('sliders.list');
 
         Route::get('partners', PartnersList::class)->name('partners.list');

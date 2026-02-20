@@ -1,12 +1,18 @@
 @extends('layouts.central.gemini.layout')
 
 @section('content')
-    <main class="flex-grow container mx-auto px-6 py-28">
+    <main class="flex-grow container mx-auto px-6 py-28" itemscope itemtype="https://schema.org/WebPage">
         <div class="flex flex-col lg:flex-row gap-12 max-w-6xl mx-auto">
 
             <div class="lg:w-2/3">
                 <h1 class="text-2xl font-bold text-brand-dark dark:text-white mb-2">Complete your registration</h1>
-                <p class="text-slate-500 dark:text-slate-400 mb-8">Start your 14-day free trial. No credit card required.</p>
+                <p class="text-slate-500 dark:text-slate-400 mb-8">
+                    @if(($selectedPricing['free_trial_months'] ?? 0) > 0)
+                        Start your {{ (int) ($selectedPricing['free_trial_months'] ?? 0) }} month free trial. No payment required during trial.
+                    @else
+                        Choose your plan and complete registration.
+                    @endif
+                </p>
 
                 <form action="#" method="POST" class="space-y-8">
 
@@ -118,31 +124,42 @@
                         <div class="flex justify-between items-start mb-2">
                             <div>
                                 <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wide">Selected Plan</span>
-                                <h4 class="text-xl font-extrabold text-brand-900 dark:text-white mt-1">Professional</h4>
+                                <h4 class="text-xl font-extrabold text-brand-900 dark:text-white mt-1">{{ $selectedPlan?->name ?? 'Starter' }}</h4>
                             </div>
-                            <a href="pricing.html" class="text-xs font-bold text-slate-400 hover:text-brand-500 underline">Change</a>
+                            <a href="{{ route('pricing') }}" class="text-xs font-bold text-slate-400 hover:text-brand-500 underline">Change</a>
                         </div>
                         <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-brand-600 dark:text-brand-400">$79</span>
-                            <span class="text-sm text-brand-600 dark:text-brand-400">/ month</span>
+                            <span class="text-2xl font-bold text-brand-600 dark:text-brand-400">${{ number_format((float) ($selectedPrice ?? 0), 2) }}</span>
+                            <span class="text-sm text-brand-600 dark:text-brand-400">/ {{ ($period ?? 'month') === 'year' ? 'year' : 'month' }}</span>
                         </div>
                     </div>
 
                     <div class="mb-6">
                         <h4 class="text-xs font-bold text-slate-400 uppercase mb-3">Includes:</h4>
                         <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500 text-xs"></i> 5 Users</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500 text-xs"></i> Unlimited Invoices</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500 text-xs"></i> ZATCA Integration</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500 text-xs"></i> Inventory Management</li>
+                            @forelse(($selectedFeatureNames ?? []) as $featureName)
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500 text-xs"></i> {{ $featureName }}</li>
+                            @empty
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500 text-xs"></i> Core modules enabled</li>
+                            @endforelse
                         </ul>
                     </div>
 
                     <div class="border-t border-slate-100 dark:border-slate-700 pt-4 flex justify-between items-center mb-2">
                         <span class="font-bold text-slate-700 dark:text-white">Total due today</span>
-                        <span class="text-2xl font-extrabold text-brand-dark dark:text-white">$0.00</span>
+                        <span class="text-2xl font-extrabold text-brand-dark dark:text-white">
+                            ${{ number_format(((int) ($selectedPricing['free_trial_months'] ?? 0) > 0) ? 0 : (float) ($selectedPrice ?? 0), 2) }}
+                        </span>
                     </div>
-                    <p class="text-xs text-right text-slate-400 mb-6">14-day free trial, then $79/mo billed monthly.</p>
+                    @if(($selectedPricing['free_trial_months'] ?? 0) > 0)
+                        <p class="text-xs text-right text-slate-400 mb-6">
+                            {{ (int) ($selectedPricing['free_trial_months'] ?? 0) }} month(s) free trial, then ${{ number_format((float) ($selectedPrice ?? 0), 2) }}/{{ ($period ?? 'month') === 'year' ? 'yr' : 'mo' }} billed {{ ($period ?? 'month') === 'year' ? 'yearly' : 'monthly' }}.
+                        </p>
+                    @else
+                        <p class="text-xs text-right text-slate-400 mb-6">
+                            Due today: ${{ number_format((float) ($selectedPrice ?? 0), 2) }}, billed {{ ($period ?? 'month') === 'year' ? 'yearly' : 'monthly' }}.
+                        </p>
+                    @endif
 
                     <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg flex justify-center gap-4 text-2xl text-slate-400 grayscale opacity-70">
                         <i class="fa-brands fa-cc-visa"></i>

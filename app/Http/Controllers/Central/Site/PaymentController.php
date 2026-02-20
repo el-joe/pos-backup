@@ -64,6 +64,7 @@ class PaymentController extends Controller
                         'plan' => [
                             'id' => $data['plan_id'] ?? 1,
                             'period' => $data['period'] ?? 'month',
+                            'systems_allowed' => $data['systems_allowed'] ?? ['pos'],
                         ],
                         'partner_id' => $data['partner_id'] ?? null,
                     ],

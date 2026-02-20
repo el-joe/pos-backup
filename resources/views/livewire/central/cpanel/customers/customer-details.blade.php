@@ -62,6 +62,23 @@
                             <option value="year">Yearly</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Systems</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="pos" wire:model.defer="renewData.systems_allowed" id="renewSystemPos">
+                                <label class="form-check-label" for="renewSystemPos">POS</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="hrm" wire:model.defer="renewData.systems_allowed" id="renewSystemHrm">
+                                <label class="form-check-label" for="renewSystemHrm">HRM</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="booking" wire:model.defer="renewData.systems_allowed" id="renewSystemBooking">
+                                <label class="form-check-label" for="renewSystemBooking">Booking</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-primary" type="button" wire:click="renewPackage">
                             <i class="fa fa-refresh"></i> Renew Current Plan
@@ -93,6 +110,23 @@
                             <option value="year">Yearly</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Systems</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="pos" wire:model.defer="upgradeData.systems_allowed" id="upgradeSystemPos">
+                                <label class="form-check-label" for="upgradeSystemPos">POS</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="hrm" wire:model.defer="upgradeData.systems_allowed" id="upgradeSystemHrm">
+                                <label class="form-check-label" for="upgradeSystemHrm">HRM</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="booking" wire:model.defer="upgradeData.systems_allowed" id="upgradeSystemBooking">
+                                <label class="form-check-label" for="upgradeSystemBooking">Booking</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-warning" type="button" wire:click="upgradePackage">
                             <i class="fa fa-level-up"></i> Upgrade Plan
@@ -116,6 +150,9 @@
                             <th>Plan</th>
                             <th>Price</th>
                             <th>Billing</th>
+                            <th>Systems</th>
+                            <th>Discount</th>
+                            <th>Trial</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Status</th>
@@ -128,6 +165,9 @@
                                 <td>{{ $subscription->plan?->name ?? '-' }}</td>
                                 <td>{{ $subscription->price }} {{ $subscription->currency?->code ?? '' }}</td>
                                 <td>{{ ucfirst($subscription->billing_cycle) }}</td>
+                                <td>{{ implode(', ', $subscription->systems_allowed ?? []) ?: '-' }}</td>
+                                <td>{{ number_format((float) data_get($subscription->plan_details, 'pricing.total_discount_amount', 0), 2) }}</td>
+                                <td>{{ (int) data_get($subscription->plan_details, 'pricing.free_trial_months', 0) }} month(s)</td>
                                 <td>{{ $subscription->start_date }}</td>
                                 <td>{{ $subscription->end_date }}</td>
                                 <td>
@@ -138,7 +178,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">No subscriptions found</td>
+                                <td colspan="10" class="text-center">No subscriptions found</td>
                             </tr>
                         @endforelse
                     </tbody>

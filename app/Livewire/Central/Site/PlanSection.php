@@ -32,6 +32,7 @@ class PlanSection extends Component
     public function render()
     {
         $plans = Plan::where('active', true)
+            ->with('planFeatures.feature')
             ->orderBy('price_month')->get();
 
         $currentCurrency = Currency::find($this->currency_id ?? null);

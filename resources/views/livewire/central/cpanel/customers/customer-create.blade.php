@@ -111,6 +111,25 @@
                     </select>
                 </div>
 
+                <div class="col-12">
+                    <label class="form-label d-block">Allowed Systems</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="pos" wire:model.defer="data.systems_allowed" id="createSystemPos">
+                            <label class="form-check-label" for="createSystemPos">POS</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="hrm" wire:model.defer="data.systems_allowed" id="createSystemHrm">
+                            <label class="form-check-label" for="createSystemHrm">HRM</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="booking" wire:model.defer="data.systems_allowed" id="createSystemBooking">
+                            <label class="form-check-label" for="createSystemBooking">Booking</label>
+                        </div>
+                    </div>
+                    @error('data.systems_allowed') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
                 <div class="col-12 d-flex justify-content-end">
                     <button type="button" class="btn btn-primary" wire:click="save" wire:loading.attr="disabled">
                         <i class="fa fa-save"></i> Create Tenant

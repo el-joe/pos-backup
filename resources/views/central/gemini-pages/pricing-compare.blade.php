@@ -1,6 +1,7 @@
 @extends('layouts.central.gemini.layout')
 
 @section('content')
+    <main itemscope itemtype="https://schema.org/WebPage">
     <header class="pt-32 pb-12 text-center bg-gradient-to-b from-brand-50 to-slate-50 dark:from-slate-900 dark:to-slate-900 transition-colors duration-300">
         <div class="container mx-auto px-6">
             <h1 class="text-4xl lg:text-5xl font-extrabold text-brand-dark dark:text-white mb-4">Compare Our Solutions</h1>
@@ -48,6 +49,7 @@
             </div>
         </div>
     </section>
+    </main>
 @endsection
 
 @push('scripts')
@@ -60,6 +62,7 @@
 
     <script>
         const systemData = @json($systemData ?? []);
+        const checkoutBase = @json(route('tenant-checkout'));
 
         let activeSystem = 'pos';
 
@@ -93,10 +96,12 @@
                         <span class="text-4xl font-extrabold dark:text-white">$${isYearly ? plan.yearly : plan.price}</span>
                         <span class="text-slate-500 ml-1">/mo</span>
                     </div>
+                    ${(plan.discount_percent || 0) > 0 ? `<p class="text-xs text-brand-500 font-semibold mb-2">Plan discount: ${plan.discount_percent}%</p>` : ''}
+                    ${(plan.free_trial_months || 0) > 0 ? `<p class="text-xs text-green-600 dark:text-green-400 font-semibold mb-2">Free trial: ${plan.free_trial_months} month(s)</p>` : ''}
                     <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-400 mb-8">
                         ${plan.features.map(f => `<li><i class="fa-solid fa-check text-brand-500 mr-2"></i> ${f}</li>`).join('')}
                     </ul>
-                    <button class="w-full py-3 rounded-xl font-bold transition ${plan.popular ? 'bg-brand-500 text-white hover:bg-brand-600' : 'bg-slate-100 dark:bg-slate-700 dark:text-white hover:bg-slate-200'}">Choose ${plan.name}</button>
+                    <a href="${checkoutBase}?plan=${encodeURIComponent(plan.slug)}&period=${isYearly ? 'year' : 'month'}" class="block text-center w-full py-3 rounded-xl font-bold transition ${plan.popular ? 'bg-brand-500 text-white hover:bg-brand-600' : 'bg-slate-100 dark:bg-slate-700 dark:text-white hover:bg-slate-200'}">Choose ${plan.name}</a>
                 </div>
             `).join('');
 

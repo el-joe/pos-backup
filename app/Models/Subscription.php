@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\AuditLog;
+use App\Services\PlanPricingService;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
@@ -179,9 +180,7 @@ class Subscription extends Model
         return self::forTenant(tenant('id'))
             ->current()->paid()
             ->with('plan')
-            ->join('plans', 'subscriptions.plan_id', '=', 'plans.id')
-            ->select('subscriptions.*')
-            ->orderByRaw("FIELD(plans.slug, 'basic', 'pro', 'enterprise') DESC")
+            ->orderByDesc('end_date')
             ->get();
     }
 
@@ -195,6 +194,7 @@ class Subscription extends Model
     }
 
     static function cancel(){
+        /** @var self|null $currentSubscription */
         $currentSubscription = self::currentTenantSubscriptions()->first();
         if($currentSubscription && $currentSubscription->canCancel()){
             AuditLog::log(AuditLogActionEnum::CANCEL_SUBSCRIPTION, ['id' => $currentSubscription->id]);
@@ -207,20 +207,41 @@ class Subscription extends Model
     }
 
     static function renew(){
+        /** @var self|null $currentSubscription */
         $currentSubscription = self::currentTenantSubscriptions()->first();
         if($currentSubscription && $currentSubscription->canRenew()){
-            // Implement renew logic here
+            $billingCycle = $currentSubscription->billing_cycle === 'yearly' ? 'yearly' : 'monthly';
+            $period = $billingCycle === 'yearly' ? 'year' : 'month';
+            $startDate = $currentSubscription->end_date && carbon($currentSubscription->end_date)->isFuture()
+                ? carbon($currentSubscription->end_date)
+                : now();
+
+            $plan = $currentSubscription->plan ?: Plan::query()->find($currentSubscription->plan_id);
+            $systemsCount = count($currentSubscription->systems_allowed ?? []);
+            $pricing = $plan
+                ? app(PlanPricingService::class)->calculate($plan, $period, max(1, $systemsCount))
+                : [
+                    'final_price' => (float) $currentSubscription->price,
+                    'free_trial_months' => 0,
+                ];
+
+            $cycleMonths = app(PlanPricingService::class)->cycleMonths($period);
+            $endDate = $startDate->copy()->addMonths($cycleMonths + (int) ($pricing['free_trial_months'] ?? 0));
+            $payableNow = ((int) ($pricing['free_trial_months'] ?? 0) > 0) ? 0.0 : (float) ($pricing['final_price'] ?? 0);
+
             Subscription::create([
                 'tenant_id' => $currentSubscription->tenant_id,
                 'plan_id' => $currentSubscription->plan_id,
-                'plan_details' => $currentSubscription->plan_details,
-                'price' => $currentSubscription->price,
+                'plan_details' => array_merge($currentSubscription->plan_details ?? [], [
+                    'pricing' => $pricing,
+                    'selected_systems' => $currentSubscription->systems_allowed,
+                ]),
+                'currency_id' => $currentSubscription->currency_id,
+                'price' => $payableNow,
                 'systems_allowed' => $currentSubscription->systems_allowed,
-                'start_date' => now(),
-                'end_date' => now()->addMonth(),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
                 'status' => 'paid',
-                'payment_gateway' => $currentSubscription->payment_gateway,
-                'payment_details' => $currentSubscription->payment_details,
                 'billing_cycle' => $currentSubscription->billing_cycle,
             ]);
             AuditLog::log(AuditLogActionEnum::RENEW_SUBSCRIPTION, ['id' => $currentSubscription->id]);

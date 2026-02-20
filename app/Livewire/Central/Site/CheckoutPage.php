@@ -9,6 +9,7 @@ use App\Models\PaymentTransaction;
 use App\Models\Plan;
 use App\Payments\Providers\Paypal;
 use App\Payments\Services\PaymentService;
+use App\Services\PlanPricingService;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
 
@@ -18,6 +19,7 @@ class CheckoutPage extends Component
 
     public $data = [
         'domain_mode'=>'subdomain',
+        'systems_allowed' => ['pos'],
     ];
 
     public $rules = [
@@ -34,6 +36,8 @@ class CheckoutPage extends Component
         'data.admin_email'=>'required|email|max:255',
         'data.admin_phone'=>'nullable|string|max:50',
         'data.admin_password'=>'required|string|min:6',
+        'data.systems_allowed' => 'required|array|min:1',
+        'data.systems_allowed.*' => 'required|in:pos,hrm,booking',
         'data.privacy_policy_agree' => 'accepted',
         'data.terms_conditions_agree' => 'accepted',
     ];
@@ -81,7 +85,9 @@ class CheckoutPage extends Component
         $data = decodedData($newPlanSlug);
         $this->period = $data['period'] ?? 'month';
         $this->slug = $slug = $data['slug'] ?? null;
-        $this->plan = Plan::whereSlug($slug)->firstOrFail();
+        $this->plan = Plan::with('planFeatures.feature')->whereSlug($slug)->firstOrFail();
+        $defaultModule = is_object($this->plan->module_name) ? $this->plan->module_name->value : (string) $this->plan->module_name;
+        $this->data['systems_allowed'] = in_array($defaultModule, ['pos', 'hrm', 'booking'], true) ? [$defaultModule] : ['pos'];
 
         $countryCode = old('data.country_id') ?? strtoupper(session('country'));
         $currencyCode = old('data.currency_id') ?? strtoupper(session('country'));
@@ -93,10 +99,25 @@ class CheckoutPage extends Component
     function completeSubscription()
     {
         $this->validate();
+
+        $systemsAllowed = collect($this->data['systems_allowed'] ?? [])
+            ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
+            ->unique()
+            ->values()
+            ->all();
+        if (count($systemsAllowed) === 0) {
+            $systemsAllowed = ['pos'];
+        }
+
+        $pricing = app(PlanPricingService::class)->calculate($this->plan, $this->period, count($systemsAllowed));
+        $amount = ((int) ($pricing['free_trial_months'] ?? 0) > 0) ? 0.0 : (float) ($pricing['final_price'] ?? 0);
+
         $newData = $this->data + [
             'plan_id' => $this->plan?->id,
             'period' => $this->period,
-            'amount' => (float)$this->plan->{'price_' . $this->period} ?? 0,
+            'systems_allowed' => $systemsAllowed,
+            'pricing' => $pricing,
+            'amount' => $amount,
         ];
 
         if(session()->has('p_ref')){
@@ -140,6 +161,8 @@ class CheckoutPage extends Component
         $countries = Country::orderBy('name')->get();
         $currencies = Currency::orderBy('name')->get();
         $currentCurrency = Currency::find($this->data['currency_id'] ?? null);
+        $systemsCount = count($this->data['systems_allowed'] ?? []);
+        $pricingSummary = app(PlanPricingService::class)->calculate($this->plan, $this->period, max(1, $systemsCount));
         return view('livewire.central.'. defaultLandingLayout() .'.checkout-page', get_defined_vars());
     }
 }

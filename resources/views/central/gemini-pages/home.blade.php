@@ -3,6 +3,7 @@
 @section('title', __('gemini-landing.home.page_title'))
 
 @section('content')
+<main itemscope itemtype="https://schema.org/WebPage">
 <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-gradient-to-b from-brand-50 to-white dark:from-slate-900 dark:to-slate-800 transition-colors duration-300">
         <div class="absolute top-0 right-0 -z-10 w-1/2 h-full bg-brand-100 dark:bg-brand-900/20 opacity-50 blur-[100px] rounded-bl-full"></div>
 
@@ -27,7 +28,7 @@
                         {{ __('gemini-landing.home.hero_subtitle_suffix') }}
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="contact.html" class="px-8 py-4 bg-brand-500 text-white rounded-xl font-bold hover:bg-brand-600 transition shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2">
+                        <a href="{{ route('contact') }}" class="px-8 py-4 bg-brand-500 text-white rounded-xl font-bold hover:bg-brand-600 transition shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2">
                             {{ __('gemini-landing.home.cta_request_demo') }} <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a href="#features" class="px-8 py-4 bg-white dark:bg-slate-800 text-brand-dark dark:text-white border border-slate-200 dark:border-slate-700 rounded-xl font-bold hover:border-brand-500 hover:text-brand-500 transition flex items-center justify-center gap-2">
@@ -309,4 +310,5 @@
             </div>
         </div>
     </section>
+</main>
     @endsection

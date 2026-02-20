@@ -1,6 +1,7 @@
 @extends('layouts.central.gemini.layout')
 
 @section('content')
+    <main itemscope itemtype="https://schema.org/FAQPage">
     <header class="pt-32 pb-16 bg-gradient-to-b from-brand-50 to-white dark:from-slate-900 dark:to-slate-800 text-center transition-colors duration-300">
         <div class="container mx-auto px-6" data-aos="fade-up">
             <p class="text-brand-500 font-bold uppercase tracking-wide text-sm mb-2">{{ __('gemini-landing.faqs_page.badge') }}</p>
@@ -17,13 +18,13 @@
                 <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6 border-b border-slate-100 dark:border-slate-800 pb-2">{{ __('gemini-landing.faqs_page.section_general') }}</h3>
                 <div class="space-y-4">
                     @foreach ($faqs as $faq)
-                        <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)">
+                        <div class="faq-item bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden cursor-pointer transition-colors duration-300" onclick="toggleFaq(this)" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                             <div class="p-5 flex justify-between items-center font-bold text-slate-800 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition">
-                                <span>{!! $faq->question !!}</span>
+                                <span itemprop="name">{!! $faq->question !!}</span>
                                 <i class="fa-solid fa-chevron-down faq-icon transition-transform duration-300 text-slate-400"></i>
                             </div>
-                            <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50">
-                                <p class="pt-3">{!! $faq->answer !!}</p>
+                            <div class="faq-content px-5 pb-5 text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700 border-opacity-50" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                                <p class="pt-3" itemprop="text">{!! $faq->answer !!}</p>
                             </div>
                         </div>
                     @endforeach
@@ -47,36 +48,5 @@
             </div>
         </div>
     </section>
+    </main>
 @endsection
-@push('scripts')
-        <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-nav { backdrop-filter: blur(10px); }
-        /* Accordion Styles */
-        .faq-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-            opacity: 0;
-        }
-        .faq-item.active .faq-content {
-            max-height: 500px;
-            opacity: 1;
-        }
-        .faq-item.active .faq-icon {
-            transform: rotate(180deg);
-            color: #00d2b4;
-        }
-    </style>
-    <script>
-        function toggleFaq(element) {
-            const allFaqs = document.querySelectorAll('.faq-item');
-            allFaqs.forEach(item => {
-                if (item !== element) {
-                    item.classList.remove('active');
-                }
-            });
-            element.classList.toggle('active');
-        }
-    </script>
-@endpush

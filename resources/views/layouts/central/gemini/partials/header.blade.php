@@ -1,7 +1,9 @@
+@php($lang = $__currentLang ?? app()->getLocale())
+
 <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md dark:bg-slate-900/90 dark:border-b dark:border-slate-800">
     <div class="container mx-auto px-6 flex justify-between items-center">
 
-        <a href="#" class="flex items-center gap-2.5 group">
+        <a href="/" class="flex items-center gap-2.5 group">
             <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -71,7 +73,7 @@
         </button>
     </div>
 
-    <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 absolute w-full top-full left-0 shadow-xl p-6 flex flex-col gap-4">
+    <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 absolute w-full top-full left-0 shadow-xl p-6 space-y-4">
         <a href="/" class="font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.home') }}</a>
         <a href="{{ route('blogs.index') }}" class="font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.blogs') }}</a>
         <a href="{{ route('pricing') }}" class="font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.pricing') }}</a>
@@ -91,6 +93,6 @@
             </button>
         </div>
 
-        <a href="checkout.html" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">{{ __('gemini-landing.nav.get_started') }}</a>
+        <a href="{{ route('pricing') }}" class="block text-center w-full px-6 py-3 bg-brand-500 text-white rounded-lg font-bold">{{ __('gemini-landing.nav.get_started') }}</a>
     </div>
 </nav>

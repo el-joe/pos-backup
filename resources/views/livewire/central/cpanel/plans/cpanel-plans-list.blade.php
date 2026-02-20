@@ -16,6 +16,9 @@
                             <th>Name</th>
                             <th>Price (Month)</th>
                             <th>Price (Year)</th>
+                            <th>Plan Discount</th>
+                            <th>Multi-System Discount</th>
+                            <th>Free Trial</th>
                             <th>Active</th>
                             <th>Recommended</th>
                             <th class="text-center">Actions</th>
@@ -28,6 +31,9 @@
                             <td>{{ $plan->name }}</td>
                             <td>${{ $plan->price_month }}</td>
                             <td>${{ $plan->price_year }}</td>
+                            <td>{{ number_format((float) ($plan->discount_percent ?? 0), 2) }}%</td>
+                            <td>{{ number_format((float) ($plan->multi_system_discount_percent ?? 0), 2) }}%</td>
+                            <td>{{ (int) ($plan->free_trial_months ?? 0) }} month(s)</td>
                             <td>
                                 <span class="badge bg-{{ $plan->active ? 'success' : 'danger' }}">
                                     {{ $plan->active ? 'Active' : 'Inactive' }}
@@ -102,6 +108,18 @@
                         <div class="col-md-2">
                             <label class="form-label">Price per Year</label>
                             <input type="number" class="form-control" wire:model="data.price_year" placeholder="Yearly price">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Plan Discount %</label>
+                            <input type="number" step="0.01" class="form-control" wire:model="data.discount_percent" placeholder="0">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Multi-System Discount %</label>
+                            <input type="number" step="0.01" class="form-control" wire:model="data.multi_system_discount_percent" placeholder="0">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Free Trial (months)</label>
+                            <input type="number" class="form-control" wire:model="data.free_trial_months" placeholder="0">
                         </div>
                     </div>
 

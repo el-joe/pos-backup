@@ -1,6 +1,12 @@
 @extends('layouts.central.gemini.layout')
 
 @section('content')
+    <main itemscope itemtype="https://schema.org/ContactPage">
+    <div class="hidden" itemprop="about" itemscope itemtype="https://schema.org/Organization">
+        <meta itemprop="name" content="Mohaaseb">
+        <meta itemprop="email" content="{{ __('gemini-landing.contact_info.sales_email') }}">
+        <meta itemprop="telephone" content="{{ __('gemini-landing.contact_info.phone') }}">
+    </div>
     <header class="pt-32 pb-12 bg-white dark:bg-slate-900 text-center transition-colors duration-300">
         <div class="container mx-auto px-6">
             <p class="text-brand-500 font-bold uppercase tracking-wide text-sm mb-2">{{ __('gemini-landing.contact_page.badge') }}</p>
@@ -9,7 +15,7 @@
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-6 py-12">
+    <section class="flex-grow container mx-auto px-6 py-12">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
 
             <div class="space-y-8">
@@ -101,5 +107,6 @@
             </div>
 
         </div>
+    </section>
     </main>
 @endsection

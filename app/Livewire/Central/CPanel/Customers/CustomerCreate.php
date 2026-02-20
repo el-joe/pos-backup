@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
+use App\Services\PlanPricingService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +35,7 @@ class CustomerCreate extends Component
         'admin_password' => '',
         'plan_id' => null,
         'period' => 'month',
+        'systems_allowed' => ['pos'],
         'active' => false,
     ];
 
@@ -61,16 +63,31 @@ class CustomerCreate extends Component
             'data.admin_password' => ['required', 'string', 'min:6'],
             'data.plan_id' => ['required', 'exists:plans,id'],
             'data.period' => ['required', 'in:month,year'],
+            'data.systems_allowed' => ['required', 'array', 'min:1'],
+            'data.systems_allowed.*' => ['required', 'in:pos,hrm,booking'],
             'data.active' => ['boolean'],
         ]);
 
         $tenantId = $this->generateUniqueTenantId((string) $this->data['company_name']);
         $plan = Plan::query()->findOrFail($this->data['plan_id']);
         $period = $this->data['period'] === 'year' ? 'year' : 'month';
-        $billingCycle = $period === 'year' ? 'yearly' : 'monthly';
-        $endDate = $period === 'year' ? now()->addYear() : now()->addMonth();
+        $systemsAllowed = collect($this->data['systems_allowed'] ?? [])
+            ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
+            ->unique()
+            ->values()
+            ->all();
 
-        $tenant = DB::transaction(function () use ($tenantId, $plan, $period, $billingCycle, $endDate) {
+        if (count($systemsAllowed) === 0) {
+            $systemsAllowed = ['pos'];
+        }
+
+        $pricing = app(PlanPricingService::class)->calculate($plan, $period, count($systemsAllowed));
+        $billingCycle = $period === 'year' ? 'yearly' : 'monthly';
+        $cycleMonths = app(PlanPricingService::class)->cycleMonths($period);
+        $endDate = now()->copy()->addMonths($cycleMonths + (int) ($pricing['free_trial_months'] ?? 0));
+        $payableNow = ((int) ($pricing['free_trial_months'] ?? 0) > 0) ? 0.0 : (float) ($pricing['final_price'] ?? 0);
+
+        $tenant = DB::transaction(function () use ($tenantId, $plan, $billingCycle, $endDate, $pricing, $systemsAllowed, $payableNow) {
             $tenant = Tenant::create([
                 'id' => $tenantId,
                 'name' => $this->data['company_name'],
@@ -90,10 +107,13 @@ class CustomerCreate extends Component
             Subscription::create([
                 'tenant_id' => $tenant->id,
                 'plan_id' => $plan->id,
-                'plan_details' => $plan->toArray(),
+                'plan_details' => array_merge($plan->toArray(), [
+                    'pricing' => $pricing,
+                    'selected_systems' => $systemsAllowed,
+                ]),
                 'currency_id' => $this->data['currency_id'],
-                'price' => (float) ($plan->{'price_' . $period} ?? 0),
-                'systems_allowed' => ['pos'],
+                'price' => $payableNow,
+                'systems_allowed' => $systemsAllowed,
                 'start_date' => now(),
                 'end_date' => $endDate,
                 'status' => 'paid',

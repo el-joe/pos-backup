@@ -10,6 +10,7 @@ use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\Plan;
 use App\Models\Slider;
+use App\Services\PlanPricingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -120,8 +121,64 @@ class HomeController extends Controller
         return redirect()->back()->with('success','Your message has been sent successfully.');
     }
 
-    function checkout()
+    function checkout(Request $request)
     {
+        $period = $request->query('period') === 'year' ? 'year' : 'month';
+        $requestedSlug = trim((string) $request->query('plan', ''));
+
+        $selectedPlan = Plan::query()
+            ->active()
+            ->when($requestedSlug !== '', fn ($query) => $query->where('slug', $requestedSlug))
+            ->with(['plan_features.feature' => function ($query) {
+                $query->where('active', true);
+            }])
+            ->orderByDesc('recommended')
+            ->orderBy('price_month')
+            ->first();
+
+        if (!$selectedPlan && $requestedSlug !== '') {
+            $selectedPlan = Plan::query()
+                ->active()
+                ->with(['plan_features.feature' => function ($query) {
+                    $query->where('active', true);
+                }])
+                ->orderByDesc('recommended')
+                ->orderBy('price_month')
+                ->first();
+        }
+
+        $selectedPrice = 0.0;
+        $selectedPricing = null;
+        $selectedFeatureNames = [];
+        if ($selectedPlan) {
+            $selectedPricing = app(PlanPricingService::class)->calculate($selectedPlan, $period, 1);
+            $selectedPrice = (float) ($selectedPricing['final_price'] ?? 0);
+            $selectedFeatureNames = $selectedPlan->plan_features
+                ->filter(function ($planFeature) {
+                    if (!$planFeature->feature) {
+                        return false;
+                    }
+
+                    if ($planFeature->feature->type === 'boolean') {
+                        return (int) $planFeature->value === 1;
+                    }
+
+                    return ((int) $planFeature->value > 0)
+                        || (is_string($planFeature->content_en) && trim($planFeature->content_en) !== '')
+                        || (is_string($planFeature->content_ar) && trim($planFeature->content_ar) !== '');
+                })
+                ->sortBy('feature_id')
+                ->map(function ($planFeature) {
+                    $feature = $planFeature->feature;
+                    $name = app()->getLocale() === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
+                    return $name ?: ($feature->name_en ?: $feature->code);
+                })
+                ->unique()
+                ->values()
+                ->take(4)
+                ->all();
+        }
+
         return landingLayoutView('checkout',get_defined_vars());
     }
 
@@ -199,10 +256,14 @@ class HomeController extends Controller
 
                     return [
                         'id' => $plan->id,
+                        'slug' => $plan->slug,
                         'name' => $plan->name,
                         'desc' => '',
-                        'price' => (float) $plan->price_month,
-                        'yearly' => (float) $plan->price_year,
+                        'price' => (float) (app(PlanPricingService::class)->calculate($plan, 'month', 1)['final_price'] ?? 0),
+                        'yearly' => (float) (app(PlanPricingService::class)->calculate($plan, 'year', 1)['final_price'] ?? 0),
+                        'discount_percent' => (float) ($plan->discount_percent ?? 0),
+                        'multi_system_discount_percent' => (float) ($plan->multi_system_discount_percent ?? 0),
+                        'free_trial_months' => (int) ($plan->free_trial_months ?? 0),
                         'features' => $featureNames,
                         'popular' => (bool) $plan->recommended,
                     ];

@@ -1,14 +1,22 @@
 @extends('layouts.central.gemini.layout')
 
 @section('content')
+<main itemscope itemtype="https://schema.org/WebPage">
 <header class="pt-32 pb-12 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <div class="container mx-auto px-6 max-w-4xl text-center" data-aos="fade-up">
 
-            <div class="flex items-center justify-center gap-2 text-sm text-slate-400 mb-6 font-medium">
-                <a href="{{ route('blogs.index') }}" class="hover:text-brand-500">{{ __('gemini-landing.blog_details.breadcrumb_blog') }}</a>
+            <nav class="flex items-center justify-center gap-2 text-sm text-slate-400 mb-6 font-medium" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+                <a href="{{ route('blogs.index') }}" class="hover:text-brand-500" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <span itemprop="name">{{ __('gemini-landing.blog_details.breadcrumb_blog') }}</span>
+                    <meta itemprop="position" content="1">
+                    <meta itemprop="item" content="{{ route('blogs.index') }}">
+                </a>
                 <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                <a href="#" class="text-brand-500 font-bold">{{ $blog->category?->name ?? __('gemini-landing.blog_details.breadcrumb_category') }}</a>
-            </div>
+                <span class="text-brand-500 font-bold" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <span itemprop="name">{{ $blog->category?->name ?? __('gemini-landing.blog_details.breadcrumb_category') }}</span>
+                    <meta itemprop="position" content="2">
+                </span>
+            </nav>
 
             <h1 class="text-3xl md:text-5xl font-extrabold text-brand-dark dark:text-white mb-6 leading-tight">
                 {{ $blog->title }}
@@ -89,4 +97,5 @@
             </div>
         </div>
     </section>
+</main>
 @endsection

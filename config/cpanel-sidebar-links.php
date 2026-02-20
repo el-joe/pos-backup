@@ -92,6 +92,12 @@ return [
         "route"     => 'cpanel.plans.list'
     ],
     [
+        "title"     => "Plan Discounts",
+        'translated_title' => 'general.titles.plans',
+        "icon"      => "fa fa-percent fa-fw",
+        "route"     => 'cpanel.plans.discounts'
+    ],
+    [
         "title"     => "Features",
         'translated_title' => 'general.titles.features',
         "icon"      => "fa fa-list-check fa-fw",
