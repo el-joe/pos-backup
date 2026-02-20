@@ -68,7 +68,11 @@ class DepreciationExpensesReport extends Component
     {
         $query = Expense::query()
             ->with(['branch', 'category', 'model'])
-            ->where('model_type', FixedAsset::class);
+            ->where('model_type', FixedAsset::class)
+            ->where(function ($q) {
+                $q->where('fixed_asset_entry_type', 'depreciation')
+                    ->orWhereNull('fixed_asset_entry_type');
+            });
 
         if ($this->from_date) {
             $query->whereDate('expense_date', '>=', $this->from_date);
@@ -82,9 +86,9 @@ class DepreciationExpensesReport extends Component
             $query->where('branch_id', $this->branch_id);
         }
 
-        // if ($this->fixed_asset_id) {
-        //     $query->where('model_id', $this->fixed_asset_id);
-        // }
+        if ($this->fixed_asset_id) {
+            $query->where('model_id', $this->fixed_asset_id);
+        }
 
         if ($this->expense_category_id) {
             $query->where('expense_category_id', $this->expense_category_id);
@@ -94,7 +98,11 @@ class DepreciationExpensesReport extends Component
 
         $summaryQuery = Expense::query()
             ->select('model_id', DB::raw('COUNT(*) as expenses_count'), DB::raw('SUM(amount) as total_amount'))
-            ->where('model_type', FixedAsset::class);
+            ->where('model_type', FixedAsset::class)
+            ->where(function ($q) {
+                $q->where('fixed_asset_entry_type', 'depreciation')
+                    ->orWhereNull('fixed_asset_entry_type');
+            });
 
         if ($this->from_date) {
             $summaryQuery->whereDate('expense_date', '>=', $this->from_date);

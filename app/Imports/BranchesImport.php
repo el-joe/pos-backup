@@ -18,7 +18,7 @@ class BranchesImport implements ToCollection, WithHeadingRow, WithValidation
     public function collection($rows)
     {
         $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-        $limit = $currentSubscription?->plan?->features['branches']['limit'] ?? 999999;
+        $limit = $currentSubscription?->plan?->featureValue('branches', 999999) ?? 999999;
         $totalBranches = Branch::count() + count($rows);
 
         if($totalBranches > $limit){

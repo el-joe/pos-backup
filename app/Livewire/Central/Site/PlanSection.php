@@ -32,10 +32,11 @@ class PlanSection extends Component
     public function render()
     {
         $plans = Plan::where('active', true)
+            ->with('planFeatures.feature')
             ->orderBy('price_month')->get();
 
         $currentCurrency = Currency::find($this->currency_id ?? null);
 
-        return view('livewire.central.site.plan-section',get_defined_vars());
+        return view('livewire.central.'. defaultLandingLayout() .'.plan-section',get_defined_vars());
     }
 }

@@ -62,6 +62,12 @@ return [
         "route"     => 'cpanel.languages.list'
     ],
     [
+        "title"     => "Translations",
+        'translated_title' => 'general.titles.translations',
+        "icon"      => "fa fa-pen-to-square fa-fw",
+        "route"     => 'cpanel.translations'
+    ],
+    [
         "title"     => "Register Requests",
         'translated_title' => 'general.titles.register-requests',
         "icon"      => "fa fa-user-plus fa-fw",
@@ -74,8 +80,8 @@ return [
         "route"     => 'cpanel.subscriptions.list'
     ],
     [
-        "title"     => "Customers",
-        'translated_title' => 'general.titles.customers',
+        "title"     => "Tenants",
+        'translated_title' => 'general.titles.tenants',
         "icon"      => "fa fa-users fa-fw",
         "route"     => 'cpanel.customers.list'
     ],
@@ -84,6 +90,12 @@ return [
         'translated_title' => 'general.titles.plans',
         "icon"      => "fa fa-gem fa-fw",
         "route"     => 'cpanel.plans.list'
+    ],
+    [
+        "title"     => "Features",
+        'translated_title' => 'general.titles.features',
+        "icon"      => "fa fa-list-check fa-fw",
+        "route"     => 'cpanel.features.list'
     ],
     [
         "title"     => "Sliders",

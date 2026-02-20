@@ -42,6 +42,7 @@ class DepreciationExpensesList extends Component
     {
         $baseFilter = [
             'model_type' => FixedAsset::class,
+            'fixed_asset_entry_type' => 'depreciation',
             ...$this->filters,
         ];
 

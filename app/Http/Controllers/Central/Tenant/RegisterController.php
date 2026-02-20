@@ -12,6 +12,7 @@ use App\Models\Plan;
 use App\Models\RegisterRequest;
 use App\Models\Subscription;
 use App\Models\Tenant;
+use App\Services\PlanPricingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
@@ -89,6 +90,23 @@ class RegisterController extends Controller
 
         $plan = Plan::find($request->plan['id']);
         $period = $request->plan['period'] ?? 'month';
+        $systemsAllowed = collect($request->plan['systems_allowed'] ?? ['pos'])
+            ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
+            ->unique()
+            ->values()
+            ->all();
+        if (count($systemsAllowed) === 0) {
+            $systemsAllowed = ['pos'];
+        }
+
+        $pricing = $plan
+            ? app(PlanPricingService::class)->calculate($plan, $period, count($systemsAllowed))
+            : [
+                'final_price' => 0,
+                'free_trial_months' => 0,
+            ];
+        $cycleMonths = app(PlanPricingService::class)->cycleMonths($period);
+        $payableNow = ((int) ($pricing['free_trial_months'] ?? 0) > 0) ? 0.0 : (float) ($pricing['final_price'] ?? 0);
 
         $tenant = Tenant::create([
             'id'=>$id,
@@ -105,11 +123,14 @@ class RegisterController extends Controller
         Subscription::create([
             'tenant_id' => $tenant->id,
             'plan_id' => $plan?->id,
-            'plan_details' => $plan?->toArray() ?? [],
-            'price' => $plan->{'price_' . $period} ?? 0,
-            'systems_allowed' => ['pos'],
+            'plan_details' => array_merge($plan?->toArray() ?? [], [
+                'pricing' => $pricing,
+                'selected_systems' => $systemsAllowed,
+            ]),
+            'price' => $payableNow,
+            'systems_allowed' => $systemsAllowed,
             'start_date' => now(),
-            'end_date' => now()->addMonths($period == 'month' ? 1 : 12),
+            'end_date' => now()->addMonths($cycleMonths + (int) ($pricing['free_trial_months'] ?? 0)),
             'status' => 'paid',
             // 'payment_gateway',
             // 'payment_details',

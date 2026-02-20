@@ -35,6 +35,7 @@
                         <select class="form-select select2" name="filters.status">
                             <option value="">{{ __('general.pages.fixed_assets.all_statuses') }}</option>
                             <option value="active" {{ ($filters['status']??'') == 'active' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_active') }}</option>
+                            <option value="under_construction" {{ ($filters['status']??'') == 'under_construction' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_under_construction') }}</option>
                             <option value="disposed" {{ ($filters['status']??'') == 'disposed' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_disposed') }}</option>
                             <option value="sold" {{ ($filters['status']??'') == 'sold' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_sold') }}</option>
                         </select>
@@ -93,8 +94,16 @@
                                 <td>{{ $asset->name }}</td>
                                 <td>{{ $asset->branch?->name ?? '—' }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $asset->status === 'active' ? 'success' : ($asset->status === 'sold' ? 'info' : 'secondary') }}">
-                                        {{ ucfirst($asset->status) }}
+                                    <span class="badge bg-{{ $asset->status === 'active' ? 'success' : ($asset->status === 'under_construction' ? 'warning' : ($asset->status === 'sold' ? 'info' : 'secondary')) }}">
+                                        @if($asset->status === 'active')
+                                            {{ __('general.pages.fixed_assets.status_active') }}
+                                        @elseif($asset->status === 'under_construction')
+                                            {{ __('general.pages.fixed_assets.status_under_construction') }}
+                                        @elseif($asset->status === 'sold')
+                                            {{ __('general.pages.fixed_assets.status_sold') }}
+                                        @else
+                                            {{ __('general.pages.fixed_assets.status_disposed') }}
+                                        @endif
                                     </span>
                                 </td>
                                 <td>{{ currencyFormat($asset->cost ?? 0, true) }}</td>

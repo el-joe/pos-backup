@@ -30,6 +30,7 @@
                         <select class="form-select form-select-sm select2" name="status">
                             <option value="">{{ __('general.pages.reports.financial.fixed_assets_report.all_statuses') }}</option>
                             <option value="active" {{ $status === 'active' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_active') }}</option>
+                            <option value="under_construction" {{ $status === 'under_construction' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_under_construction') }}</option>
                             <option value="disposed" {{ $status === 'disposed' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_disposed') }}</option>
                             <option value="sold" {{ $status === 'sold' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.status_sold') }}</option>
                         </select>
@@ -53,7 +54,7 @@
         $totalNBV = 0;
 
         foreach(($report ?? []) as $asset) {
-            $acc = (float) ($asset->expenses_sum_amount ?? 0);
+            $acc = (float) ($asset->accumulated_depreciation ?? 0);
             $cost = (float) ($asset->cost ?? 0);
             $totalCost += $cost;
             $totalAccum += $acc;
@@ -121,7 +122,7 @@
                         <tbody>
                             @forelse($report as $asset)
                                 @php
-                                    $acc = (float) ($asset->expenses_sum_amount ?? 0);
+                                    $acc = (float) ($asset->accumulated_depreciation ?? 0);
                                     $cost = (float) ($asset->cost ?? 0);
                                     $nbv = max(0, $cost - $acc);
                                 @endphp
@@ -135,8 +136,16 @@
                                     <td class="text-end">{{ currencyFormat($acc, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($nbv, true) }}</td>
                                     <td class="text-center">
-                                        <span class="badge bg-{{ $asset->status === 'active' ? 'success' : ($asset->status === 'sold' ? 'info' : 'secondary') }}">
-                                            {{ ucfirst($asset->status) }}
+                                        <span class="badge bg-{{ $asset->status === 'active' ? 'success' : ($asset->status === 'under_construction' ? 'warning' : ($asset->status === 'sold' ? 'info' : 'secondary')) }}">
+                                            @if($asset->status === 'active')
+                                                {{ __('general.pages.fixed_assets.status_active') }}
+                                            @elseif($asset->status === 'under_construction')
+                                                {{ __('general.pages.fixed_assets.status_under_construction') }}
+                                            @elseif($asset->status === 'sold')
+                                                {{ __('general.pages.fixed_assets.status_sold') }}
+                                            @else
+                                                {{ __('general.pages.fixed_assets.status_disposed') }}
+                                            @endif
                                         </span>
                                     </td>
                                 </tr>

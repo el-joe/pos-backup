@@ -91,21 +91,22 @@ class TenancyServiceProvider extends ServiceProvider
             Events\BootstrappingTenancy::class => [],
             Events\TenancyBootstrapped::class => [
                 function (Events\TenancyBootstrapped $event) {
-                    if(!Schema::hasTable('permissions'))return;
-                    $permissionRegistrar = app(\Spatie\Permission\PermissionRegistrar::class);
-                    $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.' . $event->tenancy->tenant->getTenantKey();
+                    if(Schema::hasTable('permissions')) {
+                        $permissionRegistrar = app(\Spatie\Permission\PermissionRegistrar::class);
+                        $permissionRegistrar->cacheKey = 'spatie.permission.cache.tenant.' . $event->tenancy->tenant->getTenantKey();
 
-                    // Keep tenant permissions in sync with the codebase (e.g. new modules/pages).
-                    $permissions = defaultPermissionsList();
-                    $permissionsData = [];
-                    foreach ($permissions as $key => $value) {
-                        foreach ($value as $permission) {
-                            $permissionsData[] = ['name' => $key . '.' . $permission, 'guard_name' => 'tenant_admin'];
+                        // Keep tenant permissions in sync with the codebase (e.g. new modules/pages).
+                        $permissions = defaultPermissionsList();
+                        $permissionsData = [];
+                        foreach ($permissions as $key => $value) {
+                            foreach ($value as $permission) {
+                                $permissionsData[] = ['name' => $key . '.' . $permission, 'guard_name' => 'tenant_admin'];
+                            }
                         }
-                    }
 
-                    Permission::upsert($permissionsData, ['name', 'guard_name']);
-                    $permissionRegistrar->forgetCachedPermissions();
+                        Permission::upsert($permissionsData, ['name', 'guard_name']);
+                        $permissionRegistrar->forgetCachedPermissions();
+                    }
                 }
             ],
             Events\RevertingToCentralContext::class => [],
@@ -159,9 +160,11 @@ class TenancyServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             if(!Schema::hasTable('branches'))return;
             if(tenant()){
-                $branchesService = app(BranchService::class);
-                $branches = $branchesService->activeList();
-                $view->with('__branches', $branches);
+                if(Schema::hasTable('branches')) {
+                    $branchesService = app(BranchService::class);
+                    $branches = $branchesService->activeList();
+                    $view->with('__branches', $branches);
+                }
             }
         });
     }

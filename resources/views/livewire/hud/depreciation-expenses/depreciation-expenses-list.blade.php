@@ -75,7 +75,7 @@
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.depreciation_expenses.export') }}
                 </button>
                 <a class="btn btn-primary btn-sm" href="{{ route('admin.depreciation-expenses.create') }}">
-                    <i class="fa fa-plus"></i> {{ __('general.pages.depreciation_expenses.new_depreciation_expense') }}
+                    <i class="fa fa-plus"></i> {{ __('general.pages.depreciation_expenses.new_asset_entry') }}
                 </a>
             </div>
         </div>

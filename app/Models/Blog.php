@@ -186,4 +186,12 @@ class Blog extends Model
 
         return $this->content_en ?: ($this->content_ar ?: '');
     }
+
+    function getReadingTimeAttribute()
+    {
+        $content = strip_tags($this->content);
+        $wordCount = str_word_count($content);
+        $minutes = ceil($wordCount / 200); // Assuming 200 words per minute reading speed
+        return $minutes;
+    }
 }

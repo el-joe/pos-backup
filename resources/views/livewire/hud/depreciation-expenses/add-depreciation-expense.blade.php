@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="card shadow-sm mb-4">
             <div class="card-header">
-                <h5 class="mb-0">{{ __('general.pages.depreciation_expenses.new_depreciation_expense') }}</h5>
+                <h5 class="mb-0">{{ __('general.pages.depreciation_expenses.new_asset_entry') }}</h5>
             </div>
             <div class="card-body">
                 <div class="row g-3">
@@ -41,6 +41,15 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label class="form-label">{{ __('general.pages.depreciation_expenses.entry_type') }}</label>
+                        <select class="form-select select2" name="data.fixed_asset_entry_type">
+                            <option value="depreciation" {{ ($data['fixed_asset_entry_type']??'depreciation') == 'depreciation' ? 'selected' : '' }}>{{ __('general.pages.depreciation_expenses.type_depreciation') }}</option>
+                            <option value="repair_expense" {{ ($data['fixed_asset_entry_type']??'') == 'repair_expense' ? 'selected' : '' }}>{{ __('general.pages.depreciation_expenses.type_repair_expense') }}</option>
+                            <option value="lifespan_extension" {{ ($data['fixed_asset_entry_type']??'') == 'lifespan_extension' ? 'selected' : '' }}>{{ __('general.pages.depreciation_expenses.type_lifespan_extension') }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.depreciation_expenses.amount') }}</label>
                         <input type="number" step="0.01" min="0" class="form-control" wire:model="data.amount">
                     </div>
@@ -54,6 +63,13 @@
                         <label class="form-label">{{ __('general.pages.depreciation_expenses.tax_percentage') }}</label>
                         <input type="number" step="0.01" min="0" class="form-control" wire:model="data.tax_percentage">
                     </div>
+
+                    @if(($data['fixed_asset_entry_type'] ?? 'depreciation') === 'lifespan_extension')
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.fixed_assets.added_useful_life_months') }}</label>
+                            <input type="number" step="1" min="0" class="form-control" wire:model="data.added_useful_life_months">
+                        </div>
+                    @endif
 
                     <div class="col-12">
                         <label class="form-label">{{ __('general.pages.depreciation_expenses.note') }}</label>
