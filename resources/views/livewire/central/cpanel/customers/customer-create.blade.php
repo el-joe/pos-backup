@@ -94,16 +94,6 @@
                 <div class="col-12 mt-2"><h6 class="mb-0">Subscription Package</h6></div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Plan</label>
-                    <select class="form-select" wire:model.defer="data.plan_id">
-                        <option value="">-- Select --</option>
-                        @foreach($plans as $plan)
-                            <option value="{{ $plan->id }}">{{ $plan->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-md-6">
                     <label class="form-label">Billing Period</label>
                     <select class="form-select" wire:model.defer="data.period">
                         <option value="month">Monthly</option>
@@ -111,23 +101,43 @@
                     </select>
                 </div>
 
+                <div class="col-md-6">
+                    <label class="form-label">POS Plan</label>
+                    <select class="form-select" wire:model.defer="data.selected_plans.pos">
+                        <option value="">-- Select --</option>
+                        @foreach(($plansByModule['pos'] ?? collect()) as $plan)
+                            <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('data.selected_plans.pos') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">HRM Plan (Optional)</label>
+                    <select class="form-select" wire:model.defer="data.selected_plans.hrm">
+                        <option value="">-- Not selected --</option>
+                        @foreach(($plansByModule['hrm'] ?? collect()) as $plan)
+                            <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('data.selected_plans.hrm') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Booking Plan (Optional)</label>
+                    <select class="form-select" wire:model.defer="data.selected_plans.booking">
+                        <option value="">-- Not selected --</option>
+                        @foreach(($plansByModule['booking'] ?? collect()) as $plan)
+                            <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('data.selected_plans.booking') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
                 <div class="col-12">
-                    <label class="form-label d-block">Allowed Systems</label>
-                    <div class="d-flex flex-wrap gap-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="pos" wire:model.defer="data.systems_allowed" id="createSystemPos">
-                            <label class="form-check-label" for="createSystemPos">POS</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="hrm" wire:model.defer="data.systems_allowed" id="createSystemHrm">
-                            <label class="form-check-label" for="createSystemHrm">HRM</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="booking" wire:model.defer="data.systems_allowed" id="createSystemBooking">
-                            <label class="form-check-label" for="createSystemBooking">Booking</label>
-                        </div>
-                    </div>
-                    @error('data.systems_allowed') <small class="text-danger">{{ $message }}</small> @enderror
+                    <small class="text-muted">
+                        POS plan is required. HRM and Booking can be added optionally to create a multi-system subscription.
+                    </small>
                 </div>
 
                 <div class="col-12 d-flex justify-content-end">

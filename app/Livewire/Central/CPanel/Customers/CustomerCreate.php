@@ -20,6 +20,8 @@ class CustomerCreate extends Component
 {
     use LivewireOperations;
 
+    private array $modules = ['pos', 'hrm', 'booking'];
+
     public array $data = [
         'company_name' => '',
         'company_email' => '',
@@ -33,9 +35,13 @@ class CustomerCreate extends Component
         'admin_email' => '',
         'admin_phone' => '',
         'admin_password' => '',
-        'plan_id' => null,
+        'selected_plans' => [
+            'pos' => null,
+            'hrm' => null,
+            'booking' => null,
+        ],
         'period' => 'month',
-        'systems_allowed' => ['pos'],
+        'systems_allowed' => [],
         'active' => false,
     ];
 
@@ -43,7 +49,19 @@ class CustomerCreate extends Component
     {
         $this->data['country_id'] = Country::query()->value('id');
         $this->data['currency_id'] = Currency::query()->value('id');
-        $this->data['plan_id'] = Plan::query()->where('active', true)->value('id') ?: Plan::query()->value('id');
+
+        foreach ($this->modules as $module) {
+            $defaultPlanId = Plan::query()
+                ->where('active', true)
+                ->where('module_name', $module)
+                ->orderByDesc('recommended')
+                ->orderBy('price_month')
+                ->value('id');
+
+            if ($module === 'pos') {
+                $this->data['selected_plans'][$module] = $defaultPlanId ?: Plan::query()->where('module_name', $module)->value('id');
+            }
+        }
     }
 
     public function save(): void
@@ -61,33 +79,98 @@ class CustomerCreate extends Component
             'data.admin_email' => ['required', 'email', 'max:255'],
             'data.admin_phone' => ['nullable', 'string', 'max:50'],
             'data.admin_password' => ['required', 'string', 'min:6'],
-            'data.plan_id' => ['required', 'exists:plans,id'],
+            'data.selected_plans' => ['required', 'array'],
+            'data.selected_plans.pos' => ['required', 'exists:plans,id'],
+            'data.selected_plans.hrm' => ['nullable', 'exists:plans,id'],
+            'data.selected_plans.booking' => ['nullable', 'exists:plans,id'],
             'data.period' => ['required', 'in:month,year'],
-            'data.systems_allowed' => ['required', 'array', 'min:1'],
-            'data.systems_allowed.*' => ['required', 'in:pos,hrm,booking'],
             'data.active' => ['boolean'],
         ]);
 
         $tenantId = $this->generateUniqueTenantId((string) $this->data['company_name']);
-        $plan = Plan::query()->findOrFail($this->data['plan_id']);
         $period = $this->data['period'] === 'year' ? 'year' : 'month';
-        $systemsAllowed = collect($this->data['systems_allowed'] ?? [])
-            ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
-            ->unique()
-            ->values()
-            ->all();
 
-        if (count($systemsAllowed) === 0) {
-            $systemsAllowed = ['pos'];
+        $selectedPlanIds = collect($this->data['selected_plans'] ?? [])
+            ->filter(fn ($id) => !empty($id))
+            ->map(fn ($id) => (int) $id)
+            ->values();
+
+        $selectedPlans = Plan::query()
+            ->whereIn('id', $selectedPlanIds)
+            ->where('active', true)
+            ->get()
+            ->keyBy('id');
+
+        $selectedSystemPlans = [];
+        foreach ($this->modules as $module) {
+            $planId = (int) ($this->data['selected_plans'][$module] ?? 0);
+            if ($planId <= 0) {
+                continue;
+            }
+
+            $plan = $selectedPlans->get($planId);
+            if (!$plan) {
+                continue;
+            }
+
+            $planModule = is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name;
+            if ($planModule !== $module) {
+                continue;
+            }
+
+            $selectedSystemPlans[$module] = $plan;
         }
 
-        $pricing = app(PlanPricingService::class)->calculate($plan, $period, count($systemsAllowed));
+        if (count($selectedSystemPlans) === 0) {
+            $this->addError('data.selected_plans.pos', 'Please select at least one valid plan.');
+            return;
+        }
+
+        $systemsAllowed = array_values(array_keys($selectedSystemPlans));
+        $this->data['systems_allowed'] = $systemsAllowed;
+
+        $systemsCount = max(1, count($systemsAllowed));
+        $pricingBySystem = [];
+        $totalPrice = 0.0;
+        $payableNow = 0.0;
+        $maxTrialMonths = 0;
+
+        foreach ($selectedSystemPlans as $module => $plan) {
+            $modulePricing = app(PlanPricingService::class)->calculate($plan, $period, $systemsCount);
+            $modulePrice = (float) ($modulePricing['final_price'] ?? 0);
+            $moduleTrialMonths = (int) ($modulePricing['free_trial_months'] ?? 0);
+
+            $pricingBySystem[$module] = [
+                'plan_id' => $plan->id,
+                'plan_name' => $plan->name,
+                'pricing' => $modulePricing,
+                'payable_now' => $moduleTrialMonths > 0 ? 0.0 : $modulePrice,
+            ];
+
+            $totalPrice += $modulePrice;
+            if ($moduleTrialMonths === 0) {
+                $payableNow += $modulePrice;
+            }
+            $maxTrialMonths = max($maxTrialMonths, $moduleTrialMonths);
+        }
+
+        $pricing = [
+            'period' => $period,
+            'systems_count' => $systemsCount,
+            'per_system' => $pricingBySystem,
+            'total_price' => round($totalPrice, 2),
+            'due_now' => round($payableNow, 2),
+            'total_discount_amount' => 0,
+            'free_trial_months' => $maxTrialMonths,
+            'is_free_trial' => $maxTrialMonths > 0,
+        ];
+
         $billingCycle = $period === 'year' ? 'yearly' : 'monthly';
         $cycleMonths = app(PlanPricingService::class)->cycleMonths($period);
         $endDate = now()->copy()->addMonths($cycleMonths + (int) ($pricing['free_trial_months'] ?? 0));
-        $payableNow = ((int) ($pricing['free_trial_months'] ?? 0) > 0) ? 0.0 : (float) ($pricing['final_price'] ?? 0);
+        $primaryPlan = collect($selectedSystemPlans)->first();
 
-        $tenant = DB::transaction(function () use ($tenantId, $plan, $billingCycle, $endDate, $pricing, $systemsAllowed, $payableNow) {
+        $tenant = DB::connection('central')->transaction(function () use ($tenantId, $primaryPlan, $billingCycle, $endDate, $pricing, $systemsAllowed, $payableNow, $selectedSystemPlans) {
             $tenant = Tenant::create([
                 'id' => $tenantId,
                 'name' => $this->data['company_name'],
@@ -106,10 +189,18 @@ class CustomerCreate extends Component
 
             Subscription::create([
                 'tenant_id' => $tenant->id,
-                'plan_id' => $plan->id,
-                'plan_details' => array_merge($plan->toArray(), [
+                'plan_id' => $primaryPlan?->id,
+                'plan_details' => array_merge($primaryPlan?->toArray() ?? [], [
                     'pricing' => $pricing,
                     'selected_systems' => $systemsAllowed,
+                    'selected_system_plans' => collect($selectedSystemPlans)->map(function ($plan, $module) {
+                        return [
+                            'module' => $module,
+                            'id' => $plan->id,
+                            'name' => $plan->name,
+                            'slug' => $plan->slug,
+                        ];
+                    })->values()->all(),
                 ]),
                 'currency_id' => $this->data['currency_id'],
                 'price' => $payableNow,
@@ -165,11 +256,13 @@ class CustomerCreate extends Component
     {
         $countries = Country::query()->orderBy('name')->get();
         $currencies = Currency::query()->orderBy('name')->get();
-        $plans = Plan::query()->where('active', true)->orderBy('name')->get();
-
-        if ($plans->isEmpty()) {
-            $plans = Plan::query()->orderBy('name')->get();
-        }
+        $plansByModule = Plan::query()
+            ->where('active', true)
+            ->orderBy('module_name')
+            ->orderBy('price_month')
+            ->orderBy('name')
+            ->get()
+            ->groupBy(fn (Plan $plan) => is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name);
 
         return view('livewire.central.cpanel.customers.customer-create', get_defined_vars());
     }
