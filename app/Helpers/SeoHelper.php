@@ -19,7 +19,7 @@ class SeoHelper
 
     public function __construct()
     {
-        $this->defaultImage = asset('mohaaseb_en_dark_2.webp');
+        $this->defaultImage = asset('light-logo.svg');
         // $this->locales = $locales = self::getAllLocalesWithCountry();
 
         // $this->alternates = [];

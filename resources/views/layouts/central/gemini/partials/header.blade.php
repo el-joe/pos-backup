@@ -4,10 +4,12 @@
     <div class="container mx-auto px-6 flex justify-between items-center">
 
         <a href="/" class="flex items-center gap-2.5 group">
-            <div class="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 text-white transform group-hover:scale-105 transition-transform duration-300">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="w-10 h-10 bg-gradient-to-br rounded-xl flex items-center justify-center shadow-lg text-white transform group-hover:scale-105 transition-transform duration-300">
+                {{-- <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
+                </svg> --}}
+                <img src="{{ asset('light-logo.svg') }}" alt="Mohaaseb" class=" object-contain dark:hidden block">
+                <img src="{{ asset('dark-logo.svg') }}" alt="Mohaaseb" class=" object-contain hidden dark:block">
             </div>
             <span class="text-2xl font-extrabold text-slate-800 tracking-tight group-hover:text-brand-600 transition-colors dark:text-white">
                 @if(app()->getLocale() == 'ar')
