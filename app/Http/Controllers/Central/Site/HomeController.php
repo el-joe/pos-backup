@@ -10,6 +10,7 @@ use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\Plan;
 use App\Models\Slider;
+use App\Services\PlanFeaturePresentationService;
 use App\Services\PlanPricingService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -284,42 +285,8 @@ class HomeController extends Controller
                     default => ucfirst($module),
                 },
                 'plans' => $modulePlans->map(function (Plan $plan) use ($locale, $moduleFeatures) {
-                    $featureNames = $plan->plan_features
-                        ->filter(function ($planFeature) {
-                            if (!$planFeature->feature) {
-                                return false;
-                            }
-
-                            if ($planFeature->feature->type === 'boolean') {
-                                return (int) $planFeature->value === 1;
-                            }
-
-                            return ((int) $planFeature->value > 0)
-                                || (is_string($planFeature->content_en) && trim($planFeature->content_en) !== '')
-                                || (is_string($planFeature->content_ar) && trim($planFeature->content_ar) !== '');
-                        })
-                        ->sortBy('feature_id')
-                        ->map(function ($planFeature) use ($locale) {
-                            $feature = $planFeature->feature;
-                            $name = $locale === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
-                            return $name ?: ($feature->name_en ?: $feature->code);
-                        })
-                        ->unique()
-                        ->values()
-                        ->take(3)
-                        ->all();
-
-                    // If a plan has no enabled/non-empty features yet, fall back to first features of the module.
-                    if (count($featureNames) === 0) {
-                        $featureNames = $moduleFeatures
-                            ->take(3)
-                            ->map(function (Feature $feature) use ($locale) {
-                                $name = $locale === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
-                                return $name ?: ($feature->name_en ?: $feature->code);
-                            })
-                            ->values()
-                            ->all();
-                    }
+                    $featureNames = app(PlanFeaturePresentationService::class)
+                        ->resolveDisplayPlanFeatureNames($plan, $moduleFeatures, $locale, 3);
 
                     return [
                         'id' => $plan->id,
@@ -398,6 +365,16 @@ class HomeController extends Controller
                 ->all();
 
             return [$module => $items];
+        })->all();
+
+        $pricingPlanFeaturesByPlanId = $plans->mapWithKeys(function (Plan $plan) use ($locale, $featuresByModule) {
+            $module = is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name;
+            $moduleFeatures = ($featuresByModule[$module] ?? collect())->values();
+
+            $featureNames = app(PlanFeaturePresentationService::class)
+                ->resolveDisplayPlanFeatureNames($plan, $moduleFeatures, $locale, 3);
+
+            return [$plan->id => $featureNames];
         })->all();
 
         $seoData = SeoHelper::render('pricing');

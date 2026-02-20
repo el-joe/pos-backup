@@ -4,6 +4,8 @@ namespace App\Livewire\Central\Site;
 
 use App\Models\Feature;
 use App\Models\Plan;
+use App\Services\PlanFeaturePresentationService;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -59,47 +61,29 @@ class PricingPage extends Component
             ->get()
             ->groupBy('module_name');
 
+        $locale = app()->getLocale();
+
         foreach ($this->moduleOrder as $module) {
             $modulePlans = $plans
                 ->filter(fn (Plan $plan) => (is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name) === $module)
                 ->values();
 
-            $plansPayload = $modulePlans->map(function (Plan $plan) use ($features, $module) {
-                $featureNames = $plan->plan_features
-                    ->filter(function ($planFeature) {
-                        if (!$planFeature->feature) {
-                            return false;
-                        }
+            $plansPayload = $modulePlans->map(function (Plan $plan) use ($features, $module, $locale) {
+                // $featureNames = app(PlanFeaturePresentationService::class)
+                //     ->resolveDisplayPlanFeatureNames($plan, ($features[$module] ?? collect()), $locale, 3);
 
-                        if ($planFeature->feature->type === 'boolean') {
-                            return (int) $planFeature->value === 1;
-                        }
+                $features = collect($features[$module] ?? collect())->map(function($feature) use ($plan, $locale){
+                    $planFeature = $plan->plan_features->firstWhere('feature_id', $feature->id);
 
-                        return ((int) $planFeature->value > 0)
-                            || (is_string($planFeature->content_en) && trim($planFeature->content_en) !== '')
-                            || (is_string($planFeature->content_ar) && trim($planFeature->content_ar) !== '');
-                    })
-                    ->sortBy('feature_id')
-                    ->map(function ($planFeature) {
-                        $feature = $planFeature->feature;
-                        $name = app()->getLocale() === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
-                        return $name ?: ($feature->name_en ?: $feature->code);
-                    })
-                    ->unique()
-                    ->values()
-                    ->take(3)
-                    ->all();
-
-                if (count($featureNames) === 0) {
-                    $featureNames = ($features[$module] ?? collect())
-                        ->take(3)
-                        ->map(function (Feature $feature) {
-                            $name = app()->getLocale() === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
-                            return $name ?: ($feature->name_en ?: $feature->code);
-                        })
-                        ->values()
-                        ->all();
-                }
+                    $title = $feature->{'name_'. $locale} ?? $feature->name_en ?? $feature->name_ar ?? '';
+                    if($feature->type == 'text'){
+                        $content = $planFeature->{'content_'. $locale} ?? $planFeature->content_en ?? '';
+                        return "$title: $content";
+                    }else{
+                        $icon = $planFeature->value == 1 ? 'fa-solid fa-check text-green-500' : 'fa-solid fa-xmark text-red-500';
+                        return "<i class='$icon'></i> $title";
+                    }
+                });
 
                 return [
                     'id' => $plan->id,
@@ -109,7 +93,7 @@ class PricingPage extends Component
                     'year' => round((float) $plan->price_year, 2),
                     'trial_months' => (bool) ($plan->three_months_free ?? false) ? 3 : 0,
                     'recommended' => (bool) $plan->recommended,
-                    'features' => $featureNames,
+                    'features' => $features
                 ];
             })->values()->all();
 

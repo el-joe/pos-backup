@@ -1,29 +1,6 @@
 @extends('layouts.central.gemini.layout')
 
 @section('content')
-@php
-    $resolvePlanFeatures = function ($plan) {
-        return $plan->plan_features
-            ->filter(function ($planFeature) {
-                if (!$planFeature->feature) return false;
-                if ($planFeature->feature->type === 'boolean') return (int) $planFeature->value === 1;
-                return ((int) $planFeature->value > 0)
-                    || (is_string($planFeature->content_en) && trim($planFeature->content_en) !== '')
-                    || (is_string($planFeature->content_ar) && trim($planFeature->content_ar) !== '');
-            })
-            ->sortBy('feature_id')
-            ->map(function ($planFeature) {
-                $feature = $planFeature->feature;
-                $name = app()->getLocale() === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
-                return $name ?: ($feature->name_en ?: $feature->code);
-            })
-            ->unique()
-            ->values()
-            ->take(3)
-            ->all();
-    };
-@endphp
-
 <style>
     /* Dynamic Pricing Toggle Utility */
     #pricing-wrapper.is-yearly .display-monthly { display: none !important; }
@@ -91,7 +68,7 @@
                         @php
                             $discountedMonth = round((float) $plan->price_month, 2);
                             $discountedYear = round((float) $plan->price_year, 2);
-                            $planFeatureNames = $resolvePlanFeatures($plan);
+                            $planFeatureNames = $pricingPlanFeaturesByPlanId[$plan->id] ?? [];
                         @endphp
                         <button type="button" onclick="setTier('pos', '{{ $plan->id }}', 'indigo')" data-tier-module="pos" data-plan-id="{{ $plan->id }}" class="tier-btn relative bg-white dark:bg-slate-950 rounded-2xl p-6 text-left transition-all duration-300 border-2 border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-600 focus:outline-none flex flex-col h-full shadow-sm hover:shadow-md">
                             <div class="relative z-10 flex flex-col h-full w-full">
@@ -158,7 +135,7 @@
                         @php
                             $discountedMonth = round((float) $plan->price_month, 2);
                             $discountedYear = round((float) $plan->price_year, 2);
-                            $planFeatureNames = $resolvePlanFeatures($plan);
+                            $planFeatureNames = $pricingPlanFeaturesByPlanId[$plan->id] ?? [];
                         @endphp
                         <button type="button" onclick="setTier('hrm', '{{ $plan->id }}', 'emerald')" data-tier-module="hrm" data-plan-id="{{ $plan->id }}" class="tier-btn relative bg-white dark:bg-slate-950 rounded-2xl p-6 text-left transition-all duration-300 border-2 border-slate-200 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-600 focus:outline-none flex flex-col h-full shadow-sm hover:shadow-md">
                             <div class="relative z-10 flex flex-col h-full w-full">
@@ -225,7 +202,7 @@
                         @php
                             $discountedMonth = round((float) $plan->price_month, 2);
                             $discountedYear = round((float) $plan->price_year, 2);
-                            $planFeatureNames = $resolvePlanFeatures($plan);
+                            $planFeatureNames = $pricingPlanFeaturesByPlanId[$plan->id] ?? [];
                         @endphp
                         <button type="button" onclick="setTier('booking', '{{ $plan->id }}', 'rose')" data-tier-module="booking" data-plan-id="{{ $plan->id }}" class="tier-btn relative bg-white dark:bg-slate-950 rounded-2xl p-6 text-left transition-all duration-300 border-2 border-slate-200 dark:border-slate-800 hover:border-rose-300 dark:hover:border-rose-600 focus:outline-none flex flex-col h-full shadow-sm hover:shadow-md">
                             <div class="relative z-10 flex flex-col h-full w-full">

@@ -54,6 +54,11 @@
                                 @endphp
                                 <button type="button" wire:click="setTier('{{ $module }}', {{ (int) $plan['id'] }})" class="relative bg-white dark:bg-slate-950 rounded-2xl p-6 text-left transition-all duration-300 border-2 focus:outline-none flex flex-col h-full shadow-sm hover:shadow-md {{ $isPlanSelected ? 'border-brand-500 ring-4 ring-brand-500/10' : 'border-slate-200 dark:border-slate-800' }}">
                                     <div class="relative z-10 flex flex-col h-full w-full">
+                                        @if(((int) ($plan['trial_months'] ?? 0)) > 0)
+                                            <span class="absolute top-0 end-0 -mt-2 -me-2 inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 border border-green-200 dark:border-green-800/50">
+                                                Free
+                                            </span>
+                                        @endif
                                         <div class="font-extrabold text-slate-900 dark:text-white text-lg">{{ $plan['name'] }}</div>
                                         <div class="my-4">
                                             <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format((float) ($plan['month'] ?? 0), 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
@@ -63,7 +68,9 @@
                                             <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800/80 w-full">
                                                 <ul class="space-y-3 text-sm font-medium text-slate-600 dark:text-slate-400">
                                                     @foreach($plan['features'] as $featureName)
-                                                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-green-500 mt-0.5 text-xs"></i> <span>{{ $featureName }}</span></li>
+                                                        <li class="flex items-start gap-3">
+                                                            {!! $featureName !!}
+                                                        </li>
                                                     @endforeach
                                                 </ul>
                                             </div>
