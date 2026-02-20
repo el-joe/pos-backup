@@ -95,10 +95,28 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">New Plan</label>
-                        <select class="form-select" wire:model.defer="upgradeData.plan_id">
+                        <label class="form-label">ERP Plan</label>
+                        <select class="form-select" wire:model.defer="upgradeData.selected_plans.pos">
                             <option value="">-- Select --</option>
-                            @foreach($plans as $plan)
+                            @foreach(($plansByModule['pos'] ?? []) as $plan)
+                                <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">HRM Plan</label>
+                        <select class="form-select" wire:model.defer="upgradeData.selected_plans.hrm">
+                            <option value="">-- Select --</option>
+                            @foreach(($plansByModule['hrm'] ?? []) as $plan)
+                                <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Booking Plan</label>
+                        <select class="form-select" wire:model.defer="upgradeData.selected_plans.booking">
+                            <option value="">-- Select --</option>
+                            @foreach(($plansByModule['booking'] ?? []) as $plan)
                                 <option value="{{ $plan->id }}">{{ $plan->name }}</option>
                             @endforeach
                         </select>
@@ -110,26 +128,9 @@
                             <option value="year">Yearly</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label d-block">Systems</label>
-                        <div class="d-flex flex-wrap gap-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="pos" wire:model.defer="upgradeData.systems_allowed" id="upgradeSystemPos">
-                                <label class="form-check-label" for="upgradeSystemPos">POS</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="hrm" wire:model.defer="upgradeData.systems_allowed" id="upgradeSystemHrm">
-                                <label class="form-check-label" for="upgradeSystemHrm">HRM</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="booking" wire:model.defer="upgradeData.systems_allowed" id="upgradeSystemBooking">
-                                <label class="form-check-label" for="upgradeSystemBooking">Booking</label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-warning" type="button" wire:click="upgradePackage">
-                            <i class="fa fa-level-up"></i> Upgrade Plan
+                            <i class="fa fa-level-up"></i> Upgrade Plans
                         </button>
                     </div>
                 </div>
@@ -160,9 +161,19 @@
                     </thead>
                     <tbody>
                         @forelse($subscriptions as $subscription)
+                            @php
+                                $selectedSystemPlans = collect(data_get($subscription->plan_details, 'selected_system_plans', []));
+                                $multiPlanLabel = $selectedSystemPlans
+                                    ->map(function ($item) {
+                                        $module = strtoupper((string) ($item['module'] ?? '-'));
+                                        $name = (string) ($item['name'] ?? '-');
+                                        return $module . ': ' . $name;
+                                    })
+                                    ->implode(' | ');
+                            @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $subscription->plan?->name ?? '-' }}</td>
+                                <td>{{ $multiPlanLabel ?: ($subscription->plan?->name ?? '-') }}</td>
                                 <td>{{ $subscription->price }} {{ $subscription->currency?->code ?? '' }}</td>
                                 <td>{{ ucfirst($subscription->billing_cycle) }}</td>
                                 <td>{{ implode(', ', $subscription->systems_allowed ?? []) ?: '-' }}</td>

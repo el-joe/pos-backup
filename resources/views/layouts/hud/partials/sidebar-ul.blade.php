@@ -74,8 +74,11 @@
         if(isset($data['enabled'])){
             $enabled = !!tenantSetting($data['enabled']);
         }
+
+        $getDataFromPlan = data_get($__current_subscription?->plan?->features, $data['subscription_check']??'');
+        $subscriptionCheckStatus = isset($getDataFromPlan['status']) ? $getDataFromPlan['status'] : true;
     @endphp
-    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false)) && $canAccess && $enabled)
+    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $subscriptionCheckStatus)) && $canAccess && $enabled)
         <div class="menu-item {{ request()->routeIs($data['route']) && $checkRouteParams ? 'active' : '' }}  mb-1">
             <a href="{{ $data['route'] == "#" ? "#" : route($data['route'],$data['route_params']??$data['request_params']??null) }}" class="menu-link">
                 <span class="menu-icon"><i class="{{$data['icon']}}"></i></span>

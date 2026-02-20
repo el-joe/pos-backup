@@ -308,7 +308,15 @@
                             </tr>
                             <tr>
                                 <td>Due now:</td>
-                                <td>{{ currencySymbolPosition(((int) ($pricingSummary['free_trial_months'] ?? 0) > 0 ? 0 : (($pricingSummary['final_price'] ?? 0) * ($currentCurrency->conversion_rate ?? 1))), $currentCurrency->symbol) }}</td>
+                                <td>
+                                    @php
+                                        $dueNow = $pricingSummary['due_now'] ?? null;
+                                        $dueNow = is_numeric($dueNow)
+                                            ? (float) $dueNow
+                                            : (((int) ($pricingSummary['free_trial_months'] ?? 0) > 0) ? 0.0 : (float) ($pricingSummary['final_price'] ?? 0));
+                                    @endphp
+                                    {{ currencySymbolPosition($dueNow * ($currentCurrency->conversion_rate ?? 1), $currentCurrency->symbol) }}
+                                </td>
                             </tr>
                         </table>
                         @if($currentCurrency->country_code != 'EGP')
