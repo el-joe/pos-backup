@@ -1,7 +1,7 @@
 <div class="col-12">
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Contracts</h5>
+            <h5 class="mb-0">{{ __('general.titles.hrm_contracts') }}</h5>
 
             <div class="d-flex gap-2">
                 <button class="btn btn-sm btn-outline-primary"
@@ -9,7 +9,7 @@
                         aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                         wire:click="$toggle('collapseFilters')"
                         data-bs-target="#hrmContractsFilterCollapse">
-                    <i class="fa fa-filter me-1"></i> Show/Hide
+                    <i class="fa fa-filter me-1"></i> {{ __('general.pages.hrm.show_hide') }}
                 </button>
 
                 @adminCan('hrm_master_data.create')
@@ -17,7 +17,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#editHrmContractModal"
                             wire:click="$dispatch('hrm-contract-set-employee', null)">
-                        <i class="fa fa-plus me-1"></i> New
+                        <i class="fa fa-plus me-1"></i> {{ __('general.pages.hrm.new') }}
                     </button>
                 @endadminCan
             </div>
@@ -28,7 +28,7 @@
                 <div class="row g-3">
                     <div class="col-12 d-flex justify-content-end">
                         <button class="btn btn-secondary btn-sm" wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> Reset
+                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.hrm.reset') }}
                         </button>
                     </div>
                 </div>
@@ -49,8 +49,8 @@
                 <table class="table table-bordered table-hover table-striped align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th>Employee</th>
+                            <th>{{ __('general.pages.hrm.id') }}</th>
+                            <th>{{ __('general.pages.hrm.employee') }}</th>
                             <th>Basic Salary</th>
                             <th>Start</th>
                             <th>End</th>
@@ -65,11 +65,7 @@
                                 <td>{{ numFormat($c->basic_salary) }}</td>
                                 <td>{{ optional($c->start_date)->format('Y-m-d') }}</td>
                                 <td>{{ optional($c->end_date)->format('Y-m-d') ?? '-' }}</td>
-                                <td>
-                                    <span class="badge bg-{{ $c->is_active ? 'success' : 'secondary' }}">
-                                        {{ $c->is_active ? 'Yes' : 'No' }}
-                                    </span>
-                                </td>
+                                <td><span class="badge bg-{{ $c->is_active ? 'success' : 'secondary' }}">{{ $c->is_active ? __('general.pages.hrm.yes') : __('general.pages.hrm.no') }}</span></td>
                             </tr>
                         @endforeach
                     </tbody>

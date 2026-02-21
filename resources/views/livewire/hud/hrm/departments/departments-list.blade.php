@@ -1,7 +1,7 @@
 <div class="col-12">
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Departments</h5>
+            <h5 class="mb-0">{{ __('general.titles.hrm_departments') }}</h5>
 
             <div class="d-flex gap-2">
                 <button class="btn btn-sm btn-outline-primary"
@@ -9,7 +9,7 @@
                         aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                         wire:click="$toggle('collapseFilters')"
                         data-bs-target="#hrmDepartmentsFilterCollapse">
-                    <i class="fa fa-filter me-1"></i> Show/Hide
+                    <i class="fa fa-filter me-1"></i> {{ __('general.pages.hrm.show_hide') }}
                 </button>
 
                 @adminCan('hrm_master_data.create')
@@ -17,7 +17,7 @@
                             data-bs-toggle="modal"
                             data-bs-target="#editHrmDepartmentModal"
                             wire:click="$dispatch('hrm-department-set-current', null)">
-                        <i class="fa fa-plus me-1"></i> New
+                        <i class="fa fa-plus me-1"></i> {{ __('general.pages.hrm.new') }}
                     </button>
                 @endadminCan
             </div>
@@ -27,12 +27,12 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Search</label>
+                        <label class="form-label">{{ __('general.pages.hrm.search') }}</label>
                         <input type="text" class="form-control" placeholder="Department name..." wire:model.blur="filters.search">
                     </div>
                     <div class="col-12 d-flex justify-content-end">
                         <button class="btn btn-secondary btn-sm" wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> Reset
+                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.hrm.reset') }}
                         </button>
                     </div>
                 </div>
@@ -53,11 +53,11 @@
                 <table class="table table-bordered table-hover table-striped align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
+                            <th>{{ __('general.pages.hrm.id') }}</th>
+                            <th>{{ __('general.pages.hrm.name') }}</th>
                             <th>Parent</th>
-                            <th>Manager</th>
-                            <th class="text-end">Action</th>
+                            <th>{{ __('general.pages.hrm.manager') }}</th>
+                            <th class="text-end">{{ __('general.pages.hrm.action') }}</th>
                         </tr>
                     </thead>
                     <tbody>

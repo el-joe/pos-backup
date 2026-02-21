@@ -1,16 +1,28 @@
 <div class="col-12">
     <div class="card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Payroll Runs</h5>
+            <h5 class="mb-0">{{ __('general.pages.hrm.filters') }}</h5>
+            <button class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="collapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                    wire:click="$toggle('collapseFilters')"
+                    data-bs-target="#hrmPayrollRunsFilterCollapse">
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.hrm.show_hide') }}
+            </button>
+        </div>
 
-            @adminCan('hrm_payroll.create')
-                <button class="btn btn-sm btn-theme"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editHrmPayrollRunModal"
-                        wire:click="$dispatch('hrm-payroll-run-set-current', null)">
-                    <i class="fa fa-plus me-1"></i> New
-                </button>
-            @endadminCan
+        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="hrmPayrollRunsFilterCollapse">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
+                        <input type="text" class="form-control" wire:model.blur="filters.status">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="btn btn-secondary w-100" wire:click="$set('filters', [])">{{ __('general.pages.hrm.reset') }}</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card-arrow">
@@ -22,17 +34,28 @@
     </div>
 
     <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{{ __('general.titles.hrm_payroll_runs') }}</h5>
+            @adminCan('hrm_payroll.create')
+                <button class="btn btn-sm btn-theme"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editHrmPayrollRunModal"
+                        wire:click="$dispatch('hrm-payroll-run-set-current', null)">
+                    <i class="fa fa-plus me-1"></i> {{ __('general.pages.hrm.new') }}
+                </button>
+            @endadminCan
+        </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th>Month</th>
-                            <th>Year</th>
-                            <th>Status</th>
+                            <th>{{ __('general.pages.hrm.id') }}</th>
+                            <th>{{ __('general.pages.hrm.month') }}</th>
+                            <th>{{ __('general.pages.hrm.year') }}</th>
+                            <th>{{ __('general.pages.hrm.status') }}</th>
                             <th>Total Payout</th>
-                            <th class="text-end">Action</th>
+                            <th class="text-end">{{ __('general.pages.hrm.action') }}</th>
                         </tr>
                     </thead>
                     <tbody>
