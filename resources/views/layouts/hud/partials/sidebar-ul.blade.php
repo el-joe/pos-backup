@@ -38,8 +38,10 @@
         // if(isset($checkRouteParams)){
         //     $isActive = $isActive && $checkRouteParams;
         // }
+
+        $checkSubscriptionStatus = data_get($__current_subscription?->plan?->features, $data['subscription_check']??'')['status'] ?? true;
     ?>
-    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $__current_subscription?->plan?->features[$data['subscription_check']??'']['status'] ?? false)) && $canAccess)
+    @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $checkSubscriptionStatus)) && $canAccess)
         <div class="menu-item has-sub {{ $isActive ? 'active' : '' }} mb-1">
             <a href="#" class="menu-link">
                 <span class="menu-icon">
