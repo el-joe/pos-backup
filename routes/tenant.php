@@ -6,7 +6,8 @@ use App\Enums\AccountTypeEnum;
 use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Tenant\AuthController;
-use App\Http\Middleware\{AdminTranslationMiddleware,InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck,Tenant\AdminAuthMiddleware};
+use App\Http\Controllers\Tenant\EmployeeAuthController;
+use App\Http\Middleware\{AdminTranslationMiddleware,InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck,Tenant\AdminAuthMiddleware, Tenant\HrmMasterDataPermissionCheck, Tenant\EmployeeAuthMiddleware, Tenant\EmployeeGuestMiddleware};
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Admins\{AdminsList,RoleDetails,RolesList};
 use App\Livewire\Admin\Branches\BranchesList;
@@ -48,6 +49,29 @@ use App\Livewire\Admin\Sales\{SaleDetails,SalesList};
 use App\Livewire\Admin\Sales\DeferredSalesList;
 use App\Livewire\Admin\SaleRequests\{AddSaleRequest,SaleRequestDetails,SaleRequestsList};
 use App\Livewire\Admin\FixedAssets\{AddFixedAsset,FixedAssetDetails,FixedAssetsList};
+use App\Livewire\Admin\Hrm\MasterDataPage;
+use App\Livewire\Admin\Hrm\Departments\DepartmentsList;
+use App\Livewire\Admin\Hrm\Designations\DesignationsList;
+use App\Livewire\Admin\Hrm\Employees\EmployeesList;
+use App\Livewire\Admin\Hrm\Contracts\ContractsList;
+use App\Http\Middleware\Tenant\HrmLeavesPermissionCheck;
+use App\Http\Middleware\Tenant\HrmClaimsPermissionCheck;
+use App\Http\Middleware\Tenant\HrmPayrollPermissionCheck;
+use App\Http\Middleware\Tenant\HrmAttendancePermissionCheck;
+use App\Livewire\Admin\Hrm\Leaves\LeaveTypesList;
+use App\Livewire\Admin\Hrm\Leaves\LeaveRequestsList as AdminLeaveRequestsList;
+use App\Livewire\Admin\Hrm\Claims\ClaimCategoriesList;
+use App\Livewire\Admin\Hrm\Claims\ExpenseClaimsList as AdminExpenseClaimsList;
+use App\Livewire\Admin\Hrm\Payroll\PayrollRunsList;
+use App\Livewire\Admin\Hrm\Payroll\PayrollSlipsList;
+use App\Livewire\Admin\Hrm\Attendance\AttendanceSheetsList;
+use App\Livewire\Admin\Hrm\Attendance\AttendanceSheetDetails;
+use App\Livewire\Employee\Dashboard as EmployeeDashboard;
+use App\Livewire\Employee\Profile as EmployeeProfile;
+use App\Livewire\Employee\Payslips\PayslipsList as EmployeePayslipsList;
+use App\Livewire\Employee\Leaves\LeaveRequestsList as EmployeeLeaveRequestsList;
+use App\Livewire\Employee\Claims\ExpenseClaimsList as EmployeeExpenseClaimsList;
+use App\Livewire\Employee\Attendance\AttendanceLogsList as EmployeeAttendanceLogsList;
 use App\Livewire\Admin\DepreciationExpenses\{AddDepreciationExpense,DepreciationExpenseDetails,DepreciationExpensesList};
 use App\Livewire\Admin\Settings\SettingsPage;
 use App\Livewire\Admin\Statistics;
@@ -89,6 +113,23 @@ Route::middleware([
 
     Route::redirect('/','admin/login');
 
+    Route::group(['prefix' => 'employee', 'as' => 'employee.'], function () {
+        Route::middleware([EmployeeGuestMiddleware::class])->group(function () {
+            Route::get('login', [EmployeeAuthController::class, 'login'])->name('login');
+            Route::post('login', [EmployeeAuthController::class, 'postLogin'])->name('postLogin');
+        });
+
+        Route::middleware([EmployeeAuthMiddleware::class])->group(function () {
+            Route::get('logout', [EmployeeAuthController::class, 'logout'])->name('logout');
+            Route::get('/', EmployeeDashboard::class)->name('dashboard');
+            Route::get('profile', EmployeeProfile::class)->name('profile');
+            Route::get('payslips', EmployeePayslipsList::class)->name('payslips.list');
+            Route::get('leave-requests', EmployeeLeaveRequestsList::class)->name('leaves.list');
+            Route::get('claims', EmployeeExpenseClaimsList::class)->name('claims.list');
+            Route::get('attendance', EmployeeAttendanceLogsList::class)->name('attendance.list');
+        });
+    });
+
     Route::group(['prefix'=>'admin','as'=>'admin.'],function () {
         Route::get('login',[AuthController::class,'login'])->name('login');
         Route::post('login',[AuthController::class,'postLogin'])->name('postLogin');
@@ -110,6 +151,68 @@ Route::middleware([
             Route::get('brands', BrandsList::class)->name('brands.list');
             Route::get('units',UnitsList::class)->name('units.list');
             Route::get('taxes',TaxesList::class)->name('taxes.list');
+
+            // HRM
+            Route::group([
+                'prefix' => 'hrm',
+                'as' => 'hrm.',
+            ], function () {
+                Route::get('master-data', MasterDataPage::class)
+                    ->middleware([HrmMasterDataPermissionCheck::class])
+                    ->name('master-data');
+
+                Route::get('departments', DepartmentsList::class)
+                    ->middleware([HrmMasterDataPermissionCheck::class])
+                    ->name('departments.list');
+
+                Route::get('designations', DesignationsList::class)
+                    ->middleware([HrmMasterDataPermissionCheck::class])
+                    ->name('designations.list');
+
+                Route::get('employees', EmployeesList::class)
+                    ->middleware([HrmMasterDataPermissionCheck::class])
+                    ->name('employees.list');
+
+                Route::get('contracts', ContractsList::class)
+                    ->middleware([HrmMasterDataPermissionCheck::class])
+                    ->name('contracts.list');
+
+                // Leaves
+                Route::get('leave-types', LeaveTypesList::class)
+                    ->middleware([HrmLeavesPermissionCheck::class])
+                    ->name('leave-types.list');
+
+                Route::get('leave-requests', AdminLeaveRequestsList::class)
+                    ->middleware([HrmLeavesPermissionCheck::class])
+                    ->name('leave-requests.list');
+
+                // Claims
+                Route::get('claim-categories', ClaimCategoriesList::class)
+                    ->middleware([HrmClaimsPermissionCheck::class])
+                    ->name('claim-categories.list');
+
+                Route::get('expense-claims', AdminExpenseClaimsList::class)
+                    ->middleware([HrmClaimsPermissionCheck::class])
+                    ->name('expense-claims.list');
+
+                // Payroll
+                Route::get('payroll-runs', PayrollRunsList::class)
+                    ->middleware([HrmPayrollPermissionCheck::class])
+                    ->name('payroll-runs.list');
+
+                Route::get('payslips', PayrollSlipsList::class)
+                    ->middleware([HrmPayrollPermissionCheck::class])
+                    ->name('payslips.list');
+
+                // Attendance
+                Route::get('attendance-sheets', AttendanceSheetsList::class)
+                    ->middleware([HrmAttendancePermissionCheck::class])
+                    ->name('attendance-sheets.list');
+
+                Route::get('attendance-sheets/{id}', AttendanceSheetDetails::class)
+                    ->middleware([HrmAttendancePermissionCheck::class])
+                    ->name('attendance-sheets.details');
+            });
             Route::get('pos',PosPage::class)->name('pos');
             Route::get('pos/deferred',DeferredPosPage::class)->name('pos.deferred');
             Route::get('discounts', DiscountsList::class)->name('discounts.list');

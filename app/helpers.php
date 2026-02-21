@@ -21,6 +21,9 @@ if(!defined('TENANT_ADMINS_GUARD')){
 if(!defined('CPANEL_ADMINS_GUARD')){
     define('CPANEL_ADMINS_GUARD','cpanel_admin');
 }
+if(!defined('EMPLOYEES_GUARD')){
+    define('EMPLOYEES_GUARD','employee');
+}
 
 if(!function_exists('cacheKey')) {
     function cacheKey($key){
@@ -52,6 +55,16 @@ if(!function_exists('layoutView')) {
     }
 }
 
+if(!function_exists('employeeLayoutView')) {
+    function employeeLayoutView($pageName, $with = [], $isSubPage = false){
+        $defaultView = "livewire." . defaultLayout();
+        $defaultLayout = 'layouts.employee.hud';
+
+        return view("$defaultView.$pageName", $with)
+            ->layout($isSubPage ? null : $defaultLayout);
+    }
+}
+
 if(!function_exists('landingLayoutView')) {
     function landingLayoutView($pageName,$with = []){
         $layout = defaultLandingLayout();
@@ -75,6 +88,12 @@ if(!function_exists('admin')) {
 if(!function_exists('cpanelAdmin')) {
     function cpanelAdmin() {
         return auth(CPANEL_ADMINS_GUARD)->user();
+    }
+}
+
+if(!function_exists('employee')) {
+    function employee() {
+        return auth(EMPLOYEES_GUARD)->user();
     }
 }
 
@@ -168,7 +187,17 @@ if(!function_exists('defaultPermissionsList')) {
             'subscriptions' => ['list','cancel','renew'],
             "discounts"=> ["list", "create", "update", "delete",'export'],
             "taxes"=> ["list", "create", "update", "delete",'export'],
-            "general_settings"=> ["update"]
+            "general_settings"=> ["update"],
+
+            // HRM (Admin Panel)
+            'hrm_dashboard' => ['list'],
+            'hrm_master_data' => ['list','create','update','delete'],
+            'hrm_payroll' => ['list','create','update','delete','approve','pay'],
+            'hrm_claims' => ['list','show','create','update','delete','approve','reject','pay'],
+            'hrm_attendance' => ['list','create','update','delete','approve'],
+            'hrm_leaves' => ['list','create','update','delete','approve','reject'],
+            'hrm_talent' => ['list','create','update'],
+            'hrm_workflows' => ['list','create','update'],
         ];
 
     }

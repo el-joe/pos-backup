@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Tenant\Admin;
+use App\Models\Tenant\Employee;
 
 return [
 
@@ -46,6 +47,10 @@ return [
             'driver' => 'session',
             'provider' => 'cpanel_admin',
         ],
+        'employee' => [
+            'driver' => 'session',
+            'provider' => 'employees',
+        ],
     ],
 
     /*
@@ -73,6 +78,11 @@ return [
         'cpanel_admin' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => Employee::class,
         ],
 
         // 'users' => [

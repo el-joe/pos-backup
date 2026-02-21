@@ -51,6 +51,92 @@ return [
         'can' => 'branches.list,branches.create,branches.update,branches.delete,branches.export,branches.switch'
     ],
     [
+        "title"     => "HRM",
+        'translated_title' => 'general.titles.hrm',
+        "icon"      => "fa fa-users fa-fw",
+        "route"     => "#",
+        'can' => 'hrm_dashboard.list,hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete,hrm_payroll.list,hrm_claims.list,hrm_attendance.list,hrm_leaves.list',
+        "children"  => [
+            [
+                "title" => "Departments",
+                'translated_title' => 'general.titles.hrm_departments',
+                "route" => 'admin.hrm.departments.list',
+                "icon"  => "fa fa-building fa-fw",
+                'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
+            ],
+            [
+                "title" => "Designations",
+                'translated_title' => 'general.titles.hrm_designations',
+                "route" => 'admin.hrm.designations.list',
+                "icon"  => "fa fa-id-badge fa-fw",
+                'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
+            ],
+            [
+                "title" => "Employees",
+                'translated_title' => 'general.titles.hrm_employees',
+                "route" => 'admin.hrm.employees.list',
+                "icon"  => "fa fa-user-tie fa-fw",
+                'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
+            ],
+            [
+                "title" => "Contracts",
+                'translated_title' => 'general.titles.hrm_contracts',
+                "route" => 'admin.hrm.contracts.list',
+                "icon"  => "fa fa-file-contract fa-fw",
+                'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
+            ],
+            [
+                "title" => "Leave Types",
+                'translated_title' => 'general.titles.hrm_leave_types',
+                "route" => 'admin.hrm.leave-types.list',
+                "icon"  => "fa fa-calendar fa-fw",
+                'can' => 'hrm_leaves.list,hrm_leaves.create,hrm_leaves.update,hrm_leaves.delete'
+            ],
+            [
+                "title" => "Leave Requests",
+                'translated_title' => 'general.titles.hrm_leave_requests',
+                "route" => 'admin.hrm.leave-requests.list',
+                "icon"  => "fa fa-calendar-check fa-fw",
+                'can' => 'hrm_leaves.list,hrm_leaves.approve,hrm_leaves.reject'
+            ],
+            [
+                "title" => "Claim Categories",
+                'translated_title' => 'general.titles.hrm_claim_categories',
+                "route" => 'admin.hrm.claim-categories.list',
+                "icon"  => "fa fa-tags fa-fw",
+                'can' => 'hrm_claims.list,hrm_claims.create,hrm_claims.update,hrm_claims.delete'
+            ],
+            [
+                "title" => "Expense Claims",
+                'translated_title' => 'general.titles.hrm_expense_claims',
+                "route" => 'admin.hrm.expense-claims.list',
+                "icon"  => "fa fa-receipt fa-fw",
+                'can' => 'hrm_claims.list,hrm_claims.approve,hrm_claims.reject,hrm_claims.pay'
+            ],
+            [
+                "title" => "Payroll Runs",
+                'translated_title' => 'general.titles.hrm_payroll_runs',
+                "route" => 'admin.hrm.payroll-runs.list',
+                "icon"  => "fa fa-money-bill fa-fw",
+                'can' => 'hrm_payroll.list,hrm_payroll.create,hrm_payroll.update,hrm_payroll.delete'
+            ],
+            [
+                "title" => "Payslips",
+                'translated_title' => 'general.titles.hrm_payslips',
+                "route" => 'admin.hrm.payslips.list',
+                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                'can' => 'hrm_payroll.list'
+            ],
+            [
+                "title" => "Attendance Sheets",
+                'translated_title' => 'general.titles.hrm_attendance_sheets',
+                "route" => 'admin.hrm.attendance-sheets.list',
+                "icon"  => "fa fa-clock fa-fw",
+                'can' => 'hrm_attendance.list,hrm_attendance.create,hrm_attendance.update,hrm_attendance.delete'
+            ],
+        ],
+    ],
+    [
         "title"     => "Products",
         'translated_title' => 'general.titles.products',
         "icon"      => "fa fa-boxes fa-fw",
