@@ -11,8 +11,10 @@ use App\Payments\Providers\Paypal;
 use App\Payments\Services\PaymentService;
 use App\Services\PlanPricingService;
 use App\Traits\LivewireOperations;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('layouts.central.gemini.layout')]
 class CheckoutPage extends Component
 {
     public $plan, $period, $slug;
@@ -21,12 +23,17 @@ class CheckoutPage extends Component
 
     public $data = [
         'domain_mode'=>'subdomain',
+        'subdomain' => null,
+        'domain' => null,
+        'final_domain' => null,
         'systems_allowed' => ['pos'],
         'selected_plans' => [
             'pos' => null,
             'hrm' => null,
             'booking' => null,
         ],
+        'privacy_policy_agree' => false,
+        'terms_conditions_agree' => false,
     ];
 
     public $rules = [
@@ -294,6 +301,16 @@ class CheckoutPage extends Component
 
     function completeSubscription()
     {
+
+        if (empty($this->data['admin_name'])) {
+            $first = trim((string) ($this->data['admin_first_name'] ?? ''));
+            $last = trim((string) ($this->data['admin_last_name'] ?? ''));
+            $combined = trim($first . ' ' . $last);
+            if ($combined !== '') {
+                $this->data['admin_name'] = $combined;
+            }
+        }
+
         $this->validate();
 
         $systemsAllowed = collect($this->data['systems_allowed'] ?? [])
@@ -377,8 +394,24 @@ class CheckoutPage extends Component
         return redirect()->to($requestPayload['payment']['links'][1]['href']);
     }
 
+    public function updatedDataTermsConditionsAgree($value): void
+    {
+        $this->data['privacy_policy_agree'] = (bool) $value;
+    }
+
+    public function updatedDataPrivacyPolicyAgree($value): void
+    {
+        $this->data['terms_conditions_agree'] = (bool) $value;
+    }
+
     public function render()
     {
+        $moduleTitles = [
+            'pos' => 'POS & ERP System',
+            'hrm' => 'HRM System',
+            'booking' => 'Booking & Reservations',
+        ];
+
         $countries = Country::orderBy('name')->get();
         $currencies = Currency::orderBy('name')->get();
         $currentCurrency = Currency::find($this->data['currency_id'] ?? null);
@@ -390,6 +423,80 @@ class CheckoutPage extends Component
 
         $period = $this->period === 'year' ? 'year' : 'month';
         $selectedSystemPlans = $this->buildSelectedSystemPlans($systemsAllowed, $period);
+
+        $selectedSystemsSummary = [];
+        $selectedFeatureNames = [];
+        $selectedDueNow = 0.0;
+        $hasAnyFreeTrial = false;
+
+        if (count($selectedSystemPlans) > 0) {
+            $systemsCount = max(1, count($selectedSystemPlans));
+
+            $plansWithFeatures = Plan::query()
+                ->whereIn('id', collect($selectedSystemPlans)->map(fn ($plan) => $plan->id)->values()->all())
+                ->with(['plan_features.feature' => function ($query) {
+                    $query->where('active', true);
+                }])
+                ->get()
+                ->keyBy('id');
+
+            foreach ($selectedSystemPlans as $plan) {
+                $planWithFeatures = $plansWithFeatures->get($plan->id) ?? $plan;
+
+                $pricing = app(PlanPricingService::class)->calculate($planWithFeatures, $period, $systemsCount);
+                $price = (float) ($pricing['final_price'] ?? 0);
+                $freeTrialMonths = (int) ($pricing['free_trial_months'] ?? 0);
+                $payableNow = $freeTrialMonths > 0 ? 0.0 : $price;
+
+                $module = is_object($planWithFeatures->module_name)
+                    ? $planWithFeatures->module_name->value
+                    : (string) $planWithFeatures->module_name;
+
+                $selectedSystemsSummary[] = [
+                    'module' => $module,
+                    'module_title' => $moduleTitles[$module] ?? ucfirst($module),
+                    'plan_name' => $planWithFeatures->name,
+                    'price' => $price,
+                    'free_trial_months' => $freeTrialMonths,
+                    'payable_now' => $payableNow,
+                ];
+
+                $featureNames = $planWithFeatures->plan_features
+                    ->filter(function ($planFeature) {
+                        if (!$planFeature->feature) {
+                            return false;
+                        }
+
+                        if ($planFeature->feature->type === 'boolean') {
+                            return (int) $planFeature->value === 1;
+                        }
+
+                        return ((int) $planFeature->value > 0)
+                            || (is_string($planFeature->content_en) && trim($planFeature->content_en) !== '')
+                            || (is_string($planFeature->content_ar) && trim($planFeature->content_ar) !== '');
+                    })
+                    ->sortBy('feature_id')
+                    ->map(function ($planFeature) {
+                        $feature = $planFeature->feature;
+                        $name = app()->getLocale() === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
+                        return $name ?: ($feature->name_en ?: $feature->code);
+                    })
+                    ->unique()
+                    ->values()
+                    ->take(4)
+                    ->all();
+
+                $selectedFeatureNames = array_values(array_unique(array_merge($selectedFeatureNames, $featureNames)));
+
+                $selectedDueNow += $payableNow;
+                if ($freeTrialMonths > 0) {
+                    $hasAnyFreeTrial = true;
+                }
+            }
+        }
+
+        $selectedDueNow = round($selectedDueNow, 2);
+
         $pricingSummary = count($selectedSystemPlans) > 0
             ? $this->calculateMultiModulePricing($selectedSystemPlans, $period)
             : ( $this->plan ? app(PlanPricingService::class)->calculate($this->plan, $period, max(1, count($systemsAllowed))) : [] );

@@ -7,6 +7,7 @@ use App\Http\Controllers\Central\Tenant\RegisterController;
 use App\Http\Middleware\CentralWebsitesetLocal;
 use App\Http\Middleware\RedirectToSecure;
 use App\Http\Middleware\SiteTranslationMiddleware;
+use App\Livewire\Central\Site\CheckoutPage;
 use App\Livewire\Central\Site\PricingPage;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,7 @@ Route::group(['prefix' => '/', 'middleware' => [SiteTranslationMiddleware::class
     Route::get('contact', [HomeController::class, 'contactUsView'])->name('contact');
     Route::post('contact-us', [HomeController::class, 'contactUs'])->name('contact-us');
 
-    Route::get('checkout/{token?}', [HomeController::class, 'checkout'])->name('tenant-checkout');
+    Route::get('checkout/{token?}', CheckoutPage::class)->name('tenant-checkout');
     Route::get('pricing/compare', [HomeController::class, 'pricingCompare'])->name('pricing-compare');
     Route::get('pricing', PricingPage::class)->name('pricing');
     // lang in ar|en or null
