@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Branches;
 
 use App\Enums\AuditLogActionEnum;
-use App\Models\Subscription;
 use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\TaxService;
@@ -51,8 +50,7 @@ class BranchModal extends Component
     function save() {
 
         if(!$this->current?->id){
-            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-            $limit = $currentSubscription?->plan?->featureValue('branches', 999999) ?? 999999;
+            $limit = subscriptionFeatureLimit('erp_branches', 999999);
             $totalBranches = $this->branchService->count();
 
             if($totalBranches >= $limit){
