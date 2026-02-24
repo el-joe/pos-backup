@@ -1,88 +1,113 @@
-<main id="pricing-wrapper" class="{{ $this->isYearly() ? 'is-yearly' : 'is-monthly' }} bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 antialiased pb-40 min-h-screen font-sans" itemscope itemtype="https://schema.org/WebPage">
-    <header class="pt-24 pb-16 text-center px-6 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-slate-200/50 to-transparent dark:from-slate-900/50 dark:to-transparent -z-10"></div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">Build Your Custom Suite</h1>
-        <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-10 font-medium leading-relaxed">Select the systems you need and choose the perfect plan for your team. Scale up whenever you're ready.</p>
+<main id="pricing-wrapper"
+      class="min-h-screen py-20 font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100"
+      itemscope
+      itemtype="https://schema.org/WebPage">
 
-        <div class="inline-flex items-center p-1.5 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
-            <button class="px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 {{ $this->isYearly() ? 'text-slate-500 dark:text-slate-400' : 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white shadow-inner' }}" wire:click="setBilling('monthly')">Monthly</button>
-            <button class="px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 {{ $this->isYearly() ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white shadow-inner' : 'text-slate-500 dark:text-slate-400' }}" wire:click="setBilling('yearly')">
-                Yearly <span class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-widest font-black shadow-sm">Save 20%</span>
-            </button>
+    <header class="max-w-3xl px-6 mx-auto mb-16 text-center lg:px-8">
+        <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl text-slate-900 dark:text-white">
+            Simple, transparent pricing
+        </h1>
+        <p class="max-w-xl mx-auto mt-4 text-lg text-slate-600 dark:text-slate-400">
+            Choose the plan that best fits your needs. All plans include our core feature set with values that scale.
+        </p>
+
+        <div class="flex items-center justify-center mt-10">
+            <div class="relative inline-flex p-1 rounded-lg bg-slate-200/60 dark:bg-slate-800/60 ring-1 ring-inset ring-slate-200 dark:ring-slate-700/50" role="group" aria-label="Billing frequency">
+                <button type="button"
+                        wire:click="setBilling('monthly')"
+                        aria-pressed="{{ !$this->isYearly() ? 'true' : 'false' }}"
+                        class="relative w-32 py-2.5 text-sm font-semibold text-center rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 {{ !$this->isYearly() ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200 dark:bg-slate-700 dark:text-white dark:ring-slate-600' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200' }}">
+                    Monthly
+                </button>
+                <button type="button"
+                        wire:click="setBilling('yearly')"
+                        aria-pressed="{{ $this->isYearly() ? 'true' : 'false' }}"
+                        class="relative flex items-center justify-center w-40 gap-2 py-2.5 text-sm font-semibold text-center rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 {{ $this->isYearly() ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200 dark:bg-slate-700 dark:text-white dark:ring-slate-600' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200' }}">
+                    Yearly
+                    <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold tracking-wide text-indigo-700 uppercase bg-indigo-100 rounded-full dark:bg-indigo-500/20 dark:text-indigo-300">
+                        Save 20%
+                    </span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <section class="container mx-auto max-w-5xl px-6 space-y-8 relative z-10">
-        @foreach($moduleOrder as $module)
-            @php
-                $ui = $moduleUi[$module] ?? [];
-                $plans = $plansByModule[$module] ?? [];
-                $selected = !empty($selectedSystems[$module]);
-                $selectedPlan = $this->selectedPlan($module);
-            @endphp
+    <section class="px-6 mx-auto max-w-7xl lg:px-8">
+        <div class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-3 max-w-md lg:max-w-none items-stretch mt-8">
+            @foreach($plans as $plan)
+                @php
+                    $isSelected = (int) ($selectedPlanId ?? 0) === (int) $plan['id'];
+                    $displayPrice = $this->isYearly() ? ($plan['year'] ?? 0) : ($plan['month'] ?? 0);
+                    $hasTrialText = ((int) ($plan['trial_months'] ?? 0)) > 0;
+                @endphp
 
-            <div class="bg-white dark:bg-slate-900 rounded-2xl border shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 {{ $selected ? 'border-brand-500 ring-2 ring-brand-500/10' : 'border-slate-200 dark:border-slate-800' }}" id="card-{{ $module }}">
-                <div class="p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer group" wire:click="toggleSystem('{{ $module }}')">
-                    <div class="flex items-center gap-5">
-                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-slate-700 flex items-center justify-center text-2xl shadow border border-slate-600/50 group-hover:scale-105 transition-transform duration-300">
-                            <i class="{{ $ui['icon'] ?? 'fa-solid fa-layer-group' }} drop-shadow-sm"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">{{ $ui['title'] ?? strtoupper($module) }}</h2>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">{{ $ui['description'] ?? '' }}</p>
-                        </div>
-                    </div>
-                    <div class="relative inline-flex items-center cursor-pointer mt-2 sm:mt-0" wire:click.stop="toggleSystem('{{ $module }}')">
-                        <div class="w-14 h-8 rounded-full transition-colors duration-300 shadow-inner border {{ $selected ? 'bg-emerald-500 border-emerald-500' : 'bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700' }}"></div>
-                        <div class="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform duration-300 shadow-md" style="transform: {{ $selected ? 'translateX(24px)' : 'translateX(0)' }};"></div>
-                    </div>
-                </div>
+                <button type="button"
+                        wire:click="setPlan({{ (int) $plan['id'] }})"
+                        aria-pressed="{{ $isSelected ? 'true' : 'false' }}"
+                        class="relative flex flex-col w-full text-left transition-all duration-300 bg-white border rounded-2xl dark:bg-slate-900 focus:outline-none {{ $isSelected ? 'border-indigo-600 ring-2 ring-indigo-600 shadow-xl dark:border-indigo-500 dark:ring-indigo-500 scale-[1.02] z-10' : 'border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md hover:-translate-y-1' }}">
 
-                @if($selected)
-                    <div class="border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 p-6 sm:p-8 rounded-b-2xl">
-                        <div class="flex justify-between items-end mb-6">
-                            <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Select Plan Tier</p>
-                            @if(((int) ($selectedPlan['trial_months'] ?? 0)) > 0)
-                                <p class="text-xs text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-md shadow-sm border border-green-100 dark:border-green-800/30"><i class="fa-solid fa-gift mr-1"></i> {{ (int) $selectedPlan['trial_months'] }} Month Free Trial</p>
+                    @if($isSelected)
+                        <div class="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl bg-indigo-600 dark:bg-indigo-500" aria-hidden="true"></div>
+                    @endif
+
+                    @if(!empty($plan['recommended']))
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+                            <span class="flex items-center gap-1.5 px-4 py-1 text-[11px] font-semibold tracking-wide text-indigo-700 bg-white border border-indigo-200 rounded-full shadow-sm dark:bg-slate-900 dark:border-indigo-500/40 dark:text-indigo-300 whitespace-nowrap">
+                                <i class="fa-solid fa-star text-[10px] text-indigo-500 dark:text-indigo-400"></i>
+                                Most Popular
+                            </span>
+                        </div>
+                    @endif
+
+                    <div class="flex flex-col flex-1 p-8 xl:p-10">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+                                {{ $plan['name'] }}
+                            </h2>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Best for expanding your business and scaling operations.
+                            </p>
+                        </div>
+
+                        <div class="flex items-baseline gap-2 mb-2">
+                            <span class="text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                                ${{ number_format((float) $displayPrice, 0) }}
+                            </span>
+                            <span class="text-base font-medium text-slate-500 dark:text-slate-400">/{{ $this->isYearly() ? 'year' : 'mo' }}</span>
+                        </div>
+
+                        <div class="h-6 mb-6">
+                            @if($hasTrialText)
+                                <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                                    <i class="fa-solid fa-gift text-xs" aria-hidden="true"></i>
+                                    {{ (int) $plan['trial_months'] }} month free trial
+                                </span>
                             @endif
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            @foreach($plans as $plan)
-                                @php
-                                    $isPlanSelected = (int) ($selectedPlans[$module] ?? 0) === (int) $plan['id'];
-                                @endphp
-                                <button type="button" wire:click="setTier('{{ $module }}', {{ (int) $plan['id'] }})" class="relative bg-white dark:bg-slate-950 rounded-2xl p-6 text-left transition-all duration-300 border-2 focus:outline-none flex flex-col h-full shadow-sm hover:shadow-md {{ $isPlanSelected ? 'border-brand-500 ring-4 ring-brand-500/10' : 'border-slate-200 dark:border-slate-800' }}">
-                                    <div class="relative z-10 flex flex-col h-full w-full">
-                                        @if(((int) ($plan['trial_months'] ?? 0)) > 0)
-                                            <span class="absolute top-0 end-0 -mt-2 -me-2 inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 border border-green-200 dark:border-green-800/50">
-                                                Free
+                        <div class="flex-1 pt-8 border-t border-slate-100 dark:border-slate-800">
+                            <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                                @foreach(($plan['features'] ?? []) as $feature)
+                                    @if(($feature['type'] ?? 'boolean') === 'text')
+                                        <li class="flex items-center justify-between gap-4">
+                                            <span class="text-slate-600 dark:text-slate-400">{{ $feature['name'] }}</span>
+                                            <span class="font-semibold text-slate-900 dark:text-white">{{ $feature['display_value'] ?? '—' }}</span>
+                                        </li>
+                                    @else
+                                        <li class="flex items-center justify-between gap-4">
+                                            <span class="{{ !empty($feature['enabled']) ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500 line-through decoration-slate-300 dark:decoration-slate-700' }}">
+                                                {{ $feature['name'] }}
                                             </span>
-                                        @endif
-                                        <div class="font-extrabold text-slate-900 dark:text-white text-lg">{{ $plan['name'] }}</div>
-                                        <div class="my-4">
-                                            <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format((float) ($plan['month'] ?? 0), 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
-                                            <div class="display-yearly text-4xl font-black text-slate-900 dark:text-white">${{ number_format((float) ($plan['year'] ?? 0), 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
-                                        </div>
-                                        @if(!empty($plan['features']))
-                                            <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800/80 w-full">
-                                                <ul class="space-y-3 text-sm font-medium text-slate-600 dark:text-slate-400">
-                                                    @foreach($plan['features'] as $featureName)
-                                                        <li class="flex items-start gap-3">
-                                                            {!! $featureName !!}
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </button>
-                            @endforeach
+                                            <i class="text-sm fa-solid {{ !empty($feature['enabled']) ? 'fa-check text-indigo-600 dark:text-indigo-400' : 'fa-xmark text-slate-300 dark:text-slate-700' }}" aria-hidden="true"></i>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
-                @endif
-            </div>
-        @endforeach
+                </button>
+            @endforeach
+        </div>
     </section>
 
     @php
@@ -90,51 +115,79 @@
         $totalPrice = $this->totalPrice();
         $dueNow = $this->dueNow();
         $hasTrial = $this->hasTrialSelection();
-        $periodLabel = $this->isYearly() ? 'yr' : 'mo';
+        $isYearly = $this->isYearly();
+
+        // If yearly is selected, multiply the monthly-equivalent price by 12
+        $multiplier = $isYearly ? 12 : 1;
+        $periodLabel = $isYearly ? 'year' : 'mo';
+
+        $displayTotalPrice = $totalPrice * $multiplier;
+        $displayDueNow = $dueNow * $multiplier;
     @endphp
 
-    <div class="fixed bottom-0 left-0 right-0 bg-slate-900 dark:bg-slate-950 border-t border-slate-800 p-4 sm:p-5 shadow-[0_-20px_40px_rgba(0,0,0,0.15)] z-50 transition-transform duration-500 ease-out {{ $selectedCount > 0 ? 'translate-y-0' : 'translate-y-full' }}">
-        <div class="container mx-auto max-w-5xl flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-4">
-                <div class="flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold uppercase tracking-widest">Your Selection</span>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="font-black text-2xl text-white">{{ $selectedCount }}</span>
-                        <span class="text-sm font-medium text-slate-300">Modules Selected</span>
+    @if($selectedCount > 0)
+        <section class="px-6 mx-auto mt-16 max-w-3xl lg:px-8 animate-fade-in-up">
+            <div class="overflow-hidden bg-white border shadow-xl rounded-2xl dark:bg-slate-900 border-slate-200 dark:border-slate-800 ring-1 ring-slate-900/5 dark:ring-white/5">
+                <div class="p-6 sm:p-8">
+                    <h3 class="mb-6 text-sm font-semibold tracking-wide uppercase text-slate-500 dark:text-slate-400">
+                        Order Summary
+                    </h3>
+
+                    <div class="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center justify-center w-12 h-12 text-indigo-600 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 dark:text-indigo-400">
+                                <i class="text-xl fa-solid fa-cube"></i>
+                            </div>
+                            <div>
+                                <p class="text-xl font-bold text-slate-900 dark:text-white">
+                                    {{ $this->selectedPlan()['name'] ?? '-' }} Plan
+                                </p>
+                                <p class="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                                    Billed {{ $this->isYearly() ? 'annually' : 'monthly' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                            <div class="text-left sm:text-right">
+                                @if($hasTrial && $selectedCount > 0)
+                                    <div class="text-xs font-medium line-through mb-0.5 text-slate-400 dark:text-slate-500">
+                                        ${{ number_format($totalPrice, 2) }} / {{ $periodLabel }}
+                                    </div>
+                                @endif
+
+                                <div class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                                    @if($selectedCount > 0 && $dueNow <= 0)
+                                        $0.00
+                                    @else
+                                        ${{ number_format($dueNow, 2) }}
+                                    @endif
+                                </div>
+
+                                <p class="text-sm font-medium mt-0.5 text-slate-500 dark:text-slate-400">
+                                    @if($hasTrial)
+                                        {{ $dueNow <= 0 ? 'Due today (Trial active)' : 'Pay remaining due now' }}
+                                    @else
+                                        Total due today
+                                    @endif
+                                </p>
+                            </div>
+
+                            <button wire:click="proceedToCheckout"
+                                    class="inline-flex items-center justify-center w-full gap-2 px-8 py-3.5 text-sm font-semibold text-white transition-colors bg-indigo-600 shadow-sm rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 dark:focus:ring-offset-slate-900 sm:w-auto">
+                                Continue
+                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
-                <div class="text-right flex flex-col justify-center">
-                    <div class="text-[10px] text-slate-400 line-through h-3 font-semibold uppercase tracking-widest">{{ $hasTrial && $selectedCount > 0 ? '$' . number_format($totalPrice, 2) . ' / ' . $periodLabel : '' }}</div>
-                    @if($selectedCount > 0 && $dueNow <= 0)
-                        <div class="text-3xl font-black text-white">Free<span class="text-base font-medium text-slate-400"> (due now)</span></div>
-                    @else
-                        <div class="text-3xl font-black text-white">${{ number_format($dueNow, 2) }}<span class="text-base font-medium text-slate-400">/{{ $periodLabel }}</span></div>
-                    @endif
-                    <p class="text-xs text-white font-bold h-4 mt-1">
-                        @if($selectedCount === 0)
-                        @elseif($hasTrial && $selectedCount > 0)
-                            {{ $dueNow <= 0 ? 'All selected systems are in free trial. Due now is Free.' : 'Selected trial plans are free now. Pay only non-trial systems.' }}
-                        @else
-                            Total amount due today.
-                        @endif
-                    </p>
+                <div class="flex items-center justify-center gap-2 px-6 py-4 text-xs border-t bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 sm:px-8 sm:justify-start text-slate-500 dark:text-slate-400">
+                    <i class="fa-solid fa-lock text-slate-400"></i>
+                    Secure, encrypted checkout. You can cancel at any time.
                 </div>
-                <button wire:click="proceedToCheckout" class="bg-indigo-500 text-white px-8 py-3.5 rounded-xl font-extrabold hover:bg-indigo-400 transition-all active:scale-95 flex items-center gap-3 shadow-lg shadow-indigo-500/20">
-                    Checkout <i class="fa-solid fa-arrow-right"></i>
-                </button>
             </div>
-        </div>
-    </div>
+        </section>
+    @endif
 </main>
-
-@push('styles')
-<style>
-    #pricing-wrapper.is-yearly .display-monthly { display: none !important; }
-    #pricing-wrapper.is-yearly .display-yearly { display: block !important; }
-    #pricing-wrapper.is-monthly .display-monthly { display: block !important; }
-    #pricing-wrapper.is-monthly .display-yearly { display: none !important; }
-</style>
-@endpush

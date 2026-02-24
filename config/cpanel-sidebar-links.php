@@ -86,18 +86,6 @@ return [
         "route"     => 'cpanel.customers.list'
     ],
     [
-        "title"     => "Plans",
-        'translated_title' => 'general.titles.plans',
-        "icon"      => "fa fa-gem fa-fw",
-        "route"     => 'cpanel.plans.list'
-    ],
-    [
-        "title"     => "Features",
-        'translated_title' => 'general.titles.features',
-        "icon"      => "fa fa-list-check fa-fw",
-        "route"     => 'cpanel.features.list'
-    ],
-    [
         "title"     => "Sliders",
         'translated_title' => 'general.titles.sliders',
         "icon"      => "fa fa-image fa-fw",

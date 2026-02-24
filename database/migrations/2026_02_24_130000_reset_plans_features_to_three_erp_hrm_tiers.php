@@ -1,27 +1,69 @@
 <?php
 
-namespace Database\Seeders;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-use App\Models\Feature;
-use App\Models\Plan;
-use App\Models\PlanFeature;
-use Illuminate\Database\Seeder;
-
-class PlanSeeder extends Seeder
+return new class extends Migration
 {
-    public function run(): void
+    public function up(): void
     {
-        PlanFeature::query()->delete();
-        Feature::query()->delete();
-        Plan::query()->delete();
+        if (!Schema::hasTable('plans') || !Schema::hasTable('features') || !Schema::hasTable('plan_features')) {
+            return;
+        }
+
+        DB::table('plan_features')->delete();
+        DB::table('features')->delete();
+        DB::table('plans')->delete();
+
+        $now = now();
 
         $plans = [
-            ['name' => 'Starter', 'tier' => 'starter', 'module_name' => 'pos', 'price_month' => 49, 'price_year' => 39, 'three_months_free' => false, 'slug' => 'starter', 'active' => true, 'recommended' => false, 'sort_order' => 1],
-            ['name' => 'Growth', 'tier' => 'growth', 'module_name' => 'pos', 'price_month' => 99, 'price_year' => 79, 'three_months_free' => true, 'slug' => 'growth', 'active' => true, 'recommended' => true, 'sort_order' => 2],
-            ['name' => 'Enterprise', 'tier' => 'enterprise', 'module_name' => 'pos', 'price_month' => 179, 'price_year' => 149, 'three_months_free' => true, 'slug' => 'enterprise', 'active' => true, 'recommended' => false, 'sort_order' => 3],
+            [
+                'name' => 'Starter',
+                'tier' => 'starter',
+                'module_name' => 'pos',
+                'price_month' => 49,
+                'price_year' => 39,
+                'three_months_free' => false,
+                'slug' => 'starter',
+                'active' => true,
+                'recommended' => false,
+                'sort_order' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Growth',
+                'tier' => 'growth',
+                'module_name' => 'pos',
+                'price_month' => 99,
+                'price_year' => 79,
+                'three_months_free' => true,
+                'slug' => 'growth',
+                'active' => true,
+                'recommended' => true,
+                'sort_order' => 2,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'name' => 'Enterprise',
+                'tier' => 'enterprise',
+                'module_name' => 'pos',
+                'price_month' => 179,
+                'price_year' => 149,
+                'three_months_free' => true,
+                'slug' => 'enterprise',
+                'active' => true,
+                'recommended' => false,
+                'sort_order' => 3,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
         ];
 
-        Plan::query()->insert(collect($plans)->map(fn (array $item) => $item + ['created_at' => now(), 'updated_at' => now()])->all());
+        DB::table('plans')->insert($plans);
 
         $features = [
             ['code' => 'erp_branches', 'module_name' => 'pos', 'name_ar' => 'عدد الفروع (ERP)', 'name_en' => 'ERP Branches', 'type' => 'text', 'active' => true],
@@ -37,27 +79,34 @@ class PlanSeeder extends Seeder
             ['code' => 'support_level', 'module_name' => 'pos', 'name_ar' => 'مستوى الدعم', 'name_en' => 'Support Level', 'type' => 'text', 'active' => true],
         ];
 
-        Feature::query()->insert(collect($features)->map(fn (array $item) => $item + ['created_at' => now(), 'updated_at' => now()])->all());
+        foreach ($features as &$feature) {
+            $feature['created_at'] = $now;
+            $feature['updated_at'] = $now;
+        }
+        unset($feature);
 
-        $plansBySlug = Plan::query()->whereIn('slug', collect($plans)->pluck('slug'))->get()->keyBy('slug');
-        $featuresByCode = Feature::query()->whereIn('code', collect($features)->pluck('code'))->get()->keyBy('code');
+        DB::table('features')->insert($features);
+
+        $plansBySlug = DB::table('plans')->whereIn('slug', ['starter', 'growth', 'enterprise'])->pluck('id', 'slug');
+        $featuresByCode = DB::table('features')->whereIn('code', array_column($features, 'code'))->pluck('id', 'code');
 
         $rows = [];
-        $add = function (string $planSlug, string $featureCode, int $value, ?string $contentAr = null, ?string $contentEn = null) use (&$rows, $plansBySlug, $featuresByCode): void {
-            $plan = $plansBySlug->get($planSlug);
-            $feature = $featuresByCode->get($featureCode);
-            if (!$plan || !$feature) {
+        $add = function (string $planSlug, string $featureCode, int $value, ?string $contentAr = null, ?string $contentEn = null) use (&$rows, $plansBySlug, $featuresByCode, $now): void {
+            $planId = $plansBySlug[$planSlug] ?? null;
+            $featureId = $featuresByCode[$featureCode] ?? null;
+
+            if (!$planId || !$featureId) {
                 return;
             }
 
             $rows[] = [
-                'plan_id' => $plan->id,
-                'feature_id' => $feature->id,
+                'plan_id' => $planId,
+                'feature_id' => $featureId,
                 'value' => $value,
                 'content_ar' => $contentAr,
                 'content_en' => $contentEn,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $now,
+                'updated_at' => $now,
             ];
         };
 
@@ -97,6 +146,12 @@ class PlanSeeder extends Seeder
         $add('enterprise', 'hrm_leaves', 1);
         $add('enterprise', 'support_level', 1, 'دعم VIP', 'VIP support');
 
-        PlanFeature::query()->insert($rows);
+        if (!empty($rows)) {
+            DB::table('plan_features')->insert($rows);
+        }
     }
-}
+
+    public function down(): void
+    {
+    }
+};

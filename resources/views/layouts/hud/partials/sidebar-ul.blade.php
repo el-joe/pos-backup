@@ -39,7 +39,7 @@
         //     $isActive = $isActive && $checkRouteParams;
         // }
 
-        $checkSubscriptionStatus = data_get($__current_subscription?->plan?->features, $data['subscription_check']??'')['status'] ?? true;
+        $checkSubscriptionStatus = subscriptionFeatureEnabled($data['subscription_check'] ?? null, true, $__current_subscription ?? null);
     ?>
     @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $checkSubscriptionStatus)) && $canAccess)
         <div class="menu-item has-sub {{ $isActive ? 'active' : '' }} mb-1">
@@ -77,8 +77,7 @@
             $enabled = !!tenantSetting($data['enabled']);
         }
 
-        $getDataFromPlan = data_get($__current_subscription?->plan?->features, $data['subscription_check']??'');
-        $subscriptionCheckStatus = isset($getDataFromPlan['status']) ? $getDataFromPlan['status'] : true;
+        $subscriptionCheckStatus = subscriptionFeatureEnabled($data['subscription_check'] ?? null, true, $__current_subscription ?? null);
     @endphp
     @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $subscriptionCheckStatus)) && $canAccess && $enabled)
         <div class="menu-item {{ request()->routeIs($data['route']) && $checkRouteParams ? 'active' : '' }}  mb-1">
