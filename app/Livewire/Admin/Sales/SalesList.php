@@ -67,6 +67,7 @@ class SalesList extends Component
             'payment_amount' => $this->payment['amount'],
             'branch_id' => $this->current->branch_id,
             'payment_account' => $this->payment['account_id'],
+            'customer_id' => $this->current->customer_id,
             'payments' => [
                 [
                     'account_id' => $this->payment['account_id'],

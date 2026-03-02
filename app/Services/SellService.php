@@ -370,7 +370,7 @@ class SellService
             }
 
             if($methodSlug === 'check') {
-                $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $data['branch_id']);
+                $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $data['branch_id'],'check');
                 $lines[] = [
                     'account_id' => $checksUnderCollection->id,
                     'type' => $reverse ? 'credit' : 'debit',
