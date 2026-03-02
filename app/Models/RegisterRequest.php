@@ -127,6 +127,7 @@ class RegisterRequest extends Model
                     'currency_id' => $request->company['currency_id'],
                     'address' => $request->company['address'] ?? null,
                     'tax_number' => $request->company['tax_number'] ?? null,
+                    'partner_id' => $request->partner_id ?? null,
                     'active' => false,
                 ]);
 

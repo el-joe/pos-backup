@@ -20,6 +20,8 @@ use App\Livewire\Central\CPanel\Partners\PartnerCommissionsList;
 use App\Livewire\Central\CPanel\Partners\PartnerForm;
 use App\Livewire\Central\CPanel\Partners\PartnersList;
 use App\Livewire\Central\CPanel\Plans\CpanelPlansList;
+use App\Livewire\Central\CPanel\PaymentMethods\PaymentMethodForm;
+use App\Livewire\Central\CPanel\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Central\CPanel\FileManager\FileManagerPage;
 use App\Livewire\Central\CPanel\HomePage;
 use App\Livewire\Central\CPanel\Languages\LanguagesList;
@@ -67,5 +69,9 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('partners/create', PartnerForm::class)->name('partners.create');
         Route::get('partners/{id}', PartnerForm::class)->whereNumber('id')->name('partners.edit');
         Route::get('partner-commissions', PartnerCommissionsList::class)->name('partner-commissions.list');
+
+        Route::get('payment-methods', PaymentMethodsList::class)->name('payment-methods.list');
+        Route::get('payment-methods/create', PaymentMethodForm::class)->name('payment-methods.create');
+        Route::get('payment-methods/{id}', PaymentMethodForm::class)->whereNumber('id')->name('payment-methods.edit');
     });
 });

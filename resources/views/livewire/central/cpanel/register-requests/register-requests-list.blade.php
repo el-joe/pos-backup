@@ -75,8 +75,14 @@
                                 </td>
 
                                 <td>
-                                    @if ($req->status === 'pending')
-                                        <div class="d-flex gap-1">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <button class="btn btn-sm btn-info text-white"
+                                            wire:click="viewDetails({{ $req->id }})"
+                                            title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+
+                                        @if ($req->status === 'pending')
                                             <button class="btn btn-sm btn-danger"
                                                 wire:click="changeStatus({{ $req->id }}, 'rejected')"
                                                 title="Reject">
@@ -87,8 +93,8 @@
                                                 title="Approve">
                                                 <i class="bi bi-check-lg"></i>
                                             </button>
-                                        </div>
-                                    @endif
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -108,4 +114,154 @@
             <div class="card-arrow-bottom-right"></div>
         </div>
     </div>
+
+    <!-- Details Modal -->
+    @if($selectedDetails)
+    <div class="modal fade show" style="display: block; background: rgba(0,0,0,0.5);" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registration Details</h5>
+                    <button type="button" class="btn-close" wire:click="closeDetails" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <!-- Company Details -->
+                        <div class="col-md-6">
+                            <div class="card h-100 bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary mb-3"><i class="bi bi-building"></i> Company</h6>
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tbody>
+                                            <tr><th class="text-muted" style="width: 100px;">Name</th><td>{{ $selectedDetails['company']['name'] ?? 'N/A' }}</td></tr>
+                                            <tr><th class="text-muted">Email</th><td>{{ $selectedDetails['company']['email'] ?? 'N/A' }}</td></tr>
+                                            <tr><th class="text-muted">Phone</th><td>{{ $selectedDetails['company']['phone'] ?? 'N/A' }}</td></tr>
+                                            <tr><th class="text-muted">Domain</th><td><code class="text-dark">{{ $selectedDetails['company']['domain'] ?? 'N/A' }}</code></td></tr>
+                                            @if(!empty($selectedDetails['company']['tax_number']))
+                                            <tr><th class="text-muted">Tax No</th><td>{{ $selectedDetails['company']['tax_number'] }}</td></tr>
+                                            @endif
+                                            @if(!empty($selectedDetails['company']['address']))
+                                            <tr><th class="text-muted">Address</th><td>{{ $selectedDetails['company']['address'] }}</td></tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Details -->
+                        <div class="col-md-6">
+                            <div class="card h-100 bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary mb-3"><i class="bi bi-person-badge"></i> Admin</h6>
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tbody>
+                                            <tr><th class="text-muted" style="width: 100px;">Name</th><td>{{ $selectedDetails['admin']['name'] ?? 'N/A' }}</td></tr>
+                                            <tr><th class="text-muted">Email</th><td>{{ $selectedDetails['admin']['email'] ?? 'N/A' }}</td></tr>
+                                            @if(!empty($selectedDetails['admin']['phone']))
+                                            <tr><th class="text-muted">Phone</th><td>{{ $selectedDetails['admin']['phone'] }}</td></tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan Details -->
+                        <div class="col-12">
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary mb-3"><i class="bi bi-box"></i> Plan Details</h6>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered bg-white mb-2">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="bg-light" style="width: 200px;">Period</th>
+                                                    <td><span class="badge bg-secondary">{{ ucfirst($selectedDetails['plan']['period'] ?? 'N/A') }}</span></td>
+                                                </tr>
+                                                @if(isset($selectedDetails['plan']['pricing']))
+                                                <tr>
+                                                    <th class="bg-light">Base Price</th>
+                                                    <td>{{ $selectedDetails['plan']['pricing']['base_price'] ?? 0 }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-light">Total Price</th>
+                                                    <td class="fw-bold">{{ $selectedDetails['plan']['pricing']['total_price'] ?? 0 }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-light">Free Trial</th>
+                                                    <td>
+                                                        @if(($selectedDetails['plan']['pricing']['is_free_trial'] ?? false))
+                                                            <span class="badge bg-success">Yes ({{ $selectedDetails['plan']['pricing']['free_trial_months'] ?? 0 }} Months)</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">No</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @endif
+                                                @if(isset($selectedDetails['plan']['systems_allowed']))
+                                                <tr>
+                                                    <th class="bg-light">Allowed Systems</th>
+                                                    <td>
+                                                        @foreach($selectedDetails['plan']['systems_allowed'] as $sys)
+                                                            <span class="badge bg-info text-dark me-1">{{ strtoupper($sys) }}</span>
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                                @endif
+                                                @if(isset($selectedDetails['partner_id']) && $selectedDetails['partner_id'])
+                                                <tr>
+                                                    <th class="bg-light text-warning">Partner ID</th>
+                                                    <td><span class="badge bg-warning text-dark">#{{ $selectedDetails['partner_id'] }}</span></td>
+                                                </tr>
+                                                @endif
+                                                @if(isset($selectedDetails['payment']))
+                                                <tr>
+                                                    <th class="bg-light text-info">Payment Info</th>
+                                                    <td>
+                                                        @if(isset($selectedDetails['payment']['payment_method_name']))
+                                                            <div class="mb-2"><span class="badge bg-primary px-2 py-1 fs-6">{{ $selectedDetails['payment']['payment_method_name'] }}</span></div>
+                                                        @endif
+                                                        @if(isset($selectedDetails['payment']['amount']))
+                                                            <div class="mb-1 text-muted"><strong>Amount: </strong>{{ $selectedDetails['payment']['amount'] }}</div>
+                                                        @endif
+                                                        @if(isset($selectedDetails['payment']['manual']) && $selectedDetails['payment']['manual'])
+                                                            <div class="mb-2"><span class="badge border border-dark text-dark px-2 py-1"><i class="bi bi-cash me-1"></i> Manual Transfer</span></div>
+                                                            @php
+                                                                $receiptFile = $selectedDetails['payment']['receipt_path'] ?? $selectedDetails['payment']['file_path'] ?? null;
+                                                            @endphp
+                                                            @if($receiptFile)
+                                                                <a href="{{ asset('storage/' . $receiptFile) }}" target="_blank" class="btn btn-sm btn-outline-primary mt-1">
+                                                                    <i class="bi bi-file-earmark-image"></i> View Receipt
+                                                                </a>
+                                                            @endif
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" wire:click="closeDetails">Close</button>
+                    @if(isset($current) && $current->status === 'pending')
+                    <button type="button" class="btn btn-success" wire:click="changeStatus({{ $current->id }}, 'approved')">
+                        <i class="bi bi-check-lg"></i> Approve
+                    </button>
+                    <button type="button" class="btn btn-danger" wire:click="changeStatus({{ $current->id }}, 'rejected')">
+                        <i class="bi bi-x-lg"></i> Reject
+                    </button>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

@@ -115,4 +115,10 @@ return [
         "icon"      => "fa fa-coins fa-fw",
         "route"     => 'cpanel.partner-commissions.list'
     ],
+    [
+        "title"     => "Payment Methods",
+        'translated_title' => 'general.titles.payment-methods',
+        "icon"      => "fa fa-credit-card fa-fw",
+        "route"     => 'cpanel.payment-methods.list'
+    ],
 ];

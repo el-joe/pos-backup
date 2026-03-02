@@ -128,6 +128,7 @@ class PaymentController extends Controller
     }
 
     function paymentCallbackPage(Request $request,$type) {
-        return view('central.site.payment-callback',get_defined_vars());
+        $message = $request->query('message');
+        return view('central.'. defaultLandingLayout() .'.payment-callback',get_defined_vars());
     }
 }

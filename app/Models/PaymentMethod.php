@@ -10,19 +10,26 @@ class PaymentMethod extends Model
 {
     use SoftDeletes,HasFactory;
 
+    protected $connection = 'central';
+
     protected $fillable = [
         'name',
+        'icon_path',
         'provider',
+        'manual',
         'credentials',
         'required_fields',
+        'details',
         'fee_percentage',
         'fixed_fee',
         'active',
     ];
 
     protected $casts = [
+        'manual' => 'boolean',
         'credentials' => 'array',
         'required_fields' => 'array',
+        'details' => 'array',
         'active' => 'boolean',
     ];
 

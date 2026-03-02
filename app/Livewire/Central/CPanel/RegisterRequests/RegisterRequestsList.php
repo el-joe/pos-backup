@@ -16,10 +16,23 @@ class RegisterRequestsList extends Component
 
     public $id, $registerRequest;
     public $current;
+    public ?array $selectedDetails = null;
 
     function setCurrent($id)
     {
         $this->current = RegisterRequest::find($id);
+    }
+
+    function viewDetails($id)
+    {
+        $this->setCurrent($id);
+        $this->selectedDetails = $this->current->data;
+        $this->markAsRead($id);
+    }
+
+    function closeDetails()
+    {
+        $this->selectedDetails = null;
     }
 
     function markAsRead($id)
@@ -54,6 +67,8 @@ class RegisterRequestsList extends Component
                 'status' => 'rejected'
             ]);
         }
+
+        $this->closeDetails();
     }
 
     public function render()

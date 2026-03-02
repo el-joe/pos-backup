@@ -150,57 +150,75 @@
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-2">
-                        <label class="cursor-pointer border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col items-center gap-3 hover:border-brand-500 transition {{ ($data['payment_method'] ?? '') == 'credit_card' ? 'border-brand-500 bg-brand-50 dark:bg-slate-700' : 'bg-slate-50 dark:bg-slate-900' }}">
-                            <input type="radio" wire:model.live="data.payment_method" value="credit_card" class="hidden">
-                            <i class="fa-solid fa-credit-card text-2xl text-slate-400 dark:text-slate-300"></i>
-                            <span class="text-sm font-bold text-slate-700 dark:text-white text-center">Credit Card</span>
-                        </label>
+                        @forelse($paymentMethods as $pm)
+                            <label class="cursor-pointer border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col items-center gap-3 hover:border-brand-500 transition {{ ((int)($data['payment_method_id'] ?? 0)) === (int)$pm->id ? 'border-brand-500 bg-brand-50 dark:bg-slate-700' : 'bg-slate-50 dark:bg-slate-900' }}">
+                                <input type="radio" wire:model.live="data.payment_method_id" value="{{ $pm->id }}" class="hidden">
 
-                        <label class="cursor-pointer border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col items-center gap-3 hover:border-brand-500 transition {{ ($data['payment_method'] ?? '') == 'paypal' ? 'border-brand-500 bg-brand-50 dark:bg-slate-700' : 'bg-slate-50 dark:bg-slate-900' }}">
-                            <input type="radio" wire:model.live="data.payment_method" value="paypal" class="hidden">
-                            <i class="fa-brands fa-paypal text-2xl text-slate-400 dark:text-slate-300"></i>
-                            <span class="text-sm font-bold text-slate-700 dark:text-white text-center">PayPal</span>
-                        </label>
+                                @if($pm->icon_path)
+                                    <img src="{{ asset('storage/' . $pm->icon_path) }}" alt="{{ $pm->name }}" class="h-8 w-8 object-contain">
+                                @else
+                                    <i class="fa-solid fa-money-bill-wave text-2xl text-slate-400 dark:text-slate-300"></i>
+                                @endif
 
-                        <label class="cursor-pointer border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col items-center gap-3 hover:border-brand-500 transition {{ ($data['payment_method'] ?? '') == 'bank_transfer' ? 'border-brand-500 bg-brand-50 dark:bg-slate-700' : 'bg-slate-50 dark:bg-slate-900' }}">
-                            <input type="radio" wire:model.live="data.payment_method" value="bank_transfer" class="hidden">
-                            <i class="fa-solid fa-building-columns text-2xl text-slate-400 dark:text-slate-300"></i>
-                            <span class="text-sm font-bold text-slate-700 dark:text-white text-center">Bank Transfer</span>
-                        </label>
-                    </div>
-                    @error('data.payment_method') <div class="text-xs text-red-500 mt-1 mb-4">{{ $message }}</div> @enderror
-
-                    @if(($data['payment_method'] ?? '') === 'bank_transfer')
-                        <div class="bg-blue-50 dark:bg-slate-900 border border-blue-100 dark:border-slate-700 rounded-xl p-6 mt-6">
-                            <h4 class="text-sm font-bold text-blue-900 dark:text-blue-400 mb-2">Manual Bank Transfer</h4>
-                            <p class="text-xs text-blue-800 dark:text-slate-400 mb-4">Please transfer the total amount to the account below, then upload your proof of payment. Your account will be activated once verified.</p>
-
-                            <div class="bg-white dark:bg-slate-800 p-4 rounded-lg mb-4 text-sm font-mono text-slate-700 dark:text-slate-300 space-y-2 border border-blue-50 dark:border-slate-700">
-                                <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-1">
-                                    <span class="font-bold">Bank Name:</span> <span>Global Corporate Bank</span>
-                                </div>
-                                <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-1 pt-1">
-                                    <span class="font-bold">Account Name:</span> <span>Your Company LLC</span>
-                                </div>
-                                <div class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-1 pt-1">
-                                    <span class="font-bold">IBAN/Account:</span> <span>US12 3456 7890 1234 5678</span>
-                                </div>
-                                <div class="flex justify-between pt-1">
-                                    <span class="font-bold">SWIFT/BIC:</span> <span>GCBXXX</span>
-                                </div>
+                                <span class="text-sm font-bold text-slate-700 dark:text-white text-center">{{ $pm->name }}</span>
+                            </label>
+                        @empty
+                            <div class="col-span-3 text-sm text-slate-500 dark:text-slate-400">
+                                No active payment methods are available right now.
                             </div>
+                        @endforelse
+                    </div>
+                    @error('data.payment_method_id') <div class="text-xs text-red-500 mt-1 mb-4">{{ $message }}</div> @enderror
+
+                    @if(($selectedPaymentMethod->manual ?? false))
+                        <div class="bg-blue-50 dark:bg-slate-900 border border-blue-100 dark:border-slate-700 rounded-xl p-6 mt-6">
+                            <h4 class="text-sm font-bold text-blue-900 dark:text-blue-400 mb-2">Manual Payment</h4>
+                            <p class="text-xs text-blue-800 dark:text-slate-400 mb-4">Please complete the payment using the details below, then upload your proof of payment. Your account will be activated once verified.</p>
+
+                            @php
+                                $details = $selectedPaymentMethod->details ?? [];
+                                $locale = app()->getLocale();
+                            @endphp
+
+                            @if(is_array($details) && count($details) > 0)
+                                <div class="bg-white dark:bg-slate-800 p-4 rounded-lg mb-4 text-sm text-slate-700 dark:text-slate-300 space-y-2 border border-blue-50 dark:border-slate-700">
+                                    @if(array_is_list($details))
+                                        @foreach($details as $row)
+                                            @php
+                                                $label = $row['label'][$locale] ?? ($row['label']['en'] ?? ($row['key'] ?? ''));
+                                                $value = $row['value'][$locale] ?? ($row['value']['en'] ?? '');
+                                            @endphp
+                                            <div class="flex justify-between gap-4 border-b border-slate-100 dark:border-slate-700 pb-1 last:border-b-0 last:pb-0">
+                                                <span class="font-bold">{{ $label }}:</span>
+                                                <span class="text-right">{{ $value }}</span>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        @foreach($details as $key => $value)
+                                            @php
+                                                $label = is_array($value) ? ($value[$locale] ?? ($value['en'] ?? $key)) : $key;
+                                                $val = is_array($value) ? ($value[$locale] ?? ($value['en'] ?? '')) : $value;
+                                            @endphp
+                                            <div class="flex justify-between gap-4 border-b border-slate-100 dark:border-slate-700 pb-1 last:border-b-0 last:pb-0">
+                                                <span class="font-bold">{{ $label }}:</span>
+                                                <span class="text-right">{{ $val }}</span>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            @endif
 
                             <div>
-                                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Upload Transfer Receipt <span class="text-red-500">*</span></label>
-                                <input type="file" wire:model="data.receipt" class="block w-full text-sm text-slate-500 dark:text-slate-400
+                                <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Upload Payment Receipt <span class="text-red-500">*</span></label>
+                                <input type="file" wire:model="receiptFile" class="block w-full text-sm text-slate-500 dark:text-slate-400
                                     file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
                                     file:text-sm file:font-semibold
                                     file:bg-brand-50 file:text-brand-700
                                     hover:file:bg-brand-100 dark:file:bg-slate-700 dark:file:text-brand-400
                                     border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 cursor-pointer"
                                     accept=".pdf, .jpg, .jpeg, .png">
-                                <div wire:loading wire:target="data.receipt" class="text-xs text-brand-500 mt-2 font-medium"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Uploading receipt...</div>
-                                @error('data.receipt') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                                <div wire:loading wire:target="receiptFile" class="text-xs text-brand-500 mt-2 font-medium"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Uploading receipt...</div>
+                                @error('receiptFile') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     @endif

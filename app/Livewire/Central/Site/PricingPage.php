@@ -186,6 +186,6 @@ class PricingPage extends Component
 
     public function render()
     {
-        return view('livewire.central.site.pricing-page');
+        return view('livewire.central.'. defaultLandingLayout() .'.pricing-page');
     }
 }

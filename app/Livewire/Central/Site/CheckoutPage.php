@@ -4,19 +4,26 @@ namespace App\Livewire\Central\Site;
 
 use App\Models\Country;
 use App\Models\Currency;
+use App\Models\PaymentMethod;
 use App\Models\Partner;
 use App\Models\PaymentTransaction;
 use App\Models\Plan;
-use App\Payments\Providers\Paypal;
 use App\Payments\Services\PaymentService;
 use App\Services\PlanPricingService;
 use App\Traits\LivewireOperations;
+use App\Mail\AdminRegisterRequestMail;
+use App\Mail\RegisterRequestMail;
+use App\Models\RegisterRequest;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('layouts.central.gemini.layout')]
 class CheckoutPage extends Component
 {
+    use WithFileUploads;
+
     public $plan, $period, $slug;
 
     private array $modules = ['pos', 'hrm', 'booking'];
@@ -34,7 +41,10 @@ class CheckoutPage extends Component
         ],
         'privacy_policy_agree' => false,
         'terms_conditions_agree' => false,
+        'payment_method_id' => null,
     ];
+
+    public $receiptFile = null;
 
     public $rules = [
         'data.company_name'=>'required|string|max:255|unique:tenants,id|regex:/^[a-zA-Z0-9_ ]+$/',
@@ -58,6 +68,7 @@ class CheckoutPage extends Component
         'data.selected_plans.booking' => 'nullable|exists:plans,id',
         'data.privacy_policy_agree' => 'accepted',
         'data.terms_conditions_agree' => 'accepted',
+        'data.payment_method_id' => 'nullable|integer',
     ];
 
     // function updateDomain()
@@ -222,6 +233,13 @@ class CheckoutPage extends Component
 
         $this->data['country_id'] = Country::where((old('data.country_id') != null ? 'id' : 'code'), $countryCode)->first()?->id;
         $this->data['currency_id'] = Currency::where((old('data.currency_id') != null ? 'id' : 'country_code'), $currencyCode)->first()?->id;
+
+        if (empty($this->data['payment_method_id'])) {
+            $activeMethodId = (int) PaymentMethod::query()->where('active', true)->orderBy('id')->value('id');
+            if ($activeMethodId > 0) {
+                $this->data['payment_method_id'] = $activeMethodId;
+            }
+        }
     }
 
     private function buildSelectedSystemPlans(array $systemsAllowed, string $period): array
@@ -328,6 +346,81 @@ class CheckoutPage extends Component
         ];
     }
 
+    private function buildPlanPayloadFromCheckout(array $newData): array
+    {
+        $period = ($newData['period'] ?? 'month') === 'year' ? 'year' : 'month';
+        $systemsAllowed = collect($newData['systems_allowed'] ?? [])
+            ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
+            ->unique()
+            ->values()
+            ->all();
+        if (count($systemsAllowed) === 0) {
+            $systemsAllowed = ['pos'];
+        }
+
+        $planPayload = [
+            'id' => $newData['plan_id'] ?? 1,
+            'period' => $period,
+            'systems_allowed' => $systemsAllowed,
+        ];
+
+        if (isset($newData['selected_plans']) && is_array($newData['selected_plans'])) {
+            $planPayload['selected_plans'] = $newData['selected_plans'];
+        }
+        if (isset($newData['selected_system_plans']) && is_array($newData['selected_system_plans'])) {
+            $planPayload['selected_system_plans'] = $newData['selected_system_plans'];
+        }
+        if (isset($newData['pricing']) && is_array($newData['pricing'])) {
+            $planPayload['pricing'] = $newData['pricing'];
+        }
+
+        return $planPayload;
+    }
+
+    private function createRegisterRequestForCheckout(array $newData, ?PaymentMethod $paymentMethod, array $paymentPayload): RegisterRequest
+    {
+        $registerRequest = RegisterRequest::create([
+            'data' => [
+                'company' => [
+                    'name' => $newData['company_name'],
+                    'email' => $newData['company_email'],
+                    'phone' => $newData['company_phone'],
+                    'country_id' => $newData['country_id'],
+                    'tax_number' => $newData['tax_number'] ?? null,
+                    'address' => $newData['address'] ?? null,
+                    'domain' => $newData['final_domain'],
+                    'currency_id' => $newData['currency_id'],
+                ],
+                'admin' => [
+                    'name' => $newData['admin_name'],
+                    'email' => $newData['admin_email'],
+                    'phone' => $newData['admin_phone'] ?? null,
+                    'password' => $newData['admin_password'],
+                ],
+                'plan' => $this->buildPlanPayloadFromCheckout($newData),
+                'partner_id' => $newData['partner_id'] ?? null,
+                'payment' => array_merge([
+                    'manual' => (bool) ($paymentPayload['manual'] ?? false),
+                    'amount' => (float) ($paymentPayload['amount'] ?? 0),
+                    'payment_method_id' => $paymentMethod?->id,
+                    'payment_method_name' => $paymentMethod?->name,
+                    'submitted_at' => now()->toISOString(),
+                ], $paymentPayload),
+            ],
+            'status' => 'pending',
+        ]);
+
+        Mail::to($newData['company_email'])->send(new RegisterRequestMail([
+            'name' => $newData['company_name'],
+        ]));
+
+        Mail::to(env('ADMIN_EMAIL', 'eljoe1717@gmail.com'))->send(new AdminRegisterRequestMail(
+            registerRequest: $registerRequest
+        ));
+
+        return $registerRequest;
+    }
+
     function completeSubscription()
     {
 
@@ -393,12 +486,59 @@ class CheckoutPage extends Component
 
         $dataToString = encodedData($newData);
 
-        // else proceed to payment gateway
-        if($newData['amount'] <= 0){
-            return redirect()->route('payment.callback', ['type' => 'success', 'data' => $dataToString]);
+        $paymentMethodId = (int) ($this->data['payment_method_id'] ?? 0);
+        $paymentMethod = $paymentMethodId > 0
+            ? PaymentMethod::query()->where('active', true)->find($paymentMethodId)
+            : null;
+
+        // If amount is 0 (free trial/fully discounted), skip payment gateway and create a register request.
+        if ((float) ($newData['amount'] ?? 0) <= 0) {
+            $this->createRegisterRequestForCheckout($newData, $paymentMethod, [
+                'manual' => false,
+                'amount' => 0.0,
+            ]);
+
+            return redirect()->route('payment-callback', [
+                'type' => 'success',
+                'message' => 'Thanks! Your registration was submitted successfully.',
+            ]);
         }
 
-        $paymentService = new PaymentService(new Paypal());
+        // Amount > 0 requires selecting a valid payment method.
+        if (!$paymentMethod) {
+            $this->addError('data.payment_method_id', 'Please select a payment method.');
+            return;
+        }
+
+        // Manual method => create a register request with receipt proof.
+        if ((bool) $paymentMethod->manual) {
+            $this->validate([
+                'receiptFile' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            ]);
+
+            $receiptPath = $this->receiptFile
+                ? $this->receiptFile->store('register-requests/receipts', 'public')
+                : null;
+
+            $this->createRegisterRequestForCheckout($newData, $paymentMethod, [
+                'manual' => true,
+                'amount' => (float) ($newData['amount'] ?? 0),
+                'receipt_path' => $receiptPath,
+            ]);
+
+            return redirect()->route('payment-callback', [
+                'type' => 'success',
+                'message' => 'Thanks! Your payment proof was submitted and is pending verification.',
+            ]);
+        }
+
+        $paymentProvider = 'App\\Payments\\Providers\\' . ($paymentMethod->provider ?? '');
+        if (!class_exists($paymentProvider)) {
+            $this->addError('data.payment_method_id', 'Payment gateway is not configured.');
+            return;
+        }
+
+        $paymentService = new PaymentService(new $paymentProvider());
         $requestPayload = $paymentService->pay([
             'amount' => $newData['amount'],
             'currency' => 'USD',
@@ -413,14 +553,20 @@ class CheckoutPage extends Component
 
         PaymentTransaction::create([
             // 'tenant_id',
-            'payment_method_id' => 1, // Paypal
+            'payment_method_id' => $paymentMethod->id,
             'amount' => $newData['amount'],
             'status' => 'pending',
             'request_payload' => $requestPayload,
             'transaction_reference' => $requestPayload['payment']['id'] ?? null,
         ]);
 
-        return redirect()->to($requestPayload['payment']['links'][1]['href']);
+        $redirectUrl = $requestPayload['payment']['links'][1]['href'] ?? null;
+        if (!$redirectUrl) {
+            $this->addError('data.payment_method_id', 'Unable to start the payment process.');
+            return;
+        }
+
+        return redirect()->to($redirectUrl);
     }
 
     public function updatedDataTermsConditionsAgree($value): void
@@ -533,6 +679,21 @@ class CheckoutPage extends Component
         $viewName = 'livewire.central.' . defaultLandingLayout() . '.checkout-page';
         if (!view()->exists($viewName)) {
             $viewName = 'livewire.central.site.checkout-page';
+        }
+
+        $paymentMethods = PaymentMethod::query()
+            ->where('active', true)
+            ->orderBy('id')
+            ->get();
+
+        $selectedPaymentMethod = null;
+        $selectedMethodId = (int) ($this->data['payment_method_id'] ?? 0);
+        if ($selectedMethodId > 0) {
+            $selectedPaymentMethod = $paymentMethods->firstWhere('id', $selectedMethodId);
+        }
+        if (!$selectedPaymentMethod && $paymentMethods->isNotEmpty()) {
+            $selectedPaymentMethod = $paymentMethods->first();
+            $this->data['payment_method_id'] = $selectedPaymentMethod->id;
         }
 
         return view($viewName, get_defined_vars());
