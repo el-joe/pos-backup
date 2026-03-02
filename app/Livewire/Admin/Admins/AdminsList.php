@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Admins;
 
 use App\Enums\AuditLogActionEnum;
-use App\Models\Subscription;
 use App\Models\Tenant\AuditLog;
 use App\Services\AdminService;
 use App\Services\BranchService;
@@ -89,8 +88,7 @@ class AdminsList extends Component
             $this->rules['password'] = 'nullable|string|max:500';
             $action = AuditLogActionEnum::UPDATE_ADMIN;
         }else{
-            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-            $limit = $currentSubscription?->plan?->featureValue('admins', 999999) ?? 999999;
+            $limit = subscriptionFeatureLimit('erp_admins', 999999);
             $totalAdmins = $this->adminService->count();
 
             if($totalAdmins >= $limit){

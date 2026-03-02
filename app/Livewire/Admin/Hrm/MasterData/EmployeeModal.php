@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Hrm\MasterData;
 
+use App\Models\Tenant\Employee;
 use App\Services\Hrm\DepartmentService;
 use App\Services\Hrm\DesignationService;
 use App\Services\Hrm\EmployeeService;
@@ -72,6 +73,15 @@ class EmployeeModal extends Component
         }
         if (!$isUpdate && !adminCan('hrm_master_data.create')) {
             abort(403);
+        }
+
+        if (!$isUpdate) {
+            $limit = subscriptionFeatureLimit('hrm_employees', 999999);
+            $currentEmployees = Employee::query()->count();
+            if ($currentEmployees >= $limit) {
+                $this->popup('error', 'Employee limit reached. Please upgrade your subscription to add more employees.');
+                return;
+            }
         }
 
         $rules = [

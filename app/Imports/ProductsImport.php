@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Subscription;
 use App\Models\Tenant\Branch;
 use App\Models\Tenant\Brand;
 use App\Models\Tenant\Category;
@@ -23,8 +22,7 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation
      */
     public function collection($rows)
     {
-        $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-        $limit = $currentSubscription?->plan?->featureValue('products', 999999) ?? 999999;
+        $limit = subscriptionFeatureLimit('erp_products', 999999);
         $totalProducts = Product::count() + count($rows);
 
         if($totalProducts > $limit){

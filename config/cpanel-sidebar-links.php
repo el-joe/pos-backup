@@ -80,15 +80,9 @@ return [
         "route"     => 'cpanel.subscriptions.list'
     ],
     [
-        "title"     => "Tenants",
-        'translated_title' => 'general.titles.tenants',
-        "icon"      => "fa fa-users fa-fw",
-        "route"     => 'cpanel.customers.list'
-    ],
-    [
         "title"     => "Plans",
         'translated_title' => 'general.titles.plans',
-        "icon"      => "fa fa-gem fa-fw",
+        "icon"      => "fa fa-layer-group fa-fw",
         "route"     => 'cpanel.plans.list'
     ],
     [
@@ -96,6 +90,12 @@ return [
         'translated_title' => 'general.titles.features',
         "icon"      => "fa fa-list-check fa-fw",
         "route"     => 'cpanel.features.list'
+    ],
+    [
+        "title"     => "Tenants",
+        'translated_title' => 'general.titles.tenants',
+        "icon"      => "fa fa-users fa-fw",
+        "route"     => 'cpanel.customers.list'
     ],
     [
         "title"     => "Sliders",

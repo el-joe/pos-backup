@@ -20,7 +20,7 @@ use App\Livewire\Admin\Expenses\{ExpenseCategoriesList,ExpensesList};
 use App\Livewire\Admin\Imports\ImportsPage;
 use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
-use App\Livewire\Admin\Plans\{PlansList,SubscriptionsPage};
+use App\Livewire\Admin\Plans\SubscriptionsPage;
 use App\Livewire\Admin\DeferredPosPage;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\{AddEditProduct,ProductsList,ProductDetails};
@@ -370,7 +370,6 @@ Route::middleware([
             Route::get('roles',RolesList::class)->name('roles.list');
             Route::get('roles/{id?}',RoleDetails::class)->name('roles.show');
 
-            Route::get('plans', PlansList::class)->name('plans.list');
             Route::get('subscriptions', SubscriptionsPage::class)->name('subscriptions.list');
 
 

@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Subscription;
 use App\Models\Tenant\Branch;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -17,8 +16,7 @@ class BranchesImport implements ToCollection, WithHeadingRow, WithValidation
      */
     public function collection($rows)
     {
-        $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-        $limit = $currentSubscription?->plan?->featureValue('branches', 999999) ?? 999999;
+        $limit = subscriptionFeatureLimit('erp_branches', 999999);
         $totalBranches = Branch::count() + count($rows);
 
         if($totalBranches > $limit){

@@ -4,8 +4,6 @@ namespace App\Livewire\Central\Site;
 
 use App\Models\Feature;
 use App\Models\Plan;
-use App\Services\PlanFeaturePresentationService;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -14,35 +12,9 @@ class PricingPage extends Component
 {
     public string $billingPeriod = 'monthly';
 
-    public array $moduleOrder = ['pos', 'hrm', 'booking'];
+    public array $plans = [];
 
-    public array $moduleUi = [
-        'pos' => [
-            'title' => 'POS & ERP System',
-            'description' => 'Inventory, sales, and comprehensive accounting.',
-            'icon' => 'fa-solid fa-boxes-stacked',
-            'headerColor' => 'indigo',
-            'featureColor' => 'indigo',
-        ],
-        'hrm' => [
-            'title' => 'HRM System',
-            'description' => 'Payroll, attendance, and team management.',
-            'icon' => 'fa-solid fa-users',
-            'headerColor' => 'emerald',
-            'featureColor' => 'emerald',
-        ],
-        'booking' => [
-            'title' => 'Booking & Reservations',
-            'description' => 'Smart scheduling, calendars, and reminders.',
-            'icon' => 'fa-solid fa-calendar-check',
-            'headerColor' => 'rose',
-            'featureColor' => 'rose',
-        ],
-    ];
-
-    public array $plansByModule = [];
-    public array $selectedSystems = [];
-    public array $selectedPlans = [];
+    public ?int $selectedPlanId = null;
 
     public function mount(): void
     {
@@ -51,57 +23,65 @@ class PricingPage extends Component
             ->with(['plan_features.feature' => function ($query) {
                 $query->where('active', true);
             }])
+            ->orderBy('sort_order')
+            ->orderByDesc('recommended')
             ->orderBy('price_month')
             ->orderBy('id')
+            ->limit(3)
             ->get();
 
         $features = Feature::query()
             ->where('active', true)
             ->orderBy('id')
-            ->get()
-            ->groupBy('module_name');
+            ->get();
 
         $locale = app()->getLocale();
 
-        foreach ($this->moduleOrder as $module) {
-            $modulePlans = $plans
-                ->filter(fn (Plan $plan) => (is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name) === $module)
-                ->values();
+        $this->plans = $plans->map(function (Plan $plan) use ($features, $locale) {
+            $rows = $features->map(function (Feature $feature) use ($plan, $locale) {
+                $planFeature = $plan->plan_features->firstWhere('feature_id', $feature->id);
 
-            $plansPayload = $modulePlans->map(function (Plan $plan) use ($features, $module, $locale) {
-                // $featureNames = app(PlanFeaturePresentationService::class)
-                //     ->resolveDisplayPlanFeatureNames($plan, ($features[$module] ?? collect()), $locale, 3);
+                $featureName = $feature->{'name_' . $locale} ?? $feature->name_en ?? $feature->name_ar ?? '';
+                $featureType = (string) ($feature->type ?? 'boolean');
+                $value = (int) ($planFeature->value ?? 0);
 
-                $features = collect($features[$module] ?? collect())->map(function($feature) use ($plan, $locale){
-                    $planFeature = $plan->plan_features->firstWhere('feature_id', $feature->id);
+                $content = $locale === 'ar'
+                    ? ($planFeature->content_ar ?? $planFeature->content_en ?? null)
+                    : ($planFeature->content_en ?? $planFeature->content_ar ?? null);
+                $content = is_string($content) ? trim($content) : null;
 
-                    $title = $feature->{'name_'. $locale} ?? $feature->name_en ?? $feature->name_ar ?? '';
-                    if($feature->type == 'text'){
-                        $content = $planFeature->{'content_'. $locale} ?? $planFeature->content_en ?? '';
-                        return "$title: $content";
-                    }else{
-                        $icon = $planFeature->value == 1 ? 'fa-solid fa-check text-green-500' : 'fa-solid fa-xmark text-red-500';
-                        return "<i class='$icon'></i> $title";
-                    }
-                });
+                $displayValue = null;
+                if ($featureType === 'text') {
+                    $displayValue = ($content !== null && $content !== '')
+                        ? $content
+                        : ($value > 0 ? (string) $value : '—');
+                }
 
                 return [
-                    'id' => $plan->id,
-                    'slug' => $plan->slug,
-                    'name' => $plan->name,
-                    'month' => round((float) $plan->price_month, 2),
-                    'year' => round((float) $plan->price_year, 2),
-                    'trial_months' => (bool) ($plan->three_months_free ?? false) ? 3 : 0,
-                    'recommended' => (bool) $plan->recommended,
-                    'features' => $features
+                    'name' => $featureName,
+                    'type' => $featureType,
+                    'enabled' => $value > 0,
+                    'display_value' => $displayValue,
                 ];
             })->values()->all();
 
-            $this->plansByModule[$module] = $plansPayload;
-            $defaultPlan = collect($plansPayload)->firstWhere('recommended', true) ?? (collect($plansPayload)->first() ?? null);
-            $this->selectedPlans[$module] = $defaultPlan['id'] ?? null;
-            $this->selectedSystems[$module] = false;
-        }
+            $tier = strtolower((string) ($plan->tier ?? ''));
+
+            return [
+                'id' => $plan->id,
+                'slug' => $plan->slug,
+                'name' => $plan->name,
+                'tier' => $tier,
+                'month' => round((float) $plan->price_month, 2),
+                'year' => round((float) $plan->price_year, 2),
+                'trial_months' => (bool) ($plan->three_months_free ?? false) ? 3 : 0,
+                'recommended' => (bool) $plan->recommended,
+                'features' => $rows,
+            ];
+        })->values()->all();
+
+        $defaultPlan = collect($this->plans)->firstWhere('recommended', true) ?? (collect($this->plans)->first() ?? null);
+        $this->selectedPlanId = isset($defaultPlan['id']) ? (int) $defaultPlan['id'] : null;
     }
 
     public function setBilling(string $period): void
@@ -109,37 +89,28 @@ class PricingPage extends Component
         $this->billingPeriod = $period === 'yearly' ? 'yearly' : 'monthly';
     }
 
-    public function toggleSystem(string $module): void
+    public function setPlan(int $planId): void
     {
-        if (!array_key_exists($module, $this->selectedSystems)) {
-            return;
-        }
-
-        $this->selectedSystems[$module] = !$this->selectedSystems[$module];
-    }
-
-    public function setTier(string $module, int $planId): void
-    {
-        if (!array_key_exists($module, $this->selectedPlans)) {
-            return;
-        }
-
-        $exists = collect($this->plansByModule[$module] ?? [])->contains(fn (array $plan) => (int) $plan['id'] === $planId);
+        $exists = collect($this->plans)->contains(fn (array $plan) => (int) $plan['id'] === $planId);
         if (!$exists) {
             return;
         }
 
-        $this->selectedPlans[$module] = $planId;
+        $this->selectedPlanId = $planId;
     }
 
     public function proceedToCheckout()
     {
-        if ($this->selectedCount() === 0) {
+        $plan = $this->selectedPlan();
+        if (!$plan) {
             return redirect()->route('pricing-compare');
         }
 
         $payload = [
             'period' => $this->isYearly() ? 'year' : 'month',
+            'plan_id' => $plan['id'],
+            'slug' => $plan['slug'],
+            'systems_allowed' => ['pos'],
             'systems' => $this->selectedPlansPayload(),
         ];
 
@@ -152,102 +123,65 @@ class PricingPage extends Component
         return $this->billingPeriod === 'yearly';
     }
 
-    public function selectedPlan(string $module): ?array
+    public function selectedPlan(): ?array
     {
-        $selectedPlanId = (int) ($this->selectedPlans[$module] ?? 0);
+        $selectedPlanId = (int) $this->selectedPlanId;
         if ($selectedPlanId <= 0) {
             return null;
         }
 
-        return collect($this->plansByModule[$module] ?? [])->first(fn (array $plan) => (int) $plan['id'] === $selectedPlanId);
+        return collect($this->plans)->first(fn (array $plan) => (int) $plan['id'] === $selectedPlanId);
     }
 
     public function selectedCount(): int
     {
-        return count(array_filter($this->selectedSystems, fn ($selected) => (bool) $selected));
+        return $this->selectedPlan() ? 1 : 0;
     }
 
     public function selectedPlansPayload(): array
     {
-        $payload = [];
-        foreach ($this->moduleOrder as $module) {
-            if (empty($this->selectedSystems[$module])) {
-                continue;
-            }
-
-            $plan = $this->selectedPlan($module);
-            if (!$plan) {
-                continue;
-            }
-
-            $payload[] = [
-                'module' => $module,
-                'plan_id' => $plan['id'],
-                'slug' => $plan['slug'],
-                'name' => $plan['name'],
-                'trial_months' => (int) ($plan['trial_months'] ?? 0),
-            ];
+        $plan = $this->selectedPlan();
+        if (!$plan) {
+            return [];
         }
 
-        return $payload;
+        return [[
+            'module' => 'pos',
+            'plan_id' => $plan['id'],
+            'slug' => $plan['slug'],
+            'name' => $plan['name'],
+            'trial_months' => (int) ($plan['trial_months'] ?? 0),
+        ]];
     }
 
     public function totalPrice(): float
     {
-        $total = 0.0;
-        foreach ($this->moduleOrder as $module) {
-            if (empty($this->selectedSystems[$module])) {
-                continue;
-            }
-
-            $plan = $this->selectedPlan($module);
-            if (!$plan) {
-                continue;
-            }
-
-            $total += (float) ($this->isYearly() ? $plan['year'] : $plan['month']);
+        $plan = $this->selectedPlan();
+        if (!$plan) {
+            return 0.0;
         }
 
-        return round($total, 2);
+        return round((float) ($this->isYearly() ? $plan['year'] : $plan['month']), 2);
     }
 
     public function dueNow(): float
     {
-        $total = 0.0;
-        foreach ($this->moduleOrder as $module) {
-            if (empty($this->selectedSystems[$module])) {
-                continue;
-            }
-
-            $plan = $this->selectedPlan($module);
-            if (!$plan) {
-                continue;
-            }
-
-            if ((int) ($plan['trial_months'] ?? 0) > 0) {
-                continue;
-            }
-
-            $total += (float) ($this->isYearly() ? $plan['year'] : $plan['month']);
+        $plan = $this->selectedPlan();
+        if (!$plan) {
+            return 0.0;
         }
 
-        return round($total, 2);
+        if ((int) ($plan['trial_months'] ?? 0) > 0) {
+            return 0.0;
+        }
+
+        return round((float) ($this->isYearly() ? $plan['year'] : $plan['month']), 2);
     }
 
     public function hasTrialSelection(): bool
     {
-        foreach ($this->moduleOrder as $module) {
-            if (empty($this->selectedSystems[$module])) {
-                continue;
-            }
-
-            $plan = $this->selectedPlan($module);
-            if ($plan && ((int) ($plan['trial_months'] ?? 0) > 0)) {
-                return true;
-            }
-        }
-
-        return false;
+        $plan = $this->selectedPlan();
+        return $plan ? ((int) ($plan['trial_months'] ?? 0) > 0) : false;
     }
 
     public function render()

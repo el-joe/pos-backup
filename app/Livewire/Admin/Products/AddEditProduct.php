@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\Products;
 
 use App\Enums\AuditLogActionEnum;
-use App\Models\Subscription;
 use App\Models\Tenant\AuditLog;
 use App\Services\BranchService;
 use App\Services\BrandService;
@@ -91,8 +90,7 @@ class AddEditProduct extends Component
             // $rules['gallery'] = str_replace('nullable','required',$rules['gallery'] ?? '');
             // $rules['gallery.*'] = str_replace('nullable','required',$rules['gallery.*'] ?? '');
 
-            $currentSubscription = Subscription::currentTenantSubscriptions()->first();
-            $limit = $currentSubscription?->plan?->featureValue('products', 999999) ?? 999999;
+            $limit = subscriptionFeatureLimit('erp_products', 999999);
             $totalProducts = $this->productService->count();
 
             if($totalProducts >= $limit){

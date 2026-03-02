@@ -99,12 +99,41 @@ class CheckoutPage extends Component
 
     function mount()
     {
-        // New flow (multi-module): token payload from PricingPage / landing checkout.
+        // New flow: token payload from PricingPage / landing checkout.
         $token = request()->route('token') ?? request()->query('token');
         $decodedToken = is_string($token) && trim($token) !== '' ? decodedData($token) : null;
 
         $initializedFromToken = false;
-        if (is_array($decodedToken) && isset($decodedToken['systems'])) {
+        if (is_array($decodedToken) && (isset($decodedToken['plan_id']) || isset($decodedToken['slug']))) {
+            $this->period = ($decodedToken['period'] ?? 'month') === 'year' ? 'year' : 'month';
+
+            $planId = (int) ($decodedToken['plan_id'] ?? 0);
+            $planSlug = trim((string) ($decodedToken['slug'] ?? ''));
+
+            $plan = null;
+            if ($planId > 0) {
+                $plan = Plan::query()->active()->find($planId);
+            }
+
+            if (!$plan && $planSlug !== '') {
+                $plan = Plan::query()->active()->where('slug', $planSlug)->first();
+            }
+
+            if ($plan) {
+                $this->plan = Plan::with('planFeatures.feature')->find($plan->id);
+                $this->slug = $this->plan?->slug;
+                $planModule = is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name;
+                $planModule = in_array($planModule, $this->modules, true) ? $planModule : 'pos';
+
+                $this->data['systems_allowed'] = [$planModule];
+                foreach ($this->modules as $module) {
+                    $this->data['selected_plans'][$module] = $module === $planModule ? $plan->id : null;
+                }
+                $initializedFromToken = true;
+            }
+        }
+
+        if (!$initializedFromToken && is_array($decodedToken) && isset($decodedToken['systems'])) {
             $this->period = ($decodedToken['period'] ?? 'month') === 'year' ? 'year' : 'month';
 
             $requestedSystems = collect($decodedToken['systems'] ?? [])

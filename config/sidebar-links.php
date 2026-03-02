@@ -709,27 +709,11 @@ return [
         ]
     ],
     [
-        'title'    => "Plans & Subscription",
-        'translated_title' => 'general.titles.plans-subscriptions',
-        'icon'     => 'fa fa-clipboard-list fa-fw',
-        'route'    => '#',
-        'can'      => 'plans.list,assign,subscriptions.list,subscriptions.cancel',
-        'children' => [
-            [
-                'title' => 'Plans',
-                'translated_title' => 'general.titles.plans',
-                'route' => 'admin.plans.list',
-                'icon'  => 'fa fa-list fa-fw',
-                'can' => 'plans.list,plans.assign'
-            ],
-            [
-                'title' => 'Subscriptions',
-                'translated_title' => 'general.titles.subscriptions',
-                'route' => 'admin.subscriptions.list',
-                'icon'  => 'fa fa-file-contract fa-fw',
-                'can' => 'subscriptions.list,subscriptions.cancel',
-            ]
-        ]
+        'title' => 'Subscriptions',
+        'translated_title' => 'general.titles.subscriptions',
+        'icon' => 'fa fa-file-contract fa-fw',
+        'route' => 'admin.subscriptions.list',
+        'can' => 'subscriptions.list,subscriptions.cancel',
     ],
     [
         "title"     => "Settings",

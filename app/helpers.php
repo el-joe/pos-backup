@@ -359,6 +359,76 @@ if(!function_exists('currency')) {
     }
 }
 
+if(!function_exists('subscriptionFeatureCode')) {
+    function subscriptionFeatureCode(string $code): string
+    {
+        $code = trim($code);
+
+        $aliases = [
+            'branches' => 'erp_branches',
+            'products' => 'erp_products',
+            'admins' => 'erp_admins',
+            'inventory' => 'erp_inventory',
+            'sales' => 'erp_sales',
+            'double_entry_accounting' => 'erp_accounting',
+            'advanced_reports' => 'erp_accounting',
+            'basic_reports' => 'erp_sales',
+            'discounts' => 'erp_sales',
+            'taxes' => 'erp_accounting',
+        ];
+
+        return $aliases[$code] ?? $code;
+    }
+}
+
+if(!function_exists('subscriptionFeatureData')) {
+    function subscriptionFeatureData(?string $code, ?\App\Models\Subscription $subscription = null): ?array
+    {
+        $code = trim((string) $code);
+        if ($code === '') {
+            return null;
+        }
+
+        $featureCode = subscriptionFeatureCode($code);
+        $subscription = $subscription ?: \App\Models\Subscription::currentTenantSubscriptions()->first();
+
+        return data_get($subscription?->plan?->features, $featureCode);
+    }
+}
+
+if(!function_exists('subscriptionFeatureEnabled')) {
+    function subscriptionFeatureEnabled(?string $code, bool $default = true, ?\App\Models\Subscription $subscription = null): bool
+    {
+        if (!is_string($code) || trim($code) === '') {
+            return $default;
+        }
+
+        $feature = subscriptionFeatureData($code, $subscription);
+        if (!is_array($feature)) {
+            return $default;
+        }
+
+        return (bool) ($feature['status'] ?? $default);
+    }
+}
+
+if(!function_exists('subscriptionFeatureLimit')) {
+    function subscriptionFeatureLimit(?string $code, int $default = 0, ?\App\Models\Subscription $subscription = null): int
+    {
+        if (!is_string($code) || trim($code) === '') {
+            return $default;
+        }
+
+        $feature = subscriptionFeatureData($code, $subscription);
+        if (!is_array($feature)) {
+            return $default;
+        }
+
+        $limit = $feature['limit'] ?? null;
+        return is_numeric($limit) ? (int) $limit : $default;
+    }
+}
+
 if(!function_exists('currencyFormat')) {
     function currencyFormat($amount, $withComma = false){
         $currency = currency();

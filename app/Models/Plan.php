@@ -13,13 +13,15 @@ class Plan extends Model
 
     protected $fillable = [
         'name',
+        'tier',
         'module_name',
         'price_month',
         'price_year',
         'three_months_free',
         'slug',
         'active',
-        'recommended'
+        'recommended',
+        'sort_order',
     ];
 
     protected $casts = [
@@ -27,6 +29,7 @@ class Plan extends Model
         'three_months_free' => 'boolean',
         'active' => 'boolean',
         'recommended' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     protected static function boot()
@@ -128,7 +131,7 @@ class Plan extends Model
 
     private function resolveFeatureId(string $code): ?int
     {
-        $code = trim($code);
+        $code = $this->normalizeFeatureCode($code);
         if ($code === '') {
             return null;
         }
@@ -136,5 +139,25 @@ class Plan extends Model
         return Cache::remember('features.id_by_code.' . $code, 3600, function () use ($code) {
             return Feature::query()->where('code', $code)->value('id');
         });
+    }
+
+    private function normalizeFeatureCode(string $code): string
+    {
+        $code = trim($code);
+
+        $aliases = [
+            'branches' => 'erp_branches',
+            'products' => 'erp_products',
+            'admins' => 'erp_admins',
+            'inventory' => 'erp_inventory',
+            'sales' => 'erp_sales',
+            'double_entry_accounting' => 'erp_accounting',
+            'advanced_reports' => 'erp_accounting',
+            'basic_reports' => 'erp_sales',
+            'discounts' => 'erp_sales',
+            'taxes' => 'erp_accounting',
+        ];
+
+        return $aliases[$code] ?? $code;
     }
 }
