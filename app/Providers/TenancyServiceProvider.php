@@ -159,6 +159,7 @@ class TenancyServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
             if(!Schema::hasTable('branches'))return;
+            if(!Schema::hasColumn('branches', 'deleted_at'))return;
             if(tenant()){
                 if(Schema::hasTable('branches')) {
                     $branchesService = app(BranchService::class);

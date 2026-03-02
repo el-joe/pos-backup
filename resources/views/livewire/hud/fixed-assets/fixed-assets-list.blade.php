@@ -81,6 +81,8 @@
                             <th>{{ __('general.pages.fixed_assets.name') }}</th>
                             <th>{{ __('general.pages.fixed_assets.branch') }}</th>
                             <th>{{ __('general.pages.fixed_assets.status') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.payment_status') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.due_amount') }}</th>
                             <th>{{ __('general.pages.fixed_assets.cost') }}</th>
                             <th>{{ __('general.pages.fixed_assets.net_book_value') }}</th>
                             <th class="text-nowrap text-center">{{ __('general.pages.fixed_assets.action') }}</th>
@@ -106,17 +108,50 @@
                                         @endif
                                     </span>
                                 </td>
+                                <td>
+                                    @php
+                                        $paymentState = $asset->payment_state;
+                                        $paymentBadge = match($paymentState) {
+                                            'paid' => 'success',
+                                            'partial_paid' => 'warning',
+                                            'check' => 'info',
+                                            default => 'danger',
+                                        };
+                                        $paymentLabel = match($paymentState) {
+                                            'paid' => __('general.pages.fixed_assets.payment_paid'),
+                                            'partial_paid' => __('general.pages.fixed_assets.payment_partial'),
+                                            'check' => __('general.pages.fixed_assets.payment_check'),
+                                            default => __('general.pages.fixed_assets.payment_unpaid'),
+                                        };
+                                    @endphp
+                                    <span class="badge bg-{{ $paymentBadge }}">{{ $paymentLabel }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ ($asset->due_amount ?? 0) > 0 ? 'danger' : 'success' }}">
+                                        {{ currencyFormat($asset->due_amount ?? 0, true) }}
+                                    </span>
+                                </td>
                                 <td>{{ currencyFormat($asset->cost ?? 0, true) }}</td>
                                 <td>{{ currencyFormat($asset->net_book_value ?? 0, true) }}</td>
                                 <td class="text-center">
                                     <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.fixed-assets.details', $asset->id) }}">
                                         {{ __('general.pages.fixed_assets.details') }}
                                     </a>
+                                    @adminCan('fixed_assets.update')
+                                        @if(($asset->due_amount ?? 0) > 0)
+                                            <button class="btn btn-sm btn-success ms-1"
+                                                    wire:click="setCurrent({{ $asset->id }})"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#paymentModal">
+                                                <i class="fa fa-credit-card"></i>
+                                            </button>
+                                        @endif
+                                    @endadminCan
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center">{{ __('general.pages.fixed_assets.no_records') }}</td>
+                                <td colspan="10" class="text-center">{{ __('general.pages.fixed_assets.no_records') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -128,7 +163,104 @@
             </div>
         </div>
     </div>
+    <!-- Payment Modal (same UX pattern as sales list) -->
+    <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="paymentModalLabel">{{ __('general.pages.fixed_assets.payment_modal_title') }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="paymentAmount" class="form-label fw-bold">{{ __('general.pages.fixed_assets.amount') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text">{{ currency()->symbol }}</span>
+                                <input type="number" class="form-control" id="paymentAmount" wire:model="payment.amount" placeholder="{{ __('general.pages.fixed_assets.amount') }}">
+                                <span class="input-group-text">
+                                    {{ __('general.pages.fixed_assets.due_amount') }}:
+                                    <strong class="text-danger ms-1">
+                                        {{ number_format($current->due_amount ?? 0, 2) }}
+                                    </strong>
+                                </span>
+                            </div>
+                            @error('payment.amount')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="paymentMethod" class="form-label fw-bold">{{ __('general.pages.fixed_assets.payment_account') }}</label>
+                            <select class="form-select" id="paymentMethod" wire:model="payment.account_id">
+                                <option value="">{{ __('general.pages.fixed_assets.select_payment_account') }}</option>
+                                @foreach (collect($paymentAccounts ?? []) as $paymentAcc)
+                                    <option value="{{ data_get($paymentAcc, 'id') }}">
+                                        {{ data_get($paymentAcc, 'paymentMethod.name') }} - {{ data_get($paymentAcc, 'name') }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('payment.account_id')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label for="paymentNote" class="form-label fw-bold">{{ __('general.pages.fixed_assets.note') }}</label>
+                        <textarea class="form-control" id="paymentNote" wire:model="payment.note" rows="3" placeholder="{{ __('general.pages.fixed_assets.note_optional') }}"></textarea>
+                        @error('payment.note')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <button type="button" class="btn btn-success w-100 mt-3" wire:click="savePayment">
+                        <i class="fa fa-check"></i> {{ __('general.pages.fixed_assets.save_payment') }}
+                    </button>
+
+                    <hr class="my-4">
+
+                    <h5 class="text-primary fw-bold mb-3">{{ __('general.pages.fixed_assets.recent_payments') }}</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped align-middle">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>{{ __('general.pages.fixed_assets.date') }}</th>
+                                    <th>{{ __('general.pages.fixed_assets.amount') }}</th>
+                                    <th>{{ __('general.pages.fixed_assets.method') }}</th>
+                                    <th>{{ __('general.pages.fixed_assets.note') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse(($current?->orderPayments ?? collect())->take(10) as $p)
+                                    <tr>
+                                        <td>{{ dateTimeFormat($p->created_at,true,false) }}</td>
+                                        <td><span class="badge bg-success">{{ currencyFormat($p->amount, true) }}</span></td>
+                                        <td>{{ $p->account ? (($p->account->paymentMethod?->name ? $p->account->paymentMethod?->name.' - ' : '').$p->account->name) : __('general.messages.n_a') }}</td>
+                                        <td>{{ $p->note }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">{{ __('general.pages.fixed_assets.no_payments') }}</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa fa-times"></i> {{ __('general.pages.fixed_assets.close') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
 
 @push('scripts')
 @include('layouts.hud.partials.select2-script')

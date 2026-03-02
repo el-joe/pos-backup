@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\FixedAssets;
 use App\Enums\AccountTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\FixedAsset;
+use App\Services\AccountService;
 use App\Services\BranchService;
 use App\Services\FixedAssetService;
 use App\Services\TransactionService;
@@ -19,6 +20,7 @@ class AddFixedAsset extends Component
     private FixedAssetService $fixedAssetService;
     private BranchService $branchService;
     private TransactionService $transactionService;
+    private AccountService $accountService;
 
     public array $data = [];
 
@@ -27,6 +29,7 @@ class AddFixedAsset extends Component
         $this->fixedAssetService = app(FixedAssetService::class);
         $this->branchService = app(BranchService::class);
         $this->transactionService = app(TransactionService::class);
+        $this->accountService = app(AccountService::class);
     }
 
     public function mount(): void
@@ -40,6 +43,10 @@ class AddFixedAsset extends Component
         $this->data['cost'] = $this->data['cost'] ?? 0;
         $this->data['salvage_value'] = $this->data['salvage_value'] ?? 0;
         $this->data['status'] = $this->data['status'] ?? FixedAsset::STATUS_ACTIVE;
+
+        $this->data['payment_status'] = $this->data['payment_status'] ?? 'full_paid';
+        $this->data['payment_account'] = $this->data['payment_account'] ?? null;
+        $this->data['payment_amount'] = $this->data['payment_amount'] ?? 0;
 
         if (admin()->branch_id) {
             $this->data['branch_id'] = admin()->branch_id;
@@ -61,11 +68,19 @@ class AddFixedAsset extends Component
             'data.depreciation_start_date' => 'nullable|date',
             'data.status' => 'required|in:active,under_construction,disposed,sold',
             'data.note' => 'nullable|string',
+            'data.payment_status' => 'required|in:pending,partial_paid,full_paid',
+            'data.payment_account' => 'required_if:data.payment_status,partial_paid,full_paid|integer|exists:accounts,id',
+            'data.payment_amount' => 'required_if:data.payment_status,partial_paid|numeric|min:0.01|lte:data.cost',
         ]);
 
         $asset = DB::transaction(function () {
             $branchId = $this->data['branch_id'] ?? (admin()->branch_id ?? null);
             $cost = (float)($this->data['cost'] ?? 0);
+
+            $paymentStatus = (string)($this->data['payment_status'] ?? 'pending');
+            $paidAmount = $paymentStatus === 'full_paid'
+                ? $cost
+                : ($paymentStatus === 'partial_paid' ? (float)($this->data['payment_amount'] ?? 0) : 0.0);
 
             $asset = $this->fixedAssetService->save(null, [
                 'created_by' => admin()->id ?? null,
@@ -74,6 +89,7 @@ class AddFixedAsset extends Component
                 'name' => $this->data['name'],
                 'purchase_date' => $this->data['purchase_date'] ?? null,
                 'cost' => $cost,
+                'paid_amount' => 0,
                 'salvage_value' => $this->data['salvage_value'] ?? 0,
                 'useful_life_months' => $this->data['useful_life_months'] ?? 0,
                 'depreciation_rate' => $this->data['depreciation_rate'] ?? null,
@@ -83,34 +99,19 @@ class AddFixedAsset extends Component
                 'note' => $this->data['note'] ?? null,
             ]);
 
-            // Save transaction and transaction lines if needed
-            // Debit: Fixed Asset account, Credit: Branch Cash account
             if ($cost > 0) {
-                $fixedAssetAccount = Account::default('Fixed Asset', AccountTypeEnum::FIXED_ASSET->value, $branchId);
-                $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
+                // Always record the asset invoice (debit fixed asset, credit payable)
+                $this->fixedAssetService->createPurchaseInvoice($asset, $cost, $this->data['note'] ?? '');
 
-                $this->transactionService->create([
-                    'date' => $asset->purchase_date ?? now(),
-                    'description' => 'Fixed Asset Purchase for #'.$asset->code.' - '.$asset->name,
-                    'type' => 'fixed_assets',
-                    'reference_type' => FixedAsset::class,
-                    'reference_id' => $asset->id,
-                    'branch_id' => $branchId,
-                    'note' => $this->data['note'] ?? '',
-                    'amount' => $cost,
-                    'lines' => [
-                        [
-                            'account_id' => $fixedAssetAccount->id,
-                            'type' => 'debit',
-                            'amount' => $cost,
-                        ],
-                        [
-                            'account_id' => $branchCashAccount->id,
-                            'type' => 'credit',
-                            'amount' => $cost,
-                        ],
-                    ],
-                ]);
+                // Optionally record an initial payment (cash/check) to reduce payable
+                if ($paidAmount > 0) {
+                    $this->fixedAssetService->addPayment($asset->id, [
+                        'payment_note' => $this->data['note'] ?? null,
+                        'payment_amount' => $paidAmount,
+                        'payment_account' => $this->data['payment_account'] ?? null,
+                        'payment_date' => $asset->purchase_date ?? now(),
+                    ]);
+                }
             }
 
             return $asset;
@@ -123,6 +124,8 @@ class AddFixedAsset extends Component
     public function render()
     {
         $branches = $this->branchService->activeList();
+        $branchId = $this->data['branch_id'] ?? (admin()->branch_id ?? null);
+        $paymentAccounts = $this->accountService->getBranchPaymentAccounts($branchId);
 
         return layoutView('fixed-assets.add-fixed-asset', get_defined_vars())
             ->title(__('general.pages.fixed_assets.new_fixed_asset'));

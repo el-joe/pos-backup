@@ -108,7 +108,7 @@
                                 </span>
                             </td>
                             <td class="text-center">
-                                @if(!in_array($paymentMethod->slug, ['cash', 'bank-transfer']))
+                                @if(!in_array($paymentMethod->slug, ['cash', 'bank-transfer','check']))
                                 @adminCan('payment_methods.update')
                                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal"
                                     data-bs-target="#editPaymentMethodModal"

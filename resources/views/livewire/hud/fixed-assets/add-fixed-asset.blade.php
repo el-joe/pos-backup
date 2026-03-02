@@ -41,6 +41,45 @@
                     </div>
 
                     <div class="col-md-4">
+                        <label class="form-label">{{ __('general.pages.fixed_assets.payment_status') }}</label>
+                        <select class="form-select select2" name="data.payment_status">
+                            <option value="pending" {{ ($data['payment_status'] ?? 'full_paid') == 'pending' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.payment_unpaid') }}</option>
+                            <option value="partial_paid" {{ ($data['payment_status'] ?? '') == 'partial_paid' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.payment_partial') }}</option>
+                            <option value="full_paid" {{ ($data['payment_status'] ?? 'full_paid') == 'full_paid' ? 'selected' : '' }}>{{ __('general.pages.fixed_assets.payment_paid') }}</option>
+                        </select>
+                        @error('data.payment_status')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    @if(in_array(($data['payment_status'] ?? 'full_paid'), ['partial_paid', 'full_paid']))
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.fixed_assets.payment_account') }}</label>
+                            <select class="form-select select2" name="data.payment_account">
+                                <option value="">{{ __('general.pages.fixed_assets.select_payment_account') }}</option>
+                                @foreach(($paymentAccounts ?? []) as $account)
+                                    <option value="{{ $account->id }}" {{ ($data['payment_account'] ?? '') == $account->id ? 'selected' : '' }}>
+                                        {{ $account->paymentMethod?->name }} - {{ $account->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('data.payment_account')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    @endif
+
+                    @if(($data['payment_status'] ?? '') === 'partial_paid')
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.fixed_assets.paid_amount') }}</label>
+                            <input type="number" step="0.01" min="0" class="form-control" wire:model="data.payment_amount">
+                            @error('data.payment_amount')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    @endif
+
+                    <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.fixed_assets.salvage_value') }}</label>
                         <input type="number" step="0.01" min="0" class="form-control" wire:model="data.salvage_value">
                     </div>

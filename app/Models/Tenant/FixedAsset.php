@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Enums\CheckDirectionEnum;
+use App\Enums\CheckStatusEnum;
+
 class FixedAsset extends Model
 {
     use SoftDeletes;
@@ -26,6 +29,7 @@ class FixedAsset extends Model
         'name',
         'purchase_date',
         'cost',
+        'paid_amount',
         'salvage_value',
         'useful_life_months',
         'depreciation_rate',
@@ -39,6 +43,7 @@ class FixedAsset extends Model
         'purchase_date' => 'date',
         'depreciation_start_date' => 'date',
         'cost' => 'decimal:2',
+        'paid_amount' => 'decimal:2',
         'salvage_value' => 'decimal:2',
         'useful_life_months' => 'integer',
         'depreciation_rate' => 'decimal:4',
@@ -77,6 +82,61 @@ class FixedAsset extends Model
     public function lifespanExtensions()
     {
         return $this->hasMany(FixedAssetExtension::class, 'fixed_asset_id');
+    }
+
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'reference');
+    }
+
+    public function orderPayments()
+    {
+        return $this->morphMany(OrderPayment::class, 'payable');
+    }
+
+    public function checks()
+    {
+        return $this->morphMany(Check::class, 'payable');
+    }
+
+    public function getDueAmountAttribute(): float
+    {
+        $total = (float) ($this->cost ?? 0);
+        $paid = (float) ($this->paid_amount ?? 0);
+
+        return max(0.0, $total - $paid);
+    }
+
+    public function getPaymentStateAttribute(): string
+    {
+        $total = (float) ($this->cost ?? 0);
+        $paid = (float) ($this->paid_amount ?? 0);
+        $due = (float) ($this->due_amount ?? 0);
+
+        if ($paid <= 0 || $total <= 0) {
+            return 'unpaid';
+        }
+
+        if ($due <= 0) {
+            return $this->has_pending_issued_check ? 'check' : 'paid';
+        }
+
+        return $this->has_pending_issued_check ? 'check' : 'partial_paid';
+    }
+
+    public function getHasPendingIssuedCheckAttribute(): bool
+    {
+        if ($this->relationLoaded('checks')) {
+            return $this->checks
+                ->where('direction', CheckDirectionEnum::ISSUED->value)
+                ->where('status', CheckStatusEnum::ISSUED->value)
+                ->isNotEmpty();
+        }
+
+        return $this->checks()
+            ->where('direction', CheckDirectionEnum::ISSUED->value)
+            ->where('status', CheckStatusEnum::ISSUED->value)
+            ->exists();
     }
 
     public static function generateCode(): string
