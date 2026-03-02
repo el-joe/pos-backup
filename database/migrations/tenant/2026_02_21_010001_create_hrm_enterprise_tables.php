@@ -157,15 +157,13 @@ return new class extends Migration
 
         Schema::create('attendance_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('attendance_sheet_id')->constrained('attendance_sheets')->cascadeOnDelete();
-            $table->foreignId('employee_id')->constrained('employees');
+            $table->unsignedBigInteger('attendance_sheet_id')->index();
+            $table->unsignedBigInteger('employee_id')->index();
             $table->timestamp('clock_in_at')->nullable();
             $table->timestamp('clock_out_at')->nullable();
             $table->string('status')->default('present'); // present,absent,late
             $table->string('source')->nullable(); // manual,biometric,api
             $table->timestamps();
-
-            $table->unique(['attendance_sheet_id', 'employee_id']);
         });
 
         Schema::create('payroll_runs', function (Blueprint $table) {
@@ -182,8 +180,8 @@ return new class extends Migration
 
         Schema::create('payroll_slips', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payroll_run_id')->constrained('payroll_runs')->cascadeOnDelete();
-            $table->foreignId('employee_id')->constrained('employees');
+            $table->unsignedBigInteger('payroll_run_id')->index();
+            $table->unsignedBigInteger('employee_id')->index();
             $table->decimal('gross_pay', 15, 2)->default(0);
             $table->decimal('net_pay', 15, 2)->default(0);
             $table->timestamps();
@@ -193,7 +191,7 @@ return new class extends Migration
 
         Schema::create('payroll_slip_lines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payroll_slip_id')->constrained('payroll_slips')->cascadeOnDelete();
+            $table->unsignedBigInteger('payroll_slip_id')->index();
             $table->string('type'); // earning,deduction
             $table->decimal('amount', 15, 2)->default(0);
             $table->string('description')->nullable();
@@ -209,11 +207,11 @@ return new class extends Migration
 
         Schema::create('expense_claims', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees');
+            $table->unsignedBigInteger('employee_id')->index();
             $table->date('claim_date');
             $table->decimal('total_amount', 15, 2)->default(0);
             $table->string('status')->default('submitted'); // submitted,approved,rejected,paid
-            $table->foreignId('approved_by')->nullable()->constrained('employees');
+            $table->unsignedBigInteger('approved_by')->nullable()->index();
             $table->timestamp('approved_at')->nullable();
             $table->unsignedBigInteger('transaction_id')->nullable();
             $table->timestamps();
@@ -221,8 +219,8 @@ return new class extends Migration
 
         Schema::create('expense_claim_lines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('expense_claim_id')->constrained('expense_claims')->cascadeOnDelete();
-            $table->foreignId('category_id')->nullable()->constrained('expense_claim_categories');
+            $table->unsignedBigInteger('expense_claim_id')->index();
+            $table->unsignedBigInteger('category_id')->nullable()->index();
             $table->decimal('amount', 15, 2)->default(0);
             $table->string('description')->nullable();
             $table->string('receipt_path')->nullable();
@@ -233,7 +231,7 @@ return new class extends Migration
         Schema::create('job_requisitions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->foreignId('department_id')->nullable()->constrained('departments');
+            $table->unsignedBigInteger('department_id')->nullable()->index();
             $table->string('status')->default('draft'); // draft,approved,open,closed
             $table->text('description')->nullable();
             $table->timestamps();
@@ -263,7 +261,7 @@ return new class extends Migration
         // 4) ESS / MSS & Workflows
         Schema::create('onboarding_tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees');
+            $table->unsignedBigInteger('employee_id')->index();
             $table->string('task');
             $table->string('status')->default('pending'); // pending,done
             $table->date('due_date')->nullable();
@@ -272,7 +270,7 @@ return new class extends Migration
 
         Schema::create('offboarding_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees');
+            $table->unsignedBigInteger('employee_id')->index();
             $table->date('separation_date')->nullable();
             $table->string('reason')->nullable();
             $table->string('status')->default('draft'); // draft,processing,completed
@@ -284,8 +282,8 @@ return new class extends Migration
             $table->string('module'); // leave,claim,attendance,payroll,...
             $table->string('reference_type');
             $table->unsignedBigInteger('reference_id');
-            $table->foreignId('requested_by')->nullable()->constrained('employees');
-            $table->foreignId('assigned_to')->nullable()->constrained('employees');
+            $table->unsignedBigInteger('requested_by')->nullable()->index();
+            $table->unsignedBigInteger('assigned_to')->nullable()->index();
             $table->string('status')->default('pending'); // pending,approved,rejected
             $table->timestamp('action_at')->nullable();
             $table->text('note')->nullable();
