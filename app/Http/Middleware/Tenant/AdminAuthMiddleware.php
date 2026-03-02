@@ -42,15 +42,6 @@ class AdminAuthMiddleware
             }
         }
 
-        Blade::directive('adminCan', function ($expression) {
-            return "<?php if(adminCan($expression)): ?>";
-        });
-
-        Blade::directive('endadminCan', function () {
-            return "<?php endif; ?>";
-        });
-
-
         return $next($request);
     }
 }

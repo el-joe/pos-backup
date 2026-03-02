@@ -154,8 +154,22 @@
                             <label class="cursor-pointer border border-slate-200 dark:border-slate-700 rounded-xl p-4 flex flex-col items-center gap-3 hover:border-brand-500 transition {{ ((int)($data['payment_method_id'] ?? 0)) === (int)$pm->id ? 'border-brand-500 bg-brand-50 dark:bg-slate-700' : 'bg-slate-50 dark:bg-slate-900' }}">
                                 <input type="radio" wire:model.live="data.payment_method_id" value="{{ $pm->id }}" class="hidden">
 
-                                @if($pm->icon_path)
-                                    <img src="{{ asset('storage/' . $pm->icon_path) }}" alt="{{ $pm->name }}" class="h-8 w-8 object-contain">
+                                @php
+                                    $iconValue = (string)($pm->icon_path ?? '');
+                                    $looksLikeImage = $iconValue !== '' && (
+                                        str_contains($iconValue, '/') ||
+                                        str_contains($iconValue, '.png') ||
+                                        str_contains($iconValue, '.jpg') ||
+                                        str_contains($iconValue, '.jpeg') ||
+                                        str_contains($iconValue, '.gif') ||
+                                        str_contains($iconValue, '.svg')
+                                    );
+                                @endphp
+
+                                @if($iconValue !== '' && !$looksLikeImage)
+                                    <i class="{{ $iconValue }} text-2xl text-slate-400 dark:text-slate-300"></i>
+                                @elseif($iconValue !== '' && $looksLikeImage)
+                                    <img src="{{ asset('storage/' . $iconValue) }}" alt="{{ $pm->name }}" class="h-8 w-8 object-contain">
                                 @else
                                     <i class="fa-solid fa-money-bill-wave text-2xl text-slate-400 dark:text-slate-300"></i>
                                 @endif

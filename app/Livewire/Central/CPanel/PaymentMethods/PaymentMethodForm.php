@@ -18,8 +18,6 @@ class PaymentMethodForm extends Component
 
     public array $data = [];
 
-    public $iconFile = null;
-
     public string $requiredFieldsText = '';
 
     /**
@@ -39,13 +37,13 @@ class PaymentMethodForm extends Component
     {
         return [
             'data.name' => 'required|string|max:255',
+            'data.icon_path' => 'nullable|string|max:255',
             'data.provider' => [
                 'required',
                 'string',
                 'max:255',
                 Rule::unique('central.payment_methods', 'provider')->ignore($this->paymentMethod?->id),
             ],
-            'iconFile' => 'nullable|image|max:2048',
             'data.fee_percentage' => 'nullable|numeric|min:0|max:100',
             'data.fixed_fee' => 'nullable|numeric|min:0',
             'data.active' => 'boolean',
@@ -258,6 +256,7 @@ class PaymentMethodForm extends Component
 
         $payload = [
             'name' => $this->data['name'] ?? '',
+            'icon_path' => trim((string)($this->data['icon_path'] ?? '')) ?: null,
             'provider' => $this->data['provider'] ?? '',
             'manual' => (bool)($this->data['manual'] ?? false),
             'required_fields' => $requiredFields,
@@ -271,12 +270,6 @@ class PaymentMethodForm extends Component
         $paymentMethod = $this->paymentMethod ?: new PaymentMethod();
         $paymentMethod->fill($payload);
         $paymentMethod->save();
-
-        if ($this->iconFile) {
-            $path = $this->iconFile->store('payment-methods/icons', 'public');
-            $paymentMethod->update(['icon_path' => $path]);
-            $this->data['icon_path'] = $path;
-        }
 
         $this->paymentMethod = $paymentMethod;
 

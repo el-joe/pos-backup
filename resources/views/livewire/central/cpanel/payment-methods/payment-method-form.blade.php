@@ -20,15 +20,64 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Icon / Image</label>
-                    <input type="file" class="form-control" wire:model="iconFile" accept="image/*">
-                    @error('iconFile') <div class="text-danger small">{{ $message }}</div> @enderror
+                    <label class="form-label">Icon</label>
+
+                    @php
+                        $iconValue = (string)($data['icon_path'] ?? '');
+                        $looksLikeImage = $iconValue !== '' && (
+                            str_contains($iconValue, '/') ||
+                            str_contains($iconValue, '.png') ||
+                            str_contains($iconValue, '.jpg') ||
+                            str_contains($iconValue, '.jpeg') ||
+                            str_contains($iconValue, '.gif') ||
+                            str_contains($iconValue, '.svg')
+                        );
+
+                        $iconOptions = [
+                            'fa-solid fa-credit-card' => 'Credit Card',
+                            'fa-solid fa-money-bill-wave' => 'Cash / Bank Transfer',
+                            'fa-solid fa-wallet' => 'Wallet',
+                            'fa-solid fa-building-columns' => 'Bank',
+                            'fa-solid fa-qrcode' => 'QR Code',
+                            'fa-solid fa-mobile-screen-button' => 'Mobile Payment',
+                            'fa-solid fa-receipt' => 'Receipt',
+                            'fa-solid fa-hand-holding-dollar' => 'Manual Payment',
+                            'fa-solid fa-coins' => 'Coins',
+                            'fa-solid fa-store' => 'Store',
+                            'fa-solid fa-globe' => 'Online',
+                            'fa-brands fa-cc-visa' => 'Visa',
+                            'fa-brands fa-cc-mastercard' => 'Mastercard',
+                            'fa-brands fa-cc-amex' => 'American Express',
+                            'fa-brands fa-paypal' => 'PayPal',
+                            'fa-brands fa-stripe' => 'Stripe',
+                            'fa-brands fa-bitcoin' => 'Bitcoin',
+                            'fa-brands fa-apple-pay' => 'Apple Pay',
+                            'fa-brands fa-google-pay' => 'Google Pay',
+                        ];
+                    @endphp
+
+                    <select class="form-select select2" name="data.icon_path">
+                        <option value="" {{ $iconValue === '' ? 'selected' : '' }}>—</option>
+                        @foreach($iconOptions as $class => $label)
+                            <option
+                                value="{{ $class }}"
+                                data-content="<i class='{{ $class }} fa-lg'></i>"
+                                {{ $iconValue === $class ? 'selected' : '' }}
+                            >
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('data.icon_path') <div class="text-danger small">{{ $message }}</div> @enderror
 
                     <div class="mt-2">
-                        @if ($iconFile)
-                            <img src="{{ $iconFile->temporaryUrl() }}" alt="icon" class="img-fluid rounded" style="max-height: 64px;">
-                        @elseif(!empty($data['icon_path']))
-                            <img src="{{ asset('storage/' . $data['icon_path']) }}" alt="icon" class="img-fluid rounded" style="max-height: 64px;">
+                        @if($looksLikeImage)
+                            <img src="{{ asset('storage/' . $iconValue) }}" alt="icon" class="img-fluid rounded" style="max-height: 64px;">
+                        @elseif($iconValue !== '')
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="{{ $iconValue }} fa-2xl"></i>
+                                <span class="text-muted small">{{ $iconValue }}</span>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -174,3 +223,12 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+    <link href="{{ asset('template/vendors/select2/select2.min.css') }}" rel="stylesheet" />
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('hud/assets/js/select2.min.js') }}"></script>
+    @include('layouts.hud.partials.select2-script')
+@endpush

@@ -29,10 +29,24 @@
                             <tr>
                                 <td>{{ $pm->id }}</td>
                                 <td class="text-center" style="width: 72px;">
-                                    @if($pm->icon_path)
-                                        <img src="{{ asset('storage/' . $pm->icon_path) }}" alt="icon" style="height: 28px; width: 28px; object-fit: contain;">
-                                    @else
+                                    @php
+                                        $iconValue = (string)($pm->icon_path ?? '');
+                                        $looksLikeImage = $iconValue !== '' && (
+                                            str_contains($iconValue, '/') ||
+                                            str_contains($iconValue, '.png') ||
+                                            str_contains($iconValue, '.jpg') ||
+                                            str_contains($iconValue, '.jpeg') ||
+                                            str_contains($iconValue, '.gif') ||
+                                            str_contains($iconValue, '.svg')
+                                        );
+                                    @endphp
+
+                                    @if($iconValue === '')
                                         —
+                                    @elseif($looksLikeImage)
+                                        <img src="{{ asset('storage/' . $iconValue) }}" alt="icon" style="height: 28px; width: 28px; object-fit: contain;">
+                                    @else
+                                        <i class="{{ $iconValue }} fa-lg"></i>
                                     @endif
                                 </td>
                                 <td>{{ $pm->name }}</td>

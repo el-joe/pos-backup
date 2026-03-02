@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\BranchService;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -32,5 +33,14 @@ class AppServiceProvider extends ServiceProvider
         View::share('defaultLayout', function () use ($defaultLayout) {
             return $defaultLayout;
         });
+
+        Blade::directive('adminCan', function ($expression) {
+            return "<?php if(adminCan($expression)): ?>";
+        });
+
+        Blade::directive('endadminCan', function () {
+            return "<?php endif; ?>";
+        });
+
     }
 }
