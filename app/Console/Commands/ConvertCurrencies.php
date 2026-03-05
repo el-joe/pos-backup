@@ -35,7 +35,7 @@ class ConvertCurrencies extends Command
                             ->from('USD')
                             ->to($currency->code)
                             ->get();
-                $currency->conversion_rate = $convertedAmount;
+                $currency->conversion_rate = number_format($convertedAmount, 2,'.','');
             }
 
             $currency->save();
