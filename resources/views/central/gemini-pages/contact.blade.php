@@ -61,35 +61,36 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-slate-800 p-8 lg:p-10 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700 transition-colors">
-                <form action="{{ route('contact-us') }}" method="POST" class="bg-white dark:bg-slate-800 p-8 rounded-3xl text-slate-700 dark:text-slate-300 shadow-2xl transition-colors duration-300">
+            <div class="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-10 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700 transition-colors">
+                <form action="{{ route('contact-us') }}" method="POST" class="text-slate-700 dark:text-slate-300 transition-colors duration-300">
                     @csrf
                     <h3 class="text-2xl font-bold text-brand-dark dark:text-white mb-6">{{ __('gemini-landing.home.contact_form_heading') }}</h3>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
                         <div>
                             <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_first_name') }}</label>
-                            <input type="text" name="fname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_first_name') }}" required>
+                            <input type="text" name="fname" class="w-full p-3 md:p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white transition-shadow" placeholder="{{ __('gemini-landing.home.ph_first_name') }}" required>
                             @error('fname')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_last_name') }}</label>
-                            <input type="text" name="lname" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_last_name') }}" required>
+                            <input type="text" name="lname" class="w-full p-3 md:p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white transition-shadow" placeholder="{{ __('gemini-landing.home.ph_last_name') }}" required>
                             @error('lname')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_phone') }}</label>
-                            <input type="text" name="phone" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_phone') }}" required>
+                            <input type="text" name="phone" class="w-full p-3 md:p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white transition-shadow" placeholder="{{ __('gemini-landing.home.ph_phone') }}" required>
                             @error('phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_email') }}</label>
-                            <input type="email" name="email" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_email') }}" required>
+                            <input type="email" name="email" class="w-full p-3 md:p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white transition-shadow" placeholder="{{ __('gemini-landing.home.ph_email') }}" required>
                             @error('email')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -97,15 +98,14 @@
                     </div>
                     <div class="mb-6">
                         <label class="block text-xs font-bold uppercase text-slate-400 mb-1">{{ __('gemini-landing.home.contact_message') }}</label>
-                        <textarea name="message" rows="3" class="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white" placeholder="{{ __('gemini-landing.home.ph_message') }}"></textarea>
+                        <textarea name="message" rows="4" class="w-full p-3 md:p-4 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 dark:text-white transition-shadow" placeholder="{{ __('gemini-landing.home.ph_message') }}"></textarea>
                         @error('message')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    <button type="submit" class="w-full py-4 bg-brand-500 text-white font-bold rounded-xl hover:bg-brand-600 transition shadow-lg">{{ __('gemini-landing.home.contact_submit') }}</button>
+                    <button type="submit" class="w-full py-3 md:py-4 bg-brand-500 text-white font-bold rounded-xl hover:bg-brand-600 transition shadow-lg">{{ __('gemini-landing.home.contact_submit') }}</button>
                 </form>
             </div>
-
         </div>
     </section>
     </main>
