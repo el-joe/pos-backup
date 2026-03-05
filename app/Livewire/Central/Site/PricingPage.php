@@ -118,6 +118,12 @@ class PricingPage extends Component
         return redirect()->route('tenant-checkout', ['token' => $token]);
     }
 
+    public function checkoutPlan(int $planId)
+    {
+        $this->setPlan($planId);
+        return $this->proceedToCheckout();
+    }
+
     public function isYearly(): bool
     {
         return $this->billingPeriod === 'yearly';

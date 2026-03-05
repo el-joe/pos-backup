@@ -80,6 +80,10 @@ return [
         'success_subtitle' => 'Your payment has been processed successfully!',
         'success_message' => 'Thank you for your payment. Your order is now complete and under review.',
         'back_to_home' => 'Back to Home',
+        'status' => 'Payment Status',
+        'confirmed' => 'Confirmed',
+        'having_trouble' => 'Having trouble with your payment?',
+        'contact_support' => 'Contact Support',
 
         'failed_title' => 'Payment Failed',
         'failed_subtitle' => 'Unfortunately, your payment could not be processed.',

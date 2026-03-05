@@ -12,14 +12,14 @@
 <main id="pricing-wrapper" class="is-monthly bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 antialiased pb-40 min-h-screen font-sans" itemscope itemtype="https://schema.org/WebPage">
     <header class="pt-32 pb-12 text-center px-6 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-b from-slate-200/50 to-transparent dark:from-slate-900/50 dark:to-transparent -z-10"></div>
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">Build Your Custom Suite</h1>
-        <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-10 font-medium leading-relaxed">Select the systems you need and choose the perfect plan for your team. Scale up whenever you're ready.</p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">{{ __('gemini-landing.pricing_builder.title') }}</h1>
+        <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-10 font-medium leading-relaxed">{{ __('gemini-landing.pricing_builder.subtitle') }}</p>
 
         <input type="checkbox" id="billing-toggle" class="hidden" onchange="calculateTotal()" />
         <div class="inline-flex items-center p-1.5 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
-            <button id="btn-monthly" class="px-8 py-2.5 rounded-full text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white transition-all duration-300 shadow-inner" onclick="setBilling('monthly')">Monthly</button>
+            <button id="btn-monthly" class="px-8 py-2.5 rounded-full text-sm font-bold bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white transition-all duration-300 shadow-inner" onclick="setBilling('monthly')">{{ __('gemini-landing.pricing_page.billing_monthly') }}</button>
             <button id="btn-yearly" class="px-8 py-2.5 rounded-full text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-300 flex items-center gap-2" onclick="setBilling('yearly')">
-                Yearly <span class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-widest font-black shadow-sm">Save 20%</span>
+                {{ __('gemini-landing.pricing_page.billing_yearly') }} <span class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-widest font-black shadow-sm">{{ __('gemini-landing.pricing_page.save_20') }}</span>
             </button>
         </div>
     </header>
@@ -35,8 +35,8 @@
                     </div>
 
                     <div>
-                        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">POS & ERP System</h2>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Inventory, sales, and comprehensive accounting.</p>
+                        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">{{ __('gemini-landing.pricing_builder.system_pos_title') }}</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">{{ __('gemini-landing.pricing_builder.system_pos_desc') }}</p>
                     </div>
                 </div>
                 <div class="relative inline-flex items-center cursor-pointer mt-2 sm:mt-0" onclick="event.stopPropagation(); toggleSystem('pos', 'indigo')">
@@ -48,7 +48,7 @@
 
             <div id="config-pos" class="hidden border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 p-6 sm:p-8 rounded-b-2xl">
                 <div class="flex justify-between items-end mb-6">
-                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Select Plan Tier</p>
+                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ __('gemini-landing.pricing_builder.select_plan_tier') }}</p>
                     <p class="text-xs text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/20 px-3 py-1.5 rounded-md shadow-sm border border-indigo-100 dark:border-indigo-800/30" id="trial-pos" style="display: none;"></p>
                 </div>
 
@@ -74,8 +74,8 @@
                             <div class="relative z-10 flex flex-col h-full w-full">
                                 <div class="font-extrabold text-slate-900 dark:text-white text-lg">{{ $plan->name }}</div>
                                 <div class="my-4">
-                                    <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedMonth, 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
-                                    <div class="display-yearly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedYear, 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
+                                    <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedMonth, 0) }}<span class="text-sm font-medium text-slate-400">{{ __('gemini-landing.pricing_compare.per_month') }}</span></div>
+                                    <div class="display-yearly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedYear, 0) }}<span class="text-sm font-medium text-slate-400">{{ __('gemini-landing.pricing_compare.per_month') }}</span></div>
                                 </div>
                                 @if(count($planFeatureNames) > 0)
                                     <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800/80 w-full">
@@ -102,8 +102,8 @@
                     </div>
 
                     <div>
-                        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">HRM System</h2>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Payroll, attendance, and team management.</p>
+                        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">{{ __('gemini-landing.pricing_builder.system_hrm_title') }}</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">{{ __('gemini-landing.pricing_builder.system_hrm_desc') }}</p>
                     </div>
                 </div>
                 <div class="relative inline-flex items-center cursor-pointer mt-2 sm:mt-0" onclick="event.stopPropagation(); toggleSystem('hrm', 'emerald')">
@@ -115,7 +115,7 @@
 
             <div id="config-hrm" class="hidden border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 p-6 sm:p-8 rounded-b-2xl">
                 <div class="flex justify-between items-end mb-6">
-                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Select Plan Tier</p>
+                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ __('gemini-landing.pricing_builder.select_plan_tier') }}</p>
                     <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-md shadow-sm border border-emerald-100 dark:border-emerald-800/30" id="trial-hrm" style="display: none;"></p>
                 </div>
 
@@ -141,8 +141,8 @@
                             <div class="relative z-10 flex flex-col h-full w-full">
                                 <div class="font-extrabold text-slate-900 dark:text-white text-lg">{{ $plan->name }}</div>
                                 <div class="my-4">
-                                    <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedMonth, 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
-                                    <div class="display-yearly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedYear, 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
+                                    <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedMonth, 0) }}<span class="text-sm font-medium text-slate-400">{{ __('gemini-landing.pricing_compare.per_month') }}</span></div>
+                                    <div class="display-yearly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedYear, 0) }}<span class="text-sm font-medium text-slate-400">{{ __('gemini-landing.pricing_compare.per_month') }}</span></div>
                                 </div>
                                 @if(count($planFeatureNames) > 0)
                                     <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800/80 w-full">
@@ -169,8 +169,8 @@
                     </div>
 
                     <div>
-                        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">Booking & Reservations</h2>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Smart scheduling, calendars, and reminders.</p>
+                        <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-1">{{ __('gemini-landing.pricing_builder.system_booking_title') }}</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">{{ __('gemini-landing.pricing_builder.system_booking_desc') }}</p>
                     </div>
                 </div>
                 <div class="relative inline-flex items-center cursor-pointer mt-2 sm:mt-0" onclick="event.stopPropagation(); toggleSystem('booking', 'rose')">
@@ -182,7 +182,7 @@
 
             <div id="config-booking" class="hidden border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 p-6 sm:p-8 rounded-b-2xl">
                 <div class="flex justify-between items-end mb-6">
-                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Select Plan Tier</p>
+                    <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ __('gemini-landing.pricing_builder.select_plan_tier') }}</p>
                     <p class="text-xs text-rose-600 dark:text-rose-400 font-bold bg-rose-50 dark:bg-rose-900/20 px-3 py-1.5 rounded-md shadow-sm border border-rose-100 dark:border-rose-800/30" id="trial-booking" style="display: none;"></p>
                 </div>
 
@@ -208,8 +208,8 @@
                             <div class="relative z-10 flex flex-col h-full w-full">
                                 <div class="font-extrabold text-slate-900 dark:text-white text-lg">{{ $plan->name }}</div>
                                 <div class="my-4">
-                                    <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedMonth, 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
-                                    <div class="display-yearly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedYear, 0) }}<span class="text-sm font-medium text-slate-400">/mo</span></div>
+                                    <div class="display-monthly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedMonth, 0) }}<span class="text-sm font-medium text-slate-400">{{ __('gemini-landing.pricing_compare.per_month') }}</span></div>
+                                    <div class="display-yearly text-4xl font-black text-slate-900 dark:text-white">${{ number_format($discountedYear, 0) }}<span class="text-sm font-medium text-slate-400">{{ __('gemini-landing.pricing_compare.per_month') }}</span></div>
                                 </div>
                                 @if(count($planFeatureNames) > 0)
                                     <div class="mt-auto pt-5 border-t border-slate-100 dark:border-slate-800/80 w-full">
@@ -233,10 +233,10 @@
 
             <div class="flex items-center gap-4">
                 <div class="flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold uppercase tracking-widest">Your Selection</span>
+                    <span class="text-xs text-slate-400 font-bold uppercase tracking-widest">{{ __('gemini-landing.pricing_builder.your_selection') }}</span>
                     <div class="flex items-center gap-2 mt-1">
                         <span id="system-count" class="font-black text-2xl text-white">0</span>
-                        <span class="text-sm font-medium text-slate-300">Modules Selected</span>
+                        <span class="text-sm font-medium text-slate-300">{{ __('gemini-landing.pricing_builder.modules_selected') }}</span>
                     </div>
                 </div>
             </div>
@@ -244,11 +244,11 @@
             <div class="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
                 <div class="text-right flex flex-col justify-center">
                     <div class="text-[10px] text-slate-400 line-through h-3 font-semibold uppercase tracking-widest" id="original-price"></div>
-                    <div class="text-3xl font-black text-white" id="total-price">$0<span class="text-base font-medium text-slate-400">/mo</span></div>
+                    <div class="text-3xl font-black text-white" id="total-price">$0<span class="text-base font-medium text-slate-400">{{ __('gemini-landing.pricing_compare.per_month') }}</span></div>
                     <p class="text-xs text-white font-bold h-4 mt-1" id="due-note"></p>
                 </div>
                 <button id="proceed-to-checkout" class="bg-indigo-500 text-white px-8 py-3.5 rounded-xl font-extrabold hover:bg-indigo-400 transition-all active:scale-95 flex items-center gap-3 shadow-lg shadow-indigo-500/20">
-                    Checkout <i class="fa-solid fa-arrow-right"></i>
+                    {{ __('gemini-landing.pricing_builder.checkout') }} <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
         </div>
@@ -259,6 +259,16 @@
 @push('scripts')
 <script>
     const checkoutBase = @json(route('tenant-checkout'));
+    const i18n = @json([
+        'month_free_trial' => __('gemini-landing.pricing_builder.month_free_trial', ['months' => ':months']),
+        'free' => __('gemini-landing.pricing_builder.free'),
+        'due_now' => __('gemini-landing.pricing_builder.due_now'),
+        'all_in_free_trial' => __('gemini-landing.pricing_builder.all_in_free_trial'),
+        'selected_trial_free_now' => __('gemini-landing.pricing_builder.selected_trial_free_now'),
+        'total_due_today' => __('gemini-landing.pricing_builder.total_due_today'),
+        'period_year_short' => __('gemini-landing.common.period_year_short'),
+        'period_month_short' => __('gemini-landing.common.period_month_short'),
+    ]);
 
     function getSelectedPrice(moduleKey, isYearly) {
         const select = document.getElementById('tier-' + moduleKey);
@@ -382,7 +392,7 @@
 
             if (trialElement) {
                 if(checkbox && checkbox.checked && trialMonths > 0) {
-                     trialElement.innerHTML = `<i class="fa-solid fa-gift mr-1"></i> ${trialMonths} Month Free Trial`;
+                     trialElement.innerHTML = `<i class="fa-solid fa-gift mr-1"></i> ${String(i18n.month_free_trial || '').replace(':months', String(trialMonths))}`;
                      trialElement.style.display = 'block';
                 } else {
                      trialElement.style.display = 'none';
@@ -404,16 +414,16 @@
 
         // Logic for updating the dark bottom bar text
         if (selectedCount > 0 && payableNow <= 0) {
-            originalPriceElement.textContent = `$${total.toFixed(2)} / ${isYearly ? 'yr' : 'mo'}`;
-            document.getElementById('total-price').innerHTML = 'Free<span class="text-sm font-medium text-slate-400"> (due now)</span>';
-            if (dueNoteElement) dueNoteElement.textContent = hasTrialSelection ? 'All selected systems are in free trial. Due now is Free.' : '';
+            originalPriceElement.textContent = `$${total.toFixed(2)} / ${isYearly ? i18n.period_year_short : i18n.period_month_short}`;
+            document.getElementById('total-price').innerHTML = `${i18n.free}<span class="text-sm font-medium text-slate-400"> (${i18n.due_now})</span>`;
+            if (dueNoteElement) dueNoteElement.textContent = hasTrialSelection ? i18n.all_in_free_trial : '';
         } else {
-            originalPriceElement.textContent = hasTrialSelection && selectedCount > 0 ? `$${total.toFixed(2)} / ${isYearly ? 'yr' : 'mo'}` : '';
-            document.getElementById('total-price').innerHTML = `$${payableNow.toFixed(2)}<span class="text-base font-medium text-slate-400">/${isYearly ? 'yr' : 'mo'}</span>`;
+            originalPriceElement.textContent = hasTrialSelection && selectedCount > 0 ? `$${total.toFixed(2)} / ${isYearly ? i18n.period_year_short : i18n.period_month_short}` : '';
+            document.getElementById('total-price').innerHTML = `$${payableNow.toFixed(2)}<span class="text-base font-medium text-slate-400">/${isYearly ? i18n.period_year_short : i18n.period_month_short}</span>`;
             if (dueNoteElement) {
                 dueNoteElement.textContent = hasTrialSelection && selectedCount > 0
-                    ? `Selected trial plans are free now. Pay only non-trial systems.`
-                    : (selectedCount > 0 ? 'Total amount due today.' : '');
+                    ? i18n.selected_trial_free_now
+                    : (selectedCount > 0 ? i18n.total_due_today : '');
             }
         }
 
