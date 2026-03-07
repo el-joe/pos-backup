@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Reports\Sales;
 
+use App\Models\Tenant\Refund;
+use App\Models\Tenant\Sale;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -24,25 +26,30 @@ class SalesReturnReport extends Component
 
     public function loadReport()
     {
+        $fromDate = carbon($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = carbon($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
 
-        $rows = DB::table('sales')
-            ->join('users', 'users.id', '=', 'sales.customer_id')
-            ->join('sale_items', 'sale_items.sale_id', '=', 'sales.id')
-            ->select(
-                'sales.id as sale_id',
-                'sales.invoice_number',
-                'users.name as customer_name',
-                DB::raw('SUM(sale_items.refunded_qty) as return_count'),
-                DB::raw('SUM(sale_items.refunded_qty * sale_items.sell_price) as return_amount')
-            )
-            ->whereBetween('sales.created_at', [$this->from_date, $toDate])
-            ->where('sale_items.refunded_qty', '>', 0)
-            ->groupBy('sales.id', 'sales.invoice_number', 'users.name')
-            ->orderByDesc('return_amount')
+        $refunds = Refund::with(['order', 'items.refundable'])
+            ->where('order_type', Sale::class)
+            ->whereBetween('created_at', [$fromDate, $toDate])
             ->get();
 
-        $this->report = $rows;
+        $this->report = $refunds
+            ->groupBy('order_id')
+            ->map(function ($group) {
+                $first = $group->first();
+                $order = $first?->order;
+
+                return (object) [
+                    'sale_id' => $first?->order_id,
+                    'invoice_number' => $order?->invoice_number ?? 'N/A',
+                    'customer_name' => $order?->customer?->name ?? 'N/A',
+                    'return_count' => $group->sum(fn($refund) => $refund->items->sum('qty')),
+                    'return_amount' => $group->sum('total'),
+                ];
+            })
+            ->sortByDesc('return_amount')
+            ->values();
     }
 
     public function render()

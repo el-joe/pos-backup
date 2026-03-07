@@ -39,23 +39,31 @@ class BranchProfitability extends Component
 
     public function loadReport()
     {
+        $fromDate = Carbon::parse($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = Carbon::parse($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
 
         $sales = AccountTypeEnum::SALES->value;
         $cogs = AccountTypeEnum::COGS->value;
-        $expense = AccountTypeEnum::EXPENSE->value;
+        $expenseTypes = implode("','", [
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::FINANCE_EXPENSE->value,
+            AccountTypeEnum::MARKETING_EXPENSE->value,
+            AccountTypeEnum::OPERATING_EXPENSE->value,
+            AccountTypeEnum::GENERAL_AND_ADMINISTRATIVE_EXPENSE->value,
+            AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE->value,
+            AccountTypeEnum::INVENTORY_EXPENSE->value,
+        ]);
 
         // Match the query semantics (credit - debit for revenue, debit - credit for costs)
         $salesRevenue = "SUM(CASE WHEN accounts.type = '$sales' THEN IF(transaction_lines.type = 'credit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
         $cogsSum = "SUM(CASE WHEN accounts.type = '$cogs' THEN IF(transaction_lines.type = 'debit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
-        $expensesSum = "SUM(CASE WHEN accounts.type = '$expense' THEN IF(transaction_lines.type = 'debit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
+        $expensesSum = "SUM(CASE WHEN accounts.type IN ('$expenseTypes') THEN IF(transaction_lines.type = 'debit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
         $salesDiscount = "SUM(CASE WHEN accounts.type = '" . AccountTypeEnum::SALES_DISCOUNT->value . "' THEN IF(transaction_lines.type = 'debit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
-        $salesReturn = "SUM(CASE WHEN accounts.type = '" . AccountTypeEnum::SALES_RETURN->value . "' THEN IF(transaction_lines.type = 'debit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
         $inventoryShortage = "SUM(CASE WHEN accounts.type = '" . AccountTypeEnum::INVENTORY_SHORTAGE->value . "' THEN IF(transaction_lines.type = 'debit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
         $purchaseDiscountSum = "SUM(CASE WHEN accounts.type = '" . AccountTypeEnum::PURCHASE_DISCOUNT->value . "' THEN IF(transaction_lines.type = 'credit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)";
         // No explicit 'revenue' enum exists, so other income equals purchase discount here
         $otherIncome = $purchaseDiscountSum;
-        $netProfit = "$salesRevenue + $purchaseDiscountSum - $cogsSum - $expensesSum - $salesDiscount - $salesReturn - $inventoryShortage";
+        $netProfit = "$salesRevenue + $purchaseDiscountSum - $cogsSum - $expensesSum - $salesDiscount - $inventoryShortage";
 
         $query = DB::table('transaction_lines')
             ->join('transactions', 'transactions.id', '=', 'transaction_lines.transaction_id')
@@ -70,7 +78,7 @@ class BranchProfitability extends Component
                 DB::raw("$otherIncome as other_income"),
                 DB::raw("$netProfit as net_profit")
             )
-            ->whereBetween('transactions.date', [$this->from_date, $toDate])
+            ->whereBetween('transactions.date', [$fromDate, $toDate])
             ->groupBy('transactions.branch_id', 'branches.name')
             ->orderByDesc('net_profit');
 

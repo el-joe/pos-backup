@@ -3,6 +3,8 @@
 
 namespace App\Livewire\Admin\Reports\Purchases;
 
+use App\Models\Tenant\Purchase;
+use App\Models\Tenant\Refund;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -32,20 +34,27 @@ class PurchasesReturnReport extends Component
 
     protected function getPurchasesReturnReport()
     {
+        $fromDate = carbon($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = carbon($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
-        // Aggregate returned quantity and amount per purchase
-        $query = DB::table('purchase_items')
-            ->join('purchases', 'purchase_items.purchase_id', '=', 'purchases.id')
-            ->select([
-                'purchases.ref_no as purchase_ref',
-                DB::raw('SUM(purchase_items.refunded_qty) as returned_qty'),
-                DB::raw('SUM((purchase_items.purchase_price - (purchase_items.purchase_price * purchase_items.discount_percentage / 100)) * purchase_items.refunded_qty) as returned_amount'),
-            ])
-            ->where('purchase_items.refunded_qty', '>', 0)
-            ->whereBetween('purchases.order_date', [$this->from_date, $toDate])
-            ->groupBy('purchases.id', 'purchases.ref_no')
-            ->orderByDesc('returned_amount');
 
-        return $query->get();
+        $refunds = Refund::with(['order', 'items.refundable'])
+            ->where('order_type', Purchase::class)
+            ->whereBetween('created_at', [$fromDate, $toDate])
+            ->get();
+
+        return $refunds
+            ->groupBy('order_id')
+            ->map(function ($group) {
+                $first = $group->first();
+                $order = $first?->order;
+
+                return (object) [
+                    'purchase_ref' => $order?->ref_no ?? 'N/A',
+                    'returned_qty' => $group->sum(fn($refund) => $refund->items->sum('qty')),
+                    'returned_amount' => $group->sum('total'),
+                ];
+            })
+            ->sortByDesc('returned_amount')
+            ->values();
     }
 }

@@ -42,15 +42,15 @@
                                 </tr>
                                 <tr>
                                     <td>{{ \App\Enums\AccountTypeEnum::SALES->translatedLabel() }}</td>
-                                    <td>{{ currencyFormat($report['accounts']['sales']['credit'] ?? 0, true) }}</td>
+                                    <td>{{ currencyFormat($report['gross_sales'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ \App\Enums\AccountTypeEnum::SALES_DISCOUNT->translatedLabel() }}</td>
-                                    <td>-{{ currencyFormat($report['accounts']['sales_discount']['debit'] ?? 0, true) }}</td>
+                                    <td>-{{ currencyFormat($report['sales_discount_total'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ \App\Enums\AccountTypeEnum::SALES_RETURN->translatedLabel() }}</td>
-                                    <td>-{{ currencyFormat($report['accounts']['sales_return']['debit'] ?? 0, true) }}</td>
+                                    <td>-{{ currencyFormat($report['sales_return_total'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr class="fw-semibold bg-primary bg-opacity-10">
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_revenue') }}</td>
@@ -63,15 +63,15 @@
                                 </tr>
                                 <tr>
                                     <td>{{ \App\Enums\AccountTypeEnum::COGS->translatedLabel() }}</td>
-                                    <td>{{ currencyFormat($report['accounts']['cogs']['debit'] ?? 0, true) }}</td>
+                                    <td>{{ currencyFormat($report['cogs_total'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ \App\Enums\AccountTypeEnum::INVENTORY_SHORTAGE->translatedLabel() }}</td>
-                                    <td>{{ currencyFormat($report['accounts']['inventory_shortage']['debit'] ?? 0, true) }}</td>
+                                    <td>{{ currencyFormat($report['inventory_shortage_total'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ \App\Enums\AccountTypeEnum::PURCHASE_DISCOUNT->translatedLabel() }}</td>
-                                    <td>-{{ currencyFormat($report['accounts']['purchase_discount']['credit'] ?? 0, true) }}</td>
+                                    <td>-{{ currencyFormat($report['purchase_discount_total'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr class="fw-semibold bg-info bg-opacity-10">
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_cogs') }}</td>

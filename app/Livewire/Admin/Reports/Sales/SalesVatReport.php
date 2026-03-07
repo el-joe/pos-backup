@@ -34,8 +34,10 @@ class SalesVatReport extends Component
 
     protected function getVatPayableReport()
     {
-        // Assuming Sale model and sale_items table have 'vat_payable' field
-    $query = DB::table('transaction_lines')
+        $fromDate = carbon($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
+        $toDate = carbon($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
+
+        $query = DB::table('transaction_lines')
             ->join('transactions', 'transaction_lines.transaction_id', '=', 'transactions.id')
             ->join('sales', function($join) {
                 $join->on('transactions.reference_id', '=', 'sales.id')
@@ -50,9 +52,9 @@ class SalesVatReport extends Component
                 'sales.invoice_number',
                 'users.name as customer_name',
                 DB::raw('SUM(IF(transaction_lines.type = "credit" , transaction_lines.amount, (transaction_lines.amount*-1))) as vat_payable'),
-                DB::raw('DATE(sales.order_date) as sale_date')
+                DB::raw('MAX(transactions.date) as sale_date')
             )
-            ->whereBetween('sales.order_date', [$this->from_date, $this->to_date])
+            ->whereBetween('transactions.date', [$fromDate, $toDate])
             ->groupBy('sales.id', 'sales.invoice_number', 'users.name', 'sales.order_date')
             ->orderBy('sales.order_date', 'desc');
 

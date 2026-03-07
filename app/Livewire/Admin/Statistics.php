@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Tenant\Expense;
 use App\Models\Tenant\Purchase;
+use App\Models\Tenant\Refund;
 use App\Models\Tenant\Sale;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -18,6 +19,28 @@ class Statistics extends Component
     public $saleOrdersPerMonthlabels = [];
     public $saleOrdersPerMonthData = [];
 
+    protected function getRefundTotal(string $orderType): float
+    {
+        $query = Refund::query()
+            ->with(['items.refundable', 'order'])
+            ->where('order_type', $orderType)
+            ->when($this->filter['branch_id'] ?? null, fn($q, $v) => $q->where('branch_id', $v))
+            ->when($this->filter['from_date'] ?? null, fn($q, $v) => $q->whereDate('created_at', '>=', $v))
+            ->when($this->filter['to_date'] ?? null, fn($q, $v) => $q->whereDate('created_at', '<=', $v));
+
+        if ($orderType === Sale::class && ($this->filter['customer_id'] ?? null)) {
+            $customerId = $this->filter['customer_id'];
+            $query->whereHasMorph('order', [Sale::class], fn($q) => $q->where('customer_id', $customerId));
+        }
+
+        if ($orderType === Purchase::class && ($this->filter['supplier_id'] ?? null)) {
+            $supplierId = $this->filter['supplier_id'];
+            $query->whereHasMorph('order', [Purchase::class], fn($q) => $q->where('supplier_id', $supplierId));
+        }
+
+        return (float) $query->get()->sum('total');
+    }
+
     function getData()
     {
 
@@ -25,15 +48,16 @@ class Statistics extends Component
         $purchases = Purchase::filter($this->filter)->get();
         $expensesAmount = (float)Expense::filter($this->filter)->sum('amount');
         $totalSales = $sales->sum(callback: fn($q)=>$q->grand_total_amount);
-        $totalSalesRefunded = $sales->sum(fn($q)=>$q->refunded_grand_total_amount);
+        $totalSalesRefunded = $this->getRefundTotal(Sale::class);
+        $totalPurchaseRefunded = $this->getRefundTotal(Purchase::class);
 
-        $this->data['totalSales'] = $totalSales + $totalSalesRefunded;
-        $this->data['netSales'] = $sales->sum('net_total_amount');
+        $this->data['totalSales'] = $totalSales;
+        $this->data['netSales'] = $totalSales - $totalSalesRefunded;
         $this->data['dueAmount'] = $sales->sum('due_amount');
         $this->data['totalSalesReturn'] = $totalSalesRefunded;
         $this->data['totalPurchases'] = $purchases->sum('total_amount');
         $this->data['purchaseDue'] = $purchases->sum('due_amount');
-        $this->data['totalPurchaseReturn'] = $purchases->sum(fn($q)=>$q->refunded_total_amount);
+        $this->data['totalPurchaseReturn'] = $totalPurchaseRefunded;
         $this->data['totalExpense'] = $expensesAmount;
 
 

@@ -22,6 +22,7 @@ class CashierReport extends Component
     }
 
     function loadReport() {
+        $fromDate = carbon($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = carbon($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
         $report = TransactionLine::query()
             ->select([
@@ -63,15 +64,14 @@ class CashierReport extends Component
                     )
                     + SUM(CASE
                         WHEN accounts.type = '" . AccountTypeEnum::VAT_PAYABLE->value . "'
-                            AND transaction_lines.type = 'credit'
-                        THEN transaction_lines.amount ELSE 0 END
+                        THEN IF(transaction_lines.type = 'credit', transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END
                     )
                     AS net_sales")
             ])
             ->join('accounts', 'transaction_lines.account_id', '=', 'accounts.id')
             ->join('transactions', 'transaction_lines.transaction_id', '=', 'transactions.id')
             ->join('admins', 'transaction_lines.created_by', '=', 'admins.id')
-            ->whereBetween('transactions.date', [$this->from_date, $toDate])
+            ->whereBetween('transactions.date', [$fromDate, $toDate])
             ->groupBy('admins.name')
             ->orderByDesc('net_sales')
             ->get();

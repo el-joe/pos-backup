@@ -17,6 +17,7 @@ class SellRepository extends BaseRepository
 
     function salesSummaryReport($from_date, $to_date, $period)
     {
+        $fromDate = Carbon::parse($from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = Carbon::parse($to_date)->endOfDay()->format('Y-m-d H:i:s');
         $groupFormat = match($period) {
             'day' => '%Y-%m-%d',
@@ -27,19 +28,18 @@ class SellRepository extends BaseRepository
 
         $salesAccountType = AccountTypeEnum::SALES->value;
         $salesDiscountAccountType = AccountTypeEnum::SALES_DISCOUNT->value;
-        $salesReturnAccountType = AccountTypeEnum::SALES_RETURN->value;
         $salesVatPayableAccountType = AccountTypeEnum::VAT_PAYABLE->value;
         $salesCogsAccountType = AccountTypeEnum::COGS->value;
 
         $grossSales = 'SUM(CASE WHEN accounts.type = "' . $salesAccountType . '" AND transaction_lines.type = "credit" THEN transaction_lines.amount ELSE 0 END)';
-        $discount = 'SUM(CASE WHEN accounts.type = "' . $salesDiscountAccountType . '" AND transaction_lines.type = "debit" THEN transaction_lines.amount ELSE 0 END)';
-        $salesReturn = 'SUM(CASE WHEN accounts.type = "' . $salesReturnAccountType . '" AND transaction_lines.type = "debit" THEN transaction_lines.amount ELSE 0 END)';
+        $discount = 'SUM(CASE WHEN accounts.type = "' . $salesDiscountAccountType . '" THEN IF(transaction_lines.type = "debit", transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)';
+        $salesReturn = 'SUM(CASE WHEN accounts.type = "' . $salesAccountType . '" AND transaction_lines.type = "debit" THEN transaction_lines.amount ELSE 0 END)';
         //Net Sales=Gross Sales−Discounts−Sales Returns
         $netSales = $grossSales . ' - ' . $discount . ' - ' . $salesReturn;
-        $vatPayable = 'SUM(CASE WHEN accounts.type = "' . $salesVatPayableAccountType . '" AND transaction_lines.type = "credit" THEN transaction_lines.amount ELSE 0 END)';
+        $vatPayable = 'SUM(CASE WHEN accounts.type = "' . $salesVatPayableAccountType . '" THEN IF(transaction_lines.type = "credit", transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)';
         //Total Collected=Net Sales+VAT Payable
         $totalCollected = $netSales . ' + ' . $vatPayable;
-        $cogs = 'SUM(CASE WHEN accounts.type = "' . $salesCogsAccountType . '" AND transaction_lines.type = "debit" THEN transaction_lines.amount ELSE 0 END)';
+        $cogs = 'SUM(CASE WHEN accounts.type = "' . $salesCogsAccountType . '" THEN IF(transaction_lines.type = "debit", transaction_lines.amount, (transaction_lines.amount * -1)) ELSE 0 END)';
         //Gross Profit=Net Sales−COGS
         $grossProfit = $netSales . ' - ' . $cogs;
 
@@ -56,7 +56,7 @@ class SellRepository extends BaseRepository
                 DB::raw("{$cogs} as cogs"),
                 DB::raw("{$grossProfit} as gross_profit")
             )
-            ->whereBetween('transaction_lines.created_at', [$from_date, $toDate])
+            ->whereBetween('transaction_lines.created_at', [$fromDate, $toDate])
             ->groupBy(DB::raw("DATE_FORMAT(transaction_lines.created_at, '$groupFormat')"))
             ->orderBy('period')
             ->get();

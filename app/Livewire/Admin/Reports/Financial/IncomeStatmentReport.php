@@ -59,9 +59,9 @@ class IncomeStatmentReport extends Component
         };
 
         // Revenue
-        $grossSales = $net(AccountTypeEnum::SALES, 'credit');
+        $grossSales = (float) ($accounts[AccountTypeEnum::SALES->value]['credit'] ?? 0);
+        $salesReturn = (float) ($accounts[AccountTypeEnum::SALES->value]['debit'] ?? 0);
         $salesDiscount = $net(AccountTypeEnum::SALES_DISCOUNT, 'debit');
-        $salesReturn = $net(AccountTypeEnum::SALES_RETURN, 'debit');
         $revenue = $grossSales - $salesDiscount - $salesReturn;
 
         // Cost of Goods Sold
@@ -96,6 +96,12 @@ class IncomeStatmentReport extends Component
 
         $this->report = [
             'accounts' => $accounts,
+            'gross_sales' => $grossSales,
+            'sales_discount_total' => $salesDiscount,
+            'sales_return_total' => $salesReturn,
+            'cogs_total' => $cogsBase,
+            'inventory_shortage_total' => $inventoryShortage,
+            'purchase_discount_total' => $purchaseDiscount,
             'revenue' => $revenue,
             'cogs' => $cogs,
             'gross_profit' => $gross_profit,

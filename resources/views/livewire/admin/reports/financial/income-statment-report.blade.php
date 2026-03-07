@@ -31,15 +31,15 @@
                     </tr>
                     <tr>
                         <td>{{ \App\Enums\AccountTypeEnum::SALES->translatedLabel() }}</td>
-                        <td>{{ number_format($report['accounts']['sales']['credit'] ?? 0, 2) }}</td>
+                        <td>{{ number_format($report['gross_sales'] ?? 0, 2) }}</td>
                     </tr>
                     <tr>
                         <td>{{ \App\Enums\AccountTypeEnum::SALES_DISCOUNT->translatedLabel() }}</td>
-                        <td>-{{ number_format($report['accounts']['sales_discount']['debit'] ?? 0, 2) }}</td>
+                        <td>-{{ number_format($report['sales_discount_total'] ?? 0, 2) }}</td>
                     </tr>
                     <tr>
                         <td>{{ \App\Enums\AccountTypeEnum::SALES_RETURN->translatedLabel() }}</td>
-                        <td>-{{ number_format($report['accounts']['sales_return']['debit'] ?? 0, 2) }}</td>
+                        <td>-{{ number_format($report['sales_return_total'] ?? 0, 2) }}</td>
                     </tr>
                     <tr style="background:#bbdefb; font-weight:600;">
                         <td>Total Revenue</td>
@@ -52,7 +52,7 @@
                     </tr>
                     <tr>
                         <td>{{ \App\Enums\AccountTypeEnum::COGS->translatedLabel() }}</td>
-                        <td>{{ number_format($report['accounts']['cogs']['debit'] ?? 0, 2) }}</td>
+                        <td>{{ number_format($report['cogs_total'] ?? 0, 2) }}</td>
                     </tr>
                     {{-- <tr>
                         <td>Inventory</td>
@@ -60,11 +60,11 @@
                     </tr> --}}
                     <tr>
                         <td>{{ \App\Enums\AccountTypeEnum::INVENTORY_SHORTAGE->translatedLabel() }}</td>
-                        <td>{{ number_format($report['accounts']['inventory_shortage']['debit'] ?? 0, 2) }}</td>
+                        <td>{{ number_format($report['inventory_shortage_total'] ?? 0, 2) }}</td>
                     </tr>
                     <tr>
                         <td>{{ \App\Enums\AccountTypeEnum::PURCHASE_DISCOUNT->translatedLabel() }}</td>
-                        <td>-{{ number_format($report['accounts']['purchase_discount']['credit'] ?? 0, 2) }}</td>
+                        <td>-{{ number_format($report['purchase_discount_total'] ?? 0, 2) }}</td>
                     </tr>
                     <tr style="background:#b2ebf2; font-weight:600;">
                         <td>Total COGS</td>

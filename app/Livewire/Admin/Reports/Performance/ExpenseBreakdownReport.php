@@ -32,14 +32,23 @@ class ExpenseBreakdownReport extends Component
     {
         $fromDate = Carbon::parse($this->from_date)->startOfDay();
         $toDate = Carbon::parse($this->to_date)->endOfDay();
+        $expenseTypes = [
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::FINANCE_EXPENSE->value,
+            AccountTypeEnum::MARKETING_EXPENSE->value,
+            AccountTypeEnum::OPERATING_EXPENSE->value,
+            AccountTypeEnum::GENERAL_AND_ADMINISTRATIVE_EXPENSE->value,
+            AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE->value,
+            AccountTypeEnum::INVENTORY_EXPENSE->value,
+        ];
 
         $totalDebit = "SUM(CASE WHEN transaction_lines.type = 'debit' THEN transaction_lines.amount ELSE 0 END)";
         $totalCredit = "SUM(CASE WHEN transaction_lines.type = 'credit' THEN transaction_lines.amount ELSE 0 END)";
 
         $this->report = DB::table('transaction_lines')
-            ->join('accounts', function($join) {
+            ->join('accounts', function($join) use ($expenseTypes) {
                 $join->on('accounts.id', '=', 'transaction_lines.account_id')
-                     ->where('accounts.type', AccountTypeEnum::EXPENSE);
+                     ->whereIn('accounts.type', $expenseTypes);
             })
             ->join('transactions', function($join) {
                 $join->on('transactions.id', '=', 'transaction_lines.transaction_id')

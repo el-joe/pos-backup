@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Helpers\SaleHelper;
 use Illuminate\Database\Eloquent\Model;
 
 class Refund extends Model
@@ -38,7 +39,30 @@ class Refund extends Model
 
     function getTotalAttribute(){
         return $this->items->sum(function($item){
-            return $item->qty * ($item->refundable?->unit_amount_after_tax ?? 0);
+            $refundable = $item->refundable;
+
+            if ($refundable instanceof SaleItem) {
+                $saleOrder = $refundable->sale;
+                if (!$saleOrder) {
+                    return 0;
+                }
+
+                $product = $refundable->toArray();
+                $product['qty'] = $item->qty;
+                $product['refunded_qty'] = 0;
+                $taxPercentage = (int) ($refundable->taxable ?? 0) === 1 ? ($saleOrder->tax_percentage ?? 0) : 0;
+
+                return SaleHelper::singleGrandTotal(
+                    $product,
+                    $saleOrder->saleItems,
+                    $saleOrder->discount_type,
+                    $saleOrder->discount_value,
+                    $taxPercentage,
+                    $saleOrder->max_discount_amount ?? 0,
+                );
+            }
+
+            return $item->qty * ($refundable?->unit_amount_after_tax ?? 0);
         });
     }
 }
