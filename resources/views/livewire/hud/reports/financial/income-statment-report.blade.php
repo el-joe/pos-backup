@@ -41,15 +41,15 @@
                                     <th colspan="2">{{ __('general.pages.reports.financial.income_statement.revenue') }}</th>
                                 </tr>
                                 <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.sales') }}</td>
+                                    <td>{{ \App\Enums\AccountTypeEnum::SALES->translatedLabel() }}</td>
                                     <td>{{ currencyFormat($report['accounts']['sales']['credit'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.sales_discount') }}</td>
+                                    <td>{{ \App\Enums\AccountTypeEnum::SALES_DISCOUNT->translatedLabel() }}</td>
                                     <td>-{{ currencyFormat($report['accounts']['sales_discount']['debit'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.sales_return') }}</td>
+                                    <td>{{ \App\Enums\AccountTypeEnum::SALES_RETURN->translatedLabel() }}</td>
                                     <td>-{{ currencyFormat($report['accounts']['sales_return']['debit'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr class="fw-semibold bg-primary bg-opacity-10">
@@ -62,20 +62,16 @@
                                     <th colspan="2">{{ __('general.pages.reports.financial.income_statement.cogs_section') }}</th>
                                 </tr>
                                 <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.cogs') }}</td>
+                                    <td>{{ \App\Enums\AccountTypeEnum::COGS->translatedLabel() }}</td>
                                     <td>{{ currencyFormat($report['accounts']['cogs']['debit'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.inventory_shortage') }}</td>
+                                    <td>{{ \App\Enums\AccountTypeEnum::INVENTORY_SHORTAGE->translatedLabel() }}</td>
                                     <td>{{ currencyFormat($report['accounts']['inventory_shortage']['debit'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.purchase_discount') }}</td>
+                                    <td>{{ \App\Enums\AccountTypeEnum::PURCHASE_DISCOUNT->translatedLabel() }}</td>
                                     <td>-{{ currencyFormat($report['accounts']['purchase_discount']['credit'] ?? 0, true) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.purchase_return') }}</td>
-                                    <td>-{{ currencyFormat($report['accounts']['purchase_return']['credit'] ?? 0, true) }}</td>
                                 </tr>
                                 <tr class="fw-semibold bg-info bg-opacity-10">
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_cogs') }}</td>
@@ -90,18 +86,12 @@
                                 <tr class="bg-purple bg-opacity-25">
                                     <th colspan="2">{{ __('general.pages.reports.financial.income_statement.expenses') }}</th>
                                 </tr>
-                                <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.expense') }}</td>
-                                    <td>{{ currencyFormat($report['accounts']['expense']['debit'] ?? 0, true) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.vat_payable') }}</td>
-                                    <td>{{ currencyFormat($report['accounts']['vat_payable']['credit'] ?? 0, true) }}</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ __('general.pages.reports.financial.income_statement.vat_receivable') }}</td>
-                                    <td>-{{ currencyFormat($report['accounts']['vat_receivable']['debit'] ?? 0, true) }}</td>
-                                </tr>
+                                @foreach(($report['expenses_breakdown'] ?? []) as $type => $amount)
+                                    <tr>
+                                        <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
+                                        <td>{{ currencyFormat($amount, true) }}</td>
+                                    </tr>
+                                @endforeach
                                 <tr class="fw-semibold bg-purple bg-opacity-10">
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_expenses') }}</td>
                                     <td>{{ currencyFormat($report['expenses'] ?? 0, true) }}</td>

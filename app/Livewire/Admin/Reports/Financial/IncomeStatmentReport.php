@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Reports\Financial;
 
+use App\Enums\AccountTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -25,15 +26,7 @@ class IncomeStatmentReport extends Component
 
     public function loadReport()
     {
-        // 🧠 Quick Summary
-        //     | Section          | Formula                                                 | Notes                            |
-        //     | ---------------- | ------------------------------------------------------- | -------------------------------- |
-        //     | **Revenue**      | Sales – Returns – Discounts                             | From credits/debits              |
-        //     | **COGS**         | COGS + Shortage – Purchase Returns – Purchase Discounts | Don’t include inventory directly |
-        //     | **Gross Profit** | Revenue – COGS                                          |                                  |
-        //     | **Expenses**     | Expenses + VAT Payable – VAT Receivable + Liabilities   | Optional to separate VAT         |
-        //     | **Net Profit**   | Gross Profit – Expenses                                 | Final profit or loss             |
-
+        $fromDate = carbon($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = carbon($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
         $rows = DB::table('transaction_lines')
             ->join('accounts', 'accounts.id', '=', 'transaction_lines.account_id')
@@ -42,7 +35,7 @@ class IncomeStatmentReport extends Component
                 DB::raw('SUM(CASE WHEN transaction_lines.type = "debit" THEN transaction_lines.amount ELSE 0 END) as debit_total'),
                 DB::raw('SUM(CASE WHEN transaction_lines.type = "credit" THEN transaction_lines.amount ELSE 0 END) as credit_total')
             )
-            ->whereBetween('transaction_lines.created_at', [$this->from_date, $toDate])
+            ->whereBetween('transaction_lines.created_at', [$fromDate, $toDate])
             ->groupBy('accounts.type')
             ->get();
 
@@ -56,31 +49,58 @@ class IncomeStatmentReport extends Component
             ];
         }
 
+        $net = function (AccountTypeEnum $accountType, string $normalSide = 'debit') use ($accounts): float {
+            $debit = (float) ($accounts[$accountType->value]['debit'] ?? 0);
+            $credit = (float) ($accounts[$accountType->value]['credit'] ?? 0);
 
-        $revenue = ($accounts['sales']['credit'] ?? 0)
-            - ($accounts['sales_discount']['debit'] ?? 0)
-            - ($accounts['sales_return']['debit'] ?? 0);
+            return $normalSide === 'credit'
+                ? ($credit - $debit)
+                : ($debit - $credit);
+        };
 
-        $cogs = ($accounts['cogs']['debit'] ?? 0)
-            + ($accounts['inventory_shortage']['debit'] ?? 0)
-            - ($accounts['purchase_discount']['credit'] ?? 0)
-            - ($accounts['purchase_return']['credit'] ?? 0);
+        // Revenue
+        $grossSales = $net(AccountTypeEnum::SALES, 'credit');
+        $salesDiscount = $net(AccountTypeEnum::SALES_DISCOUNT, 'debit');
+        $salesReturn = $net(AccountTypeEnum::SALES_RETURN, 'debit');
+        $revenue = $grossSales - $salesDiscount - $salesReturn;
+
+        // Cost of Goods Sold
+        $cogsBase = $net(AccountTypeEnum::COGS, 'debit');
+        $inventoryShortage = $net(AccountTypeEnum::INVENTORY_SHORTAGE, 'debit');
+        $purchaseDiscount = $net(AccountTypeEnum::PURCHASE_DISCOUNT, 'credit');
+        // IMPORTANT: Purchase returns should NOT appear in income statement (per business rule).
+        $cogs = $cogsBase + $inventoryShortage - $purchaseDiscount;
 
         $gross_profit = $revenue - $cogs;
 
-        $expenses = ($accounts['expense']['debit'] ?? 0)
-            + ($accounts['vat_payable']['debit'] ?? 0)
-            - ($accounts['vat_receivable']['credit'] ?? 0)
-            + ($accounts['longterm_liability']['debit'] ?? 0);
+        // Expenses (sum all expense-type accounts)
+        $expenseTypes = [
+            AccountTypeEnum::EXPENSE,
+            AccountTypeEnum::FINANCE_EXPENSE,
+            AccountTypeEnum::MARKETING_EXPENSE,
+            AccountTypeEnum::OPERATING_EXPENSE,
+            AccountTypeEnum::GENERAL_AND_ADMINISTRATIVE_EXPENSE,
+            AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE,
+            AccountTypeEnum::INVENTORY_EXPENSE,
+        ];
 
-        $net_profit = $gross_profit - $expenses;
+        $expensesBreakdown = [];
+        $expensesTotal = 0.0;
+        foreach ($expenseTypes as $type) {
+            $amount = $net($type, 'debit');
+            $expensesBreakdown[$type->value] = $amount;
+            $expensesTotal += $amount;
+        }
+
+        $net_profit = $gross_profit - $expensesTotal;
 
         $this->report = [
             'accounts' => $accounts,
             'revenue' => $revenue,
             'cogs' => $cogs,
             'gross_profit' => $gross_profit,
-            'expenses' => $expenses,
+            'expenses' => $expensesTotal,
+            'expenses_breakdown' => $expensesBreakdown,
             'net_profit' => $net_profit,
         ];
     }

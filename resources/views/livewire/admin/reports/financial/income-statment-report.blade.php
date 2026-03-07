@@ -30,15 +30,15 @@
                         <th colspan="2">Revenue</th>
                     </tr>
                     <tr>
-                        <td>Sales</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::SALES->translatedLabel() }}</td>
                         <td>{{ number_format($report['accounts']['sales']['credit'] ?? 0, 2) }}</td>
                     </tr>
                     <tr>
-                        <td>Sales Discount</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::SALES_DISCOUNT->translatedLabel() }}</td>
                         <td>-{{ number_format($report['accounts']['sales_discount']['debit'] ?? 0, 2) }}</td>
                     </tr>
                     <tr>
-                        <td>Sales Return</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::SALES_RETURN->translatedLabel() }}</td>
                         <td>-{{ number_format($report['accounts']['sales_return']['debit'] ?? 0, 2) }}</td>
                     </tr>
                     <tr style="background:#bbdefb; font-weight:600;">
@@ -51,7 +51,7 @@
                         <th colspan="2">Cost of Goods Sold</th>
                     </tr>
                     <tr>
-                        <td>COGS</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::COGS->translatedLabel() }}</td>
                         <td>{{ number_format($report['accounts']['cogs']['debit'] ?? 0, 2) }}</td>
                     </tr>
                     {{-- <tr>
@@ -59,16 +59,12 @@
                         <td>{{ number_format($report['accounts']['inventory']['debit'] ?? 0, 2) }}</td>
                     </tr> --}}
                     <tr>
-                        <td>Inventory Shortage</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::INVENTORY_SHORTAGE->translatedLabel() }}</td>
                         <td>{{ number_format($report['accounts']['inventory_shortage']['debit'] ?? 0, 2) }}</td>
                     </tr>
                     <tr>
-                        <td>Purchase Discount</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::PURCHASE_DISCOUNT->translatedLabel() }}</td>
                         <td>-{{ number_format($report['accounts']['purchase_discount']['credit'] ?? 0, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Purchase Return</td>
-                        <td>-{{ number_format($report['accounts']['purchase_return']['credit'] ?? 0, 2) }}</td>
                     </tr>
                     <tr style="background:#b2ebf2; font-weight:600;">
                         <td>Total COGS</td>
@@ -83,18 +79,12 @@
                     <tr style="background:#f3e5f5;">
                         <th colspan="2">Expenses</th>
                     </tr>
+                    @foreach(($report['expenses_breakdown'] ?? []) as $type => $amount)
                     <tr>
-                        <td>Expense</td>
-                        <td>{{ number_format($report['accounts']['expense']['debit'] ?? 0, 2) }}</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
+                        <td>{{ number_format($amount, 2) }}</td>
                     </tr>
-                    <tr>
-                        <td>VAT Payable</td>
-                        <td>{{ number_format($report['accounts']['vat_payable']['credit'] ?? 0, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td>VAT Receivable</td>
-                        <td>-{{ number_format($report['accounts']['vat_receivable']['debit'] ?? 0, 2) }}</td>
-                    </tr>
+                    @endforeach
                     <tr style="background:#e1bee7; font-weight:600;">
                         <td>Total Expenses</td>
                         <td>{{ number_format($report['expenses'] ?? 0, 2) }}</td>
