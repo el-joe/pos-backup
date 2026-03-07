@@ -11,6 +11,7 @@ use App\Services\CashRegisterService;
 use App\Services\SellService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class CustomerPayable extends Component
@@ -77,44 +78,46 @@ class CustomerPayable extends Component
             return;
         }
 
-        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-        if ($cashRegister) {
-            $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $this->payment['amount']);
-        }
-
         $remaining = (float) $this->payment['amount'];
         $applied = 0.0;
 
-        foreach ($dueSales as $sale) {
-            if ($remaining <= 0) {
-                break;
-            }
+        DB::transaction(function () use ($dueSales, &$remaining, &$applied) {
+            foreach ($dueSales as $sale) {
+                if ($remaining <= 0) {
+                    break;
+                }
 
-            $due = (float) $sale->due_amount;
-            if ($due <= 0) {
-                continue;
-            }
+                $due = (float) $sale->due_amount;
+                if ($due <= 0) {
+                    continue;
+                }
 
-            $payAmount = min($due, $remaining);
+                $payAmount = min($due, $remaining);
 
-            $this->sellService->addPayment($sale->id, [
-                'payment_note' => $this->payment['note'] ?? null,
-                'payment_amount' => $payAmount,
-                'branch_id' => $sale->branch_id,
-                'payment_account' => $this->payment['account_id'],
-                'payments' => [
-                    [
-                        'account_id' => $this->payment['account_id'],
-                        'amount' => $payAmount,
+                $this->sellService->addPayment($sale->id, [
+                    'payment_note' => $this->payment['note'] ?? null,
+                    'payment_amount' => $payAmount,
+                    'branch_id' => $sale->branch_id,
+                    'payment_account' => $this->payment['account_id'],
+                    'payments' => [
+                        [
+                            'account_id' => $this->payment['account_id'],
+                            'amount' => $payAmount,
+                        ],
                     ],
-                ],
-            ]);
+                ]);
 
-            AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER_PAYMENT, ['id' => $sale->id, 'customer_id' => $this->id]);
+                AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER_PAYMENT, ['id' => $sale->id, 'customer_id' => $this->id]);
 
-            $remaining -= $payAmount;
-            $applied += $payAmount;
-        }
+                $remaining -= $payAmount;
+                $applied += $payAmount;
+            }
+
+            $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+            if ($cashRegister && $applied > 0) {
+                $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $applied);
+            }
+        });
 
         $this->reset('payment');
 

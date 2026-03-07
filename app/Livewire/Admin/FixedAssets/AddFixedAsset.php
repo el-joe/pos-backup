@@ -2,11 +2,14 @@
 
 namespace App\Livewire\Admin\FixedAssets;
 
+use App\Enums\AuditLogActionEnum;
 use App\Enums\AccountTypeEnum;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\FixedAsset;
 use App\Services\AccountService;
 use App\Services\BranchService;
+use App\Services\CashRegisterService;
 use App\Services\FixedAssetService;
 use App\Services\TransactionService;
 use App\Traits\LivewireOperations;
@@ -21,6 +24,7 @@ class AddFixedAsset extends Component
     private BranchService $branchService;
     private TransactionService $transactionService;
     private AccountService $accountService;
+    private CashRegisterService $cashRegisterService;
 
     public array $data = [];
 
@@ -30,6 +34,7 @@ class AddFixedAsset extends Component
         $this->branchService = app(BranchService::class);
         $this->transactionService = app(TransactionService::class);
         $this->accountService = app(AccountService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     public function mount(): void
@@ -111,11 +116,22 @@ class AddFixedAsset extends Component
                         'payment_account' => $this->data['payment_account'] ?? null,
                         'payment_date' => $asset->purchase_date ?? now(),
                     ]);
+
+                    $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+                    if ($cashRegister) {
+                        $this->cashRegisterService->increment($cashRegister->id, 'total_withdrawals', $paidAmount);
+                    }
                 }
             }
 
             return $asset;
         });
+
+        AuditLog::log(AuditLogActionEnum::FIXED_ASSET_CREATED, [
+            'id' => $asset->id,
+            'code' => $asset->code,
+            'route' => route('admin.fixed-assets.details', $asset->id),
+        ]);
 
         $this->alert('success', __('general.pages.fixed_assets.asset_saved'));
         $this->redirect(route('admin.fixed-assets.details', $asset->id));

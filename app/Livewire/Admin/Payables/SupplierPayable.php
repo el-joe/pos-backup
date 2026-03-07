@@ -11,6 +11,7 @@ use App\Services\CashRegisterService;
 use App\Services\PurchaseService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class SupplierPayable extends Component
@@ -77,39 +78,41 @@ class SupplierPayable extends Component
             return;
         }
 
-        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-        if ($cashRegister) {
-            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $this->payment['amount']);
-        }
-
         $remaining = (float) $this->payment['amount'];
         $applied = 0.0;
 
-        foreach ($duePurchases as $purchase) {
-            if ($remaining <= 0) {
-                break;
+        DB::transaction(function () use ($duePurchases, &$remaining, &$applied) {
+            foreach ($duePurchases as $purchase) {
+                if ($remaining <= 0) {
+                    break;
+                }
+
+                $due = (float) $purchase->due_amount;
+                if ($due <= 0) {
+                    continue;
+                }
+
+                $payAmount = min($due, $remaining);
+
+                $this->purchaseService->addPayment($purchase->id, [
+                    'payment_note' => $this->payment['note'] ?? null,
+                    'payment_status' => 'partial_paid',
+                    'payment_amount' => $payAmount,
+                    'branch_id' => $purchase->branch_id,
+                    'payment_account' => $this->payment['account_id'],
+                ]);
+
+                AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE_PAYMENT, ['id' => $purchase->id, 'supplier_id' => $this->id]);
+
+                $remaining -= $payAmount;
+                $applied += $payAmount;
             }
 
-            $due = (float) $purchase->due_amount;
-            if ($due <= 0) {
-                continue;
+            $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+            if ($cashRegister && $applied > 0) {
+                $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $applied);
             }
-
-            $payAmount = min($due, $remaining);
-
-            $this->purchaseService->addPayment($purchase->id, [
-                'payment_note' => $this->payment['note'] ?? null,
-                'payment_status' => 'partial_paid',
-                'payment_amount' => $payAmount,
-                'branch_id' => $purchase->branch_id,
-                'payment_account' => $this->payment['account_id'],
-            ]);
-
-            AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE_PAYMENT, ['id' => $purchase->id, 'supplier_id' => $this->id]);
-
-            $remaining -= $payAmount;
-            $applied += $payAmount;
-        }
+        });
 
         $this->reset('payment');
 

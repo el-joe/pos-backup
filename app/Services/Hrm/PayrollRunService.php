@@ -2,6 +2,8 @@
 
 namespace App\Services\Hrm;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\PayrollRun;
 use App\Repositories\Hrm\PayrollRunRepository;
 
@@ -21,16 +23,24 @@ class PayrollRunService
 
     public function create($data = []): mixed
     {
-        return $this->repo->create($data);
+        $run = $this->repo->create($data);
+        AuditLog::log(AuditLogActionEnum::from('create_record'), ['entity' => 'Payroll run', 'id' => $run->id]);
+        return $run;
     }
 
     public function update($id, $data = []): mixed
     {
-        return $this->repo->update($id, $data);
+        $run = $this->repo->update($id, $data);
+        AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Payroll run', 'id' => $id]);
+        return $run;
     }
 
     public function delete($id): mixed
     {
-        return $this->repo->delete($id);
+        $deleted = $this->repo->delete($id);
+        if ($deleted) {
+            AuditLog::log(AuditLogActionEnum::from('delete_record'), ['entity' => 'Payroll run', 'id' => $id]);
+        }
+        return $deleted;
     }
 }

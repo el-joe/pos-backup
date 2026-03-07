@@ -3,6 +3,8 @@
 namespace App\Livewire\Admin\DepreciationExpenses;
 
 use App\Enums\AccountTypeEnum;
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\FixedAsset;
 use App\Services\BranchService;
 use App\Services\ExpenseCategoryService;
@@ -67,6 +69,8 @@ class DepreciationExpensesList extends Component
             $columns = ['loop', 'id', 'branch', 'asset', 'category', 'amount', 'date', 'note'];
             $headers = ['#', 'ID', 'Branch', 'Fixed Asset', 'Category', 'Amount', 'Date', 'Note'];
             $fullPath = exportToExcel($data, $columns, $headers, 'depreciation-expenses');
+
+            AuditLog::log(AuditLogActionEnum::EXPORT_DEPRECIATION_EXPENSES, ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

@@ -2,6 +2,8 @@
 
 namespace App\Services\Hrm;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Repositories\Hrm\LeaveTypeRepository;
 
 class LeaveTypeService
@@ -20,16 +22,24 @@ class LeaveTypeService
 
     public function create($data = [])
     {
-        return $this->repo->create($data);
+        $leaveType = $this->repo->create($data);
+        AuditLog::log(AuditLogActionEnum::from('create_record'), ['entity' => 'Leave type', 'id' => $leaveType->id]);
+        return $leaveType;
     }
 
     public function update($id, $data = [])
     {
-        return $this->repo->update($id, $data);
+        $leaveType = $this->repo->update($id, $data);
+        AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Leave type', 'id' => $id]);
+        return $leaveType;
     }
 
     public function delete($id)
     {
-        return $this->repo->delete($id);
+        $deleted = $this->repo->delete($id);
+        if ($deleted) {
+            AuditLog::log(AuditLogActionEnum::from('delete_record'), ['entity' => 'Leave type', 'id' => $id]);
+        }
+        return $deleted;
     }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Admin\FixedAssets;
 
+use App\Enums\AuditLogActionEnum;
 use App\Enums\TransactionTypeEnum;
+use App\Models\Tenant\AuditLog;
 use App\Services\AccountService;
 use App\Services\BranchService;
+use App\Services\CashRegisterService;
 use App\Services\FixedAssetService;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
@@ -17,6 +20,7 @@ class FixedAssetsList extends Component
     private FixedAssetService $fixedAssetService;
     private BranchService $branchService;
     private AccountService $accountService;
+    private CashRegisterService $cashRegisterService;
 
     public $current;
     public array $payment = [];
@@ -30,6 +34,7 @@ class FixedAssetsList extends Component
         $this->fixedAssetService = app(FixedAssetService::class);
         $this->branchService = app(BranchService::class);
         $this->accountService = app(AccountService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     public function setCurrent($id): void
@@ -58,6 +63,17 @@ class FixedAssetsList extends Component
             'payment_amount' => $this->payment['amount'],
             'payment_account' => $this->payment['account_id'],
             'payment_date' => now(),
+        ]);
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+        if ($cashRegister) {
+            $this->cashRegisterService->increment($cashRegister->id, 'total_withdrawals', (float) $this->payment['amount']);
+        }
+
+        AuditLog::log(AuditLogActionEnum::from('fixed_asset_payment_created'), [
+            'id' => $this->current->id,
+            'amount' => (float) $this->payment['amount'],
+            'route' => route('admin.fixed-assets.details', $this->current->id),
         ]);
 
         $this->alert('success', __('general.messages.payment_added_successfully'));
@@ -91,6 +107,8 @@ class FixedAssetsList extends Component
             $columns = ['loop', 'code', 'name', 'branch', 'status', 'cost', 'net_book_value'];
             $headers = ['#', 'Code', 'Name', 'Branch', 'Status', 'Cost', 'Net Book Value'];
             $fullPath = exportToExcel($data, $columns, $headers, 'fixed-assets');
+
+            AuditLog::log(AuditLogActionEnum::from('export_fixed_assets'), ['url' => $fullPath]);
 
             $this->redirectToDownload($fullPath);
         }

@@ -102,4 +102,15 @@ enum AuditLogActionEnum : string
     case CREATE_TAX = 'create_tax';
     case UPDATE_TAX = 'update_tax';
     case EXPORT_TAXES = 'export_taxes';
+    case FIXED_ASSET_CREATED = 'fixed_asset_created';
+    case FIXED_ASSET_PAYMENT_CREATED = 'fixed_asset_payment_created';
+    case EXPORT_FIXED_ASSETS = 'export_fixed_assets';
+    case DEPRECIATION_EXPENSE_CREATED = 'depreciation_expense_created';
+    case FIXED_ASSET_LIFESPAN_EXTENSION = 'fixed_asset_lifespan_extension';
+    case EXPORT_DEPRECIATION_EXPENSES = 'export_depreciation_expenses';
+    case DEFERRED_SALE_INVENTORY_DELIVERED = 'deferred_sale_inventory_delivered';
+    case DEFERRED_PURCHASE_INVENTORY_RECEIVED = 'deferred_purchase_inventory_received';
+    case CREATE_RECORD = 'create_record';
+    case UPDATE_RECORD = 'update_record';
+    case DELETE_RECORD = 'delete_record';
 }

@@ -3,10 +3,13 @@
 namespace App\Livewire\Admin\DepreciationExpenses;
 
 use App\Enums\AccountTypeEnum;
+use App\Enums\AuditLogActionEnum;
 use App\Models\Tenant\Account;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\FixedAsset;
 use App\Models\Tenant\FixedAssetExtension;
 use App\Services\BranchService;
+use App\Services\CashRegisterService;
 use App\Services\ExpenseCategoryService;
 use App\Services\ExpenseService;
 use App\Services\FixedAssetService;
@@ -25,6 +28,7 @@ class AddDepreciationExpense extends Component
     private BranchService $branchService;
     private FixedAssetService $fixedAssetService;
     private TransactionService $transactionService;
+    private CashRegisterService $cashRegisterService;
 
     public array $data = [];
 
@@ -38,6 +42,7 @@ class AddDepreciationExpense extends Component
         $this->branchService = app(BranchService::class);
         $this->fixedAssetService = app(FixedAssetService::class);
         $this->transactionService = app(TransactionService::class);
+        $this->cashRegisterService = app(CashRegisterService::class);
     }
 
     public function mount(): void
@@ -105,6 +110,11 @@ class AddDepreciationExpense extends Component
             'fixed_asset_entry_type' => $this->data['fixed_asset_entry_type'],
         ]);
 
+        AuditLog::log(AuditLogActionEnum::DEPRECIATION_EXPENSE_CREATED, [
+            'id' => $expense->id,
+            'route' => route('admin.depreciation-expenses.details', $expense->id),
+        ]);
+
         $this->alert('success', __('general.pages.depreciation_expenses.saved'));
         $this->redirect(route('admin.depreciation-expenses.details', $expense->id));
     }
@@ -160,7 +170,18 @@ class AddDepreciationExpense extends Component
                     ],
                 ],
             ]);
+
+            $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+            if ($cashRegister) {
+                $this->cashRegisterService->increment($cashRegister->id, 'total_withdrawals', $amount);
+            }
         });
+
+        AuditLog::log(AuditLogActionEnum::FIXED_ASSET_LIFESPAN_EXTENSION, [
+            'id' => $fixedAsset->id,
+            'amount' => $amount,
+            'route' => route('admin.fixed-assets.details', $fixedAsset->id),
+        ]);
 
         $this->alert('success', __('general.pages.depreciation_expenses.extension_saved'));
         $this->redirect(route('admin.fixed-assets.details', $fixedAsset->id));

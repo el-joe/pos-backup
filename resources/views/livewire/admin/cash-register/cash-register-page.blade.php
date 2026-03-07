@@ -50,7 +50,7 @@
                     </tr>
                     <tr style="font-weight:600; background:#f1f8e9;">
                         <td>Closing Balance</td>
-                        <td class="text-right">{{ number_format($aggregates['closing_balance'] ?? 0, 2) }}</td>
+                        <td class="text-right">{{ number_format($aggregates['calculated_closing_balance'] ?? 0, 2) }}</td>
                     </tr>
                 </tbody>
             </table>

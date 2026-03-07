@@ -83,6 +83,18 @@ class CashRegisterPage extends Component
             ->first();
 
         $this->aggregates = (array) $row;
+        $this->aggregates['calculated_closing_balance'] = round(
+            (float) ($this->aggregates['opening_balance'] ?? 0)
+            + (float) ($this->aggregates['total_sales'] ?? 0)
+            + (float) ($this->aggregates['total_purchase_refunds'] ?? 0)
+            + (float) ($this->aggregates['total_expense_refunds'] ?? 0)
+            + (float) ($this->aggregates['total_deposits'] ?? 0)
+            - (float) ($this->aggregates['total_sale_refunds'] ?? 0)
+            - (float) ($this->aggregates['total_purchases'] ?? 0)
+            - (float) ($this->aggregates['total_expenses'] ?? 0)
+            - (float) ($this->aggregates['total_withdrawals'] ?? 0),
+            2
+        );
     }
 
     public function openRegister()

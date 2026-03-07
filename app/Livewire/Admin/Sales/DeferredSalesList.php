@@ -53,12 +53,6 @@ class DeferredSalesList extends Component
             'payment.note' => 'nullable|string|max:255',
         ]);
 
-        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-
-        if($cashRegister){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $this->payment['amount']);
-        }
-
         $this->sellService->addPayment($this->current->id, [
             'payment_note' => $this->payment['note'] ?? null,
             'payment_amount' => $this->payment['amount'],
@@ -72,6 +66,12 @@ class DeferredSalesList extends Component
                 ]
             ]
         ]);
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $this->payment['amount']);
+        }
 
         AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER_PAYMENT,  ['id' => $this->current->id]);
 
@@ -90,6 +90,12 @@ class DeferredSalesList extends Component
     {
         try{
             $sale = $this->sellService->deliverDeferredInventory($saleId);
+
+            AuditLog::log(AuditLogActionEnum::DEFERRED_SALE_INVENTORY_DELIVERED, [
+                'id' => $sale->id,
+                'invoice_number' => $sale->invoice_number,
+                'route' => route('admin.sales.details', $sale->id),
+            ]);
 
             Artisan::call('app:stock-quantity-alert-check', [
                 '--branch_id' => $sale->branch_id,

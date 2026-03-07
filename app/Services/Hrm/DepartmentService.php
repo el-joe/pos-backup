@@ -2,6 +2,8 @@
 
 namespace App\Services\Hrm;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Repositories\Hrm\DepartmentRepository;
 
 class DepartmentService
@@ -20,17 +22,25 @@ class DepartmentService
 
     public function create($data = [])
     {
-        return $this->repo->create($data);
+        $department = $this->repo->create($data);
+        AuditLog::log(AuditLogActionEnum::from('create_record'), ['entity' => 'Department', 'id' => $department->id]);
+        return $department;
     }
 
     public function update($id, $data = [])
     {
-        return $this->repo->update($id, $data);
+        $department = $this->repo->update($id, $data);
+        AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Department', 'id' => $id]);
+        return $department;
     }
 
     public function delete($id)
     {
         $model = $this->repo->find($id);
-        return $model?->delete();
+        $deleted = $model?->delete();
+        if ($deleted) {
+            AuditLog::log(AuditLogActionEnum::from('delete_record'), ['entity' => 'Department', 'id' => $id]);
+        }
+        return $deleted;
     }
 }

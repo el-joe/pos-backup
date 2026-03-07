@@ -2,6 +2,8 @@
 
 namespace App\Services\Hrm;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Repositories\Hrm\EmployeeRepository;
 
 class EmployeeService
@@ -20,16 +22,24 @@ class EmployeeService
 
     public function create($data = [])
     {
-        return $this->repo->create($data);
+        $employee = $this->repo->create($data);
+        AuditLog::log(AuditLogActionEnum::from('create_record'), ['entity' => 'Employee', 'id' => $employee->id]);
+        return $employee;
     }
 
     public function update($id, $data = [])
     {
-        return $this->repo->update($id, $data);
+        $employee = $this->repo->update($id, $data);
+        AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Employee', 'id' => $id]);
+        return $employee;
     }
 
     public function delete($id)
     {
-        return $this->repo->delete($id);
+        $deleted = $this->repo->delete($id);
+        if ($deleted) {
+            AuditLog::log(AuditLogActionEnum::from('delete_record'), ['entity' => 'Employee', 'id' => $id]);
+        }
+        return $deleted;
     }
 }

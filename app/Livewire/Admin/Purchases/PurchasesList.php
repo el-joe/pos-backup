@@ -70,13 +70,6 @@ class PurchasesList extends Component
             'payment.note' => 'nullable|string|max:255',
         ]);
 
-        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-
-        if($cashRegister){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $this->payment['amount']);
-        }
-
-
         $this->purchaseService->addPayment($this->current->id, [
             'payment_note' => $this->payment['note'] ?? null,
             'payment_status' => 'partial_paid',
@@ -84,6 +77,12 @@ class PurchasesList extends Component
             'branch_id' => $this->current->branch_id,
             'payment_account' => $this->payment['account_id'],
         ]);
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $this->payment['amount']);
+        }
 
         AuditLog::log(AuditLogActionEnum::CREATE_PURCHASE_PAYMENT, ['id' => $this->current->id]);
 

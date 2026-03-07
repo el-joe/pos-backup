@@ -60,7 +60,7 @@ class CashRegisterReport extends Component
 
     public function loadRegisters()
     {
-        $query = CashRegister::query();
+        $query = CashRegister::query()->with(['branch', 'admin']);
         if ($this->from_date && $this->to_date) {
             $query->whereDate('opened_at', '>=', $this->from_date)
                   ->whereDate('opened_at', '<=', $this->to_date);

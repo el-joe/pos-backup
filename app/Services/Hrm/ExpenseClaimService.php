@@ -2,6 +2,8 @@
 
 namespace App\Services\Hrm;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\ExpenseClaimLine;
 use App\Repositories\Hrm\ExpenseClaimRepository;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +41,8 @@ class ExpenseClaimService
             }
 
             $claim->update(['total_amount' => $total]);
+
+            AuditLog::log(AuditLogActionEnum::from('create_record'), ['entity' => 'Expense claim', 'id' => $claim->id]);
 
             return $claim->refresh();
         });

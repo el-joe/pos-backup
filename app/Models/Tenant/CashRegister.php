@@ -13,6 +13,21 @@ class CashRegister extends Model
         'status', 'notes'
     ];
 
+    protected $casts = [
+        'opening_balance' => 'float',
+        'total_sales' => 'float',
+        'total_sale_refunds' => 'float',
+        'total_purchases' => 'float',
+        'total_purchase_refunds' => 'float',
+        'total_expenses' => 'float',
+        'total_expense_refunds' => 'float',
+        'total_deposits' => 'float',
+        'total_withdrawals' => 'float',
+        'closing_balance' => 'float',
+        'opened_at' => 'datetime',
+        'closed_at' => 'datetime',
+    ];
+
     function scopeFilter($query,$filters = []) {
         return $query->when($filters['opened_at'] ?? null, function($q,$openedAt) {
             $q->whereDate('opened_at', $openedAt);
@@ -41,5 +56,21 @@ class CashRegister extends Model
     public function admin()
     {
         return $this->belongsTo(Admin::class)->withTrashed();
+    }
+
+    public function getCalculatedClosingBalanceAttribute(): float
+    {
+        return round(
+            (float) $this->opening_balance
+            + (float) $this->total_sales
+            + (float) $this->total_purchase_refunds
+            + (float) $this->total_expense_refunds
+            + (float) $this->total_deposits
+            - (float) $this->total_sale_refunds
+            - (float) $this->total_purchases
+            - (float) $this->total_expenses
+            - (float) $this->total_withdrawals,
+            2
+        );
     }
 }

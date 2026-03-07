@@ -71,12 +71,6 @@ class SalesList extends Component
             'payment.note' => 'nullable|string|max:255',
         ]);
 
-        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-
-        if($cashRegister){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $this->payment['amount']);
-        }
-
         $this->sellService->addPayment($this->current->id, [
             'payment_note' => $this->payment['note'] ?? null,
             'payment_amount' => $this->payment['amount'],
@@ -90,6 +84,12 @@ class SalesList extends Component
                 ]
             ]
         ]);
+
+        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
+
+        if($cashRegister){
+            $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $this->payment['amount']);
+        }
 
         AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER_PAYMENT,  ['id' => $this->current->id]);
 

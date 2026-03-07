@@ -2,6 +2,8 @@
 
 namespace App\Services\Hrm;
 
+use App\Enums\AuditLogActionEnum;
+use App\Models\Tenant\AuditLog;
 use App\Repositories\Hrm\DesignationRepository;
 
 class DesignationService
@@ -20,16 +22,24 @@ class DesignationService
 
     public function create($data = [])
     {
-        return $this->repo->create($data);
+        $designation = $this->repo->create($data);
+        AuditLog::log(AuditLogActionEnum::from('create_record'), ['entity' => 'Designation', 'id' => $designation->id]);
+        return $designation;
     }
 
     public function update($id, $data = [])
     {
-        return $this->repo->update($id, $data);
+        $designation = $this->repo->update($id, $data);
+        AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Designation', 'id' => $id]);
+        return $designation;
     }
 
     public function delete($id)
     {
-        return $this->repo->delete($id);
+        $deleted = $this->repo->delete($id);
+        if ($deleted) {
+            AuditLog::log(AuditLogActionEnum::from('delete_record'), ['entity' => 'Designation', 'id' => $id]);
+        }
+        return $deleted;
     }
 }

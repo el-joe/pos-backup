@@ -53,7 +53,7 @@
                         </tr>
                         <tr class="fw-semibold table-light">
                             <td>{{ __('general.pages.cash_register.closing_balance') }}</td>
-                            <td class="text-end">{{ currencyFormat($aggregates['closing_balance'] ?? 0, true) }}</td>
+                            <td class="text-end">{{ currencyFormat($aggregates['calculated_closing_balance'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
                 </table>

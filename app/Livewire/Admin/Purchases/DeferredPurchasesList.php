@@ -42,6 +42,12 @@ class DeferredPurchasesList extends Component
         try{
             $purchase = $this->purchaseService->receiveDeferredInventory($purchaseId);
 
+            AuditLog::log(AuditLogActionEnum::DEFERRED_PURCHASE_INVENTORY_RECEIVED, [
+                'id' => $purchase->id,
+                'ref_no' => $purchase->ref_no,
+                'route' => route('admin.purchases.details', $purchase->id),
+            ]);
+
             Artisan::call('app:stock-quantity-alert-check', [
                 '--branch_id' => $purchase->branch_id,
                 '--tenant_id' => tenant('id'),
