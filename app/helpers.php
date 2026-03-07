@@ -27,13 +27,80 @@ if(!defined('EMPLOYEES_GUARD')){
 
 if(!function_exists('cacheKey')) {
     function cacheKey($key){
-        return tenant()->id . '_' . $key;
+        $tenantId = tenant()?->id ?? 'app';
+
+        return $tenantId . '_' . $key;
     }
 }
 
 if(!function_exists('defaultLayout')) {
     function defaultLayout(){
-        return 'hud';
+        if (!tenant()) {
+            return request()?->query('panel', 'hud') === 'tenant-tailwind-gemini'
+                ? 'tenant-tailwind-gemini'
+                : 'hud';
+        }
+
+        $layout = request()?->query('panel')
+            ?: tenantSetting('panel_layout', 'hud');
+
+        return in_array($layout, ['hud', 'tenant-tailwind-gemini'], true)
+            ? $layout
+            : 'hud';
+    }
+}
+
+if(!function_exists('resolveLivewireView')) {
+    function resolveLivewireView($pageName) {
+        $layout = defaultLayout();
+        $candidate = "livewire.{$layout}.{$pageName}";
+
+        return view()->exists($candidate)
+            ? $candidate
+            : "livewire.hud.{$pageName}";
+    }
+}
+
+if(!function_exists('resolveTenantLayoutView')) {
+    function resolveTenantLayoutView($employee = false) {
+        $layout = defaultLayout();
+        $candidate = $employee
+            ? "layouts.employee.{$layout}"
+            : "layouts.{$layout}";
+
+        if (view()->exists($candidate)) {
+            return $candidate;
+        }
+
+        return $employee ? 'layouts.employee.hud' : 'layouts.hud';
+    }
+}
+
+if(!function_exists('panelAwareUrl')) {
+    function panelAwareUrl($url) {
+        if (!$url || defaultLayout() !== 'tenant-tailwind-gemini' || !request()?->query('panel')) {
+            return $url;
+        }
+
+        $parts = parse_url($url);
+        $query = [];
+
+        if (!empty($parts['query'])) {
+            parse_str($parts['query'], $query);
+        }
+
+        $query['panel'] = request()->query('panel');
+
+        $scheme = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+        $host = $parts['host'] ?? '';
+        $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+        $user = $parts['user'] ?? '';
+        $pass = isset($parts['pass']) ? ':' . $parts['pass'] : '';
+        $pass = ($user || $pass) ? "{$pass}@" : '';
+        $path = $parts['path'] ?? '';
+        $fragment = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
+
+        return "{$scheme}{$user}{$pass}{$host}{$port}{$path}?" . http_build_query($query) . $fragment;
     }
 }
 
@@ -47,20 +114,20 @@ if(!function_exists('defaultLandingLayout')) {
 
 if(!function_exists('layoutView')) {
     function layoutView($pageName,$with = [],$isSubPage = false){
-        $defaultView = "livewire." . defaultLayout();
-        $defaultLayout = 'layouts.' . defaultLayout();
+        $defaultView = resolveLivewireView($pageName);
+        $defaultLayout = resolveTenantLayoutView();
         $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
-        return view("$defaultView.$pageName", $with)
+        return view($defaultView, $with)
                 ->layout($isSubPage ? null : $defaultLayout, $layoutData);
     }
 }
 
 if(!function_exists('employeeLayoutView')) {
     function employeeLayoutView($pageName, $with = [], $isSubPage = false){
-        $defaultView = "livewire." . defaultLayout();
-        $defaultLayout = 'layouts.employee.hud';
+        $defaultView = resolveLivewireView($pageName);
+        $defaultLayout = resolveTenantLayoutView(true);
 
-        return view("$defaultView.$pageName", $with)
+        return view($defaultView, $with)
             ->layout($isSubPage ? null : $defaultLayout);
     }
 }
@@ -249,6 +316,12 @@ if(!function_exists('adminCan')) {
 if(!function_exists('sidebarHud')) {
     function sidebarHud($data){
         return view('layouts.hud.partials.sidebar-ul',get_defined_vars())->render();
+    }
+}
+
+if(!function_exists('sidebarGemini')) {
+    function sidebarGemini($data){
+        return view('layouts.tenant-tailwind-gemini.partials.sidebar-item', get_defined_vars())->render();
     }
 }
 
@@ -447,6 +520,10 @@ if(!function_exists('dateTimeFormat')) {
 
 if(!function_exists('tenantSetting')) {
     function tenantSetting($key, $default = null) {
+        if (!tenant()) {
+            return $default;
+        }
+
         return Cache::driver('file')->remember(cacheKey('setting'), 60 * 60 * 24, function () {
                 return Setting::all()->pluck('value', 'key')->toArray();
         })[$key] ?? $default;

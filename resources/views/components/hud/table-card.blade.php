@@ -7,6 +7,51 @@
     'theadClass' => 'table-light',
 ])
 
+@if(defaultLayout() === 'tenant-tailwind-gemini')
+    <x-tenant-tailwind-gemini.table-card :title="$title" {{ $attributes }}>
+        @isset($actions)
+            <x-slot:actions>
+                {{ $actions }}
+            </x-slot:actions>
+        @endisset
+
+        @if(isset($head) || count($headers))
+            <table class="min-w-full text-left text-sm rtl:text-right {{ $tableClass }}">
+                @if(isset($head))
+                    <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800/80 dark:text-slate-400 {{ $theadClass }}">
+                        {{ $head }}
+                    </thead>
+                @elseif(count($headers))
+                    <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800/80 dark:text-slate-400 {{ $theadClass }}">
+                        <tr>
+                            @foreach($headers as $header)
+                                <th class="px-4 py-3">{{ $header }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                @endif
+
+                <tbody>
+                    {{ $slot }}
+                </tbody>
+            </table>
+        @elseif($renderTable)
+            <table class="min-w-full text-left text-sm rtl:text-right {{ $tableClass }}">
+                <tbody>
+                    {{ $slot }}
+                </tbody>
+            </table>
+        @else
+            {{ $slot }}
+        @endif
+
+        @isset($footer)
+            <x-slot:footer>
+                {{ $footer }}
+            </x-slot:footer>
+        @endisset
+    </x-tenant-tailwind-gemini.table-card>
+@else
 <div {{ $attributes->class(['card shadow-sm']) }}>
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">
@@ -64,3 +109,4 @@
         <div class="card-arrow-bottom-right"></div>
     </div>
 </div>
+@endif
