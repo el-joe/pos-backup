@@ -40,6 +40,6 @@ class PayrollSlipsList extends Component
         $slips = $this->payrollSlipService->list(['employee', 'run'], $this->filters, 10, 'id');
 
         return layoutView('hrm.payroll.payroll-slips-list', get_defined_vars())
-            ->title('HRM Payslips');
+            ->title(__('general.titles.hrm_payslips'));
     }
 }

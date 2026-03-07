@@ -24,6 +24,18 @@ class ProductsList extends Component
     public $collapseFilters = false;
     public $export = null;
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     function boot() {
         $this->productService = app(ProductService::class);
         $this->branchService = app(BranchService::class);

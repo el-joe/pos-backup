@@ -35,7 +35,7 @@ class AttendanceSheetsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this attendance sheet', 'Yes, delete it!');
+        $this->confirm('delete', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_attendance_sheet'), __('general.messages.yes_delete_it'));
     }
 
     public function delete(): void
@@ -44,11 +44,11 @@ class AttendanceSheetsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Attendance sheet not found');
+            $this->popup('error', __('general.messages.hrm.attendance_sheet_not_found'));
             return;
         }
         $this->attendanceSheetService->delete($this->current->id);
-        $this->popup('success', 'Attendance sheet deleted successfully');
+        $this->popup('success', __('general.messages.hrm.attendance_sheet_deleted_successfully'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -60,7 +60,7 @@ class AttendanceSheetsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('submit', 'question', 'Submit?', 'You want to submit this attendance sheet', 'Yes, submit');
+        $this->confirm('submit', 'question', __('general.pages.hrm.submit_action'), __('general.messages.hrm.confirm_submit_attendance_sheet'), __('general.pages.hrm.submit_action'));
     }
 
     public function approveAlert($id): void
@@ -69,7 +69,7 @@ class AttendanceSheetsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('approve', 'question', 'Approve?', 'You want to approve this attendance sheet', 'Yes, approve');
+        $this->confirm('approve', 'question', __('general.pages.hrm.approve_action'), __('general.messages.hrm.confirm_approve_attendance_sheet'), __('general.pages.hrm.approve_action'));
     }
 
     public function submit(): void
@@ -78,11 +78,11 @@ class AttendanceSheetsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Attendance sheet not found');
+            $this->popup('error', __('general.messages.hrm.attendance_sheet_not_found'));
             return;
         }
         if (($this->current->status ?? null) !== 'draft') {
-            $this->popup('warning', 'Only draft sheets can be submitted');
+            $this->popup('warning', __('general.messages.hrm.only_draft_attendance_sheets_can_be_submitted'));
             $this->dismiss();
             return;
         }
@@ -91,7 +91,7 @@ class AttendanceSheetsList extends Component
             'status' => 'submitted',
         ]);
 
-        $this->popup('success', 'Attendance sheet submitted');
+        $this->popup('success', __('general.messages.hrm.attendance_sheet_submitted'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -103,11 +103,11 @@ class AttendanceSheetsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Attendance sheet not found');
+            $this->popup('error', __('general.messages.hrm.attendance_sheet_not_found'));
             return;
         }
         if (($this->current->status ?? null) !== 'submitted') {
-            $this->popup('warning', 'Only submitted sheets can be approved');
+            $this->popup('warning', __('general.messages.hrm.only_submitted_attendance_sheets_can_be_approved'));
             $this->dismiss();
             return;
         }
@@ -118,7 +118,7 @@ class AttendanceSheetsList extends Component
             'approved_at' => Carbon::now(),
         ]);
 
-        $this->popup('success', 'Attendance sheet approved');
+        $this->popup('success', __('general.messages.hrm.attendance_sheet_approved'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -130,6 +130,6 @@ class AttendanceSheetsList extends Component
         $sheets = $this->attendanceSheetService->list(['department'], $this->filters, 10, 'id');
 
         return layoutView('hrm.attendance.attendance-sheets-list', get_defined_vars())
-            ->title('HRM Attendance Sheets');
+            ->title(__('general.titles.hrm_attendance_sheets'));
     }
 }

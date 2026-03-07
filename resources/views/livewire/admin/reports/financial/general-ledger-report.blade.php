@@ -1,27 +1,18 @@
 <div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-3 form-group">
-                    <label>From Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="from_date">
-                </div>
-                <div class="col-md-3 form-group">
-                    <label>To Date</label>
-                    <input type="date" class="form-control input-sm" wire:model.lazy="to_date">
-                </div>
+    <x-admin.filter-card title="Filter Options" icon="fa-filter">
+        <div class="row">
+            <div class="col-md-3 form-group">
+                <label>From Date</label>
+                <input type="date" class="form-control input-sm" wire:model.lazy="from_date">
+            </div>
+            <div class="col-md-3 form-group">
+                <label>To Date</label>
+                <input type="date" class="form-control input-sm" wire:model.lazy="to_date">
             </div>
         </div>
-    </div>
+    </x-admin.filter-card>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-book"></i> General Ledger</h4>
-        </div>
-        <div class="panel-body">
+    <x-admin.table-card title="General Ledger" icon="fa-book" :render-table="false">
 
             @if(count($accounts))
             <ul class="nav nav-tabs ledger-tabs" role="tablist">
@@ -76,6 +67,5 @@
             @else
                 <div class="alert alert-info">No transactions found for selected period.</div>
             @endif
-        </div>
-    </div>
+    </x-admin.table-card>
 </div>

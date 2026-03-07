@@ -1,30 +1,19 @@
 
 <div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
+    <x-admin.filter-card title="Filter Options" icon="fa-filter">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="control-label" for="from_date">From</label>
+                <input type="date" id="from_date" wire:model.lazy="from_date" class="form-control input-sm">
+            </div>
+            <div class="col-sm-4">
+                <label class="control-label" for="to_date">To</label>
+                <input type="date" id="to_date" wire:model.lazy="to_date" class="form-control input-sm">
+            </div>
         </div>
-        <div class="panel-body">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label for="from_date" class="col-sm-1 control-label">From</label>
-                    <div class="col-sm-2">
-                        <input type="date" id="from_date" wire:model.lazy="from_date" class="form-control input-sm">
-                    </div>
-                    <label for="to_date" class="col-sm-1 control-label">To</label>
-                    <div class="col-sm-2">
-                        <input type="date" id="to_date" wire:model.lazy="to_date" class="form-control input-sm">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    </x-admin.filter-card>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-briefcase"></i> Supplier Payable Report</h4>
-        </div>
-        <div class="panel-body" style="padding:0;">
+    <x-admin.table-card title="Supplier Payable Report" icon="fa-briefcase" :render-table="false">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
                     <thead>
@@ -65,6 +54,5 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
+    </x-admin.table-card>
 </div>

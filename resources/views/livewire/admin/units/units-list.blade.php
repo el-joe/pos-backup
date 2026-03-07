@@ -1,59 +1,119 @@
 <div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Units</h3>
-            </div>
-            <div class="col-xs-6 text-right">
-                {{-- add toggle for edit unit --}}
-                <a class="btn btn-primary" data-toggle="modal" data-target="#editUnitModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus"></i> New Unit
-                </a>
-            </div>
-        </div>
+    <x-admin.filter-card
+        :title="__('general.pages.units.filters')"
+        icon="fa-filter"
+        collapse-id="adminUnitFilterCollapse"
+        :collapsed="$collapseFilters"
+    >
+        <x-slot:actions>
+            <button type="button"
+                    class="btn btn-default btn-sm"
+                    wire:click="$toggle('collapseFilters')"
+                    data-toggle="collapse"
+                    data-target="#adminUnitFilterCollapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}">
+                <i class="fa fa-filter"></i> {{ __('general.pages.units.show_hide') }}
+            </button>
+        </x-slot:actions>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Parent</th>
-                        <th>Count</th>
-                        <th>Status</th>
-                        <th class="text-nowrap">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($units as $unit)
-                    <tr>
-                        <td>{{ $unit->id }}</td>
-                        <td>{{ $unit->name }}</td>
-                        <td>{{ $unit->parent ? $unit->parent->name : 'N/A' }}</td>
-                        <td>{{ $unit->count }}</td>
-                        <td>
-                            <span class="badge badge-{{ $unit->active ? 'success' : 'danger' }}">
-                                {{ $unit->active ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-                        <td class="text-nowrap">
-                            <a href="javascript:void(0)" data-toggle="modal" data-target="#editUnitModal" wire:click="setCurrent({{ $unit->id }})" data-toggle="tooltip" data-original-title="Edit">
-                                <i class="fa fa-pencil text-primary m-r-10"></i>
-                            </a>
-                            <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Close" wire:click="deleteAlert({{ $unit->id }})">
-                                <i class="fa fa-close text-danger"></i>
-                            </a>
-                        </td>
-                    </tr>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.units.search') }}</label>
+                <input type="text"
+                       class="form-control"
+                       placeholder="{{ __('general.pages.units.search') }} ..."
+                       wire:model.live="filters.search">
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.units.parent_unit') }}</label>
+                <select class="form-control" wire:model.live="filters.parent_id">
+                    <option value="">{{ __('general.pages.units.all') }}</option>
+                    <option value="0">{{ __('general.pages.units.is_parent') }}</option>
+                    @foreach($filterUnits as $parentUnit)
+                        <option value="{{ $parentUnit->id }}">{{ $parentUnit->name }}</option>
                     @endforeach
-                </tbody>
-            </table>
-            {{-- center pagination --}}
-            <div class="pagination-wrapper t-a-c">
-                {{ $units->links() }}
+                </select>
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.units.status') }}</label>
+                <select class="form-control" wire:model.live="filters.active">
+                    <option value="">{{ __('general.pages.units.all') }}</option>
+                    <option value="1">{{ __('general.pages.units.active') }}</option>
+                    <option value="0">{{ __('general.pages.units.inactive') }}</option>
+                </select>
+            </div>
+
+            <div class="col-xs-12 text-right">
+                <button type="button" class="btn btn-default btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo"></i> {{ __('general.pages.units.reset') }}
+                </button>
             </div>
         </div>
-    </div>
+    </x-admin.filter-card>
+
+    <x-admin.table-card :title="__('general.pages.units.units')" icon="fa-balance-scale">
+        <x-slot:actions>
+            @adminCan('units.export')
+                <button type="button" class="btn btn-success btn-sm" wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel-o"></i> {{ __('general.pages.units.export') }}
+                </button>
+            @endadminCan
+            @adminCan('units.create')
+                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editUnitModal" wire:click="setCurrent(null)">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.units.new_unit') }}
+                </a>
+            @endadminCan
+        </x-slot:actions>
+
+        <x-slot:head>
+            <tr>
+                <th>#</th>
+                <th>{{ __('general.pages.units.name') }}</th>
+                <th>{{ __('general.pages.units.parent') }}</th>
+                <th>{{ __('general.pages.units.count') }}</th>
+                <th>{{ __('general.pages.units.status') }}</th>
+                <th class="text-nowrap">{{ __('general.pages.units.actions') }}</th>
+            </tr>
+        </x-slot:head>
+
+        @forelse ($units as $unit)
+            <tr>
+                <td>{{ $unit->id }}</td>
+                <td>{{ $unit->name }}</td>
+                <td>{{ $unit->parent ? $unit->parent->name : __('general.pages.units.n_a') }}</td>
+                <td>{{ $unit->count }}</td>
+                <td>
+                    <span class="badge badge-{{ $unit->active ? 'success' : 'danger' }}">
+                        {{ $unit->active ? __('general.pages.units.active') : __('general.pages.units.inactive') }}
+                    </span>
+                </td>
+                <td class="text-nowrap">
+                    @adminCan('units.update')
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#editUnitModal" wire:click="setCurrent({{ $unit->id }})" data-original-title="{{ __('general.pages.units.edit') }}">
+                            <i class="fa fa-pencil text-primary m-r-10"></i>
+                        </a>
+                    @endadminCan
+                    @adminCan('units.delete')
+                        <a href="javascript:void(0)" data-original-title="{{ __('general.pages.units.delete') }}" wire:click="deleteAlert({{ $unit->id }})">
+                            <i class="fa fa-close text-danger"></i>
+                        </a>
+                    @endadminCan
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="6" class="text-center text-muted">No data found.</td>
+            </tr>
+        @endforelse
+
+        @if($units->hasPages())
+            <x-slot:footer>
+                {{ $units->links() }}
+            </x-slot:footer>
+        @endif
+    </x-admin.table-card>
 
     <div class="modal fade" id="editUnitModal" tabindex="-1" role="dialog" aria-labelledby="editUnitModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">

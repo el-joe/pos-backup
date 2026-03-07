@@ -34,7 +34,7 @@ class LeaveTypesList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this leave type', 'Yes, delete it!');
+        $this->confirm('delete', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_leave_type'), __('general.messages.yes_delete_it'));
     }
 
     public function delete(): void
@@ -43,11 +43,11 @@ class LeaveTypesList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Leave type not found');
+            $this->popup('error', __('general.messages.hrm.leave_type_not_found'));
             return;
         }
         $this->leaveTypeService->delete($this->current->id);
-        $this->popup('success', 'Leave type deleted successfully');
+        $this->popup('success', __('general.messages.hrm.leave_type_deleted_successfully'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -65,6 +65,6 @@ class LeaveTypesList extends Component
         $types = $this->leaveTypeService->list([], $this->filters, 10, 'id');
 
         return layoutView('hrm.leaves.leave-types-list', get_defined_vars())
-            ->title('HRM Leave Types');
+            ->title(__('general.titles.hrm_leave_types'));
     }
 }

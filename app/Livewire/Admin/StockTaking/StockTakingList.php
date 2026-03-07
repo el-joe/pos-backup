@@ -20,6 +20,18 @@ class StockTakingList extends Component
     public $export = null;
     public $collapseFilters = false;
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     function boot() {
         $this->stockTakingService = app(StockTakingService::class);
         $this->branchService = app(BranchService::class);
@@ -33,16 +45,16 @@ class StockTakingList extends Component
             $data = $stockTaking->map(function ($stockTaking, $loop) {
                 return [
                     'loop' => $loop + 1,
-                    'branch' => $stockTaking->branch?->name ?? 'N/A',
+                    'branch' => $stockTaking->branch?->name ?? __('general.messages.n_a'),
                     'date' => $stockTaking->date,
                     'products_count' => $stockTaking->products->unique('product_id')?->count() ?? 0,
-                    'created_by' => $stockTaking->user?->name ?? 'N/A',
+                    'created_by' => $stockTaking->user?->name ?? __('general.messages.n_a'),
                     'created_at' => dateTimeFormat($stockTaking->created_at),
                     'note' => $stockTaking->note,
                 ];
             })->toArray();
             $columns = ['loop', 'branch', 'date', 'products_count', 'created_by', 'created_at', 'note'];
-            $headers = ['#', 'Branch', 'Date', 'Products Count', 'Created by', 'Created at', 'Note'];
+            $headers = ['#', __('general.pages.stock-taking.branch'), __('general.pages.stock-taking.date'), __('general.pages.stock-taking.products_count'), __('general.pages.stock-taking.created_by'), __('general.pages.stock-taking.created_at'), __('general.pages.stock-taking.note')];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'stock-takings');
 
@@ -56,30 +68,30 @@ class StockTakingList extends Component
         ->through(function($st) {
             return [
                 'id' => $st->id,
-                'branch' => $st->branch?->name ?? 'N/A',
+                'branch' => $st->branch?->name ?? __('general.messages.n_a'),
                 'date' => dateTimeFormat($st->date, true, false),
                 'note' => $st->note,
-                'created_by' => $st->user?->name ?? 'N/A',
+                'created_by' => $st->user?->name ?? __('general.messages.n_a'),
                 'products_count' => $st->products->unique('product_id')?->count() ?? 0,
                 'created_at' => dateTimeFormat($st->created_at),
             ];
         });
 
         $headers = [
-            '#' , 'Branch' , 'Date' , 'Products Count', 'Created by' , 'Created at' , 'Note' , 'Actions'
+            '#' , __('general.pages.stock-taking.branch') , __('general.pages.stock-taking.date') , __('general.pages.stock-taking.products_count'), __('general.pages.stock-taking.created_by') , __('general.pages.stock-taking.created_at') , __('general.pages.stock-taking.note') , __('general.pages.stock-taking.action')
         ];
 
         $actions = [];
         if(adminCan('stock_adjustments.show')) {
             $actions[] = [
-                    'title' => 'Details',
+                    'title' => __('general.pages.stock-taking.details'),
                     'icon' => 'fa fa-eye',
                     'class' => 'btn btn-info btn-sm',
                     'route' => fn($row) => route('admin.stocks.adjustments.details', $row['id']),
                     'attributes' => [
                         'data-toggle' => 'tooltip',
                         'data-placement' => 'top',
-                        'data-original-title' => 'Details',
+                        'data-original-title' => __('general.pages.stock-taking.details'),
                     ],
                 ];
         }

@@ -17,6 +17,8 @@ class ChecksList extends Component
 
     private CheckService $checkService;
 
+    public bool $collapseFilters = false;
+
     public array $filters = [
         'direction' => null,
         'status' => null,
@@ -27,6 +29,23 @@ class ChecksList extends Component
     public function boot(): void
     {
         $this->checkService = app(CheckService::class);
+    }
+
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->filters = [
+            'direction' => null,
+            'status' => null,
+            'branch_id' => null,
+            'search' => null,
+        ];
+        $this->collapseFilters = false;
+        $this->resetPage();
     }
 
     public function collect(int $id): void

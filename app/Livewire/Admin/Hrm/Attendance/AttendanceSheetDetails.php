@@ -29,6 +29,6 @@ class AttendanceSheetDetails extends Component
             ->withQueryString();
 
         return layoutView('hrm.attendance.attendance-sheet-details', get_defined_vars())
-            ->title('Attendance Sheet');
+            ->title(__('general.titles.hrm_attendance_sheets'));
     }
 }

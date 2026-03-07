@@ -1,14 +1,7 @@
 <div class="col-12">
-    <div class="card shadow-sm border-0 bg-dark text-light mb-4">
-        <div class="card-header d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">
-                <i class="fa fa-warning me-2"></i> {{ __('general.pages.reports.inventory.shortage.title') }}
-            </h4>
-        </div>
-
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
+    <x-hud.table-card :title="__('general.pages.reports.inventory.shortage.title')" icon="fa-warning" :render-table="false" class="mb-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
                     <thead class="table-primary text-dark">
                         <tr>
                             <th>{{ __('general.pages.reports.inventory.shortage.product') }}</th>
@@ -48,14 +41,6 @@
                         @endif
                     </tbody>
                 </table>
-            </div>
         </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+    </x-hud.table-card>
 </div>

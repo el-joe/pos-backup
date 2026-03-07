@@ -1,65 +1,54 @@
 <div class="container-fluid">
-    <div class="col-12 mb-4">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-light d-flex align-items-center justify-content-between">
-                <strong><i class="fa fa-filter me-2"></i> {{ __('general.pages.reports.common.filter_options') }}</strong>
-                <button type="button" wire:click="resetFilters" class="btn btn-sm btn-secondary">
-                    <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
-                </button>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
-                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.branch') }}</label>
-                        <select class="form-select form-select-sm select2" name="branch_id">
-                            <option value="">{{ __('general.pages.reports.common.all_branches') }}</option>
-                            @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}" {{ (string)$branch->id === (string)$branch_id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <label class="form-label fw-semibold">{{ __('general.pages.depreciation_expenses.fixed_asset') }}</label>
-                        <select class="form-select form-select-sm select2" name="fixed_asset_id">
-                            <option value="">{{ __('general.pages.depreciation_expenses.all_assets') }}</option>
-                            @foreach($assets as $asset)
-                                <option value="{{ $asset->id }}" {{ (string)$asset->id === (string)$fixed_asset_id ? 'selected' : '' }}>{{ $asset->code }} - {{ $asset->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <label class="form-label fw-semibold">{{ __('general.pages.depreciation_expenses.category') }}</label>
-                        <select class="form-select form-select-sm select2" name="expense_category_id">
-                            <option value="">{{ __('general.pages.depreciation_expenses.all_categories') }}</option>
-                            @foreach($expenseCategories as $cat)
-                                <option value="{{ $cat->id }}" {{ (string)$cat->id === (string)$expense_category_id ? 'selected' : '' }}>{{ $cat->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+    <x-hud.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter" class="mb-4">
+        <div class="d-flex justify-content-end mb-3">
+            <button type="button" wire:click="resetFilters" class="btn btn-sm btn-secondary">
+                <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
+            </button>
+        </div>
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
             </div>
 
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
+            <div class="col-sm-3">
+                <label class="form-label fw-semibold">{{ __('general.pages.reports.common.branch') }}</label>
+                <select class="form-select form-select-sm select2" name="branch_id">
+                    <option value="">{{ __('general.pages.reports.common.all_branches') }}</option>
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ (string)$branch->id === (string)$branch_id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label class="form-label fw-semibold">{{ __('general.pages.depreciation_expenses.fixed_asset') }}</label>
+                <select class="form-select form-select-sm select2" name="fixed_asset_id">
+                    <option value="">{{ __('general.pages.depreciation_expenses.all_assets') }}</option>
+                    @foreach($assets as $asset)
+                        <option value="{{ $asset->id }}" {{ (string)$asset->id === (string)$fixed_asset_id ? 'selected' : '' }}>{{ $asset->code }} - {{ $asset->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label class="form-label fw-semibold">{{ __('general.pages.depreciation_expenses.category') }}</label>
+                <select class="form-select form-select-sm select2" name="expense_category_id">
+                    <option value="">{{ __('general.pages.depreciation_expenses.all_categories') }}</option>
+                    @foreach($expenseCategories as $cat)
+                        <option value="{{ $cat->id }}" {{ (string)$cat->id === (string)$expense_category_id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
-    </div>
+    </x-hud.filter-card>
 
     @php
-        $count = $report?->count() ?? 0;
+        $reportItems = collect(is_iterable($report ?? null) ? $report : []);
+        $count = $reportItems->count();
         $totalAmount = 0;
-        foreach(($report ?? []) as $row) {
-            $totalAmount += (float) ($row->amount ?? 0);
+        foreach($reportItems as $row) {
+            $totalAmount += (float) data_get($row, 'amount', 0);
         }
         $avg = $count ? ($totalAmount / $count) : 0;
     @endphp
@@ -92,11 +81,7 @@
     </div>
 
     <div class="col-12 mb-4">
-        <div class="card shadow-sm">
-            <div class="card-header bg-secondary text-white d-flex align-items-center">
-                <h5 class="mb-0"><i class="fa fa-chart-area me-2"></i> {{ __('general.pages.reports.financial.depreciation_expenses_report.top_assets_title') }}</h5>
-            </div>
-            <div class="card-body p-0">
+        <x-hud.table-card :title="__('general.pages.reports.financial.depreciation_expenses_report.top_assets_title')" icon="fa-chart-area" :render-table="false">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0 align-middle">
                         <thead class="table-light">
@@ -121,16 +106,11 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+        </x-hud.table-card>
     </div>
 
     <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white d-flex align-items-center">
-                <h5 class="mb-0"><i class="fa fa-receipt me-2"></i> {{ __('general.pages.reports.financial.depreciation_expenses_report.title') }}</h5>
-            </div>
-            <div class="card-body p-0">
+        <x-hud.table-card :title="__('general.pages.reports.financial.depreciation_expenses_report.title')" icon="fa-receipt" :render-table="false">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0 align-middle">
                         <thead class="table-primary">
@@ -165,15 +145,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
-            </div>
-        </div>
+        </x-hud.table-card>
     </div>
 </div>
 

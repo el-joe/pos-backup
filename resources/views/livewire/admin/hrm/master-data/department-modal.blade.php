@@ -2,28 +2,28 @@
     <div class="modal-dialog">
         <div class="modal-content border-0 shadow">
             <div class="modal-header">
-                <h5 class="modal-title">{{ $current?->id ? 'Edit Department' : 'New Department' }}</h5>
+                <h5 class="modal-title">{{ $current?->id ? __('general.pages.hrm.modal.edit_department') : __('general.pages.hrm.modal.new_department') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-control" wire:model="data.name" placeholder="Department name">
+                    <label class="form-label">{{ __('general.pages.hrm.name') }}</label>
+                    <input type="text" class="form-control" wire:model="data.name" placeholder="{{ __('general.pages.hrm.department_name_placeholder') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Parent Department ID</label>
-                    <input type="number" class="form-control" wire:model="data.parent_id" placeholder="Optional">
+                    <label class="form-label">{{ __('general.pages.hrm.parent_department_id') }}</label>
+                    <input type="number" class="form-control" wire:model="data.parent_id" placeholder="{{ __('general.pages.hrm.optional_placeholder') }}">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Manager Employee ID</label>
-                    <input type="number" class="form-control" wire:model="data.manager_id" placeholder="Optional">
+                    <label class="form-label">{{ __('general.pages.hrm.manager_employee_id') }}</label>
+                    <input type="number" class="form-control" wire:model="data.manager_id" placeholder="{{ __('general.pages.hrm.optional_placeholder') }}">
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click="save">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('general.pages.hrm.close') }}</button>
+                <button type="button" class="btn btn-primary" wire:click="save">{{ __('general.pages.hrm.save') }}</button>
             </div>
         </div>
     </div>

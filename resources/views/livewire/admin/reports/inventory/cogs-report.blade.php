@@ -1,10 +1,6 @@
 <div class="container-fluid">
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-shopping-cart"></i> Cost of Goods Sold</h4>
-        </div>
-        <div class="panel-body" style="padding:0;">
-            <div class="table-responsive">
+    <x-admin.table-card title="Cost of Goods Sold" icon="fa-shopping-cart" :render-table="false">
+        <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
                 <thead>
                     <tr style="background:#e3f2fd;">
@@ -37,7 +33,6 @@
                     @endif
                 </tbody>
             </table>
-            </div>
         </div>
-    </div>
+    </x-admin.table-card>
 </div>

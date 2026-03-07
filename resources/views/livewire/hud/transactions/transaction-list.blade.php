@@ -1,20 +1,16 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.transactions.filters') }}</h5>
-
+    <x-hud.filter-card :title="__('general.pages.transactions.filters')" icon="fa-filter" collapse-id="hudTransactionsFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                     wire:click="$toggle('collapseFilters')"
-                    data-bs-target="#branchFilterCollapse">
+                    data-bs-target="#hudTransactionsFilterCollapse">
                 <i class="fa fa-filter me-1"></i> {{ __('general.pages.transactions.show_hide') }}
             </button>
-        </div>
+        </x-slot:actions>
 
-        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
-            <div class="card-body">
-                <div class="row g-3">
+        <div class="row g-3">
 
                     <!-- Filter by Transaction_id -->
                     <div class="col-md-4">
@@ -61,48 +57,24 @@
                         </button>
                     </div>
 
-                </div>
-            </div>
         </div>
+    </x-hud.filter-card>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">{{ __('general.pages.transactions.transactions_list') }}</h3>
-
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('transactions.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
+    <x-hud.table-card :title="__('general.pages.transactions.transactions_list')" icon="fa-exchange" :render-table="false">
+        <x-slot:actions>
+            @adminCan('transactions.export')
+                <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.transactions.export') }}
                 </button>
-                @endadminCan
-            </div>
-        </div>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            @include('admin.partials.tableHandler',[
-                'rows'=> $transactionLines,
-                'columns' => $columns,
-                'headers' => $headers,
-            ])
-        </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        @include('admin.partials.tableHandler',[
+            'rows'=> $transactionLines,
+            'columns' => $columns,
+            'headers' => $headers,
+        ])
+    </x-hud.table-card>
 </div>
 
 @push('scripts')

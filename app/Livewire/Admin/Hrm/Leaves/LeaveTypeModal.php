@@ -72,11 +72,11 @@ class LeaveTypeModal extends Component
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            $this->popup('error', 'Error while saving leave type: ' . $e->getMessage());
+            $this->popup('error', __('general.messages.hrm.error_saving_leave_type', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Leave type saved successfully');
+        $this->popup('success', __('general.messages.hrm.leave_type_saved_successfully'));
         $this->dismiss();
         $this->reset('current', 'data');
         $this->dispatch('re-render');

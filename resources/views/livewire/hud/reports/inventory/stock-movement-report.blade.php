@@ -1,14 +1,8 @@
 <div class="container-fluid">
     <div class="col-12">
-        <div class="card shadow-sm border-0 bg-dark text-light">
-            <div class="card-header d-flex align-items-center">
-                <i class="fa fa-exchange me-2 text-info"></i>
-                <h5 class="mb-0">{{ __('general.pages.reports.inventory.stock_movement.title') }}</h5>
-            </div>
-
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover table-striped align-middle mb-0">
+        <x-hud.table-card :title="__('general.pages.reports.inventory.stock_movement.title')" icon="fa-exchange" :render-table="false">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-striped align-middle mb-0">
                         <thead class="table-light text-dark">
                             <tr>
                                 <th>{{ __('general.pages.reports.inventory.stock_movement.product') }}</th>
@@ -55,15 +49,7 @@
                             @endif
                         </tbody>
                     </table>
-                </div>
             </div>
-
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
-            </div>
-        </div>
+        </x-hud.table-card>
     </div>
 </div>

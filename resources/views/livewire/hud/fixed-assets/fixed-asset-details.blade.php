@@ -132,7 +132,7 @@
             </div>
 
             <div class="mt-3">
-                {{ $depreciationExpenses->links() }}
+                {{ $depreciationExpenses->links('pagination::default5') }}
             </div>
         </div>
     </div>

@@ -1,114 +1,71 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.expenses.filters') }}</h5>
-
-            <button class="btn btn-sm btn-outline-primary"
-                    data-bs-toggle="collapse"
-                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
-                    wire:click="$toggle('collapseFilters')"
-                    data-bs-target="#branchFilterCollapse">
+    <x-hud.filter-card :title="__('general.pages.expenses.filters')" icon="fa-filter" collapse-id="hudExpenseFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}" wire:click="$toggle('collapseFilters')" data-bs-target="#hudExpenseFilterCollapse">
                 <i class="fa fa-filter me-1"></i> {{ __('general.pages.expenses.show_hide') }}
             </button>
-        </div>
+        </x-slot:actions>
 
-        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
-            <div class="card-body">
-                <div class="row g-3">
-
-                    <!-- Filter by Branch -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.expenses.branch') }}</label>
-                        <select class="form-select select2"
-                                name="filters.branch_id">
-                            <option value="">{{ __('general.layout.all_branches') }}</option>
-                            @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Filter by Category -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.expenses.category') }}</label>
-                        <select class="form-select select2"
-                                name="filters.expense_category_id">
-                            <option value="">{{ __('general.pages.expenses.all_categories') }}</option>
-                            @foreach($expenseCategories as $category)
-                                <option value="{{ $category->id }}" {{ ($filters['expense_category_id']??'') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <label class="form-label">{{ __('general.pages.expenses.type') }}</label>
-                        <select class="form-select select2"
-                                wire:model="filters.type">
-                            <option value="">{{ __('general.pages.expenses.types.all_types') }}</option>
-                            <option value="normal">{{ __('general.pages.expenses.types.normal') }}</option>
-                            <option value="prepaid">{{ __('general.pages.expenses.types.prepaid') }}</option>
-                            <option value="accrued">{{ __('general.pages.expenses.types.accrued') }}</option>
-                        </select>
-                    </div>
-                    <!-- Filter by Date -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.expenses.date') }}</label>
-                        <input type="date" class="form-control"
-                               wire:model="filters.date" />
-                    </div>
-                    <!-- Reset -->
-                    <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-secondary btn-sm"
-                                wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.expenses.reset') }}
-                        </button>
-                    </div>
-
-                </div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.expenses.branch') }}</label>
+                <select class="form-select select2" name="filters.branch_id">
+                    <option value="">{{ __('general.layout.all_branches') }}</option>
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.expenses.category') }}</label>
+                <select class="form-select select2" name="filters.expense_category_id">
+                    <option value="">{{ __('general.pages.expenses.all_categories') }}</option>
+                    @foreach($expenseCategories as $category)
+                        <option value="{{ $category->id }}" {{ ($filters['expense_category_id']??'') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label class="form-label">{{ __('general.pages.expenses.type') }}</label>
+                <select class="form-select select2" wire:model="filters.type">
+                    <option value="">{{ __('general.pages.expenses.types.all_types') }}</option>
+                    <option value="normal">{{ __('general.pages.expenses.types.normal') }}</option>
+                    <option value="prepaid">{{ __('general.pages.expenses.types.prepaid') }}</option>
+                    <option value="accrued">{{ __('general.pages.expenses.types.accrued') }}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.expenses.date') }}</label>
+                <input type="date" class="form-control" wire:model="filters.date" />
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-secondary btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo me-1"></i> {{ __('general.pages.expenses.reset') }}
+                </button>
             </div>
         </div>
+    </x-hud.filter-card>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">{{ __('general.titles.expenses') }}</h3>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('expenses.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
+    <x-hud.table-card :title="__('general.titles.expenses')" icon="fa-money" :render-table="false">
+        <x-slot:actions>
+            @adminCan('expenses.export')
+                <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.expenses.export') }}
                 </button>
-                @endadminCan
-                @adminCan('expenses.create')
+            @endadminCan
+            @adminCan('expenses.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addExpenseModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus"></i> {{ __('general.pages.expenses.new_expense') }}
                 </button>
-                @endadminCan
-            </div>
-        </div>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            @include('admin.partials.tableHandler',[
-                'rows'=>$expenses,
-                'columns'=>$columns,
-                'headers'=>$headers
-            ])
-        </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        @include('admin.partials.tableHandler',[
+            'rows'=>$expenses,
+            'columns'=>$columns,
+            'headers'=>$headers
+        ])
+    </x-hud.table-card>
 
     <!-- Add/Edit Expense Modal -->
     <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="addExpenseModalLabel" aria-hidden="true" wire:ignore.self>

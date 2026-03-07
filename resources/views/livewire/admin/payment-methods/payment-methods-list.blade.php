@@ -1,59 +1,120 @@
 <div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Payment Methods</h3>
+    <x-admin.filter-card
+        :title="__('general.pages.payment-methods.filters')"
+        icon="fa-filter"
+        collapse-id="adminPaymentMethodFilterCollapse"
+        :collapsed="$collapseFilters"
+    >
+        <x-slot:actions>
+            <button type="button"
+                    class="btn btn-default btn-sm"
+                    wire:click="$toggle('collapseFilters')"
+                    data-toggle="collapse"
+                    data-target="#adminPaymentMethodFilterCollapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}">
+                <i class="fa fa-filter"></i> {{ __('general.pages.payment-methods.show_hide') }}
+            </button>
+        </x-slot:actions>
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.payment-methods.search') }}</label>
+                <input type="text"
+                       class="form-control"
+                       placeholder="{{ __('general.pages.payment-methods.search_placeholder') }}"
+                       wire:model.live="filters.name">
             </div>
-            <div class="col-xs-6 text-right">
-                {{-- add toggle for edit payment method --}}
-                <a class="btn btn-primary" data-toggle="modal" data-target="#editPaymentMethodModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus"></i> New Payment Method
-                </a>
+
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.payment-methods.branch') }}</label>
+                <select class="form-control" wire:model.live="filters.branch_id">
+                    <option value="">{{ __('general.layout.all_branches') }}</option>
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.payment-methods.status') }}</label>
+                <select class="form-control" wire:model.live="filters.active">
+                    <option value="">{{ __('general.pages.payment-methods.all') }}</option>
+                    <option value="1">{{ __('general.pages.payment-methods.active') }}</option>
+                    <option value="0">{{ __('general.pages.payment-methods.inactive') }}</option>
+                </select>
+            </div>
+
+            <div class="col-xs-12 text-right">
+                <button type="button" class="btn btn-default btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo"></i> {{ __('general.pages.payment-methods.reset') }}
+                </button>
             </div>
         </div>
+    </x-admin.filter-card>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Branch</th>
-                        <th>Status</th>
-                        <th class="text-nowrap">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($paymentMethods as $paymentMethod)
-                    <tr>
-                        <td>{{ $paymentMethod->id }}</td>
-                        <td>{{ $paymentMethod->name }}</td>
-                        <td>{{ $paymentMethod->branch?->name ?? 'All Branches'}}</td>
-                        <td>
-                            <span class="badge badge-{{ $paymentMethod->active ? 'success' : 'danger' }}">{{ $paymentMethod->active ? 'Active' : 'Inactive' }}</span>
-                        </td>
-                        <td class="text-nowrap">
-                            @if(!in_array($paymentMethod->slug, ['cash', 'bank-transfer']))
-                            <a href="javascript:void(0)" data-toggle="modal" data-target="#editPaymentMethodModal" wire:click="setCurrent({{ $paymentMethod->id }})" data-toggle="tooltip" data-original-title="Edit">
+    <x-admin.table-card :title="__('general.titles.payment-methods')" icon="fa-credit-card">
+        <x-slot:actions>
+            @adminCan('payment_methods.export')
+                <button type="button" class="btn btn-success btn-sm" wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel-o"></i> {{ __('general.pages.payment-methods.export') }}
+                </button>
+            @endadminCan
+            @adminCan('payment_methods.create')
+                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editPaymentMethodModal" wire:click="setCurrent(null)">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.payment-methods.new_payment_method') }}
+                </a>
+            @endadminCan
+        </x-slot:actions>
+
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.payment-methods.id') }}</th>
+                <th>{{ __('general.pages.payment-methods.name') }}</th>
+                <th>{{ __('general.pages.payment-methods.branch_name') }}</th>
+                <th>{{ __('general.pages.payment-methods.status') }}</th>
+                <th class="text-nowrap">{{ __('general.pages.payment-methods.actions') }}</th>
+            </tr>
+        </x-slot:head>
+
+        @forelse ($paymentMethods as $paymentMethod)
+            <tr>
+                <td>{{ $paymentMethod->id }}</td>
+                <td>{{ $paymentMethod->name }}</td>
+                <td>{{ $paymentMethod->branch?->name ?? __('general.layout.all_branches') }}</td>
+                <td>
+                    <span class="badge badge-{{ $paymentMethod->active ? 'success' : 'danger' }}">
+                        {{ $paymentMethod->active ? __('general.pages.payment-methods.active') : __('general.pages.payment-methods.inactive') }}
+                    </span>
+                </td>
+                <td class="text-nowrap">
+                    @if(!in_array($paymentMethod->slug, ['cash', 'bank-transfer', 'check']))
+                        @adminCan('payment_methods.update')
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#editPaymentMethodModal" wire:click="setCurrent({{ $paymentMethod->id }})" data-original-title="{{ __('general.pages.payment-methods.edit') }}">
                                 <i class="fa fa-pencil text-primary m-r-10"></i>
                             </a>
-                            <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Close" wire:click="deleteAlert({{ $paymentMethod->id }})">
+                        @endadminCan
+                        @adminCan('payment_methods.delete')
+                            <a href="javascript:void(0)" data-original-title="{{ __('general.pages.payment-methods.delete') }}" wire:click="deleteAlert({{ $paymentMethod->id }})">
                                 <i class="fa fa-close text-danger m-r-10"></i>
                             </a>
-                            @else
-                            <i class="fa fa-lock text-muted m-r-10" title="This payment method cannot be edited or deleted"></i>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {{-- center pagination --}}
-            <div class="pagination-wrapper t-a-c">
+                        @endadminCan
+                    @else
+                        <i class="fa fa-lock text-muted m-r-10" title="{{ __('general.pages.payment-methods.lock_tooltip') }}"></i>
+                    @endif
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" class="text-center text-muted">No data found.</td>
+            </tr>
+        @endforelse
+
+        @if($paymentMethods->hasPages())
+            <x-slot:footer>
                 {{ $paymentMethods->links() }}
-            </div>
-        </div>
-    </div>
+            </x-slot:footer>
+        @endif
+    </x-admin.table-card>
 
     {{-- add edit modal for payment methods --}}
     <div class="modal fade" id="editPaymentMethodModal" tabindex="-1" role="dialog" aria-labelledby="editPaymentMethodModalLabel" aria-hidden="true" wire:ignore.self>

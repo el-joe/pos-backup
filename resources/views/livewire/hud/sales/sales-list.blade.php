@@ -1,5 +1,16 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
+    <x-hud.filter-card :title="__('general.pages.sales.filters')" icon="fa-filter" collapse-id="branchFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="collapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                    wire:click="$toggle('collapseFilters')"
+                    data-bs-target="#branchFilterCollapse">
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.sales.show_hide') }}
+            </button>
+        </x-slot:actions>
+
+        <div class="row g-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.sales.filters') }}</h5>
 
@@ -78,122 +89,85 @@
             </div>
         </div>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+    </x-hud.filter-card>
 
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">{{ __('general.pages.sales.selling_orders') }}</h3>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('sales.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.sales.export') }}
-                </button>
-                @endadminCan
-                @adminCan('pos.create')
-                <a class="btn btn-primary btn-sm" href="{{ route('admin.pos') }}">
-                    <i class="fa fa-plus"></i> {{ __('general.pages.sales.new_selling_order') }}
-                </a>
-                <a class="btn btn-warning btn-sm" href="{{ route('admin.pos.deferred') }}">
-                    <i class="fa fa-clock"></i> {{ __('general.titles.deferred_pos') }}
-                </a>
-                <a class="btn btn-outline-warning btn-sm" href="{{ route('admin.sales.deferred') }}">
-                    <i class="fa fa-truck"></i> {{ __('general.titles.deferred_sales') }}
-                </a>
-                @endadminCan
-            </div>
-        </div>
+    <x-hud.table-card :title="__('general.pages.sales.selling_orders')" icon="fa-shopping-basket">
+        <x-slot:actions>
+            @adminCan('sales.export')
+            <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
+                <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.sales.export') }}
+            </button>
+            @endadminCan
+            @adminCan('pos.create')
+            <a class="btn btn-primary btn-sm" href="{{ route('admin.pos') }}">
+                <i class="fa fa-plus"></i> {{ __('general.pages.sales.new_selling_order') }}
+            </a>
+            <a class="btn btn-warning btn-sm" href="{{ route('admin.pos.deferred') }}">
+                <i class="fa fa-clock"></i> {{ __('general.titles.deferred_pos') }}
+            </a>
+            <a class="btn btn-outline-warning btn-sm" href="{{ route('admin.sales.deferred') }}">
+                <i class="fa fa-truck"></i> {{ __('general.titles.deferred_sales') }}
+            </a>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped align-middle mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>{{ __('general.pages.sales.id') }}</th>
-                            <th>{{ __('general.pages.sales.invoice_no') }}</th>
-                            <th>{{ __('general.pages.sales.customer') }}</th>
-                            <th>{{ __('general.pages.sales.branch') }}</th>
-                            <th>{{ __('general.pages.sales.total_amount') }}</th>
-                            <th>{{ __('general.pages.sales.due_amount') }}</th>
-                            <th>{{ __('general.pages.sales.refund_status') }}</th>
-                            <th class="text-nowrap text-center">{{ __('general.pages.sales.action') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($sales as $sale)
-                            <tr>
-                                <td>{{ $sale->id }}</td>
-                                <td>{{ $sale->invoice_number }}</td>
-                                <td>{{ $sale->customer?->name }}</td>
-                                <td>{{ $sale->branch?->name }}</td>
-                                <td>{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
-                                <td>
-                                    <span class="badge bg-danger">
-                                        {{ currencyFormat($sale->due_amount ?? 0, true) }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-{{ $sale->refund_status->colorClass() }}">
-                                        {{ $sale->refund_status->label() }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    @adminCan('sales.show')
-                                    <a href="{{ route('admin.sales.details', $sale->id) }}"
-                                       class="btn btn-sm btn-primary me-1"
-                                       title="{{ __('general.pages.sales.details') }}">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
-                                    @endadminCan
-                                    @adminCan('sales.pay')
-                                    <button class="btn btn-sm btn-success"
-                                            wire:click="setCurrent({{ $sale->id }})"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#paymentModal">
-                                        <i class="fa fa-credit-card"></i>
-                                    </button>
-                                    @endadminCan
-                                    @adminCan('sales.show-invoice')
-                                    {{-- create 2 btn one for print and one for export to pdf --}}
-                                    <a href="{{ route('sales.invoice', encodedData(['type' => '80mm','order_id'=>$sale->id, 'action' => 'print'])) }}"
-                                       class="btn btn-sm btn-info ms-1"
-                                       title="{{ __('general.pages.sales.print') }}"
-                                       target="_blank">
-                                        <i class="fa fa-print"></i>
-                                    </a>
-                                    <a href="{{ route('sales.invoice', encodedData(['type' => 'a4','order_id'=>$sale->id, 'action' => 'pdf'])) }}"
-                                       class="btn btn-sm btn-warning ms-1"
-                                       title="{{ __('general.pages.sales.export_pdf') }}"
-                                       target="_blank">
-                                        <i class="fa fa-file-pdf"></i>
-                                    </a>
-                                    @endadminCan
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.sales.id') }}</th>
+                <th>{{ __('general.pages.sales.invoice_no') }}</th>
+                <th>{{ __('general.pages.sales.customer') }}</th>
+                <th>{{ __('general.pages.sales.branch') }}</th>
+                <th>{{ __('general.pages.sales.total_amount') }}</th>
+                <th>{{ __('general.pages.sales.due_amount') }}</th>
+                <th>{{ __('general.pages.sales.refund_status') }}</th>
+                <th class="text-nowrap text-center">{{ __('general.pages.sales.action') }}</th>
+            </tr>
+        </x-slot:head>
 
-                <div class="d-flex justify-content-center mt-3">
-                    {{ $sales->links('pagination::default5') }}
-                </div>
-            </div>
-        </div>
+        @foreach ($sales as $sale)
+            <tr>
+                <td>{{ $sale->id }}</td>
+                <td>{{ $sale->invoice_number }}</td>
+                <td>{{ $sale->customer?->name }}</td>
+                <td>{{ $sale->branch?->name }}</td>
+                <td>{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
+                <td>
+                    <span class="badge bg-danger">
+                        {{ currencyFormat($sale->due_amount ?? 0, true) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-{{ $sale->refund_status->colorClass() }}">
+                        {{ $sale->refund_status->label() }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    @adminCan('sales.show')
+                    <a href="{{ route('admin.sales.details', $sale->id) }}" class="btn btn-sm btn-primary me-1" title="{{ __('general.pages.sales.details') }}">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    @endadminCan
+                    @adminCan('sales.pay')
+                    <button class="btn btn-sm btn-success" wire:click="setCurrent({{ $sale->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                        <i class="fa fa-credit-card"></i>
+                    </button>
+                    @endadminCan
+                    @adminCan('sales.show-invoice')
+                    <a href="{{ route('sales.invoice', encodedData(['type' => '80mm','order_id'=>$sale->id, 'action' => 'print'])) }}" class="btn btn-sm btn-info ms-1" title="{{ __('general.pages.sales.print') }}" target="_blank">
+                        <i class="fa fa-print"></i>
+                    </a>
+                    <a href="{{ route('sales.invoice', encodedData(['type' => 'a4','order_id'=>$sale->id, 'action' => 'pdf'])) }}" class="btn btn-sm btn-warning ms-1" title="{{ __('general.pages.sales.export_pdf') }}" target="_blank">
+                        <i class="fa fa-file-pdf"></i>
+                    </a>
+                    @endadminCan
+                </td>
+            </tr>
+        @endforeach
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        <x-slot:footer>
+            {{ $sales->links('pagination::default5') }}
+        </x-slot:footer>
+    </x-hud.table-card>
 
     <!-- Payment Modal -->
     <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">

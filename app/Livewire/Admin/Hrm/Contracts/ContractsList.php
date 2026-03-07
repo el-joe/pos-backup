@@ -34,6 +34,6 @@ class ContractsList extends Component
         $contracts = $this->employeeContractService->list(['employee'], $this->filters, 10, 'id');
 
         return layoutView('hrm.contracts.contracts-list', get_defined_vars())
-            ->title('HRM Contracts');
+            ->title(__('general.titles.hrm_contracts'));
     }
 }

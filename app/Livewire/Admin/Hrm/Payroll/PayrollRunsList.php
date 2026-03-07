@@ -34,7 +34,7 @@ class PayrollRunsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this payroll run', 'Yes, delete it!');
+        $this->confirm('delete', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_payroll_run'), __('general.messages.yes_delete_it'));
     }
 
     public function delete(): void
@@ -43,11 +43,11 @@ class PayrollRunsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Payroll run not found');
+            $this->popup('error', __('general.messages.hrm.payroll_run_not_found'));
             return;
         }
         $this->payrollRunService->delete($this->current->id);
-        $this->popup('success', 'Payroll run deleted successfully');
+        $this->popup('success', __('general.messages.hrm.payroll_run_deleted_successfully'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -59,7 +59,7 @@ class PayrollRunsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('approve', 'question', 'Approve?', 'You want to approve this payroll run', 'Yes, approve');
+        $this->confirm('approve', 'question', __('general.pages.hrm.approve_action'), __('general.messages.hrm.confirm_approve_payroll_run'), __('general.pages.hrm.approve_action'));
     }
 
     public function payAlert($id): void
@@ -68,7 +68,7 @@ class PayrollRunsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('pay', 'question', 'Mark as paid?', 'You want to mark this payroll run as paid', 'Yes, mark paid');
+        $this->confirm('pay', 'question', __('general.pages.hrm.mark_paid_action'), __('general.messages.hrm.confirm_mark_payroll_paid'), __('general.pages.hrm.mark_paid_action'));
     }
 
     public function approve(): void
@@ -77,11 +77,11 @@ class PayrollRunsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Payroll run not found');
+            $this->popup('error', __('general.messages.hrm.payroll_run_not_found'));
             return;
         }
         if (($this->current->status ?? null) !== 'draft') {
-            $this->popup('warning', 'Only draft payroll runs can be approved');
+            $this->popup('warning', __('general.messages.hrm.only_draft_payroll_runs_can_be_approved'));
             $this->dismiss();
             return;
         }
@@ -90,7 +90,7 @@ class PayrollRunsList extends Component
             'status' => 'approved',
         ]);
 
-        $this->popup('success', 'Payroll run approved');
+        $this->popup('success', __('general.messages.hrm.payroll_run_approved'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -102,11 +102,11 @@ class PayrollRunsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Payroll run not found');
+            $this->popup('error', __('general.messages.hrm.payroll_run_not_found'));
             return;
         }
         if (($this->current->status ?? null) !== 'approved') {
-            $this->popup('warning', 'Only approved payroll runs can be marked as paid');
+            $this->popup('warning', __('general.messages.hrm.only_approved_payroll_runs_can_be_marked_paid'));
             $this->dismiss();
             return;
         }
@@ -116,7 +116,7 @@ class PayrollRunsList extends Component
             'status' => 'paid',
         ]);
 
-        $this->popup('success', 'Payroll run marked as paid');
+        $this->popup('success', __('general.messages.hrm.payroll_run_marked_paid'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -128,6 +128,6 @@ class PayrollRunsList extends Component
         $runs = $this->payrollRunService->list([], $this->filters, 10, 'id');
 
         return layoutView('hrm.payroll.payroll-runs-list', get_defined_vars())
-            ->title('HRM Payroll Runs');
+            ->title(__('general.titles.hrm_payroll_runs'));
     }
 }

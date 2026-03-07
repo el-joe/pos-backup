@@ -70,11 +70,11 @@ class DesignationModal extends Component
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            $this->popup('error', 'Error while saving designation: ' . $e->getMessage());
+            $this->popup('error', __('general.messages.hrm.error_saving_designation', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Designation saved successfully');
+        $this->popup('success', __('general.messages.hrm.designation_saved_successfully'));
         $this->dismiss();
         $this->reset('current', 'data');
         $this->dispatch('re-render');

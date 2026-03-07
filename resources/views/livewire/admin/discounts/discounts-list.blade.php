@@ -1,66 +1,125 @@
 <div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Discounts</h3>
-            </div>
-            <div class="col-xs-6 text-right">
-                {{-- add toggle for edit discount --}}
-                <a class="btn btn-primary" data-toggle="modal" data-target="#editDiscountModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus"></i> New Discount
-                </a>
-            </div>
-        </div>
+    <x-admin.filter-card
+        :title="__('general.pages.discounts.filters')"
+        icon="fa-filter"
+        collapse-id="adminDiscountFilterCollapse"
+        :collapsed="$collapseFilters"
+    >
+        <x-slot:actions>
+            <button type="button"
+                    class="btn btn-default btn-sm"
+                    wire:click="$toggle('collapseFilters')"
+                    data-toggle="collapse"
+                    data-target="#adminDiscountFilterCollapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}">
+                <i class="fa fa-filter"></i> {{ __('general.pages.discounts.show_hide') }}
+            </button>
+        </x-slot:actions>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Value</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Status</th>
-                        <th class="text-nowrap">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($discounts as $discount)
-                    <tr>
-                        <td>{{ $discount->id }}</td>
-                        <td>{{ $discount->name }}</td>
-                        <td>{{ $discount->code }}</td>
-                        <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : '' }}</td>
-                        <td>{{ formattedDate($discount->start_date) }}</td>
-                        <td>{{ formattedDate($discount->end_date) }}</td>
-                        <td>
-                            <span class="badge badge-{{ $discount->active ? 'success' : 'danger' }}">
-                                {{ $discount->active ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-                        <td class="text-nowrap">
-                            <a href="javascript:void(0)" data-toggle="modal" data-target="#editDiscountModal" wire:click="setCurrent({{ $discount->id }})" data-toggle="tooltip" data-original-title="Edit">
-                                <i class="fa fa-pencil text-primary m-r-10"></i>
-                            </a>
-                            <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Close" wire:click="deleteAlert({{ $discount->id }})">
-                                <i class="fa fa-close text-danger m-r-10"></i>
-                            </a>
-                            <a href="javascript:void(0)" data-toggle="modal" data-target="#historyModal" data-toggle="tooltip" data-original-title="History" wire:click="setCurrent({{ $discount->id }})">
-                                <i class="fa fa-history text-info"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {{-- center pagination --}}
-            <div class="pagination-wrapper t-a-c">
-                {{ $discounts->links() }}
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.discounts.search_label') }}</label>
+                <input type="text"
+                       class="form-control"
+                       placeholder="{{ __('general.pages.discounts.search_placeholder') }}"
+                       wire:model.live="filters.search">
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.discounts.start_date') }}</label>
+                <input type="date" class="form-control" wire:model.live="filters.start_date">
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.discounts.end_date') }}</label>
+                <input type="date" class="form-control" wire:model.live="filters.end_date">
+            </div>
+
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.discounts.status') }}</label>
+                <select class="form-control" wire:model.live="filters.active">
+                    <option value="">{{ __('general.pages.discounts.all') }}</option>
+                    <option value="1">{{ __('general.pages.discounts.active') }}</option>
+                    <option value="0">{{ __('general.pages.discounts.inactive') }}</option>
+                </select>
+            </div>
+
+            <div class="col-xs-12 text-right">
+                <button type="button" class="btn btn-default btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo"></i> {{ __('general.pages.discounts.reset') }}
+                </button>
             </div>
         </div>
-    </div>
+    </x-admin.filter-card>
+
+    <x-admin.table-card :title="__('general.titles.discounts')" icon="fa-percent">
+        <x-slot:actions>
+            @adminCan('discounts.export')
+                <button type="button" class="btn btn-success btn-sm" wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel-o"></i> {{ __('general.pages.discounts.export') }}
+                </button>
+            @endadminCan
+            @adminCan('discounts.create')
+                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editDiscountModal" wire:click="setCurrent(null)">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.discounts.new_discount') }}
+                </a>
+            @endadminCan
+        </x-slot:actions>
+
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.discounts.id') }}</th>
+                <th>{{ __('general.pages.discounts.name') }}</th>
+                <th>{{ __('general.pages.discounts.code') }}</th>
+                <th>{{ __('general.pages.discounts.value') }}</th>
+                <th>{{ __('general.pages.discounts.start_date') }}</th>
+                <th>{{ __('general.pages.discounts.end_date') }}</th>
+                <th>{{ __('general.pages.discounts.status') }}</th>
+                <th class="text-nowrap">{{ __('general.pages.discounts.actions') }}</th>
+            </tr>
+        </x-slot:head>
+
+        @forelse ($discounts as $discount)
+            <tr>
+                <td>{{ $discount->id }}</td>
+                <td>{{ $discount->name }}</td>
+                <td>{{ $discount->code }}</td>
+                <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
+                <td>{{ dateTimeFormat($discount->start_date, true, false) }}</td>
+                <td>{{ dateTimeFormat($discount->end_date, true, false) }}</td>
+                <td>
+                    <span class="badge badge-{{ $discount->active ? 'success' : 'danger' }}">
+                        {{ $discount->active ? __('general.pages.discounts.active') : __('general.pages.discounts.inactive') }}
+                    </span>
+                </td>
+                <td class="text-nowrap">
+                    @adminCan('discounts.update')
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#editDiscountModal" wire:click="setCurrent({{ $discount->id }})" data-original-title="{{ __('general.pages.discounts.edit') }}">
+                            <i class="fa fa-pencil text-primary m-r-10"></i>
+                        </a>
+                    @endadminCan
+                    @adminCan('discounts.delete')
+                        <a href="javascript:void(0)" data-original-title="{{ __('general.pages.discounts.delete') }}" wire:click="deleteAlert({{ $discount->id }})">
+                            <i class="fa fa-close text-danger m-r-10"></i>
+                        </a>
+                    @endadminCan
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#historyModal" data-original-title="{{ __('general.pages.discounts.history') }}" wire:click="setCurrent({{ $discount->id }})">
+                        <i class="fa fa-history text-info"></i>
+                    </a>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="8" class="text-center text-muted">No data found.</td>
+            </tr>
+        @endforelse
+
+        @if($discounts->hasPages())
+            <x-slot:footer>
+                {{ $discounts->links() }}
+            </x-slot:footer>
+        @endif
+    </x-admin.table-card>
 
     {{-- add edit modal for discounts page --}}
     <div class="modal fade" id="editDiscountModal" tabindex="-1" role="dialog" aria-labelledby="editDiscountModalLabel" aria-hidden="true" wire:ignore.self>
@@ -180,7 +239,7 @@
                                 <td>{{ $history->id }}</td>
                                 <td>{{ App\Models\Tenant\DiscountHistory::$relatedWith[$history->target_type] ?? $history->target_type }}</td>
                                 <td>{{ $history->target_id }}</td>
-                                <td>{{ formattedDate($history->created_at) }}</td>
+                                <td>{{ dateTimeFormat($history->created_at, true, false) }}</td>
                             </tr>
                             @endforeach
                         </tbody>

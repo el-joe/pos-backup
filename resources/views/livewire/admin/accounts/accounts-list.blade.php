@@ -1,67 +1,56 @@
 <div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Accounts</h3>
-            </div>
-            <div class="col-xs-6 text-right">
-                {{-- add toggle for edit account --}}
-                <a  class="btn btn-primary" data-toggle="modal" data-target="#editAccountModal" wire:click="$dispatch('setCurrentAccount' , [
-                    'current' => null,
-                    'filters' => $filters,
-                    'subPage' => $subPage
-                ])">
-                    <i class="fa fa-plus"></i> New Account
-                </a>
-            </div>
-        </div>
+    <x-admin.table-card title="Accounts" icon="fa-book">
+        <x-slot:actions>
+            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editAccountModal" wire:click="$dispatch('setCurrentAccount' , [
+                'current' => null,
+                'filters' => $filters,
+                'subPage' => $subPage
+            ])">
+                <i class="fa fa-plus"></i> New Account
+            </a>
+        </x-slot:actions>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Type</th>
-                        <th>Branch</th>
-                        <th>Payment Method</th>
-                        <th>Status</th>
-                        <th class="text-nowrap">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($accounts as $account)
-                        <tr>
-                            <td>{{ $account->id }}</td>
-                            <td>{{ $account->name }}</td>
-                            <td>{{ $account->code }}</td>
-                            <td><p class="badge badge-{{ $account->type->color() }}">{{ $account->type->label() }}</p></td>
-                            <td>{{ $account->branch?->name ?? 'All' }}</td>
-                            <td>{{ $account->paymentMethod?->name ?? '----' }}</td>
-                            <td>
-                                <span class="badge badge-{{ $account->active ? 'success' : 'danger' }}">
-                                    {{ $account->active ? 'Active' : 'Inactive' }}
-                                </span>
-                            </td>
-                            <td class="text-nowrap">
-                                <a href="javascript:void(0)"  data-toggle="modal" data-target="#editAccountModal" wire:click="setCurrent({{ $account->id }})" data-toggle="tooltip" data-original-title="Edit">
-                                    <i class="fa fa-pencil text-primary m-r-10"></i>
-                                </a>
-                                <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Close" wire:click="deleteAlert({{ $account->id }})">
-                                    <i class="fa fa-close text-danger"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {{-- center pagination --}}
-            <div class="pagination-wrapper t-a-c">
-                {{ $accounts->links() }}
-            </div>
-        </div>
-    </div>
+        <x-slot:head>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Type</th>
+                <th>Branch</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+                <th class="text-nowrap">Action</th>
+            </tr>
+        </x-slot:head>
+
+        @foreach ($accounts as $account)
+            <tr>
+                <td>{{ $account->id }}</td>
+                <td>{{ $account->name }}</td>
+                <td>{{ $account->code }}</td>
+                <td><p class="badge badge-{{ $account->type->color() }}">{{ $account->type->label() }}</p></td>
+                <td>{{ $account->branch?->name ?? 'All' }}</td>
+                <td>{{ $account->paymentMethod?->name ?? '----' }}</td>
+                <td>
+                    <span class="badge badge-{{ $account->active ? 'success' : 'danger' }}">
+                        {{ $account->active ? 'Active' : 'Inactive' }}
+                    </span>
+                </td>
+                <td class="text-nowrap">
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#editAccountModal" wire:click="setCurrent({{ $account->id }})" data-toggle="tooltip" data-original-title="Edit">
+                        <i class="fa fa-pencil text-primary m-r-10"></i>
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" data-original-title="Close" wire:click="deleteAlert({{ $account->id }})">
+                        <i class="fa fa-close text-danger"></i>
+                    </a>
+                </td>
+            </tr>
+        @endforeach
+
+        <x-slot:footer>
+            {{ $accounts->links() }}
+        </x-slot:footer>
+    </x-admin.table-card>
 
     {{-- add edit modal for accounts page --}}
     <div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-labelledby="editAccountModalLabel" aria-hidden="true" wire:ignore.self>

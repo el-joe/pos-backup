@@ -17,6 +17,18 @@ class TransactionList extends Component
     public $filters = [];
     public $export = null;
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     public function render()
     {
         $transactionLines = TransactionLine::with(['transaction','account','transaction.branch'])

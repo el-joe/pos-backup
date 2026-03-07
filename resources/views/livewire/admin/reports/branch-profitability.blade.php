@@ -1,11 +1,6 @@
-<div style="margin-top: 20px;">
+<div class="container-fluid" style="margin-top: 20px;">
 
-    <!-- 🔍 Filter Panel -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
-        </div>
-        <div class="panel-body">
+    <x-admin.filter-card title="Filter Options" icon="fa-filter">
             <form wire:submit.prevent="applyFilter" class="row">
                 <div class="col-md-3 form-group">
                     <label for="from_date">From Date</label>
@@ -35,21 +30,15 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
+    </x-admin.filter-card>
 
-    <!-- 📊 Report Panel -->
-    <div class="panel panel-primary">
-        <div class="panel-heading clearfix">
-            <h4 class="panel-title pull-left" style="padding-top: 7.5px;">
-                <i class="glyphicon glyphicon-stats"></i> Branch Profitability
-            </h4>
+    <x-admin.table-card title="Branch Profitability" icon="fa-line-chart" :render-table="false">
+        <div class="clearfix" style="padding: 15px 15px 0;">
             <small class="pull-right text-warning" style="margin-top: 10px;">
                 <i class="glyphicon glyphicon-info-sign"></i> Other Income includes (Purchase Discounts)
             </small>
         </div>
 
-        <div class="panel-body" style="padding: 0;">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped" style="margin-bottom: 0;">
                     <thead style="background: #f5f5f5;">
@@ -114,6 +103,5 @@
                     </tfoot>
                 </table>
             </div>
-        </div>
-    </div>
+    </x-admin.table-card>
 </div>

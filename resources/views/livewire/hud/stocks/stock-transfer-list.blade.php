@@ -1,5 +1,16 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
+    <x-hud.filter-card :title="__('general.pages.stock-transfers.filters')" icon="fa-filter" collapse-id="hudStockTransferFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="collapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                    wire:click="$toggle('collapseFilters')"
+                    data-bs-target="#hudStockTransferFilterCollapse">
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.stock-transfers.show_hide') }}
+            </button>
+        </x-slot:actions>
+
+        <div class="row g-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.stock-transfers.filters') }}</h5>
 
@@ -65,48 +76,29 @@
             </div>
         </div>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
         </div>
-    </div>
+    </x-hud.filter-card>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">{{ __('general.pages.stock-transfers.stock_transfers') }}</h3>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('stock_transfers.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
+    <x-hud.table-card :title="__('general.pages.stock-transfers.stock_transfers')" icon="fa-exchange" :render-table="false">
+        <x-slot:actions>
+            @adminCan('stock_transfers.export')
+                <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.stock-transfers.export') }}
                 </button>
-                @endadminCan
-                @adminCan('stock_transfers.create')
+            @endadminCan
+            @adminCan('stock_transfers.create')
                 <a class="btn btn-primary" href="{{ route('admin.stocks.transfers.create') }}">
                     <i class="fa fa-plus"></i> {{ __('general.pages.stock-transfers.new_stock_transfer') }}
                 </a>
-                @endadminCan
-            </div>
-        </div>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            @include('admin.partials.tableHandler',[
-                'rows' => $stockTransfers,
-                'columns' => $columns,
-                'headers' => $headers
-            ])
-        </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        @include('admin.partials.tableHandler',[
+            'rows' => $stockTransfers,
+            'columns' => $columns,
+            'headers' => $headers
+        ])
+    </x-hud.table-card>
 </div>
 
 @push('scripts')

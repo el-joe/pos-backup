@@ -37,7 +37,7 @@ class MasterDataPage extends Component
     public function deleteDepartmentAlert(int $id): void
     {
         $this->currentDepartment = $this->departmentService->find($id);
-        $this->confirm('deleteDepartment', 'warning', 'Are you sure?', 'You want to delete this department', 'Yes, delete it!');
+        $this->confirm('deleteDepartment', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_department'), __('general.messages.yes_delete_it'));
     }
 
     public function deleteDepartment(): void
@@ -46,11 +46,11 @@ class MasterDataPage extends Component
             abort(403);
         }
         if (!$this->currentDepartment) {
-            $this->popup('error', 'Department not found');
+            $this->popup('error', __('general.messages.hrm.department_not_found'));
             return;
         }
         $this->departmentService->delete($this->currentDepartment->id);
-        $this->popup('success', 'Department deleted successfully');
+        $this->popup('success', __('general.messages.hrm.department_deleted_successfully'));
         $this->dismiss();
         $this->reset('currentDepartment');
     }
@@ -58,7 +58,7 @@ class MasterDataPage extends Component
     public function deleteDesignationAlert(int $id): void
     {
         $this->currentDesignation = $this->designationService->find($id);
-        $this->confirm('deleteDesignation', 'warning', 'Are you sure?', 'You want to delete this designation', 'Yes, delete it!');
+        $this->confirm('deleteDesignation', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_designation'), __('general.messages.yes_delete_it'));
     }
 
     public function deleteDesignation(): void
@@ -67,11 +67,11 @@ class MasterDataPage extends Component
             abort(403);
         }
         if (!$this->currentDesignation) {
-            $this->popup('error', 'Designation not found');
+            $this->popup('error', __('general.messages.hrm.designation_not_found'));
             return;
         }
         $this->designationService->delete($this->currentDesignation->id);
-        $this->popup('success', 'Designation deleted successfully');
+        $this->popup('success', __('general.messages.hrm.designation_deleted_successfully'));
         $this->dismiss();
         $this->reset('currentDesignation');
     }
@@ -79,7 +79,7 @@ class MasterDataPage extends Component
     public function deleteEmployeeAlert(int $id): void
     {
         $this->currentEmployee = $this->employeeService->find($id);
-        $this->confirm('deleteEmployee', 'warning', 'Are you sure?', 'You want to delete this employee', 'Yes, delete it!');
+        $this->confirm('deleteEmployee', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_employee'), __('general.messages.yes_delete_it'));
     }
 
     public function deleteEmployee(): void
@@ -88,11 +88,11 @@ class MasterDataPage extends Component
             abort(403);
         }
         if (!$this->currentEmployee) {
-            $this->popup('error', 'Employee not found');
+            $this->popup('error', __('general.messages.hrm.employee_not_found'));
             return;
         }
         $this->employeeService->delete($this->currentEmployee->id);
-        $this->popup('success', 'Employee deleted successfully');
+        $this->popup('success', __('general.messages.hrm.employee_deleted_successfully'));
         $this->dismiss();
         $this->reset('currentEmployee');
     }
@@ -130,6 +130,6 @@ class MasterDataPage extends Component
         $contracts = $this->employeeContractService->list(['employee'], [], null, 'id')->take(100);
 
         return layoutView('hrm.master-data', get_defined_vars())
-            ->title('HRM Master Data');
+            ->title(__('general.titles.hrm_master_data'));
     }
 }

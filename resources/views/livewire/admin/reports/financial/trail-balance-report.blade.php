@@ -1,10 +1,10 @@
 <div class="container-fluid">
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-list"></i> Transactions List</h4>
-        </div>
-        <div class="panel-body">
-            <x-table-component :rows="$transactionLines" :columns="$columns" :headers="$headers" :totals="$totals" />
-        </div>
-    </div>
+    <x-admin.table-card :title="__('general.pages.reports.financial.trial_balance.transactions_list')" icon="fa-list" :render-table="false">
+        @include('admin.partials.tableHandler',[
+            'rows' => $transactionLines,
+            'columns' => $columns,
+            'headers' => $headers,
+            'totals' => $totals,
+        ])
+    </x-admin.table-card>
 </div>

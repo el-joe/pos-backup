@@ -21,6 +21,17 @@ class AccountsList extends Component
     public $data = [];
     public $filters = [];
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->resetPage();
+    }
+
     function boot() {
         $this->accountService = app(AccountService::class);
         $this->branchService = app(BranchService::class);

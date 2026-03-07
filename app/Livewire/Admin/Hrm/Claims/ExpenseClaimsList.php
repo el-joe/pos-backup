@@ -39,7 +39,7 @@ class ExpenseClaimsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('approve', 'question', 'Approve?', 'You want to approve this expense claim', 'Yes, approve');
+        $this->confirm('approve', 'question', __('general.pages.hrm.approve_action'), __('general.messages.hrm.confirm_approve_expense_claim'), __('general.pages.hrm.approve_action'));
     }
 
     public function rejectAlert($id): void
@@ -48,7 +48,7 @@ class ExpenseClaimsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('reject', 'warning', 'Reject?', 'You want to reject this expense claim', 'Yes, reject');
+        $this->confirm('reject', 'warning', __('general.pages.hrm.statuses.rejected'), __('general.messages.hrm.confirm_reject_expense_claim'), __('general.pages.hrm.statuses.rejected'));
     }
 
     public function approve(): void
@@ -57,7 +57,7 @@ class ExpenseClaimsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Expense claim not found');
+            $this->popup('error', __('general.messages.hrm.expense_claim_not_found'));
             return;
         }
 
@@ -67,7 +67,7 @@ class ExpenseClaimsList extends Component
             'approved_at' => Carbon::now(),
         ]);
 
-        $this->popup('success', 'Expense claim approved');
+        $this->popup('success', __('general.messages.hrm.expense_claim_approved'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -79,7 +79,7 @@ class ExpenseClaimsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Expense claim not found');
+            $this->popup('error', __('general.messages.hrm.expense_claim_not_found'));
             return;
         }
 
@@ -89,7 +89,7 @@ class ExpenseClaimsList extends Component
             'approved_at' => Carbon::now(),
         ]);
 
-        $this->popup('success', 'Expense claim rejected');
+        $this->popup('success', __('general.messages.hrm.expense_claim_rejected'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -110,6 +110,6 @@ class ExpenseClaimsList extends Component
         $claims = $this->expenseClaimService->list(['employee'], $this->filters, 10, 'id');
 
         return layoutView('hrm.claims.expense-claims-list', get_defined_vars())
-            ->title('HRM Expense Claims');
+            ->title(__('general.titles.hrm_expense_claims'));
     }
 }

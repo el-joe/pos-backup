@@ -27,7 +27,7 @@
                 </table>
             </div>
             <div class="d-flex justify-content-center mt-3">
-                {{ $payslips->links() }}
+                {{ $payslips->links('pagination::default5') }}
             </div>
         </div>
 

@@ -64,11 +64,11 @@ class AddStockTransfer extends Component
         $product = $this->productService->search($value);
         if(!($this->data['from_branch_id']??null)) {
             $this->resetSearchInput();
-            $this->popup('warning','Please select From Branch first');
+            $this->popup('warning', __('general.messages.please_select_from_branch_first'));
             return;
         }
         if(!$product) {
-            $this->alert('warning','Product not found');
+            $this->alert('warning', __('general.messages.product_not_found'));
             return;
         }
 
@@ -121,7 +121,7 @@ class AddStockTransfer extends Component
     function delete($index) {
         unset($this->items[$index]);
         $this->items = array_values($this->items);
-        $this->alert('success','Product removed from the list');
+        $this->alert('success', __('general.messages.product_removed_from_list'));
     }
 
     public function addExpense()
@@ -146,7 +146,7 @@ class AddStockTransfer extends Component
             unset($this->data['expenses'][$index]);
             $this->data['expenses'] = array_values($this->data['expenses']);
         }
-        $this->alert('success','Expense removed from the list');
+        $this->alert('success', __('general.messages.expense_removed_from_list'));
     }
 
     function save() {
@@ -160,7 +160,7 @@ class AddStockTransfer extends Component
 
         foreach ($dataToSave['items'] as $item) {
             if($item['qty'] > $item['max_stock']) {
-                $this->alert('warning',"Insufficient stock for product {$item['name']}. Available stock: {$item['max_stock']}");
+                $this->alert('warning', __('general.messages.insufficient_stock_for_product', ['name' => $item['name'], 'qty' => $item['max_stock']]));
                 return;
             }
         }
@@ -177,11 +177,11 @@ class AddStockTransfer extends Component
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->popup('error','Error occurred while saving stock transfer: '.$e->getMessage());
+            $this->popup('error', __('general.messages.error_saving_stock_transfer', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->alert('success','Stock Transfer created successfully');
+        $this->alert('success', __('general.messages.stock_transfer_created_successfully'));
 
         return $this->redirectWithTimeout(route('admin.stocks.transfers.details', $stockTransfer),1500);
     }

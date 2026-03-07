@@ -20,6 +20,18 @@ class StockTransferList extends Component
     public $filters = [];
     public $export = null;
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     function boot() {
         $this->stockTransferService = app()->make(StockTransferService::class);
     }
@@ -34,8 +46,8 @@ class StockTransferList extends Component
                 return [
                     'loop' => $loop + 1,
                     'ref_no' => $stockTransfer->ref_no,
-                    'from_branch' => $stockTransfer->fromBranch ? $stockTransfer->fromBranch->name : 'N/A',
-                    'to_branch' => $stockTransfer->toBranch ? $stockTransfer->toBranch->name : 'N/A',
+                    'from_branch' => $stockTransfer->fromBranch ? $stockTransfer->fromBranch->name : __('general.messages.n_a'),
+                    'to_branch' => $stockTransfer->toBranch ? $stockTransfer->toBranch->name : __('general.messages.n_a'),
                     'items_count' => $stockTransfer->items ? $stockTransfer->items->count() : 0,
                     'total_quantity' => $stockTransfer->items ? $stockTransfer->items->sum('qty') : 0,
                     'transfer_date' => dateTimeFormat($stockTransfer->transfer_date),
@@ -44,7 +56,7 @@ class StockTransferList extends Component
                 ];
             })->toArray();
             $columns = ['loop', 'ref_no', 'from_branch', 'to_branch', 'items_count', 'total_quantity', 'transfer_date', 'status', 'created_at'];
-            $headers = ['#', 'Ref No', 'From', 'To', 'Items Count', 'Total Quantity', 'Transfer Date', 'Status', 'Created At'];
+            $headers = ['#', __('general.pages.stock-transfers.ref_no'), __('general.pages.stock-transfers.from_branch'), __('general.pages.stock-transfers.to_branch'), __('general.pages.stock-transfers.items_count'), __('general.pages.stock-transfers.total_quantity'), __('general.pages.stock-transfers.transfer_date'), __('general.pages.stock-transfers.status'), __('general.pages.stock-transfers.created_at')];
 
             $fullPath = exportToExcel($data, $columns, $headers, 'stock_transfers');
 
@@ -59,8 +71,8 @@ class StockTransferList extends Component
         ->through(function($st) {
             return [
                 'id' => $st->id,
-                'from_branch' => $st->fromBranch ? $st->fromBranch->name : 'N/A',
-                'to_branch' => $st->toBranch ? $st->toBranch->name : 'N/A',
+                'from_branch' => $st->fromBranch ? $st->fromBranch->name : __('general.messages.n_a'),
+                'to_branch' => $st->toBranch ? $st->toBranch->name : __('general.messages.n_a'),
                 'items_count' => $st->items ? $st->items->count() : 0,
                 'total_quantity' => $st->items ? $st->items->sum('qty') : 0,
                 'transfer_date' => dateTimeFormat($st->transfer_date),
@@ -72,20 +84,20 @@ class StockTransferList extends Component
         });
 
         $headers = [
-            '#' , 'Ref No' , 'From' , 'To' , 'Items Count' , 'Total Quantity' , 'Transfer Date' , 'Status' , 'Created At' , 'Actions'
+            '#' , __('general.pages.stock-transfers.ref_no') , __('general.pages.stock-transfers.from_branch') , __('general.pages.stock-transfers.to_branch') , __('general.pages.stock-transfers.items_count') , __('general.pages.stock-transfers.total_quantity') , __('general.pages.stock-transfers.transfer_date') , __('general.pages.stock-transfers.status') , __('general.pages.stock-transfers.created_at') , __('general.pages.stock-transfers.action')
         ];
 
         $actions = [];
         if(adminCan('stock_transfers.show')){
             $actions[] = [
-                'title' => 'Details',
+                'title' => __('general.pages.stock-transfers.details_tab'),
                 'icon' => 'fa fa-eye',
                 'class' => 'btn btn-info btn-sm',
                 'route' => fn($row) => route('admin.stocks.transfers.details', $row['id']),
                 'attributes' => [
                     'data-toggle' => 'tooltip',
                     'data-placement' => 'top',
-                    'data-original-title' => 'Details',
+                    'data-original-title' => __('general.pages.stock-transfers.details_tab'),
                 ],
             ];
         }

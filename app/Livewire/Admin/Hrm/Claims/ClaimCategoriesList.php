@@ -34,7 +34,7 @@ class ClaimCategoriesList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this claim category', 'Yes, delete it!');
+        $this->confirm('delete', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_claim_category'), __('general.messages.yes_delete_it'));
     }
 
     public function delete(): void
@@ -43,11 +43,11 @@ class ClaimCategoriesList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Claim category not found');
+            $this->popup('error', __('general.messages.hrm.claim_category_not_found'));
             return;
         }
         $this->categoryService->delete($this->current->id);
-        $this->popup('success', 'Claim category deleted successfully');
+        $this->popup('success', __('general.messages.hrm.claim_category_deleted_successfully'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -65,6 +65,6 @@ class ClaimCategoriesList extends Component
         $categories = $this->categoryService->list([], $this->filters, 10, 'id');
 
         return layoutView('hrm.claims.claim-categories-list', get_defined_vars())
-            ->title('HRM Claim Categories');
+            ->title(__('general.titles.hrm_claim_categories'));
     }
 }

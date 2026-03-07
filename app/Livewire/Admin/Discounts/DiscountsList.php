@@ -54,6 +54,18 @@ class DiscountsList extends Component
         }
     }
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     function deleteAlert($id)
     {
         $this->setCurrent($id);

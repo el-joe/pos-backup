@@ -1,5 +1,16 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
+    <x-hud.filter-card :title="__('general.pages.admins.filters')" icon="fa-filter" collapse-id="branchFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="collapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                    wire:click="$toggle('collapseFilters')"
+                    data-bs-target="#branchFilterCollapse">
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.admins.show_hide') }}
+            </button>
+        </x-slot:actions>
+
+        <div class="row g-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.admins.filters') }}</h5>
 
@@ -57,98 +68,63 @@
             </div>
         </div>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+    </x-hud.filter-card>
 
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.admins.admins') }}</h5>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('user_management.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.admins.export') }}
-                </button>
-                @endadminCan
-                @adminCan('user_management.create')
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAdminModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus"></i> {{ __('general.pages.admins.new_admin') }}
-                </a>
-                @endadminCan
-            </div>
-        </div>
+    <x-hud.table-card :title="__('general.pages.admins.admins')" icon="fa-user-secret">
+        <x-slot:actions>
+            @adminCan('user_management.export')
+            <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
+                <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.admins.export') }}
+            </button>
+            @endadminCan
+            @adminCan('user_management.create')
+            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAdminModal" wire:click="setCurrent(null)">
+                <i class="fa fa-plus"></i> {{ __('general.pages.admins.new_admin') }}
+            </a>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>{{ __('general.pages.admins.id') }}</th>
-                            <th>{{ __('general.pages.admins.name') }}</th>
-                            <th>{{ __('general.pages.admins.phone') }}</th>
-                            <th>{{ __('general.pages.admins.email') }}</th>
-                            <th>{{ __('general.pages.admins.type') }}</th>
-                            <th>{{ __('general.pages.admins.branch') }}</th>
-                            <th>{{ __('general.pages.admins.active') }}</th>
-                            <th class="text-center">{{ __('general.pages.admins.actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($admins as $admin)
-                            <tr>
-                                <td>{{ $admin->id }}</td>
-                                <td>{{ $admin->name }}</td>
-                                <td>{{ $admin->phone }}</td>
-                                <td>{{ $admin->email }}</td>
-                                <td>{{ $admin->type }}</td>
-                                <td>{{ $admin->branch?->name }}</td>
-                                <td>
-                                    <span class="badge bg-{{ $admin->active ? 'success' : 'danger' }}">
-                                        {{ $admin->active ? __('general.pages.admins.active') : __('general.pages.admins.inactive') }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    @adminCan('user_management.update')
-                                        <button class="btn btn-sm btn-primary me-1"
-                                                data-bs-toggle="modal" data-bs-target="#editAdminModal"
-                                                wire:click="setCurrent({{ $admin->id }})"
-                                                title="{{ __('general.pages.admins.edit') }}">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
-                                    @endadminCan
-                                    @adminCan('user_management.delete')
-                                        <button class="btn btn-sm btn-danger"
-                                                wire:click="deleteAlert({{ $admin->id }})"
-                                                title="{{ __('general.pages.admins.delete') }}">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    @endadminCan
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.admins.id') }}</th>
+                <th>{{ __('general.pages.admins.name') }}</th>
+                <th>{{ __('general.pages.admins.phone') }}</th>
+                <th>{{ __('general.pages.admins.email') }}</th>
+                <th>{{ __('general.pages.admins.type') }}</th>
+                <th>{{ __('general.pages.admins.branch') }}</th>
+                <th>{{ __('general.pages.admins.active') }}</th>
+                <th class="text-center">{{ __('general.pages.admins.actions') }}</th>
+            </tr>
+        </x-slot:head>
 
-                {{-- pagination center aligned (optional) --}}
-                {{-- <div class="d-flex justify-content-center mt-3">
-                    {{ $admins->links() }}
-                </div> --}}
-            </div>
-        </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        @foreach ($admins as $admin)
+            <tr>
+                <td>{{ $admin->id }}</td>
+                <td>{{ $admin->name }}</td>
+                <td>{{ $admin->phone }}</td>
+                <td>{{ $admin->email }}</td>
+                <td>{{ $admin->type }}</td>
+                <td>{{ $admin->branch?->name }}</td>
+                <td>
+                    <span class="badge bg-{{ $admin->active ? 'success' : 'danger' }}">
+                        {{ $admin->active ? __('general.pages.admins.active') : __('general.pages.admins.inactive') }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    @adminCan('user_management.update')
+                        <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editAdminModal" wire:click="setCurrent({{ $admin->id }})" title="{{ __('general.pages.admins.edit') }}">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    @endadminCan
+                    @adminCan('user_management.delete')
+                        <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $admin->id }})" title="{{ __('general.pages.admins.delete') }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    @endadminCan
+                </td>
+            </tr>
+        @endforeach
+    </x-hud.table-card>
 
     <!-- Edit / Create Admin Modal -->
     <div class="modal fade" id="editAdminModal" tabindex="-1" aria-labelledby="editAdminModalLabel" aria-hidden="true" wire:ignore.self>

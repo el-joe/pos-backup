@@ -1,19 +1,71 @@
 <div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Expenses</h3>
+    <x-admin.filter-card :title="__('general.pages.expenses.filters')" icon="fa-filter" collapse-id="adminExpenseFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button type="button" class="btn btn-default btn-sm" wire:click="$toggle('collapseFilters')" data-toggle="collapse" data-target="#adminExpenseFilterCollapse" aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}">
+                <i class="fa fa-filter"></i> {{ __('general.pages.expenses.show_hide') }}
+            </button>
+        </x-slot:actions>
+
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.expenses.branch') }}</label>
+                <select class="form-control" wire:model.live="filters.branch_id">
+                    <option value="">{{ __('general.layout.all_branches') }}</option>
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                    @endforeach
+                </select>
             </div>
-            <div class="col-xs-6 text-right">
-                {{-- add toggle for edit expense category --}}
-                <a class="btn btn-primary" data-toggle="modal" data-target="#addExpenseModal" wire:click="setCurrent(null)">
-                    <i class="fa fa-plus"></i> New Expense
-                </a>
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.expenses.category') }}</label>
+                <select class="form-control" wire:model.live="filters.expense_category_id">
+                    <option value="">{{ __('general.pages.expenses.all_categories') }}</option>
+                    @foreach($expenseCategories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.expenses.type') }}</label>
+                <select class="form-control" wire:model.live="filters.type">
+                    <option value="">{{ __('general.pages.expenses.types.all_types') }}</option>
+                    <option value="normal">{{ __('general.pages.expenses.types.normal') }}</option>
+                    <option value="prepaid">{{ __('general.pages.expenses.types.prepaid') }}</option>
+                    <option value="accrued">{{ __('general.pages.expenses.types.accrued') }}</option>
+                </select>
+            </div>
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.expenses.date') }}</label>
+                <input type="date" class="form-control" wire:model.live="filters.date" />
+            </div>
+            <div class="col-xs-12 text-right">
+                <button type="button" class="btn btn-default btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo"></i> {{ __('general.pages.expenses.reset') }}
+                </button>
             </div>
         </div>
+    </x-admin.filter-card>
 
-        <x-table-component :rows="$expenses" :columns="$columns" :headers="$headers" />
-    </div>
+    <x-admin.table-card :title="__('general.titles.expenses')" icon="fa-money" :render-table="false">
+        <x-slot:actions>
+            @adminCan('expenses.export')
+                <button type="button" class="btn btn-success btn-sm" wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel-o"></i> {{ __('general.pages.expenses.export') }}
+                </button>
+            @endadminCan
+            @adminCan('expenses.create')
+                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addExpenseModal" wire:click="setCurrent(null)">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.expenses.new_expense') }}
+                </a>
+            @endadminCan
+        </x-slot:actions>
+
+        @include('admin.partials.tableHandler', [
+            'rows' => $expenses,
+            'columns' => $columns,
+            'headers' => $headers,
+        ])
+    </x-admin.table-card>
 
     <div class="modal fade" id="addExpenseModal" tabindex="-1" role="dialog" aria-labelledby="editExpenseCategoryModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog" role="document">

@@ -1,161 +1,117 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.expense-categories.filters') }}</h5>
-
-            <button class="btn btn-sm btn-outline-primary"
-                    data-bs-toggle="collapse"
-                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
-                    wire:click="$toggle('collapseFilters')"
-                    data-bs-target="#branchFilterCollapse">
+    <x-hud.filter-card :title="__('general.pages.expense-categories.filters')" icon="fa-filter" collapse-id="hudExpenseCategoryFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}" wire:click="$toggle('collapseFilters')" data-bs-target="#hudExpenseCategoryFilterCollapse">
                 <i class="fa fa-filter me-1"></i> {{ __('general.pages.expense-categories.show_hide') }}
             </button>
-        </div>
+        </x-slot:actions>
 
-        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
-            <div class="card-body">
-                <div class="row g-3">
-
-                    <!-- Filter by Name -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.expense-categories.search') }}</label>
-                        <input type="text" class="form-control"
-                            placeholder="{{ __('general.pages.expense-categories.search_placeholder') }}"
-                            wire:model.blur="filters.name">
-                    </div>
-
-                    <!-- Filter by Status -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.expense-categories.status') }}</label>
-                        <select class="form-select select2" name="filters.active">
-                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.all') }}</option>
-                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.active') }}</option>
-                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.inactive') }}</option>
-                        </select>
-                    </div>
-
-                    <!-- Reset -->
-                    <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-secondary btn-sm"
-                                wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.expense-categories.reset') }}
-                        </button>
-                    </div>
-
-                </div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.expense-categories.search') }}</label>
+                <input type="text" class="form-control" placeholder="{{ __('general.pages.expense-categories.search_placeholder') }}" wire:model.blur="filters.name">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.expense-categories.status') }}</label>
+                <select class="form-select select2" name="filters.active">
+                    <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.all') }}</option>
+                    <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.active') }}</option>
+                    <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.expense-categories.inactive') }}</option>
+                </select>
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-secondary btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo me-1"></i> {{ __('general.pages.expense-categories.reset') }}
+                </button>
             </div>
         </div>
+    </x-hud.filter-card>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title mb-0">{{ __('general.titles.expense-categories') }}</h3>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('expense_categories.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
+    <x-hud.table-card :title="__('general.titles.expense-categories')" icon="fa-tags">
+        <x-slot:actions>
+            @adminCan('expense_categories.export')
+                <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.expense-categories.export') }}
                 </button>
-                @endadminCan
-                @adminCan('expense_categories.create')
+            @endadminCan
+            @adminCan('expense_categories.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus"></i> {{ __('general.pages.expense-categories.new_expense_category') }}
                 </button>
-                @endadminCan
-            </div>
-        </div>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>{{ __('general.pages.expense-categories.id') }}</th>
-                            <th>{{ __('general.pages.expense-categories.ar_name') }}</th>
-                            <th>{{ __('general.pages.expense-categories.name') }}</th>
-                            <th>{{ __('general.pages.expense-categories.status_label') }}</th>
-                            <th class="text-nowrap text-center">{{ __('general.pages.expense-categories.actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($expenseCategories as $expenseCategory)
-                        <tr>
-                            <td>{{ $expenseCategory->id }}</td>
-                            <td class="h5">{{ $expenseCategory->ar_name }}</td>
-                            <td class="h5">{{ $expenseCategory->name }}</td>
-                            <td>
-                                <span class="badge bg-{{ $expenseCategory->active ? 'success' : 'danger' }}">
-                                    {{ $expenseCategory->active ? __('general.pages.expense-categories.active') : __('general.pages.expense-categories.inactive') }}
-                                </span>
-                            </td>
-                            <td class="text-nowrap text-center">
-                                @if($expenseCategory->default != 1)
-                                    @adminCan('expense_categories.update')
-                                    <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal"
-                                        wire:click="setCurrent({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.edit') }}">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    @endadminCan
-                                    @adminCan('expense_categories.delete')
-                                    <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.delete') }}">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                    @endadminCan
-                                @else
-                                    <i class="fas fa-ban"></i>
-                                @endif
-                            </td>
-                        </tr>
-                            @foreach ($expenseCategory->children as $child)
-                                <tr>
-                                    <td>----{{ $child->id }}</td>
-                                    <td>{{ $child->ar_name }}</td>
-                                    <td>{{ $child->name }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $child->active ? 'success' : 'danger' }}">
-                                            {{ $child->active ? __('general.pages.expense-categories.active') : __('general.pages.expense-categories.inactive') }}
-                                        </span>
-                                    </td>
-                                    <td class="text-nowrap text-center">
-                                        @if($child->default != 1)
-                                            @adminCan('expense_categories.update')
-                                            <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal"
-                                                wire:click="setCurrent({{ $child->id }})" title="{{ __('general.pages.expense-categories.edit') }}">
-                                                <i class="fa fa-edit"></i>
-                                            </button>
-                                            @endadminCan
-                                            @adminCan('expense_categories.delete')
-                                            <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $child->id }})" title="{{ __('general.pages.expense-categories.delete') }}">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                            @endadminCan
-                                        @else
-                                            <i class="fas fa-ban"></i>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.expense-categories.id') }}</th>
+                <th>{{ __('general.pages.expense-categories.ar_name') }}</th>
+                <th>{{ __('general.pages.expense-categories.name') }}</th>
+                <th>{{ __('general.pages.expense-categories.status_label') }}</th>
+                <th class="text-nowrap text-center">{{ __('general.pages.expense-categories.actions') }}</th>
+            </tr>
+        </x-slot:head>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        @forelse ($expenseCategories as $expenseCategory)
+            <tr>
+                <td>{{ $expenseCategory->id }}</td>
+                <td class="h5">{{ $expenseCategory->ar_name }}</td>
+                <td class="h5">{{ $expenseCategory->name }}</td>
+                <td>
+                    <span class="badge bg-{{ $expenseCategory->active ? 'success' : 'danger' }}">
+                        {{ $expenseCategory->active ? __('general.pages.expense-categories.active') : __('general.pages.expense-categories.inactive') }}
+                    </span>
+                </td>
+                <td class="text-nowrap text-center">
+                    @if($expenseCategory->default != 1)
+                        @adminCan('expense_categories.update')
+                            <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal" wire:click="setCurrent({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.edit') }}">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        @endadminCan
+                        @adminCan('expense_categories.delete')
+                            <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $expenseCategory->id }})" title="{{ __('general.pages.expense-categories.delete') }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        @endadminCan
+                    @else
+                        <i class="fas fa-ban"></i>
+                    @endif
+                </td>
+            </tr>
+            @foreach ($expenseCategory->children as $child)
+                <tr>
+                    <td>----{{ $child->id }}</td>
+                    <td>{{ $child->ar_name }}</td>
+                    <td>{{ $child->name }}</td>
+                    <td>
+                        <span class="badge bg-{{ $child->active ? 'success' : 'danger' }}">
+                            {{ $child->active ? __('general.pages.expense-categories.active') : __('general.pages.expense-categories.inactive') }}
+                        </span>
+                    </td>
+                    <td class="text-nowrap text-center">
+                        @if($child->default != 1)
+                            @adminCan('expense_categories.update')
+                                <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editExpenseCategoryModal" wire:click="setCurrent({{ $child->id }})" title="{{ __('general.pages.expense-categories.edit') }}">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            @endadminCan
+                            @adminCan('expense_categories.delete')
+                                <button class="btn btn-sm btn-danger" wire:click="deleteAlert({{ $child->id }})" title="{{ __('general.pages.expense-categories.delete') }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            @endadminCan
+                        @else
+                            <i class="fas fa-ban"></i>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        @empty
+            <tr>
+                <td colspan="5" class="text-center text-muted">No data found.</td>
+            </tr>
+        @endforelse
+    </x-hud.table-card>
 
     <!-- Edit Expense Category Modal -->
     <div class="modal fade" id="editExpenseCategoryModal" tabindex="-1" aria-labelledby="editExpenseCategoryModalLabel" aria-hidden="true" wire:ignore.self>

@@ -61,11 +61,11 @@ class ClaimCategoryModal extends Component
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            $this->popup('error', 'Error while saving claim category: ' . $e->getMessage());
+            $this->popup('error', __('general.messages.hrm.error_saving_claim_category', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Claim category saved successfully');
+        $this->popup('success', __('general.messages.hrm.claim_category_saved_successfully'));
         $this->dismiss();
         $this->reset('current', 'data');
         $this->dispatch('re-render');

@@ -204,7 +204,7 @@
                                         <td>{{ $e->employee_code }}</td>
                                         <td>{{ $e->name }}</td>
                                         <td>{{ $e->email }}</td>
-                                        <td>{{ $e->status }}</td>
+                                        <td>{{ __('general.pages.hrm.statuses.' . $e->status) }}</td>
                                         <td class="text-end text-nowrap">
                                             @adminCan('hrm_master_data.update')
                                                 <button class="btn btn-sm btn-outline-primary me-1"

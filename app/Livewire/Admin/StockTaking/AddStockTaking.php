@@ -57,7 +57,7 @@ class AddStockTaking extends Component
         foreach ($product->units() as $unit) {
             $stock = $unit->stock($product->id,$this->data['branch_id']);
             if(!$stock){
-                $this->alert('warning','No stock found for '.$product->name.' in '.$unit->name);
+                $this->alert('warning', __('general.messages.no_stock_found_for_product_in_unit', ['product' => $product->name, 'unit' => $unit->name]));
                 continue;
             }
 
@@ -98,13 +98,13 @@ class AddStockTaking extends Component
     {
         $product = $this->productService->search($value);
         if(!$product) {
-            $this->alert('warning','Product not found');
+            $this->alert('warning', __('general.messages.product_not_found'));
             return;
         }
         if(empty($value))return;
 
         if(isset($this->stocks[$product->id]) && count($this->stocks[$product->id]) == $product->units()->count()){
-            $this->alert('warning','Product already added in the list');
+            $this->alert('warning', __('general.messages.product_already_added_in_list'));
             $this->product_search = '';
             $this->dispatch('reset-search-input');
             return;
@@ -149,11 +149,11 @@ class AddStockTaking extends Component
 
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->popup('error','Error occurred while saving stock take: '.$e->getMessage());
+            $this->popup('error', __('general.messages.error_saving_stock_adjustment', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Stock Take saved successfully');
+        $this->popup('success', __('general.messages.stock_adjustment_saved_successfully'));
 
         $this->reset('data', 'stocks');
 

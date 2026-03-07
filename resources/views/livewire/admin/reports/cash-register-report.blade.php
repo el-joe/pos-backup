@@ -1,9 +1,5 @@
 <div class="container-fluid">
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
-        </div>
-        <div class="panel-body">
+    <x-admin.filter-card title="Filter Options" icon="fa-filter">
             <form wire:submit.prevent="applyFilter" class="form-horizontal">
                 <div class="col-md-3">
                     <label for="from_date" class="control-label">From Date</label>
@@ -42,14 +38,9 @@
                     <button type="button" wire:click="resetFilters" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> Reset</button>
                 </div>
             </form>
-        </div>
-    </div>
+    </x-admin.filter-card>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> Cash Register Summary</h4>
-        </div>
-        <div class="panel-body" style="padding:0;">
+    <x-admin.table-card title="Cash Register Summary" icon="fa-list-alt" :render-table="false">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
                     <thead class="active">
@@ -100,6 +91,5 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
+    </x-admin.table-card>
 </div>

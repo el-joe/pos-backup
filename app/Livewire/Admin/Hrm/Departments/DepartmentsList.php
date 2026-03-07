@@ -35,7 +35,7 @@ class DepartmentsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this department', 'Yes, delete it!');
+        $this->confirm('delete', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_department'), __('general.messages.yes_delete_it'));
     }
 
     public function delete(): void
@@ -44,12 +44,12 @@ class DepartmentsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Department not found');
+            $this->popup('error', __('general.messages.hrm.department_not_found'));
             return;
         }
 
         $this->departmentService->delete($this->current->id);
-        $this->popup('success', 'Department deleted successfully');
+        $this->popup('success', __('general.messages.hrm.department_deleted_successfully'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -67,6 +67,6 @@ class DepartmentsList extends Component
         $departments = $this->departmentService->list([], $this->filters, 10, 'id');
 
         return layoutView('hrm.departments.departments-list', get_defined_vars())
-            ->title('HRM Departments');
+            ->title(__('general.titles.hrm_departments'));
     }
 }

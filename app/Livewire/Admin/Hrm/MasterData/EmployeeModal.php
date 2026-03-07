@@ -79,7 +79,7 @@ class EmployeeModal extends Component
             $limit = subscriptionFeatureLimit('hrm_employees', 999999);
             $currentEmployees = Employee::query()->count();
             if ($currentEmployees >= $limit) {
-                $this->popup('error', 'Employee limit reached. Please upgrade your subscription to add more employees.');
+                $this->popup('error', __('general.messages.hrm.employee_limit_reached'));
                 return;
             }
         }
@@ -114,11 +114,11 @@ class EmployeeModal extends Component
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            $this->popup('error', 'Error while saving employee: ' . $e->getMessage());
+            $this->popup('error', __('general.messages.hrm.error_saving_employee', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Employee saved successfully');
+        $this->popup('success', __('general.messages.hrm.employee_saved_successfully'));
         $this->dismiss();
         $this->reset('current', 'data');
         $this->data['status'] = 'active';

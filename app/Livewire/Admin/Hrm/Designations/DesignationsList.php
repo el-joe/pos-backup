@@ -35,7 +35,7 @@ class DesignationsList extends Component
             abort(403);
         }
         $this->setCurrent($id);
-        $this->confirm('delete', 'warning', 'Are you sure?', 'You want to delete this designation', 'Yes, delete it!');
+        $this->confirm('delete', 'warning', __('general.messages.are_you_sure'), __('general.messages.hrm.confirm_delete_designation'), __('general.messages.yes_delete_it'));
     }
 
     public function delete(): void
@@ -44,12 +44,12 @@ class DesignationsList extends Component
             abort(403);
         }
         if (!$this->current) {
-            $this->popup('error', 'Designation not found');
+            $this->popup('error', __('general.messages.hrm.designation_not_found'));
             return;
         }
 
         $this->designationService->delete($this->current->id);
-        $this->popup('success', 'Designation deleted successfully');
+        $this->popup('success', __('general.messages.hrm.designation_deleted_successfully'));
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -67,6 +67,6 @@ class DesignationsList extends Component
         $designations = $this->designationService->list(['department'], $this->filters, 10, 'id');
 
         return layoutView('hrm.designations.designations-list', get_defined_vars())
-            ->title('HRM Designations');
+            ->title(__('general.titles.hrm_designations'));
     }
 }

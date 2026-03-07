@@ -10,10 +10,11 @@ use App\Traits\LivewireOperations;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class UnitsList extends Component
 {
-    use LivewireOperations;
+    use LivewireOperations, WithPagination;
 
     public $current;
     private $unitService;
@@ -28,6 +29,18 @@ class UnitsList extends Component
 
     function setCurrent($id) {
         $this->current = $this->unitService->find($id);
+    }
+
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
     }
 
     function deleteAlert($id)

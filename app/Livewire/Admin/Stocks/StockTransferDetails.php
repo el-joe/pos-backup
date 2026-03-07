@@ -50,18 +50,18 @@ class StockTransferDetails extends Component
     function deleteExpenseConfirm($id) {
         $this->setCurrentExpense($id);
         AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_INTO_STOCK_TRANSFER_TRY, ['id' => $id, 'stock_transfer_id' => $this->stockTransfer->id]);
-        $this->confirm('deleteExpense','error','Delete Expense','Are you sure you want to delete this expense? This action cannot be undone.','Do it!' );
+        $this->confirm('deleteExpense','error', __('general.messages.delete_expense_title'), __('general.messages.delete_expense_confirmation'), __('general.messages.do_it') );
     }
 
     function deleteExpense() {
         $expense = $this->currentExpense;
         if(!$expense) {
-            $this->popup('error','Expense not found.');
+            $this->popup('error', __('general.messages.expense_not_found'));
             return;
         }
 
         if($expense->refunded) {
-            $this->popup('error','Expense already refunded.');
+            $this->popup('error', __('general.messages.expense_already_refunded'));
             return;
         }
 
@@ -73,7 +73,7 @@ class StockTransferDetails extends Component
 
         $this->mount();
 
-        $this->popup('success','Expense deleted successfully.');
+        $this->popup('success', __('general.messages.expense_deleted_successfully'));
     }
 
     public function render()

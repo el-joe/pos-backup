@@ -27,6 +27,18 @@ class AdminsList extends Component
     public $filters = [];
     public $export = null;
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     public $rules = [
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:admins,email|max:255',

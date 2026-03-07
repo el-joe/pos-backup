@@ -32,6 +32,21 @@ class SalesList extends Component
         'due_filter' => 'all',
     ];
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->filters = [
+            'is_deferred' => 0,
+            'due_filter' => 'all',
+        ];
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     function boot() {
         $this->sellService = app(SellService::class);
         $this->cashRegisterService = app(CashRegisterService::class);

@@ -41,7 +41,7 @@ class StockTakingDetails extends Component
 
         AuditLog::log(AuditLogActionEnum::RETURN_STOCK_TAKING_PRODUCT_TRY, ['id' => $id]);
 
-        $this->confirm('returnStock', 'warning', 'Are you sure?', 'You want to return this stock', 'Yes, return it!');
+        $this->confirm('returnStock', 'warning', __('general.messages.are_you_sure'), __('general.messages.confirm_return_stock_adjustment_item'), __('general.messages.do_it'));
     }
 
     function returnStock() {
@@ -49,7 +49,7 @@ class StockTakingDetails extends Component
 
         AuditLog::log(AuditLogActionEnum::RETURN_STOCK_TAKING_PRODUCT, ['id' => $this->stProductId]);
 
-        $this->popup('success', 'Stock returned successfully');
+        $this->popup('success', __('general.messages.stock_returned_successfully'));
     }
 
     public function render()

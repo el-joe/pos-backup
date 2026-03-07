@@ -1,12 +1,5 @@
 <div class="container-fluid">
-    <!-- Filter Options -->
-    <div class="col-12">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white d-flex align-items-center">
-                <i class="fa fa-filter me-2"></i>
-                <strong>{{ __('general.pages.reports.common.filter_options') }}</strong>
-            </div>
-            <div class="card-body">
+    <x-hud.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter" class="mb-4">
                 <form wire:submit.prevent="applyFilter" class="row g-3">
                     <div class="col-sm-6">
                         <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
@@ -39,27 +32,16 @@
                         </button>
                     </div>
                 </form>
-            </div>
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
-            </div>
-        </div>
-    </div>
+    </x-hud.filter-card>
 
-    <!-- Audit Logs Table -->
     <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+        <x-hud.table-card :title="__('general.pages.reports.audit_report.title')" icon="fa-history" :render-table="false">
+            <div class="d-flex align-items-center justify-content-between px-3 pt-3">
                 <div class="d-flex align-items-center">
-                    <i class="fa fa-history me-2"></i>
-                    <h5 class="mb-0">{{ __('general.pages.reports.audit_report.title') }}</h5>
                 </div>
                 <small class="text-white-50">{{ __('general.pages.reports.audit_report.total') }}: {{ $audits->total() }}</small>
             </div>
-            <div class="card-body p-0">
+            <div class="pt-2">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0">
                         <thead class="table-light">
@@ -118,18 +100,12 @@
             </div>
 
             @if($audits->hasPages())
-                <div class="card-footer">
-                    {{ $audits->links() }}
+                <div class="px-3 pb-3">
+                    {{ $audits->links('pagination::default5') }}
                 </div>
             @endif
 
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
-            </div>
-        </div>
+        </x-hud.table-card>
     </div>
 </div>
 @push('scripts')

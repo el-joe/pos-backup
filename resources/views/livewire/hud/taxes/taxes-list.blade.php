@@ -1,138 +1,112 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.taxes.filters') }}</h5>
+    <x-hud.filter-card
+        :title="__('general.pages.taxes.filters')"
+        icon="fa-filter"
+        collapse-id="hudTaxFilterCollapse"
+        :collapsed="$collapseFilters"
+    >
+        <x-slot:actions>
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                     wire:click="$toggle('collapseFilters')"
-                    data-bs-target="#branchFilterCollapse">
+                    data-bs-target="#hudTaxFilterCollapse">
                 <i class="fa fa-filter me-1"></i> {{ __('general.pages.taxes.show_hide') }}
             </button>
-        </div>
+        </x-slot:actions>
 
-        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
-            <div class="card-body">
-                <div class="row g-3">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.taxes.search') }}</label>
+                <input type="text" class="form-control"
+                    placeholder="{{ __('general.pages.taxes.search_placeholder') }}"
+                    wire:model.blur="filters.search">
+            </div>
 
-                    <!-- Filter by Name -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.taxes.search') }}</label>
-                        <input type="text" class="form-control"
-                            placeholder="{{ __('general.pages.taxes.search_placeholder') }}"
-                            wire:model.blur="filters.search">
-                    </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.taxes.status') }}</label>
+                <select class="form-select select2" name="filters.active">
+                    <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.taxes.all') }}</option>
+                    <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.taxes.active') }}</option>
+                    <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.taxes.inactive') }}</option>
+                </select>
+            </div>
 
-                    <!-- Filter by Status -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.taxes.status') }}</label>
-                        <select class="form-select select2" name="filters.active">
-                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.taxes.all') }}</option>
-                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.taxes.active') }}</option>
-                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.taxes.inactive') }}</option>
-                        </select>
-                    </div>
-
-                    <!-- Reset -->
-                    <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-secondary btn-sm"
-                                wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.taxes.reset') }}
-                        </button>
-                    </div>
-
-                </div>
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-secondary btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo me-1"></i> {{ __('general.pages.taxes.reset') }}
+                </button>
             </div>
         </div>
+    </x-hud.filter-card>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.titles.taxes') }}</h5>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('taxes.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
+    <x-hud.table-card :title="__('general.titles.taxes')" icon="fa-percent">
+        <x-slot:actions>
+            @adminCan('taxes.export')
+                <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.taxes.export') }}
                 </button>
-                @endadminCan
-                @adminCan('taxes.create')
+            @endadminCan
+            @adminCan('taxes.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editTaxModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.taxes.new_tax') }}
                 </button>
-                @endadminCan
-            </div>
-        </div>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>{{ __('general.pages.taxes.id') }}</th>
-                            <th>{{ __('general.pages.taxes.name') }}</th>
-                            <th>{{ __('general.pages.taxes.tax_registeration_number') }}</th>
-                            <th>{{ __('general.pages.taxes.percentage') }}</th>
-                            <th>{{ __('general.pages.taxes.status') }}</th>
-                            <th class="text-nowrap">{{ __('general.pages.taxes.actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($taxes as $tax)
-                            <tr>
-                                <td>{{ $tax->id }}</td>
-                                <td>{{ $tax->name }}</td>
-                                <td>{{ $tax->vat_number }}</td>
-                                <td>{{ $tax->rate ?? 0 }}%</td>
-                                <td>
-                                    <span class="badge bg-{{ $tax->active ? 'success' : 'danger' }}">
-                                        {{ $tax->active ? __('general.pages.taxes.active') : __('general.pages.taxes.inactive') }}
-                                    </span>
-                                </td>
-                                <td class="text-nowrap">
-                                    @adminCan('taxes.update')
-                                    <button type="button"
-                                            class="btn btn-sm btn-primary me-1"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editTaxModal"
-                                            wire:click="setCurrent({{ $tax->id }})">
-                                        <i class="fa fa-edit me-1"></i> {{ __('general.pages.taxes.edit') }}
-                                    </button>
-                                    @endadminCan
-                                    @adminCan('taxes.delete')
-                                    <button type="button"
-                                            class="btn btn-sm btn-danger"
-                                            wire:click="deleteAlert({{ $tax->id }})">
-                                        <i class="fa fa-trash me-1"></i> {{ __('general.pages.taxes.delete') }}
-                                    </button>
-                                    @endadminCan
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.taxes.id') }}</th>
+                <th>{{ __('general.pages.taxes.name') }}</th>
+                <th>{{ __('general.pages.taxes.tax_registeration_number') }}</th>
+                <th>{{ __('general.pages.taxes.percentage') }}</th>
+                <th>{{ __('general.pages.taxes.status') }}</th>
+                <th class="text-nowrap">{{ __('general.pages.taxes.actions') }}</th>
+            </tr>
+        </x-slot:head>
 
-                <div class="d-flex justify-content-center">
-                    {{ $taxes->links() }}
-                </div>
-            </div>
-        </div>
+        @forelse ($taxes as $tax)
+            <tr>
+                <td>{{ $tax->id }}</td>
+                <td>{{ $tax->name }}</td>
+                <td>{{ $tax->vat_number }}</td>
+                <td>{{ $tax->rate ?? 0 }}%</td>
+                <td>
+                    <span class="badge bg-{{ $tax->active ? 'success' : 'danger' }}">
+                        {{ $tax->active ? __('general.pages.taxes.active') : __('general.pages.taxes.inactive') }}
+                    </span>
+                </td>
+                <td class="text-nowrap">
+                    @adminCan('taxes.update')
+                        <button type="button"
+                                class="btn btn-sm btn-primary me-1"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editTaxModal"
+                                wire:click="setCurrent({{ $tax->id }})">
+                            <i class="fa fa-edit me-1"></i> {{ __('general.pages.taxes.edit') }}
+                        </button>
+                    @endadminCan
+                    @adminCan('taxes.delete')
+                        <button type="button"
+                                class="btn btn-sm btn-danger"
+                                wire:click="deleteAlert({{ $tax->id }})">
+                            <i class="fa fa-trash me-1"></i> {{ __('general.pages.taxes.delete') }}
+                        </button>
+                    @endadminCan
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="6" class="text-center text-muted">No data found.</td>
+            </tr>
+        @endforelse
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        @if($taxes->hasPages())
+            <x-slot:footer>
+                {{ $taxes->links('pagination::default5') }}
+            </x-slot:footer>
+        @endif
+    </x-hud.table-card>
 
     <!-- Modal -->
     <div class="modal fade" id="editTaxModal" tabindex="-1" aria-labelledby="editTaxModalLabel" aria-hidden="true" wire:ignore.self>
@@ -152,6 +126,7 @@
                     <div class="mb-3">
                         <label for="taxVatNumber" class="form-label">{{ __('general.pages.taxes.tax_registeration_number') }}</label>
                         <input type="text" class="form-control" wire:model="data.vat_number" id="taxVatNumber" placeholder="{{ __('general.pages.taxes.enter_tax_registration_number') }}">
+                    </div>
 
                     <div class="mb-3">
                         <label for="taxRate" class="form-label">{{ __('general.pages.taxes.rate') }}</label>

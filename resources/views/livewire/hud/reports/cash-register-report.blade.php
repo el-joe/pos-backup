@@ -1,12 +1,5 @@
 <div class="container-fluid">
-    <!-- Filter Options -->
-    <div class="col-12">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-primary text-white d-flex align-items-center">
-                <i class="fa fa-filter me-2"></i>
-                <strong>{{ __('general.pages.reports.common.filter_options') }}</strong>
-            </div>
-            <div class="card-body">
+    <x-hud.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter" class="mb-4">
                 <form wire:submit.prevent="applyFilter" class="row g-3">
                     <div class="col-sm-6">
                         <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
@@ -39,24 +32,10 @@
                         </button>
                     </div>
                 </form>
-            </div>
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
-            </div>
-        </div>
-    </div>
+    </x-hud.filter-card>
 
-    <!-- Cash Register Summary -->
     <div class="col-12">
-        <div class="card shadow-sm">
-            <div class="card-header bg-secondary text-white d-flex align-items-center">
-                <i class="fa fa-list-alt me-2"></i>
-                <h5 class="mb-0">{{ __('general.pages.reports.cash_register_report.title') }}</h5>
-            </div>
-            <div class="card-body p-0">
+        <x-hud.table-card :title="__('general.pages.reports.cash_register_report.title')" icon="fa-list-alt" :render-table="false">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0">
                         <thead class="table-light">
@@ -111,14 +90,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="card-arrow">
-                <div class="card-arrow-top-left"></div>
-                <div class="card-arrow-top-right"></div>
-                <div class="card-arrow-bottom-left"></div>
-                <div class="card-arrow-bottom-right"></div>
-            </div>
-        </div>
+        </x-hud.table-card>
     </div>
 </div>
 @push('scripts')

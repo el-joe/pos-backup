@@ -1,84 +1,128 @@
 <div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">{{ __('general.pages.purchases.purchase_orders') }}</h3>
-            </div>
-            <div class="col-xs-6 text-right">
-                {{-- add toggle for edit branch --}}
-                <a class="btn btn-primary" href="#">
-                    <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
-                </a>
-            </div>
-        </div>
+    <x-admin.filter-card :title="__('general.pages.purchases.filters')" icon="fa-filter" collapse-id="adminPurchasesFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button type="button" class="btn btn-default btn-sm" wire:click="$toggle('collapseFilters')" data-toggle="collapse" data-target="#adminPurchasesFilterCollapse" aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}">
+                <i class="fa fa-filter"></i> {{ __('general.pages.purchases.show_hide') }}
+            </button>
+        </x-slot:actions>
 
-        <div class="row" style="margin-bottom:15px;">
-            <div class="col-sm-3">
-                <label class="control-label">{{ __('general.pages.purchases.due_filter') }}</label>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.purchases.ref_no') }}</label>
+                <input type="text" class="form-control" placeholder="{{ __('general.pages.purchases.search_placeholder') }}" wire:model.live="filters.ref_no">
+            </div>
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.purchases.due_filter') }}</label>
                 <select class="form-control" wire:model.live="filters.due_filter">
                     <option value="all">{{ __('general.pages.purchases.due_filter_all') }}</option>
                     <option value="paid">{{ __('general.pages.purchases.due_filter_paid') }}</option>
                     <option value="unpaid">{{ __('general.pages.purchases.due_filter_unpaid') }}</option>
                 </select>
             </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
-                <thead>
-                    <tr>
-                        <th>{{ __('general.pages.purchases.id') }}</th>
-                        <th>{{ __('general.pages.purchases.ref_no') }}</th>
-                        <th>{{ __('general.pages.purchases.supplier') }}</th>
-                        <th>{{ __('general.pages.purchases.branch') }}</th>
-                        <th>{{ __('general.pages.purchases.status') }}</th>
-                        <th>{{ __('general.pages.purchases.total_amount') }}</th>
-                        <th>{{ __('general.pages.purchases.due_amount') }}</th>
-                        <th>{{ __('general.pages.purchases.refund_status') }}</th>
-                        <th class="text-nowrap">{{ __('general.pages.purchases.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($purchases as $purchase)
-                    <tr>
-                        <td>{{ $purchase->id }}</td>
-                        <td>{{ $purchase->ref_no }}</td>
-                        <td>{{ $purchase->supplier->name }}</td>
-                        <td>{{ $purchase->branch->name }}</td>
-                        <td>
-                            <span class="label label-{{ $purchase->status->colorClass() }}">
-                                {{ $purchase->status->label() }}
-                            </span>
-                        </td>
-                        <td>{{ $purchase->total_amount ?? 0 }}</td>
-                        <td>
-                            <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
-                                {{ number_format($purchase->due_amount ?? 0, 2) }}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="text-{{ $purchase->refund_status->colorClass() }}">
-                                {{ $purchase->refund_status->label() }}
-                            </span>
-                        </td>
-                        <td class="text-nowrap">
-                            <a href="{{ route('admin.purchases.details', $purchase->id) }}" data-toggle="tooltip" data-original-title="Details">
-                                <i class="fa fa-eye text-primary m-r-10"></i>
-                            </a>
-                            <a href="#" wire:click="setCurrent({{ $purchase->id }})" data-toggle="modal" data-target="#paymentModal" data-id="{{ $purchase->id }}">
-                                <i class="fa fa-credit-card text-success"></i>
-                            </a>
-                        </td>
-                    </tr>
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.purchases.supplier') }}</label>
+                <select class="form-control" wire:model.live="filters.supplier_id">
+                    <option value="">{{ __('general.pages.purchases.all_suppliers') }}</option>
+                    @foreach ($suppliers as $supplier)
+                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                     @endforeach
-                </tbody>
-            </table>
-            {{-- center pagination --}}
-            <div class="pagination-wrapper t-a-c">
-                {{ $purchases->links() }}
+                </select>
+            </div>
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.purchases.branch') }}</label>
+                <select class="form-control" wire:model.live="filters.branch_id">
+                    <option value="">{{ __('general.pages.purchases.all_branches_option') }}</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-4 form-group">
+                <label>{{ __('general.pages.purchases.status') }}</label>
+                <select class="form-control" wire:model.live="filters.status">
+                    <option value="">{{ __('general.pages.purchases.all_statuses') }}</option>
+                    @foreach (App\Enums\PurchaseStatusEnum::cases() as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-xs-12 text-right">
+                <button type="button" class="btn btn-default btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo"></i> {{ __('general.pages.purchases.reset') }}
+                </button>
             </div>
         </div>
-    </div>
+    </x-admin.filter-card>
+
+    <x-admin.table-card :title="__('general.pages.purchases.purchase_orders')" icon="fa-shopping-cart">
+        <x-slot:actions>
+            @adminCan('purchases.export')
+                <button type="button" class="btn btn-success btn-sm" wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel-o"></i> {{ __('general.pages.purchases.export') }}
+                </button>
+            @endadminCan
+            @adminCan('purchases.create')
+                <a class="btn btn-primary btn-sm" href="{{ route('admin.purchases.add') }}">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
+                </a>
+                <a class="btn btn-warning btn-sm" href="{{ route('admin.purchases.deferred') }}">
+                    <i class="fa fa-truck"></i> {{ __('general.titles.deferred_purchases') }}
+                </a>
+            @endadminCan
+        </x-slot:actions>
+
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.purchases.id') }}</th>
+                <th>{{ __('general.pages.purchases.ref_no') }}</th>
+                <th>{{ __('general.pages.purchases.supplier') }}</th>
+                <th>{{ __('general.pages.purchases.branch') }}</th>
+                <th>{{ __('general.pages.purchases.status') }}</th>
+                <th>{{ __('general.pages.purchases.total_amount') }}</th>
+                <th>{{ __('general.pages.purchases.due_amount') }}</th>
+                <th>{{ __('general.pages.purchases.refund_status') }}</th>
+                <th class="text-nowrap">{{ __('general.pages.purchases.action') }}</th>
+            </tr>
+        </x-slot:head>
+
+        @foreach ($purchases as $purchase)
+        <tr>
+            <td>{{ $purchase->id }}</td>
+            <td>{{ $purchase->ref_no }}</td>
+            <td>{{ $purchase->supplier->name }}</td>
+            <td>{{ $purchase->branch->name }}</td>
+            <td>
+                <span class="label label-{{ $purchase->status->colorClass() }}">
+                    {{ $purchase->status->label() }}
+                </span>
+            </td>
+            <td>{{ $purchase->total_amount ?? 0 }}</td>
+            <td>
+                <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
+                    {{ number_format($purchase->due_amount ?? 0, 2) }}
+                </span>
+            </td>
+            <td>
+                <span class="text-{{ $purchase->refund_status->colorClass() }}">
+                    {{ $purchase->refund_status->label() }}
+                </span>
+            </td>
+            <td class="text-nowrap">
+                <a href="{{ route('admin.purchases.details', $purchase->id) }}" data-toggle="tooltip" data-original-title="Details">
+                    <i class="fa fa-eye text-primary m-r-10"></i>
+                </a>
+                <a href="#" wire:click="setCurrent({{ $purchase->id }})" data-toggle="modal" data-target="#paymentModal" data-id="{{ $purchase->id }}">
+                    <i class="fa fa-credit-card text-success"></i>
+                </a>
+            </td>
+        </tr>
+        @endforeach
+
+        <x-slot:footer>
+            {{ $purchases->links() }}
+        </x-slot:footer>
+    </x-admin.table-card>
+
     <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <!-- wider modal -->
@@ -111,8 +155,8 @@
                             <label for="paymentMethod" class="control-label">Payment Account</label>
                             <select class="form-control" id="paymentMethod" wire:model="payment.account_id">
                                 <option value="">-- Select Account --</option>
-                                @foreach (($paymentAccounts ?? []) as $acc)
-                                    <option value="{{ $acc->id }}">{{ $acc->paymentMethod?->name }} - {{ $acc->name }}</option>
+                                @foreach (collect($paymentAccounts ?? [])->filter() as $paymentAccount)
+                                    <option value="{{ data_get($paymentAccount, 'id') }}">{{ data_get($paymentAccount, 'name') }}</option>
                                 @endforeach
                             </select>
                             @error('payment.account_id') <span class="text-danger small">{{ $message }}</span> @enderror

@@ -32,6 +32,18 @@ class RefundsList extends Component
         };
     }
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset('filters');
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     public function render()
     {
         $refundsQuery = Refund::query()

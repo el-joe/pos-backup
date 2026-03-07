@@ -1,54 +1,44 @@
 <div class="col-sm-12">
-    <div class="white-box">
-        <div class="row mb-3" style="margin-bottom:15px;">
-            <div class="col-xs-6">
-                <h3 class="box-title m-b-0" style="margin:0;">Refunds</h3>
-            </div>
-            <div class="col-xs-6 text-right">
-                <a class="btn btn-primary" href="{{ route('admin.refunds.create', array_filter(['order_type' => $order_type, 'order_id' => $order_id], fn($v) => !is_null($v) && $v !== '')) }}">
-                    <i class="fa fa-plus"></i> New Refund
-                </a>
-                <button type="button" class="btn btn-default" wire:click="$set('export','excel')">
-                    <i class="fa fa-file-excel-o"></i> Export
-                </button>
-            </div>
-        </div>
+    <x-admin.table-card title="Refunds" icon="fa-undo">
+        <x-slot:actions>
+            <a class="btn btn-primary btn-sm" href="{{ route('admin.refunds.create', array_filter(['order_type' => $order_type, 'order_id' => $order_id], fn($v) => !is_null($v) && $v !== '')) }}">
+                <i class="fa fa-plus"></i> New Refund
+            </a>
+            <button type="button" class="btn btn-default btn-sm" wire:click="$set('export','excel')">
+                <i class="fa fa-file-excel-o"></i> Export
+            </button>
+        </x-slot:actions>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped custom-table color-table primary-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Order Type</th>
-                        <th>Order ID</th>
-                        <th>Items</th>
-                        <th>Total</th>
-                        <th>Reason</th>
-                        <th>Created At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($refunds as $refund)
-                        <tr>
-                            <td>{{ $refund->id }}</td>
-                            <td>{{ class_basename($refund->order_type) }}</td>
-                            <td>{{ $refund->order_id }}</td>
-                            <td>{{ $refund->items?->count() ?? 0 }}</td>
-                            <td>{{ number_format($refund->total ?? 0, 2) }}</td>
-                            <td>{{ $refund->reason }}</td>
-                            <td>{{ $refund->created_at?->format('Y-m-d H:i') }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center text-muted">No refunds found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <x-slot:head>
+            <tr>
+                <th>#</th>
+                <th>Order Type</th>
+                <th>Order ID</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Reason</th>
+                <th>Created At</th>
+            </tr>
+        </x-slot:head>
 
-            <div class="pagination-wrapper t-a-c">
-                {{ $refunds->links() }}
-            </div>
-        </div>
-    </div>
+        @forelse ($refunds as $refund)
+            <tr>
+                <td>{{ $refund->id }}</td>
+                <td>{{ class_basename($refund->order_type) }}</td>
+                <td>{{ $refund->order_id }}</td>
+                <td>{{ $refund->items?->count() ?? 0 }}</td>
+                <td>{{ number_format($refund->total ?? 0, 2) }}</td>
+                <td>{{ $refund->reason }}</td>
+                <td>{{ $refund->created_at?->format('Y-m-d H:i') }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="7" class="text-center text-muted">No refunds found.</td>
+            </tr>
+        @endforelse
+
+        <x-slot:footer>
+            {{ $refunds->links() }}
+        </x-slot:footer>
+    </x-admin.table-card>
 </div>

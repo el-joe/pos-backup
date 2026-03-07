@@ -31,6 +31,21 @@ class PurchasesList extends Component
 
     public $payment = [];
 
+    public function updatedFilters(): void
+    {
+        $this->resetPage();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->filters = [
+            'is_deferred' => 0,
+            'due_filter' => 'all',
+        ];
+        $this->collapseFilters = false;
+        $this->resetPage();
+    }
+
     function boot() {
         $this->purchaseService = app(PurchaseService::class);
         $this->cashRegisterService = app(CashRegisterService::class);

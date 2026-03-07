@@ -1,8 +1,6 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.titles.deferred_sales') }}</h5>
-
+    <x-hud.table-card :title="__('general.titles.deferred_sales')" icon="fa-clock-o">
+        <x-slot:actions>
             <div class="d-flex align-items-center gap-2">
                 @adminCan('pos.create')
                 <a class="btn btn-primary btn-sm" href="{{ route('admin.pos.deferred') }}">
@@ -13,77 +11,45 @@
                     <i class="fa fa-list"></i> {{ __('general.pages.sales.all_sales') }}
                 </a>
             </div>
-        </div>
-
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped align-middle mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>{{ __('general.pages.sales.id') }}</th>
-                            <th>{{ __('general.pages.sales.invoice_number') }}</th>
-                            <th>{{ __('general.pages.sales.customer') }}</th>
-                            <th>{{ __('general.pages.sales.branch') }}</th>
-                            <th>{{ __('general.pages.sales.total') }}</th>
-                            <th>{{ __('general.pages.sales.due') }}</th>
-                            <th class="text-center">{{ __('general.pages.sales.action') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($sales as $sale)
-                            <tr>
-                                <td>{{ $sale->id }}</td>
-                                <td>{{ $sale->invoice_number }}</td>
-                                <td>{{ $sale->customer?->name }}</td>
-                                <td>{{ $sale->branch?->name }}</td>
-                                <td>{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
-                                <td>
-                                    <span class="badge bg-danger">{{ currencyFormat($sale->due_amount ?? 0, true) }}</span>
-                                </td>
-                                <td class="text-center text-nowrap">
-                                    @adminCan('sales.show')
-                                    <a href="{{ route('admin.sales.details', $sale->id) }}" class="btn btn-sm btn-primary" title="{{ __('general.pages.sales.details') }}">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
-                                    @endadminCan
-
-                                    @adminCan('sales.pay')
-                                    <button class="btn btn-sm btn-success"
-                                            wire:click="setCurrent({{ $sale->id }})"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#paymentModal">
-                                        <i class="fa fa-credit-card"></i>
-                                    </button>
-                                    @endadminCan
-
-                                    <button class="btn btn-sm btn-warning"
-                                            onclick="if(confirm('{{ __('general.pages.sales.confirm_deliver_inventory_now') }}')) { @this.deliverInventory({{ $sale->id }}) }"
-                                            title="{{ __('general.pages.sales.deliver_inventory') }}">
-                                        <i class="fa fa-truck"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted">{{ __('general.pages.sales.no_deferred_sales_pending_delivery') }}</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-
-                <div class="d-flex justify-content-center mt-3">
-                    {{ $sales->links('pagination::default5') }}
-                </div>
-            </div>
-        </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        </x-slot:actions>
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.sales.id') }}</th>
+                <th>{{ __('general.pages.sales.invoice_number') }}</th>
+                <th>{{ __('general.pages.sales.customer') }}</th>
+                <th>{{ __('general.pages.sales.branch') }}</th>
+                <th>{{ __('general.pages.sales.total') }}</th>
+                <th>{{ __('general.pages.sales.due') }}</th>
+                <th class="text-center">{{ __('general.pages.sales.action') }}</th>
+            </tr>
+        </x-slot:head>
+        @forelse ($sales as $sale)
+            <tr>
+                <td>{{ $sale->id }}</td>
+                <td>{{ $sale->invoice_number }}</td>
+                <td>{{ $sale->customer?->name }}</td>
+                <td>{{ $sale->branch?->name }}</td>
+                <td>{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
+                <td><span class="badge bg-danger">{{ currencyFormat($sale->due_amount ?? 0, true) }}</span></td>
+                <td class="text-center text-nowrap">
+                    @adminCan('sales.show')
+                    <a href="{{ route('admin.sales.details', $sale->id) }}" class="btn btn-sm btn-primary" title="{{ __('general.pages.sales.details') }}"><i class="fa fa-pencil"></i></a>
+                    @endadminCan
+                    @adminCan('sales.pay')
+                    <button class="btn btn-sm btn-success" wire:click="setCurrent({{ $sale->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal"><i class="fa fa-credit-card"></i></button>
+                    @endadminCan
+                    <button class="btn btn-sm btn-warning" onclick="if(confirm('{{ __('general.pages.sales.confirm_deliver_inventory_now') }}')) { @this.deliverInventory({{ $sale->id }}) }" title="{{ __('general.pages.sales.deliver_inventory') }}"><i class="fa fa-truck"></i></button>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="7" class="text-center text-muted">{{ __('general.pages.sales.no_deferred_sales_pending_delivery') }}</td>
+            </tr>
+        @endforelse
+        <x-slot:footer>
+            {{ $sales->links('pagination::default5') }}
+        </x-slot:footer>
+    </x-hud.table-card>
 
     <!-- Payment Modal (same UX as sales list) -->
     <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
@@ -117,9 +83,9 @@
                             <label for="paymentMethod" class="form-label fw-bold">{{ __('general.pages.sales.customer_account') }}</label>
                             <select class="form-select" id="paymentMethod" wire:model="payment.account_id">
                                 <option value="">{{ __('general.pages.sales.select_account') }}</option>
-                                @foreach (($current?->customer?->accounts ?? []) as $acc)
-                                    <option value="{{ $acc->id }}">
-                                        {{ $acc->paymentMethod?->name }} - {{ $acc->name }}
+                                @foreach (collect($current?->customer?->accounts ?? [])->filter() as $customerAccount)
+                                    <option value="{{ data_get($customerAccount, 'id') }}">
+                                        {{ data_get($customerAccount, 'paymentMethod.name') }} - {{ data_get($customerAccount, 'name') }}
                                     </option>
                                 @endforeach
                             </select>

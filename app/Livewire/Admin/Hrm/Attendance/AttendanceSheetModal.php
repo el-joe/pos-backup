@@ -72,11 +72,11 @@ class AttendanceSheetModal extends Component
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            $this->popup('error', 'Error while saving attendance sheet: ' . $e->getMessage());
+            $this->popup('error', __('general.messages.hrm.error_saving_attendance_sheet', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Attendance sheet saved successfully');
+        $this->popup('success', __('general.messages.hrm.attendance_sheet_saved_successfully'));
         $this->dismiss();
         $this->reset('current', 'data');
         $this->dispatch('re-render');

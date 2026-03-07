@@ -1,5 +1,16 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
+    <x-hud.filter-card :title="__('general.pages.purchases.filters')" icon="fa-filter" collapse-id="branchFilterCollapse" :collapsed="$collapseFilters">
+        <x-slot:actions>
+            <button class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="collapse"
+                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                    wire:click="$toggle('collapseFilters')"
+                    data-bs-target="#branchFilterCollapse">
+                <i class="fa fa-filter me-1"></i> {{ __('general.pages.purchases.show_hide') }}
+            </button>
+        </x-slot:actions>
+
+        <div class="row g-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.purchases.filters') }}</h5>
 
@@ -78,105 +89,80 @@
             </div>
         </div>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+    </x-hud.filter-card>
 
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.purchases.purchase_orders') }}</h5>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('purchases.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
-                    <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.purchases.export') }}
-                </button>
-                @endadminCan
-                @adminCan('purchases.create')
-                <a href="{{ route('admin.purchases.add') }}" class="btn btn-primary">
-                    <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
+    <x-hud.table-card :title="__('general.pages.purchases.purchase_orders')" icon="fa-shopping-cart">
+        <x-slot:actions>
+            @adminCan('purchases.export')
+            <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
+                <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.purchases.export') }}
+            </button>
+            @endadminCan
+            @adminCan('purchases.create')
+            <a href="{{ route('admin.purchases.add') }}" class="btn btn-primary">
+                <i class="fa fa-plus"></i> {{ __('general.pages.purchases.new_purchase_order') }}
+            </a>
+            <a href="{{ route('admin.purchases.deferred') }}" class="btn btn-outline-warning">
+                <i class="fa fa-truck"></i> {{ __('general.titles.deferred_purchases') }}
+            </a>
+            @endadminCan
+        </x-slot:actions>
+
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.purchases.id') }}</th>
+                <th>{{ __('general.pages.purchases.ref_no') }}</th>
+                <th>{{ __('general.pages.purchases.supplier') }}</th>
+                <th>{{ __('general.pages.purchases.branch') }}</th>
+                <th>{{ __('general.pages.purchases.status') }}</th>
+                <th>{{ __('general.pages.purchases.total_amount') }}</th>
+                <th>{{ __('general.pages.purchases.due_amount') }}</th>
+                <th>{{ __('general.pages.purchases.refund_status') }}</th>
+                <th class="text-nowrap">{{ __('general.pages.purchases.action') }}</th>
+            </tr>
+        </x-slot:head>
+
+        @foreach ($purchases as $purchase)
+        <tr>
+            <td>{{ $purchase->id }}</td>
+            <td>{{ $purchase->ref_no }}</td>
+            <td>{{ $purchase->supplier->name }}</td>
+            <td>{{ $purchase->branch->name }}</td>
+            <td>
+                <span class="badge bg-{{ $purchase->status->colorClass() }}">
+                    {{ $purchase->status->label() }}
+                </span>
+            </td>
+            <td>{{ currencyFormat($purchase->total_amount ?? 0, true) }}</td>
+            <td>
+                <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
+                    {{ currencyFormat($purchase->due_amount ?? 0, true) }}
+                </span>
+            </td>
+            <td>
+                <span class="text-{{ $purchase->refund_status->colorClass() }}">
+                    {{ $purchase->refund_status->label() }}
+                </span>
+            </td>
+            <td class="text-nowrap">
+                @adminCan('purchases.show')
+                <a href="{{ route('admin.purchases.details', $purchase->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="{{ __('general.pages.purchases.details') }}">
+                    <i class="fa fa-eye"></i>
                 </a>
-                <a href="{{ route('admin.purchases.deferred') }}" class="btn btn-outline-warning">
-                    <i class="fa fa-truck"></i> {{ __('general.titles.deferred_purchases') }}
+                @endadminCan
+                @adminCan('purchases.delete')
+                <a href="#" class="btn btn-sm btn-outline-success" wire:click="setCurrent({{ $purchase->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal" data-id="{{ $purchase->id }}">
+                    <i class="fa fa-credit-card"></i>
                 </a>
                 @endadminCan
-            </div>
-        </div>
+            </td>
+        </tr>
+        @endforeach
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>{{ __('general.pages.purchases.id') }}</th>
-                            <th>{{ __('general.pages.purchases.ref_no') }}</th>
-                            <th>{{ __('general.pages.purchases.supplier') }}</th>
-                            <th>{{ __('general.pages.purchases.branch') }}</th>
-                            <th>{{ __('general.pages.purchases.status') }}</th>
-                            <th>{{ __('general.pages.purchases.total_amount') }}</th>
-                            <th>{{ __('general.pages.purchases.due_amount') }}</th>
-                            <th>{{ __('general.pages.purchases.refund_status') }}</th>
-                            <th class="text-nowrap">{{ __('general.pages.purchases.action') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($purchases as $purchase)
-                        <tr>
-                            <td>{{ $purchase->id }}</td>
-                            <td>{{ $purchase->ref_no }}</td>
-                            <td>{{ $purchase->supplier->name }}</td>
-                            <td>{{ $purchase->branch->name }}</td>
-                            <td>
-                                <span class="badge bg-{{ $purchase->status->colorClass() }}">
-                                    {{ $purchase->status->label() }}
-                                </span>
-                            </td>
-                            <td>{{ currencyFormat($purchase->total_amount ?? 0, true) }}</td>
-                            <td>
-                                <span class="text-{{ $purchase->due_amount > 0 ? 'danger' : 'success' }}">
-                                    {{ currencyFormat($purchase->due_amount ?? 0, true) }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="text-{{ $purchase->refund_status->colorClass() }}">
-                                    {{ $purchase->refund_status->label() }}
-                                </span>
-                            </td>
-                            <td class="text-nowrap">
-                                @adminCan('purchases.show')
-                                <a href="{{ route('admin.purchases.details', $purchase->id) }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="{{ __('general.pages.purchases.details') }}">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                @endadminCan
-                                @adminCan('purchases.delete')
-                                <a href="#" class="btn btn-sm btn-outline-success" wire:click="setCurrent({{ $purchase->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal" data-id="{{ $purchase->id }}">
-                                    <i class="fa fa-credit-card"></i>
-                                </a>
-                                @endadminCan
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <div class="d-flex justify-content-center">
-                    {{ $purchases->links() }}
-                </div>
-            </div>
-        </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        <x-slot:footer>
+            {{ $purchases->links('pagination::default5') }}
+        </x-slot:footer>
+    </x-hud.table-card>
 
     <!-- Payment Modal -->
     <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">

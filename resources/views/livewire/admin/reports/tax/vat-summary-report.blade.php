@@ -1,32 +1,22 @@
 <div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong><i class="glyphicon glyphicon-filter"></i> Filter Options</strong>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-4">
-                    <label class="control-label">From</label>
-                    <input type="date" class="form-control input-sm" wire:model="from_date">
-                </div>
-                <div class="col-sm-4">
-                    <label class="control-label">To</label>
-                    <input type="date" class="form-control input-sm" wire:model="to_date">
-                </div>
-                <div class="col-sm-4 d-flex align-items-end justify-content-end" style="padding-top: 25px">
-                    <button wire:click="resetDates" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> Reset</button>
-                </div>
+    <x-admin.filter-card title="Filter Options" icon="fa-filter">
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="control-label">From</label>
+                <input type="date" class="form-control input-sm" wire:model="from_date">
+            </div>
+            <div class="col-sm-4">
+                <label class="control-label">To</label>
+                <input type="date" class="form-control input-sm" wire:model="to_date">
+            </div>
+            <div class="col-sm-4 d-flex align-items-end justify-content-end" style="padding-top: 25px">
+                <button wire:click="resetDates" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-refresh"></i> Reset</button>
             </div>
         </div>
-    </div>
+    </x-admin.filter-card>
 
-    <!-- Report Panel -->
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title"><i class="glyphicon glyphicon-list-alt"></i> VAT Summary</h4>
-        </div>
-        <div class="panel-body" style="padding:0;">
-            <div class="table-responsive">
+    <x-admin.table-card title="VAT Summary" icon="fa-list-alt" :render-table="false">
+        <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped" style="margin-bottom:0;">
                 <thead>
                     <tr style="background:#e3f2fd;">
@@ -49,7 +39,6 @@
                     </tr>
                 </tbody>
             </table>
-            </div>
         </div>
-    </div>
+    </x-admin.table-card>
 </div>

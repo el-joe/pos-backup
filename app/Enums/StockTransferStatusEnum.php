@@ -12,10 +12,10 @@ enum StockTransferStatusEnum : string
     function label(): string
     {
         return match($this) {
-            self::PENDING => 'Pending',
-            self::IN_TRANSIT => 'In Transit',
-            self::COMPLETED => 'Completed',
-            self::CANCELLED => 'Cancelled',
+            self::PENDING => __('general.pages.stock-transfers.statuses.pending'),
+            self::IN_TRANSIT => __('general.pages.stock-transfers.statuses.in_transit'),
+            self::COMPLETED => __('general.pages.stock-transfers.statuses.completed'),
+            self::CANCELLED => __('general.pages.stock-transfers.statuses.cancelled'),
         };
     }
 

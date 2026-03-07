@@ -1,155 +1,123 @@
 <div class="col-12">
-    <div class="card shadow-sm mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.discounts.filters') }}</h5>
-
+    <x-hud.filter-card
+        :title="__('general.pages.discounts.filters')"
+        icon="fa-filter"
+        collapse-id="hudDiscountFilterCollapse"
+        :collapsed="$collapseFilters"
+    >
+        <x-slot:actions>
             <button class="btn btn-sm btn-outline-primary"
                     data-bs-toggle="collapse"
                     aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
                     wire:click="$toggle('collapseFilters')"
-                    data-bs-target="#branchFilterCollapse">
+                    data-bs-target="#hudDiscountFilterCollapse">
                 <i class="fa fa-filter me-1"></i> {{ __('general.pages.discounts.show_hide') }}
             </button>
-        </div>
+        </x-slot:actions>
 
-        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
-            <div class="card-body">
-                <div class="row g-3">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.discounts.search_label') }}</label>
+                <input type="text" class="form-control"
+                    placeholder="{{ __('general.pages.discounts.search_placeholder') }}"
+                    wire:model.blur="filters.search">
+            </div>
 
-                    <!-- Filter by Name -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.discounts.search_label') }}</label>
-                        <input type="text" class="form-control"
-                            placeholder="{{ __('general.pages.discounts.search_placeholder') }}"
-                            wire:model.blur="filters.search">
-                    </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.discounts.start_date') }}</label>
+                <input type="date" class="form-control" wire:model.live="filters.start_date">
+            </div>
 
-                    {{-- Filter By Start Date --}}
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.discounts.start_date') }}</label>
-                        <input type="date" class="form-control"
-                            wire:model.live="filters.start_date">
-                    </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.discounts.end_date') }}</label>
+                <input type="date" class="form-control" wire:model.live="filters.end_date">
+            </div>
 
-                    {{-- Filter By End Date --}}
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.discounts.end_date') }}</label>
-                        <input type="date" class="form-control"
-                            wire:model.live="filters.end_date">
-                    </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ __('general.pages.discounts.status') }}</label>
+                <select class="form-select select2" name="filters.active">
+                    <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.discounts.all') }}</option>
+                    <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.discounts.active') }}</option>
+                    <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.discounts.inactive') }}</option>
+                </select>
+            </div>
 
-                    <!-- Filter by Status -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.discounts.status') }}</label>
-                        <select class="form-select select2" name="filters.active">
-                            <option value="all" {{ ($filters['active']??'') == 'all' ? 'selected' : '' }}>{{ __('general.pages.discounts.all') }}</option>
-                            <option value="1" {{ ($filters['active']??'') == '1' ? 'selected' : '' }}>{{ __('general.pages.discounts.active') }}</option>
-                            <option value="0" {{ ($filters['active']??'') == '0' ? 'selected' : '' }}>{{ __('general.pages.discounts.inactive') }}</option>
-                        </select>
-                    </div>
-
-                    <!-- Reset -->
-                    <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-secondary btn-sm"
-                                wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.discounts.reset') }}
-                        </button>
-                    </div>
-
-                </div>
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-secondary btn-sm" wire:click="resetFilters">
+                    <i class="fa fa-undo me-1"></i> {{ __('general.pages.discounts.reset') }}
+                </button>
             </div>
         </div>
+    </x-hud.filter-card>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.titles.discounts') }}</h5>
-            <div class="d-flex align-items-center gap-2">
-                @adminCan('discounts.export')
-                <!-- Export Button -->
-                <button class="btn btn-outline-success"
-                        wire:click="$set('export', 'excel')">
+    <x-hud.table-card :title="__('general.titles.discounts')" icon="fa-percent">
+        <x-slot:actions>
+            @adminCan('discounts.export')
+                <button class="btn btn-outline-success" wire:click="$set('export', 'excel')">
                     <i class="fa fa-file-excel me-1"></i> {{ __('general.pages.discounts.export') }}
                 </button>
-                @endadminCan
-
-                @adminCan('discounts.create')
+            @endadminCan
+            @adminCan('discounts.create')
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editDiscountModal" wire:click="setCurrent(null)">
                     <i class="fa fa-plus me-1"></i> {{ __('general.pages.discounts.new_discount') }}
                 </button>
-                @endadminCan
-            </div>
-        </div>
+            @endadminCan
+        </x-slot:actions>
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>{{ __('general.pages.discounts.id') }}</th>
-                            <th>{{ __('general.pages.discounts.name') }}</th>
-                            <th>{{ __('general.pages.discounts.code') }}</th>
-                            <th>{{ __('general.pages.discounts.value') }}</th>
-                            <th>{{ __('general.pages.discounts.start_date') }}</th>
-                            <th>{{ __('general.pages.discounts.end_date') }}</th>
-                            <th>{{ __('general.pages.discounts.status') }}</th>
-                            <th class="text-nowrap text-center">{{ __('general.pages.discounts.actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($discounts as $discount)
-                        <tr>
-                            <td>{{ $discount->id }}</td>
-                            <td>{{ $discount->name }}</td>
-                            <td>{{ $discount->code }}</td>
-                            <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
-                            <td>{{ dateTimeFormat($discount->start_date,true,false) }}</td>
-                            <td>{{ dateTimeFormat($discount->end_date,true,false) }}</td>
-                            <td>
-                                <span class="badge bg-{{ $discount->active ? 'success' : 'danger' }}">
-                                    {{ $discount->active ? __('general.pages.discounts.active') : __('general.pages.discounts.inactive') }}
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                @adminCan('discounts.update')
-                                <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editDiscountModal" wire:click="setCurrent({{ $discount->id }})" title="{{ __('general.pages.discounts.edit') }}">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                @endadminCan
-                                @adminCan('discounts.delete')
-                                <button class="btn btn-sm btn-danger me-1" wire:click="deleteAlert({{ $discount->id }})" title="{{ __('general.pages.discounts.delete') }}">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                @endadminCan
-                                <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#historyModal" wire:click="setCurrent({{ $discount->id }})" title="{{ __('general.pages.discounts.history') }}">
-                                    <i class="fa fa-history"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+        <x-slot:head>
+            <tr>
+                <th>{{ __('general.pages.discounts.id') }}</th>
+                <th>{{ __('general.pages.discounts.name') }}</th>
+                <th>{{ __('general.pages.discounts.code') }}</th>
+                <th>{{ __('general.pages.discounts.value') }}</th>
+                <th>{{ __('general.pages.discounts.start_date') }}</th>
+                <th>{{ __('general.pages.discounts.end_date') }}</th>
+                <th>{{ __('general.pages.discounts.status') }}</th>
+                <th class="text-nowrap text-center">{{ __('general.pages.discounts.actions') }}</th>
+            </tr>
+        </x-slot:head>
 
-            <div class="d-flex justify-content-center">
-                {{ $discounts->links() }}
-            </div>
-        </div>
+        @forelse ($discounts as $discount)
+            <tr>
+                <td>{{ $discount->id }}</td>
+                <td>{{ $discount->name }}</td>
+                <td>{{ $discount->code }}</td>
+                <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
+                <td>{{ dateTimeFormat($discount->start_date,true,false) }}</td>
+                <td>{{ dateTimeFormat($discount->end_date,true,false) }}</td>
+                <td>
+                    <span class="badge bg-{{ $discount->active ? 'success' : 'danger' }}">
+                        {{ $discount->active ? __('general.pages.discounts.active') : __('general.pages.discounts.inactive') }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    @adminCan('discounts.update')
+                        <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editDiscountModal" wire:click="setCurrent({{ $discount->id }})" title="{{ __('general.pages.discounts.edit') }}">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    @endadminCan
+                    @adminCan('discounts.delete')
+                        <button class="btn btn-sm btn-danger me-1" wire:click="deleteAlert({{ $discount->id }})" title="{{ __('general.pages.discounts.delete') }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    @endadminCan
+                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#historyModal" wire:click="setCurrent({{ $discount->id }})" title="{{ __('general.pages.discounts.history') }}">
+                        <i class="fa fa-history"></i>
+                    </button>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="8" class="text-center text-muted">No data found.</td>
+            </tr>
+        @endforelse
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+        @if($discounts->hasPages())
+            <x-slot:footer>
+                {{ $discounts->links('pagination::default5') }}
+            </x-slot:footer>
+        @endif
+    </x-hud.table-card>
 
 
     <!-- Edit Discount Modal -->

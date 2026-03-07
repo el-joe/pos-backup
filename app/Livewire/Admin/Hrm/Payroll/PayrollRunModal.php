@@ -76,11 +76,11 @@ class PayrollRunModal extends Component
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            $this->popup('error', 'Error while saving payroll run: ' . $e->getMessage());
+            $this->popup('error', __('general.messages.hrm.error_saving_payroll_run', ['message' => $e->getMessage()]));
             return;
         }
 
-        $this->popup('success', 'Payroll run saved successfully');
+        $this->popup('success', __('general.messages.hrm.payroll_run_saved_successfully'));
         $this->dismiss();
         $this->reset('current', 'data');
         $this->dispatch('re-render');

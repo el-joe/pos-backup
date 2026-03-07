@@ -2,51 +2,51 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content border-0 shadow">
             <div class="modal-header">
-                <h5 class="modal-title">{{ $current?->id ? 'Edit Employee' : 'New Employee' }}</h5>
+                <h5 class="modal-title">{{ $current?->id ? __('general.pages.hrm.modal.edit_employee') : __('general.pages.hrm.modal.new_employee') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label">Code</label>
-                        <input class="form-control" wire:model="data.employee_code" placeholder="EMP-0001">
+                        <label class="form-label">{{ __('general.pages.hrm.code') }}</label>
+                        <input class="form-control" wire:model="data.employee_code" placeholder="{{ __('general.pages.hrm.employee_code_placeholder') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Name</label>
-                        <input class="form-control" wire:model="data.name" placeholder="Full name">
+                        <label class="form-label">{{ __('general.pages.hrm.name') }}</label>
+                        <input class="form-control" wire:model="data.name" placeholder="{{ __('general.pages.hrm.employee_name_placeholder') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" wire:model="data.email" placeholder="email@company.com">
+                        <label class="form-label">{{ __('general.pages.hrm.email') }}</label>
+                        <input type="email" class="form-control" wire:model="data.email" placeholder="{{ __('general.pages.hrm.employee_email_placeholder') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Phone</label>
-                        <input class="form-control" wire:model="data.phone" placeholder="Phone">
+                        <label class="form-label">{{ __('general.pages.hrm.phone') }}</label>
+                        <input class="form-control" wire:model="data.phone" placeholder="{{ __('general.pages.hrm.employee_phone_placeholder') }}">
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label">Department</label>
+                        <label class="form-label">{{ __('general.pages.hrm.department') }}</label>
                         <select class="form-select" wire:model="data.department_id">
-                            <option value="">Select</option>
+                            <option value="">{{ __('general.pages.hrm.select') }}</option>
                             @foreach($departments as $dept)
                                 <option value="{{ $dept->id }}">{{ $dept->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Designation</label>
+                        <label class="form-label">{{ __('general.pages.hrm.designation') }}</label>
                         <select class="form-select" wire:model="data.designation_id">
-                            <option value="">Select</option>
+                            <option value="">{{ __('general.pages.hrm.select') }}</option>
                             @foreach($designations as $des)
                                 <option value="{{ $des->id }}">{{ $des->title }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Manager</label>
+                        <label class="form-label">{{ __('general.pages.hrm.manager') }}</label>
                         <select class="form-select" wire:model="data.manager_id">
-                            <option value="">None</option>
+                            <option value="">{{ __('general.pages.hrm.none') }}</option>
                             @foreach($employees as $emp)
                                 <option value="{{ $emp->id }}">{{ $emp->name }} ({{ $emp->employee_code }})</option>
                             @endforeach
@@ -54,27 +54,27 @@
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label">Hire Date</label>
+                        <label class="form-label">{{ __('general.pages.hrm.hire_date') }}</label>
                         <input type="date" class="form-control" wire:model="data.hire_date">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
                         <select class="form-select" wire:model="data.status">
-                            <option value="active">active</option>
-                            <option value="suspended">suspended</option>
-                            <option value="terminated">terminated</option>
+                            <option value="active">{{ __('general.pages.hrm.statuses.active') }}</option>
+                            <option value="suspended">{{ __('general.pages.hrm.statuses.suspended') }}</option>
+                            <option value="terminated">{{ __('general.pages.hrm.statuses.terminated') }}</option>
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Password {{ $current?->id ? '(leave blank to keep)' : '' }}</label>
-                        <input type="password" class="form-control" wire:model="data.password" placeholder="******">
+                        <label class="form-label">{{ __('general.pages.hrm.password') }} {{ $current?->id ? __('general.pages.hrm.leave_blank_to_keep') : '' }}</label>
+                        <input type="password" class="form-control" wire:model="data.password" placeholder="{{ __('general.pages.hrm.password_placeholder') }}">
                     </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" wire:click="save">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('general.pages.hrm.close') }}</button>
+                <button type="button" class="btn btn-primary" wire:click="save">{{ __('general.pages.hrm.save') }}</button>
             </div>
         </div>
     </div>
