@@ -50,7 +50,7 @@
                 <td>{{ optional($r->start_date)->format('Y-m-d') }}</td>
                 <td>{{ optional($r->end_date)->format('Y-m-d') }}</td>
                 <td>{{ numFormat($r->days) }}</td>
-                <td>{{ $r->status }}</td>
+                <td>{{ $r->status?->label() ?? '-' }}</td>
             </tr>
         @endforeach
         <x-slot:footer>

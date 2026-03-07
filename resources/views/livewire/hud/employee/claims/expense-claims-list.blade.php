@@ -46,7 +46,7 @@
                 <td>{{ $c->id }}</td>
                 <td>{{ optional($c->claim_date)->format('Y-m-d') }}</td>
                 <td>{{ numFormat($c->total_amount) }}</td>
-                <td>{{ $c->status }}</td>
+                <td>{{ $c->status?->label() ?? '-' }}</td>
             </tr>
         @endforeach
         <x-slot:footer>

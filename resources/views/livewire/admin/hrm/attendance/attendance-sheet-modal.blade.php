@@ -14,12 +14,21 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.hrm.department') }}</label>
-                        <input type="number" class="form-control" wire:model="data.department_id">
+                        <select class="form-select" wire:model="data.department_id">
+                            <option value="">{{ __('general.pages.hrm.select') }}</option>
+                            @foreach($departments as $department)
+                                <option value="{{ $department->id }}">{{ $department->name }}</option>
+                            @endforeach
+                        </select>
                         @error('data.department_id')<small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
-                        <input type="text" class="form-control" wire:model="data.status">
+                        <select class="form-select" wire:model="data.status">
+                            @foreach(App\Enums\AttendanceSheetStatusEnum::cases() as $status)
+                                <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                            @endforeach
+                        </select>
                         @error('data.status')<small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                 </div>

@@ -10,9 +10,9 @@
                 <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
                 <select class="form-select" wire:model.blur="filters.status">
                     <option value="all">{{ __('general.pages.hrm.all') }}</option>
-                    <option value="pending">{{ __('general.pages.hrm.pending') }}</option>
-                    <option value="approved">{{ __('general.pages.hrm.approved') }}</option>
-                    <option value="rejected">{{ __('general.pages.hrm.rejected') }}</option>
+                    @foreach ([App\Enums\LeaveRequestStatusEnum::PENDING, App\Enums\LeaveRequestStatusEnum::APPROVED, App\Enums\LeaveRequestStatusEnum::REJECTED] as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-md-4">
@@ -20,8 +20,13 @@
                         <input type="text" class="form-control" placeholder="{{ __('general.pages.hrm.search_reason_placeholder') }}" wire:model.blur="filters.search">
             </div>
             <div class="col-md-4">
-                <label class="form-label">{{ __('general.pages.hrm.employee') }} {{ __('general.pages.hrm.id') }}</label>
-                <input type="number" class="form-control" wire:model.blur="filters.employee_id">
+                <label class="form-label">{{ __('general.pages.hrm.employee') }}</label>
+                <select class="form-select" wire:model.blur="filters.employee_id">
+                    <option value="">{{ __('general.pages.hrm.all') }}</option>
+                    @foreach($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->name }} ({{ $employee->employee_code }})</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn btn-secondary btn-sm" wire:click="resetFilters"><i class="fa fa-undo me-1"></i> {{ __('general.pages.hrm.reset') }}</button>
@@ -50,9 +55,9 @@
                 <td>{{ optional($r->start_date)->format('Y-m-d') }}</td>
                 <td>{{ optional($r->end_date)->format('Y-m-d') }}</td>
                 <td>{{ numFormat($r->days) }}</td>
-                <td>{{ __('general.pages.hrm.statuses.' . $r->status) }}</td>
+                <td>{{ $r->status?->label() ?? '-' }}</td>
                 <td class="text-end text-nowrap">
-                    @if($r->status === 'pending')
+                    @if(($r->status?->value ?? $r->status) === App\Enums\LeaveRequestStatusEnum::PENDING->value)
                         @adminCan('hrm_leaves.approve')
                             <button class="btn btn-sm btn-outline-success me-1" wire:click="approveAlert({{ $r->id }})"><i class="fa fa-check"></i></button>
                         @endadminCan

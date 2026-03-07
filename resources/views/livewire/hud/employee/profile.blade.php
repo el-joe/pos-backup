@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="text-inverse text-opacity-50">Status</div>
-                    <div class="fw-bold">{{ $employee->status ?? '-' }}</div>
+                    <div class="fw-bold">{{ $employee->status?->label() ?? '-' }}</div>
                 </div>
 
                 <div class="col-12">

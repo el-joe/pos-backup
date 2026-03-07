@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Hrm\Attendance;
 
+use App\Enums\AttendanceSheetStatusEnum;
+use App\Services\Hrm\DepartmentService;
 use App\Services\Hrm\AttendanceSheetService;
 use App\Traits\LivewireOperations;
 use Carbon\Carbon;
@@ -14,6 +16,7 @@ class AttendanceSheetsList extends Component
     use LivewireOperations, WithPagination;
 
     private AttendanceSheetService $attendanceSheetService;
+    private DepartmentService $departmentService;
 
     public array $filters = [];
     public bool $collapseFilters = false;
@@ -22,6 +25,7 @@ class AttendanceSheetsList extends Component
     public function boot(): void
     {
         $this->attendanceSheetService = app(AttendanceSheetService::class);
+        $this->departmentService = app(DepartmentService::class);
     }
 
     public function setCurrent($id): void
@@ -81,14 +85,14 @@ class AttendanceSheetsList extends Component
             $this->popup('error', __('general.messages.hrm.attendance_sheet_not_found'));
             return;
         }
-        if (($this->current->status ?? null) !== 'draft') {
+        if (($this->current->status?->value ?? $this->current->status) !== AttendanceSheetStatusEnum::DRAFT->value) {
             $this->popup('warning', __('general.messages.hrm.only_draft_attendance_sheets_can_be_submitted'));
             $this->dismiss();
             return;
         }
 
         $this->attendanceSheetService->update($this->current->id, [
-            'status' => 'submitted',
+            'status' => AttendanceSheetStatusEnum::SUBMITTED->value,
         ]);
 
         $this->popup('success', __('general.messages.hrm.attendance_sheet_submitted'));
@@ -106,14 +110,14 @@ class AttendanceSheetsList extends Component
             $this->popup('error', __('general.messages.hrm.attendance_sheet_not_found'));
             return;
         }
-        if (($this->current->status ?? null) !== 'submitted') {
+        if (($this->current->status?->value ?? $this->current->status) !== AttendanceSheetStatusEnum::SUBMITTED->value) {
             $this->popup('warning', __('general.messages.hrm.only_submitted_attendance_sheets_can_be_approved'));
             $this->dismiss();
             return;
         }
 
         $this->attendanceSheetService->update($this->current->id, [
-            'status' => 'approved',
+            'status' => AttendanceSheetStatusEnum::APPROVED->value,
             'approved_by' => admin()->id,
             'approved_at' => Carbon::now(),
         ]);
@@ -128,6 +132,7 @@ class AttendanceSheetsList extends Component
     public function render()
     {
         $sheets = $this->attendanceSheetService->list(['department'], $this->filters, 10, 'id');
+        $departments = $this->departmentService->list([], [], null, 'name');
 
         return layoutView('hrm.attendance.attendance-sheets-list', get_defined_vars())
             ->title(__('general.titles.hrm_attendance_sheets'));

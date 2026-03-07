@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\AttendanceSheetStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendanceSheet extends Model
@@ -17,6 +18,7 @@ class AttendanceSheet extends Model
     protected $casts = [
         'date' => 'date',
         'approved_at' => 'datetime',
+        'status' => AttendanceSheetStatusEnum::class,
     ];
 
     public function department()
@@ -34,6 +36,6 @@ class AttendanceSheet extends Model
         return $q
             ->when($filters['department_id'] ?? null, fn($q, $departmentId) => $q->where('department_id', $departmentId))
             ->when($filters['date'] ?? null, fn($q, $date) => $q->whereDate('date', $date))
-            ->when($filters['status'] ?? null, fn($q, $status) => $q->where('status', $status));
+            ->when($filters['status'] ?? null, fn($q, $status) => $q->where('status', $status instanceof AttendanceSheetStatusEnum ? $status->value : $status));
     }
 }

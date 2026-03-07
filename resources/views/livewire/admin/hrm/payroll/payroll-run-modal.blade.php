@@ -19,7 +19,11 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
-                        <input type="text" class="form-control" wire:model="data.status">
+                        <select class="form-select" wire:model="data.status">
+                            @foreach(App\Enums\PayrollRunStatusEnum::cases() as $status)
+                                <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                            @endforeach
+                        </select>
                         @error('data.status')<small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                     <div class="col-md-3">

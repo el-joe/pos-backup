@@ -7,12 +7,22 @@
         </x-slot:actions>
         <div class="row g-3">
             <div class="col-md-4">
-                <label class="form-label">{{ __('general.pages.hrm.employee') }} {{ __('general.pages.hrm.id') }}</label>
-                <input type="number" class="form-control" wire:model.blur="filters.employee_id">
+                <label class="form-label">{{ __('general.pages.hrm.employee') }}</label>
+                <select class="form-select" wire:model.blur="filters.employee_id">
+                    <option value="">{{ __('general.pages.hrm.all') }}</option>
+                    @foreach($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->name }} ({{ $employee->employee_code }})</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">{{ __('general.titles.hrm_payroll_runs') }} {{ __('general.pages.hrm.id') }}</label>
-                <input type="number" class="form-control" wire:model.blur="filters.payroll_run_id">
+                <label class="form-label">{{ __('general.titles.hrm_payroll_runs') }}</label>
+                <select class="form-select" wire:model.blur="filters.payroll_run_id">
+                    <option value="">{{ __('general.pages.hrm.all') }}</option>
+                    @foreach($runs as $run)
+                        <option value="{{ $run->id }}">#{{ $run->id }} - {{ $run->month }}/{{ $run->year }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn btn-secondary btn-sm" wire:click="resetFilters"><i class="fa fa-undo me-1"></i> {{ __('general.pages.hrm.reset') }}</button>

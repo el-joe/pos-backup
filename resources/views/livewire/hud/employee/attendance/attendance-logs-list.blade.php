@@ -45,8 +45,8 @@
                                 <td>{{ $l->sheet?->date?->format('Y-m-d') ?? '-' }}</td>
                                 <td>{{ optional($l->clock_in_at)->format('Y-m-d H:i') ?? '-' }}</td>
                                 <td>{{ optional($l->clock_out_at)->format('Y-m-d H:i') ?? '-' }}</td>
-                                <td>{{ $l->status ?? '-' }}</td>
-                                <td>{{ $l->source ?? '-' }}</td>
+                                <td>{{ $l->status?->label() ?? '-' }}</td>
+                                <td>{{ $l->source?->label() ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

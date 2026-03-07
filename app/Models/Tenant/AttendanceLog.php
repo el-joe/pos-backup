@@ -2,6 +2,8 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\AttendanceLogSourceEnum;
+use App\Enums\AttendanceLogStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class AttendanceLog extends Model
@@ -18,6 +20,8 @@ class AttendanceLog extends Model
     protected $casts = [
         'clock_in_at' => 'datetime',
         'clock_out_at' => 'datetime',
+        'status' => AttendanceLogStatusEnum::class,
+        'source' => AttendanceLogSourceEnum::class,
     ];
 
     public function sheet()

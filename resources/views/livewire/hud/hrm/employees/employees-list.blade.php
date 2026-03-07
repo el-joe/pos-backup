@@ -15,9 +15,9 @@
                 <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
                 <select class="form-select" wire:model.blur="filters.status">
                     <option value="all">{{ __('general.pages.hrm.all') }}</option>
-                    <option value="active">{{ __('general.pages.hrm.active') }}</option>
-                    <option value="suspended">{{ __('general.pages.hrm.suspended') }}</option>
-                    <option value="terminated">{{ __('general.pages.hrm.terminated') }}</option>
+                    @foreach (App\Enums\EmployeeStatusEnum::cases() as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-12 d-flex justify-content-end">
@@ -60,7 +60,7 @@
                 <td>{{ $e->department?->name ?? '-' }}</td>
                 <td>{{ $e->designation?->title ?? '-' }}</td>
                 <td>{{ $e->manager?->name ?? '-' }}</td>
-                <td>{{ __('general.pages.hrm.statuses.' . $e->status) }}</td>
+                <td>{{ $e->status?->label() ?? '-' }}</td>
                 <td class="text-end text-nowrap">
                     @adminCan('hrm_master_data.update')
                         <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editHrmEmployeeModal" wire:click="$dispatch('hrm-employee-set-current', { id: {{ $e->id }} })">

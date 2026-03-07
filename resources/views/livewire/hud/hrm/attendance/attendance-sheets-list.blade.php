@@ -8,11 +8,21 @@
         <div class="row g-3">
             <div class="col-md-4">
                 <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
-                <input type="text" class="form-control" wire:model.blur="filters.status">
+                <select class="form-select" wire:model.blur="filters.status">
+                    <option value="">{{ __('general.pages.hrm.all') }}</option>
+                    @foreach(App\Enums\AttendanceSheetStatusEnum::cases() as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-4">
                 <label class="form-label">{{ __('general.pages.hrm.department') }}</label>
-                <input type="text" class="form-control" wire:model.blur="filters.department_id">
+                <select class="form-select" wire:model.blur="filters.department_id">
+                    <option value="">{{ __('general.pages.hrm.all') }}</option>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button class="btn btn-secondary w-100" wire:click="$set('filters', [])">{{ __('general.pages.hrm.reset') }}</button>
@@ -42,16 +52,16 @@
                 <td>{{ $s->id }}</td>
                 <td>{{ optional($s->date)->format('Y-m-d') }}</td>
                 <td>{{ $s->department?->name ?? '-' }}</td>
-                <td>{{ __('general.pages.hrm.statuses.' . $s->status) }}</td>
+                <td>{{ $s->status?->label() ?? '-' }}</td>
                 <td class="text-end text-nowrap">
                     <a class="btn btn-sm btn-outline-theme me-1" href="{{ route('admin.hrm.attendance-sheets.details', $s->id) }}"><i class="fa fa-eye"></i></a>
                     @adminCan('hrm_attendance.update')
-                        @if(($s->status ?? null) === 'draft')
+                        @if(($s->status?->value ?? $s->status) === App\Enums\AttendanceSheetStatusEnum::DRAFT->value)
                             <button class="btn btn-sm btn-outline-success me-1" wire:click="submitAlert({{ $s->id }})" title="{{ __('general.pages.hrm.submit_action') }}"><i class="fa fa-paper-plane"></i></button>
                         @endif
                     @endadminCan
                     @adminCan('hrm_attendance.approve')
-                        @if(($s->status ?? null) === 'submitted')
+                        @if(($s->status?->value ?? $s->status) === App\Enums\AttendanceSheetStatusEnum::SUBMITTED->value)
                             <button class="btn btn-sm btn-outline-success me-1" wire:click="approveAlert({{ $s->id }})" title="{{ __('general.pages.hrm.approve_action') }}"><i class="fa fa-check"></i></button>
                         @endif
                     @endadminCan

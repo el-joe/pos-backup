@@ -47,4 +47,22 @@ class ExpenseClaimService
             return $claim->refresh();
         });
     }
+
+    public function update($id, $data = [])
+    {
+        $claim = $this->repo->update($id, $data);
+        AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Expense claim', 'id' => $id]);
+
+        return $claim;
+    }
+
+    public function delete($id)
+    {
+        $deleted = $this->repo->delete($id);
+        if ($deleted) {
+            AuditLog::log(AuditLogActionEnum::from('delete_record'), ['entity' => 'Expense claim', 'id' => $id]);
+        }
+
+        return $deleted;
+    }
 }

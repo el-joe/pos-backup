@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Hrm\MasterData;
 
+use App\Enums\EmployeeStatusEnum;
 use App\Models\Tenant\Employee;
 use App\Services\Hrm\DepartmentService;
 use App\Services\Hrm\DesignationService;
@@ -26,7 +27,7 @@ class EmployeeModal extends Component
         'designation_id' => null,
         'manager_id' => null,
         'hire_date' => null,
-        'status' => 'active',
+        'status' => EmployeeStatusEnum::ACTIVE->value,
         'password' => null,
     ];
 
@@ -55,12 +56,12 @@ class EmployeeModal extends Component
                 'designation_id' => $this->current->designation_id,
                 'manager_id' => $this->current->manager_id,
                 'hire_date' => optional($this->current->hire_date)->format('Y-m-d'),
-                'status' => $this->current->status,
+                'status' => $this->current->status?->value,
                 'password' => null,
             ];
         } else {
             $this->reset('data', 'current');
-            $this->data['status'] = 'active';
+            $this->data['status'] = EmployeeStatusEnum::ACTIVE->value;
         }
     }
 
@@ -93,7 +94,7 @@ class EmployeeModal extends Component
             'data.designation_id' => ['nullable', 'exists:designations,id'],
             'data.manager_id' => ['nullable', 'exists:employees,id'],
             'data.hire_date' => ['nullable', 'date'],
-            'data.status' => ['required', Rule::in(['active', 'suspended', 'terminated'])],
+            'data.status' => ['required', Rule::in(array_map(static fn (EmployeeStatusEnum $status) => $status->value, EmployeeStatusEnum::cases()))],
             'data.password' => [$isUpdate ? 'nullable' : 'required', 'string', 'min:6'],
         ];
 
@@ -121,7 +122,7 @@ class EmployeeModal extends Component
         $this->popup('success', __('general.messages.hrm.employee_saved_successfully'));
         $this->dismiss();
         $this->reset('current', 'data');
-        $this->data['status'] = 'active';
+        $this->data['status'] = EmployeeStatusEnum::ACTIVE->value;
         $this->dispatch('re-render');
     }
 

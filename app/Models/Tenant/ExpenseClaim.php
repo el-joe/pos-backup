@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\ExpenseClaimStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class ExpenseClaim extends Model
@@ -20,6 +21,7 @@ class ExpenseClaim extends Model
         'claim_date' => 'date',
         'total_amount' => 'decimal:2',
         'approved_at' => 'datetime',
+        'status' => ExpenseClaimStatusEnum::class,
     ];
 
     public function employee()
@@ -38,7 +40,7 @@ class ExpenseClaim extends Model
             ->when($filters['employee_id'] ?? null, fn($q, $employeeId) => $q->where('employee_id', $employeeId))
             ->when($filters['status'] ?? null, function ($q, $status) {
                 if ($status !== 'all') {
-                    $q->where('status', $status);
+                    $q->where('status', $status instanceof ExpenseClaimStatusEnum ? $status->value : $status);
                 }
             });
     }

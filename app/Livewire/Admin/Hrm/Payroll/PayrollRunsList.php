@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Hrm\Payroll;
 
+use App\Enums\PayrollRunStatusEnum;
 use App\Services\Hrm\PayrollRunService;
 use App\Traits\LivewireOperations;
 use Livewire\Attributes\On;
@@ -80,14 +81,14 @@ class PayrollRunsList extends Component
             $this->popup('error', __('general.messages.hrm.payroll_run_not_found'));
             return;
         }
-        if (($this->current->status ?? null) !== 'draft') {
+        if (($this->current->status?->value ?? $this->current->status) !== PayrollRunStatusEnum::DRAFT->value) {
             $this->popup('warning', __('general.messages.hrm.only_draft_payroll_runs_can_be_approved'));
             $this->dismiss();
             return;
         }
 
         $this->payrollRunService->update($this->current->id, [
-            'status' => 'approved',
+            'status' => PayrollRunStatusEnum::APPROVED->value,
         ]);
 
         $this->popup('success', __('general.messages.hrm.payroll_run_approved'));
@@ -105,7 +106,7 @@ class PayrollRunsList extends Component
             $this->popup('error', __('general.messages.hrm.payroll_run_not_found'));
             return;
         }
-        if (($this->current->status ?? null) !== 'approved') {
+        if (($this->current->status?->value ?? $this->current->status) !== PayrollRunStatusEnum::APPROVED->value) {
             $this->popup('warning', __('general.messages.hrm.only_approved_payroll_runs_can_be_marked_paid'));
             $this->dismiss();
             return;
@@ -113,7 +114,7 @@ class PayrollRunsList extends Component
 
         // Accounting transaction posting will be integrated later.
         $this->payrollRunService->update($this->current->id, [
-            'status' => 'paid',
+            'status' => PayrollRunStatusEnum::PAID->value,
         ]);
 
         $this->popup('success', __('general.messages.hrm.payroll_run_marked_paid'));

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\EmployeeStatusEnum;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -37,6 +38,7 @@ class Employee extends Authenticatable
     protected $casts = [
         'hire_date' => 'date',
         'termination_date' => 'date',
+        'status' => EmployeeStatusEnum::class,
     ];
 
     public function setPasswordAttribute($value): void
@@ -90,7 +92,7 @@ class Employee extends Authenticatable
             })
             ->when($filters['status'] ?? null, function ($q, $status) {
                 if ($status !== 'all') {
-                    $q->where('status', $status);
+                    $q->where('status', $status instanceof EmployeeStatusEnum ? $status->value : $status);
                 }
             });
     }

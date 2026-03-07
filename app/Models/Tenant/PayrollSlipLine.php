@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\PayrollSlipLineTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class PayrollSlipLine extends Model
@@ -15,6 +16,7 @@ class PayrollSlipLine extends Model
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'type' => PayrollSlipLineTypeEnum::class,
     ];
 
     public function slip()

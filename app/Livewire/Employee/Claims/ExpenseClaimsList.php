@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Employee\Claims;
 
+use App\Enums\ExpenseClaimStatusEnum;
 use App\Models\Tenant\ExpenseClaimCategory;
 use App\Services\Hrm\ExpenseClaimService;
 use Carbon\Carbon;
@@ -40,13 +41,12 @@ class ExpenseClaimsList extends Component
         $this->expenseClaimService->createWithLines([
             'employee_id' => $employee->id,
             'claim_date' => Carbon::parse($this->form['claim_date'])->toDateString(),
-            'status' => 'pending',
-            'lines' => [
-                [
-                    'category_id' => $this->form['category_id'],
-                    'amount' => $this->form['amount'],
-                    'description' => $this->form['description'],
-                ],
+            'status' => ExpenseClaimStatusEnum::PENDING->value,
+        ], [
+            [
+                'category_id' => $this->form['category_id'],
+                'amount' => $this->form['amount'],
+                'description' => $this->form['description'],
             ],
         ]);
 

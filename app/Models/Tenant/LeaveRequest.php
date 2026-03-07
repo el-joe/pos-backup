@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\LeaveRequestStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class LeaveRequest extends Model
@@ -23,6 +24,7 @@ class LeaveRequest extends Model
         'end_date' => 'date',
         'days' => 'decimal:2',
         'approved_at' => 'datetime',
+        'status' => LeaveRequestStatusEnum::class,
     ];
 
     public function employee()
@@ -41,7 +43,7 @@ class LeaveRequest extends Model
             ->when($filters['employee_id'] ?? null, fn($q, $employeeId) => $q->where('employee_id', $employeeId))
             ->when($filters['status'] ?? null, function ($q, $status) {
                 if ($status !== 'all') {
-                    $q->where('status', $status);
+                    $q->where('status', $status instanceof LeaveRequestStatusEnum ? $status->value : $status);
                 }
             })
             ->when($filters['search'] ?? null, function ($q, $search) {

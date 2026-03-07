@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Admin\Hrm\Attendance;
 
+use App\Enums\AttendanceSheetStatusEnum;
+use App\Services\Hrm\DepartmentService;
 use App\Services\Hrm\AttendanceSheetService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -13,17 +16,19 @@ class AttendanceSheetModal extends Component
     use LivewireOperations;
 
     private AttendanceSheetService $attendanceSheetService;
+    private DepartmentService $departmentService;
 
     public $current;
     public array $data = [
         'date' => null,
         'department_id' => null,
-        'status' => 'draft',
+        'status' => AttendanceSheetStatusEnum::DRAFT->value,
     ];
 
     public function boot(): void
     {
         $this->attendanceSheetService = app(AttendanceSheetService::class);
+        $this->departmentService = app(DepartmentService::class);
     }
 
     #[On('hrm-attendance-sheet-set-current')]
@@ -34,14 +39,14 @@ class AttendanceSheetModal extends Component
             $this->data = [
                 'date' => optional($this->current->date)->format('Y-m-d'),
                 'department_id' => $this->current->department_id,
-                'status' => $this->current->status,
+                'status' => $this->current->status?->value,
             ];
         } else {
             $this->reset('current', 'data');
             $this->data = [
                 'date' => null,
                 'department_id' => null,
-                'status' => 'draft',
+                'status' => AttendanceSheetStatusEnum::DRAFT->value,
             ];
         }
     }
@@ -59,7 +64,7 @@ class AttendanceSheetModal extends Component
         $this->validate([
             'data.date' => 'required|date',
             'data.department_id' => 'nullable|exists:departments,id',
-            'data.status' => 'required|string|max:50',
+            'data.status' => ['required', Rule::in(array_map(static fn (AttendanceSheetStatusEnum $status) => $status->value, AttendanceSheetStatusEnum::cases()))],
         ]);
 
         try {
@@ -84,6 +89,8 @@ class AttendanceSheetModal extends Component
 
     public function render()
     {
-        return view('livewire.admin.hrm.attendance.attendance-sheet-modal');
+        $departments = $this->departmentService->list([], [], null, 'name');
+
+        return view('livewire.admin.hrm.attendance.attendance-sheet-modal', get_defined_vars());
     }
 }

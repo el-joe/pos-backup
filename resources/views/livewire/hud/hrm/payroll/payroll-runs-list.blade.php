@@ -8,7 +8,12 @@
         <div class="row g-3">
             <div class="col-md-4">
                 <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
-                <input type="text" class="form-control" wire:model.blur="filters.status">
+                <select class="form-select" wire:model.blur="filters.status">
+                    <option value="">{{ __('general.pages.hrm.all') }}</option>
+                    @foreach(App\Enums\PayrollRunStatusEnum::cases() as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button class="btn btn-secondary w-100" wire:click="$set('filters', [])">{{ __('general.pages.hrm.reset') }}</button>
@@ -39,16 +44,16 @@
                 <td>{{ $r->id }}</td>
                 <td>{{ $r->month }}</td>
                 <td>{{ $r->year }}</td>
-                <td>{{ __('general.pages.hrm.statuses.' . $r->status) }}</td>
+                <td>{{ $r->status?->label() ?? '-' }}</td>
                 <td>{{ numFormat($r->total_payout) }}</td>
                 <td class="text-end text-nowrap">
                     @adminCan('hrm_payroll.approve')
-                        @if(($r->status ?? null) === 'draft')
+                        @if(($r->status?->value ?? $r->status) === App\Enums\PayrollRunStatusEnum::DRAFT->value)
                             <button class="btn btn-sm btn-outline-success me-1" wire:click="approveAlert({{ $r->id }})" title="{{ __('general.pages.hrm.approve_action') }}"><i class="fa fa-check"></i></button>
                         @endif
                     @endadminCan
                     @adminCan('hrm_payroll.pay')
-                        @if(($r->status ?? null) === 'approved')
+                        @if(($r->status?->value ?? $r->status) === App\Enums\PayrollRunStatusEnum::APPROVED->value)
                             <button class="btn btn-sm btn-outline-theme me-1" wire:click="payAlert({{ $r->id }})" title="{{ __('general.pages.hrm.mark_paid_action') }}"><i class="fa fa-money-bill"></i></button>
                         @endif
                     @endadminCan

@@ -10,15 +10,19 @@
                 <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
                 <select class="form-select" wire:model.blur="filters.status">
                     <option value="all">{{ __('general.pages.hrm.all') }}</option>
-                    <option value="pending">{{ __('general.pages.hrm.pending') }}</option>
-                    <option value="approved">{{ __('general.pages.hrm.approved') }}</option>
-                    <option value="rejected">{{ __('general.pages.hrm.rejected') }}</option>
-                    <option value="paid">{{ __('general.pages.hrm.paid') }}</option>
+                    @foreach ([App\Enums\ExpenseClaimStatusEnum::PENDING, App\Enums\ExpenseClaimStatusEnum::SUBMITTED, App\Enums\ExpenseClaimStatusEnum::APPROVED, App\Enums\ExpenseClaimStatusEnum::REJECTED, App\Enums\ExpenseClaimStatusEnum::PAID] as $status)
+                        <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-md-4">
-                <label class="form-label">{{ __('general.pages.hrm.employee') }} {{ __('general.pages.hrm.id') }}</label>
-                <input type="number" class="form-control" wire:model.blur="filters.employee_id">
+                <label class="form-label">{{ __('general.pages.hrm.employee') }}</label>
+                <select class="form-select" wire:model.blur="filters.employee_id">
+                    <option value="">{{ __('general.pages.hrm.all') }}</option>
+                    @foreach($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->name }} ({{ $employee->employee_code }})</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn btn-secondary btn-sm" wire:click="resetFilters"><i class="fa fa-undo me-1"></i> {{ __('general.pages.hrm.reset') }}</button>
@@ -43,9 +47,9 @@
                 <td>{{ $c->employee?->name ?? $c->employee_id }}</td>
                 <td>{{ optional($c->claim_date)->format('Y-m-d') }}</td>
                 <td>{{ numFormat($c->total_amount) }}</td>
-                <td>{{ __('general.pages.hrm.statuses.' . $c->status) }}</td>
+                <td>{{ $c->status?->label() ?? '-' }}</td>
                 <td class="text-end text-nowrap">
-                    @if($c->status === 'pending')
+                    @if(in_array(($c->status?->value ?? $c->status), [App\Enums\ExpenseClaimStatusEnum::PENDING->value, App\Enums\ExpenseClaimStatusEnum::SUBMITTED->value], true))
                         @adminCan('hrm_claims.approve')
                             <button class="btn btn-sm btn-outline-success me-1" wire:click="approveAlert({{ $c->id }})"><i class="fa fa-check"></i></button>
                         @endadminCan

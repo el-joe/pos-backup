@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Employee\Attendance;
 
+use App\Enums\AttendanceLogSourceEnum;
+use App\Enums\AttendanceLogStatusEnum;
+use App\Enums\AttendanceSheetStatusEnum;
 use App\Models\Tenant\AttendanceLog;
 use App\Models\Tenant\AttendanceSheet;
 use App\Traits\LivewireOperations;
@@ -65,7 +68,7 @@ class AttendanceLogsList extends Component
         return AttendanceSheet::query()->create([
             'date' => $today,
             'department_id' => $employee?->department_id,
-            'status' => 'draft',
+            'status' => AttendanceSheetStatusEnum::DRAFT->value,
         ]);
     }
 
@@ -77,7 +80,7 @@ class AttendanceLogsList extends Component
         }
 
         $sheet = $this->getOrCreateTodaySheet();
-        if (($sheet->status ?? null) === 'approved') {
+        if (($sheet->status?->value ?? $sheet->status) === AttendanceSheetStatusEnum::APPROVED->value) {
             $this->popup('warning', 'Today attendance is already approved');
             return;
         }
@@ -96,8 +99,8 @@ class AttendanceLogsList extends Component
                 'employee_id' => $employee->id,
                 'clock_in_at' => Carbon::now(),
                 'clock_out_at' => null,
-                'status' => 'present',
-                'source' => 'employee',
+                'status' => AttendanceLogStatusEnum::PRESENT->value,
+                'source' => AttendanceLogSourceEnum::EMPLOYEE->value,
             ]);
 
             DB::commit();
@@ -119,7 +122,7 @@ class AttendanceLogsList extends Component
         }
 
         $sheet = $this->getOrCreateTodaySheet();
-        if (($sheet->status ?? null) === 'approved') {
+        if (($sheet->status?->value ?? $sheet->status) === AttendanceSheetStatusEnum::APPROVED->value) {
             $this->popup('warning', 'Today attendance is already approved');
             return;
         }
@@ -134,7 +137,7 @@ class AttendanceLogsList extends Component
             DB::beginTransaction();
             $open->update([
                 'clock_out_at' => Carbon::now(),
-                'source' => $open->source ?? 'employee',
+                'source' => $open->source?->value ?? $open->source ?? AttendanceLogSourceEnum::EMPLOYEE->value,
             ]);
             DB::commit();
         } catch (\Throwable $e) {

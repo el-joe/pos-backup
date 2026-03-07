@@ -25,7 +25,7 @@
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="text-inverse text-opacity-50">Status</div>
-                            <div class="fw-bold">{{ $employee->status ?? '-' }}</div>
+                            <div class="fw-bold">{{ $employee->status?->label() ?? '-' }}</div>
                         </div>
                     </div>
                 </div>

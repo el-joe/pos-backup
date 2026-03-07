@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Hrm\Claims;
 
+use App\Enums\ExpenseClaimStatusEnum;
+use App\Services\Hrm\EmployeeService;
 use App\Services\Hrm\ExpenseClaimService;
 use App\Traits\LivewireOperations;
 use Carbon\Carbon;
@@ -14,6 +16,7 @@ class ExpenseClaimsList extends Component
     use LivewireOperations, WithPagination;
 
     private ExpenseClaimService $expenseClaimService;
+    private EmployeeService $employeeService;
 
     public array $filters = [
         'status' => 'all',
@@ -26,6 +29,7 @@ class ExpenseClaimsList extends Component
     public function boot(): void
     {
         $this->expenseClaimService = app(ExpenseClaimService::class);
+        $this->employeeService = app(EmployeeService::class);
     }
 
     public function setCurrent($id): void
@@ -62,7 +66,7 @@ class ExpenseClaimsList extends Component
         }
 
         $this->expenseClaimService->update($this->current->id, [
-            'status' => 'approved',
+            'status' => ExpenseClaimStatusEnum::APPROVED->value,
             'approved_by' => admin()->id,
             'approved_at' => Carbon::now(),
         ]);
@@ -84,7 +88,7 @@ class ExpenseClaimsList extends Component
         }
 
         $this->expenseClaimService->update($this->current->id, [
-            'status' => 'rejected',
+            'status' => ExpenseClaimStatusEnum::REJECTED->value,
             'approved_by' => admin()->id,
             'approved_at' => Carbon::now(),
         ]);
@@ -108,6 +112,7 @@ class ExpenseClaimsList extends Component
     public function render()
     {
         $claims = $this->expenseClaimService->list(['employee'], $this->filters, 10, 'id');
+        $employees = $this->employeeService->list([], [], null, 'name');
 
         return layoutView('hrm.claims.expense-claims-list', get_defined_vars())
             ->title(__('general.titles.hrm_expense_claims'));

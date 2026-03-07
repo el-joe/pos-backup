@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Admin\Hrm\Payroll;
 
+use App\Enums\PayrollRunStatusEnum;
 use App\Services\Hrm\PayrollRunService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -18,7 +20,7 @@ class PayrollRunModal extends Component
     public array $data = [
         'month' => null,
         'year' => null,
-        'status' => 'draft',
+        'status' => PayrollRunStatusEnum::DRAFT->value,
         'total_payout' => 0,
     ];
 
@@ -35,7 +37,7 @@ class PayrollRunModal extends Component
             $this->data = [
                 'month' => $this->current->month,
                 'year' => $this->current->year,
-                'status' => $this->current->status,
+                'status' => $this->current->status?->value,
                 'total_payout' => $this->current->total_payout,
             ];
         } else {
@@ -43,7 +45,7 @@ class PayrollRunModal extends Component
             $this->data = [
                 'month' => null,
                 'year' => null,
-                'status' => 'draft',
+                'status' => PayrollRunStatusEnum::DRAFT->value,
                 'total_payout' => 0,
             ];
         }
@@ -62,7 +64,7 @@ class PayrollRunModal extends Component
         $this->validate([
             'data.month' => 'required|integer|min:1|max:12',
             'data.year' => 'required|integer|min:2000|max:2100',
-            'data.status' => 'required|string|max:50',
+            'data.status' => ['required', Rule::in(array_map(static fn (PayrollRunStatusEnum $status) => $status->value, PayrollRunStatusEnum::cases()))],
             'data.total_payout' => 'required|numeric|min:0',
         ]);
 

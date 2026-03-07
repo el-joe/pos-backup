@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Employee\Leaves;
 
+use App\Enums\LeaveRequestStatusEnum;
 use App\Models\Tenant\LeaveType;
 use App\Services\Hrm\LeaveRequestService;
 use Carbon\Carbon;
@@ -48,7 +49,7 @@ class LeaveRequestsList extends Component
             'end_date' => $end->toDateString(),
             'days' => $days,
             'reason' => $this->form['reason'],
-            'status' => 'pending',
+            'status' => LeaveRequestStatusEnum::PENDING->value,
         ]);
 
         $this->reset('form');

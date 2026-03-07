@@ -13,11 +13,23 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">{{ __('general.pages.hrm.parent_department_id') }}</label>
-                    <input type="number" class="form-control" wire:model="data.parent_id" placeholder="{{ __('general.pages.hrm.optional_placeholder') }}">
+                    <select class="form-select" wire:model="data.parent_id">
+                        <option value="">{{ __('general.pages.hrm.none') }}</option>
+                        @foreach($departments as $department)
+                            @if($department->id !== $current?->id)
+                                <option value="{{ $department->id }}">{{ $department->name }}</option>
+                            @endif
+                        @endforeach
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">{{ __('general.pages.hrm.manager_employee_id') }}</label>
-                    <input type="number" class="form-control" wire:model="data.manager_id" placeholder="{{ __('general.pages.hrm.optional_placeholder') }}">
+                    <select class="form-select" wire:model="data.manager_id">
+                        <option value="">{{ __('general.pages.hrm.none') }}</option>
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}">{{ $employee->name }} ({{ $employee->employee_code }})</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 

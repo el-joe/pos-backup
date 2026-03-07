@@ -60,9 +60,9 @@
                     <div class="col-md-3">
                         <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
                         <select class="form-select" wire:model="data.status">
-                            <option value="active">{{ __('general.pages.hrm.statuses.active') }}</option>
-                            <option value="suspended">{{ __('general.pages.hrm.statuses.suspended') }}</option>
-                            <option value="terminated">{{ __('general.pages.hrm.statuses.terminated') }}</option>
+                            @foreach(App\Enums\EmployeeStatusEnum::cases() as $status)
+                                <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6">

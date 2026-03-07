@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Hrm\MasterData;
 
+use App\Services\Hrm\EmployeeService;
 use App\Services\Hrm\DepartmentService;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +21,12 @@ class DepartmentModal extends Component
     ];
 
     private DepartmentService $departmentService;
+    private EmployeeService $employeeService;
 
     public function boot(): void
     {
         $this->departmentService = app(DepartmentService::class);
+        $this->employeeService = app(EmployeeService::class);
     }
 
     #[On('hrm-department-set-current')]
@@ -79,6 +82,9 @@ class DepartmentModal extends Component
 
     public function render()
     {
-        return view('livewire.admin.hrm.master-data.department-modal');
+        $departments = $this->departmentService->list([], [], null, 'name');
+        $employees = $this->employeeService->list([], [], null, 'name');
+
+        return view('livewire.admin.hrm.master-data.department-modal', get_defined_vars());
     }
 }

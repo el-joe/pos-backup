@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Admin\Hrm\Leaves;
 
+use App\Enums\LeaveRequestStatusEnum;
+use App\Services\Hrm\EmployeeService;
 use App\Services\Hrm\LeaveRequestService;
 use App\Traits\LivewireOperations;
 use Carbon\Carbon;
@@ -14,6 +16,7 @@ class LeaveRequestsList extends Component
     use LivewireOperations, WithPagination;
 
     private LeaveRequestService $leaveRequestService;
+    private EmployeeService $employeeService;
 
     public array $filters = [
         'status' => 'all',
@@ -27,6 +30,7 @@ class LeaveRequestsList extends Component
     public function boot(): void
     {
         $this->leaveRequestService = app(LeaveRequestService::class);
+        $this->employeeService = app(EmployeeService::class);
     }
 
     public function setCurrent($id): void
@@ -63,7 +67,7 @@ class LeaveRequestsList extends Component
         }
 
         $this->leaveRequestService->update($this->current->id, [
-            'status' => 'approved',
+            'status' => LeaveRequestStatusEnum::APPROVED->value,
             'approved_by' => admin()->id,
             'approved_at' => Carbon::now(),
         ]);
@@ -85,7 +89,7 @@ class LeaveRequestsList extends Component
         }
 
         $this->leaveRequestService->update($this->current->id, [
-            'status' => 'rejected',
+            'status' => LeaveRequestStatusEnum::REJECTED->value,
             'approved_by' => admin()->id,
             'approved_at' => Carbon::now(),
         ]);
@@ -110,6 +114,7 @@ class LeaveRequestsList extends Component
     public function render()
     {
         $requests = $this->leaveRequestService->list(['employee', 'leaveType'], $this->filters, 10, 'id');
+        $employees = $this->employeeService->list([], [], null, 'name');
 
         return layoutView('hrm.leaves.leave-requests-list', get_defined_vars())
             ->title(__('general.titles.hrm_leave_requests'));

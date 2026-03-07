@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="text-inverse text-opacity-50">{{ __('general.pages.hrm.status') }}</div>
-                    <div class="fw-bold">{{ __('general.pages.hrm.statuses.' . $sheet->status) }}</div>
+                    <div class="fw-bold">{{ $sheet->status?->label() ?? '-' }}</div>
                 </div>
             </div>
         </div>
@@ -55,8 +55,8 @@
                                 <td>{{ $l->employee?->name ?? $l->employee_id }}</td>
                                 <td>{{ optional($l->clock_in_at)->format('Y-m-d H:i') ?? '-' }}</td>
                                 <td>{{ optional($l->clock_out_at)->format('Y-m-d H:i') ?? '-' }}</td>
-                                <td>{{ $l->status ? __('general.pages.hrm.statuses.' . $l->status) : '-' }}</td>
-                                <td>{{ $l->source ? __('general.pages.hrm.sources.' . $l->source) : '-' }}</td>
+                                <td>{{ $l->status?->label() ?? '-' }}</td>
+                                <td>{{ $l->source?->label() ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>

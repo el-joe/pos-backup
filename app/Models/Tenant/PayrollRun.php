@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\PayrollRunStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class PayrollRun extends Model
@@ -16,6 +17,7 @@ class PayrollRun extends Model
 
     protected $casts = [
         'total_payout' => 'decimal:2',
+        'status' => PayrollRunStatusEnum::class,
     ];
 
     public function slips()
@@ -28,6 +30,6 @@ class PayrollRun extends Model
         return $q
             ->when($filters['month'] ?? null, fn($q, $month) => $q->where('month', $month))
             ->when($filters['year'] ?? null, fn($q, $year) => $q->where('year', $year))
-            ->when($filters['status'] ?? null, fn($q, $status) => $q->where('status', $status));
+            ->when($filters['status'] ?? null, fn($q, $status) => $q->where('status', $status instanceof PayrollRunStatusEnum ? $status->value : $status));
     }
 }
