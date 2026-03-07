@@ -29,9 +29,9 @@
                     <tr style="background:#e3f2fd;">
                         <th colspan="2">Assets</th>
                     </tr>
-                    @foreach($report['assets'] as $label => $amount)
+                    @foreach(($report['assets'] ?? []) as $type => $amount)
                     <tr>
-                        <td>{{ $label }}</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
                         <td>{{ number_format($amount, 2) }}</td>
                     </tr>
                     @endforeach
@@ -44,9 +44,9 @@
                     <tr style="background:#f3e5f5;">
                         <th colspan="2">Liabilities</th>
                     </tr>
-                    @foreach($report['liabilities'] as $label => $amount)
+                    @foreach(($report['liabilities'] ?? []) as $type => $amount)
                     <tr>
-                        <td>{{ $label }}</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
                         <td>{{ number_format($amount, 2) }}</td>
                     </tr>
                     @endforeach
@@ -59,9 +59,9 @@
                     <tr style="background:#e8f5e8;">
                         <th colspan="2">Equity</th>
                     </tr>
-                    @foreach($report['equity'] as $label => $amount)
+                    @foreach(($report['equity'] ?? []) as $type => $amount)
                     <tr>
-                        <td>{{ $label }}</td>
+                        <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
                         <td>{{ number_format($amount, 2) }}</td>
                     </tr>
                     @endforeach

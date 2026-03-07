@@ -75,6 +75,48 @@ enum AccountTypeEnum : string
         };
     }
 
+    function translatedLabel(?string $locale = null): string
+    {
+        $locale = $locale ?? app()->getLocale();
+
+        if ($locale !== 'ar') {
+            return $this->label();
+        }
+
+        return match ($this) {
+            self::BRANCH_CASH => 'نقدية الفرع',
+            self::OWNER_ACCOUNT => 'حساب المالك',
+            self::CUSTOMER => 'ذمم العملاء',
+            self::SUPPLIER => 'ذمم الموردين',
+            self::CHECKS_UNDER_COLLECTION => 'شيكات تحت التحصيل',
+            self::ISSUED_CHECKS => 'شيكات صادرة',
+
+            self::EXPENSE => 'مصروفات',
+            self::FINANCE_EXPENSE => 'مصروفات تمويلية',
+            self::MARKETING_EXPENSE => 'مصروفات تسويقية',
+            self::OPERATING_EXPENSE => 'مصروفات تشغيلية',
+            self::GENERAL_AND_ADMINISTRATIVE_EXPENSE => 'مصروفات عامة وإدارية',
+            self::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'مصروفات صيانة واستهلاك',
+            self::INVENTORY_EXPENSE => 'مصروفات المخزون (غير تكلفة بضاعة)',
+
+            self::SALES => 'المبيعات',
+            self::INVENTORY => 'المخزون',
+            self::COGS => 'تكلفة البضاعة المباعة',
+            self::INVENTORY_SHORTAGE => 'عجز المخزون',
+            self::FIXED_ASSET => 'الأصول الثابتة',
+            self::LONGTERM_LIABILITY => 'التزامات طويلة الأجل',
+            self::VAT_PAYABLE => 'ضريبة القيمة المضافة المستحقة',
+            self::VAT_RECEIVABLE => 'ضريبة القيمة المضافة القابلة للاسترداد',
+            self::SALES_DISCOUNT => 'خصم المبيعات',
+            self::PURCHASE_DISCOUNT => 'خصم المشتريات',
+            self::SALES_RETURN => 'مرتجعات المبيعات',
+            self::PURCHASE_RETURN => 'مرتجعات المشتريات',
+
+            self::UNEARNED_REVENUE => 'إيرادات مقدمة',
+            self::ACCRUED_REVENUE => 'إيرادات مستحقة',
+        };
+    }
+
     function color(): string
     {
         return match($this) {

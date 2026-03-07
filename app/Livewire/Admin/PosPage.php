@@ -307,6 +307,7 @@ class PosPage extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             $this->alert('error', __('general.messages.error_placing_order', ['message' => $e->getMessage()]));
+            dd($e->getMessage());
             return;
         }
         AuditLog::log(AuditLogActionEnum::CREATE_SALE_ORDER,['invoice_number' => $saleOrder->invoice_number]);

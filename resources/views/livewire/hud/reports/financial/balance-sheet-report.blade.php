@@ -41,9 +41,9 @@
                         <tr class="bg-light">
                             <th colspan="2" class="text-uppercase text-primary">{{ __('general.pages.reports.financial.balance_sheet.assets') }}</th>
                         </tr>
-                        @foreach($report['assets'] as $label => $amount)
+                        @foreach(($report['assets'] ?? []) as $type => $amount)
                         <tr>
-                            <td>{{ $label }}</td>
+                            <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
                             <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
@@ -56,9 +56,9 @@
                         <tr class="bg-light">
                             <th colspan="2" class="text-uppercase text-danger">{{ __('general.pages.reports.financial.balance_sheet.liabilities') }}</th>
                         </tr>
-                        @foreach($report['liabilities'] as $label => $amount)
+                        @foreach(($report['liabilities'] ?? []) as $type => $amount)
                         <tr>
-                            <td>{{ $label }}</td>
+                            <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
                             <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
@@ -71,9 +71,9 @@
                         <tr class="bg-light">
                             <th colspan="2" class="text-uppercase text-success">{{ __('general.pages.reports.financial.balance_sheet.equity') }}</th>
                         </tr>
-                        @foreach($report['equity'] as $label => $amount)
+                        @foreach(($report['equity'] ?? []) as $type => $amount)
                         <tr>
-                            <td>{{ $label }}</td>
+                            <td>{{ \App\Enums\AccountTypeEnum::tryFrom($type)?->translatedLabel() ?? $type }}</td>
                             <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach

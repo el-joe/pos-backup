@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Reports\Financial;
 
+use App\Enums\AccountTypeEnum;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -10,6 +11,13 @@ class BalanceSheetReport extends Component
     public $from_date;
     public $to_date;
     public $report = [];
+
+    protected function getEndingInventoryValue(): float
+    {
+        return (float) DB::table('stocks')
+            ->selectRaw('COALESCE(SUM(stocks.qty * stocks.unit_cost), 0) as stock_value')
+            ->value('stock_value');
+    }
 
     public function mount()
     {
@@ -61,24 +69,34 @@ class BalanceSheetReport extends Component
                 : ($debit - $credit);
         };
 
+        $netEnum = function (AccountTypeEnum $accountType, string $normalSide = 'debit') use ($net): float {
+            return $net($accountType->value, $normalSide);
+        };
+
         // Asset accounts
         $assets = [
-            'Fixed Asset' => $net('fixed_asset', 'debit'),
-            // 'Current Asset' => $net('current_asset', 'debit'),
-            'Inventory' => $net('inventory', 'debit'),
-            'VAT Receivable' => $net('vat_receivable', 'debit'),
+            AccountTypeEnum::BRANCH_CASH->value => $netEnum(AccountTypeEnum::BRANCH_CASH, 'debit'),
+            AccountTypeEnum::CUSTOMER->value => $netEnum(AccountTypeEnum::CUSTOMER, 'debit'),
+            AccountTypeEnum::CHECKS_UNDER_COLLECTION->value => $netEnum(AccountTypeEnum::CHECKS_UNDER_COLLECTION, 'debit'),
+            AccountTypeEnum::FIXED_ASSET->value => $netEnum(AccountTypeEnum::FIXED_ASSET, 'debit'),
+            // Note: inventory in balance sheet should be ending/actual inventory, not total purchases.
+            AccountTypeEnum::INVENTORY->value => $this->getEndingInventoryValue(),
+            AccountTypeEnum::VAT_RECEIVABLE->value => $netEnum(AccountTypeEnum::VAT_RECEIVABLE, 'debit'),
+            AccountTypeEnum::ACCRUED_REVENUE->value => $netEnum(AccountTypeEnum::ACCRUED_REVENUE, 'debit'),
         ];
 
         // Liability accounts
         $liabilities = [
-            'Long-term Liability' => $net('longterm_liability', 'credit'),
-            'VAT Payable' => $net('vat_payable', 'credit'),
-            'Unearned Revenue' => $net('unearned_revenue', 'credit'),
+            AccountTypeEnum::SUPPLIER->value => $netEnum(AccountTypeEnum::SUPPLIER, 'credit'),
+            AccountTypeEnum::ISSUED_CHECKS->value => $netEnum(AccountTypeEnum::ISSUED_CHECKS, 'credit'),
+            AccountTypeEnum::VAT_PAYABLE->value => $netEnum(AccountTypeEnum::VAT_PAYABLE, 'credit'),
+            AccountTypeEnum::UNEARNED_REVENUE->value => $netEnum(AccountTypeEnum::UNEARNED_REVENUE, 'credit'),
+            AccountTypeEnum::LONGTERM_LIABILITY->value => $netEnum(AccountTypeEnum::LONGTERM_LIABILITY, 'credit'),
         ];
 
         // Equity
         $equity = [
-            'Owner Account' => $net('owner_account', 'credit'),
+            AccountTypeEnum::OWNER_ACCOUNT->value => $netEnum(AccountTypeEnum::OWNER_ACCOUNT, 'credit'),
         ];
 
         $total_assets = array_sum($assets);
