@@ -23,7 +23,7 @@ class SettingsPage extends Component
     public $uploadedFiles = [];
 
     function boot(){
-        if(Setting::count() == 0){
+        if(Setting::count() == 0 || request()->has('reset')){
             $this->defaultSettings();
         }
     }
@@ -221,7 +221,7 @@ class SettingsPage extends Component
         ];
 
         foreach ($data as $item) {
-            Setting::updateOrCreate(
+            Setting::firstOrCreate(
                 ['key' => $item['key']],
                 $item
             );
