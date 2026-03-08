@@ -1,7 +1,7 @@
 <div class="col-12">
     <x-tenant-tailwind-gemini.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter" class="mb-4">
-        <div class="d-flex justify-content-end mb-3">
-            <button type="button" wire:click="resetFilters" class="btn btn-sm btn-secondary">
+        <div class="flex justify-end mb-3">
+            <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
                 <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
             </button>
         </div>
@@ -18,7 +18,7 @@
                 <table class="table table-bordered table-hover table-striped mb-0 align-middle">
                     <tbody>
                         {{-- ================= Assets ================= --}}
-                        <tr class="bg-light">
+                        <tr class="bg-slate-100">
                             <th colspan="2" class="text-uppercase text-primary">{{ __('general.pages.reports.financial.balance_sheet.assets') }}</th>
                         </tr>
                         @foreach(($report['assets'] ?? []) as $type => $amount)
@@ -27,13 +27,13 @@
                             <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
-                        <tr class="fw-bold bg-primary-subtle">
+                        <tr class="bg-sky-50 font-bold text-slate-900">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_assets') }}</td>
                             <td>{{ currencyFormat($report['total_assets'] ?? 0, true) }}</td>
                         </tr>
 
                         {{-- ================= Liabilities ================= --}}
-                        <tr class="bg-light">
+                        <tr class="bg-slate-100">
                             <th colspan="2" class="text-uppercase text-danger">{{ __('general.pages.reports.financial.balance_sheet.liabilities') }}</th>
                         </tr>
                         @foreach(($report['liabilities'] ?? []) as $type => $amount)
@@ -42,13 +42,13 @@
                             <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
-                        <tr class="fw-bold bg-danger-subtle">
+                        <tr class="bg-rose-50 font-bold text-slate-900">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_liabilities') }}</td>
                             <td>{{ currencyFormat($report['total_liabilities'] ?? 0, true) }}</td>
                         </tr>
 
                         {{-- ================= Equity ================= --}}
-                        <tr class="bg-light">
+                        <tr class="bg-slate-100">
                             <th colspan="2" class="text-uppercase text-success">{{ __('general.pages.reports.financial.balance_sheet.equity') }}</th>
                         </tr>
                         @foreach(($report['equity'] ?? []) as $type => $amount)
@@ -57,7 +57,7 @@
                             <td>{{ currencyFormat($amount, true) }}</td>
                         </tr>
                         @endforeach
-                        <tr class="fw-bold bg-success-subtle">
+                        <tr class="bg-emerald-50 font-bold text-slate-900">
                             <td>{{ __('general.pages.reports.financial.balance_sheet.total_equity') }}</td>
                             <td>{{ currencyFormat($report['total_equity'] ?? 0, true) }}</td>
                         </tr>

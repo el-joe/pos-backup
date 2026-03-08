@@ -14,8 +14,8 @@
         <div class="col-12">
             <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.sales.customer.title')" icon="fa-user" :render-table="false">
                 <div class="table-responsive">
-                    <table class="table table-dark table-striped table-hover mb-0 align-middle">
-                            <thead class="table-light text-dark">
+                    <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+                            <thead >
                                 <tr>
                                     <th>{{ __('general.pages.reports.sales.customer.customer') }}</th>
                                     <th>{{ __('general.pages.reports.sales.customer.sale_count') }}</th>
@@ -45,7 +45,7 @@
                                     </tr>
                                 @endforelse
                                 @if(count($report))
-                                    <tr class="bg-success text-dark fw-bold">
+                                    <tr class="bg-emerald-50 font-bold text-slate-900">
                                         <td>{{ __('general.pages.reports.common.total') }}</td>
                                         <td>{{ $total_count }}</td>
                                         <td>{{ currencyFormat($total_spent, true) }}</td>

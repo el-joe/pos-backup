@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <x-tenant-tailwind-gemini.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter" class="mb-4">
-        <div class="d-flex justify-content-end mb-3">
-            <button type="button" wire:click="resetFilters" class="btn btn-sm btn-secondary">
+        <div class="flex justify-end mb-3">
+            <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
                 <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
             </button>
         </div>
@@ -55,27 +55,21 @@
 
     <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="text-muted">{{ __('general.pages.reports.financial.depreciation_expenses_report.expenses_count') }}</div>
-                    <div class="fs-4 fw-semibold">{{ $count }}</div>
-                </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.depreciation_expenses_report.expenses_count') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ $count }}</div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="text-muted">{{ __('general.pages.reports.financial.depreciation_expenses_report.total_amount') }}</div>
-                    <div class="fs-4 fw-semibold">{{ currencyFormat($totalAmount, true) }}</div>
-                </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.depreciation_expenses_report.total_amount') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ currencyFormat($totalAmount, true) }}</div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="text-muted">{{ __('general.pages.reports.financial.depreciation_expenses_report.avg_amount') }}</div>
-                    <div class="fs-4 fw-semibold">{{ currencyFormat($avg, true) }}</div>
-                </div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.depreciation_expenses_report.avg_amount') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ currencyFormat($avg, true) }}</div>
             </div>
         </div>
     </div>
@@ -84,7 +78,7 @@
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.financial.depreciation_expenses_report.top_assets_title')" icon="fa-chart-area" :render-table="false">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0 align-middle">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th>{{ __('general.pages.depreciation_expenses.fixed_asset') }}</th>
                                 <th class="text-end">{{ __('general.pages.reports.financial.depreciation_expenses_report.expenses_count') }}</th>
@@ -113,7 +107,7 @@
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.financial.depreciation_expenses_report.title')" icon="fa-receipt" :render-table="false">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0 align-middle">
-                        <thead class="table-primary">
+                        <thead>
                             <tr>
                                 <th>#</th>
                                 <th>{{ __('general.pages.reports.common.branch') }}</th>

@@ -14,28 +14,6 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon_io/android-chrome-512x512.png">
     <link rel="manifest" href="/favicon_io/site.webmanifest">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#2563eb',
-                            600: '#1d4ed8',
-                            700: '#1e40af'
-                        }
-                    }
-                }
-            }
-        };
-    </script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-
     @include('layouts.tenant-tailwind-gemini.partials.styles')
     <style>
         [x-cloak] { display: none !important; }

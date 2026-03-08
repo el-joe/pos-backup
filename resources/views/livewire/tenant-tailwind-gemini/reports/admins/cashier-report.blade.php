@@ -11,8 +11,8 @@
     <div class="col-12">
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.admins.cashier_report.title')" icon="fa-user" :render-table="false">
                 <div class="table-responsive">
-                    <table class="table table-dark table-bordered table-hover table-striped mb-0 align-middle">
-                        <thead class="table-secondary text-dark">
+                    <table class="table table-bordered table-hover table-striped mb-0 align-middle">
+                        <thead >
                             <tr>
                                 <th>{{ __('general.pages.reports.admins.cashier_report.cashier') }}</th>
                                 <th class="text-end">{{ __('general.pages.reports.admins.cashier_report.total_sales') }}</th>
@@ -50,7 +50,7 @@
                         </tbody>
 
                         @if(count($report))
-                        <tfoot class="bg-success bg-opacity-25 fw-bold">
+                        <tfoot class="bg-emerald-50 font-bold text-slate-900">
                             <tr>
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td class="text-end">{{ currencyFormat($sumSales, true) }}</td>

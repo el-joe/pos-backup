@@ -1,215 +1,219 @@
-<div>
-    <div class="col-12">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-            <h5 class="mb-0"><i class="fa fa-file-text me-2"></i> {{ __('general.pages.sales.sale_order_details') }} #{{ $order->id }}</h5>
+<div class="space-y-6">
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.invoice_number') }}</p>
+            <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">#{{ $order->invoice_number }}</p>
         </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.order_date') }}</p>
+            <p class="mt-3 text-lg font-semibold text-slate-900 dark:text-white">{{ dateTimeFormat($order->created_at, true, false) }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.items_count') }}</p>
+            <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{{ $itemsCount }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.paid') }}</p>
+            <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($paid, true) }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.due') }}</p>
+            <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat(($grandTotal - $paid), true) }}</p>
+        </div>
+    </div>
 
-        <div class="card-body">
-            <!-- Nav Tabs -->
-            <ul class="nav nav-tabs mb-4" role="tablist">
-                <li class="nav-item">
-                    <button class="nav-link {{ $activeTab === 'details' ? 'active' : '' }}" wire:click="$set('activeTab', 'details')" data-bs-toggle="tab" type="button">
-                        <i class="fa fa-info-circle me-1"></i> {{ __('general.pages.sales.details_tab') }}
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link {{ $activeTab === 'products' ? 'active' : '' }}" wire:click="$set('activeTab', 'products')" data-bs-toggle="tab" type="button">
-                        <i class="fa fa-cubes me-1"></i> {{ __('general.pages.sales.products_tab') }}
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link {{ $activeTab === 'transactions' ? 'active' : '' }}" wire:click="$set('activeTab', 'transactions')" data-bs-toggle="tab" type="button">
-                        <i class="fa fa-exchange me-1"></i> {{ __('general.pages.sales.transactions_tab') }}
-                    </button>
-                </li>
-            </ul>
+    <x-tenant-tailwind-gemini.table-card :title="__('general.pages.sales.sale_order_details') . ' #' . $order->id" :description="__('general.pages.sales.sale_details')" icon="fa fa-file-text">
+        <x-slot:head>
+            <div class="flex flex-wrap gap-2">
+                <button type="button" wire:click="$set('activeTab', 'details')" class="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition {{ $activeTab === 'details' ? 'bg-brand-600 text-white shadow-sm' : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800' }}">
+                    <i class="fa fa-info-circle"></i>
+                    {{ __('general.pages.sales.details_tab') }}
+                </button>
+                <button type="button" wire:click="$set('activeTab', 'products')" class="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition {{ $activeTab === 'products' ? 'bg-brand-600 text-white shadow-sm' : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800' }}">
+                    <i class="fa fa-cubes"></i>
+                    {{ __('general.pages.sales.products_tab') }}
+                </button>
+                <button type="button" wire:click="$set('activeTab', 'transactions')" class="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold transition {{ $activeTab === 'transactions' ? 'bg-brand-600 text-white shadow-sm' : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800' }}">
+                    <i class="fa fa-exchange"></i>
+                    {{ __('general.pages.sales.transactions_tab') }}
+                </button>
+            </div>
+        </x-slot:head>
 
-            <!-- Tab Content -->
-            <div class="tab-content">
-                <!-- Details Tab -->
-                <div class="tab-pane fade {{ $activeTab === 'details' ? 'show active' : '' }}">
-                    <h5 class="fw-bold mb-3"><i class="fa fa-info-circle me-2"></i> {{ __('general.pages.sales.sale_details') }}</h5>
-
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <div class="p-3 bg-dark-subtle rounded">
-                                <h6><i class="fa fa-user me-1"></i> {{ __('general.pages.sales.customer') }}</h6>
-                                <p class="mb-0">{{ $order->customer->name ?? __('general.messages.n_a') }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-dark-subtle rounded">
-                                <h6><i class="fa fa-building me-1"></i> {{ __('general.pages.sales.branch') }}</h6>
-                                <p class="mb-0">{{ $order->branch->name ?? __('general.messages.n_a') }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-dark-subtle rounded">
-                                <h6><i class="fa fa-hashtag me-1"></i> {{ __('general.pages.sales.invoice_number') }}</h6>
-                                <p class="mb-0">#{{ $order->invoice_number }}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-dark-subtle rounded">
-                                <h6><i class="fa fa-calendar me-1"></i> {{ __('general.pages.sales.order_date') }}</h6>
-                                <p class="mb-0">{{ dateTimeFormat($order->created_at, true, false) }}</p>
-                            </div>
-                        </div>
+        @if($activeTab === 'details')
+            <div class="space-y-6 p-5">
+                <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.customer') }}</p>
+                        <p class="mt-2 text-base font-semibold text-slate-900 dark:text-white">{{ $order->customer->name ?? __('general.messages.n_a') }}</p>
                     </div>
-
-                    <hr class="my-4">
-
-                    <h5 class="fw-bold mb-3"><i class="fa fa-list-alt me-2"></i> {{ __('general.pages.sales.sale_summary') }}</h5>
-                    <div class="row g-3">
-                        @php
-                            $summaryCards = [
-                                ['title'=>__('general.pages.sales.items_count'),'icon'=>'fa-cube','bg'=>'bg-primary-subtle','color'=>'text-primary','value'=>$itemsCount],
-                                ['title'=>__('general.pages.sales.total_quantity'),'icon'=>'fa-plus','bg'=>'bg-info-subtle','color'=>'text-info','value'=>$totalQty],
-                                ['title'=>__('general.pages.sales.subtotal'),'icon'=>'fa-calculator','bg'=>'bg-warning-subtle','color'=>'text-warning','value'=>currencyFormat($subTotal, true)],
-                                ['title'=>__('general.pages.sales.discount'),'icon'=>'fa-tag','bg'=>'bg-danger-subtle','color'=>'text-danger','value'=>currencyFormat($totalDiscount, true)],
-                                ['title'=>__('general.pages.sales.tax'),'icon'=>'fa-percent','bg'=>'bg-secondary-subtle','color'=>'text-secondary','value'=>currencyFormat($totalTax, true)],
-                                ['title'=>__('general.pages.sales.grand_total'),'icon'=>'fa-money','bg'=>'bg-gradient','color'=>'text-white','value'=>currencyFormat($grandTotal, true), 'gradient'=>'linear-gradient(135deg, #2196f3, #00c6ff)'],
-                                ['title'=>__('general.pages.sales.paid'),'icon'=>'fa-check-circle','bg'=>'bg-success-subtle','color'=>'text-success','value'=>currencyFormat($paid, true)],
-                                ['title'=>__('general.pages.sales.due'),'icon'=>'fa-clock-o','bg'=>'bg-light-subtle','color'=>'text-light','value'=>currencyFormat(($grandTotal - $paid), true)],
-                            ];
-                        @endphp
-
-                        @foreach($summaryCards as $card)
-                            <div class="col-md-3 col-sm-6">
-                                <div class="card border-0 shadow-sm h-100 {{ $card['bg'] ?? '' }}">
-                                    <div class="card-body d-flex align-items-center">
-                                        <div class="rounded-circle p-3 bg-opacity-25 {{ $card['color'] }} me-3">
-                                            <i class="fa {{ $card['icon'] }}"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1 {{ $card['color'] }}">{{ $card['title'] }}</h6>
-                                            <h4 class="mb-0 fw-bold {{ $card['color'] }}">{{ $card['value'] }}</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.branch') }}</p>
+                        <p class="mt-2 text-base font-semibold text-slate-900 dark:text-white">{{ $order->branch->name ?? __('general.messages.n_a') }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.invoice_number') }}</p>
+                        <p class="mt-2 text-base font-semibold text-slate-900 dark:text-white">#{{ $order->invoice_number }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.order_date') }}</p>
+                        <p class="mt-2 text-base font-semibold text-slate-900 dark:text-white">{{ dateTimeFormat($order->created_at, true, false) }}</p>
                     </div>
                 </div>
 
-                <!-- Products Tab -->
-                <div class="tab-pane fade {{ $activeTab === 'products' ? 'show active' : '' }}">
-                    <h5 class="fw-bold mb-3"><i class="fa fa-cubes me-2"></i> {{ __('general.pages.sales.sale_products') }}</h5>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>{{ __('general.pages.sales.product') }}</th>
-                                    <th>{{ __('general.pages.sales.quantity') }}</th>
-                                    <th>{{ __('general.pages.sales.refunded') }}</th>
-                                    <th>{{ __('general.pages.sales.unit_price') }}</th>
-                                    <th>{{ __('general.pages.sales.total') }}</th>
-                                    <th>{{ __('general.pages.sales.refund_status') }}</th>
-                                    <th>{{ __('general.pages.sales.action') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($order->saleItems as $item)
-                                    <tr>
-                                        <td><strong>{{ $item->product?->name }} - {{ $item->unit?->name }}</strong></td>
-                                        <td>{{ $item->qty }}</td>
-                                        <td>{{ $item->refunded_qty }}</td>
-                                        <td>{{ currencyFormat($item->sell_price, true) }}</td>
-                                        <td>{{ currencyFormat($item->total, true) }}</td>
-                                        <td>
-                                            @if($item->actual_qty <= 0)
-                                                <span class="badge bg-success">{{ __('general.pages.sales.fully_refunded') }}</span>
-                                            @elseif($item->actual_qty < $item->qty)
-                                                <span class="badge bg-warning text-dark">{{ __('general.pages.sales.partially_refunded') }}</span>
-                                            @else
-                                                <span class="badge bg-primary">{{ __('general.pages.sales.not_refunded') }}</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if($item->actual_qty <= 0)
-                                                <button class="btn btn-sm btn-secondary" disabled><i class="fa fa-undo"></i> {{ __('general.pages.sales.refund') }}</button>
-                                            @else
-                                                <a class="btn btn-sm btn-danger" href="{{ route('admin.refunds.create',['order_type'=>'sale','order_id'=>$order->id]) }}">
-                                                    <i class="fa fa-undo"></i> {{ __('general.pages.sales.refund') }}
-                                                </a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.items_count') }}</p>
+                        <p class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ $itemsCount }}</p>
+                    </div>
+                    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.total_quantity') }}</p>
+                        <p class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ $totalQty }}</p>
+                    </div>
+                    <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.subtotal') }}</p>
+                        <p class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($subTotal, true) }}</p>
+                    </div>
+                    <div class="rounded-3xl border border-brand-200 bg-brand-50 p-5 shadow-sm dark:border-brand-500/30 dark:bg-brand-500/10">
+                        <p class="text-sm font-medium text-brand-700 dark:text-brand-200">{{ __('general.pages.sales.grand_total') }}</p>
+                        <p class="mt-3 text-3xl font-semibold text-brand-900 dark:text-white">{{ currencyFormat($grandTotal, true) }}</p>
                     </div>
                 </div>
 
-                <!-- Transactions Tab -->
-                <div class="tab-pane fade {{ $activeTab === 'transactions' ? 'show active' : '' }}">
-                    <h5 class="fw-bold mb-3"><i class="fa fa-exchange me-2"></i> {{ __('general.pages.sales.order_transactions') }}</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.id') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.transaction_id') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.type') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.branch') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.reference') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.note') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.date') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.account') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.debit') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.credit') }}</th>
-                                    <th>{{ __('general.pages.purchases.transaction_lines.created_at') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php $totals = ['debit' => 0, 'credit' => 0]; @endphp
-                                @foreach($transactionLines as $transaction)
-                                    <tr>
-                                        <td>{{ $transaction->id }}</td>
-                                        <td>{{ $transaction->transaction_id ?? __('general.messages.n_a') }}</td>
-                                        <td>{{ $transaction->type ?? __('general.messages.n_a') }}</td>
-                                        <td>{{ $transaction->branch ?? __('general.messages.n_a') }}</td>
-                                        <td>{{ $transaction->reference ?? __('general.messages.n_a') }}</td>
-                                        <td>{{ $transaction->note ?? __('general.messages.n_a') }}</td>
-                                        <td>{{ $transaction->date ?? __('general.messages.n_a') }}</td>
-                                        <td>{{ $transaction->account ?? __('general.messages.n_a') }}</td>
-                                        <td>{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
-                                        <td>{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
-                                        <td>{{ $transaction->created_at ?? __('general.messages.n_a') }}</td>
-                                    </tr>
-                                    @php
-                                        if ($transaction->line_type == 'debit') {
-                                            $totals['debit'] += $transaction->amount_raw;
-                                        } elseif ($transaction->line_type == 'credit') {
-                                            $totals['credit'] += $transaction->amount_raw;
-                                        }
-                                    @endphp
-                                @endforeach
-                                <tr class="table-secondary fw-bold">
-                                    <td colspan="8" class="text-{{ app()->getLocale() == 'ar' ? 'end' : 'start' }}">{{ __('general.pages.purchases.transaction_lines.total') }}</td>
-                                    <td>{{ currencyFormat($totals['debit'], true) }}</td>
-                                    <td>{{ currencyFormat($totals['credit'], true) }}</td>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.discount') }}</p>
+                        <p class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($totalDiscount, true) }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.tax') }}</p>
+                        <p class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($totalTax, true) }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.paid') }}</p>
+                        <p class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($paid, true) }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.due') }}</p>
+                        <p class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat(($grandTotal - $paid), true) }}</p>
                     </div>
                 </div>
             </div>
-        </div>
+        @elseif($activeTab === 'products')
+            <div class="p-5">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>{{ __('general.pages.sales.product') }}</th>
+                                <th>{{ __('general.pages.sales.quantity') }}</th>
+                                <th>{{ __('general.pages.sales.refunded') }}</th>
+                                <th>{{ __('general.pages.sales.unit_price') }}</th>
+                                <th>{{ __('general.pages.sales.total') }}</th>
+                                <th>{{ __('general.pages.sales.refund_status') }}</th>
+                                <th>{{ __('general.pages.sales.action') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($order->saleItems as $item)
+                                <tr>
+                                    <td class="font-semibold">{{ $item->product?->name }} - {{ $item->unit?->name }}</td>
+                                    <td>{{ $item->qty }}</td>
+                                    <td>{{ $item->refunded_qty }}</td>
+                                    <td>{{ currencyFormat($item->sell_price, true) }}</td>
+                                    <td>{{ currencyFormat($item->total, true) }}</td>
+                                    <td>
+                                        @if($item->actual_qty <= 0)
+                                            <span class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{{ __('general.pages.sales.fully_refunded') }}</span>
+                                        @elseif($item->actual_qty < $item->qty)
+                                            <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">{{ __('general.pages.sales.partially_refunded') }}</span>
+                                        @else
+                                            <span class="inline-flex rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700 dark:bg-sky-500/10 dark:text-sky-300">{{ __('general.pages.sales.not_refunded') }}</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($item->actual_qty <= 0)
+                                            <button class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-400 dark:border-slate-700 dark:text-slate-500" disabled>
+                                                <i class="fa fa-check"></i> {{ __('general.pages.sales.refund') }}
+                                            </button>
+                                        @else
+                                            <button class="inline-flex items-center gap-2 rounded-2xl bg-rose-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-rose-700" wire:click="setCurrentItem({{ $item->id }})" data-toggle="modal" data-target="#refundModal">
+                                                <i class="fa fa-undo"></i> {{ __('general.pages.sales.refund') }}
+                                            </button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @else
+            <div class="p-5">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead>
+                            <tr>
+                                <th>{{ __('general.pages.purchases.transaction_lines.id') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.transaction_id') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.type') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.branch') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.reference') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.note') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.date') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.account') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.debit') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.credit') }}</th>
+                                <th>{{ __('general.pages.purchases.transaction_lines.created_at') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $totals = ['debit' => 0, 'credit' => 0]; @endphp
+                            @forelse($transactionLines as $transaction)
+                                <tr>
+                                    <td>{{ $transaction->id }}</td>
+                                    <td>{{ $transaction->transaction_id ?? __('general.messages.n_a') }}</td>
+                                    <td>{{ $transaction->type ?? __('general.messages.n_a') }}</td>
+                                    <td>{{ $transaction->branch ?? __('general.messages.n_a') }}</td>
+                                    <td>{{ $transaction->reference ?? __('general.messages.n_a') }}</td>
+                                    <td>{{ $transaction->note ?? __('general.messages.n_a') }}</td>
+                                    <td>{{ $transaction->date ?? __('general.messages.n_a') }}</td>
+                                    <td>{{ $transaction->account ?? __('general.messages.n_a') }}</td>
+                                    <td>{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                    <td>{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                    <td>{{ $transaction->created_at ?? __('general.messages.n_a') }}</td>
+                                </tr>
+                                @php
+                                    if ($transaction->line_type == 'debit') {
+                                        $totals['debit'] += $transaction->amount_raw;
+                                    } elseif ($transaction->line_type == 'credit') {
+                                        $totals['credit'] += $transaction->amount_raw;
+                                    }
+                                @endphp
+                            @empty
+                                <tr>
+                                    <td colspan="11" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                </tr>
+                            @endforelse
+                            @if(count($transactionLines ?? []))
+                                <tr class="bg-slate-50 font-semibold dark:bg-slate-800/60">
+                                    <td colspan="8" class="text-{{ app()->getLocale() == 'ar' ? 'end' : 'start' }}">{{ __('general.pages.purchases.transaction_lines.total') }}</td>
+                                    <td>{{ currencyFormat($totals['debit'], true) }}</td>
+                                    <td>{{ currencyFormat($totals['credit'], true) }}</td>
+                                    <td></td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+    </x-tenant-tailwind-gemini.table-card>
 
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
-</div>
-
-
-    <!-- Refund Modal -->
     <div class="modal fade" id="refundModal" tabindex="-1" role="dialog" aria-labelledby="refundModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content refund-modal-content">

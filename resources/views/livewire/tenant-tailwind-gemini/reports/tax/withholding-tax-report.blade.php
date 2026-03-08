@@ -10,8 +10,8 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.tax.withholding_tax.title')" icon="fa-list-alt" :render-table="false" class="mb-4">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
-                    <thead class="table-primary text-dark">
+            <table class="table table-bordered table-hover table-striped mb-0 align-middle">
+                    <thead >
                             <tr>
                                 <th>{{ __('general.pages.reports.tax.withholding_tax.id') }}</th>
                                 <th>{{ __('general.pages.reports.tax.withholding_tax.account') }}</th>
@@ -40,7 +40,7 @@
                         @endforelse
 
                         @if(count($report))
-                            <tr class="bg-success bg-opacity-25 fw-semibold">
+                            <tr class="bg-emerald-50 font-semibold text-slate-900">
                                 <td colspan="3">{{ __('general.pages.reports.common.total') }}</td>
                                 <td colspan="2" class="text-end">{{ currencyFormat($total, true) }}</td>
                             </tr>

@@ -23,11 +23,11 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary btn-sm me-2">
+                    <div class="col-md-3 flex items-end gap-2">
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800">
                             <i class="fa fa-check-circle"></i> {{ __('general.pages.reports.common.apply') }}
                         </button>
-                        <button type="button" wire:click="resetFilters" class="btn btn-secondary btn-sm">
+                        <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
                             <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
                         </button>
                     </div>
@@ -36,15 +36,15 @@
 
     <div class="col-12">
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.audit_report.title')" icon="fa-history" :render-table="false">
-            <div class="d-flex align-items-center justify-content-between px-3 pt-3">
-                <div class="d-flex align-items-center">
+            <div class="flex items-center justify-between px-3 pt-3">
+                <div class="flex items-center">
                 </div>
-                <small class="text-white-50">{{ __('general.pages.reports.audit_report.total') }}: {{ $audits->total() }}</small>
+                <small class="text-slate-500">{{ __('general.pages.reports.audit_report.total') }}: {{ $audits->total() }}</small>
             </div>
             <div class="pt-2">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0">
-                        <thead class="table-light">
+                        <thead >
                             <tr>
                                 <th style="width: 80px">#</th>
                                 <th style="width: 180px">{{ __('general.pages.reports.audit_report.date_time') }}</th>
@@ -65,7 +65,7 @@
                                     </td>
                                     <td>
                                         @if($audit->admin)
-                                            <div class="d-flex align-items-center">
+                                            <div class="flex items-center">
                                                 <i class="fa fa-user-circle text-primary me-2"></i>
                                                 <span>{{ $audit->admin->name }} #{{ $audit->admin->id }}</span>
                                             </div>
@@ -74,7 +74,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <span class="badge bg-info">
+                                        <span class="inline-flex items-center rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
                                             {{ ucwords(str_replace('_', ' ', $audit->action->value)) }}
                                         </span>
                                     </td>

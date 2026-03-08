@@ -10,7 +10,7 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.performance.revenue_breakdown.title')" icon="fa-signal" :render-table="false">
                 <div class="table-responsive">
-                    <table class="table table-dark table-bordered table-hover table-striped mb-0 align-middle">
+                    <table class="table table-bordered table-hover table-striped mb-0 align-middle">
                         <thead class="table-secondary text-dark">
                             <tr>
                                 <th>{{ __('general.pages.reports.performance.revenue_breakdown.branch') }}</th>
@@ -24,7 +24,7 @@
                                 <tr>
                                     <td>{{ $row->branch_name }}</td>
                                     <td class="text-end">
-                                        <span class="badge bg-success">{{ currencyFormat($row->total_revenue, true) }}</span>
+                                        <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">{{ currencyFormat($row->total_revenue, true) }}</span>
                                     </td>
                                 </tr>
                             @empty
@@ -34,7 +34,7 @@
                             @endforelse
 
                             @if(count($report))
-                            <tr class="bg-success bg-opacity-25 fw-bold">
+                            <tr class="bg-emerald-50 font-bold text-slate-900">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td class="text-end">{{ currencyFormat($sum_revenue, true) }}</td>
                             </tr>

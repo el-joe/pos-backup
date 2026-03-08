@@ -23,11 +23,11 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary btn-sm me-2">
+                    <div class="col-md-3 flex items-end gap-2">
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800">
                             <i class="fa fa-check-circle"></i> {{ __('general.pages.reports.common.apply') }}
                         </button>
-                        <button type="button" wire:click="resetFilters" class="btn btn-secondary btn-sm">
+                        <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
                             <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
                         </button>
                     </div>
@@ -38,7 +38,7 @@
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.cash_register_report.title')" icon="fa-list-alt" :render-table="false">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-0">
-                        <thead class="table-light">
+                        <thead >
                             <tr>
                                 <th>{{ __('general.pages.reports.cash_register_report.opened_at') }}</th>
                                 <th>{{ __('general.pages.reports.cash_register_report.closed_at') }}</th>
@@ -76,7 +76,7 @@
                                     <td class="text-end">{{ currencyFormat($register->total_withdrawals, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($register->closing_balance, true) }}</td>
                                     <td class="text-center">
-                                        <span class="badge bg-{{ $register->status == 'open' ? 'success' : 'danger' }}">
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $register->status == 'open' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}">
                                             {{ ucfirst($register->status) }}
                                         </span>
                                     </td>

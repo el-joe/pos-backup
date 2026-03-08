@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <link href="{{ asset('template/vendors/select2/select2.min.css') }}" rel="stylesheet">
 <link href="{{ asset('adminBoard/plugins/components/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+@vite(['resources/css/gemini-tailwind.css', 'resources/js/gemini-tailwind.js'])
 <style>
 	.gemini-legacy-page {
 		color: #1f2937;

@@ -10,8 +10,8 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.tax.vat_summary.title')" icon="fa-list-alt" :render-table="false" class="mb-4">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
-                    <thead class="table-primary text-dark">
+            <table class="table table-bordered table-hover table-striped mb-0 align-middle">
+                    <thead >
                             <tr>
                                 <th>{{ __('general.pages.reports.common.metric') }}</th>
                                 <th class="text-end">{{ __('general.pages.reports.common.amount') }}</th>
@@ -26,7 +26,7 @@
                             <td>{{ __('general.pages.reports.tax.vat_summary.vat_receivable_purchases') }}</td>
                             <td class="text-end">{{ currencyFormat($report['vat_receivable'] ?? 0, true) }}</td>
                         </tr>
-                        <tr class="bg-success bg-opacity-25 fw-semibold">
+                        <tr class="bg-emerald-50 font-semibold text-slate-900">
                             <td>{{ __('general.pages.reports.tax.vat_summary.net_vat') }}</td>
                             <td class="text-end">{{ currencyFormat($report['net'] ?? 0, true) }}</td>
                         </tr>

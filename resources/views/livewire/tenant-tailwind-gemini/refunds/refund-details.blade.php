@@ -1,13 +1,13 @@
 <div class="space-y-6">
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.refunds.refund_details') . ' #' . $refund->id" :description="$refund->created_at?->format('Y-m-d H:i')" icon="fa-rotate-left">
         <x-slot:actions>
-            <a class="btn btn-outline-secondary" href="{{ route('admin.refunds.list', ['order_type' => $refund->order_type === \App\Models\Tenant\Sale::class ? 'sale' : 'purchase']) }}">
-                <i class="fa fa-arrow-left me-1"></i> {{ __('general.pages.refunds.back') }}
+            <a class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" href="{{ route('admin.refunds.list', ['order_type' => $refund->order_type === \App\Models\Tenant\Sale::class ? 'sale' : 'purchase']) }}">
+                <i class="fa fa-arrow-left"></i> {{ __('general.pages.refunds.back') }}
             </a>
             @if($order)
-                <a class="btn btn-outline-primary" target="_blank"
+                <a class="inline-flex items-center gap-2 rounded-2xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700" target="_blank"
                    href="{{ $refund->order_type === \App\Models\Tenant\Sale::class ? route('admin.sales.details', $refund->order_id) : route('admin.purchases.details', $refund->order_id) }}">
-                    <i class="fa fa-external-link me-1"></i> {{ __('general.pages.refunds.view_order') }}
+                    <i class="fa fa-external-link"></i> {{ __('general.pages.refunds.view_order') }}
                 </a>
             @endif
         </x-slot:actions>
@@ -39,7 +39,7 @@
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.refunds.refund_items')" icon="fa-cubes" :render-table="false">
         <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped align-middle">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>{{ __('general.pages.refunds.product') }}</th>
@@ -76,7 +76,7 @@
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.refunds.transactions')" icon="fa-receipt" :render-table="false">
         <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped align-middle">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>{{ __('general.pages.refunds.date') }}</th>
@@ -100,7 +100,7 @@
                                         <div class="fw-semibold mb-2">{{ __('general.pages.refunds.transaction_lines') }}</div>
                                         <div class="table-responsive">
                                             <table class="table table-sm table-bordered mb-0 align-middle">
-                                                <thead class="table-light">
+                                                <thead>
                                                     <tr>
                                                         <th>{{ __('general.pages.refunds.line_type') }}</th>
                                                         <th>{{ __('general.pages.refunds.account') }}</th>

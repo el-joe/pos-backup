@@ -10,7 +10,7 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.performance.expense_breakdown.title')" icon="fa-list-alt" :render-table="false">
                 <div class="table-responsive">
-                    <table class="table table-dark table-striped table-hover align-middle mb-0">
+                    <table class="table table-bordered table-striped table-hover align-middle mb-0">
                         <thead class="table-secondary text-dark">
                             <tr>
                                 <th>{{ __('general.pages.reports.common.category') }}</th>
@@ -37,7 +37,7 @@
                                     <td class="text-end">{{ currencyFormat($row->total_debit, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($row->total_credit, true) }}</td>
                                     <td class="text-end">
-                                        <span class="badge bg-{{ $net > 0 ? 'danger' : ($net < 0 ? 'success' : 'secondary') }}">
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $net > 0 ? 'bg-rose-100 text-rose-700' : ($net < 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-700') }}">
                                             {{ currencyFormat($net, true) }}
                                         </span>
                                     </td>
@@ -50,7 +50,7 @@
                                 </tr>
                             @endforelse
                             @if(count($report))
-                                <tr class="fw-semibold table-success text-dark">
+                                <tr class="bg-emerald-50 font-semibold text-slate-900">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td class="text-end">{{ currencyFormat($sum_debit, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($sum_credit, true) }}</td>

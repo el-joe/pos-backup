@@ -2,7 +2,7 @@
     <x-tenant-tailwind-gemini.table-card title="My Payslips" icon="fa-file-invoice-dollar" :render-table="false">
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Run</th>
@@ -11,19 +11,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($payslips as $p)
+                        @forelse($payslips as $p)
                             <tr>
                                 <td>{{ $p->id }}</td>
                                 <td>{{ $p->run?->name ?? $p->payroll_run_id }}</td>
                                 <td>{{ numFormat($p->gross_pay) }}</td>
                                 <td>{{ numFormat($p->net_pay) }}</td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                            </tr>
+                        @endforelse
                     </tbody>
             </table>
         </div>
         <x-slot:footer>
-            <div class="d-flex justify-content-center">
+            <div class="flex justify-center">
                 {{ $payslips->links('pagination::default5') }}
             </div>
         </x-slot:footer>

@@ -4,25 +4,6 @@
     <meta charset="utf-8">
     <title>{{ env('APP_NAME', 'Mohaaseb') }} | Employee Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#2563eb',
-                            600: '#1d4ed8',
-                            700: '#1e40af'
-                        }
-                    }
-                }
-            }
-        };
-    </script>
     @include('layouts.tenant-tailwind-gemini.partials.styles')
 </head>
 <body class="min-h-screen bg-stone-950 text-stone-100">

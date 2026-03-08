@@ -1,8 +1,8 @@
 <div class="space-y-6">
     <x-tenant-tailwind-gemini.table-card :title="__('general.titles.customer_payable')" :description="($customer?->name ?? '—') . ' — ' . __('general.pages.payables.total_due') . ': ' . currencyFormat($totalDue ?? 0, true)" icon="fa-user">
         <x-slot:actions>
-            <a href="{{ route('admin.users.list', ['type' => 'customer']) }}" class="btn btn-sm btn-outline-secondary">
-                <i class="fa fa-arrow-left me-1"></i> {{ __('general.pages.payables.back') }}
+            <a href="{{ route('admin.users.list', ['type' => 'customer']) }}" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                <i class="fa fa-arrow-left"></i> {{ __('general.pages.payables.back') }}
             </a>
         </x-slot:actions>
 
@@ -51,8 +51,8 @@
             </div>
 
             <div class="md:col-span-3 flex justify-end">
-                    <button class="btn btn-success" wire:click="savePayment">
-                        <i class="fa fa-check me-1"></i> {{ __('general.pages.payables.apply_payment') }}
+                    <button class="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700" wire:click="savePayment">
+                        <i class="fa fa-check"></i> {{ __('general.pages.payables.apply_payment') }}
                     </button>
             </div>
 
@@ -68,7 +68,7 @@
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.payables.due_orders')" icon="fa-file-invoice" :render-table="false">
         <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped align-middle mb-0">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>{{ __('general.pages.payables.invoice_number') }}</th>
                             <th>{{ __('general.pages.payables.date') }}</th>
@@ -90,7 +90,7 @@
                                 <td>{{ $sale->branch?->name ?? '—' }}</td>
                                 <td>{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
                                 <td>{{ currencyFormat($sale->paid_amount ?? 0, true) }}</td>
-                                <td><span class="badge bg-danger">{{ currencyFormat($sale->due_amount ?? 0, true) }}</span></td>
+                                <td><span class="inline-flex rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">{{ currencyFormat($sale->due_amount ?? 0, true) }}</span></td>
                             </tr>
                         @empty
                             <tr>

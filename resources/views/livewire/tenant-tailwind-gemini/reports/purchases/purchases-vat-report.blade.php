@@ -13,8 +13,8 @@
     <div class="col-12">
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.purchases.vat.title')" icon="fa-file-invoice-dollar" :render-table="false">
             <div class="table-responsive">
-                <table class="table table-dark table-hover table-striped align-middle mb-0">
-                        <thead class="table-light text-dark">
+                <table class="table table-bordered table-hover table-striped align-middle mb-0">
+                        <thead >
                             <tr>
                                 <th>{{ __('general.pages.reports.purchases.vat.date') }}</th>
                                 <th>{{ __('general.pages.reports.purchases.vat.vat_amount') }}</th>
@@ -38,7 +38,7 @@
                                 </tr>
                             @endforelse
                             @if(count($report))
-                                <tr class="fw-semibold bg-success bg-opacity-25">
+                                <tr class="bg-emerald-50 font-semibold text-slate-900">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ currencyFormat($total_vat, true) }}</td>
                                 </tr>

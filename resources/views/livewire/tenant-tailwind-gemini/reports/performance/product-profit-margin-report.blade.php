@@ -10,7 +10,7 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.performance.product_profit_margin.title')" icon="fa-line-chart" :render-table="false" class="mb-4">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped mb-0 table-dark align-middle">
+                <table class="table table-bordered table-hover table-striped mb-0 align-middle">
                     <thead class="table-primary text-dark">
                         <tr>
                             <th>{{ __('general.pages.reports.performance.product_profit_margin.product') }}</th>
@@ -38,7 +38,7 @@
                                 <td class="text-end">{{ currencyFormat($row->total_cogs, true) }}</td>
                                 <td class="text-end">{{ currencyFormat($row->profit, true) }}</td>
                                 <td class="text-end">
-                                    <span class="badge bg-success bg-opacity-75">{{ number_format($row->profit_margin_percent, 2) }}</span>
+                                    <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">{{ number_format($row->profit_margin_percent, 2) }}</span>
                                 </td>
                             </tr>
                         @empty
@@ -48,7 +48,7 @@
                         @endforelse
 
                         @if(count($report))
-                            <tr class="bg-success bg-opacity-25 fw-semibold">
+                            <tr class="bg-emerald-50 font-semibold text-slate-900">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td class="text-end">{{ currencyFormat($sum_sales, true) }}</td>
                                 <td class="text-end">{{ currencyFormat($sum_cogs, true) }}</td>

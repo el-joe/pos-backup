@@ -42,7 +42,7 @@
                                 <td>{{ currencyFormat($row['gross_sales'], true) }}</td>
                                 <td class="text-danger">-{{ currencyFormat($row['discount'], true) }}</td>
                                 <td class="text-danger">-{{ currencyFormat($row['sales_return'], true) }}</td>
-                                <td><span class="badge bg-success">{{ currencyFormat($row['net_sales'], true) }}</span></td>
+                                <td><span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">{{ currencyFormat($row['net_sales'], true) }}</span></td>
                                 <td>{{ currencyFormat($row['vat_payable'], true) }}</td>
                                 <td>{{ currencyFormat($row['total_collected'], true) }}</td>
                                 <td>{{ currencyFormat($row['cogs'], true) }}</td>
@@ -55,12 +55,12 @@
                             @endforelse
 
                             @if(count($report))
-                            <tr class="table-success fw-semibold">
+                            <tr class="bg-emerald-50 font-semibold text-slate-900">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td>{{ currencyFormat(collect($report)->sum('gross_sales'), true) }}</td>
                                 <td class="text-danger">-{{ currencyFormat(collect($report)->sum('discount'), true) }}</td>
                                 <td class="text-danger">-{{ currencyFormat(collect($report)->sum('sales_return'), true) }}</td>
-                                <td><span class="badge bg-success">{{ currencyFormat(collect($report)->sum('net_sales'), true) }}</span></td>
+                                <td><span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">{{ currencyFormat(collect($report)->sum('net_sales'), true) }}</span></td>
                                 <td>{{ currencyFormat(collect($report)->sum('vat_payable'), true) }}</td>
                                 <td>{{ currencyFormat(collect($report)->sum('total_collected'), true) }}</td>
                                 <td>{{ currencyFormat(collect($report)->sum('cogs'), true) }}</td>

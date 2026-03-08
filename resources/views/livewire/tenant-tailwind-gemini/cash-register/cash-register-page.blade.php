@@ -184,7 +184,7 @@
                         <div class="space-y-5">
                             <div>
                                 <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.opening_balance') }}</label>
-                                <input type="number" step="any" class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-emerald-500" wire:model="opening_balance_input">
+                                <input type="number"  wire:model="opening_balance_input" step="any" class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-emerald-500">
                             </div>
 
                             @if(admin()->branch_id === null)

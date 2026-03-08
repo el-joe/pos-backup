@@ -1,44 +1,34 @@
-<div class="col-12">
-    <div class="card shadow-sm mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.titles.hrm_attendance_sheets') }} #{{ $sheet->id }}</h5>
-            <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.hrm.attendance-sheets.list') }}">
-                <i class="fa fa-arrow-left me-1"></i> {{ __('general.pages.hrm.back') }}
-            </a>
+<div class="space-y-6">
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.titles.hrm_attendance_sheets') }}</p>
+            <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">#{{ $sheet->id }}</p>
         </div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <div class="text-inverse text-opacity-50">{{ __('general.pages.hrm.date') }}</div>
-                    <div class="fw-bold">{{ optional($sheet->date)->format('Y-m-d') }}</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="text-inverse text-opacity-50">{{ __('general.pages.hrm.department') }}</div>
-                    <div class="fw-bold">{{ $sheet->department?->name ?? '-' }}</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="text-inverse text-opacity-50">{{ __('general.pages.hrm.status') }}</div>
-                    <div class="fw-bold">{{ $sheet->status?->label() ?? '-' }}</div>
-                </div>
-            </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.hrm.date') }}</p>
+            <p class="mt-3 text-lg font-semibold text-slate-900 dark:text-white">{{ optional($sheet->date)->format('Y-m-d') }}</p>
         </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.hrm.department') }}</p>
+            <p class="mt-3 text-lg font-semibold text-slate-900 dark:text-white">{{ $sheet->department?->name ?? '-' }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.hrm.status') }}</p>
+            <p class="mt-3 text-lg font-semibold text-slate-900 dark:text-white">{{ $sheet->status?->label() ?? '-' }}</p>
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h6 class="mb-0">{{ __('general.pages.hrm.logs') }}</h6>
-        </div>
-        <div class="card-body">
+    <x-tenant-tailwind-gemini.table-card :title="__('general.titles.hrm_attendance_sheets') . ' #' . $sheet->id" icon="fa fa-calendar-check-o">
+        <x-slot:actions>
+            <a class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" href="{{ route('admin.hrm.attendance-sheets.list') }}">
+                <i class="fa fa-arrow-left"></i> {{ __('general.pages.hrm.back') }}
+            </a>
+        </x-slot:actions>
+
+        <div class="p-5">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped align-middle">
-                    <thead class="table-light">
+                <table class="table table-bordered align-middle">
+                    <thead>
                         <tr>
                             <th>{{ __('general.pages.hrm.id') }}</th>
                             <th>{{ __('general.pages.hrm.employee') }}</th>
@@ -49,7 +39,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($logs as $l)
+                        @forelse($logs as $l)
                             <tr>
                                 <td>{{ $l->id }}</td>
                                 <td>{{ $l->employee?->name ?? $l->employee_id }}</td>
@@ -58,20 +48,18 @@
                                 <td>{{ $l->status?->label() ?? '-' }}</td>
                                 <td>{{ $l->source?->label() ?? '-' }}</td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-            <div class="d-flex justify-content-center mt-3">
+
+            <div class="mt-4 flex justify-center">
                 {{ $logs->links('pagination::default5') }}
             </div>
         </div>
-
-        <div class="card-arrow">
-            <div class="card-arrow-top-left"></div>
-            <div class="card-arrow-top-right"></div>
-            <div class="card-arrow-bottom-left"></div>
-            <div class="card-arrow-bottom-right"></div>
-        </div>
-    </div>
+    </x-tenant-tailwind-gemini.table-card>
 </div>

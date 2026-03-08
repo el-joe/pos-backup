@@ -10,7 +10,7 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.performance.customer_outstanding.title')" icon="fa-user" :render-table="false">
                 <div class="table-responsive">
-                    <table class="table table-dark table-hover table-striped align-middle mb-0">
+                    <table class="table table-bordered table-hover table-striped align-middle mb-0">
                         <thead class="table-secondary text-dark">
                             <tr>
                                 <th>{{ __('general.pages.reports.performance.customer_outstanding.customer') }}</th>
@@ -36,7 +36,7 @@
                                     <td class="text-end">{{ currencyFormat($row->total_debit, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($row->total_credit, true) }}</td>
                                     <td class="text-end">
-                                        <span class="badge bg-{{ $row->balance > 0 ? 'danger' : 'success' }}">
+                                        <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $row->balance > 0 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700' }}">
                                             {{ currencyFormat($row->balance, true) }}
                                         </span>
                                     </td>
@@ -47,7 +47,7 @@
                                 </tr>
                             @endforelse
                             @if(count($report))
-                                <tr class="fw-semibold table-success text-dark">
+                                <tr class="bg-emerald-50 font-semibold text-slate-900">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td class="text-end">{{ currencyFormat($total_debit, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($total_credit, true) }}</td>

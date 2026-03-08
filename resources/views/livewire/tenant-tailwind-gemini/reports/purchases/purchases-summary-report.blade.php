@@ -14,7 +14,7 @@
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.purchases.summary.title')" icon="fa-shopping-cart" :render-table="false">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-striped mb-0 align-middle">
-                        <thead class="table-light">
+                        <thead >
                             <tr>
                                 <th>{{ __('general.pages.reports.purchases.summary.date') }}</th>
                                 <th>{{ __('general.pages.reports.purchases.summary.purchase_count') }}</th>
@@ -42,7 +42,7 @@
                                 </tr>
                             @endforelse
                             @if(count($report))
-                                <tr class="fw-semibold table-success">
+                                <tr class="bg-emerald-50 font-semibold text-slate-900">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_count }}</td>
                                     <td>{{ currencyFormat($total_value, true) }}</td>

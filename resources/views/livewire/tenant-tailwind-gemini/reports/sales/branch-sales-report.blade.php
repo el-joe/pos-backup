@@ -50,7 +50,7 @@
                                 </tr>
                             @endforelse
                             @if(count($report))
-                                <tr class="table-success fw-semibold">
+                                <tr class="bg-emerald-50 font-semibold text-slate-900">
                                     <td>{{ __('general.pages.reports.common.total') }}</td>
                                     <td>{{ $total_count }}</td>
                                     <td>{{ currencyFormat($total_sales, true) }}</td>

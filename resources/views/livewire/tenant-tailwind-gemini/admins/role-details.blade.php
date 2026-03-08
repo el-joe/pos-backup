@@ -1,134 +1,81 @@
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-
-            <!-- Role Details Card -->
-            <div class="card shadow-sm mb-4 border-primary">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3 class="card-title mb-0">
-                        <i class="fa fa-lock"></i> {{ __('general.pages.roles.role_details') }}
-                    </h3>
-                </div>
-
-                <div class="card-body">
-                    <!-- Role Name -->
-                    <div class="mb-4">
-                        <label for="roleName" class="form-label fw-semibold">{{ __('general.pages.roles.role_name') }}</label>
-                        <input type="text"
-                               class="form-control"
-                               id="roleName"
-                               name="roleName"
-                               wire:model.lazy="data.roleName"
-                               placeholder="{{ __('general.pages.roles.enter_role_name') }}">
-                    </div>
-
-                    <hr class="my-4">
-
-                    <!-- Permissions List Card -->
-                    <div class="card border-0 shadow-sm bg-light mb-4">
-                        <div class="card-header bg-secondary">
-                            <h4 class="card-title mb-0">
-                                <i class="fa fa-list-ul"></i> {{ __('general.pages.roles.permissions_list') }}
-                            </h4>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="accordion" id="permissionsAccordion">
-
-                                @foreach ($permissionsList as $key => $list)
-                                @php $collapseId = 'collapse_' . $key; @endphp
-
-                                <div class="accordion-item mb-2 border rounded">
-                                    <h2 class="accordion-header" id="heading_{{ $key }}">
-                                        <button class="accordion-button fw-semibold {{ ($collapses[$key] ?? false) ? '' : 'collapsed' }}"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#{{ $collapseId }}"
-                                                aria-expanded="{{ ($collapses[$key] ?? false) ? 'true' : 'false' }}"
-                                                aria-controls="{{ $collapseId }}"
-                                                wire:click.prevent="toggleCollapse('{{ $key }}')">
-                                            {{ __(ucwords(str_replace('_', ' ', $key))) }}
-                                        </button>
-                                    </h2>
-
-                                    <div id="{{ $collapseId }}"
-                                         class="accordion-collapse collapse {{ ($collapses[$key] ?? false) ? 'show' : '' }}"
-                                         aria-labelledby="heading_{{ $key }}"
-                                         data-bs-parent="#permissionsAccordion">
-                                        <div class="accordion-body">
-                                            <div class="row">
-                                                @foreach ($list as $per)
-                                                <div class="col-sm-6 col-md-4 mb-2">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input"
-                                                               type="checkbox"
-                                                               wire:click="setPermission('{{ $key }}','{{ $per }}', $event.target.checked)"
-                                                               id="{{ $per }}"
-                                                               {{ ($permissions["$key.$per"] ?? false) ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="{{ $per }}">
-                                                            {{ __(ucwords(str_replace(['_', $key], [' ', ''], $per))) }}
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="text-center mt-4">
-                        <button class="btn btn-success me-2" wire:click="save">
-                            <i class="fa fa-save"></i> {{ __('general.pages.roles.save_role') }}
-                        </button>
-                        <button type="reset" class="btn btn-secondary">
-                            <i class="fa fa-times"></i> {{ __('general.pages.roles.cancel') }}
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card-arrow">
-                    <div class="card-arrow-top-left"></div>
-                    <div class="card-arrow-top-right"></div>
-                    <div class="card-arrow-bottom-left"></div>
-                    <div class="card-arrow-bottom-right"></div>
-                </div>
-            </div>
+<div class="mx-auto max-w-6xl space-y-6">
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.roles.role_details') }}</p>
+            <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{{ $data['roleName'] ?? __('general.pages.roles.enter_role_name') }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.roles.permissions_list') }}</p>
+            <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">{{ collect($permissionsList ?? [])->flatten()->count() }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:col-span-2">
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.roles.role_name') }}</p>
+            <p class="mt-3 text-lg font-semibold text-slate-900 dark:text-white">{{ $current?->name ?? __('general.pages.roles.enter_role_name') }}</p>
         </div>
     </div>
-</div>
 
-@push('styles')
-{{-- <style>
-    .card {
-        border-radius: 16px;
-        border: 1.5px solid #e3e6ed;
-    }
-    .card-header {
-        padding: 16px 24px;
-    }
-    .accordion-button {
-        background-color: #f8f9fa;
-        color: #333;
-        font-weight: 600;
-        border-radius: 8px;
-    }
-    .accordion-button:not(.collapsed) {
-        background-color: #e9ecef;
-        color: #0d6efd;
-        box-shadow: none;
-    }
-    .accordion-body {
-        background-color: #fff;
-        border-top: 1px solid #dee2e6;
-    }
-    .form-check-label {
-        cursor: pointer;
-    }
-</style> --}}
-@endpush
+    <x-tenant-tailwind-gemini.table-card :title="__('general.pages.roles.role_details')" icon="fa fa-lock">
+        <div class="space-y-6 p-5">
+            <div>
+                <label for="roleName" class="mb-2 block text-sm font-semibold text-slate-900 dark:text-white">{{ __('general.pages.roles.role_name') }}</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="roleName"
+                    name="roleName"
+                    wire:model.lazy="data.roleName"
+                    placeholder="{{ __('general.pages.roles.enter_role_name') }}"
+                >
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.roles.permissions_list') }}</h3>
+                </div>
+
+                @foreach ($permissionsList as $key => $list)
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
+                        <button
+                            type="button"
+                            wire:click.prevent="toggleCollapse('{{ $key }}')"
+                            class="flex w-full items-center justify-between gap-4 px-4 py-4 text-left"
+                        >
+                            <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ __(ucwords(str_replace('_', ' ', $key))) }}</span>
+                            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 text-slate-600 dark:border-slate-600 dark:text-slate-300">
+                                <i class="fa {{ ($collapses[$key] ?? false) ? 'fa-minus' : 'fa-plus' }}"></i>
+                            </span>
+                        </button>
+
+                        @if($collapses[$key] ?? false)
+                            <div class="grid gap-3 border-t border-slate-200 px-4 py-4 md:grid-cols-2 xl:grid-cols-3 dark:border-slate-700">
+                                @foreach ($list as $per)
+                                    <label class="inline-flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-900">
+                                        <input
+                                            class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                                            type="checkbox"
+                                            wire:click="setPermission('{{ $key }}','{{ $per }}', $event.target.checked)"
+                                            id="{{ $per }}"
+                                            {{ ($permissions["$key.$per"] ?? false) ? 'checked' : '' }}
+                                        >
+                                        <span class="text-slate-700 dark:text-slate-200">{{ __(ucwords(str_replace(['_', $key], [' ', ''], $per))) }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <x-slot:footer>
+            <div class="flex flex-wrap justify-center gap-3">
+                <button class="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700" wire:click="save">
+                    <i class="fa fa-save"></i> {{ __('general.pages.roles.save_role') }}
+                </button>
+                <button type="reset" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                    <i class="fa fa-times"></i> {{ __('general.pages.roles.cancel') }}
+                </button>
+            </div>
+        </x-slot:footer>
+    </x-tenant-tailwind-gemini.table-card>
+</div>
