@@ -1,5 +1,8 @@
 <?php
     $canAccess = isset($data['can']) ? adminCan($data['can']) : true;
+    $depth = $depth ?? 0;
+    $isTopLevel = $depth === 0;
+    $labelVisibility = $isTopLevel ? 'sidebarOpen || !isDesktop' : 'true';
 ?>
 @if(isset($data['children']) && count($data['children']) > 0)
     <?php
@@ -38,18 +41,21 @@
         $checkSubscriptionStatus = subscriptionFeatureEnabled($data['subscription_check'] ?? null, true, $__current_subscription ?? null);
     ?>
     @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $checkSubscriptionStatus)) && $canAccess)
-        <div x-data="{ open: {{ $isActive ? 'true' : 'false' }} }" class="rounded-2xl border border-slate-200/80 bg-white/70 p-1 dark:border-slate-800 dark:bg-slate-900/60">
-            <button type="button" @click="open = !open" class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-start transition {{ $isActive ? 'bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-300' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800' }}">
+        <div x-data="{ open: {{ $isActive ? 'true' : 'false' }} }" class="relative" @click.away="if (isDesktop && !sidebarOpen && {{ $isTopLevel ? 'true' : 'false' }}) open = false">
+            <button type="button" @click="open = !open" class="w-full rounded-lg py-2 text-start transition {{ $isActive ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}" :class="(!sidebarOpen && isDesktop && {{ $isTopLevel ? 'true' : 'false' }}) ? 'flex items-center justify-center px-2' : 'flex items-center justify-between px-3'">
                 <span class="flex items-center gap-3">
-                    <i class="{{ $data['icon'] }} w-5 text-center"></i>
-                    <span class="text-sm font-medium">{{ __($data['translated_title']) }}</span>
+                    <i class="{{ $data['icon'] }} w-6 flex-shrink-0 text-center"></i>
+                    <span x-show="{{ $labelVisibility }}" x-cloak class="text-sm font-medium transition-opacity">{{ __($data['translated_title']) }}</span>
                 </span>
-                <i class="fa fa-chevron-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                <i x-show="{{ $labelVisibility }}" x-cloak class="fa fa-chevron-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
             </button>
 
-            <div x-show="open" x-collapse class="space-y-1 px-2 pb-2 pt-1" x-cloak>
+            <div x-show="open" x-cloak :class="(!sidebarOpen && isDesktop && {{ $isTopLevel ? 'true' : 'false' }}) ? 'absolute top-0 z-[60] w-56 rounded-xl border border-gray-200 bg-white py-2 shadow-xl dark:border-gray-700 dark:bg-gray-800 ltr:left-full ltr:ml-3 rtl:right-full rtl:mr-3' : '{{ $isTopLevel ? 'mt-1 space-y-1 ltr:ml-9 rtl:mr-9' : 'mt-1 space-y-1 ltr:ml-5 rtl:mr-5' }}'" @if($isTopLevel) x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" @else x-collapse @endif>
+                @if($isTopLevel)
+                    <div x-show="!sidebarOpen && isDesktop" x-cloak class="border-b border-gray-100 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-gray-400 dark:border-gray-700">{{ __($data['translated_title']) }}</div>
+                @endif
                 @foreach ($data['children'] as $child)
-                    {!! sidebarGemini($child) !!}
+                    {!! view('layouts.tenant-tailwind-gemini.partials.sidebar-item', ['data' => $child, 'depth' => $depth + 1])->render() !!}
                 @endforeach
             </div>
         </div>
@@ -78,9 +84,9 @@
         $link = $data['route'] == '#' ? '#' : panelAwareUrl(route($data['route'], $data['route_params'] ?? $data['request_params'] ?? null));
     @endphp
     @if((!isset($data['subscription_check']) || (isset($data['subscription_check']) && $subscriptionCheckStatus)) && $canAccess && $enabled)
-        <a href="{{ $link }}" class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition {{ request()->routeIs($data['route']) && $checkRouteParams ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800' }}">
-            <i class="{{ $data['icon'] }} w-5 text-center"></i>
-            <span>{{ __($data['translated_title']) }}</span>
+        <a href="{{ $link }}" class="group relative rounded-lg py-2 text-sm font-medium transition {{ request()->routeIs($data['route']) && $checkRouteParams ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}" :class="(!sidebarOpen && isDesktop && {{ $isTopLevel ? 'true' : 'false' }}) ? 'flex items-center justify-center px-2' : 'flex items-center gap-3 px-3'" @if($isTopLevel) :title="(!sidebarOpen && isDesktop) ? '{{ __($data['translated_title']) }}' : ''" @endif>
+            <i class="{{ $data['icon'] }} w-6 flex-shrink-0 text-center"></i>
+            <span x-show="{{ $labelVisibility }}" x-cloak class="transition-opacity">{{ __($data['translated_title']) }}</span>
         </a>
     @endif
 @endif

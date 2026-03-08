@@ -1,85 +1,97 @@
-<header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
-    <div class="flex h-16 items-center justify-between gap-3 px-4 lg:px-8">
-        <div class="flex items-center gap-3">
-            @if(!isset($withoutSidebar))
-                <button type="button" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden" @click="sidebarOpen = true">
-                    <i class="fa fa-bars"></i>
-                </button>
-            @endif
+<header class="z-40 flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 lg:px-6">
+    <div class="flex min-w-0 items-center gap-4">
+        @if(!isset($withoutSidebar))
+            <button type="button" class="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700" @click="sidebarOpen = !sidebarOpen">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
+            </button>
+        @endif
 
-            <div>
-                <div class="text-sm text-slate-500 dark:text-slate-400">{{ __('general.layout.welcome') }}</div>
-                <div class="text-lg font-semibold text-slate-900 dark:text-white">{{ admin()?->name ?? tenantSetting('business_name', tenant()->name) }}</div>
+        <div class="min-w-0">
+            <div class="hidden text-sm text-gray-500 dark:text-gray-400 md:block">{{ __('general.layout.welcome') }}</div>
+            <div class="truncate text-lg font-semibold text-gray-800 dark:text-white">{{ $title ?? admin()?->name ?? tenantSetting('business_name', tenant()->name) }}</div>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-2 lg:gap-3">
+
+        @if(isset($__branches) && count($__branches) > 0)
+            @php
+                $currentBranch = admin()?->branch_id;
+                $currentBranchName = __('general.layout.all_branches');
+                $activeBranchObj = $__branches->where('id', $currentBranch)->first();
+                if ($activeBranchObj) {
+                    $currentBranchName = $activeBranchObj->name;
+                }
+            @endphp
+            <div class="relative hidden md:block" x-data="{ open: false }" @click.away="open = false">
+                <button type="button" @click="open = !open" class="flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
+                    <i class="fa fa-building text-gray-400"></i>
+                    <span class="max-w-40 truncate">{{ $currentBranchName }}</span>
+                    <i class="fa fa-chevron-down text-[10px] transition-transform" :class="open ? 'rotate-180' : ''"></i>
+                </button>
+
+                <div x-show="open" x-transition x-cloak class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
+                    <div class="max-h-60 overflow-y-auto p-2">
+                        <a href="{{ panelAwareUrl(url('/admin/switch-branch/')) }}" class="block rounded-lg px-3 py-2 text-sm transition {{ $currentBranch == null ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' }}">{{ __('general.layout.all_branches') }}</a>
+
+                        @foreach($__branches as $b)
+                            <a href="{{ panelAwareUrl(url('/admin/switch-branch/' . $b->id)) }}" class="mt-1 block rounded-lg px-3 py-2 text-sm transition {{ $currentBranch == $b->id ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' }}">{{ $b->name }}</a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        {{-- <button type="button" @click="rtl = !rtl" class="rounded-md border border-gray-300 px-3 py-1 text-xs font-bold transition hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700">
+            <span x-text="rtl ? 'LTR' : 'RTL'"></span>
+        </button> --}}
+
+        <button type="button" @click="darkMode = !darkMode" class="rounded-full p-2 text-gray-500 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+            <svg x-show="!darkMode" x-cloak class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+            </svg>
+            <svg x-show="darkMode" x-cloak class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM4.343 4.343A1 1 0 105.757 2.93l-.707-.707A1 1 0 103.636 3.636l.707.707zm-1.414 9.9l-.707.707a1 1 0 101.414 1.414l.707-.707a1 1 0 10-1.414-1.414zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-8-6a1 1 0 100 2H3a1 1 0 100-2H2zm15 0a1 1 0 100 2h1a1 1 0 100-2h-1z" />
+            </svg>
+        </button>
+
+        <div class="relative" x-data="{ open: false }" @click.away="open = false">
+            <button type="button" @click="open = !open" class="relative rounded-full p-2 text-gray-500 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+                @if(isset($__unreaded_notifications) && count($__unreaded_notifications) > 0)
+                    <span class="absolute right-2 top-2 h-2 w-2 rounded-full border-2 border-white bg-red-500 dark:border-gray-800"></span>
+                @endif
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+            </button>
+            <div x-show="open" x-transition x-cloak class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
+                <div class="border-b border-gray-100 p-3 text-sm font-bold dark:border-gray-700">{{ __('general.layout.notifications') }}</div>
+                <div class="max-h-80 overflow-y-auto">
+                    @forelse ($__unreaded_notifications ?? [] as $notification)
+                        <div class="border-b border-gray-100 p-3 text-sm text-gray-600 last:border-0 dark:border-gray-700 dark:text-gray-200">
+                            {!! __($notification->data['translation_key'], ($notification->data['translation_params'] ?? []) + ['id' => $notification->id, 'date' => carbon($notification->created_at)->diffForHumans()]) !!}
+                        </div>
+                    @empty
+                        <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">{{ __('general.layout.no_new_notifications') }}</div>
+                    @endforelse
+                </div>
+                <div class="border-t border-gray-100 p-3 text-center dark:border-gray-700">
+                    <a href="{{ panelAwareUrl(route('admin.notifications.list')) }}" class="text-sm font-semibold text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">{{ __('general.layout.see_all') }}</a>
+                </div>
             </div>
         </div>
 
-        <div class="flex items-center gap-2 lg:gap-3">
-            @if(isset($__branches) && count($__branches) > 0)
-                @php
-                    $currentBranch = admin()?->branch_id;
-                    $currentBranchName = __('general.layout.all_branches');
-                    $activeBranchObj = $__branches->where('id', $currentBranch)->first();
-                    if($activeBranchObj) {
-                        $currentBranchName = $activeBranchObj->name;
-                    }
-                @endphp
-                <div class="hidden md:block">
-                    <select onchange="window.location.href = this.value" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-brand-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                        <option value="{{ panelAwareUrl(url('/admin/switch-branch/')) }}">{{ __('general.layout.all_branches') }}</option>
-                        @foreach($__branches as $b)
-                            <option value="{{ panelAwareUrl(url('/admin/switch-branch/' . $b->id)) }}" @selected($currentBranch == $b->id)>{{ $b->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            @endif
-
-            <a href="{{ request()->fullUrlWithQuery(['panel' => defaultLayout() === 'tenant-tailwind-gemini' ? 'hud' : 'tenant-tailwind-gemini']) }}" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
-                <i class="fa {{ defaultLayout() === 'tenant-tailwind-gemini' ? 'fa-desktop' : 'fa-wand-magic-sparkles' }}"></i>
-                <span class="hidden sm:inline">{{ defaultLayout() === 'tenant-tailwind-gemini' ? 'HUD' : 'Gemini' }}</span>
-            </a>
-
-            <button type="button" @click="darkMode = !darkMode" class="rounded-xl border border-slate-200 p-2 text-slate-500 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
-                <i class="fa" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
+        <div class="relative" x-data="{ open: false }" @click.away="open = false">
+            <button type="button" @click="open = !open" class="flex items-center gap-2 focus:outline-none">
+                <div class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-600 text-sm font-bold text-white">{{ strtoupper(substr(admin()?->name ?? 'A', 0, 1)) }}</div>
             </button>
-
-            <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                <button type="button" @click="open = !open" class="relative rounded-xl border border-slate-200 p-2 text-slate-500 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
-                    <i class="fa fa-bell"></i>
-                    @if(isset($__unreaded_notifications) && count($__unreaded_notifications) > 0)
-                        <span class="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">{{ count($__unreaded_notifications) }}</span>
-                    @endif
-                </button>
-                <div x-show="open" x-transition x-cloak class="absolute {{ $__locale == 'en' ? 'right-0' : 'left-0' }} mt-2 w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
-                    <div class="border-b border-slate-100 px-4 py-3 text-sm font-semibold dark:border-slate-800">{{ __('general.layout.notifications') }}</div>
-                    <div class="max-h-80 overflow-y-auto">
-                        @forelse ($__unreaded_notifications ?? [] as $notification)
-                            <div class="border-b border-slate-100 px-4 py-3 text-sm last:border-0 dark:border-slate-800">
-                                {!! __($notification->data['translation_key'], $notification->data['translation_params']+['id'=>$notification->id,'date'=>carbon($notification->created_at)->diffForHumans()] ?? []) !!}
-                            </div>
-                        @empty
-                            <div class="px-4 py-6 text-center text-sm text-slate-500">{{ __('general.layout.no_new_notifications') }}</div>
-                        @endforelse
-                    </div>
-                    <div class="border-t border-slate-100 px-4 py-3 text-center dark:border-slate-800">
-                        <a href="{{ panelAwareUrl(route('admin.notifications.list')) }}" class="text-sm font-semibold text-brand-600 hover:text-brand-700">{{ __('general.layout.see_all') }}</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative" x-data="{ open: false }" @click.away="open = false">
-                <button type="button" @click="open = !open" class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">{{ strtoupper(substr(admin()?->name ?? 'A', 0, 1)) }}</div>
-                    <div class="hidden text-start sm:block">
-                        <div class="text-sm font-semibold text-slate-900 dark:text-white">{{ admin()?->name }}</div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400">{{ __('general.pages.admins.name') }}</div>
-                    </div>
-                </button>
-                <div x-show="open" x-transition x-cloak class="absolute {{ $__locale == 'en' ? 'right-0' : 'left-0' }} mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl dark:border-slate-700 dark:bg-slate-900">
-                    <a href="{{ panelAwareUrl(route('admin.statistics')) }}" class="block rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800">{{ __('general.layout.dashboard') }}</a>
-                    <a href="{{ panelAwareUrl(route('admin.notifications.list')) }}" class="block rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800">{{ __('general.layout.notifications') }}</a>
-                    <div class="my-2 border-t border-slate-100 dark:border-slate-800"></div>
-                    <a href="{{ panelAwareUrl(route('admin.logout')) }}" class="block rounded-xl px-3 py-2 text-sm font-semibold text-rose-600 transition hover:bg-rose-50 dark:hover:bg-rose-500/10">{{ __('general.layout.logout') }}</a>
-                </div>
+            <div x-show="open" x-transition x-cloak class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-48 rounded-xl border border-gray-200 bg-white py-2 shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
+                <a href="{{ panelAwareUrl(route('admin.statistics')) }}" class="block px-4 py-2 text-sm transition hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('general.layout.dashboard') }}</a>
+                <a href="{{ panelAwareUrl(route('admin.notifications.list')) }}" class="block px-4 py-2 text-sm transition hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('general.layout.notifications') }}</a>
+                <div class="my-1 border-t border-gray-100 dark:border-gray-700"></div>
+                <a href="{{ panelAwareUrl(route('admin.logout')) }}" class="block px-4 py-2 text-sm font-semibold text-red-500 transition hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('general.layout.logout') }}</a>
             </div>
         </div>
     </div>

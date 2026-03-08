@@ -1876,6 +1876,9 @@ return [
         'checks' => [
             'checks' => 'الشيكات',
             'direction' => 'الاتجاه',
+            'filters' => 'الفلاتر',
+            'show_hide' => 'إظهار / إخفاء',
+            'reset' => 'إعادة تعيين',
             'status' => 'الحالة',
             'branch' => 'الفرع',
             'search' => 'بحث',

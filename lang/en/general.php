@@ -1896,6 +1896,9 @@ return [
         ],
         'checks' => [
             'checks' => 'Checks',
+            'filters' => 'Filters',
+            'show_hide' => 'Show / Hide',
+            'reset' => 'Reset',
             'direction' => 'Direction',
             'status' => 'Status',
             'branch' => 'Branch',
