@@ -50,7 +50,7 @@
 @endif
 
 @push('scripts')
-    <script src="{{ asset('hud/assets/plugins/chart.js/dist/chart.umd.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script>
         const geminiChartColor = '#2563eb';
         const geminiGridColor = 'rgba(148, 163, 184, 0.18)';

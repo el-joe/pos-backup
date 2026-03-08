@@ -56,7 +56,9 @@
             @include('layouts.tenant-tailwind-gemini.partials.header')
 
             <main class="custom-scroll flex-1 overflow-y-auto bg-gray-100 p-4 dark:bg-gray-900 lg:p-8">
-                {{ $slot }}
+                <div class="gemini-legacy-page">
+                    {{ $slot }}
+                </div>
             </main>
         </div>
     </div>
@@ -91,9 +93,11 @@
 
                     document.documentElement.classList.toggle('dark', this.darkMode);
                     document.documentElement.setAttribute('dir', this.rtl ? 'rtl' : 'ltr');
+                    document.documentElement.setAttribute('data-bs-theme', this.darkMode ? 'dark' : 'light');
 
                     this.$watch('darkMode', value => {
                         document.documentElement.classList.toggle('dark', value);
+                        document.documentElement.setAttribute('data-bs-theme', value ? 'dark' : 'light');
                         localStorage.setItem('gemini-dark-mode', value ? '1' : '0');
                     });
 
@@ -150,34 +154,7 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const currentUrl = new URL(window.location.href);
-            const panel = currentUrl.searchParams.get('panel');
-
-            if (!panel) {
-                return;
-            }
-
-            document.querySelectorAll('a[href]').forEach(anchor => {
-                const href = anchor.getAttribute('href');
-                if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) {
-                    return;
-                }
-
-                try {
-                    const url = new URL(href, window.location.origin);
-                    if (url.origin !== window.location.origin) {
-                        return;
-                    }
-
-                    if (!url.searchParams.has('panel')) {
-                        url.searchParams.set('panel', panel);
-                        anchor.setAttribute('href', url.pathname + url.search + url.hash);
-                    }
-                } catch (e) {
-                }
-            });
-        });
+        document.addEventListener('DOMContentLoaded', () => window.geminiUi?.boot());
     </script>
 </body>
 </html>

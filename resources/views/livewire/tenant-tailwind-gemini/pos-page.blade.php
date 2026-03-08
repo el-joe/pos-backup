@@ -323,9 +323,21 @@
 @livewire('admin.branches.branch-modal')
 @livewire('admin.users.user-modal')
 
-<script src="{{ asset('hud/assets/plugins/@highlightjs/cdn-assets/highlight.min.js') }}"></script>
-<script src="{{ asset('hud/assets/js/demo/highlightjs.demo.js') }}"></script>
-@include('layouts.hud.partials.select2-script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.hljs) {
+            window.hljs.highlightAll();
+        }
+    });
+
+    document.addEventListener('livewire:navigated', () => {
+        if (window.hljs) {
+            window.hljs.highlightAll();
+        }
+    });
+</script>
+@include('layouts.tenant-tailwind-gemini.partials.select2-script')
 
 <script>
     function redirectTo(url){

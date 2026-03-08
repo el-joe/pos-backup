@@ -67,7 +67,7 @@
             `);
         }
 
-       let select2Timeout = null;
+    let select2Timeout = null;
 
         function renderSelect2() {
 
@@ -101,6 +101,8 @@
             );
         }
 
+        window.renderSelect2 = renderSelect2;
+
         document.addEventListener('livewire:initialized', () => {
             renderSelect2();
 
@@ -110,6 +112,15 @@
                     renderSelect2();
                 }, 150);
             });
+        });
+
+        document.addEventListener('livewire:navigated', () => {
+            clearTimeout(select2Timeout);
+            select2Timeout = setTimeout(() => {
+                if (typeof window.renderSelect2 === 'function') {
+                    window.renderSelect2();
+                }
+            }, 150);
         });
 
 </script>

@@ -8,7 +8,17 @@
 ])
 
 @if(defaultLayout() === 'tenant-tailwind-gemini')
-    <x-tenant-tailwind-gemini.table-card :title="$title" {{ $attributes }}>
+    @php
+        $resolvedTableClass = collect(preg_split('/\s+/', trim($tableClass)) ?: [])
+            ->reject(fn ($class) => in_array($class, ['table', 'table-bordered', 'table-hover', 'table-striped', 'align-middle', 'mb-0', 'table-light']))
+            ->implode(' ');
+
+        $resolvedTheadClass = collect(preg_split('/\s+/', trim($theadClass)) ?: [])
+            ->reject(fn ($class) => in_array($class, ['table-light', 'table-primary', 'table-secondary']))
+            ->implode(' ');
+    @endphp
+
+    <x-tenant-tailwind-gemini.table-card :title="$title" :icon="$icon" {{ $attributes }}>
         @isset($actions)
             <x-slot:actions>
                 {{ $actions }}
@@ -16,13 +26,13 @@
         @endisset
 
         @if(isset($head) || count($headers))
-            <table class="min-w-full text-left text-sm rtl:text-right {{ $tableClass }}">
+            <table class="min-w-full text-left text-sm rtl:text-right {{ $resolvedTableClass }}">
                 @if(isset($head))
-                    <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800/80 dark:text-slate-400 {{ $theadClass }}">
+                    <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/70 dark:text-slate-400 {{ $resolvedTheadClass }}">
                         {{ $head }}
                     </thead>
                 @elseif(count($headers))
-                    <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800/80 dark:text-slate-400 {{ $theadClass }}">
+                    <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/70 dark:text-slate-400 {{ $resolvedTheadClass }}">
                         <tr>
                             @foreach($headers as $header)
                                 <th class="px-4 py-3">{{ $header }}</th>
@@ -36,7 +46,7 @@
                 </tbody>
             </table>
         @elseif($renderTable)
-            <table class="min-w-full text-left text-sm rtl:text-right {{ $tableClass }}">
+            <table class="min-w-full text-left text-sm rtl:text-right {{ $resolvedTableClass }}">
                 <tbody>
                     {{ $slot }}
                 </tbody>

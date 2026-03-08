@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ $__locale }}" dir="{{ $__locale != 'ar' ? 'ltr' : 'rtl' }}" x-data="{ darkMode: localStorage.getItem('gemini-dark-mode') === '1' }" :class="{ 'dark': darkMode }" x-cloak>
+<html lang="{{ $__locale }}" dir="{{ $__locale != 'ar' ? 'ltr' : 'rtl' }}" x-data="{ darkMode: localStorage.getItem('gemini-dark-mode') === '1', rtl: localStorage.getItem('gemini-rtl') === '1' || document.documentElement.getAttribute('dir') === 'rtl' }" :class="{ 'dark': darkMode }" :dir="rtl ? 'rtl' : 'ltr'" x-cloak>
 <head>
     <meta charset="utf-8">
     <title>{{ tenantSetting('business_name', tenant()->name) }} | {{ $title ?? '' }}</title>
@@ -14,7 +14,7 @@
     </script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    @include('layouts.hud.partials.styles')
+    @include('layouts.tenant-tailwind-gemini.partials.styles')
     <style>[x-cloak] { display: none !important; }</style>
     @stack('styles')
     @livewireStyles
@@ -40,17 +40,21 @@
         </header>
 
         <main class="mx-auto max-w-7xl px-4 py-6 lg:px-8">
-            {{ $slot }}
+            <div class="gemini-legacy-page">
+                {{ $slot }}
+            </div>
         </main>
     </div>
 
-    @include('layouts.hud.partials.scripts')
+    @include('layouts.tenant-tailwind-gemini.partials.scripts')
     @livewireScripts
     @stack('scripts')
     @livewire('operations')
 
     <script>
         document.documentElement.classList.toggle('dark', localStorage.getItem('gemini-dark-mode') === '1');
+        document.documentElement.setAttribute('data-bs-theme', localStorage.getItem('gemini-dark-mode') === '1' ? 'dark' : 'light');
+        document.documentElement.setAttribute('dir', localStorage.getItem('gemini-rtl') === '1' ? 'rtl' : document.documentElement.getAttribute('dir'));
 
         window.addEventListener('download-file', event => {
             window.open(event.detail[0].url, '_blank');

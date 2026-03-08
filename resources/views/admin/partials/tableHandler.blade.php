@@ -1,18 +1,24 @@
 @php
-    $isHud = defaultLayout() === 'hud';
+    $layout = defaultLayout();
+    $isHud = $layout === 'hud';
+    $isGemini = $layout === 'tenant-tailwind-gemini';
     $tableClass = $isHud
         ? 'table table-striped table-hover align-middle table-bordered mb-0'
-        : 'table table-bordered table-hover table-striped custom-table color-table primary-table';
-    $theadClass = $isHud ? 'table-primary' : '';
+        : ($isGemini
+            ? 'min-w-full text-left text-sm rtl:text-right'
+            : 'table table-bordered table-hover table-striped custom-table color-table primary-table');
+    $theadClass = $isHud
+        ? 'table-primary'
+        : ($isGemini ? 'bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/70 dark:text-slate-400' : '');
     $badgeBaseClass = $isHud ? 'bg-' : 'badge-';
 @endphp
 
-<div class="table-responsive">
+<div class="{{ $isGemini ? 'table-responsive table-handler-gemini' : 'table-responsive' }}">
     <table class="{{ $tableClass }}">
         <thead @class([$theadClass])>
             <tr>
                 @foreach ($headers as $header)
-                    <th>{{ $header }}</th>
+                    <th class="{{ $isGemini ? 'px-4 py-3 font-semibold' : '' }}">{{ $header }}</th>
                 @endforeach
             </tr>
         </thead>
@@ -23,23 +29,23 @@
                         @php $value = $row[$key] ?? null; @endphp
 
                         @if($column['type'] == 'text' || $column['type'] == 'number')
-                            <td>{{ $value }}</td>
+                            <td class="{{ $isGemini ? 'px-4 py-3 text-slate-700 dark:text-slate-200' : '' }}">{{ $value }}</td>
 
                         @elseif($column['type'] == 'decimal')
-                            <td>{{ number_format($value, 2) }}</td>
+                            <td class="{{ $isGemini ? 'px-4 py-3 text-slate-700 dark:text-slate-200' : '' }}">{{ number_format($value, 2) }}</td>
 
                         @elseif($column['type'] == 'boolean')
-                            <td>
-                                <span class="badge {{ $badgeBaseClass }}{{ $value ? 'success' : 'danger' }}">
+                            <td class="{{ $isGemini ? 'px-4 py-3' : '' }}">
+                                <span class="badge {{ $badgeBaseClass }}{{ $value ? 'success' : 'danger' }}{{ $isGemini ? ' inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold' : '' }}">
                                     {{ $value ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
 
                         @elseif($column['type'] == 'date')
-                            <td>{{ carbon($value)->format($isHud ? 'l, d M Y' : 'l ,d M Y') }}</td>
+                            <td class="{{ $isGemini ? 'px-4 py-3 text-slate-700 dark:text-slate-200' : '' }}">{{ carbon($value)->format($isHud ? 'l, d M Y' : 'l ,d M Y') }}</td>
 
                         @elseif($column['type'] == 'datetime')
-                            <td>{{ carbon($value)->format($isHud ? 'l, d M Y h:i A' : 'l ,d M Y H:i A') }}</td>
+                            <td class="{{ $isGemini ? 'px-4 py-3 text-slate-700 dark:text-slate-200' : '' }}">{{ carbon($value)->format($isHud ? 'l, d M Y h:i A' : 'l ,d M Y H:i A') }}</td>
 
                         @elseif($column['type'] == 'badge')
                             @php
@@ -64,10 +70,10 @@
                                     $value = '-----';
                                 }
                             @endphp
-                            <td class="text-center">{!! $icon !!}<span class="badge {{ $badgeClass }}">{{ $value }}</span></td>
+                            <td class="text-center {{ $isGemini ? 'px-4 py-3' : '' }}">{!! $icon !!}<span class="badge {{ $badgeClass }}{{ $isGemini ? ' inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold' : '' }}">{{ $value }}</span></td>
 
                         @elseif($column['type'] == 'actions')
-                            <td class="text-nowrap">
+                            <td class="text-nowrap {{ $isGemini ? 'px-4 py-3' : '' }}">
                                 @foreach ($column['actions'] ?? [] as $action)
                                     @php
                                         $shouldHide = isset($action['hide']) && is_callable($action['hide']) ? $action['hide']($row) : false;
@@ -93,7 +99,7 @@
                             </td>
 
                         @else
-                            <td>-----</td>
+                            <td class="{{ $isGemini ? 'px-4 py-3 text-slate-500 dark:text-slate-400' : '' }}">-----</td>
                         @endif
                     @endforeach
                 </tr>
@@ -112,7 +118,7 @@
                             @php
                                 $value = is_callable($totals[$key]) ? $totals[$key]($rows) : $totals[$key];
                             @endphp
-                            <td>{{ is_numeric($value) ? number_format($value, 2) : $value }}</td>
+                            <td class="{{ $isGemini ? 'px-4 py-3 font-semibold text-slate-900 dark:text-white' : '' }}">{{ is_numeric($value) ? number_format($value, 2) : $value }}</td>
                         @elseif(($loop->iteration) > (isset($totals['total']['colspan']) ? ($totals['total']['colspan'] + count($totals) - 1) : 0))
                             <td></td>
                         @endif
@@ -122,16 +128,35 @@
         </tbody>
     </table>
 
-    <div class="{{ $isHud ? 'd-flex justify-content-center mt-3' : 'pagination-wrapper t-a-c' }}">
+    <div class="{{ $isHud ? 'd-flex justify-content-center mt-3' : ($isGemini ? 'mt-4 flex justify-center' : 'pagination-wrapper t-a-c') }}">
         {{ $isHud ? $rows->links('pagination::default5') : $rows->links() }}
     </div>
 </div>
 
 @push('styles')
     <style>
+        .table-handler-gemini td {
+            border-bottom: 1px solid rgb(226 232 240 / 1);
+            vertical-align: middle !important;
+        }
+
+        .dark .table-handler-gemini td {
+            border-bottom-color: rgb(51 65 85 / 1);
+        }
+
+        .table-handler-gemini tbody tr:hover td {
+            background: rgb(248 250 252 / 1);
+        }
+
+        .dark .table-handler-gemini tbody tr:hover td {
+            background: rgb(15 23 42 / 0.85);
+        }
+
+        @if(!$isGemini)
         td {
             font-size: {{ $isHud ? '0.9rem' : '1.4rem' }} !important;
             vertical-align: middle !important;
         }
+        @endif
     </style>
 @endpush

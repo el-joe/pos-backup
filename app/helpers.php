@@ -54,9 +54,11 @@ if(!function_exists('resolveLivewireView')) {
         $layout = defaultLayout();
         $candidate = "livewire.{$layout}.{$pageName}";
 
-        return view()->exists($candidate)
-            ? $candidate
-            : "livewire.hud.{$pageName}";
+        if (view()->exists($candidate)) {
+            return $candidate;
+        }
+
+        return "livewire.hud.{$pageName}";
     }
 }
 
