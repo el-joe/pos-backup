@@ -1,3 +1,36 @@
+@php
+    $branches = $__branches ?? collect();
+    $currentBranch = admin()?->branch_id;
+    $currentBranchName = __('general.layout.all_branches');
+    $activeBranchObj = $branches->where('id', $currentBranch)->first() ?? null;
+
+    if ($activeBranchObj) {
+        $currentBranchName = $activeBranchObj->name;
+    }
+
+    $notificationClassMap = [
+        'd-flex align-items-center py-10px dropdown-item text-wrap fw-semibold' => 'unread-notification flex items-start gap-3 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-700/70',
+        'fs-20px' => 'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-50 text-base text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+        'text-theme' => 'text-blue-600 dark:text-blue-400',
+        'flex-1 flex-wrap ps-3' => 'min-w-0 flex-1 ltr:pl-1 rtl:pr-1',
+        'mb-1 text-inverse' => 'mb-1 text-sm font-medium text-gray-800 dark:text-gray-100',
+        'small text-inverse text-opacity-50' => 'text-xs text-gray-500 dark:text-gray-400',
+        'ps-2 fs-16px' => 'flex-shrink-0 text-sm text-gray-400 dark:text-gray-500',
+    ];
+
+    $renderNotification = static function ($notification) use ($notificationClassMap) {
+        $html = __(
+            $notification->data['translation_key'],
+            ($notification->data['translation_params'] ?? []) + [
+                'id' => $notification->id,
+                'date' => carbon($notification->created_at)->diffForHumans(),
+            ]
+        );
+
+        return strtr($html, $notificationClassMap);
+    };
+@endphp
+
 <header class="z-40 flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 lg:px-6">
     <div class="flex min-w-0 items-center gap-4">
         @if(!isset($withoutSidebar))
@@ -9,22 +42,13 @@
         @endif
 
         <div class="min-w-0">
-            <div class="hidden text-sm text-gray-500 dark:text-gray-400 md:block">{{ __('general.layout.welcome') }}</div>
             <div class="truncate text-lg font-semibold text-gray-800 dark:text-white">{{ $title ?? admin()?->name ?? tenantSetting('business_name', tenant()->name) }}</div>
         </div>
     </div>
 
     <div class="flex items-center gap-2 lg:gap-3">
 
-        @if(isset($__branches) && count($__branches) > 0)
-            @php
-                $currentBranch = admin()?->branch_id;
-                $currentBranchName = __('general.layout.all_branches');
-                $activeBranchObj = $__branches->where('id', $currentBranch)->first();
-                if ($activeBranchObj) {
-                    $currentBranchName = $activeBranchObj->name;
-                }
-            @endphp
+        @if($branches->count() > 0)
             <div class="relative hidden md:block" x-data="{ open: false }" @click.away="open = false">
                 <button type="button" @click="open = !open" class="flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">
                     <i class="fa fa-building text-gray-400"></i>
@@ -33,11 +57,24 @@
                 </button>
 
                 <div x-show="open" x-transition x-cloak class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
+                    <div class="border-b border-gray-100 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:border-gray-700">{{ __('general.layout.all_branches') }}</div>
                     <div class="max-h-60 overflow-y-auto p-2">
-                        <a href="{{ panelAwareUrl(url('/admin/switch-branch/')) }}" class="block rounded-lg px-3 py-2 text-sm transition {{ $currentBranch == null ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' }}">{{ __('general.layout.all_branches') }}</a>
+                        <a href="{{ url('/admin/switch-branch/') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition {{ empty($currentBranch) ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' }}">
+                            <i class="fa fa-th-large text-xs"></i>
+                            <span>{{ __('general.layout.all_branches') }}</span>
+                            @if(empty($currentBranch))
+                                <i class="fa fa-check ms-auto ltr:ml-auto rtl:mr-auto"></i>
+                            @endif
+                        </a>
 
-                        @foreach($__branches as $b)
-                            <a href="{{ panelAwareUrl(url('/admin/switch-branch/' . $b->id)) }}" class="mt-1 block rounded-lg px-3 py-2 text-sm transition {{ $currentBranch == $b->id ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' }}">{{ $b->name }}</a>
+                        @foreach($branches as $b)
+                            <a href="{{ url('/admin/switch-branch/' . $b->id) }}" class="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition {{ $currentBranch == $b->id ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' }}">
+                                <i class="fa fa-building-o text-xs"></i>
+                                <span class="truncate">{{ $b->name }}</span>
+                                @if($currentBranch == $b->id)
+                                    <i class="fa fa-check ms-auto ltr:ml-auto rtl:mr-auto"></i>
+                                @endif
+                            </a>
                         @endforeach
                     </div>
                 </div>
@@ -69,16 +106,16 @@
             <div x-show="open" x-transition x-cloak class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
                 <div class="border-b border-gray-100 p-3 text-sm font-bold dark:border-gray-700">{{ __('general.layout.notifications') }}</div>
                 <div class="max-h-80 overflow-y-auto">
-                    @forelse ($__unreaded_notifications ?? [] as $notification)
-                        <div class="border-b border-gray-100 p-3 text-sm text-gray-600 last:border-0 dark:border-gray-700 dark:text-gray-200">
-                            {!! __($notification->data['translation_key'], ($notification->data['translation_params'] ?? []) + ['id' => $notification->id, 'date' => carbon($notification->created_at)->diffForHumans()]) !!}
+                    @forelse (($__unreaded_notifications ?? []) as $notification)
+                        <div class="border-b border-gray-100 last:border-0 dark:border-gray-700">
+                            {!! $renderNotification($notification) !!}
                         </div>
                     @empty
                         <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">{{ __('general.layout.no_new_notifications') }}</div>
                     @endforelse
                 </div>
-                <div class="border-t border-gray-100 p-3 text-center dark:border-gray-700">
-                    <a href="{{ panelAwareUrl(route('admin.notifications.list')) }}" class="text-sm font-semibold text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">{{ __('general.layout.see_all') }}</a>
+                <div class="sticky bottom-0 border-t border-gray-100 bg-white p-3 text-center dark:border-gray-700 dark:bg-gray-800">
+                    <a href="{{ route('admin.notifications.list') }}" class="text-sm font-semibold text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">{{ __('general.layout.see_all') }}</a>
                 </div>
             </div>
         </div>
@@ -88,10 +125,13 @@
                 <div class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-600 text-sm font-bold text-white">{{ strtoupper(substr(admin()?->name ?? 'A', 0, 1)) }}</div>
             </button>
             <div x-show="open" x-transition x-cloak class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-48 rounded-xl border border-gray-200 bg-white py-2 shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
-                <a href="{{ panelAwareUrl(route('admin.statistics')) }}" class="block px-4 py-2 text-sm transition hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('general.layout.dashboard') }}</a>
-                <a href="{{ panelAwareUrl(route('admin.notifications.list')) }}" class="block px-4 py-2 text-sm transition hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('general.layout.notifications') }}</a>
+                <div class="px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-gray-400 dark:text-gray-500">{{ __('general.pages.admins.name') }}</div>
+                <div class="px-4 pb-3 text-sm font-semibold text-gray-800 dark:text-gray-100">{{ admin()?->name }}</div>
                 <div class="my-1 border-t border-gray-100 dark:border-gray-700"></div>
-                <a href="{{ panelAwareUrl(route('admin.logout')) }}" class="block px-4 py-2 text-sm font-semibold text-red-500 transition hover:bg-gray-50 dark:hover:bg-gray-700">{{ __('general.layout.logout') }}</a>
+                <a href="{{ route('admin.logout') }}" class="flex items-center px-4 py-2 text-sm font-semibold text-red-500 transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <span>{{ __('general.layout.logout') }}</span>
+                    <i class="fa fa-toggle-off ltr:ml-auto rtl:mr-auto"></i>
+                </a>
             </div>
         </div>
     </div>
