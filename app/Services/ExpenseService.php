@@ -7,6 +7,7 @@ use App\Enums\Tenant\ExpenseTypeEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Expense;
+use App\Models\Tenant\ExpenseCategory;
 use App\Repositories\ExpenseRepository;
 
 class ExpenseService
@@ -61,6 +62,7 @@ class ExpenseService
                 'amount' => $newAmount,
                 'lines' => $this->expenseLines([
                     'branch_id' => $expense->branch_id,
+                    'expense_category_id' => $expense->expense_category_id,
                     'amount'=> $newAmount,
                     'tax_percentage' => $expense->tax_percentage,
                     'total' => $expense->total,
@@ -89,6 +91,7 @@ class ExpenseService
                 'amount' => $expense->total_paid,
                 'lines' => $this->expenseLines([
                     'branch_id' => $expense->branch_id,
+                    'expense_category_id' => $expense->expense_category_id,
                     'amount'=> $expense->total_paid
                 ],true)
             ];
@@ -104,13 +107,16 @@ class ExpenseService
 
     function expenseLines($data,$reverse = false) {
         $total = $data['amount'];
+        $expenseAccount = $this->resolveExpenseAccount(
+            branchId: $data['branch_id'],
+            expenseCategoryId: $data['expense_category_id'] ?? null,
+        );
 
-        $lines[] = $this->purchaseService->createExpenseLine([
-            'branch_id' => $data['branch_id'],
-            'expenses'=> [
-                ['amount'=> $total]
-            ]
-        ],$reverse);
+        $lines[] = [
+            'account_id' => $expenseAccount->id,
+            'type' => $reverse ? 'credit' : 'debit',
+            'amount' => $total,
+        ];
 
         if(isset($data['tax_percentage']) && $data['tax_percentage'] > 0) {
             $taxAmount = ($data['amount'] * $data['tax_percentage']) / 100;
@@ -128,5 +134,22 @@ class ExpenseService
         ],'full_paid',$reverse);
 
         return $lines;
+    }
+
+    protected function resolveExpenseAccount(int $branchId, ?int $expenseCategoryId = null): Account
+    {
+        $category = $expenseCategoryId
+            ? ExpenseCategory::withTrashed()->find($expenseCategoryId)
+            : null;
+
+        $accountType = $category?->key;
+
+        if (!$accountType instanceof AccountTypeEnum) {
+            $accountType = AccountTypeEnum::EXPENSE;
+        }
+
+        $accountName = $accountType->label();
+
+        return Account::default($accountName, $accountType->value, $branchId);
     }
 }
