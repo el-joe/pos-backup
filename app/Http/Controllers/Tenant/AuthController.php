@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     function login() {
-        return view('admin.login');
+        return view(defaultLayout() === 'tenant-tailwind-gemini'
+            ? 'tenant-tailwind-gemini.auth.admin-login'
+            : 'admin.login');
     }
 
     function postLogin(Request $request) {
@@ -32,7 +34,7 @@ class AuthController extends Controller
             return back()->with('error','incorrect password!')->withInput();
         }
 
-        return redirect('admin');
+        return redirect(panelAwareUrl(route('admin.statistics')));
     }
 
     function switchBranch($branch = null) {
@@ -47,7 +49,7 @@ class AuthController extends Controller
     function logout() {
         auth(TENANT_ADMINS_GUARD)->logout();
         session()->flush();
-        return redirect()->route('admin.login');
+        return redirect(panelAwareUrl(route('admin.login')));
     }
 
     function markAsRead($id) {

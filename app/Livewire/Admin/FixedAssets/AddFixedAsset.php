@@ -3,7 +3,6 @@
 namespace App\Livewire\Admin\FixedAssets;
 
 use App\Enums\AuditLogActionEnum;
-use App\Enums\AccountTypeEnum;
 use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\FixedAsset;
@@ -27,6 +26,7 @@ class AddFixedAsset extends Component
     private CashRegisterService $cashRegisterService;
 
     public array $data = [];
+    public array $payments = [];
 
     public function boot(): void
     {
@@ -50,12 +50,110 @@ class AddFixedAsset extends Component
         $this->data['status'] = $this->data['status'] ?? FixedAsset::STATUS_ACTIVE;
 
         $this->data['payment_status'] = $this->data['payment_status'] ?? 'full_paid';
-        $this->data['payment_account'] = $this->data['payment_account'] ?? null;
-        $this->data['payment_amount'] = $this->data['payment_amount'] ?? 0;
+        $this->payments = $this->payments ?: [['account_id' => null, 'amount' => 0]];
 
         if (admin()->branch_id) {
             $this->data['branch_id'] = admin()->branch_id;
         }
+    }
+
+    public function updatedDataPaymentStatus($value): void
+    {
+        if ($value === 'pending') {
+            $this->payments = [];
+            return;
+        }
+
+        if (empty($this->payments)) {
+            $this->addPayment();
+        }
+    }
+
+    public function addPayment(): void
+    {
+        $this->payments[] = [
+            'account_id' => null,
+            'amount' => 0,
+        ];
+    }
+
+    public function removePayment($index): void
+    {
+        unset($this->payments[$index]);
+        $this->payments = array_values($this->payments);
+
+        if (($this->data['payment_status'] ?? 'pending') !== 'pending' && empty($this->payments)) {
+            $this->addPayment();
+        }
+    }
+
+    protected function paymentSummary(): array
+    {
+        $totalPaid = collect($this->payments ?? [])->sum(fn($payment) => (float)($payment['amount'] ?? 0));
+        $cost = (float)($this->data['cost'] ?? 0);
+
+        return [
+            'totalPaid' => $totalPaid,
+            'remainingDue' => max(0, $cost - $totalPaid),
+            'cost' => $cost,
+        ];
+    }
+
+    protected function validatePayments(float $cost): array|false
+    {
+        $paymentStatus = (string)($this->data['payment_status'] ?? 'pending');
+        $payments = array_values($this->payments ?? []);
+
+        if ($paymentStatus === 'pending') {
+            return [];
+        }
+
+        if (empty($payments)) {
+            $this->alert('error', __('general.pages.fixed_assets.add_first_payment'));
+            return false;
+        }
+
+        foreach ($payments as $payment) {
+            if (empty($payment['account_id'])) {
+                $this->alert('error', __('general.messages.please_select_payment_method_for_all_payments'));
+                return false;
+            }
+
+            if ((float)($payment['amount'] ?? 0) <= 0) {
+                $this->alert('error', __('general.messages.please_enter_valid_amount_for_all_payments'));
+                return false;
+            }
+        }
+
+        $totalPaid = collect($payments)->sum(fn($payment) => (float)($payment['amount'] ?? 0));
+
+        if ($totalPaid > $cost) {
+            $this->alert('error', __('general.pages.fixed_assets.payments_cannot_exceed_cost'));
+            return false;
+        }
+
+        if ($paymentStatus === 'full_paid' && abs($totalPaid - $cost) > 0.01) {
+            $this->alert('error', __('general.pages.fixed_assets.full_payment_must_equal_cost'));
+            return false;
+        }
+
+        if ($paymentStatus === 'partial_paid' && ($totalPaid <= 0 || $totalPaid >= $cost)) {
+            $this->alert('error', __('general.pages.fixed_assets.partial_payment_must_be_less_than_cost'));
+            return false;
+        }
+
+        return $payments;
+    }
+
+    protected function cashPaidAmount(array $payments): float
+    {
+        return collect($payments)->sum(function ($payment) {
+            $account = Account::with('paymentMethod')->find($payment['account_id'] ?? null);
+
+            return $account?->paymentMethod?->slug === 'cash'
+                ? (float)($payment['amount'] ?? 0)
+                : 0.0;
+        });
     }
 
     public function saveAsset(): void
@@ -74,18 +172,16 @@ class AddFixedAsset extends Component
             'data.status' => 'required|in:active,under_construction,disposed,sold',
             'data.note' => 'nullable|string',
             'data.payment_status' => 'required|in:pending,partial_paid,full_paid',
-            'data.payment_account' => 'required_if:data.payment_status,partial_paid,full_paid|integer|exists:accounts,id',
-            'data.payment_amount' => 'required_if:data.payment_status,partial_paid|numeric|min:0.01|lte:data.cost',
         ]);
 
-        $asset = DB::transaction(function () {
-            $branchId = $this->data['branch_id'] ?? (admin()->branch_id ?? null);
-            $cost = (float)($this->data['cost'] ?? 0);
+        $cost = (float)($this->data['cost'] ?? 0);
+        $payments = $this->validatePayments($cost);
+        if ($payments === false) {
+            return;
+        }
 
-            $paymentStatus = (string)($this->data['payment_status'] ?? 'pending');
-            $paidAmount = $paymentStatus === 'full_paid'
-                ? $cost
-                : ($paymentStatus === 'partial_paid' ? (float)($this->data['payment_amount'] ?? 0) : 0.0);
+        $asset = DB::transaction(function () use ($payments, $cost) {
+            $branchId = $this->data['branch_id'] ?? (admin()->branch_id ?? null);
 
             $asset = $this->fixedAssetService->save(null, [
                 'created_by' => admin()->id ?? null,
@@ -108,18 +204,20 @@ class AddFixedAsset extends Component
                 // Always record the asset invoice (debit fixed asset, credit payable)
                 $this->fixedAssetService->createPurchaseInvoice($asset, $cost, $this->data['note'] ?? '');
 
-                // Optionally record an initial payment (cash/check) to reduce payable
-                if ($paidAmount > 0) {
+                foreach ($payments as $payment) {
                     $this->fixedAssetService->addPayment($asset->id, [
                         'payment_note' => $this->data['note'] ?? null,
-                        'payment_amount' => $paidAmount,
-                        'payment_account' => $this->data['payment_account'] ?? null,
+                        'payment_amount' => (float)($payment['amount'] ?? 0),
+                        'payment_account' => $payment['account_id'] ?? null,
                         'payment_date' => $asset->purchase_date ?? now(),
                     ]);
+                }
 
+                $cashPaidAmount = $this->cashPaidAmount($payments);
+                if ($cashPaidAmount > 0) {
                     $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
                     if ($cashRegister) {
-                        $this->cashRegisterService->increment($cashRegister->id, 'total_withdrawals', $paidAmount);
+                        $this->cashRegisterService->increment($cashRegister->id, 'total_withdrawals', $cashPaidAmount);
                     }
                 }
             }
@@ -142,6 +240,7 @@ class AddFixedAsset extends Component
         $branches = $this->branchService->activeList();
         $branchId = $this->data['branch_id'] ?? (admin()->branch_id ?? null);
         $paymentAccounts = $this->accountService->getBranchPaymentAccounts($branchId);
+        extract($this->paymentSummary());
 
         return layoutView('fixed-assets.add-fixed-asset', get_defined_vars())
             ->title(__('general.pages.fixed_assets.new_fixed_asset'));

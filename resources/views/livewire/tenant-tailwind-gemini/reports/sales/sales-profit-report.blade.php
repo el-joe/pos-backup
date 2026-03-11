@@ -1,0 +1,71 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <x-tenant-tailwind-gemini.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                        <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
+                    </div>
+                </div>
+            </x-tenant-tailwind-gemini.filter-card>
+        </div>
+
+        <div class="col-12">
+            <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.sales.profit.title')" icon="fa-line-chart" :render-table="false">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+                            <thead >
+                                <tr>
+                                    <th>{{ __('general.pages.reports.sales.product.product') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.sales_revenue') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.cogs') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.gross_profit') }}</th>
+                                    <th>{{ __('general.pages.reports.sales.profit.margin_percentage') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $total_revenue = 0;
+                                    $total_cogs = 0;
+                                    $total_profit = 0;
+                                @endphp
+                                @forelse($report as $row)
+                                    @php
+                                        $total_revenue += $row->sales_revenue;
+                                        $total_cogs += $row->cogs;
+                                        $total_profit += $row->gross_profit;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $row->product_name }}</td>
+                                        <td>{{ currencyFormat($row->sales_revenue, true) }}</td>
+                                        <td>{{ currencyFormat($row->cogs, true) }}</td>
+                                        <td>{{ currencyFormat($row->gross_profit, true) }}</td>
+                                        <td>{{ currencyFormat($row->margin, true) }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-3">
+                                            {{ __('general.pages.reports.sales.profit.no_data') }}
+                                        </td>
+                                    </tr>
+                                @endforelse
+                                @if(count($report))
+                                    <tr class="bg-emerald-50 font-bold text-slate-900">
+                                        <td>{{ __('general.pages.reports.common.total') }}</td>
+                                        <td>{{ currencyFormat($total_revenue, true) }}</td>
+                                        <td>{{ currencyFormat($total_cogs, true) }}</td>
+                                        <td>{{ currencyFormat($total_profit, true) }}</td>
+                                        <td>{{ $total_revenue > 0 ? currencyFormat(($total_profit / $total_revenue * 100), true) : '0.00' }}</td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                </div>
+            </x-tenant-tailwind-gemini.table-card>
+        </div>
+    </div>
+</div>
+@push('scripts')
+    @include('layouts.tenant-tailwind-gemini.partials.daterange-picker-script')
+@endpush

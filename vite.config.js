@@ -9,6 +9,8 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/css/gemini.css',
                 'resources/js/gemini.js',
+                'resources/css/gemini-tailwind.css',
+                'resources/js/gemini-tailwind.js',
             ],
             refresh: true,
         }),

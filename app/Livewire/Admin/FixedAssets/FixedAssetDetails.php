@@ -27,7 +27,7 @@ class FixedAssetDetails extends Component
 
     public function mount(): void
     {
-        $this->asset = $this->fixedAssetService->first($this->id, ['branch', 'createdBy', 'lifespanExtensions']);
+        $this->asset = $this->fixedAssetService->first($this->id, ['branch', 'createdBy', 'lifespanExtensions', 'orderPayments.account.paymentMethod', 'checks']);
         if (!$this->asset) {
             abort(404);
         }

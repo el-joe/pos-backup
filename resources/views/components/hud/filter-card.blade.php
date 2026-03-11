@@ -5,6 +5,17 @@
     'collapsed' => false,
 ])
 
+@if(defaultLayout() === 'tenant-tailwind-gemini')
+    <x-tenant-tailwind-gemini.filter-card :title="$title" :icon="$icon" :expanded="!$collapsed" {{ $attributes }}>
+        @isset($actions)
+            <x-slot:actions>
+                {{ $actions }}
+            </x-slot:actions>
+        @endisset
+
+        {{ $slot }}
+    </x-tenant-tailwind-gemini.filter-card>
+@else
 <div {{ $attributes->class(['card shadow-sm mb-3']) }}>
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">
@@ -34,3 +45,4 @@
         <div class="card-arrow-bottom-right"></div>
     </div>
 </div>
+@endif

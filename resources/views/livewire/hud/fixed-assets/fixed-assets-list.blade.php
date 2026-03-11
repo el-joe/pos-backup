@@ -50,6 +50,7 @@
                 <th>{{ __('general.pages.fixed_assets.branch') }}</th>
                 <th>{{ __('general.pages.fixed_assets.status') }}</th>
                 <th>{{ __('general.pages.fixed_assets.payment_status') }}</th>
+                <th>{{ __('general.pages.fixed_assets.payments') }}</th>
                 <th>{{ __('general.pages.fixed_assets.due_amount') }}</th>
                 <th>{{ __('general.pages.fixed_assets.cost') }}</th>
                 <th>{{ __('general.pages.fixed_assets.net_book_value') }}</th>
@@ -93,6 +94,15 @@
                     @endphp
                     <span class="badge bg-{{ $paymentBadge }}">{{ $paymentLabel }}</span>
                 </td>
+                <td>
+                    @php($latestPayment = $asset->orderPayments->sortByDesc('id')->first())
+                    <div class="small fw-semibold">{{ $asset->orderPayments->count() }} {{ __('general.pages.fixed_assets.payments_count') }}</div>
+                    @if($latestPayment)
+                        <div class="text-muted small">
+                            {{ $latestPayment->account ? (($latestPayment->account->paymentMethod?->name ? $latestPayment->account->paymentMethod?->name.' - ' : '').$latestPayment->account->name) : __('general.messages.n_a') }}
+                        </div>
+                    @endif
+                </td>
                 <td><span class="badge bg-{{ ($asset->due_amount ?? 0) > 0 ? 'danger' : 'success' }}">{{ currencyFormat($asset->due_amount ?? 0, true) }}</span></td>
                 <td>{{ currencyFormat($asset->cost ?? 0, true) }}</td>
                 <td>{{ currencyFormat($asset->net_book_value ?? 0, true) }}</td>
@@ -107,7 +117,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="10" class="text-center">{{ __('general.pages.fixed_assets.no_records') }}</td>
+                <td colspan="11" class="text-center">{{ __('general.pages.fixed_assets.no_records') }}</td>
             </tr>
         @endforelse
         <x-slot:footer>

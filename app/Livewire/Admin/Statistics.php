@@ -14,10 +14,48 @@ class Statistics extends Component
 {
     public $data = [];
     public $filter = [];
-    public $saleOrdersPerDaylabels = [];
-    public $saleOrdersPerDayData = [];
-    public $saleOrdersPerMonthlabels = [];
-    public $saleOrdersPerMonthData = [];
+    public $dailyTrendLabels = [];
+    public $dailySalesData = [];
+    public $dailyPurchasesData = [];
+    public $dailyExpensesData = [];
+    public $monthlyTrendLabels = [];
+    public $monthlySalesData = [];
+    public $monthlyPurchasesData = [];
+    public $monthlyExpensesData = [];
+    public $operatingBreakdownLabels = [];
+    public $operatingBreakdownData = [];
+    public $collectionsSnapshotLabels = [];
+    public $collectionsSnapshotData = [];
+
+    protected function salesFilters(array $overrides = []): array
+    {
+        return array_merge([
+            'branch_id' => $this->filter['branch_id'] ?? null,
+            'customer_id' => $this->filter['customer_id'] ?? null,
+            'from_date' => $this->filter['from_date'] ?? $this->filter['date_from'] ?? null,
+            'to_date' => $this->filter['to_date'] ?? $this->filter['date_to'] ?? null,
+        ], $overrides);
+    }
+
+    protected function purchaseFilters(array $overrides = []): array
+    {
+        return array_merge([
+            'branch_id' => $this->filter['branch_id'] ?? null,
+            'supplier_id' => $this->filter['supplier_id'] ?? null,
+            'date_from' => $this->filter['date_from'] ?? $this->filter['from_date'] ?? null,
+            'date_to' => $this->filter['date_to'] ?? $this->filter['to_date'] ?? null,
+        ], $overrides);
+    }
+
+    protected function expenseFilters(array $overrides = []): array
+    {
+        return array_merge([
+            'branch_id' => $this->filter['branch_id'] ?? null,
+            'expense_category_id' => $this->filter['expense_category_id'] ?? null,
+            'date_from' => $this->filter['date_from'] ?? $this->filter['from_date'] ?? null,
+            'date_to' => $this->filter['date_to'] ?? $this->filter['to_date'] ?? null,
+        ], $overrides);
+    }
 
     protected function getRefundTotal(string $orderType): float
     {
@@ -43,70 +81,158 @@ class Statistics extends Component
 
     function getData()
     {
-
-        $sales = Sale::filter($this->filter)->get();
-        $purchases = Purchase::filter($this->filter)->get();
-        $expensesAmount = (float)Expense::filter($this->filter)->sum('amount');
+        $sales = Sale::filter($this->salesFilters())->get();
+        $purchases = Purchase::filter($this->purchaseFilters())->get();
+        $expensesAmount = (float) Expense::filter($this->expenseFilters())->sum('amount');
         $totalSales = $sales->sum(callback: fn($q)=>$q->grand_total_amount);
         $totalSalesRefunded = $this->getRefundTotal(Sale::class);
         $totalPurchaseRefunded = $this->getRefundTotal(Purchase::class);
+        $totalPurchases = (float) $purchases->sum('total_amount');
+        $salesCount = $sales->count();
+        $purchaseCount = $purchases->count();
+        $netSales = $totalSales - $totalSalesRefunded;
+        $netPurchases = $totalPurchases - $totalPurchaseRefunded;
+        $dueAmount = (float) $sales->sum('due_amount');
+        $purchaseDue = (float) $purchases->sum('due_amount');
+        $operatingProfit = $netSales - $netPurchases - $expensesAmount;
 
         $this->data['totalSales'] = $totalSales;
-        $this->data['netSales'] = $totalSales - $totalSalesRefunded;
-        $this->data['dueAmount'] = $sales->sum('due_amount');
+        $this->data['netSales'] = $netSales;
+        $this->data['dueAmount'] = $dueAmount;
         $this->data['totalSalesReturn'] = $totalSalesRefunded;
-        $this->data['totalPurchases'] = $purchases->sum('total_amount');
-        $this->data['purchaseDue'] = $purchases->sum('due_amount');
+        $this->data['totalPurchases'] = $totalPurchases;
+        $this->data['purchaseDue'] = $purchaseDue;
         $this->data['totalPurchaseReturn'] = $totalPurchaseRefunded;
         $this->data['totalExpense'] = $expensesAmount;
+        $this->data['salesCount'] = $salesCount;
+        $this->data['purchaseCount'] = $purchaseCount;
+        $this->data['averageSaleValue'] = $salesCount > 0 ? $totalSales / $salesCount : 0;
+        $this->data['averagePurchaseValue'] = $purchaseCount > 0 ? $totalPurchases / $purchaseCount : 0;
+        $this->data['salesCollectionRate'] = $totalSales > 0 ? (($totalSales - $dueAmount) / $totalSales) * 100 : 0;
+        $this->data['purchasePaymentRate'] = $totalPurchases > 0 ? (($totalPurchases - $purchaseDue) / $totalPurchases) * 100 : 0;
+        $this->data['operatingProfit'] = $operatingProfit;
+
+        $this->operatingBreakdownLabels = [
+            __('general.pages.statistics.net_sales'),
+            __('general.pages.statistics.total_purchases'),
+            __('general.pages.statistics.total_expense'),
+            __('general.pages.statistics.operating_profit'),
+        ];
+
+        $this->operatingBreakdownData = [
+            round($netSales, 2),
+            round($netPurchases, 2),
+            round($expensesAmount, 2),
+            round($operatingProfit, 2),
+        ];
+
+        $this->collectionsSnapshotLabels = [
+            __('general.pages.statistics.sales_collected'),
+            __('general.pages.statistics.due_amount'),
+            __('general.pages.statistics.purchases_paid'),
+            __('general.pages.statistics.purchase_due'),
+        ];
+
+        $this->collectionsSnapshotData = [
+            round(max($totalSales - $dueAmount, 0), 2),
+            round($dueAmount, 2),
+            round(max($totalPurchases - $purchaseDue, 0), 2),
+            round($purchaseDue, 2),
+        ];
 
 
-        $this->getMonthChartData();
-        $this->getYearChartData();
+        $this->getDailyChartData();
+        $this->getMonthlyChartData();
     }
 
-    function getMonthChartData(){
+    function getDailyChartData(){
         $from = now()->subDays(29)->startOfDay();
         $to = now()->endOfDay();
 
-        $sales = Sale::whereBetween('order_date', [
-            $from,
-            $to
-        ])->get();
+        $sales = Sale::filter($this->salesFilters([
+            'from_date' => $from->toDateString(),
+            'to_date' => $to->toDateString(),
+        ]))->get();
 
+        $purchases = Purchase::filter($this->purchaseFilters([
+            'date_from' => $from->toDateString(),
+            'date_to' => $to->toDateString(),
+        ]))->get();
 
-        $this->saleOrdersPerDaylabels = collect(CarbonPeriod::create($from,$to))->map(fn($date) => $date->format('d M'))->toArray();
+        $expenses = Expense::filter($this->expenseFilters([
+            'date_from' => $from->toDateString(),
+            'date_to' => $to->toDateString(),
+        ]))->get();
 
-        $this->saleOrdersPerDayData = collect($this->saleOrdersPerDaylabels)->map(function($label) use ($sales) {
-            $date = Carbon::createFromFormat('d M', $label)->setYear(now()->year);
-            $total = $sales->whereBetween('order_date', [
+        $period = collect(CarbonPeriod::create($from, $to));
+
+        $this->dailyTrendLabels = $period->map(fn(Carbon $date) => $date->format('d M'))->toArray();
+
+        $this->dailySalesData = $period->map(function(Carbon $date) use ($sales) {
+            return round((float) $sales->whereBetween('order_date', [
                 $date->copy()->startOfDay(),
-                $date->copy()->endOfDay()
-            ])->sum('grand_total_amount');
-            return $total;
+                $date->copy()->endOfDay(),
+            ])->sum('grand_total_amount'), 2);
+        })->toArray();
+
+        $this->dailyPurchasesData = $period->map(function(Carbon $date) use ($purchases) {
+            return round((float) $purchases->whereBetween('order_date', [
+                $date->copy()->startOfDay(),
+                $date->copy()->endOfDay(),
+            ])->sum('total_amount'), 2);
+        })->toArray();
+
+        $this->dailyExpensesData = $period->map(function(Carbon $date) use ($expenses) {
+            return round((float) $expenses->whereBetween('expense_date', [
+                $date->copy()->startOfDay(),
+                $date->copy()->endOfDay(),
+            ])->sum('amount'), 2);
         })->toArray();
     }
 
-    function getYearChartData(){
+    function getMonthlyChartData(){
         $monthsFrom = now()->subMonths(11)->startOfMonth();
         $monthsTo = now()->endOfMonth();
 
-        $monthSales = Sale::whereBetween('order_date', [
-            $monthsFrom,
-            $monthsTo
-        ])->get();
+        $sales = Sale::filter($this->salesFilters([
+            'from_date' => $monthsFrom->toDateString(),
+            'to_date' => $monthsTo->toDateString(),
+        ]))->get();
 
-        $this->saleOrdersPerMonthlabels = collect(CarbonPeriod::create($monthsFrom,$monthsTo))->map(fn($date) => $date->format('M Y'))->unique()->values()->toArray();
+        $purchases = Purchase::filter($this->purchaseFilters([
+            'date_from' => $monthsFrom->toDateString(),
+            'date_to' => $monthsTo->toDateString(),
+        ]))->get();
 
-        $this->saleOrdersPerMonthData = collect($this->saleOrdersPerMonthlabels)->map(function($label) use ($monthSales) {
-            $date = Carbon::createFromFormat('M Y', $label)->setDay(1);
-            $total = $monthSales->whereBetween('order_date', [
+        $expenses = Expense::filter($this->expenseFilters([
+            'date_from' => $monthsFrom->toDateString(),
+            'date_to' => $monthsTo->toDateString(),
+        ]))->get();
+
+        $period = collect(CarbonPeriod::create($monthsFrom, '1 month', $monthsTo));
+
+        $this->monthlyTrendLabels = $period->map(fn(Carbon $date) => $date->format('M Y'))->toArray();
+
+        $this->monthlySalesData = $period->map(function(Carbon $date) use ($sales) {
+            return round((float) $sales->whereBetween('order_date', [
                 $date->copy()->startOfMonth(),
                 $date->copy()->endOfMonth()
-            ])->sum('grand_total_amount');
-            return $total;
+            ])->sum('grand_total_amount'), 2);
         })->toArray();
 
+        $this->monthlyPurchasesData = $period->map(function(Carbon $date) use ($purchases) {
+            return round((float) $purchases->whereBetween('order_date', [
+                $date->copy()->startOfMonth(),
+                $date->copy()->endOfMonth()
+            ])->sum('total_amount'), 2);
+        })->toArray();
+
+        $this->monthlyExpensesData = $period->map(function(Carbon $date) use ($expenses) {
+            return round((float) $expenses->whereBetween('expense_date', [
+                $date->copy()->startOfMonth(),
+                $date->copy()->endOfMonth()
+            ])->sum('amount'), 2);
+        })->toArray();
     }
 
     function mount() {

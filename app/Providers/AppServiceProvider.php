@@ -27,7 +27,13 @@ class AppServiceProvider extends ServiceProvider
     {
         $defaultLayout = defaultLayout();
 
-        Paginator::defaultView('vendor.pagination.default' . ($defaultLayout == 'hud' ? '5' : ''));
+        Paginator::defaultView($defaultLayout === 'tenant-tailwind-gemini'
+            ? 'vendor.pagination.tenant-tailwind-gemini'
+            : 'vendor.pagination.default5');
+
+        Paginator::defaultSimpleView($defaultLayout === 'tenant-tailwind-gemini'
+            ? 'vendor.pagination.simple-tailwind'
+            : 'vendor.pagination.simple-default');
 
         // share layout to all views
         View::share('defaultLayout', function () use ($defaultLayout) {

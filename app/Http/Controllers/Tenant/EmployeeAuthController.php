@@ -10,7 +10,9 @@ class EmployeeAuthController extends Controller
 {
     public function login()
     {
-        return view('employee.login');
+        return view(defaultLayout() === 'tenant-tailwind-gemini'
+            ? 'tenant-tailwind-gemini.auth.employee-login'
+            : 'employee.login');
     }
 
     public function postLogin(Request $request)
@@ -33,7 +35,7 @@ class EmployeeAuthController extends Controller
             return back()->with('error', 'Incorrect password!')->withInput();
         }
 
-        return redirect()->route('employee.dashboard');
+        return redirect(panelAwareUrl(route('employee.dashboard')));
     }
 
     public function logout()
@@ -41,6 +43,6 @@ class EmployeeAuthController extends Controller
         auth(EMPLOYEES_GUARD)->logout();
         session()->flush();
 
-        return redirect()->route('employee.login');
+        return redirect(panelAwareUrl(route('employee.login')));
     }
 }

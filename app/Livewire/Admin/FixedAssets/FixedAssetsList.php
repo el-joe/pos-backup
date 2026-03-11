@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\FixedAssets;
 use App\Enums\AuditLogActionEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\AuditLog;
+use App\Models\Tenant\Account;
 use App\Services\AccountService;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
@@ -66,7 +67,8 @@ class FixedAssetsList extends Component
         ]);
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-        if ($cashRegister) {
+        $paymentAccount = Account::with('paymentMethod')->find($this->payment['account_id']);
+        if ($cashRegister && $paymentAccount?->paymentMethod?->slug === 'cash') {
             $this->cashRegisterService->increment($cashRegister->id, 'total_withdrawals', (float) $this->payment['amount']);
         }
 
@@ -113,7 +115,7 @@ class FixedAssetsList extends Component
             $this->redirectToDownload($fullPath);
         }
 
-        $assets = $this->fixedAssetService->list(relations: ['branch', 'checks'], filter: $this->filters, perPage: 10, orderByDesc: 'id');
+        $assets = $this->fixedAssetService->list(relations: ['branch', 'checks', 'orderPayments.account.paymentMethod'], filter: $this->filters, perPage: 10, orderByDesc: 'id');
         $branches = $this->branchService->activeList();
         $paymentAccounts = $this->accountService->getBranchPaymentAccounts($this->current?->branch_id);
 

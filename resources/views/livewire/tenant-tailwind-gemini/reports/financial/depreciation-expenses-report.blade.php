@@ -1,0 +1,149 @@
+<div class="container-fluid">
+    <x-tenant-tailwind-gemini.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter" class="mb-4">
+        <div class="flex justify-end mb-3">
+            <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
+                <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
+            </button>
+        </div>
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <label class="form-label fw-semibold">{{ __('general.pages.reports.common.date_range') }}</label>
+                <input type="text" data-start_date_key="from_date" data-end_date_key="to_date" class="form-control date_range" id="date_range" readonly>
+            </div>
+
+            <div class="col-sm-3">
+                <label class="form-label fw-semibold">{{ __('general.pages.reports.common.branch') }}</label>
+                <select class="form-select form-select-sm select2" name="branch_id">
+                    <option value="">{{ __('general.pages.reports.common.all_branches') }}</option>
+                    @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ (string)$branch->id === (string)$branch_id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label class="form-label fw-semibold">{{ __('general.pages.depreciation_expenses.fixed_asset') }}</label>
+                <select class="form-select form-select-sm select2" name="fixed_asset_id">
+                    <option value="">{{ __('general.pages.depreciation_expenses.all_assets') }}</option>
+                    @foreach($assets as $asset)
+                        <option value="{{ $asset->id }}" {{ (string)$asset->id === (string)$fixed_asset_id ? 'selected' : '' }}>{{ $asset->code }} - {{ $asset->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-sm-3">
+                <label class="form-label fw-semibold">{{ __('general.pages.depreciation_expenses.category') }}</label>
+                <select class="form-select form-select-sm select2" name="expense_category_id">
+                    <option value="">{{ __('general.pages.depreciation_expenses.all_categories') }}</option>
+                    @foreach($expenseCategories as $cat)
+                        <option value="{{ $cat->id }}" {{ (string)$cat->id === (string)$expense_category_id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </x-tenant-tailwind-gemini.filter-card>
+
+    @php
+        $reportItems = collect(is_iterable($report ?? null) ? $report : []);
+        $count = $reportItems->count();
+        $totalAmount = 0;
+        foreach($reportItems as $row) {
+            $totalAmount += (float) data_get($row, 'amount', 0);
+        }
+        $avg = $count ? ($totalAmount / $count) : 0;
+    @endphp
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.depreciation_expenses_report.expenses_count') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ $count }}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.depreciation_expenses_report.total_amount') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ currencyFormat($totalAmount, true) }}</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.depreciation_expenses_report.avg_amount') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ currencyFormat($avg, true) }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mb-4">
+        <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.financial.depreciation_expenses_report.top_assets_title')" icon="fa-chart-area" :render-table="false">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>{{ __('general.pages.depreciation_expenses.fixed_asset') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.financial.depreciation_expenses_report.expenses_count') }}</th>
+                                <th class="text-end">{{ __('general.pages.reports.financial.depreciation_expenses_report.total_amount') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($byAsset as $row)
+                                <tr>
+                                    <td>{{ $row['asset_name'] }}</td>
+                                    <td class="text-end">{{ $row['expenses_count'] }}</td>
+                                    <td class="text-end">{{ currencyFormat($row['total_amount'], true) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-3">{{ __('general.pages.reports.financial.depreciation_expenses_report.no_data') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+        </x-tenant-tailwind-gemini.table-card>
+    </div>
+
+    <div class="col-12">
+        <x-tenant-tailwind-gemini.table-card :title="__('general.pages.reports.financial.depreciation_expenses_report.title')" icon="fa-receipt" :render-table="false">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{{ __('general.pages.reports.common.branch') }}</th>
+                                <th>{{ __('general.pages.depreciation_expenses.fixed_asset') }}</th>
+                                <th>{{ __('general.pages.depreciation_expenses.category') }}</th>
+                                <th class="text-end">{{ __('general.pages.depreciation_expenses.amount') }}</th>
+                                <th class="text-end">{{ __('general.pages.depreciation_expenses.tax_percentage') }}</th>
+                                <th>{{ __('general.pages.depreciation_expenses.date') }}</th>
+                                <th>{{ __('general.pages.depreciation_expenses.note') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($report as $expense)
+                                <tr>
+                                    <td>{{ $expense->id }}</td>
+                                    <td>{{ $expense->branch?->name ?? '—' }}</td>
+                                    <td>{{ $expense->model?->code ?? '' }} {{ $expense->model?->name ?? $expense->model_id }}</td>
+                                    <td>{{ $expense->category?->name ?? '—' }}</td>
+                                    <td class="text-end">{{ currencyFormat($expense->amount ?? 0, true) }}</td>
+                                    <td class="text-end">{{ $expense->tax_percentage ?? 0 }}%</td>
+                                    <td>{{ $expense->expense_date }}</td>
+                                    <td>{{ $expense->note ?? '—' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted py-3">{{ __('general.pages.reports.financial.depreciation_expenses_report.no_data') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+        </x-tenant-tailwind-gemini.table-card>
+    </div>
+</div>
+
+@push('scripts')
+    @include('layouts.tenant-tailwind-gemini.partials.select2-script')
+    @include('layouts.tenant-tailwind-gemini.partials.daterange-picker-script')
+@endpush

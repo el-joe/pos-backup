@@ -10,7 +10,6 @@
             </button>
         </x-slot:actions>
 
-        <div class="row g-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.sales.filters') }}</h5>
 

@@ -100,7 +100,7 @@ class ChecksList extends Component
         }
 
         $query = Check::query()
-            ->with(['branch', 'customer', 'supplier'])
+            ->with(['branch', 'customer', 'supplier', 'payable'])
             ->when($this->filters['direction'] ?? null, fn($q) => $q->where('direction', $this->filters['direction']))
             ->when($this->filters['status'] ?? null, fn($q) => $q->where('status', $this->filters['status']))
             ->when($this->filters['branch_id'] ?? null, fn($q) => $q->where('branch_id', $this->filters['branch_id']))

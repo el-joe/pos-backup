@@ -11,84 +11,84 @@
         </x-slot:actions>
 
         <div class="row g-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('general.pages.purchases.filters') }}</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ __('general.pages.purchases.filters') }}</h5>
 
-            <button class="btn btn-sm btn-outline-primary"
-                    data-bs-toggle="collapse"
-                    aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
-                    wire:click="$toggle('collapseFilters')"
-                    data-bs-target="#branchFilterCollapse">
-                <i class="fa fa-filter me-1"></i> {{ __('general.pages.purchases.show_hide') }}
-            </button>
-        </div>
+                <button class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="collapse"
+                        aria-expanded="{{ $collapseFilters ? 'true' : 'false' }}"
+                        wire:click="$toggle('collapseFilters')"
+                        data-bs-target="#branchFilterCollapse">
+                    <i class="fa fa-filter me-1"></i> {{ __('general.pages.purchases.show_hide') }}
+                </button>
+            </div>
 
-        <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
-            <div class="card-body">
-                <div class="row g-3">
+            <div class="collapse {{ $collapseFilters ? 'show' : '' }}" id="branchFilterCollapse">
+                <div class="card-body">
+                    <div class="row g-3">
 
-                    <!-- Filter by Ref No. -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.purchases.ref_no') }}</label>
-                        <input type="text" class="form-control"
-                            placeholder="{{ __('general.pages.purchases.search_placeholder') }}"
-                            wire:model.blur="filters.ref_no">
+                        <!-- Filter by Ref No. -->
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.purchases.ref_no') }}</label>
+                            <input type="text" class="form-control"
+                                placeholder="{{ __('general.pages.purchases.search_placeholder') }}"
+                                wire:model.blur="filters.ref_no">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.purchases.due_filter') }}</label>
+                            <select class="form-select select2" name="filters.due_filter">
+                                <option value="all">{{ __('general.pages.purchases.due_filter_all') }}</option>
+                                <option value="paid">{{ __('general.pages.purchases.due_filter_paid') }}</option>
+                                <option value="unpaid">{{ __('general.pages.purchases.due_filter_unpaid') }}</option>
+                            </select>
+                        </div>
+
+                        <!-- Filter by Supplier -->
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.purchases.supplier') }}</label>
+                            <select class="form-select select2" name="filters.supplier_id">
+                                <option value="">{{ __('general.pages.purchases.all_suppliers') }}</option>
+                                @foreach ($suppliers as $supplier)
+                                    <option value="{{ $supplier->id }}" {{ ($filters['supplier_id']??'') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Filter by Branch -->
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.purchases.branch') }}</label>
+                            <select class="form-select select2" name="filters.branch_id">
+                                <option value="">{{ __('general.pages.purchases.all_branches_option') }}</option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Filter by Status -->
+                        <div class="col-md-4">
+                            <label class="form-label">{{ __('general.pages.purchases.status') }}</label>
+                            <select class="form-select select2" name="filters.status">
+                                <option value="">{{ __('general.pages.purchases.all_statuses') }}</option>
+                                @foreach (App\Enums\PurchaseStatusEnum::cases() as $status)
+                                    <option value="{{ $status->value }}" {{ ($filters['status']??'') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Reset -->
+                        <div class="col-12 d-flex justify-content-end">
+                            <button class="btn btn-secondary btn-sm"
+                                    wire:click="resetFilters">
+                                <i class="fa fa-undo me-1"></i> {{ __('general.pages.purchases.reset') }}
+                            </button>
+                        </div>
+
                     </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.purchases.due_filter') }}</label>
-                        <select class="form-select select2" name="filters.due_filter">
-                            <option value="all">{{ __('general.pages.purchases.due_filter_all') }}</option>
-                            <option value="paid">{{ __('general.pages.purchases.due_filter_paid') }}</option>
-                            <option value="unpaid">{{ __('general.pages.purchases.due_filter_unpaid') }}</option>
-                        </select>
-                    </div>
-
-                    <!-- Filter by Supplier -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.purchases.supplier') }}</label>
-                        <select class="form-select select2" name="filters.supplier_id">
-                            <option value="">{{ __('general.pages.purchases.all_suppliers') }}</option>
-                            @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}" {{ ($filters['supplier_id']??'') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Filter by Branch -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.purchases.branch') }}</label>
-                        <select class="form-select select2" name="filters.branch_id">
-                            <option value="">{{ __('general.pages.purchases.all_branches_option') }}</option>
-                            @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}" {{ ($filters['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Filter by Status -->
-                    <div class="col-md-4">
-                        <label class="form-label">{{ __('general.pages.purchases.status') }}</label>
-                        <select class="form-select select2" name="filters.status">
-                            <option value="">{{ __('general.pages.purchases.all_statuses') }}</option>
-                            @foreach (App\Enums\PurchaseStatusEnum::cases() as $status)
-                                <option value="{{ $status->value }}" {{ ($filters['status']??'') == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Reset -->
-                    <div class="col-12 d-flex justify-content-end">
-                        <button class="btn btn-secondary btn-sm"
-                                wire:click="resetFilters">
-                            <i class="fa fa-undo me-1"></i> {{ __('general.pages.purchases.reset') }}
-                        </button>
-                    </div>
-
                 </div>
             </div>
         </div>
-
     </x-hud.filter-card>
 
     <x-hud.table-card :title="__('general.pages.purchases.purchase_orders')" icon="fa-shopping-cart">
@@ -150,7 +150,7 @@
                     <i class="fa fa-eye"></i>
                 </a>
                 @endadminCan
-                @adminCan('purchases.delete')
+                @adminCan('purchases.pay')
                 <a href="#" class="btn btn-sm btn-outline-success" wire:click="setCurrent({{ $purchase->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal" data-id="{{ $purchase->id }}">
                     <i class="fa fa-credit-card"></i>
                 </a>

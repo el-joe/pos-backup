@@ -57,6 +57,7 @@
                 <th>{{ __('general.pages.checks.bank') }}</th>
                 <th>{{ __('general.pages.checks.due_date') }}</th>
                 <th>{{ __('general.pages.checks.amount') }}</th>
+                <th>{{ __('general.pages.checks.reference') }}</th>
                 <th>{{ __('general.pages.checks.customer_supplier') }}</th>
                 <th>{{ __('general.pages.checks.branch') }}</th>
                 <th style="width:220px;">{{ __('general.pages.checks.actions') }}</th>
@@ -73,8 +74,24 @@
                 <td>{{ $check->due_date?->format('Y-m-d') ?? '-' }}</td>
                 <td>{{ currencyFormat($check->amount, true) }}</td>
                 <td>
+                    @php($payable = $check->payable)
+                    @if($check->payable_type === \App\Models\Tenant\FixedAsset::class)
+                        {{ __('general.pages.fixed_assets.fixed_asset') }}: {{ $payable?->code ?? ('#'.$check->payable_id) }}
+                    @elseif($check->payable_type === \App\Models\Tenant\Sale::class)
+                        {{ __('general.pages.checks.sales') }}: {{ $payable?->invoice_number ?? ('#'.$check->payable_id) }}
+                    @elseif($check->payable_type === \App\Models\Tenant\Purchase::class)
+                        {{ __('general.pages.checks.purchase') }}: {{ $payable?->ref_no ?? ('#'.$check->payable_id) }}
+                    @else
+                        {{ class_basename((string)$check->payable_type) }} #{{ $check->payable_id }}
+                    @endif
+                </td>
+                <td>
                     @if($check->direction === 'received')
                         {{ $check->customer?->name ?? '-' }}
+                    @elseif($check->direction === 'issued' && $check->supplier)
+                        {{ $check->supplier?->name ?? '-' }}
+                    @elseif($check->payable_type === \App\Models\Tenant\FixedAsset::class)
+                        {{ $check->payable?->name ?? '-' }}
                     @else
                         {{ $check->supplier?->name ?? '-' }}
                     @endif
@@ -93,7 +110,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="10" class="text-center text-muted">{{ __('general.pages.checks.no_checks_found') }}</td>
+                <td colspan="11" class="text-center text-muted">{{ __('general.pages.checks.no_checks_found') }}</td>
             </tr>
         @endforelse
 

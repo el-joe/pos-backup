@@ -81,6 +81,9 @@ class AddPurchase extends Component
         }
 
         $this->data['is_deferred'] = $this->data['is_deferred'] ?? !!request()->get('is_deferred', false);
+        $this->data['discount_type'] = in_array(($this->data['discount_type'] ?? null), ['fixed', 'percentage'], true)
+            ? $this->data['discount_type']
+            : 'fixed';
     }
 
     public function updatingProductSearch($value)
@@ -176,8 +179,12 @@ class AddPurchase extends Component
     }
 
     function purchaseCalculations() {
+        $discountType = in_array(($this->data['discount_type'] ?? null), ['fixed', 'percentage'], true)
+            ? $this->data['discount_type']
+            : 'fixed';
+
         $orderSubTotal = PurchaseHelper::calcSubtotal($this->calcOrderProductsTotal(),$this->calcExpensesTotal());
-        $orderDiscountAmount = PurchaseHelper::calcDiscount($orderSubTotal,$this->data['discount_type'] ?? null,$this->data['discount_value'] ?? 0);
+        $orderDiscountAmount = PurchaseHelper::calcDiscount($orderSubTotal,$discountType,$this->data['discount_value'] ?? 0);
         $orderTotalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($orderSubTotal,$orderDiscountAmount);
         $orderTaxAmount = PurchaseHelper::calcTax($orderTotalAfterDiscount,$this->data['tax_rate'] ?? 0);
         $orderGrandTotal = PurchaseHelper::calcGrandTotal($orderTotalAfterDiscount,$orderTaxAmount);

@@ -23,7 +23,7 @@ class SettingsPage extends Component
     public $uploadedFiles = [];
 
     function boot(){
-        if(Setting::count() == 0){
+        if(Setting::count() == 0 || request()->has('reset')){
             $this->defaultSettings();
         }
     }
@@ -167,6 +167,17 @@ class SettingsPage extends Component
                 'group' => 'pos',
                 'options' => null
             ],
+            [
+                'title'=> 'settings.panel_layout',
+                'key'=> 'panel_layout',
+                'value' => 'hud',
+                'type' => TenantSettingEnum::SELECT->value,
+                'group' => 'system',
+                'options' => json_encode([
+                    'hud' => 'HUD',
+                    'tenant-tailwind-gemini' => 'Mohaaseb Tailwind',
+                ])
+            ],
             // [
             //     'title' => 'settings.theme_color',
             //     'key' => 'theme_color',
@@ -210,7 +221,7 @@ class SettingsPage extends Component
         ];
 
         foreach ($data as $item) {
-            Setting::updateOrCreate(
+            Setting::firstOrCreate(
                 ['key' => $item['key']],
                 $item
             );
