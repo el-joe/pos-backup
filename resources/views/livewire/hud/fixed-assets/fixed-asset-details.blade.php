@@ -138,6 +138,41 @@
     </div>
 
     <div class="card shadow-sm mt-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{{ __('general.pages.fixed_assets.payments_history') }}</h5>
+            <span class="badge bg-primary">{{ $asset->orderPayments->count() }} {{ __('general.pages.fixed_assets.payments_count') }}</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>{{ __('general.pages.fixed_assets.date') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.amount') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.method') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.note') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($asset->orderPayments->sortByDesc('id') as $payment)
+                            <tr>
+                                <td>{{ dateTimeFormat($payment->created_at, true, false) }}</td>
+                                <td>{{ currencyFormat($payment->amount ?? 0, true) }}</td>
+                                <td>{{ $payment->account ? (($payment->account->paymentMethod?->name ? $payment->account->paymentMethod?->name.' - ' : '').$payment->account->name) : __('general.messages.n_a') }}</td>
+                                <td>{{ $payment->note ?: '—' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center">{{ __('general.pages.fixed_assets.no_payments') }}</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
         <div class="card-header">
             <h5 class="mb-0">{{ __('general.pages.fixed_assets.lifespan_extensions') }}</h5>
         </div>

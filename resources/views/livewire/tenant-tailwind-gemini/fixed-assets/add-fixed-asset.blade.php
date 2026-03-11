@@ -67,30 +67,25 @@
             </div>
 
             @if(in_array(($data['payment_status'] ?? 'full_paid'), ['partial_paid', 'full_paid']))
-                <div>
-                    <label class="form-label">{{ __('general.pages.fixed_assets.payment_account') }}</label>
-                    @php($paymentAccountsList = collect($paymentAccounts ?? [])->filter())
-                    <select class="form-select select2" name="data.payment_account">
-                        <option value="">{{ __('general.pages.fixed_assets.select_payment_account') }}</option>
-                        @foreach($paymentAccountsList as $account)
-                            <option value="{{ $account->id }}" {{ ($data['payment_account'] ?? '') == $account->id ? 'selected' : '' }}>
-                                {{ $account->paymentMethod?->name }} - {{ $account->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('data.payment_account')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-            @endif
-
-            @if(($data['payment_status'] ?? '') === 'partial_paid')
-                <div>
-                    <label class="form-label">{{ __('general.pages.fixed_assets.paid_amount') }}</label>
-                    <input type="number" step="0.01" min="0" class="form-control" wire:model="data.payment_amount">
-                    @error('data.payment_amount')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+                <div class="md:col-span-2 xl:col-span-2">
+                    <label class="form-label">{{ __('general.pages.fixed_assets.payment_distribution') }}</label>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+                        <div class="grid gap-3 md:grid-cols-3 md:items-center">
+                            <div>
+                                <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.fixed_assets.total_paid') }}</p>
+                                <p class="mt-2 text-base font-semibold text-slate-900 dark:text-white">{{ currencyFormat($totalPaid ?? 0, true) }}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.fixed_assets.due_amount') }}</p>
+                                <p class="mt-2 text-base font-semibold text-rose-600 dark:text-rose-400">{{ currencyFormat($remainingDue ?? 0, true) }}</p>
+                            </div>
+                            <div class="md:text-end">
+                                <button type="button" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" data-bs-toggle="modal" data-bs-target="#fixedAssetPaymentsModal">
+                                    <i class="fa fa-credit-card"></i> {{ __('general.pages.fixed_assets.manage_payments') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
 
@@ -147,6 +142,73 @@
             </div>
         </x-slot:footer>
     </x-tenant-tailwind-gemini.table-card>
+
+    <div class="modal fade" id="fixedAssetPaymentsModal" tabindex="-1" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-xl">
+                <div class="rounded-3xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+                    <div class="flex items-center justify-between rounded-t-3xl bg-slate-900 px-6 py-4 text-white dark:bg-slate-800">
+                        <h5 class="text-base font-semibold"><i class="fa fa-credit-card me-2"></i>{{ __('general.pages.fixed_assets.manage_payments') }}</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="mb-4 grid gap-3 rounded-2xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900 md:grid-cols-3 dark:border-sky-900/60 dark:bg-sky-950/30 dark:text-sky-100">
+                            <div><strong>{{ __('general.pages.fixed_assets.cost') }}:</strong> {{ currencyFormat($cost ?? 0, true) }}</div>
+                            <div><strong>{{ __('general.pages.fixed_assets.total_paid') }}:</strong> {{ currencyFormat($totalPaid ?? 0, true) }}</div>
+                            <div><strong>{{ __('general.pages.fixed_assets.due_amount') }}:</strong> {{ currencyFormat($remainingDue ?? 0, true) }}</div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="table table-bordered align-middle mb-3">
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('general.pages.fixed_assets.payment_account') }}</th>
+                                        <th>{{ __('general.pages.fixed_assets.amount') }}</th>
+                                        <th class="text-center">{{ __('general.pages.fixed_assets.action') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($payments as $index => $payment)
+                                        <tr>
+                                            <td>
+                                                <select class="form-select" wire:model="payments.{{ $index }}.account_id">
+                                                    <option value="">{{ __('general.pages.fixed_assets.select_payment_account') }}</option>
+                                                    @foreach (collect($paymentAccounts ?? [])->filter() as $account)
+                                                        <option value="{{ data_get($account, 'id') }}">{{ data_get($account, 'paymentMethod.name') }} - {{ data_get($account, 'name') }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" wire:model="payments.{{ $index }}.amount" step="0.01" min="0">
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-rose-600 text-white transition hover:bg-rose-700" wire:click="removePayment({{ $index }})">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.fixed_assets.no_payment_rows') }}</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button type="button" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" wire:click="addPayment">
+                            <i class="fa fa-plus"></i> {{ __('general.pages.fixed_assets.add_payment') }}
+                        </button>
+                    </div>
+
+                    <div class="flex justify-end px-6 pb-6">
+                        <button type="button" class="inline-flex items-center gap-2 rounded-2xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700" data-bs-dismiss="modal">{{ __('general.pages.fixed_assets.close') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @push('scripts')

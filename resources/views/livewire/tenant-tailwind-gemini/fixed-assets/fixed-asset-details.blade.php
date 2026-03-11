@@ -135,6 +135,40 @@
         </div>
     </x-tenant-tailwind-gemini.table-card>
 
+    <x-tenant-tailwind-gemini.table-card :title="__('general.pages.fixed_assets.payments_history')" icon="fa fa-credit-card">
+        <x-slot:actions>
+            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">{{ $asset->orderPayments->count() }} {{ __('general.pages.fixed_assets.payments_count') }}</span>
+        </x-slot:actions>
+        <div class="p-5">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>{{ __('general.pages.fixed_assets.date') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.amount') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.method') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.note') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($asset->orderPayments->sortByDesc('id') as $payment)
+                            <tr>
+                                <td>{{ dateTimeFormat($payment->created_at, true, false) }}</td>
+                                <td>{{ currencyFormat($payment->amount ?? 0, true) }}</td>
+                                <td>{{ $payment->account ? (($payment->account->paymentMethod?->name ? $payment->account->paymentMethod?->name.' - ' : '').$payment->account->name) : __('general.messages.n_a') }}</td>
+                                <td>{{ $payment->note ?: '—' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.fixed_assets.no_payments') }}</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </x-tenant-tailwind-gemini.table-card>
+
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.fixed_assets.lifespan_extensions')" icon="fa fa-calendar-plus-o">
         <div class="p-5">
             <div class="table-responsive">

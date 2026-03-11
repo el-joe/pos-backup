@@ -29,7 +29,7 @@ class CheckService
         return DB::transaction(function () use ($check, $collectedAccountId, $note) {
             $branchId = $check->branch_id;
 
-            $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branchId);
+            $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branchId,'check');
             $bankOrCash = $collectedAccountId
                 ? Account::findOrFail($collectedAccountId)
                 : Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
@@ -85,7 +85,7 @@ class CheckService
         return DB::transaction(function () use ($check, $note) {
             $branchId = $check->branch_id;
 
-            $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branchId);
+            $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branchId,'check');
 
             // Customer receivable account
             $customerAccount = Account::where('model_type', \App\Models\Tenant\User::class)

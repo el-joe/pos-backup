@@ -136,7 +136,7 @@ class FixedAssetService
         if ($methodSlug === 'check') {
             $creditAccount = Account::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branchId);
         } else {
-            $creditAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
+            $creditAccount = $paymentAccount;
         }
 
         $this->transactionService->create([

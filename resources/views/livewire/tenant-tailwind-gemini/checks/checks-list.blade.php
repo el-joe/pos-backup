@@ -72,6 +72,7 @@
                     <th class="px-5 py-3 font-semibold">{{ __('general.pages.checks.bank') }}</th>
                     <th class="px-5 py-3 font-semibold">{{ __('general.pages.checks.due_date') }}</th>
                     <th class="px-5 py-3 font-semibold">{{ __('general.pages.checks.amount') }}</th>
+                    <th class="px-5 py-3 font-semibold">{{ __('general.pages.checks.reference') }}</th>
                     <th class="px-5 py-3 font-semibold">{{ __('general.pages.checks.customer_supplier') }}</th>
                     <th class="px-5 py-3 font-semibold">{{ __('general.pages.checks.branch') }}</th>
                     <th class="px-5 py-3 font-semibold w-56">{{ __('general.pages.checks.actions') }}</th>
@@ -92,8 +93,24 @@
                         <td class="px-5 py-4">{{ $check->due_date?->format('Y-m-d') ?? '-' }}</td>
                         <td class="px-5 py-4 font-semibold text-slate-900 dark:text-white">{{ currencyFormat($check->amount, true) }}</td>
                         <td class="px-5 py-4">
+                            @php($payable = $check->payable)
+                            @if($check->payable_type === \App\Models\Tenant\FixedAsset::class)
+                                {{ __('general.pages.fixed_assets.fixed_asset') }}: {{ $payable?->code ?? ('#'.$check->payable_id) }}
+                            @elseif($check->payable_type === \App\Models\Tenant\Sale::class)
+                                {{ __('general.pages.sales.sale') }}: {{ $payable?->invoice_number ?? ('#'.$check->payable_id) }}
+                            @elseif($check->payable_type === \App\Models\Tenant\Purchase::class)
+                                {{ __('general.pages.purchases.purchase') }}: {{ $payable?->ref_no ?? ('#'.$check->payable_id) }}
+                            @else
+                                {{ class_basename((string)$check->payable_type) }} #{{ $check->payable_id }}
+                            @endif
+                        </td>
+                        <td class="px-5 py-4">
                             @if($check->direction === 'received')
                                 {{ $check->customer?->name ?? '-' }}
+                            @elseif($check->direction === 'issued' && $check->supplier)
+                                {{ $check->supplier?->name ?? '-' }}
+                            @elseif($check->payable_type === \App\Models\Tenant\FixedAsset::class)
+                                {{ $check->payable?->name ?? '-' }}
                             @else
                                 {{ $check->supplier?->name ?? '-' }}
                             @endif
@@ -120,7 +137,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="10" class="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                        <td colspan="11" class="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
                             {{ __('general.pages.checks.no_checks_found') }}
                         </td>
                     </tr>
