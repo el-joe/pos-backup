@@ -36,12 +36,11 @@ if(!function_exists('cacheKey')) {
 if(!function_exists('defaultLayout')) {
     function defaultLayout(){
         if (!tenant()) {
-            return request()?->query('panel', 'hud') === 'tenant-tailwind-gemini'
-                ? 'tenant-tailwind-gemini'
-                : 'hud';
+            return 'hud';
         }
 
-        $layout = tenantSetting('panel_layout', 'hud');
+        // $layout = tenantSetting('panel_layout', 'hud');
+        $layout = 'hud';
 
         return in_array($layout, ['hud', 'tenant-tailwind-gemini'], true)
             ? $layout
