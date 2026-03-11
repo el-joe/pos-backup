@@ -29,13 +29,14 @@ class IncomeStatmentReport extends Component
         $fromDate = carbon($this->from_date)->startOfDay()->format('Y-m-d H:i:s');
         $toDate = carbon($this->to_date)->endOfDay()->format('Y-m-d H:i:s');
         $rows = DB::table('transaction_lines')
+            ->join('transactions', 'transactions.id', '=', 'transaction_lines.transaction_id')
             ->join('accounts', 'accounts.id', '=', 'transaction_lines.account_id')
             ->select(
                 'accounts.type as account_type',
                 DB::raw('SUM(CASE WHEN transaction_lines.type = "debit" THEN transaction_lines.amount ELSE 0 END) as debit_total'),
                 DB::raw('SUM(CASE WHEN transaction_lines.type = "credit" THEN transaction_lines.amount ELSE 0 END) as credit_total')
             )
-            ->whereBetween('transaction_lines.created_at', [$fromDate, $toDate])
+            ->whereBetween('transactions.date', [$fromDate, $toDate])
             ->groupBy('accounts.type')
             ->get();
 
@@ -60,7 +61,8 @@ class IncomeStatmentReport extends Component
 
         // Revenue
         $grossSales = (float) ($accounts[AccountTypeEnum::SALES->value]['credit'] ?? 0);
-        $salesReturn = (float) ($accounts[AccountTypeEnum::SALES->value]['debit'] ?? 0);
+        $salesReturn = (float) ($accounts[AccountTypeEnum::SALES->value]['debit'] ?? 0)
+            + $net(AccountTypeEnum::SALES_RETURN, 'debit');
         $salesDiscount = $net(AccountTypeEnum::SALES_DISCOUNT, 'debit');
         $revenue = $grossSales - $salesDiscount - $salesReturn;
 
