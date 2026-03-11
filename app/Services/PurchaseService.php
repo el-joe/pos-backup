@@ -57,6 +57,9 @@ class PurchaseService
         }
 
         $isDeferred = (bool)($data['is_deferred'] ?? false);
+        $discountType = in_array(($data['discount_type'] ?? null), ['fixed', 'percentage'], true)
+            ? $data['discount_type']
+            : 'fixed';
 
         // fill purchase data
         $status = PurchaseStatusEnum::from($data['payment_status'] ?? 'pending')->value;
@@ -65,7 +68,7 @@ class PurchaseService
             'branch_id' => $data['branch_id'],
             'ref_no' => $data['ref_no'],
             'order_date' => $data['order_date'],
-            'discount_type' => $data['discount_type'] ?? 'fixed',
+            'discount_type' => $discountType,
             'discount_value' => $data['discount_value'] ?? 0,
             'tax_id' => $data['tax_id'] ?? null,
             'tax_percentage' => $data['tax_rate'] ?? $data['tax_percentage'] ?? 0,
