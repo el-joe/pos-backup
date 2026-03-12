@@ -389,6 +389,10 @@ class PosPage extends Component
 
         $categories = $this->categoryService->activeList();
 
+        if($this->step == 2){
+            dd($products);
+        }
+
         return layoutView('pos-page', get_defined_vars());
     }
 }
