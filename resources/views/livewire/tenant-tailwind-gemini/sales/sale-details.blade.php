@@ -101,28 +101,28 @@
             </div>
         @elseif($activeTab === 'products')
             <div class="p-5">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                        <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
                             <tr>
-                                <th>{{ __('general.pages.sales.product') }}</th>
-                                <th>{{ __('general.pages.sales.quantity') }}</th>
-                                <th>{{ __('general.pages.sales.refunded') }}</th>
-                                <th>{{ __('general.pages.sales.unit_price') }}</th>
-                                <th>{{ __('general.pages.sales.total') }}</th>
-                                <th>{{ __('general.pages.sales.refund_status') }}</th>
-                                <th>{{ __('general.pages.sales.action') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sales.product') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sales.quantity') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sales.refunded') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sales.unit_price') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sales.total') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sales.refund_status') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.sales.action') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                             @forelse($order->saleItems as $item)
                                 <tr>
-                                    <td class="font-semibold">{{ $item->product?->name }} - {{ $item->unit?->name }}</td>
-                                    <td>{{ $item->qty }}</td>
-                                    <td>{{ $item->refunded_qty }}</td>
-                                    <td>{{ currencyFormat($item->sell_price, true) }}</td>
-                                    <td>{{ currencyFormat($item->total, true) }}</td>
-                                    <td>
+                                    <td class="px-4 py-4 font-semibold text-slate-900 dark:text-white">{{ $item->product?->name }} - {{ $item->unit?->name }}</td>
+                                    <td class="px-4 py-4">{{ $item->qty }}</td>
+                                    <td class="px-4 py-4">{{ $item->refunded_qty }}</td>
+                                    <td class="px-4 py-4">{{ currencyFormat($item->sell_price, true) }}</td>
+                                    <td class="px-4 py-4">{{ currencyFormat($item->total, true) }}</td>
+                                    <td class="px-4 py-4">
                                         @if($item->actual_qty <= 0)
                                             <span class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{{ __('general.pages.sales.fully_refunded') }}</span>
                                         @elseif($item->actual_qty < $item->qty)
@@ -131,13 +131,13 @@
                                             <span class="inline-flex rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700 dark:bg-sky-500/10 dark:text-sky-300">{{ __('general.pages.sales.not_refunded') }}</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="px-4 py-4 text-right">
                                         @if($item->actual_qty <= 0)
                                             <button class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-400 dark:border-slate-700 dark:text-slate-500" disabled>
                                                 <i class="fa fa-check"></i> {{ __('general.pages.sales.refund') }}
                                             </button>
                                         @else
-                                            <button class="inline-flex items-center gap-2 rounded-2xl bg-rose-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-rose-700" wire:click="setCurrentItem({{ $item->id }})" data-toggle="modal" data-target="#refundModal">
+                                            <button class="inline-flex items-center gap-2 rounded-2xl bg-rose-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-rose-700" wire:click="setCurrentItem({{ $item->id }})" data-bs-toggle="modal" data-bs-target="#refundModal">
                                                 <i class="fa fa-undo"></i> {{ __('general.pages.sales.refund') }}
                                             </button>
                                         @endif
@@ -145,7 +145,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                    <td colspan="7" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -154,38 +154,38 @@
             </div>
         @else
             <div class="p-5">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                        <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
                             <tr>
-                                <th>{{ __('general.pages.purchases.transaction_lines.id') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.transaction_id') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.type') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.branch') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.reference') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.note') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.date') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.account') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.debit') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.credit') }}</th>
-                                <th>{{ __('general.pages.purchases.transaction_lines.created_at') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.id') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.transaction_id') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.type') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.branch') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.reference') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.note') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.date') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.account') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.purchases.transaction_lines.debit') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.purchases.transaction_lines.credit') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.purchases.transaction_lines.created_at') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                             @php $totals = ['debit' => 0, 'credit' => 0]; @endphp
                             @forelse($transactionLines as $transaction)
                                 <tr>
-                                    <td>{{ $transaction->id }}</td>
-                                    <td>{{ $transaction->transaction_id ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $transaction->type ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $transaction->branch ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $transaction->reference ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $transaction->note ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $transaction->date ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $transaction->account ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
-                                    <td>{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
-                                    <td>{{ $transaction->created_at ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->id }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->transaction_id ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->type ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->branch ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->reference ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->note ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->date ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->account ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4 text-right">{{ $transaction->line_type == 'debit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                    <td class="px-4 py-4 text-right">{{ $transaction->line_type == 'credit' ? $transaction->amount : currencyFormat('0', true) }}</td>
+                                    <td class="px-4 py-4">{{ $transaction->created_at ?? __('general.messages.n_a') }}</td>
                                 </tr>
                                 @php
                                     if ($transaction->line_type == 'debit') {
@@ -196,15 +196,15 @@
                                 @endphp
                             @empty
                                 <tr>
-                                    <td colspan="11" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                    <td colspan="11" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
                                 </tr>
                             @endforelse
                             @if(count($transactionLines ?? []))
                                 <tr class="bg-slate-50 font-semibold dark:bg-slate-800/60">
-                                    <td colspan="8" class="text-{{ app()->getLocale() == 'ar' ? 'end' : 'start' }}">{{ __('general.pages.purchases.transaction_lines.total') }}</td>
-                                    <td>{{ currencyFormat($totals['debit'], true) }}</td>
-                                    <td>{{ currencyFormat($totals['credit'], true) }}</td>
-                                    <td></td>
+                                    <td colspan="8" class="px-4 py-4 text-{{ app()->getLocale() == 'ar' ? 'end' : 'start' }}">{{ __('general.pages.purchases.transaction_lines.total') }}</td>
+                                    <td class="px-4 py-4 text-right">{{ currencyFormat($totals['debit'], true) }}</td>
+                                    <td class="px-4 py-4 text-right">{{ currencyFormat($totals['credit'], true) }}</td>
+                                    <td class="px-4 py-4"></td>
                                 </tr>
                             @endif
                         </tbody>
@@ -219,7 +219,7 @@
             <div class="modal-content refund-modal-content">
                 <div class="modal-header refund-modal-header">
                     <h5 class="modal-title mx-auto"><i class="fa fa-undo"></i> {{ __('general.pages.sales.refund_item') }}</h5>
-                    <button type="button" class="close refund-close" data-dismiss="modal" aria-label="Close">&times;</button>
+                    <button type="button" class="close refund-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="refund-warning">
@@ -229,16 +229,16 @@
                             <strong class="refund-product-name">{{ $currentItem?->product?->name }} - {{ $currentItem?->unit?->name }}</strong>
                         </div>
                     </div>
-                    <div class="form-group mt-3">
+                    <div class="mt-3">
                         <label for="refundQty"><strong>{{ __('general.pages.sales.quantity_to_refund') }}</strong></label>
-                        <input type="number" class="form-control refund-input" id="refundQty" min="1" max="{{ $currentItem?->actual_qty ?? 1 }}" wire:model="refundedQty">
-                        <small class="form-text text-muted">{{ __('general.pages.sales.max_refundable') }} {{ $currentItem?->actual_qty ?? 1 }}</small>
+                        <input type="number" class="refund-input mt-2 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-500" id="refundQty" min="1" max="{{ $currentItem?->actual_qty ?? 1 }}" wire:model="refundedQty">
+                        <small class="mt-2 block text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.max_refundable') }} {{ $currentItem?->actual_qty ?? 1 }}</small>
                     </div>
                 </div>
-                <div class="modal-footer justify-content-end">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('general.pages.sales.cancel') }}</button>
+                <div class="modal-footer justify-content-end gap-2">
+                    <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" data-bs-dismiss="modal">{{ __('general.pages.sales.cancel') }}</button>
                     @if ($currentItem)
-                    <button type="button" class="btn btn-danger" wire:click="refundSaleItem">
+                    <button type="button" class="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700" wire:click="refundSaleItem">
                         <i class="fa fa-check"></i> {{ __('general.pages.sales.confirm_refund') }}
                     </button>
                     @endif

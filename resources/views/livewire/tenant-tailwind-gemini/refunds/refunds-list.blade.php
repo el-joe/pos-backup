@@ -22,12 +22,14 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.titles.refunds')" icon="fa-undo">
         <x-slot:actions>
-            <a class="btn btn-primary" href="{{ route('admin.refunds.create') }}">
-                <i class="fa fa-plus"></i> {{ __('general.pages.refunds.new_refund') }}
-            </a>
-            <button type="button" class="btn btn-outline-success" wire:click="$set('export','excel')">
-                <i class="fa fa-file-excel"></i> {{ __('general.pages.refunds.export') }}
-            </button>
+            <div class="flex flex-wrap items-center gap-2">
+                <a class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" href="{{ route('admin.refunds.create') }}">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.refunds.new_refund') }}
+                </a>
+                <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-emerald-500 bg-white px-3 py-2 text-sm font-medium text-emerald-600 transition-colors hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20 dark:focus:ring-offset-slate-900" wire:click="$set('export','excel')">
+                    <i class="fa fa-file-excel"></i> {{ __('general.pages.refunds.export') }}
+                </button>
+            </div>
         </x-slot:actions>
 
         <x-slot:head>
@@ -38,7 +40,7 @@
                 <th>{{ __('general.pages.refunds.items_count') }}</th>
                 <th>{{ __('general.pages.refunds.reason') }}</th>
                 <th>{{ __('general.pages.refunds.created_at') }}</th>
-                <th>{{ __('general.pages.refunds.actions') }}</th>
+                <th class="text-right">{{ __('general.pages.refunds.actions') }}</th>
             </tr>
         </x-slot:head>
 
@@ -53,8 +55,8 @@
                 <td>{{ $refund->items?->count() ?? 0 }}</td>
                 <td>{{ $refund->reason }}</td>
                 <td>{{ $refund->created_at?->format('Y-m-d H:i') }}</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-primary" href="{{ route('admin.refunds.details', $refund->id) }}">
+                <td class="text-right">
+                    <a class="inline-flex items-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700 transition hover:bg-brand-100 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-300 dark:hover:bg-brand-500/20" href="{{ route('admin.refunds.details', $refund->id) }}">
                         <i class="fa fa-eye"></i> {{ __('general.pages.refunds.details') }}
                     </a>
                 </td>

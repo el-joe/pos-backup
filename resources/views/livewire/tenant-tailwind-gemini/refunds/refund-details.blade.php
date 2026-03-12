@@ -37,101 +37,99 @@
     </x-tenant-tailwind-gemini.table-card>
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.refunds.refund_items')" icon="fa-cubes" :render-table="false">
-        <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped align-middle">
-                    <thead>
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
+                    <tr>
+                        <th class="px-4 py-3 font-semibold">#</th>
+                        <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.product') }}</th>
+                        <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.unit') }}</th>
+                        <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.qty') }}</th>
+                        <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.refundable') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    @forelse($refund->items as $item)
                         <tr>
-                            <th>#</th>
-                            <th>{{ __('general.pages.refunds.product') }}</th>
-                            <th>{{ __('general.pages.refunds.unit') }}</th>
-                            <th>{{ __('general.pages.refunds.qty') }}</th>
-                            <th>{{ __('general.pages.refunds.refundable') }}</th>
+                            <td class="px-4 py-4">{{ $item->id }}</td>
+                            <td class="px-4 py-4">{{ $item->product?->name ?? '—' }}</td>
+                            <td class="px-4 py-4">{{ $item->unit?->name ?? '—' }}</td>
+                            <td class="px-4 py-4">{{ $item->qty }}</td>
+                            <td class="px-4 py-4">
+                                @if($item->refundable)
+                                    {{ class_basename($item->refundable_type) }} #{{ $item->refundable_id }}
+                                @else
+                                    —
+                                @endif
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($refund->items as $item)
-                            <tr>
-                                <td>{{ $item->id }}</td>
-                                <td>{{ $item->product?->name ?? '—' }}</td>
-                                <td>{{ $item->unit?->name ?? '—' }}</td>
-                                <td>{{ $item->qty }}</td>
-                                <td>
-                                    @if($item->refundable)
-                                        {{ class_basename($item->refundable_type) }} #{{ $item->refundable_id }}
-                                    @else
-                                        —
-                                    @endif
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-4">{{ __('general.pages.refunds.no_items') }}</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.refunds.no_items') }}</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </x-tenant-tailwind-gemini.table-card>
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.refunds.transactions')" icon="fa-receipt" :render-table="false">
-        <div class="table-responsive">
-                <table class="table table-bordered table-hover table-striped align-middle">
-                    <thead>
+        <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+            <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
+                    <tr>
+                        <th class="px-4 py-3 font-semibold">#</th>
+                        <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.date') }}</th>
+                        <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.type') }}</th>
+                        <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.description') }}</th>
+                        <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.refunds.amount') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    @forelse($transactions as $transaction)
                         <tr>
-                            <th>#</th>
-                            <th>{{ __('general.pages.refunds.date') }}</th>
-                            <th>{{ __('general.pages.refunds.type') }}</th>
-                            <th>{{ __('general.pages.refunds.description') }}</th>
-                            <th>{{ __('general.pages.refunds.amount') }}</th>
+                            <td class="px-4 py-4">{{ $transaction->id }}</td>
+                            <td class="px-4 py-4">{{ $transaction->date ?? $transaction->created_at?->format('Y-m-d') }}</td>
+                            <td class="px-4 py-4">{{ $transaction->type?->label() ?? (string)$transaction->type }}</td>
+                            <td class="px-4 py-4">{{ $transaction->description }}</td>
+                            <td class="px-4 py-4 text-right">{{ currencyFormat($transaction->amount ?? 0, true) }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($transactions as $transaction)
-                            <tr>
-                                <td>{{ $transaction->id }}</td>
-                                <td>{{ $transaction->date ?? $transaction->created_at?->format('Y-m-d') }}</td>
-                                <td>{{ $transaction->type?->label() ?? (string)$transaction->type }}</td>
-                                <td>{{ $transaction->description }}</td>
-                                <td>{{ currencyFormat($transaction->amount ?? 0, true) }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="5" class="p-0">
-                                    <div class="p-3 bg-body-tertiary">
-                                        <div class="fw-semibold mb-2">{{ __('general.pages.refunds.transaction_lines') }}</div>
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-bordered mb-0 align-middle">
-                                                <thead>
-                                                    <tr>
-                                                        <th>{{ __('general.pages.refunds.line_type') }}</th>
-                                                        <th>{{ __('general.pages.refunds.account') }}</th>
-                                                        <th class="text-end">{{ __('general.pages.refunds.amount') }}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @forelse($transaction->lines as $line)
-                                                        <tr>
-                                                            <td>{{ ucfirst($line->type) }}</td>
-                                                            <td>{{ $line->account?->name ?? '—' }}</td>
-                                                            <td class="text-end">{{ currencyFormat($line->amount ?? 0, true) }}</td>
-                                                        </tr>
-                                                    @empty
-                                                        <tr>
-                                                            <td colspan="3" class="text-center text-muted py-2">—</td>
-                                                        </tr>
-                                                    @endforelse
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-4">{{ __('general.pages.refunds.no_transactions') }}</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        <tr class="bg-slate-50/80 dark:bg-slate-950/50">
+                            <td colspan="5" class="px-4 py-4">
+                                <div class="mb-3 text-sm font-semibold text-slate-900 dark:text-white">{{ __('general.pages.refunds.transaction_lines') }}</div>
+                                <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700">
+                                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-700">
+                                        <thead class="bg-white text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+                                            <tr>
+                                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.line_type') }}</th>
+                                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.refunds.account') }}</th>
+                                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.refunds.amount') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                            @forelse($transaction->lines as $line)
+                                                <tr>
+                                                    <td class="px-4 py-3">{{ ucfirst($line->type) }}</td>
+                                                    <td class="px-4 py-3">{{ $line->account?->name ?? '—' }}</td>
+                                                    <td class="px-4 py-3 text-right">{{ currencyFormat($line->amount ?? 0, true) }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="3" class="px-4 py-6 text-center text-sm text-slate-500 dark:text-slate-400">—</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.refunds.no_transactions') }}</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </x-tenant-tailwind-gemini.table-card>
 </div>

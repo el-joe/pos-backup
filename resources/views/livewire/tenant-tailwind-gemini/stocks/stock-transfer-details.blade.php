@@ -57,29 +57,29 @@
             </div>
         @elseif($activeTab === 'products')
             <div class="p-5">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                        <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
                             <tr>
-                                <th>{{ __('general.pages.stock-transfers.product') }}</th>
-                                <th>{{ __('general.pages.stock-transfers.unit') }}</th>
-                                <th>{{ __('general.pages.stock-transfers.qty') }}</th>
-                                <th>{{ __('general.pages.stock-transfers.unit_price') }}</th>
-                                <th>{{ __('general.pages.stock-transfers.selling_price') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-transfers.product') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-transfers.unit') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-transfers.qty') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.stock-transfers.unit_price') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.stock-transfers.selling_price') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                             @forelse ($stockTransfer->items as $item)
                                 <tr>
-                                    <td class="font-semibold">{{ $item?->product?->name }}</td>
-                                    <td>{{ $item?->unit?->name ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ $item->qty }}</td>
-                                    <td>{{ currencyFormat($item->unit_cost, true) }}</td>
-                                    <td>{{ currencyFormat($item->sell_price, true) }}</td>
+                                    <td class="px-4 py-4 font-semibold text-slate-900 dark:text-white">{{ $item?->product?->name }}</td>
+                                    <td class="px-4 py-4">{{ $item?->unit?->name ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4">{{ $item->qty }}</td>
+                                    <td class="px-4 py-4 text-right">{{ currencyFormat($item->unit_cost, true) }}</td>
+                                    <td class="px-4 py-4 text-right">{{ currencyFormat($item->sell_price, true) }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                    <td colspan="5" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -88,23 +88,23 @@
             </div>
         @else
             <div class="p-5">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                        <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
                             <tr>
-                                <th>{{ __('general.pages.stock-transfers.description') }}</th>
-                                <th>{{ __('general.pages.stock-transfers.amount') }}</th>
-                                <th>{{ __('general.pages.stock-transfers.expense_date') }}</th>
-                                <th class="text-center">{{ __('general.pages.stock-transfers.action') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-transfers.description') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.stock-transfers.amount') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-transfers.expense_date') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.stock-transfers.action') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                             @forelse ($stockTransfer->expenses ?? [] as $expense)
                                 <tr>
-                                    <td>{{ $expense->description ?? $expense->note ?? __('general.messages.n_a') }}</td>
-                                    <td>{{ currencyFormat($expense->amount ?? 0, true) }}</td>
-                                    <td>{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : __('general.messages.n_a') }}</td>
-                                    <td class="text-center">
+                                    <td class="px-4 py-4">{{ $expense->description ?? $expense->note ?? __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4 text-right">{{ currencyFormat($expense->amount ?? 0, true) }}</td>
+                                    <td class="px-4 py-4">{{ $expense->expense_date ? carbon($expense->expense_date)->format('Y-m-d') : __('general.messages.n_a') }}</td>
+                                    <td class="px-4 py-4 text-right">
                                         <button class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 text-rose-600 transition hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/20" wire:click="deleteExpenseConfirm({{ $expense->id }})">
                                             <i class="fa fa-trash"></i>
                                         </button>
@@ -112,7 +112,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                    <td colspan="4" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -127,7 +127,7 @@
             <div class="modal-content refund-modal-content">
                 <div class="modal-header refund-modal-header">
                     <h5 class="modal-title mx-auto"><i class="fa fa-undo"></i> {{ __('general.pages.stock-transfers.refund_item') }}</h5>
-                    <button type="button" class="close refund-close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close refund-close" data-bs-dismiss="modal">&times;</button>
                 </div>
 
                 <div class="modal-body">
@@ -139,18 +139,18 @@
                         </div>
                     </div>
 
-                    <div class="form-group mt-3">
+                    <div class="mt-3">
                         <label><strong>{{ __('general.pages.stock-transfers.quantity_to_refund') }}</strong></label>
-                        <input type="number" min="1" max="{{ $currentItem?->actual_qty ?? 1 }}" wire:model="refundedQty" class="form-control refund-input">
-                        <small class="form-text text-muted">{{ __('general.pages.stock-transfers.max', ['qty' => $currentItem?->actual_qty ?? 1]) }}</small>
+                        <input type="number" min="1" max="{{ $currentItem?->actual_qty ?? 1 }}" wire:model="refundedQty" class="refund-input mt-2 block w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white">
+                        <small class="mt-2 block text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.stock-transfers.max', ['qty' => $currentItem?->actual_qty ?? 1]) }}</small>
                     </div>
                 </div>
 
-                <div class="modal-footer justify-content-end">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('general.pages.stock-transfers.cancel') }}</button>
+                <div class="modal-footer justify-content-end gap-2">
+                    <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" data-bs-dismiss="modal">{{ __('general.pages.stock-transfers.cancel') }}</button>
 
                     @if ($currentItem)
-                    <button type="button" class="btn btn-danger" wire:click="refundPurchaseItem">
+                    <button type="button" class="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700" wire:click="refundPurchaseItem">
                         <i class="fa fa-check"></i> {{ __('general.pages.stock-transfers.confirm_refund') }}
                     </button>
                     @endif
