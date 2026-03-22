@@ -13,8 +13,8 @@
                 </div>
             </div>
 
-            <div class="grid gap-6 xl:grid-cols-3">
-                <div class="xl:col-span-2">
+            <div>
+                <div>
                     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.pos-page.order_details')" icon="fa fa-receipt" :render-table="false">
                         <div class="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-3">
                             <div>
@@ -53,10 +53,9 @@
                                 @error('selectedCustomerId') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
-                            <div>
-                                <label for="invoiceNumber" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.pos-page.invoice_number') }}</label>
-                                <input type="text" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-brand-500" id="invoiceNumber" wire:model="data.invoice_number">
-                                <small class="text-primary">{{ __('general.pages.pos-page.leave_blank_for_auto_generated') }}</small>
+                            <div class="hidden">
+                                <label for="isDeferredSwitch" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.pos-page.deferred_revenue') }}</label>
+                                <input type="checkbox" id="isDeferredSwitch" wire:model="data.is_deferred" @if(($deferredMode ?? false) === true) disabled @endif>
                             </div>
 
                             <div>
@@ -69,6 +68,12 @@
                                 <label for="dueDate" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.pos-page.due_date') }}</label>
                                 <input type="date" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-brand-500" id="dueDate" wire:model="data.due_date">
                                 @error('data.due_date') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+                            <div>
+                                <label for="invoiceNumber" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.pos-page.invoice_number') }}</label>
+                                <input type="text" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-brand-500" id="invoiceNumber" wire:model="data.invoice_number">
+                                <small class="text-primary">{{ __('general.pages.pos-page.leave_blank_for_auto_generated') }}</small>
                             </div>
 
                             <div class="md:col-span-2 xl:col-span-3">
@@ -92,35 +97,20 @@
                         </x-slot:footer>
                     </x-tenant-tailwind-gemini.table-card>
                 </div>
-
-                <div class="space-y-4">
-                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                        <h3 class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.pos-page.customer') }}</h3>
-                        <div class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">{{ $selectedCustomer?->name ?? __('general.pages.pos-page.customer') }}</div>
-                        <div class="text-sm text-slate-500 dark:text-slate-400">{{ $selectedCustomer?->phone }}</div>
-                    </div>
-
-                    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                        <div class="flex justify-between text-sm"><span>{{ __('general.pages.pos-page.subtotal') }}</span><span class="font-semibold">{{ currencyFormat($subTotal, true) }}</span></div>
-                        <div class="mt-2 flex justify-between text-sm"><span>{{ __('general.pages.pos-page.taxes') }} ({{ $taxPercentage }}%)</span><span class="font-semibold">{{ currencyFormat($tax, true) }}</span></div>
-                        <div class="mt-2 flex justify-between text-sm"><span>{{ __('general.pages.pos-page.discount') }}</span><span class="font-semibold">{{ currencyFormat($discount, true) }}</span></div>
-                        <div class="mt-3 border-t border-slate-200 pt-3 text-lg font-bold dark:border-slate-700 flex justify-between"><span>{{ __('general.pages.pos-page.total') }}</span><span>{{ currencyFormat($total, true) }}</span></div>
-                    </div>
-                </div>
             </div>
         </div>
     @elseif($step == 2)
-        <div wire:key="step-2-container" class="flex h-[calc(100vh-11rem)] min-h-[720px] overflow-hidden bg-slate-50 dark:bg-slate-950">
+        <div wire:key="step-2-container" id="posStepContainer" class="relative flex h-[calc(100vh-11rem)] min-h-[720px] overflow-hidden bg-slate-50 dark:bg-slate-950">
             <aside class="hidden w-56 border-e border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 lg:flex lg:flex-col">
                 <div class="flex items-center h-14 px-4 border-b border-slate-200 dark:border-slate-800">
                     <span class="font-bold tracking-tight text-brand-600">POS</span>
                 </div>
                 <div class="flex-1 overflow-y-auto p-3 space-y-2">
-                    <button type="button" class="w-full rounded-xl bg-brand-500 px-3 py-2 text-left text-sm font-medium text-white">
+                    <button type="button" data-filter="all" class="pos-category-filter w-full rounded-xl bg-brand-500 px-3 py-2 text-left text-sm font-medium text-white">
                         <i class="fa fa-fw fa-hamburger me-1"></i> {{ __('general.pages.pos-page.all') }}
                     </button>
                     @foreach ($categories as $category)
-                        <button type="button" wire:key="category-{{ $category->id }}" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                        <button type="button" wire:key="category-{{ $category->id }}" data-filter="cat-{{ $category->id }}" class="pos-category-filter w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
                             <i class="fa fa-fw {{ $category->icon }} me-1"></i> {{ $category->name }}
                         </button>
                     @endforeach
@@ -130,8 +120,11 @@
             <div class="flex-1 flex flex-col min-w-0">
                 <header class="h-14 flex items-center justify-between px-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
                     <div class="flex items-center gap-3">
+                        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden" data-pos-sidebar-open>
+                            <i class="bi bi-bag"></i>
+                        </button>
                         <div class="relative hidden md:block">
-                            <input type="text" placeholder="Search products..." class="w-72 rounded-full border border-slate-200 bg-slate-100 px-10 py-2 text-sm text-slate-700 outline-none focus:border-brand-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                            <input type="text" id="posProductSearch" placeholder="Search products..." class="w-72 rounded-full border border-slate-200 bg-slate-100 px-10 py-2 text-sm text-slate-700 outline-none focus:border-brand-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
                             <i class="fa fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                         </div>
                     </div>
@@ -151,7 +144,7 @@
                     <section class="flex-1 overflow-y-auto p-4">
                         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                             @foreach ($products as $product)
-                                <button type="button" wire:key="product-card-{{ $product->id }}" class="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
+                                <button type="button" wire:key="product-card-{{ $product->id }}" data-category="cat-{{ $product->category_id }}" data-search="{{ \Illuminate\Support\Str::lower(trim($product->name . ' ' . ($product->category?->name ?? '') . ' ' . ($product->sku ?? '') . ' ' . ($product->code ?? ''))) }}" class="pos-product-card group overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
                                     @if($product->unit->children->count() > 0) data-bs-toggle="modal" data-bs-target="#modalPosItem" wire:click="setCurrentProduct({{ $product->id }})" @else wire:click="addToCart({{ $product->id }})" @endif>
                                     <div class="aspect-square overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
                                         <img src="{{ $product->image_path }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]">
@@ -166,10 +159,14 @@
                         </div>
                     </section>
 
-                    <section class="w-full max-w-sm bg-white dark:bg-slate-900 border-s border-slate-200 dark:border-slate-800 flex flex-col">
-                        <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/60">
+                    <div class="absolute inset-0 z-20 hidden bg-slate-900/40 lg:hidden" data-pos-sidebar-overlay></div>
+
+                    <section id="posCartSidebar" class="fixed inset-y-0 end-0 z-30 flex w-[min(92vw,22rem)] translate-x-full flex-col border-s border-slate-200 bg-white transition-transform duration-200 ease-out dark:border-slate-800 dark:bg-slate-900 lg:static lg:z-auto lg:w-full lg:max-w-sm lg:translate-x-0">
+                        <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/60">
                             <span class="font-semibold">{{ __('general.pages.pos-page.cart') }}</span>
-                            <button type="button" class="text-rose-500 text-xs font-semibold hover:underline" wire:click="$set('data.products', [])">Clear</button>
+                            <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden" data-pos-sidebar-close>
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
                         </div>
 
                         <div class="flex-1 overflow-y-auto p-4 space-y-3">
@@ -178,6 +175,7 @@
                                     <img src="{{ $dataProduct['image'] }}" alt="{{ $dataProduct['product_name'] }}" class="h-12 w-12 rounded-lg object-cover">
                                     <div class="flex-1 min-w-0">
                                         <p class="truncate text-sm font-semibold text-slate-900 dark:text-white">{{ $dataProduct['product_name'] }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ currencyFormat($dataProduct['sell_price'], true) }}</p>
                                         <p class="text-xs text-slate-500 dark:text-slate-400">{{ $dataProduct['unit_name'] }}</p>
                                         <div class="mt-2 flex items-center gap-2">
                                             <button type="button" class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-slate-300 dark:border-slate-600" wire:click="updateQty({{ $key }} , -1)">-</button>
@@ -194,15 +192,38 @@
 
                         <div class="p-4 border-t border-slate-200 dark:border-slate-800 space-y-3 bg-slate-50 dark:bg-slate-900/40">
                             @if(!$discount || $discount == 0)
-                                <div class="flex gap-2">
-                                    <input type="text" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-brand-500" placeholder="{{ __('general.pages.pos-page.enter_code_or_amount') }}" wire:model="discountCode">
-                                    <button class="rounded-xl bg-brand-500 px-3 py-2 text-sm font-medium text-white" wire:click="validateDiscountCode">{{ __('general.pages.pos-page.discount') }}</button>
+                                <div class="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                            <i class="fa fa-percent me-1 text-brand-500"></i> {{ __('general.pages.pos-page.discount') }}
+                                        </label>
+                                        <input type="text" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-brand-500" placeholder="{{ __('general.pages.pos-page.enter_code_or_amount') }}" wire:model="discountCode">
+                                        <button class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500 text-sm font-medium text-white" wire:click="validateDiscountCode">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             @else
-                                <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <span>{{ __('general.pages.pos-page.code') }}: {{ $data['discount']['code'] ?? 'N/A' }}</span>
-                                        <button class="text-rose-500" wire:click="removeCoupon">{{ __('general.pages.pos-page.cancel') }}</button>
+                                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-700 shadow-sm dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <div>
+                                            <div class="font-semibold">
+                                                <i class="fa fa-tag me-1"></i> {{ __('general.pages.pos-page.discount_applied') }}
+                                            </div>
+                                            <div class="mt-1 text-[11px] opacity-90">
+                                                {{ __('general.pages.pos-page.code') }}: <strong>{{ $data['discount']['code'] ?? 'N/A' }}</strong>
+                                                @if($data['discount']['value'] ?? false)
+                                                    - <span>{{ $data['discount']['value'] }}% Off</span>
+                                                @endif
+                                                @if($data['discount']['max_discount_amount'] ?? 0)
+                                                    <span>({{ __('general.pages.pos-page.max') }}: {{ currencyFormat($data['discount']['max_discount_amount'] ?? 0, true) }})</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="font-bold">{{ currencyFormat($discount, true) }}</div>
+                                            <button class="mt-1 text-rose-500" wire:click="removeCoupon">{{ __('general.pages.pos-page.cancel') }}</button>
+                                        </div>
                                     </div>
                                 </div>
                             @endif
@@ -218,14 +239,16 @@
                             <div class="flex justify-between text-sm text-slate-500 dark:text-slate-400"><span>{{ __('general.pages.pos-page.discount') }}</span><span>{{ currencyFormat($discount, true) }}</span></div>
                             <div class="flex justify-between border-t border-dashed border-slate-300 pt-2 text-lg font-bold text-slate-900 dark:border-slate-700 dark:text-white"><span>{{ __('general.pages.pos-page.total') }}</span><span class="text-brand-600 dark:text-brand-300">{{ currencyFormat($total, true) }}</span></div>
 
-                            <div class="grid grid-cols-2 gap-2">
-                                <button type="button" class="rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800" wire:click="$set('step', 1)">Hold</button>
-                                <button type="button" class="rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800" @if(!$discount || $discount == 0) wire:click="validateDiscountCode" @else wire:click="removeCoupon" @endif>{{ __('general.pages.pos-page.discount') }}</button>
+                            <div class="grid grid-cols-[96px_minmax(0,1fr)] gap-2">
+                                <button type="button" class="rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800" wire:click="$set('step', 1)">
+                                    <i class="bi bi-arrow-left-circle me-1"></i>
+                                    {{ __('general.pages.pos-page.previous') }}
+                                </button>
+                                <button type="button" class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+                                    <i class="bi bi-send-check me-1"></i>
+                                    {{ __('general.pages.pos-page.submit_order') }}
+                                </button>
                             </div>
-
-                            <button type="button" class="w-full rounded-2xl bg-emerald-600 px-4 py-3 text-base font-bold text-white shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-700" data-bs-toggle="modal" data-bs-target="#checkoutModal">
-                                {{ __('general.pages.pos-page.submit_order') }}
-                            </button>
                         </div>
                     </section>
                 </main>
@@ -354,6 +377,115 @@
         }
     }
 
+    function initGeminiPosFilters() {
+        const categoryButtons = Array.from(document.querySelectorAll('.pos-category-filter'));
+        const productCards = Array.from(document.querySelectorAll('.pos-product-card'));
+        const searchInput = document.getElementById('posProductSearch');
+
+        if (!categoryButtons.length || !productCards.length) {
+            return;
+        }
+
+        const activeClasses = ['bg-brand-500', 'text-white'];
+        const inactiveClasses = ['border', 'border-slate-200', 'bg-white', 'text-slate-700', 'dark:border-slate-700', 'dark:bg-slate-900', 'dark:text-slate-200'];
+
+        const setActiveFilter = (activeButton) => {
+            categoryButtons.forEach((button) => {
+                if (button === activeButton) {
+                    button.classList.add(...activeClasses);
+                    button.classList.remove(...inactiveClasses);
+                } else {
+                    button.classList.remove(...activeClasses);
+                    button.classList.add(...inactiveClasses);
+                }
+            });
+        };
+
+        const applyFilters = () => {
+            const activeButton = categoryButtons.find((button) => button.dataset.active === 'true') ?? categoryButtons[0];
+            const categoryFilter = activeButton?.dataset.filter ?? 'all';
+            const searchTerm = (searchInput?.value ?? '').trim().toLowerCase();
+
+            productCards.forEach((card) => {
+                const matchesCategory = categoryFilter === 'all' || card.dataset.category === categoryFilter;
+                const searchableText = card.dataset.search ?? '';
+                const matchesSearch = !searchTerm || searchableText.includes(searchTerm);
+                card.classList.toggle('hidden', !(matchesCategory && matchesSearch));
+            });
+        };
+
+        categoryButtons.forEach((button, index) => {
+            if (!button.dataset.boundFilter) {
+                button.addEventListener('click', () => {
+                    categoryButtons.forEach((item) => delete item.dataset.active);
+                    button.dataset.active = 'true';
+                    setActiveFilter(button);
+                    applyFilters();
+                });
+                button.dataset.boundFilter = 'true';
+            }
+
+            if (index === 0 && !categoryButtons.some((item) => item.dataset.active === 'true')) {
+                button.dataset.active = 'true';
+            }
+        });
+
+        if (searchInput && !searchInput.dataset.boundSearch) {
+            searchInput.addEventListener('input', applyFilters);
+            searchInput.dataset.boundSearch = 'true';
+        }
+
+        const activeButton = categoryButtons.find((button) => button.dataset.active === 'true') ?? categoryButtons[0];
+        if (activeButton) {
+            setActiveFilter(activeButton);
+        }
+
+        applyFilters();
+    }
+
+    function initGeminiPosSidebarToggle() {
+        const container = document.getElementById('posStepContainer');
+        const sidebar = document.getElementById('posCartSidebar');
+        const overlay = container?.querySelector('[data-pos-sidebar-overlay]');
+
+        if (!container || !sidebar || !overlay) {
+            return;
+        }
+
+        const openSidebar = () => {
+            sidebar.classList.remove('translate-x-full');
+            overlay.classList.remove('hidden');
+        };
+
+        const closeSidebar = () => {
+            sidebar.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+        };
+
+        container.querySelectorAll('[data-pos-sidebar-open]').forEach((button) => {
+            if (!button.dataset.boundOpen) {
+                button.addEventListener('click', openSidebar);
+                button.dataset.boundOpen = 'true';
+            }
+        });
+
+        container.querySelectorAll('[data-pos-sidebar-close]').forEach((button) => {
+            if (!button.dataset.boundClose) {
+                button.addEventListener('click', closeSidebar);
+                button.dataset.boundClose = 'true';
+            }
+        });
+
+        if (!overlay.dataset.boundOverlay) {
+            overlay.addEventListener('click', closeSidebar);
+            overlay.dataset.boundOverlay = 'true';
+        }
+
+        if (window.matchMedia('(min-width: 1024px)').matches) {
+            closeSidebar();
+        }
+    }
+
     // Bridge Select2 changes to Livewire 3
     document.addEventListener('livewire:initialized', () => {
         $('#branchSelect').on('change', function (e) {
@@ -363,6 +495,21 @@
         $('#customerSelect').on('change', function (e) {
             @this.set('selectedCustomerId', $(this).val());
         });
+
+        initGeminiPosFilters();
+        initGeminiPosSidebarToggle();
     });
+
+    document.addEventListener('livewire:navigated', () => {
+        initGeminiPosFilters();
+        initGeminiPosSidebarToggle();
+    });
+
+    if (window.Livewire) {
+        window.Livewire.hook('morph.updated', () => {
+            initGeminiPosFilters();
+            initGeminiPosSidebarToggle();
+        });
+    }
 </script>
 @endpush

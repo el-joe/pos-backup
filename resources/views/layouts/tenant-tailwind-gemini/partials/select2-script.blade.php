@@ -1,9 +1,11 @@
 <style>
-    .gemini-select2.select2-container {
+    .gemini-select2.select2-container,
+    .select2-container {
         width: 100% !important;
     }
 
-    .gemini-select2 .select2-selection {
+    .gemini-select2 .select2-selection,
+    .select2-container .select2-selection {
         min-height: 2.75rem !important;
         border: 1px solid rgb(203 213 225 / 1) !important;
         border-radius: 1rem !important;
@@ -12,12 +14,14 @@
     }
 
     .dark .gemini-select2 .select2-selection,
+    .dark .select2-container .select2-selection,
     [data-bs-theme=dark] .gemini-select2 .select2-selection {
         border-color: rgb(51 65 85 / 1) !important;
         background: #020617 !important;
     }
 
-    .gemini-select2 .select2-selection__rendered {
+    .gemini-select2 .select2-selection__rendered,
+    .select2-container .select2-selection__rendered {
         min-height: 2.75rem;
         padding-inline: 1rem !important;
         line-height: 2.75rem !important;
@@ -25,16 +29,19 @@
     }
 
     .dark .gemini-select2 .select2-selection__rendered,
+    .dark .select2-container .select2-selection__rendered,
     [data-bs-theme=dark] .gemini-select2 .select2-selection__rendered {
         color: #e2e8f0 !important;
     }
 
-    .gemini-select2 .select2-selection__arrow {
+    .gemini-select2 .select2-selection__arrow,
+    .select2-container .select2-selection__arrow {
         height: 2.75rem !important;
         right: 0.85rem !important;
     }
 
-    .select2-dropdown.gemini-select2-dropdown {
+    .select2-dropdown.gemini-select2-dropdown,
+    .select2-dropdown {
         border: 1px solid rgb(203 213 225 / 1) !important;
         border-radius: 1rem !important;
         overflow: hidden;
@@ -58,6 +65,11 @@
     }
 </style>
 <script>
+    if (window.__geminiSelect2ScriptLoaded) {
+        // Prevent duplicate listeners when this partial is included in both layout and page.
+    } else {
+        window.__geminiSelect2ScriptLoaded = true;
+
     window.formatGeminiSelect2Option = window.formatGeminiSelect2Option || function (option) {
         if (!option.id) {
             return $('<span>').text(option.text);
@@ -108,8 +120,6 @@
             const $parentModal = $element.closest('.modal');
             const options = {
                 width: '100%',
-                dropdownCssClass: 'gemini-select2-dropdown',
-                containerCssClass: 'gemini-select2',
                 templateResult: window.formatGeminiSelect2Option,
                 templateSelection: window.formatGeminiSelect2Option,
             };
@@ -151,4 +161,5 @@
             window.renderSelect2?.();
         });
     });
+    }
 </script>
