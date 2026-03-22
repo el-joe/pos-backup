@@ -46,11 +46,9 @@
                     <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.sale_requests.status') }}</p>
                     <div class="mt-2 flex flex-wrap items-center gap-3">
                         <span class="inline-flex rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-900">{{ $request->status?->label() ?? (string) $request->status }}</span>
-                        <select class="form-select max-w-[220px]" wire:change="updateStatus($event.target.value)">
+                        <select class="w-full max-w-[220px] rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-brand-500" wire:change="updateStatus($event.target.value)">
                             @foreach ($statuses as $status)
-                                <option value="{{ $status->value }}" {{ ($request->status?->value ?? (string) $request->status) == $status->value ? 'selected' : '' }}>
-                                    {{ $status->label() }}
-                                </option>
+                                <option value="{{ $status->value }}" {{ ($request->status?->value ?? (string) $request->status) == $status->value ? 'selected' : '' }}>{{ $status->label() }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -74,42 +72,40 @@
                         <p class="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-300">{{ $request->note }}</p>
                     </div>
                 @endif
-+            </div>
-+        @else
-+            <div class="p-5">
-+                <div class="table-responsive">
-+                    <table class="table table-bordered align-middle mb-0">
-+                        <thead>
-+                            <tr>
-+                                <th>{{ __('general.pages.sale_requests.product') }}</th>
-+                                <th>{{ __('general.pages.sale_requests.unit') }}</th>
-+                                <th>{{ __('general.pages.sale_requests.qty') }}</th>
-+                                <th>{{ __('general.pages.sale_requests.sell_price') }}</th>
-+                                <th>{{ __('general.pages.sale_requests.taxable') }}</th>
-+                                <th>{{ __('general.pages.sale_requests.total') }}</th>
-+                            </tr>
-+                        </thead>
-+                        <tbody>
-+                            @forelse($request->items as $item)
-+                                <tr>
-+                                    <td>{{ $item->product?->name ?? $item->product_id }}</td>
-+                                    <td>{{ $item->unit?->name ?? $item->unit_id }}</td>
-+                                    <td>{{ $item->qty }}</td>
-+                                    <td>{{ currencyFormat($item->sell_price, true) }}</td>
-+                                    <td>{{ $item->taxable ? __('general.pages.sale_requests.yes') : __('general.pages.sale_requests.no') }}</td>
-+                                    <td>{{ currencyFormat(($item->sell_price * $item->qty), true) }}</td>
-+                                </tr>
-+                            @empty
-+                                <tr>
-+                                    <td colspan="6" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
-+                                </tr>
-+                            @endforelse
-+                        </tbody>
-+                    </table>
-+                </div>
-             </div>
--        </div>
--    </div>
-+        @endif
-+    </x-tenant-tailwind-gemini.table-card>
- </div>
+            </div>
+        @else
+            <div class="p-5">
+                <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                        <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sale_requests.product') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sale_requests.unit') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sale_requests.qty') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sale_requests.sell_price') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sale_requests.taxable') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.sale_requests.total') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                            @forelse($request->items as $item)
+                                <tr>
+                                    <td class="px-4 py-3">{{ $item->product?->name ?? $item->product_id }}</td>
+                                    <td class="px-4 py-3">{{ $item->unit?->name ?? $item->unit_id }}</td>
+                                    <td class="px-4 py-3">{{ $item->qty }}</td>
+                                    <td class="px-4 py-3">{{ currencyFormat($item->sell_price, true) }}</td>
+                                    <td class="px-4 py-3">{{ $item->taxable ? __('general.pages.sale_requests.yes') : __('general.pages.sale_requests.no') }}</td>
+                                    <td class="px-4 py-3">{{ currencyFormat(($item->sell_price * $item->qty), true) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+    </x-tenant-tailwind-gemini.table-card>
+</div>

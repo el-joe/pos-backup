@@ -67,10 +67,23 @@ class TransactionList extends Component
             'account' => [ 'type' => 'text'],
             'line_type' => [
                 'type' => 'badge', 'class' => function($row) {
+                    $isGemini = defaultLayout() === 'tenant-tailwind-gemini';
+
+                    if ($isGemini) {
+                        return $row['line_type'] === 'debit'
+                            ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
+                            : 'bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400';
+                    }
+
                     return $row['line_type'] === 'debit' ? 'badge-success' : 'badge-danger';
                 },
                 'icon' => function($row) {
-                    // i want make up/down with color green/red arrow
+                    $isGemini = defaultLayout() === 'tenant-tailwind-gemini';
+
+                    if ($isGemini) {
+                        return $row['line_type'] === 'debit' ? 'fa-arrow-up text-emerald-500' : 'fa-arrow-down text-rose-500';
+                    }
+
                     return $row['line_type'] === 'debit' ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger';
                 },
                 'value' => function($row) {

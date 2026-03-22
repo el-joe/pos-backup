@@ -4,6 +4,7 @@
 <script src="{{ asset('template/vendors/select2/select2.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/min/moment.min.js"></script>
 <script src="{{ asset('adminBoard/plugins/components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+@include('layouts.tenant-tailwind-gemini.partials.select2-script')
 <script>
 	window.app = window.app || {
 		color: {

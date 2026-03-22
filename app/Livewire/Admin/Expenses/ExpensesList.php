@@ -243,21 +243,29 @@ class ExpensesList extends Component
             '#' , 'Branch' ,'Target' , 'Category' , 'Amount' , 'Tax Percentage' , 'Total' , 'Total Paid' , 'Date' , 'Type' , 'Note' , 'Created At' , 'Actions'
         ];
 
+        $isGemini = defaultLayout() === 'tenant-tailwind-gemini';
+        $deleteActionClass = $isGemini
+            ? 'inline-flex h-8 w-8 items-center justify-center rounded-lg text-rose-600 transition-colors hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10'
+            : 'btn btn-danger btn-sm';
+        $payActionClass = $isGemini
+            ? 'inline-flex h-8 w-8 items-center justify-center rounded-lg text-emerald-600 transition-colors hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-500/10'
+            : 'btn btn-success btn-sm';
+
         $actions = [];
         if(adminCan('expenses.delete')){
             $actions[] = [
                 'title' => fn($row) => $row['deleted'] ? 'Deleted' : 'Delete',
                 'icon' => 'fa fa-trash',
-                'class' => 'btn btn-danger btn-sm',
+                'class' => $deleteActionClass,
                 'wire:click' => fn($row) => "deleteAlert({$row['id']})",
                 'hide' => function($row) {
                     return $row['target'] == 'purchases';
                 },
                 'disabled' => fn($row) => $row['deleted'],
                 'attributes' => [
-                    'data-toggle' => 'tooltip',
-                    'data-placement' => 'top',
-                    'data-original-title' => fn($row) => $row['deleted'] ? 'Deleted' : 'Delete',
+                    'data-bs-toggle' => 'tooltip',
+                    'data-bs-placement' => 'top',
+                    'title' => fn($row) => $row['deleted'] ? 'Deleted' : 'Delete',
                 ],
             ];
         }
@@ -267,16 +275,16 @@ class ExpensesList extends Component
             $actions[] = [
                 'title' => fn($row) => 'Pay Expense',
                 'icon' => 'fa fa-credit-card',
-                'class' => 'btn btn-success btn-sm',
+                'class' => $payActionClass,
                 'wire:click' => fn($row) => "payExpense({$row['id']})",
                 'hide' => function($row) {
                     return $row['type'] != ExpenseTypeEnum::ACCRUED->value || $row['deleted'] || $row['total_paid'] >= $row['total'];
                 },
                 'disabled' => fn($row) => $row['deleted'],
                 'attributes' => [
-                    'data-toggle' => 'tooltip',
-                    'data-placement' => 'top',
-                    'data-original-title' => fn($row) => 'Pay Expense',
+                    'data-bs-toggle' => 'tooltip',
+                    'data-bs-placement' => 'top',
+                    'title' => fn($row) => 'Pay Expense',
                 ],
             ];
         }

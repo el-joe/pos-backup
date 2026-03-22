@@ -183,6 +183,7 @@ return [
         'theme_cover' => 'Theme Cover',
         'see_all' => 'See All',
         'no_new_notifications' => 'No new notifications',
+        'navigation' => 'Navigation',
     ],
     'pages' => [
         'reports' => [

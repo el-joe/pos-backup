@@ -92,7 +92,7 @@ class StockTransferList extends Component
             $actions[] = [
                 'title' => __('general.pages.stock-transfers.details_tab'),
                 'icon' => 'fa fa-eye',
-                'class' => 'btn btn-info btn-sm',
+                'class' => 'inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-300 dark:hover:bg-sky-500/20',
                 'route' => fn($row) => route('admin.stocks.transfers.details', $row['id']),
                 'attributes' => [
                     'data-toggle' => 'tooltip',

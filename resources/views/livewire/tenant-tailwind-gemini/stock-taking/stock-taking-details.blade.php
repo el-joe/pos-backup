@@ -53,20 +53,20 @@
             </div>
         @else
             <div class="p-5">
-                <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
-                        <thead>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <table class="min-w-full divide-y divide-slate-200 text-left text-sm dark:divide-slate-800">
+                        <thead class="bg-slate-50 text-xs uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
                             <tr>
-                                <th>{{ __('general.pages.stock-taking.product') }}</th>
-                                <th>{{ __('general.pages.stock-taking.unit') }}</th>
-                                <th>{{ __('general.pages.stock-taking.current_stock') }}</th>
-                                <th>{{ __('general.pages.stock-taking.actual_stock') }}</th>
-                                <th>{{ __('general.pages.stock-taking.difference') }}</th>
-                                <th>{{ __('general.pages.stock-taking.status') }}</th>
-                                <th>{{ __('general.pages.stock-taking.action') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-taking.product') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-taking.unit') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-taking.current_stock') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-taking.actual_stock') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-taking.difference') }}</th>
+                                <th class="px-4 py-3 font-semibold">{{ __('general.pages.stock-taking.status') }}</th>
+                                <th class="px-4 py-3 text-right font-semibold">{{ __('general.pages.stock-taking.action') }}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                             @forelse($stockTake->products as $stProduct)
                                 @php
                                     $stock = $stProduct->stock;
@@ -86,13 +86,13 @@
                                     }
                                 @endphp
                                 <tr>
-                                    <td>{{ $stock->product?->name }}</td>
-                                    <td>{{ $stock->unit?->name }}</td>
-                                    <td>{{ $stProduct->current_qty }}</td>
-                                    <td>{{ $stProduct->actual_qty }}</td>
-                                    <td>{{ $sign }}{{ $difference }}</td>
-                                    <td><span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold {{ $badgeClass }}">{{ $status }}</span></td>
-                                    <td>
+                                    <td class="px-4 py-4 font-semibold text-slate-900 dark:text-white">{{ $stock->product?->name }}</td>
+                                    <td class="px-4 py-4">{{ $stock->unit?->name }}</td>
+                                    <td class="px-4 py-4">{{ $stProduct->current_qty }}</td>
+                                    <td class="px-4 py-4">{{ $stProduct->actual_qty }}</td>
+                                    <td class="px-4 py-4">{{ $sign }}{{ $difference }}</td>
+                                    <td class="px-4 py-4"><span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold {{ $badgeClass }}">{{ $status }}</span></td>
+                                    <td class="px-4 py-4 text-right">
                                         @if($stProduct->returned == 0)
                                             <button class="inline-flex items-center gap-2 rounded-2xl bg-amber-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-amber-600" wire:click="returnStockAlert({{ $stProduct->id }})">
                                                 <i class="fa fa-undo"></i> {{ __('general.pages.stock-taking.return') }}
@@ -106,7 +106,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                                    <td colspan="7" class="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

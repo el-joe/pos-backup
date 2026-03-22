@@ -39,8 +39,8 @@ if(!function_exists('defaultLayout')) {
             return 'hud';
         }
 
-        // $layout = tenantSetting('panel_layout', 'hud');
-        $layout = 'hud';
+        $layout = tenantSetting('panel_layout', 'hud');
+        // $layout = 'hud';
 
         return in_array($layout, ['hud', 'tenant-tailwind-gemini'], true)
             ? $layout
