@@ -3,7 +3,6 @@
     'size' => 'md',
     'invalid' => false,
 ])
-
 @php
     $sizes = [
         'sm' => 'px-2.5 py-1.5 text-xs',

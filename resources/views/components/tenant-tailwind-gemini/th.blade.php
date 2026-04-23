@@ -7,7 +7,8 @@
 
 <th {{ $attributes->merge(['class' => 'px-5 py-3 font-semibold ' . $alignClass]) }}>
     @if($sortable && $field)
-        <button type="button" class="inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white" wire:click="sortBy('{{ $field }}')">
+        <button type="button" class="inline-flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white"
+            wire:click="sortBy('{{ $field }}')">
             <span>{{ $slot }}</span>
             @if($isSorted)
                 <i class="fa fa-sort-{{ $sortDir === 'asc' ? 'up' : 'down' }} text-[0.65rem]"></i>

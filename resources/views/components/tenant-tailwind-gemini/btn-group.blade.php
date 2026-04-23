@@ -1,7 +1,6 @@
 @props([
     'align' => 'start',
 ])
-
 @php
     $alignClass = $align === 'end' ? 'justify-end' : ($align === 'center' ? 'justify-center' : 'justify-start');
 @endphp

@@ -6,7 +6,7 @@
     @php
         $alignClass = $align === 'end' ? 'justify-content-end' : ($align === 'center' ? 'justify-content-center' : '');
     @endphp
-<div {{ $attributes->merge(['class' => 'd-flex flex-wrap align-items-center gap-2 ' . $alignClass]) }}>
-    {{ $slot }}
-</div>
+    <div {{ $attributes->merge(['class' => 'd-flex flex-wrap align-items-center gap-2 ' . $alignClass]) }}>
+        {{ $slot }}
+    </div>
 @endif

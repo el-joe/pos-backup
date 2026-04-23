@@ -6,5 +6,5 @@
     @php
         $alignClass = $align === 'end' ? 'text-end' : ($align === 'center' ? 'text-center' : '');
     @endphp
-<td {{ $attributes->merge(['class' => $alignClass]) }}>{{ $slot }}</td>
+    <td {{ $attributes->merge(['class' => $alignClass]) }}>{{ $slot }}</td>
 @endif

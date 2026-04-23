@@ -7,5 +7,5 @@
         $sizeClass = $size === 'sm' ? 'form-control-sm' : ($size === 'lg' ? 'form-control-lg' : '');
         $classes = 'form-control ' . $sizeClass . ($invalid ? ' is-invalid' : '');
     @endphp
-<textarea rows="{{ $rows }}" {{ $attributes->merge(['class' => $classes]) }}>{{ $slot }}</textarea>
+    <textarea rows="{{ $rows }}" {{ $attributes->merge(['class' => $classes]) }}>{{ $slot }}</textarea>
 @endif
