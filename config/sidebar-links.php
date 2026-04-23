@@ -2,159 +2,294 @@
 
 return [
     [
-        "title"     => "Dashboard",
+        "title" => "Dashboard",
         'translated_title' => 'general.titles.statistics',
-        "icon"      => "fa fa-tachometer-alt fa-fw",
-        "route"     => 'admin.statistics',
+        "icon" => "fa fa-tachometer-alt fa-fw",
+        "route" => 'admin.statistics',
         'can' => 'statistics.show'
     ],
     [
-        "title"     => "Cash Register",
+        "title" => "Cash Register",
         'translated_title' => 'general.titles.cash-register',
-        "icon"      => "fa fa-cash-register fa-fw",
-        "route"     => 'admin.cash.register.open',
+        "icon" => "fa fa-cash-register fa-fw",
+        "route" => 'admin.cash.register.open',
         'can' => 'cash_register.create'
     ],
     [
-        "title"     => "POS",
+        "title" => "POS",
         'translated_title' => 'general.titles.pos',
-        "icon"      => "fa fa-store fa-fw",
-        "route"     => 'admin.pos',
+        "icon" => "fa fa-store fa-fw",
+        "route" => 'admin.pos',
         'can' => 'pos.create'
     ],
     [
-        "title"     => "Deferred POS",
+        "title" => "Deferred POS",
         'translated_title' => 'general.titles.deferred_pos',
-        "icon"      => "fa fa-hourglass-half fa-fw",
-        "route"     => 'admin.pos.deferred',
+        "icon" => "fa fa-hourglass-half fa-fw",
+        "route" => 'admin.pos.deferred',
         'can' => 'pos.create'
     ],
     [
-        "title"     => "Checks",
+        "title" => "Checks",
         'translated_title' => 'general.titles.checks',
-        "icon"      => "fa fa-money-check fa-fw",
-        "route"     => 'admin.checks.list',
+        "icon" => "fa fa-money-check fa-fw",
+        "route" => 'admin.checks.list',
         'can' => 'checks.list,checks.collect,checks.bounce,checks.clear'
     ],
     [
-        "title"     => "Imports",
+        "title" => "Imports",
         'translated_title' => 'general.titles.imports',
-        "icon"      => "fa fa-file-import fa-fw",
-        "route"     => 'admin.imports',
+        "icon" => "fa fa-file-import fa-fw",
+        "route" => 'admin.imports',
         // 'can' => 'imports.create'
     ],
     [
-        "title"     => "Branches",
+        "title" => "Branches",
         'translated_title' => 'general.titles.branches',
-        "icon"      => "fa fa-code-branch fa-fw",
-        "route"     => 'admin.branches.list',
+        "icon" => "fa fa-code-branch fa-fw",
+        "route" => 'admin.branches.list',
         'can' => 'branches.list,branches.create,branches.update,branches.delete,branches.export,branches.switch'
     ],
     [
-        "title"     => "HRM",
+        "title" => "HRM",
         'translated_title' => 'general.titles.hrm',
-        "icon"      => "fa fa-users fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-users fa-fw",
+        "route" => "#",
         'can' => 'hrm_dashboard.list,hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete,hrm_payroll.list,hrm_claims.list,hrm_attendance.list,hrm_leaves.list',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Departments",
                 'translated_title' => 'general.titles.hrm_departments',
                 "route" => 'admin.hrm.departments.list',
-                "icon"  => "fa fa-building fa-fw",
+                "icon" => "fa fa-building fa-fw",
                 'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
             ],
             [
                 "title" => "Designations",
                 'translated_title' => 'general.titles.hrm_designations',
                 "route" => 'admin.hrm.designations.list',
-                "icon"  => "fa fa-id-badge fa-fw",
+                "icon" => "fa fa-id-badge fa-fw",
                 'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
             ],
             [
                 "title" => "Employees",
                 'translated_title' => 'general.titles.hrm_employees',
                 "route" => 'admin.hrm.employees.list',
-                "icon"  => "fa fa-user-tie fa-fw",
+                "icon" => "fa fa-user-tie fa-fw",
                 'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
             ],
             [
                 "title" => "Contracts",
                 'translated_title' => 'general.titles.hrm_contracts',
                 "route" => 'admin.hrm.contracts.list',
-                "icon"  => "fa fa-file-contract fa-fw",
+                "icon" => "fa fa-file-contract fa-fw",
                 'can' => 'hrm_master_data.list,hrm_master_data.create,hrm_master_data.update,hrm_master_data.delete'
             ],
             [
                 "title" => "Leave Types",
                 'translated_title' => 'general.titles.hrm_leave_types',
                 "route" => 'admin.hrm.leave-types.list',
-                "icon"  => "fa fa-calendar fa-fw",
+                "icon" => "fa fa-calendar fa-fw",
                 'can' => 'hrm_leaves.list,hrm_leaves.create,hrm_leaves.update,hrm_leaves.delete'
             ],
             [
                 "title" => "Leave Requests",
                 'translated_title' => 'general.titles.hrm_leave_requests',
                 "route" => 'admin.hrm.leave-requests.list',
-                "icon"  => "fa fa-calendar-check fa-fw",
+                "icon" => "fa fa-calendar-check fa-fw",
                 'can' => 'hrm_leaves.list,hrm_leaves.approve,hrm_leaves.reject'
             ],
             [
                 "title" => "Claim Categories",
                 'translated_title' => 'general.titles.hrm_claim_categories',
                 "route" => 'admin.hrm.claim-categories.list',
-                "icon"  => "fa fa-tags fa-fw",
+                "icon" => "fa fa-tags fa-fw",
                 'can' => 'hrm_claims.list,hrm_claims.create,hrm_claims.update,hrm_claims.delete'
             ],
             [
                 "title" => "Expense Claims",
                 'translated_title' => 'general.titles.hrm_expense_claims',
                 "route" => 'admin.hrm.expense-claims.list',
-                "icon"  => "fa fa-receipt fa-fw",
+                "icon" => "fa fa-receipt fa-fw",
                 'can' => 'hrm_claims.list,hrm_claims.approve,hrm_claims.reject,hrm_claims.pay'
             ],
             [
                 "title" => "Payroll Runs",
                 'translated_title' => 'general.titles.hrm_payroll_runs',
                 "route" => 'admin.hrm.payroll-runs.list',
-                "icon"  => "fa fa-money-bill fa-fw",
+                "icon" => "fa fa-money-bill fa-fw",
                 'can' => 'hrm_payroll.list,hrm_payroll.create,hrm_payroll.update,hrm_payroll.delete'
             ],
             [
                 "title" => "Payslips",
                 'translated_title' => 'general.titles.hrm_payslips',
                 "route" => 'admin.hrm.payslips.list',
-                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                "icon" => "fa fa-file-invoice-dollar fa-fw",
                 'can' => 'hrm_payroll.list'
             ],
             [
                 "title" => "Attendance Sheets",
                 'translated_title' => 'general.titles.hrm_attendance_sheets',
                 "route" => 'admin.hrm.attendance-sheets.list',
-                "icon"  => "fa fa-clock fa-fw",
+                "icon" => "fa fa-clock fa-fw",
                 'can' => 'hrm_attendance.list,hrm_attendance.create,hrm_attendance.update,hrm_attendance.delete'
             ],
         ],
     ],
     [
-        "title"     => "Products",
+        "title" => "Contracting",
+        'translated_title' => 'general.titles.contracting',
+        "icon" => "fa fa-hard-hat fa-fw",
+        "route" => "#",
+        'can' => 'contracting_tenders.list,contracting_boqs.list,contracting_supplier_quotations.list,contracting_projects.list,contracting_contracts.list,contracting_extracts.list,contracting_purchase_requests.list,contracting_purchase_orders.list,contracting_inventory.list,contracting_warehouses.list,contracting_items.list,contracting_chart_of_accounts.list,contracting_cost_centers.list,contracting_journal_entries.list,contracting_workers.list,contracting_timesheets.list,contracting_equipment.list,contracting_equipment_logs.list',
+        "children" => [
+            [
+                "title" => "Tenders",
+                'translated_title' => 'general.titles.contracting_tenders',
+                "route" => 'admin.contracting.tenders.list',
+                "icon" => "fa fa-gavel fa-fw",
+                'can' => 'contracting_tenders.list,contracting_tenders.create,contracting_tenders.update,contracting_tenders.delete'
+            ],
+            [
+                "title" => "Bills of Quantities",
+                'translated_title' => 'general.titles.contracting_boqs',
+                "route" => 'admin.contracting.boqs.list',
+                "icon" => "fa fa-list-ol fa-fw",
+                'can' => 'contracting_boqs.list,contracting_boqs.create,contracting_boqs.update,contracting_boqs.delete'
+            ],
+            [
+                "title" => "Supplier Quotations",
+                'translated_title' => 'general.titles.contracting_supplier_quotations',
+                "route" => 'admin.contracting.supplier-quotations.list',
+                "icon" => "fa fa-file-invoice fa-fw",
+                'can' => 'contracting_supplier_quotations.list,contracting_supplier_quotations.create'
+            ],
+            [
+                "title" => "Projects",
+                'translated_title' => 'general.titles.contracting_projects',
+                "route" => 'admin.contracting.projects.list',
+                "icon" => "fa fa-project-diagram fa-fw",
+                'can' => 'contracting_projects.list,contracting_projects.create,contracting_projects.update,contracting_projects.delete'
+            ],
+            [
+                "title" => "Contracts",
+                'translated_title' => 'general.titles.contracting_contracts',
+                "route" => 'admin.contracting.contracts.list',
+                "icon" => "fa fa-file-signature fa-fw",
+                'can' => 'contracting_contracts.list,contracting_contracts.create,contracting_contracts.update,contracting_contracts.delete'
+            ],
+            [
+                "title" => "Extracts",
+                'translated_title' => 'general.titles.contracting_extracts',
+                "route" => 'admin.contracting.extracts.list',
+                "icon" => "fa fa-file-invoice-dollar fa-fw",
+                'can' => 'contracting_extracts.list,contracting_extracts.create,contracting_extracts.approve,contracting_extracts.post'
+            ],
+            [
+                "title" => "Purchase Requests",
+                'translated_title' => 'general.titles.contracting_purchase_requests',
+                "route" => 'admin.contracting.purchase-requests.list',
+                "icon" => "fa fa-clipboard-list fa-fw",
+                'can' => 'contracting_purchase_requests.list,contracting_purchase_requests.create'
+            ],
+            [
+                "title" => "Purchase Orders",
+                'translated_title' => 'general.titles.contracting_purchase_orders',
+                "route" => 'admin.contracting.purchase-orders.list',
+                "icon" => "fa fa-shopping-cart fa-fw",
+                'can' => 'contracting_purchase_orders.list,contracting_purchase_orders.create'
+            ],
+            [
+                "title" => "Site Inventory",
+                'translated_title' => 'general.titles.contracting_inventory',
+                "route" => 'admin.contracting.inventory.list',
+                "icon" => "fa fa-warehouse fa-fw",
+                'can' => 'contracting_inventory.list,contracting_inventory.show,contracting_inventory.create'
+            ],
+            [
+                "title" => "Warehouses",
+                'translated_title' => 'general.titles.contracting_warehouses',
+                "route" => 'admin.contracting.warehouses.list',
+                "icon" => "fa fa-building fa-fw",
+                'can' => 'contracting_warehouses.list,contracting_warehouses.create,contracting_warehouses.update,contracting_warehouses.delete'
+            ],
+            [
+                "title" => "Construction Items",
+                'translated_title' => 'general.titles.contracting_items',
+                "route" => 'admin.contracting.items.list',
+                "icon" => "fa fa-cubes fa-fw",
+                'can' => 'contracting_items.list,contracting_items.create,contracting_items.update,contracting_items.delete'
+            ],
+            [
+                "title" => "Chart of Accounts",
+                'translated_title' => 'general.titles.contracting_chart_of_accounts',
+                "route" => 'admin.contracting.chart-of-accounts.list',
+                "icon" => "fa fa-sitemap fa-fw",
+                'can' => 'contracting_chart_of_accounts.list,contracting_chart_of_accounts.create'
+            ],
+            [
+                "title" => "Cost Centers",
+                'translated_title' => 'general.titles.contracting_cost_centers',
+                "route" => 'admin.contracting.cost-centers.list',
+                "icon" => "fa fa-coins fa-fw",
+                'can' => 'contracting_cost_centers.list,contracting_cost_centers.create'
+            ],
+            [
+                "title" => "Journal Entries",
+                'translated_title' => 'general.titles.contracting_journal_entries',
+                "route" => 'admin.contracting.journal-entries.list',
+                "icon" => "fa fa-book fa-fw",
+                'can' => 'contracting_journal_entries.list,contracting_journal_entries.create,contracting_journal_entries.post'
+            ],
+            [
+                "title" => "Workers",
+                'translated_title' => 'general.titles.contracting_workers',
+                "route" => 'admin.contracting.workers.list',
+                "icon" => "fa fa-hard-hat fa-fw",
+                'can' => 'contracting_workers.list,contracting_workers.create'
+            ],
+            [
+                "title" => "Labor Timesheets",
+                'translated_title' => 'general.titles.contracting_timesheets',
+                "route" => 'admin.contracting.timesheets.list',
+                "icon" => "fa fa-clock fa-fw",
+                'can' => 'contracting_timesheets.list,contracting_timesheets.create,contracting_timesheets.approve'
+            ],
+            [
+                "title" => "Equipment",
+                'translated_title' => 'general.titles.contracting_equipment',
+                "route" => 'admin.contracting.equipment.list',
+                "icon" => "fa fa-truck-monster fa-fw",
+                'can' => 'contracting_equipment.list,contracting_equipment.create'
+            ],
+            [
+                "title" => "Equipment Logs",
+                'translated_title' => 'general.titles.contracting_equipment_logs',
+                "route" => 'admin.contracting.equipment-logs.list',
+                "icon" => "fa fa-tools fa-fw",
+                'can' => 'contracting_equipment_logs.list,contracting_equipment_logs.create'
+            ],
+        ],
+    ],
+    [
+        "title" => "Products",
         'translated_title' => 'general.titles.products',
-        "icon"      => "fa fa-boxes fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-boxes fa-fw",
+        "route" => "#",
         'can' => 'products.list,products.create,products.update,products.delete,products.export,categories.list,categories.create,categories.update,categories.delete,categories.export,brands.list,brands.create,brands.update,brands.delete,brands.export,units.list,units.create,units.update,units.delete,units.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Products",
                 'translated_title' => 'general.titles.products',
                 "route" => 'admin.products.list',
-                "icon"  => "fa fa-box fa-fw",
+                "icon" => "fa fa-box fa-fw",
                 'can' => 'products.list,products.create,products.update,products.delete,products.export'
             ],
             [
                 "title" => "Categories",
                 'translated_title' => 'general.titles.categories',
                 "route" => 'admin.categories.list',
-                "icon"  => "fa fa-list fa-fw",
+                "icon" => "fa fa-list fa-fw",
                 'can' => 'categories.list,categories.create,categories.update,categories.delete,categories.export',
                 'enabled' => 'enable_categories'
             ],
@@ -162,7 +297,7 @@ return [
                 "title" => "Brands",
                 'translated_title' => 'general.titles.brands',
                 "route" => 'admin.brands.list',
-                "icon"  => "fa fa-tag fa-fw",
+                "icon" => "fa fa-tag fa-fw",
                 'can' => 'brands.list,brands.create,brands.update,brands.delete,brands.export',
                 'enabled' => 'enable_brands'
             ],
@@ -170,76 +305,76 @@ return [
                 "title" => "Units",
                 'translated_title' => 'general.titles.units',
                 "route" => 'admin.units.list',
-                "icon"  => "fa fa-ruler fa-fw",
+                "icon" => "fa fa-ruler fa-fw",
                 'can' => 'units.list,units.create,units.update,units.delete,units.export'
             ],
         ]
     ],
     [
-        "title"     => "Inventory",
+        "title" => "Inventory",
         'translated_title' => 'general.titles.inventory',
-        "icon"      => "fa fa-warehouse fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-warehouse fa-fw",
+        "route" => "#",
         'subscription_check' => 'inventory',
         'can' => 'stock_transfers.list,stock_transfers.show,stock_transfers.create,stock_transfers.update,stock_transfers.delete,stock_transfers.export,stock_adjustments.list,stock_adjustments.show,stock_adjustments.create,stock_adjustments.update,stock_adjustments.delete,stock_adjustments.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Stocks",
                 'translated_title' => 'general.titles.stocks',
                 "route" => 'admin.stocks.list',
-                "icon"  => "fa fa-layer-group fa-fw",
+                "icon" => "fa fa-layer-group fa-fw",
                 'can' => 'products.list,products.show'
             ],
             [
                 "title" => "Stock Transfers",
                 'translated_title' => 'general.titles.stock-transfers',
                 "route" => 'admin.stocks.transfers.list',
-                "icon"  => "fa fa-exchange-alt fa-fw",
+                "icon" => "fa fa-exchange-alt fa-fw",
                 'can' => 'stock_transfers.list,stock_transfers.show,stock_transfers.create,stock_transfers.update,stock_transfers.delete,stock_transfers.export'
             ],
             [
                 "title" => "Stock Adjustments",
                 'translated_title' => 'general.titles.stock-adjustments',
                 "route" => 'admin.stocks.adjustments.list',
-                "icon"  => "fa fa-sliders-h fa-fw",
+                "icon" => "fa fa-sliders-h fa-fw",
                 'can' => 'stock_adjustments.list,stock_adjustments.show,stock_adjustments.create,stock_adjustments.update,stock_adjustments.delete,stock_adjustments.export'
             ],
         ]
     ],
     [
-        "title"     => "Sales",
+        "title" => "Sales",
         'translated_title' => 'general.titles.sales',
-        "icon"      => "fa fa-chart-line fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-chart-line fa-fw",
+        "route" => "#",
         'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export,customers.list,customers.show,customers.create,customers.update,customers.delete,customers.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Orders",
                 'translated_title' => 'general.titles.sales_orders',
                 "route" => 'admin.sales.index',
-                "icon"  => "fa fa-receipt fa-fw",
+                "icon" => "fa fa-receipt fa-fw",
                 'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export'
             ],
             [
                 "title" => "Deferred Sales",
                 'translated_title' => 'general.titles.deferred_sales',
                 "route" => 'admin.sales.deferred',
-                "icon"  => "fa fa-hourglass-half fa-fw",
+                "icon" => "fa fa-hourglass-half fa-fw",
                 'can' => 'sales.list,sales.show,sales.update,sales.delete,sales.pay,sales.export'
             ],
             [
                 "title" => "Requests",
                 'translated_title' => 'general.titles.sale-requests',
                 "route" => 'admin.sale-requests.list',
-                "icon"  => "fa fa-file-alt fa-fw",
+                "icon" => "fa fa-file-alt fa-fw",
                 'can' => 'sales.list,sales.show,sales.update,sales.delete'
             ],
             [
                 "title" => "Customers",
                 'translated_title' => 'general.titles.customers',
                 "route" => 'admin.users.list',
-                'route_params' => ['type'=>'customer'],
-                "icon"  => "fa fa-user-friends fa-fw",
+                'route_params' => ['type' => 'customer'],
+                "icon" => "fa fa-user-friends fa-fw",
                 'can' => 'customers.list,customers.show,customers.create,customers.update,customers.delete,customers.export'
             ],
             [
@@ -247,45 +382,45 @@ return [
                 'translated_title' => 'general.titles.refunds',
                 "route" => 'admin.refunds.list',
                 'request_params' => ['order_type' => 'sale'],
-                "icon"  => "fa fa-undo-alt fa-fw",
+                "icon" => "fa fa-undo-alt fa-fw",
                 'can' => 'refunds.list,refunds.show,refunds.create,refunds.delete,refunds.export'
             ]
         ],
     ],
     [
-        "title"     => "Purchases",
+        "title" => "Purchases",
         'translated_title' => 'general.titles.purchases',
-        "icon"      => "fa fa-shopping-bag fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-shopping-bag fa-fw",
+        "route" => "#",
         'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export,suppliers.list,suppliers.show,suppliers.create,suppliers.update,suppliers.delete,suppliers.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Orders",
                 'translated_title' => 'general.titles.purchases_orders',
                 "route" => 'admin.purchases.list',
-                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                "icon" => "fa fa-file-invoice-dollar fa-fw",
                 'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export'
             ],
             [
                 "title" => "Deferred Purchases",
                 'translated_title' => 'general.titles.deferred_purchases',
                 "route" => 'admin.purchases.deferred',
-                "icon"  => "fa fa-hourglass-half fa-fw",
+                "icon" => "fa fa-hourglass-half fa-fw",
                 'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete,purchases.pay,purchases.export'
             ],
             [
                 "title" => "Requests",
                 'translated_title' => 'general.titles.purchase-requests',
                 "route" => 'admin.purchase-requests.list',
-                "icon"  => "fa fa-file-alt fa-fw",
+                "icon" => "fa fa-file-alt fa-fw",
                 'can' => 'purchases.list,purchases.show,purchases.create,purchases.delete'
             ],
             [
                 "title" => "Suppliers",
                 'translated_title' => 'general.titles.suppliers',
                 "route" => 'admin.users.list',
-                'route_params' => ['type'=>'supplier'],
-                "icon"  => "fa fa-shipping-fast fa-fw",
+                'route_params' => ['type' => 'supplier'],
+                "icon" => "fa fa-shipping-fast fa-fw",
                 'can' => 'suppliers.list,suppliers.show,suppliers.create,suppliers.update,suppliers.delete,suppliers.export'
             ],
             [
@@ -293,53 +428,53 @@ return [
                 'translated_title' => 'general.titles.refunds',
                 "route" => 'admin.refunds.list',
                 'request_params' => ['order_type' => 'purchase'],
-                "icon"  => "fa fa-undo-alt fa-fw",
+                "icon" => "fa fa-undo-alt fa-fw",
                 'can' => 'refunds.list,refunds.show,refunds.create,refunds.delete,refunds.export'
             ]
         ],
     ],
     [
-        "title"     => "Expenses",
+        "title" => "Expenses",
         'translated_title' => 'general.titles.expenses',
-        "icon"      => "fa fa-file-invoice fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-file-invoice fa-fw",
+        "route" => "#",
         'can' => 'expense_categories.list,expense_categories.create,expense_categories.update,expense_categories.delete,expense_categories.export,expenses.list,expenses.create,expenses.update,expenses.delete,expenses.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Expense Categories",
                 'translated_title' => 'general.titles.expense-categories',
                 "route" => 'admin.expense-categories.list',
-                "icon"  => "fa fa-folder-open fa-fw",
+                "icon" => "fa fa-folder-open fa-fw",
                 'can' => 'expense_categories.list,expense_categories.create,expense_categories.update,expense_categories.delete,expense_categories.export'
             ],
             [
                 "title" => "Expenses",
                 'translated_title' => 'general.titles.expenses',
                 "route" => 'admin.expenses.list',
-                "icon"  => "fa fa-money-bill-wave fa-fw",
+                "icon" => "fa fa-money-bill-wave fa-fw",
                 'can' => 'expenses.list,expenses.create,expenses.update,expenses.delete,expenses.export'
             ],
         ],
     ],
     [
-        "title"     => "Accounting",
+        "title" => "Accounting",
         'translated_title' => 'general.titles.accounting',
-        "icon"      => "fa fa-file-invoice-dollar fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-file-invoice-dollar fa-fw",
+        "route" => "#",
         'can' => 'payment_methods.list,payment_methods.create,payment_methods.update,payment_methods.delete,payment_methods.export,transactions.list,transactions.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Payment Methods",
                 'translated_title' => 'general.titles.payment-methods',
                 "route" => 'admin.payment-methods.list',
-                "icon"  => "fa fa-credit-card fa-fw",
+                "icon" => "fa fa-credit-card fa-fw",
                 'can' => 'payment_methods.list,payment_methods.create,payment_methods.update,payment_methods.delete,payment_methods.export'
             ],
             [
                 "title" => "Fixed Assets",
                 'translated_title' => 'general.titles.fixed-assets',
                 "route" => 'admin.fixed-assets.list',
-                "icon"  => "fa fa-building fa-fw",
+                "icon" => "fa fa-building fa-fw",
                 'subscription_check' => 'double_entry_accounting',
                 'can' => 'fixed_assets.list,fixed_assets.show,fixed_assets.create,fixed_assets.update,fixed_assets.delete,fixed_assets.export'
             ],
@@ -347,7 +482,7 @@ return [
                 "title" => "Depreciation Expenses",
                 'translated_title' => 'general.titles.depreciation-expenses',
                 "route" => 'admin.depreciation-expenses.list',
-                "icon"  => "fa fa-chart-area fa-fw",
+                "icon" => "fa fa-chart-area fa-fw",
                 'subscription_check' => 'double_entry_accounting',
                 'can' => 'depreciation_expenses.list,depreciation_expenses.show,depreciation_expenses.create,depreciation_expenses.update,depreciation_expenses.delete,depreciation_expenses.export'
             ],
@@ -355,103 +490,103 @@ return [
                 "title" => "Shipping Companies (SOON)",
                 'translated_title' => 'general.titles.shipping-companies',
                 "route" => "#",
-                "icon"  => "fa fa-shipping-fast fa-fw",
+                "icon" => "fa fa-shipping-fast fa-fw",
                 //'can' => 'shipping_companies.list,shipping_companies.create,shipping_companies.update,shipping_companies.delete,shipping_companies.export'
             ],
             [
                 "title" => "Transactions",
                 'translated_title' => 'general.titles.transactions',
                 "route" => 'admin.transactions.list',
-                "icon"  => "fa fa-exchange-alt fa-fw",
+                "icon" => "fa fa-exchange-alt fa-fw",
                 'subscription_check' => 'double_entry_accounting',
                 'can' => 'transactions.list,transactions.export'
             ]
         ],
     ],
     [
-        "title"     => "Administrators",
+        "title" => "Administrators",
         'translated_title' => 'general.titles.administrators',
-        "icon"      => "fa fa-user-shield fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-user-shield fa-fw",
+        "route" => "#",
         'can' => 'user_management.list,user_management.create,user_management.update,user_management.delete,user_management.export,role_management.list,role_management.create,role_management.update,role_management.delete,role_management.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Users",
                 'translated_title' => 'general.titles.admins',
                 "route" => 'admin.admins.list',
-                "icon"  => "fa fa-user-tie fa-fw",
+                "icon" => "fa fa-user-tie fa-fw",
                 'can' => 'user_management.list,user_management.create,user_management.update,user_management.delete,user_management.export'
             ],
             [
                 "title" => "Roles & Permissions",
                 'translated_title' => 'general.titles.roles-permissions',
                 "route" => 'admin.roles.list',
-                "icon"  => "fa fa-user-lock fa-fw",
+                "icon" => "fa fa-user-lock fa-fw",
                 'can' => 'role_management.list,role_management.create,role_management.update,role_management.delete,role_management.export'
             ],
         ],
     ],
     [
-        "title"     => "Reports",
+        "title" => "Reports",
         'translated_title' => 'general.titles.reports',
-        "icon"      => "fa fa-chart-bar fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-chart-bar fa-fw",
+        "route" => "#",
         'can' => 'reports.list,reports.export',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Financial Reports",
                 'translated_title' => 'general.titles.financial-reports',
                 "route" => "#",
-                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                "icon" => "fa fa-file-invoice-dollar fa-fw",
                 'subscription_check' => 'advanced_reports',
                 "children" => [
                     [
                         "title" => "Trial Balance",
                         'translated_title' => 'general.titles.trial-balance',
                         "route" => 'admin.reports.financial.trail-balance',
-                        "icon"  => "fa fa-balance-scale fa-fw"
+                        "icon" => "fa fa-balance-scale fa-fw"
                     ],
                     [
                         "title" => "Income Statement",
                         'translated_title' => 'general.titles.income-statement',
                         "route" => 'admin.reports.financial.income-statement',
-                        "icon"  => "fa fa-file-invoice-dollar fa-fw"
+                        "icon" => "fa fa-file-invoice-dollar fa-fw"
                     ],
                     [
                         "title" => "Cash Flow Statement",
                         'translated_title' => 'general.titles.cash-flow-statement',
                         "route" => 'admin.reports.financial.cash-flow-statement',
-                        "icon"  => "fa fa-water fa-fw"
+                        "icon" => "fa fa-water fa-fw"
                     ],
                     [
                         "title" => "General Ledger",
                         'translated_title' => 'general.titles.general-ledger',
                         "route" => 'admin.reports.financial.general-ledger',
-                        "icon"  => "fa fa-book fa-fw"
+                        "icon" => "fa fa-book fa-fw"
                     ],
                     [
                         "title" => "Fixed Assets Report",
                         'translated_title' => 'general.titles.fixed-assets-report',
                         "route" => 'admin.reports.financial.fixed-assets',
-                        "icon"  => "fa fa-building fa-fw"
+                        "icon" => "fa fa-building fa-fw"
                     ],
                     [
                         "title" => "Depreciation Expenses Report",
                         'translated_title' => 'general.titles.depreciation-expenses-report',
                         "route" => 'admin.reports.financial.depreciation-expenses',
-                        "icon"  => "fa fa-chart-area fa-fw"
+                        "icon" => "fa fa-chart-area fa-fw"
                     ],
                     [
                         "title" => "Balance Sheet",
                         'translated_title' => 'general.titles.balance-sheet',
                         "route" => 'admin.reports.financial.balance-sheet',
-                        "icon"  => "fa fa-balance-scale fa-fw"
+                        "icon" => "fa fa-balance-scale fa-fw"
                     ],
                     [
                         "title" => "Audit Trail Report",
                         'translated_title' => 'general.titles.audit-trail-report',
                         "route" => "admin.reports.audit.report",
-                        "icon"  => "fa fa-user-secret fa-fw"
+                        "icon" => "fa fa-user-secret fa-fw"
                     ]
                 ],
             ],
@@ -459,55 +594,55 @@ return [
                 "title" => "Sales Reports",
                 'translated_title' => 'general.titles.sales-reports',
                 "route" => "#",
-                "icon"  => "fa fa-chart-line fa-fw",
+                "icon" => "fa fa-chart-line fa-fw",
                 "children" => [
                     [
                         "title" => "Sales Summary",
                         'translated_title' => 'general.titles.sales-summary',
                         "route" => 'admin.reports.sales.sales.summary',
-                        "icon"  => "fa fa-clipboard-list fa-fw",
+                        "icon" => "fa fa-clipboard-list fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales by Product",
                         'translated_title' => 'general.titles.sales-by-product',
                         "route" => 'admin.reports.sales.sales.product',
-                        "icon"  => "fa fa-box fa-fw",
+                        "icon" => "fa fa-box fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales by Branch",
                         'translated_title' => 'general.titles.sales-by-branch',
                         "route" => 'admin.reports.sales.sales.branch',
-                        "icon"  => "fa fa-code-branch fa-fw",
+                        "icon" => "fa fa-code-branch fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales by Customer",
                         'translated_title' => 'general.titles.sales-by-customer',
                         "route" => 'admin.reports.sales.sales.customer',
-                        "icon"  => "fa fa-user-friends fa-fw",
+                        "icon" => "fa fa-user-friends fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Sales Profit Report",
                         'translated_title' => 'general.titles.sales-profit-report',
                         "route" => 'admin.reports.sales.sales.profit-loss',
-                        "icon"  => "fa fa-percentage fa-fw",
+                        "icon" => "fa fa-percentage fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "VAT on Sales (VAT Payable)",
                         'translated_title' => 'general.titles.vat-on-sales',
                         "route" => 'admin.reports.sales.sales.vat-report',
-                        "icon"  => "fa fa-file-invoice fa-fw",
+                        "icon" => "fa fa-file-invoice fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Sales Return Report",
                         'translated_title' => 'general.titles.sales-return-report',
                         "route" => 'admin.reports.sales.sales.returns',
-                        "icon"  => "fa fa-undo-alt fa-fw",
+                        "icon" => "fa fa-undo-alt fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                 ],
@@ -516,55 +651,55 @@ return [
                 "title" => "Purchase Reports",
                 'translated_title' => 'general.titles.purchase-reports',
                 "route" => "#",
-                "icon"  => "fa fa-file-invoice fa-fw",
+                "icon" => "fa fa-file-invoice fa-fw",
                 "children" => [
                     [
                         "title" => "Purchase Summary",
                         'translated_title' => 'general.titles.purchase-summary',
                         "route" => 'admin.reports.purchases.purchases.summary',
-                        "icon"  => "fa fa-clipboard-list fa-fw",
+                        "icon" => "fa fa-clipboard-list fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Purchases by Product",
                         'translated_title' => 'general.titles.purchases-by-product',
                         "route" => 'admin.reports.purchases.purchases.product',
-                        "icon"  => "fa fa-box fa-fw",
+                        "icon" => "fa fa-box fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Purchases by Branch",
                         'translated_title' => 'general.titles.purchases-by-branch',
                         "route" => 'admin.reports.purchases.purchases.branch',
-                        "icon"  => "fa fa-code-branch fa-fw",
+                        "icon" => "fa fa-code-branch fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Purchases by Supplier",
                         'translated_title' => 'general.titles.purchases-by-supplier',
                         "route" => 'admin.reports.purchases.purchases.supplier',
-                        "icon"  => "fa fa-shipping-fast fa-fw",
+                        "icon" => "fa fa-shipping-fast fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "VAT on Purchases (VAT Receivable)",
                         'translated_title' => 'general.titles.vat-on-purchases',
                         "route" => 'admin.reports.purchases.purchases.vat-report',
-                        "icon"  => "fa fa-file-invoice fa-fw",
+                        "icon" => "fa fa-file-invoice fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Purchase Discount Report",
                         'translated_title' => 'general.titles.purchase-discount-report',
                         "route" => 'admin.reports.purchases.purchases.discounts',
-                        "icon"  => "fa fa-percentage fa-fw",
+                        "icon" => "fa fa-percentage fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Purchase Return Report",
                         'translated_title' => 'general.titles.purchase-return-report',
                         "route" => 'admin.reports.purchases.purchases.returns',
-                        "icon"  => "fa fa-undo-alt fa-fw",
+                        "icon" => "fa fa-undo-alt fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                 ],
@@ -573,34 +708,34 @@ return [
                 "title" => "Inventory & COGS Reports",
                 'translated_title' => 'general.titles.inventory-cogs-reports',
                 "route" => "#",
-                "icon"  => "fa fa-warehouse fa-fw",
+                "icon" => "fa fa-warehouse fa-fw",
                 "children" => [
                     [
                         "title" => "Inventory Valuation",
                         'translated_title' => 'general.titles.inventory-valuation',
                         "route" => 'admin.reports.inventory.stock-valuation',
-                        "icon"  => "fa fa-balance-scale fa-fw",
+                        "icon" => "fa fa-balance-scale fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Stock Movement Report",
                         'translated_title' => 'general.titles.stock-movement-report',
                         "route" => 'admin.reports.inventory.stock-movement',
-                        "icon"  => "fa fa-exchange-alt fa-fw",
+                        "icon" => "fa fa-exchange-alt fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "COGS Report",
                         'translated_title' => 'general.titles.cogs-report',
                         "route" => 'admin.reports.inventory.cogs-report',
-                        "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                        "icon" => "fa fa-file-invoice-dollar fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "Inventory Shortage Report",
                         'translated_title' => 'general.titles.inventory-shortage-report',
                         "route" => 'admin.reports.inventory.shortage-report',
-                        "icon"  => "fa fa-box-open fa-fw",
+                        "icon" => "fa fa-box-open fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ],
                 ],
@@ -609,50 +744,50 @@ return [
                 "title" => "Performance & Analysis Reports",
                 'translated_title' => 'general.titles.performance-analysis-reports',
                 "route" => "#",
-                "icon"  => "fa fa-chart-pie fa-fw",
+                "icon" => "fa fa-chart-pie fa-fw",
                 'subscription_check' => 'advanced_reports',
                 "children" => [
                     [
                         "title" => "Profit Margin by Product",
                         'translated_title' => 'general.titles.profit-margin-by-product',
                         "route" => 'admin.reports.performance.product-profit-margin',
-                        "icon"  => "fa fa-percentage fa-fw"
+                        "icon" => "fa fa-percentage fa-fw"
                     ],
                     [
                         "title" => "Customer Outstanding Report",
                         'translated_title' => 'general.titles.customer-outstanding-report',
                         "route" => 'admin.reports.performance.customer-outstanding',
-                        "icon"  => "fa fa-user-clock fa-fw"
+                        "icon" => "fa fa-user-clock fa-fw"
                     ],
                     [
                         "title" => "Supplier Payable Report",
                         'translated_title' => 'general.titles.supplier-payable-report',
                         "route" => 'admin.reports.performance.supplier-payable',
-                        "icon"  => "fa fa-shipping-fast fa-fw"
+                        "icon" => "fa fa-shipping-fast fa-fw"
                     ],
                     [
                         "title" => "Expense Breakdown",
                         'translated_title' => 'general.titles.expense-breakdown',
                         "route" => 'admin.reports.performance.expense-breakdown',
-                        "icon"  => "fa fa-file-invoice fa-fw"
+                        "icon" => "fa fa-file-invoice fa-fw"
                     ],
                     [
                         "title" => "Revenue Breakdown",
                         'translated_title' => 'general.titles.revenue-breakdown',
                         "route" => 'admin.reports.performance.revenue-breakdown-by-branch',
-                        "icon"  => "fa fa-chart-bar fa-fw"
+                        "icon" => "fa fa-chart-bar fa-fw"
                     ],
                     [
                         "title" => "Discount Impact Report",
                         'translated_title' => 'general.titles.discount-impact-report',
                         "route" => 'admin.reports.performance.discount-impact',
-                        "icon"  => "fa fa-percentage fa-fw"
+                        "icon" => "fa fa-percentage fa-fw"
                     ],
                     [
                         "title" => "Sales Threshold Report",
                         'translated_title' => 'general.titles.sales-threshold-report',
                         "route" => 'admin.reports.performance.sales-threshold',
-                        "icon"  => "fa fa-trophy fa-fw"
+                        "icon" => "fa fa-trophy fa-fw"
                     ]
                 ]
             ],
@@ -660,20 +795,20 @@ return [
                 "title" => "Tax & Compliance Reports",
                 'translated_title' => 'general.titles.tax-compliance-reports',
                 "route" => "#",
-                "icon"  => "fa fa-file-invoice fa-fw",
+                "icon" => "fa fa-file-invoice fa-fw",
                 'subscription_check' => 'advanced_reports',
                 "children" => [
                     [
                         "title" => "VAT Summary Report",
                         'translated_title' => 'general.titles.vat-summary-report',
                         "route" => 'admin.reports.taxes.vat-summary',
-                        "icon"  => "fa fa-file-invoice fa-fw"
+                        "icon" => "fa fa-file-invoice fa-fw"
                     ],
                     [
                         "title" => "With holding Tax Report",
                         'translated_title' => 'general.titles.withholding-tax-report',
                         "route" => 'admin.reports.taxes.withholding-tax',
-                        "icon"  => "fa fa-file-invoice-dollar fa-fw"
+                        "icon" => "fa fa-file-invoice-dollar fa-fw"
                     ]
                 ]
             ],
@@ -681,27 +816,27 @@ return [
                 "title" => "Branch / User / Cash Reports",
                 'translated_title' => 'general.titles.branch-user-cash-reports',
                 "route" => "#",
-                "icon"  => "fa fa-chart-bar fa-fw",
+                "icon" => "fa fa-chart-bar fa-fw",
                 "children" => [
                     [
                         "title" => "Cash Register Summary",
                         'translated_title' => 'general.titles.cash-register',
                         "route" => 'admin.reports.cash.register.report',
-                        "icon"  => "fa fa-cash-register fa-fw",
+                        "icon" => "fa fa-cash-register fa-fw",
                         'subscription_check' => 'basic_reports'
                     ],
                     [
                         "title" => "Branch Profitability",
                         'translated_title' => 'general.titles.branch-profitability',
                         "route" => 'admin.reports.branch.profitability',
-                        "icon"  => "fa fa-code-branch fa-fw",
+                        "icon" => "fa fa-code-branch fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ],
                     [
                         "title" => "User / Cashier Performance",
                         'translated_title' => 'general.titles.cashier-performance',
                         "route" => 'admin.reports.cashier.report',
-                        "icon"  => "fa fa-user-tie fa-fw",
+                        "icon" => "fa fa-user-tie fa-fw",
                         'subscription_check' => 'advanced_reports'
                     ]
                 ]
@@ -716,17 +851,17 @@ return [
         'can' => 'subscriptions.list,subscriptions.cancel',
     ],
     [
-        "title"     => "Settings",
+        "title" => "Settings",
         'translated_title' => 'general.titles.settings',
-        "icon"      => "fa fa-cogs fa-fw",
-        "route"     => "#",
+        "icon" => "fa fa-cogs fa-fw",
+        "route" => "#",
         'can' => 'discounts.list,discounts.create,discounts.update,discounts.delete,discounts.export,taxes.list,taxes.create,taxes.update,taxes.delete,taxes.export,general_settings.update',
-        "children"  => [
+        "children" => [
             [
                 "title" => "Discounts",
                 'translated_title' => 'general.titles.discounts',
                 "route" => 'admin.discounts.list',
-                "icon"  => "fa fa-percentage fa-fw",
+                "icon" => "fa fa-percentage fa-fw",
                 'subscription_check' => 'discounts',
                 'can' => 'discounts.list,discounts.create,discounts.update,discounts.delete,discounts.export'
             ],
@@ -734,7 +869,7 @@ return [
                 "title" => "Taxes",
                 'translated_title' => 'general.titles.taxes',
                 "route" => 'admin.taxes.list',
-                "icon"  => "fa fa-file-invoice-dollar fa-fw",
+                "icon" => "fa fa-file-invoice-dollar fa-fw",
                 'subscription_check' => 'taxes',
                 'can' => 'taxes.list,taxes.create,taxes.update,taxes.delete,taxes.export'
             ],
@@ -742,7 +877,7 @@ return [
                 "title" => "General Settings",
                 'translated_title' => 'general.titles.general-settings',
                 "route" => "admin.settings",
-                "icon"  => "fa fa-cogs fa-fw",
+                "icon" => "fa fa-cogs fa-fw",
                 'can' => 'general_settings.update'
             ]
         ]

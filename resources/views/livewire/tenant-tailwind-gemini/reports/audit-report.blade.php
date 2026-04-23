@@ -27,7 +27,7 @@
                         <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-slate-800">
                             <i class="fa fa-check-circle"></i> {{ __('general.pages.reports.common.apply') }}
                         </button>
-                        <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
+                        <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-slate-600">
                             <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
                         </button>
                     </div>
@@ -39,7 +39,7 @@
             <div class="flex items-center justify-between px-3 pt-3">
                 <div class="flex items-center">
                 </div>
-                <small class="text-slate-500">{{ __('general.pages.reports.audit_report.total') }}: {{ $audits->total() }}</small>
+                <small class="text-slate-500 dark:text-slate-400">{{ __('general.pages.reports.audit_report.total') }}: {{ $audits->total() }}</small>
             </div>
             <div class="pt-2">
                 <div class="table-responsive">

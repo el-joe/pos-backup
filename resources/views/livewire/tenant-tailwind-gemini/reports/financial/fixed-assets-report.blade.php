@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <x-tenant-tailwind-gemini.filter-card :title="__('general.pages.reports.common.filter_options')" icon="fa-filter" class="mb-4">
         <div class="flex justify-end mb-3">
-            <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
+            <button type="button" wire:click="resetFilters" class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-slate-600">
                 <i class="fa fa-refresh"></i> {{ __('general.pages.reports.common.reset') }}
             </button>
         </div>
@@ -53,27 +53,27 @@
 
     <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.fixed_assets_report.assets_count') }}</div>
-                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ $count }}</div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.reports.financial.fixed_assets_report.assets_count') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ $count }}</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.fixed_assets_report.total_cost') }}</div>
-                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ currencyFormat($totalCost, true) }}</div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.reports.financial.fixed_assets_report.total_cost') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($totalCost, true) }}</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.fixed_assets_report.total_accumulated_depreciation') }}</div>
-                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ currencyFormat($totalAccum, true) }}</div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.reports.financial.fixed_assets_report.total_accumulated_depreciation') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($totalAccum, true) }}</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{ __('general.pages.reports.financial.fixed_assets_report.total_net_book_value') }}</div>
-                <div class="mt-3 text-3xl font-semibold text-slate-900">{{ currencyFormat($totalNBV, true) }}</div>
+            <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ __('general.pages.reports.financial.fixed_assets_report.total_net_book_value') }}</div>
+                <div class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ currencyFormat($totalNBV, true) }}</div>
             </div>
         </div>
     </div>

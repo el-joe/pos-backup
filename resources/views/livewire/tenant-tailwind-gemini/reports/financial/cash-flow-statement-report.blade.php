@@ -28,7 +28,7 @@
                             <td>{{ currencyFormat($flow['net'], true) }}</td>
                         </tr>
                         @endforeach
-                        <tr class="bg-sky-50 font-bold text-slate-900">
+                        <tr class="bg-sky-50 font-bold text-slate-900 dark:bg-sky-900/30 dark:text-white">
                             <td>{{ __('general.pages.reports.common.total') }}</td>
                             <td>{{ currencyFormat($report['total_inflow'] ?? 0, true) }}</td>
                             <td>{{ currencyFormat($report['total_outflow'] ?? 0, true) }}</td>

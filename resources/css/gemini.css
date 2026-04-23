@@ -17,8 +17,15 @@ body {
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 .animate-float {
@@ -40,4 +47,252 @@ body {
 .faq-item.active .faq-icon {
     transform: rotate(180deg);
     color: #00d2b4;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Dark mode fixes for tenant-tailwind-gemini                                 */
+/* Bootstrap 5.3 components auto-theme via [data-bs-theme="dark"] on <html>.  */
+/* The overrides below cover 3rd-party widgets and defensive fallbacks that   */
+/* don't respect that attribute.                                              */
+/* -------------------------------------------------------------------------- */
+
+/* Defensive fallback: any HUD-ported content inside .gemini-legacy-page gets
+   sane dark defaults even when the blade file forgot `dark:` variants. */
+html.dark .gemini-legacy-page {
+    color-scheme: dark;
+    color: rgb(226 232 240);
+    /* slate-200 */
+}
+
+html.dark .gemini-legacy-page .text-slate-900,
+html.dark .gemini-legacy-page .text-gray-900,
+html.dark .gemini-legacy-page .text-black {
+    color: rgb(241 245 249) !important;
+    /* slate-100 */
+}
+
+html.dark .gemini-legacy-page .text-slate-800,
+html.dark .gemini-legacy-page .text-gray-800,
+html.dark .gemini-legacy-page .text-slate-700,
+html.dark .gemini-legacy-page .text-gray-700 {
+    color: rgb(226 232 240) !important;
+    /* slate-200 */
+}
+
+html.dark .gemini-legacy-page .text-slate-600,
+html.dark .gemini-legacy-page .text-gray-600,
+html.dark .gemini-legacy-page .text-slate-500,
+html.dark .gemini-legacy-page .text-gray-500 {
+    color: rgb(148 163 184) !important;
+    /* slate-400 */
+}
+
+/* Pastel "badge" backgrounds keep dark text on light bg — leave those alone,
+   they remain readable in dark mode. */
+
+/* Cards / panels ported from HUD that set bg-white without dark: variant. */
+html.dark .gemini-legacy-page .bg-white:not([class*="dark:bg-"]) {
+    background-color: rgb(30 41 59) !important;
+    /* slate-800 */
+}
+
+html.dark .gemini-legacy-page .bg-gray-50:not([class*="dark:bg-"]),
+html.dark .gemini-legacy-page .bg-slate-50:not([class*="dark:bg-"]),
+html.dark .gemini-legacy-page .bg-gray-100:not([class*="dark:bg-"]),
+html.dark .gemini-legacy-page .bg-slate-100:not([class*="dark:bg-"]) {
+    background-color: rgb(15 23 42) !important;
+    /* slate-900 */
+}
+
+html.dark .gemini-legacy-page .border-gray-100:not([class*="dark:border-"]),
+html.dark .gemini-legacy-page .border-gray-200:not([class*="dark:border-"]),
+html.dark .gemini-legacy-page .border-slate-100:not([class*="dark:border-"]),
+html.dark .gemini-legacy-page .border-slate-200:not([class*="dark:border-"]) {
+    border-color: rgb(51 65 85) !important;
+    /* slate-700 */
+}
+
+/* Select2 --------------------------------------------------------------- */
+html.dark .select2-container--default .select2-selection--single,
+html.dark .select2-container--default .select2-selection--multiple {
+    background-color: rgb(30 41 59);
+    /* slate-800 */
+    border-color: rgb(71 85 105);
+    /* slate-600 */
+    color: rgb(226 232 240);
+    /* slate-200 */
+}
+
+html.dark .select2-container--default .select2-selection--single .select2-selection__rendered,
+html.dark .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    color: rgb(226 232 240);
+}
+
+html.dark .select2-container--default .select2-selection--single .select2-selection__placeholder,
+html.dark .select2-container--default .select2-selection--multiple .select2-selection__placeholder {
+    color: rgb(148 163 184);
+    /* slate-400 */
+}
+
+html.dark .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: rgb(148 163 184) transparent transparent transparent;
+}
+
+html.dark .select2-dropdown {
+    background-color: rgb(30 41 59);
+    border-color: rgb(71 85 105);
+    color: rgb(226 232 240);
+}
+
+html.dark .select2-container--default .select2-results__option {
+    color: rgb(226 232 240);
+}
+
+html.dark .select2-container--default .select2-results__option--highlighted[aria-selected],
+html.dark .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: rgb(37 99 235);
+    /* blue-600 */
+    color: white;
+}
+
+html.dark .select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: rgb(51 65 85);
+    /* slate-700 */
+    color: rgb(241 245 249);
+}
+
+html.dark .select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: rgb(15 23 42);
+    border-color: rgb(71 85 105);
+    color: rgb(226 232 240);
+}
+
+html.dark .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: rgb(37 99 235);
+    border-color: rgb(29 78 216);
+    color: white;
+}
+
+html.dark .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgb(29 78 216);
+}
+
+/* Date Range Picker ----------------------------------------------------- */
+html.dark .daterangepicker {
+    background-color: rgb(30 41 59);
+    border-color: rgb(71 85 105);
+    color: rgb(226 232 240);
+}
+
+html.dark .daterangepicker::before,
+html.dark .daterangepicker::after {
+    border-bottom-color: rgb(71 85 105);
+}
+
+html.dark .daterangepicker .calendar-table {
+    background-color: rgb(30 41 59);
+    border: none;
+}
+
+html.dark .daterangepicker .calendar-table th,
+html.dark .daterangepicker .calendar-table td {
+    color: rgb(226 232 240);
+    background-color: transparent;
+    border-color: transparent;
+}
+
+html.dark .daterangepicker td.off,
+html.dark .daterangepicker td.off.in-range,
+html.dark .daterangepicker td.off.start-date,
+html.dark .daterangepicker td.off.end-date {
+    color: rgb(100 116 139);
+    /* slate-500 */
+    background-color: transparent;
+}
+
+html.dark .daterangepicker td.available:hover,
+html.dark .daterangepicker th.available:hover {
+    background-color: rgb(51 65 85);
+    color: white;
+}
+
+html.dark .daterangepicker td.in-range {
+    background-color: rgb(30 58 138);
+    /* blue-900 */
+    color: rgb(191 219 254);
+}
+
+html.dark .daterangepicker td.active,
+html.dark .daterangepicker td.active:hover {
+    background-color: rgb(37 99 235);
+    color: white;
+}
+
+html.dark .daterangepicker .ranges li {
+    color: rgb(226 232 240);
+}
+
+html.dark .daterangepicker .ranges li:hover {
+    background-color: rgb(51 65 85);
+}
+
+html.dark .daterangepicker .ranges li.active {
+    background-color: rgb(37 99 235);
+    color: white;
+}
+
+html.dark .daterangepicker select.hourselect,
+html.dark .daterangepicker select.minuteselect,
+html.dark .daterangepicker select.secondselect,
+html.dark .daterangepicker select.ampmselect,
+html.dark .daterangepicker select.monthselect,
+html.dark .daterangepicker select.yearselect,
+html.dark .daterangepicker input.input-mini {
+    background-color: rgb(15 23 42);
+    border-color: rgb(71 85 105);
+    color: rgb(226 232 240);
+}
+
+html.dark .daterangepicker .drp-buttons {
+    border-top-color: rgb(71 85 105);
+}
+
+html.dark .daterangepicker .drp-calendar.left {
+    border-right-color: rgb(71 85 105);
+}
+
+/* SweetAlert2 --------------------------------------------------------- */
+html.dark .swal2-popup {
+    background-color: rgb(30 41 59);
+    color: rgb(226 232 240);
+}
+
+html.dark .swal2-popup .swal2-title,
+html.dark .swal2-popup .swal2-html-container,
+html.dark .swal2-popup .swal2-content,
+html.dark .swal2-popup label {
+    color: rgb(241 245 249);
+}
+
+html.dark .swal2-popup .swal2-input,
+html.dark .swal2-popup .swal2-textarea,
+html.dark .swal2-popup .swal2-select,
+html.dark .swal2-popup .swal2-file {
+    background-color: rgb(15 23 42);
+    border-color: rgb(71 85 105);
+    color: rgb(226 232 240);
+}
+
+html.dark .swal2-popup .swal2-validation-message {
+    background-color: rgb(15 23 42);
+    color: rgb(252 165 165);
+}
+
+html.dark .swal2-popup .swal2-close {
+    color: rgb(148 163 184);
+}
+
+html.dark .swal2-popup .swal2-close:hover {
+    color: rgb(241 245 249);
 }

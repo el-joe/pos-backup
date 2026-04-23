@@ -168,7 +168,7 @@
                         </div>
 
                         <label class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                            <input class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox" wire:model="data.active" id="branchActive">
+                            <input class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 dark:border-slate-600" type="checkbox" wire:model="data.active" id="branchActive">
                             <span>{{ __('general.pages.admins.is_active') }}</span>
                         </label>
                     </form>

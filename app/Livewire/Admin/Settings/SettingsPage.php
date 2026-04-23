@@ -159,14 +159,14 @@ class SettingsPage extends Component
                 'group' => 'product',
                 'options' => null
             ],
-            [
-                'title' => 'settings.default_tax',
-                'key' => 'default_tax',
-                'value' => null,
-                'type' => TenantSettingEnum::SELECT->value,
-                'group' => 'pos',
-                'options' => null
-            ],
+            // [
+            //     'title' => 'settings.default_tax',
+            //     'key' => 'default_tax',
+            //     'value' => null,
+            //     'type' => TenantSettingEnum::SELECT->value,
+            //     'group' => 'pos',
+            //     'options' => null
+            // ],
             [
                 'title'=> 'settings.panel_layout',
                 'key'=> 'panel_layout',

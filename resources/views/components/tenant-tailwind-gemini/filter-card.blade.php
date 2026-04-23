@@ -24,7 +24,7 @@
             @if(isset($actions))
                 {{ $actions }}
             @endif
-            <i class="fa fa-chevron-down text-xs text-slate-400 transition-transform" :class="expanded ? 'rotate-180' : ''"></i>
+            <i class="fa fa-chevron-down text-xs text-slate-400 transition-transform dark:text-slate-500" :class="expanded ? 'rotate-180' : ''"></i>
         </div>
     </button>
 

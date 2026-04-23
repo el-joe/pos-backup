@@ -55,7 +55,7 @@
 
                                 @case('boolean')
                                     <label class="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-slate-700 dark:bg-slate-800/70">
-                                        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" wire:model="settings.{{ $setting->key }}" id="{{ $setting->key }}" value="1" {{ ($settings[$setting->key] ?? false) ? 'checked' : '' }}>
+                                        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 dark:border-slate-600" wire:model="settings.{{ $setting->key }}" id="{{ $setting->key }}" value="1" {{ ($settings[$setting->key] ?? false) ? 'checked' : '' }}>
                                         <span class="text-sm font-medium text-slate-700 dark:text-slate-200">Enable</span>
                                     </label>
                                     @break

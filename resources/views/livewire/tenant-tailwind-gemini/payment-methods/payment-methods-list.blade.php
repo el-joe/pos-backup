@@ -173,7 +173,7 @@
                     </div>
 
                     <label class="inline-flex items-center gap-3 text-sm text-slate-700 dark:text-slate-300">
-                        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" id="expenseCategoryActive" wire:model="data.active">
+                        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 dark:border-slate-600" id="expenseCategoryActive" wire:model="data.active">
                         <span>{{ __('general.pages.payment-methods.is_active') }}</span>
                     </label>
                 </div>

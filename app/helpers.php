@@ -15,26 +15,28 @@ use RalphJSmit\Laravel\SEO\Support\ImageMeta;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
 use RalphJSmit\Laravel\SEO\TagManager;
 
-if(!defined('TENANT_ADMINS_GUARD')){
-    define('TENANT_ADMINS_GUARD','tenant_admin');
+if (!defined('TENANT_ADMINS_GUARD')) {
+    define('TENANT_ADMINS_GUARD', 'tenant_admin');
 }
-if(!defined('CPANEL_ADMINS_GUARD')){
-    define('CPANEL_ADMINS_GUARD','cpanel_admin');
+if (!defined('CPANEL_ADMINS_GUARD')) {
+    define('CPANEL_ADMINS_GUARD', 'cpanel_admin');
 }
-if(!defined('EMPLOYEES_GUARD')){
-    define('EMPLOYEES_GUARD','employee');
+if (!defined('EMPLOYEES_GUARD')) {
+    define('EMPLOYEES_GUARD', 'employee');
 }
 
-if(!function_exists('cacheKey')) {
-    function cacheKey($key){
+if (!function_exists('cacheKey')) {
+    function cacheKey($key)
+    {
         $tenantId = tenant()?->id ?? 'app';
 
         return $tenantId . '_' . $key;
     }
 }
 
-if(!function_exists('defaultLayout')) {
-    function defaultLayout(){
+if (!function_exists('defaultLayout')) {
+    function defaultLayout()
+    {
         if (!tenant()) {
             return 'hud';
         }
@@ -48,8 +50,9 @@ if(!function_exists('defaultLayout')) {
     }
 }
 
-if(!function_exists('resolveLivewireView')) {
-    function resolveLivewireView($pageName) {
+if (!function_exists('resolveLivewireView')) {
+    function resolveLivewireView($pageName)
+    {
         $layout = defaultLayout();
         $candidate = "livewire.{$layout}.{$pageName}";
 
@@ -61,8 +64,9 @@ if(!function_exists('resolveLivewireView')) {
     }
 }
 
-if(!function_exists('resolveTenantLayoutView')) {
-    function resolveTenantLayoutView($employee = false) {
+if (!function_exists('resolveTenantLayoutView')) {
+    function resolveTenantLayoutView($employee = false)
+    {
         $layout = defaultLayout();
         $candidate = $employee
             ? "layouts.employee.{$layout}"
@@ -76,8 +80,9 @@ if(!function_exists('resolveTenantLayoutView')) {
     }
 }
 
-if(!function_exists('panelAwareUrl')) {
-    function panelAwareUrl($url) {
+if (!function_exists('panelAwareUrl')) {
+    function panelAwareUrl($url)
+    {
         if (!$url || defaultLayout() !== 'tenant-tailwind-gemini' || !request()?->query('panel')) {
             return $url;
         }
@@ -104,26 +109,29 @@ if(!function_exists('panelAwareUrl')) {
     }
 }
 
-if(!function_exists('defaultLandingLayout')) {
-    function defaultLandingLayout(){
+if (!function_exists('defaultLandingLayout')) {
+    function defaultLandingLayout()
+    {
         // Central (marketing) landing pages layout.
         // Folder name under: resources/views/central/{layout}/
         return 'gemini-pages';
     }
 }
 
-if(!function_exists('layoutView')) {
-    function layoutView($pageName,$with = [],$isSubPage = false){
+if (!function_exists('layoutView')) {
+    function layoutView($pageName, $with = [], $isSubPage = false)
+    {
         $defaultView = resolveLivewireView($pageName);
         $defaultLayout = resolveTenantLayoutView();
         $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
         return view($defaultView, $with)
-                ->layout($isSubPage ? null : $defaultLayout, $layoutData);
+            ->layout($isSubPage ? null : $defaultLayout, $layoutData);
     }
 }
 
-if(!function_exists('employeeLayoutView')) {
-    function employeeLayoutView($pageName, $with = [], $isSubPage = false){
+if (!function_exists('employeeLayoutView')) {
+    function employeeLayoutView($pageName, $with = [], $isSubPage = false)
+    {
         $defaultView = resolveLivewireView($pageName);
         $defaultLayout = resolveTenantLayoutView(true);
 
@@ -132,8 +140,9 @@ if(!function_exists('employeeLayoutView')) {
     }
 }
 
-if(!function_exists('landingLayoutView')) {
-    function landingLayoutView($pageName,$with = []){
+if (!function_exists('landingLayoutView')) {
+    function landingLayoutView($pageName, $with = [])
+    {
         $layout = defaultLandingLayout();
 
         // Allow passing either "home" or a fully qualified view name.
@@ -146,68 +155,76 @@ if(!function_exists('landingLayoutView')) {
 }
 
 
-if(!function_exists('admin')) {
-    function admin() {
+if (!function_exists('admin')) {
+    function admin()
+    {
         return auth(TENANT_ADMINS_GUARD)->user();
     }
 }
 
-if(!function_exists('cpanelAdmin')) {
-    function cpanelAdmin() {
+if (!function_exists('cpanelAdmin')) {
+    function cpanelAdmin()
+    {
         return auth(CPANEL_ADMINS_GUARD)->user();
     }
 }
 
-if(!function_exists('employee')) {
-    function employee() {
+if (!function_exists('employee')) {
+    function employee()
+    {
         return auth(EMPLOYEES_GUARD)->user();
     }
 }
 
-if(!function_exists('numFormat')) {
-    function numFormat($number, $decimals = 2) {
-        return number_format((float)$number, $decimals, '.', '');
+if (!function_exists('numFormat')) {
+    function numFormat($number, $decimals = 2)
+    {
+        return number_format((float) $number, $decimals, '.', '');
 
     }
 }
 
-if(!function_exists('branch')) {
-    function branch() {
+if (!function_exists('branch')) {
+    function branch()
+    {
         return auth(TENANT_ADMINS_GUARD)->user()->branch;
     }
 }
 
-if(!function_exists('recursiveChildrenForOptions')) {
-    function recursiveChildrenForOptions($model,$relationName,$key,$value,$number,$isLastChildCheck = true,$selectedId = null) {
-        $arrayOfDashes = array_fill(0,$number,'-- ');
-        $dashes = implode('',$arrayOfDashes);
+if (!function_exists('recursiveChildrenForOptions')) {
+    function recursiveChildrenForOptions($model, $relationName, $key, $value, $number, $isLastChildCheck = true, $selectedId = null)
+    {
+        $arrayOfDashes = array_fill(0, $number, '-- ');
+        $dashes = implode('', $arrayOfDashes);
 
-        if(method_exists($model,'isLastChild')){
+        if (method_exists($model, 'isLastChild')) {
             $isLastChild = $model->isLastChild();
-        }else{
+        } else {
             $isLastChild = $model->{$relationName}->count() == 0;
         }
         // add
-        echo '<option value="'. $model->{$key} .'" '. ($isLastChildCheck ? ($isLastChild ? '' : 'disabled') : '') . ($selectedId == $model->{$key} ? 'selected' : '') .'>'. $dashes . $model->{$value} .'</option>';
+        echo '<option value="' . $model->{$key} . '" ' . ($isLastChildCheck ? ($isLastChild ? '' : 'disabled') : '') . ($selectedId == $model->{$key} ? 'selected' : '') . '>' . $dashes . $model->{$value} . '</option>';
 
-        $model->{$relationName}->map(fn($model1)=> recursiveChildrenForOptions($model1,$relationName,$key,$value,$number+1,$isLastChildCheck));
+        $model->{$relationName}->map(fn($model1) => recursiveChildrenForOptions($model1, $relationName, $key, $value, $number + 1, $isLastChildCheck));
     }
 }
 
-if(!function_exists('carbon')) {
-    function carbon($date) {
+if (!function_exists('carbon')) {
+    function carbon($date)
+    {
         return Carbon::parse($date);
     }
 }
 
 
-if(!function_exists('formattedDateTime')) {
-    function formattedDateTime($date): string {
+if (!function_exists('formattedDateTime')) {
+    function formattedDateTime($date): string
+    {
         return carbon($date)->translatedFormat('l , d-M-Y h:i A');
     }
 }
 
-if(!function_exists('getMonthsBetween')) {
+if (!function_exists('getMonthsBetween')) {
     function getMonthsBetween($from, $to)
     {
         $from = Carbon::parse($from)->startOfMonth();
@@ -223,89 +240,112 @@ if(!function_exists('getMonthsBetween')) {
         return $months;
     }
 }
-if(!function_exists('defaultPermissionsList')) {
-    function defaultPermissionsList() {
+if (!function_exists('defaultPermissionsList')) {
+    function defaultPermissionsList()
+    {
         return [
-            "statistics"=> ["show"],
-            "cash_register"=> ["create"],
-            "pos"=> ["create"],
-            "branches"=> ["list", "create", "update", "delete",'export',"switch"],
-            "products"=> ["list", "show", "create", "update", "delete",'export'],
-            "categories"=> ["list", "create", "update", "delete",'export'],
-            "brands"=> ["list", "create", "update", "delete",'export'],
-            "units"=> ["list", "create", "update", "delete",'export'],
-            "stock_transfers"=> ["list","show", "create","export"],
-            "stock_adjustments"=> ["list","show", "create",'export'],
-            "sales"=> ["list", "show","update", "delete","pay",'show-invoice','export'],
-            "customers"=> ["list","show", "create", "update", "delete",'export'],
-            "purchases"=> ["list","show", "create", "delete","pay",'export'],
-            "suppliers"=> ["list", "show", "create", "update", "delete",'export'],
-            "expense_categories"=> ["list", "create", "update", "delete",'export'],
-            "expenses"=> ["list", "create", "update", "delete",'export'],
-            "payment_methods"=> ["list", "create", "update", "delete",'export'],
-            "transactions"=> ["list",'export'],
-            "checks"=> ["list", "collect", "bounce", "clear"],
-            "fixed_assets"=> ["list", "show", "create", "update", "delete", "export"],
-            "depreciation_expenses"=> ["list", "show", "create", "update", "delete", "export"],
-            "user_management"=> ["list", "create", "update", "delete",'export'],
-            "role_management"=> ["list", "create", "update", "delete",'export'],
-            "reports"=> ["list",'export'],
-            'plans' => ['list','assign'],
-            'subscriptions' => ['list','cancel','renew'],
-            "discounts"=> ["list", "create", "update", "delete",'export'],
-            "taxes"=> ["list", "create", "update", "delete",'export'],
-            "general_settings"=> ["update"],
+            "statistics" => ["show"],
+            "cash_register" => ["create"],
+            "pos" => ["create"],
+            "branches" => ["list", "create", "update", "delete", 'export', "switch"],
+            "products" => ["list", "show", "create", "update", "delete", 'export'],
+            "categories" => ["list", "create", "update", "delete", 'export'],
+            "brands" => ["list", "create", "update", "delete", 'export'],
+            "units" => ["list", "create", "update", "delete", 'export'],
+            "stock_transfers" => ["list", "show", "create", "export"],
+            "stock_adjustments" => ["list", "show", "create", 'export'],
+            "sales" => ["list", "show", "update", "delete", "pay", 'show-invoice', 'export'],
+            "customers" => ["list", "show", "create", "update", "delete", 'export'],
+            "purchases" => ["list", "show", "create", "delete", "pay", 'export'],
+            "suppliers" => ["list", "show", "create", "update", "delete", 'export'],
+            "expense_categories" => ["list", "create", "update", "delete", 'export'],
+            "expenses" => ["list", "create", "update", "delete", 'export'],
+            "payment_methods" => ["list", "create", "update", "delete", 'export'],
+            "transactions" => ["list", 'export'],
+            "checks" => ["list", "collect", "bounce", "clear"],
+            "fixed_assets" => ["list", "show", "create", "update", "delete", "export"],
+            "depreciation_expenses" => ["list", "show", "create", "update", "delete", "export"],
+            "user_management" => ["list", "create", "update", "delete", 'export'],
+            "role_management" => ["list", "create", "update", "delete", 'export'],
+            "reports" => ["list", 'export'],
+            'plans' => ['list', 'assign'],
+            'subscriptions' => ['list', 'cancel', 'renew'],
+            "discounts" => ["list", "create", "update", "delete", 'export'],
+            "taxes" => ["list", "create", "update", "delete", 'export'],
+            "general_settings" => ["update"],
 
             // HRM (Admin Panel)
             'hrm_dashboard' => ['list'],
-            'hrm_master_data' => ['list','create','update','delete'],
-            'hrm_payroll' => ['list','create','update','delete','approve','pay'],
-            'hrm_claims' => ['list','show','create','update','delete','approve','reject','pay'],
-            'hrm_attendance' => ['list','create','update','delete','approve'],
-            'hrm_leaves' => ['list','create','update','delete','approve','reject'],
-            'hrm_talent' => ['list','create','update'],
-            'hrm_workflows' => ['list','create','update'],
+            'hrm_master_data' => ['list', 'create', 'update', 'delete'],
+            'hrm_payroll' => ['list', 'create', 'update', 'delete', 'approve', 'pay'],
+            'hrm_claims' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'reject', 'pay'],
+            'hrm_attendance' => ['list', 'create', 'update', 'delete', 'approve'],
+            'hrm_leaves' => ['list', 'create', 'update', 'delete', 'approve', 'reject'],
+            'hrm_talent' => ['list', 'create', 'update'],
+            'hrm_workflows' => ['list', 'create', 'update'],
+
+            // Contracting (Admin Panel)
+            'contracting_tenders' => ['list', 'show', 'create', 'update', 'delete', 'export'],
+            'contracting_boqs' => ['list', 'show', 'create', 'update', 'delete', 'export'],
+            'contracting_supplier_quotations' => ['list', 'show', 'create', 'update', 'delete', 'export'],
+            'contracting_projects' => ['list', 'show', 'create', 'update', 'delete', 'export'],
+            'contracting_contracts' => ['list', 'show', 'create', 'update', 'delete', 'export'],
+            'contracting_extracts' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'post', 'export'],
+            'contracting_purchase_requests' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'export'],
+            'contracting_purchase_orders' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'export'],
+            'contracting_inventory' => ['list', 'show', 'create', 'export'],
+            'contracting_warehouses' => ['list', 'create', 'update', 'delete', 'export'],
+            'contracting_items' => ['list', 'create', 'update', 'delete', 'export'],
+            'contracting_chart_of_accounts' => ['list', 'create', 'update', 'delete', 'export'],
+            'contracting_cost_centers' => ['list', 'create', 'update', 'delete', 'export'],
+            'contracting_journal_entries' => ['list', 'show', 'create', 'update', 'delete', 'post', 'export'],
+            'contracting_workers' => ['list', 'create', 'update', 'delete', 'export'],
+            'contracting_timesheets' => ['list', 'create', 'update', 'delete', 'approve', 'export'],
+            'contracting_equipment' => ['list', 'create', 'update', 'delete', 'export'],
+            'contracting_equipment_logs' => ['list', 'create', 'update', 'delete', 'export'],
         ];
 
     }
 }
 
-if(!function_exists('generateSlug')) {
-    function generateSlug($model,$slug) {
-        if(!$slug){
+if (!function_exists('generateSlug')) {
+    function generateSlug($model, $slug)
+    {
+        if (!$slug) {
             $slug = uniqid();
         }
 
         $slug = Str::slug(trim($slug), '-');
 
         $modelObj = $model::whereSlug($slug)->first();
-        if($modelObj){
-            return generateSlug($model,$slug.'-'.time());
+        if ($modelObj) {
+            return generateSlug($model, $slug . '-' . time());
         }
 
         return $slug;
     }
 }
 
-if(!function_exists('adminCan')) {
-    function adminCan($permission) {
-        if(admin()->type == 'super_admin'){
+if (!function_exists('adminCan')) {
+    function adminCan($permission)
+    {
+        if (admin()->type == 'super_admin') {
             return true;
         }
 
         $permissions = session()->get('admin.permissions');
-        if(!$permissions){
+        if (!$permissions) {
             $permissions = admin()->getPermissionsViaRoles()->pluck('name')->toArray();
-            session()->put('admin.permissions',$permissions);
+            session()->put('admin.permissions', $permissions);
         }
 
         // set permissions values as keys too
         $permissions = array_flip($permissions);
 
-        $permissionArr = explode(',',$permission);
+        $permissionArr = explode(',', $permission);
 
         foreach ($permissionArr as $p) {
-            if(isset($permissions[$p])){
+            if (isset($permissions[$p])) {
                 return true;
             }
         }
@@ -313,25 +353,28 @@ if(!function_exists('adminCan')) {
     }
 }
 
-if(!function_exists('sidebarHud')) {
-    function sidebarHud($data){
-        return view('layouts.hud.partials.sidebar-ul',get_defined_vars())->render();
+if (!function_exists('sidebarHud')) {
+    function sidebarHud($data)
+    {
+        return view('layouts.hud.partials.sidebar-ul', get_defined_vars())->render();
     }
 }
 
-if(!function_exists('sidebarGemini')) {
-    function sidebarGemini($data){
+if (!function_exists('sidebarGemini')) {
+    function sidebarGemini($data)
+    {
         return view('layouts.tenant-tailwind-gemini.partials.sidebar-item', get_defined_vars())->render();
     }
 }
 
-if(!function_exists('sidebarCpanel')) {
-    function sidebarCpanel($data){
-        return view('layouts.cpanel.partials.sidebar-ul',get_defined_vars())->render();
+if (!function_exists('sidebarCpanel')) {
+    function sidebarCpanel($data)
+    {
+        return view('layouts.cpanel.partials.sidebar-ul', get_defined_vars())->render();
     }
 }
 
-if(!function_exists('extractRoutes')) {
+if (!function_exists('extractRoutes')) {
     function extractRoutes(array $items): array
     {
         $routes = [];
@@ -351,12 +394,13 @@ if(!function_exists('extractRoutes')) {
 }
 
 
-if(!function_exists('checkRouteParams')) {
-    function checkRouteParams($routeParams = []){
+if (!function_exists('checkRouteParams')) {
+    function checkRouteParams($routeParams = [])
+    {
         foreach ($routeParams as $key => $value) {
             $routeCheck = request()->route($key);
 
-            if(!empty($routeCheck)){
+            if (!empty($routeCheck)) {
                 return $routeCheck == $value;
             }
         }
@@ -365,11 +409,12 @@ if(!function_exists('checkRouteParams')) {
     }
 }
 
-if(!function_exists('checkRequestParams')) {
-    function checkRequestParams($requestParams = []){
+if (!function_exists('checkRequestParams')) {
+    function checkRequestParams($requestParams = [])
+    {
         foreach ($requestParams as $key => $value) {
             $paramCheck = request()->has($key) ?? false;
-            if($paramCheck){
+            if ($paramCheck) {
                 return request($key) == $value;
             }
         }
@@ -378,8 +423,9 @@ if(!function_exists('checkRequestParams')) {
     }
 }
 
-if(!function_exists('exportToExcel')) {
-    function exportToExcel($data, $columns, $headers, $fileName) {
+if (!function_exists('exportToExcel')) {
+    function exportToExcel($data, $columns, $headers, $fileName)
+    {
         $filePath = "exports/{$fileName}-" . now()->format('Y-m-d_H-i-s') . ".xlsx";
         Excel::store(
             new \App\Exports\GeneralExport(
@@ -395,13 +441,14 @@ if(!function_exists('exportToExcel')) {
     }
 }
 
-if(!function_exists('superAdmins')) {
-    function superAdmins(){
+if (!function_exists('superAdmins')) {
+    function superAdmins()
+    {
         return Admin::where('type', 'super_admin')->get();
     }
 }
 
-if(!function_exists('encodedData')) {
+if (!function_exists('encodedData')) {
     function encodedData($data)
     {
         $newSlug = base64_encode(json_encode($data));
@@ -410,29 +457,31 @@ if(!function_exists('encodedData')) {
     }
 }
 
-if(!function_exists('decodedData')) {
+if (!function_exists('decodedData')) {
     function decodedData($encoded)
     {
         return json_decode(base64_decode($encoded), true);
     }
 }
 
-if(!function_exists('lang')) {
-    function lang(){
+if (!function_exists('lang')) {
+    function lang()
+    {
         return app()->getLocale();
     }
 }
 
-if(!function_exists('currency')) {
-    function currency(){
+if (!function_exists('currency')) {
+    function currency()
+    {
         $key = cacheKey('currency');
-        return Cache::driver('file')->remember($key, 60*60, function() {
-            return Currency::find(tenantSetting('currency_id',1));
+        return Cache::driver('file')->remember($key, 60 * 60, function () {
+            return Currency::find(tenantSetting('currency_id', 1));
         });
     }
 }
 
-if(!function_exists('subscriptionFeatureCode')) {
+if (!function_exists('subscriptionFeatureCode')) {
     function subscriptionFeatureCode(string $code): string
     {
         $code = trim($code);
@@ -454,7 +503,7 @@ if(!function_exists('subscriptionFeatureCode')) {
     }
 }
 
-if(!function_exists('subscriptionFeatureData')) {
+if (!function_exists('subscriptionFeatureData')) {
     function subscriptionFeatureData(?string $code, ?\App\Models\Subscription $subscription = null): ?array
     {
         $code = trim((string) $code);
@@ -469,7 +518,7 @@ if(!function_exists('subscriptionFeatureData')) {
     }
 }
 
-if(!function_exists('subscriptionFeatureEnabled')) {
+if (!function_exists('subscriptionFeatureEnabled')) {
     function subscriptionFeatureEnabled(?string $code, bool $default = true, ?\App\Models\Subscription $subscription = null): bool
     {
         if (!is_string($code) || trim($code) === '') {
@@ -485,7 +534,7 @@ if(!function_exists('subscriptionFeatureEnabled')) {
     }
 }
 
-if(!function_exists('subscriptionFeatureLimit')) {
+if (!function_exists('subscriptionFeatureLimit')) {
     function subscriptionFeatureLimit(?string $code, int $default = 0, ?\App\Models\Subscription $subscription = null): int
     {
         if (!is_string($code) || trim($code) === '') {
@@ -502,36 +551,39 @@ if(!function_exists('subscriptionFeatureLimit')) {
     }
 }
 
-if(!function_exists('currencyFormat')) {
-    function currencyFormat($amount, $withComma = false){
+if (!function_exists('currencyFormat')) {
+    function currencyFormat($amount, $withComma = false)
+    {
         $currency = currency();
-        $currencyPercision = tenantSetting('currency_precision',2);
-        return "$currency->symbol" . number_format((float)$amount, $currencyPercision, '.',$withComma ? ',' : '');
+        $currencyPercision = tenantSetting('currency_precision', 2);
+        return "$currency->symbol" . number_format((float) $amount, $currencyPercision, '.', $withComma ? ',' : '');
     }
 }
 
-if(!function_exists('dateTimeFormat')) {
-    function dateTimeFormat($date,$dateFormat = true, $timeFormat = true){
-        $dateFormat = $dateFormat ? tenantSetting('date_format','Y-m-d') : '';
-        $timeFormat = $timeFormat ? tenantSetting('time_format','H:i:s') : '';
+if (!function_exists('dateTimeFormat')) {
+    function dateTimeFormat($date, $dateFormat = true, $timeFormat = true)
+    {
+        $dateFormat = $dateFormat ? tenantSetting('date_format', 'Y-m-d') : '';
+        $timeFormat = $timeFormat ? tenantSetting('time_format', 'H:i:s') : '';
         return carbon($date)->translatedFormat(trim("$dateFormat $timeFormat"));
     }
 }
 
-if(!function_exists('tenantSetting')) {
-    function tenantSetting($key, $default = null) {
+if (!function_exists('tenantSetting')) {
+    function tenantSetting($key, $default = null)
+    {
         if (!tenant()) {
             return $default;
         }
 
         return Cache::driver('file')->remember(cacheKey('setting'), 60 * 60 * 24, function () {
-                return Setting::all()->pluck('value', 'key')->toArray();
+            return Setting::all()->pluck('value', 'key')->toArray();
         })[$key] ?? $default;
     }
 }
 
-if (! function_exists('seo')) {
-    function seo(Model | SEOData | null $source = null): TagManager
+if (!function_exists('seo')) {
+    function seo(Model|SEOData|null $source = null): TagManager
     {
         $tagManager = app(TagManager::class);
 
@@ -629,12 +681,12 @@ if (! function_exists('seo')) {
 
 }
 
-if (! function_exists('currencySymbolPosition')) {
-    function currencySymbolPosition($price,$symbol){
-        if(app()->getLocale() == 'ar'){
+if (!function_exists('currencySymbolPosition')) {
+    function currencySymbolPosition($price, $symbol)
+    {
+        if (app()->getLocale() == 'ar') {
             return $price . ' ' . $symbol;
-        }
-        else{
+        } else {
             return $symbol . ' ' . $price;
         }
     }

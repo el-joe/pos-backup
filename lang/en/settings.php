@@ -19,4 +19,5 @@ return [
     'default_language' => 'Default Language',
     'theme_color' => 'Theme Color',
     'theme_mode' => 'Theme Mode',
+    'panel_layout' => 'Panel Layout',
 ];
