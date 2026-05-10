@@ -7,48 +7,74 @@ use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\EmployeeAuthController;
-use App\Http\Middleware\{AdminTranslationMiddleware,InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck,Tenant\AdminAuthMiddleware, Tenant\HrmMasterDataPermissionCheck, Tenant\EmployeeAuthMiddleware, Tenant\EmployeeGuestMiddleware};
+use App\Http\Middleware\{AdminTranslationMiddleware, InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck, Tenant\AdminAuthMiddleware, Tenant\HrmMasterDataPermissionCheck, Tenant\EmployeeAuthMiddleware, Tenant\EmployeeGuestMiddleware};
 use App\Livewire\Admin\Accounts\AccountsList;
-use App\Livewire\Admin\Admins\{AdminsList,RoleDetails,RolesList};
+use App\Livewire\Admin\Admins\{AdminsList, RoleDetails, RolesList};
 use App\Livewire\Admin\Branches\BranchesList;
 use App\Livewire\Admin\Brands\BrandsList;
 use App\Livewire\Admin\CashRegister\CashRegisterPage;
 use App\Livewire\Admin\Categories\CategoriesList;
 use App\Livewire\Admin\Checks\ChecksList;
 use App\Livewire\Admin\Discounts\DiscountsList;
-use App\Livewire\Admin\Expenses\{ExpenseCategoriesList,ExpensesList};
+use App\Livewire\Admin\Expenses\{ExpenseCategoriesList, ExpensesList};
 use App\Livewire\Admin\Imports\ImportsPage;
 use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\Plans\SubscriptionsPage;
 use App\Livewire\Admin\DeferredPosPage;
 use App\Livewire\Admin\PosPage;
-use App\Livewire\Admin\Products\{AddEditProduct,ProductsList,ProductDetails};
-use App\Livewire\Admin\Purchases\{AddPurchase,PurchaseDetails,PurchasesList};
+use App\Livewire\Admin\Products\{AddEditProduct, ProductsList, ProductDetails};
+use App\Livewire\Admin\Purchases\{AddPurchase, PurchaseDetails, PurchasesList};
 use App\Livewire\Admin\Purchases\DeferredPurchasesList;
-use App\Livewire\Admin\PurchaseRequests\{AddPurchaseRequest,PurchaseRequestDetails,PurchaseRequestsList};
+use App\Livewire\Admin\PurchaseRequests\{AddPurchaseRequest, PurchaseRequestDetails, PurchaseRequestsList};
 use App\Livewire\Admin\Refunds\AddRefund;
 use App\Livewire\Admin\Refunds\RefundDetails;
 use App\Livewire\Admin\Refunds\RefundsList;
 use App\Livewire\Admin\Reports\{
     Admins\CashierReport,
     AuditReport,
-    BranchProfitability,CashRegisterReport,
-    Financial\BalanceSheetReport,Financial\CashFlowStatementReport,Financial\GeneralLedgerReport,Financial\IncomeStatmentReport,Financial\TrailBalanceReport,
-    Financial\FixedAssetsReport,Financial\DepreciationExpensesReport,
-    Inventory\CogsReport,Inventory\ShortageReport,Inventory\StockMovementReport,Inventory\StockValuationReport,
-    Performance\CustomerOutstandingReport,Performance\DiscountImpactReport,Performance\ExpenseBreakdownReport,Performance\ProductProfitMarginReport,
-    Performance\RevenueBreakdownByBranchReport,Performance\SalesThresholdReport,Performance\SupplierPayableReport,
-    Purchases\BranchPurchasesReport,Purchases\PurchasesDiscountReport,Purchases\PurchasesReturnReport,Purchases\PurchasesSummaryReport,Purchases\PurchasesVatReport,
-    Purchases\ProductPurchasesReport,Purchases\SupplierPurchasesReport,
-    Sales\BranchSalesReport,Sales\CustomerSalesReport,Sales\ProductSalesReport,Sales\SalesProfitReport,Sales\SalesReturnReport,Sales\SalesSummaryReport,Sales\SalesVatReport,
-    Tax\VatSummaryReport,Tax\WithholdingTaxReport
+    BranchProfitability,
+    CashRegisterReport,
+    Financial\BalanceSheetReport,
+    Financial\CashFlowStatementReport,
+    Financial\GeneralLedgerReport,
+    Financial\IncomeStatmentReport,
+    Financial\TrailBalanceReport,
+    Financial\FixedAssetsReport,
+    Financial\DepreciationExpensesReport,
+    Inventory\CogsReport,
+    Inventory\ShortageReport,
+    Inventory\StockMovementReport,
+    Inventory\StockValuationReport,
+    Performance\CustomerOutstandingReport,
+    Performance\DiscountImpactReport,
+    Performance\ExpenseBreakdownReport,
+    Performance\ProductProfitMarginReport,
+    Performance\RevenueBreakdownByBranchReport,
+    Performance\SalesThresholdReport,
+    Performance\SupplierPayableReport,
+    Purchases\BranchPurchasesReport,
+    Purchases\PurchasesDiscountReport,
+    Purchases\PurchasesReturnReport,
+    Purchases\PurchasesSummaryReport,
+    Purchases\PurchasesVatReport,
+    Purchases\ProductPurchasesReport,
+    Purchases\SupplierPurchasesReport,
+    Sales\BranchSalesReport,
+    Sales\CustomerSalesReport,
+    Sales\ProductSalesReport,
+    Sales\SalesProfitReport,
+    Sales\SalesReturnReport,
+    Sales\SalesSummaryReport,
+    Sales\SalesVatReport,
+    Tax\VatSummaryReport,
+    Tax\WithholdingTaxReport
 };
 
-use App\Livewire\Admin\Sales\{SaleDetails,SalesList};
+use App\Livewire\Admin\Sales\{SaleDetails, SalesList};
 use App\Livewire\Admin\Sales\DeferredSalesList;
-use App\Livewire\Admin\SaleRequests\{AddSaleRequest,SaleRequestDetails,SaleRequestsList};
-use App\Livewire\Admin\FixedAssets\{AddFixedAsset,FixedAssetDetails,FixedAssetsList};
+use App\Livewire\Admin\SaleRequests\{AddSaleRequest, SaleRequestDetails, SaleRequestsList};
+use App\Livewire\Admin\FixedAssets\{AddFixedAsset, FixedAssetDetails, FixedAssetsList};
 use App\Livewire\Admin\Hrm\MasterDataPage;
 use App\Livewire\Admin\Hrm\Departments\DepartmentsList;
 use App\Livewire\Admin\Hrm\Designations\DesignationsList;
@@ -66,23 +92,41 @@ use App\Livewire\Admin\Hrm\Payroll\PayrollRunsList;
 use App\Livewire\Admin\Hrm\Payroll\PayrollSlipsList;
 use App\Livewire\Admin\Hrm\Attendance\AttendanceSheetsList;
 use App\Livewire\Admin\Hrm\Attendance\AttendanceSheetDetails;
+use App\Livewire\Admin\Contracting\Tenders\TendersList as ContractingTendersList;
+use App\Livewire\Admin\Contracting\Boqs\BoqsList as ContractingBoqsList;
+use App\Livewire\Admin\Contracting\SupplierQuotations\SupplierQuotationsList as ContractingSupplierQuotationsList;
+use App\Livewire\Admin\Contracting\Projects\ProjectsList as ContractingProjectsList;
+use App\Livewire\Admin\Contracting\Contracts\ContractsList as ContractingContractsList;
+use App\Livewire\Admin\Contracting\Extracts\ExtractsList as ContractingExtractsList;
+use App\Livewire\Admin\Contracting\PurchaseRequests\PurchaseRequestsList as ContractingPurchaseRequestsList;
+use App\Livewire\Admin\Contracting\PurchaseOrders\PurchaseOrdersList as ContractingPurchaseOrdersList;
+use App\Livewire\Admin\Contracting\Inventory\InventoryList as ContractingInventoryList;
+use App\Livewire\Admin\Contracting\Warehouses\WarehousesList as ContractingWarehousesList;
+use App\Livewire\Admin\Contracting\Items\ItemsList as ContractingItemsList;
+use App\Livewire\Admin\Contracting\ChartOfAccounts\ChartOfAccountsList as ContractingChartOfAccountsList;
+use App\Livewire\Admin\Contracting\CostCenters\CostCentersList as ContractingCostCentersList;
+use App\Livewire\Admin\Contracting\JournalEntries\JournalEntriesList as ContractingJournalEntriesList;
+use App\Livewire\Admin\Contracting\Workers\WorkersList as ContractingWorkersList;
+use App\Livewire\Admin\Contracting\Timesheets\TimesheetsList as ContractingTimesheetsList;
+use App\Livewire\Admin\Contracting\Equipment\EquipmentList as ContractingEquipmentList;
+use App\Livewire\Admin\Contracting\EquipmentLogs\EquipmentLogsList as ContractingEquipmentLogsList;
 use App\Livewire\Employee\Dashboard as EmployeeDashboard;
 use App\Livewire\Employee\Profile as EmployeeProfile;
 use App\Livewire\Employee\Payslips\PayslipsList as EmployeePayslipsList;
 use App\Livewire\Employee\Leaves\LeaveRequestsList as EmployeeLeaveRequestsList;
 use App\Livewire\Employee\Claims\ExpenseClaimsList as EmployeeExpenseClaimsList;
 use App\Livewire\Employee\Attendance\AttendanceLogsList as EmployeeAttendanceLogsList;
-use App\Livewire\Admin\DepreciationExpenses\{AddDepreciationExpense,DepreciationExpenseDetails,DepreciationExpensesList};
+use App\Livewire\Admin\DepreciationExpenses\{AddDepreciationExpense, DepreciationExpenseDetails, DepreciationExpensesList};
 use App\Livewire\Admin\Settings\SettingsPage;
 use App\Livewire\Admin\Statistics;
-use App\Livewire\Admin\Stocks\{AddStockTransfer,StockTransferDetails,StockTransferList,StocksList};
+use App\Livewire\Admin\Stocks\{AddStockTransfer, StockTransferDetails, StockTransferList, StocksList};
 
-use App\Livewire\Admin\StockTaking\{AddStockTaking,StockTakingDetails,StockTakingList};
+use App\Livewire\Admin\StockTaking\{AddStockTaking, StockTakingDetails, StockTakingList};
 
 use App\Livewire\Admin\Taxes\TaxesList;
 use App\Livewire\Admin\Transactions\TransactionList;
 use App\Livewire\Admin\Units\{UnitsList};
-use App\Livewire\Admin\Users\{UserDetails,UsersList};
+use App\Livewire\Admin\Users\{UserDetails, UsersList};
 use App\Livewire\Admin\Payables\CustomerPayable;
 use App\Livewire\Admin\Payables\SupplierPayable;
 use App\Models\Tenant\Account;
@@ -111,7 +155,7 @@ Route::middleware([
     AdminTranslationMiddleware::class,
 ])->group(function () {
 
-    Route::redirect('/','admin/login');
+    Route::redirect('/', 'admin/login');
 
     Route::group(['prefix' => 'employee', 'as' => 'employee.'], function () {
         Route::middleware([EmployeeGuestMiddleware::class])->group(function () {
@@ -130,27 +174,27 @@ Route::middleware([
         });
     });
 
-    Route::group(['prefix'=>'admin','as'=>'admin.'],function () {
-        Route::get('login',[AuthController::class,'login'])->name('login');
-        Route::post('login',[AuthController::class,'postLogin'])->name('postLogin');
+    Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+        Route::get('login', [AuthController::class, 'login'])->name('login');
+        Route::post('login', [AuthController::class, 'postLogin'])->name('postLogin');
 
         Route::post('notifications/mark-as-read/{id}', [AuthController::class, 'markAsRead'])->name('notifications.markAsRead');
 
         Route::middleware([AdminAuthMiddleware::class])->group(function () {
 
-            Route::get('logout',[AuthController::class,'logout'])->name('logout');
+            Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-            Route::get('/',Statistics::class)->name('statistics');
-            Route::get('cash-register',CashRegisterPage::class)->name('cash.register.open');
+            Route::get('/', Statistics::class)->name('statistics');
+            Route::get('cash-register', CashRegisterPage::class)->name('cash.register.open');
 
             Route::get('notifications', NotificationsList::class)->name('notifications.list');
 
             Route::get('switch-branch/{branch?}', [AuthController::class, 'switchBranch'])->name('switch.branch');
-            Route::get('branches',BranchesList::class)->name('branches.list');
+            Route::get('branches', BranchesList::class)->name('branches.list');
             Route::get('categories', CategoriesList::class)->name('categories.list');
             Route::get('brands', BrandsList::class)->name('brands.list');
-            Route::get('units',UnitsList::class)->name('units.list');
-            Route::get('taxes',TaxesList::class)->name('taxes.list');
+            Route::get('units', UnitsList::class)->name('units.list');
+            Route::get('taxes', TaxesList::class)->name('taxes.list');
 
             // HRM
             Route::group([
@@ -213,15 +257,40 @@ Route::middleware([
                     ->middleware([HrmAttendancePermissionCheck::class])
                     ->name('attendance-sheets.details');
             });
-            Route::get('pos',PosPage::class)->name('pos');
-            Route::get('pos/deferred',DeferredPosPage::class)->name('pos.deferred');
-            Route::get('discounts', DiscountsList::class)->name('discounts.list');
-            Route::get('expense-categories',ExpenseCategoriesList::class)->name('expense-categories.list');
-            // TODO : expenses will be saved without payments and we can add payments later
-            Route::get('expenses',ExpensesList::class)->name('expenses.list');
 
-            Route::get('payment-methods',PaymentMethodsList::class)->name('payment-methods.list');
-            Route::get('accounts',AccountsList::class)->name('accounts.list');
+            // Contracting
+            Route::group([
+                'prefix' => 'contracting',
+                'as' => 'contracting.',
+            ], function () {
+                Route::get('tenders', ContractingTendersList::class)->name('tenders.list');
+                Route::get('boqs', ContractingBoqsList::class)->name('boqs.list');
+                Route::get('supplier-quotations', ContractingSupplierQuotationsList::class)->name('supplier-quotations.list');
+                Route::get('projects', ContractingProjectsList::class)->name('projects.list');
+                Route::get('contracts', ContractingContractsList::class)->name('contracts.list');
+                Route::get('extracts', ContractingExtractsList::class)->name('extracts.list');
+                Route::get('purchase-requests', ContractingPurchaseRequestsList::class)->name('purchase-requests.list');
+                Route::get('purchase-orders', ContractingPurchaseOrdersList::class)->name('purchase-orders.list');
+                Route::get('inventory', ContractingInventoryList::class)->name('inventory.list');
+                Route::get('warehouses', ContractingWarehousesList::class)->name('warehouses.list');
+                Route::get('items', ContractingItemsList::class)->name('items.list');
+                Route::get('chart-of-accounts', ContractingChartOfAccountsList::class)->name('chart-of-accounts.list');
+                Route::get('cost-centers', ContractingCostCentersList::class)->name('cost-centers.list');
+                Route::get('journal-entries', ContractingJournalEntriesList::class)->name('journal-entries.list');
+                Route::get('workers', ContractingWorkersList::class)->name('workers.list');
+                Route::get('timesheets', ContractingTimesheetsList::class)->name('timesheets.list');
+                Route::get('equipment', ContractingEquipmentList::class)->name('equipment.list');
+                Route::get('equipment-logs', ContractingEquipmentLogsList::class)->name('equipment-logs.list');
+            });
+            Route::get('pos', PosPage::class)->name('pos');
+            Route::get('pos/deferred', DeferredPosPage::class)->name('pos.deferred');
+            Route::get('discounts', DiscountsList::class)->name('discounts.list');
+            Route::get('expense-categories', ExpenseCategoriesList::class)->name('expense-categories.list');
+            // TODO : expenses will be saved without payments and we can add payments later
+            Route::get('expenses', ExpensesList::class)->name('expenses.list');
+
+            Route::get('payment-methods', PaymentMethodsList::class)->name('payment-methods.list');
+            Route::get('accounts', AccountsList::class)->name('accounts.list');
 
             // Fixed Assets + Depreciation
             Route::get('fixed-assets', FixedAssetsList::class)->name('fixed-assets.list');
@@ -241,30 +310,30 @@ Route::middleware([
             Route::get('suppliers/{id}/pay', SupplierPayable::class)->name('suppliers.pay');
 
             // Products
-            Route::get('products',ProductsList::class)->name('products.list'); // TODO : -> Add Product Details Page contains Stock info , Purchases , Sales , Stock Transfers , Adjustments
-            Route::get('products/{id}',AddEditProduct::class)->name('products.add-edit');
-            Route::get('products/{id}/details',ProductDetails::class)->name('products.details');
+            Route::get('products', ProductsList::class)->name('products.list'); // TODO : -> Add Product Details Page contains Stock info , Purchases , Sales , Stock Transfers , Adjustments
+            Route::get('products/{id}', AddEditProduct::class)->name('products.add-edit');
+            Route::get('products/{id}/details', ProductDetails::class)->name('products.details');
             // Purchases
-            Route::get('purchases',PurchasesList::class)->name('purchases.list');
-            Route::get('purchases/deferred',DeferredPurchasesList::class)->name('purchases.deferred');
-            Route::get('purchases/create',AddPurchase::class)->name('purchases.add');
-            Route::get('purchases/{id}',PurchaseDetails::class)->name('purchases.details');
+            Route::get('purchases', PurchasesList::class)->name('purchases.list');
+            Route::get('purchases/deferred', DeferredPurchasesList::class)->name('purchases.deferred');
+            Route::get('purchases/create', AddPurchase::class)->name('purchases.add');
+            Route::get('purchases/{id}', PurchaseDetails::class)->name('purchases.details');
 
             // Purchase Requests (Internal)
             Route::get('purchase-requests', PurchaseRequestsList::class)->name('purchase-requests.list');
             Route::get('purchase-requests/create', AddPurchaseRequest::class)->name('purchase-requests.create');
             Route::get('purchase-requests/{id}', PurchaseRequestDetails::class)->name('purchase-requests.details');
             // Sales
-            Route::get('sales',SalesList::class)->name('sales.index');
-            Route::get('sales/deferred',DeferredSalesList::class)->name('sales.deferred');
-            Route::get('sales/{id}',SaleDetails::class)->name('sales.details');
+            Route::get('sales', SalesList::class)->name('sales.index');
+            Route::get('sales/deferred', DeferredSalesList::class)->name('sales.deferred');
+            Route::get('sales/{id}', SaleDetails::class)->name('sales.details');
 
             // Sale Requests (Client Inquiry / Quotation)
             Route::get('sale-requests', SaleRequestsList::class)->name('sale-requests.list');
             Route::get('sale-requests/create', AddSaleRequest::class)->name('sale-requests.create');
             Route::get('sale-requests/{id}', SaleRequestDetails::class)->name('sale-requests.details');
             // Transactions
-            Route::get('transactions',TransactionList::class)->name('transactions.list');
+            Route::get('transactions', TransactionList::class)->name('transactions.list');
 
             // Checks
             Route::get('checks', ChecksList::class)->name('checks.list');
@@ -272,10 +341,10 @@ Route::middleware([
 
             // Reports
             Route::group([
-                'prefix'=> 'reports',
-                'as'=> 'reports.',
+                'prefix' => 'reports',
+                'as' => 'reports.',
                 'middleware' => [ReportsPermissionCheck::class]
-            ],function () {
+            ], function () {
 
                 Route::group([
                     'prefix' => 'financial',
@@ -339,13 +408,13 @@ Route::middleware([
                     'prefix' => 'performance',
                     'as' => 'performance.',
                 ], function () {
-                    Route::get('product-profit-margin',ProductProfitMarginReport::class)->name('product-profit-margin');
-                    Route::get('customer-outstanding',CustomerOutstandingReport::class)->name('customer-outstanding');
-                    Route::get('supplier-payable',SupplierPayableReport::class)->name('supplier-payable');
-                    Route::get('expense-breakdown',ExpenseBreakdownReport::class)->name('expense-breakdown');
-                    Route::get('revenue-breakdown-by-branch',RevenueBreakdownByBranchReport::class)->name('revenue-breakdown-by-branch');
-                    Route::get('discount-impact',DiscountImpactReport::class)->name('discount-impact');
-                    Route::get('sales-threshold',SalesThresholdReport::class)->name('sales-threshold');
+                    Route::get('product-profit-margin', ProductProfitMarginReport::class)->name('product-profit-margin');
+                    Route::get('customer-outstanding', CustomerOutstandingReport::class)->name('customer-outstanding');
+                    Route::get('supplier-payable', SupplierPayableReport::class)->name('supplier-payable');
+                    Route::get('expense-breakdown', ExpenseBreakdownReport::class)->name('expense-breakdown');
+                    Route::get('revenue-breakdown-by-branch', RevenueBreakdownByBranchReport::class)->name('revenue-breakdown-by-branch');
+                    Route::get('discount-impact', DiscountImpactReport::class)->name('discount-impact');
+                    Route::get('sales-threshold', SalesThresholdReport::class)->name('sales-threshold');
                 });
 
                 Route::get('cashier-report', CashierReport::class)->name('cashier.report');
@@ -366,15 +435,15 @@ Route::middleware([
             // Stocks
             Route::get('stocks', StocksList::class)->name('stocks.list');
 
-            Route::get('admins',AdminsList::class)->name('admins.list');
-            Route::get('roles',RolesList::class)->name('roles.list');
-            Route::get('roles/{id?}',RoleDetails::class)->name('roles.show');
+            Route::get('admins', AdminsList::class)->name('admins.list');
+            Route::get('roles', RolesList::class)->name('roles.list');
+            Route::get('roles/{id?}', RoleDetails::class)->name('roles.show');
 
             Route::get('subscriptions', SubscriptionsPage::class)->name('subscriptions.list');
 
 
-            Route::get('imports',ImportsPage::class)->name('imports');
-            Route::get('settings',SettingsPage::class)->name('settings');
+            Route::get('imports', ImportsPage::class)->name('imports');
+            Route::get('settings', SettingsPage::class)->name('settings');
 
             Route::get('refunds', RefundsList::class)->name('refunds.list');
             Route::get('refunds/{id}/details', RefundDetails::class)->name('refunds.details');
@@ -383,14 +452,14 @@ Route::middleware([
     });
 
     //Route::get('admin/invoices/{type}/{id}', [GeneralController::class, 'generateInvoice'])->name('generate.invoice');
-    Route::get('sales/invoice/{token}',[InvoiceController::class,'show'])->name('sales.invoice');
+    Route::get('sales/invoice/{token}', [InvoiceController::class, 'show'])->name('sales.invoice');
 
 
-    Route::get('change-language/{lang}', function($lang){
-        if($lang == 'ar'){
-            session()->put('locale','ar');
+    Route::get('change-language/{lang}', function ($lang) {
+        if ($lang == 'ar') {
+            session()->put('locale', 'ar');
         } else {
-            session()->put('locale','en');
+            session()->put('locale', 'en');
         }
     })->name('change.language');
 
@@ -405,23 +474,23 @@ Route::get('download-file', function () {
     }
 })->name('admin.export.download');
 
-Route::view('invoice-80mm','invoices.invoice-80mm');
-Route::view('invoice-80mm-ar','invoices.invoice-80mm-ar');
-Route::view('invoice-a4-ar','invoices.invoice-a4-ar');
-Route::view('invoice-a4','invoices.invoice-a4');
-Route::view('refund-invoice-a4-ar','invoices.refund-invoice-a4-ar');
-Route::view('refund-invoice-a4','invoices.refund-invoice-a4');
-Route::view('refund-invoice-80mm','invoices.refund-invoice-80mm');
-Route::view('refund-invoice-80mm-ar','invoices.refund-invoice-80mm-ar');
+Route::view('invoice-80mm', 'invoices.invoice-80mm');
+Route::view('invoice-80mm-ar', 'invoices.invoice-80mm-ar');
+Route::view('invoice-a4-ar', 'invoices.invoice-a4-ar');
+Route::view('invoice-a4', 'invoices.invoice-a4');
+Route::view('refund-invoice-a4-ar', 'invoices.refund-invoice-a4-ar');
+Route::view('refund-invoice-a4', 'invoices.refund-invoice-a4');
+Route::view('refund-invoice-80mm', 'invoices.refund-invoice-80mm');
+Route::view('refund-invoice-80mm-ar', 'invoices.refund-invoice-80mm-ar');
 
-Route::get('test/{tenant}',function($tenant){
-    tenancy()->initialize( $tenant);
-    $branchService = app(BranchService::class );
+Route::get('test/{tenant}', function ($tenant) {
+    tenancy()->initialize($tenant);
+    $branchService = app(BranchService::class);
     // initaialize tenant
     $branch = Branch::first();
 
     // Seed default check accounts for this branch
-    if($branch) {
+    if ($branch) {
         Account::defaultForPaymentMethodSlug('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branch->id, 'check');
         Account::defaultForPaymentMethodSlug('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branch->id, 'check');
     }

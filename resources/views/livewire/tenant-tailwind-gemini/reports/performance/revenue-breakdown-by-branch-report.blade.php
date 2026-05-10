@@ -34,7 +34,7 @@
                             @endforelse
 
                             @if(count($report))
-                            <tr class="bg-emerald-50 font-bold text-slate-900">
+                            <tr class="bg-emerald-50 font-bold text-slate-900 dark:bg-emerald-900/30 dark:text-white">
                                 <td>{{ __('general.pages.reports.common.total') }}</td>
                                 <td class="text-end">{{ currencyFormat($sum_revenue, true) }}</td>
                             </tr>

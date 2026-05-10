@@ -78,7 +78,7 @@
                                     <td>{{ __('general.pages.reports.financial.income_statement.total_expenses') }}</td>
                                     <td>{{ currencyFormat($report['expenses'] ?? 0, true) }}</td>
                                 </tr>
-                                <tr class="bg-emerald-50 text-lg font-bold text-slate-900">
+                                <tr class="bg-emerald-50 text-lg font-bold text-slate-900 dark:bg-emerald-900/30 dark:text-white">
                                     <th>{{ __('general.pages.reports.financial.income_statement.net_profit') }}</th>
                                     <th>{{ currencyFormat($report['net_profit'] ?? 0, true) }}</th>
                                 </tr>

@@ -19,4 +19,5 @@ return [
     'default_language' => 'اللغة الافتراضية',
     'theme_color' => 'لون السمة',
     'theme_mode' => 'وضع السمة',
+    'panel_layout' => 'تخطيط اللوحة',
 ];

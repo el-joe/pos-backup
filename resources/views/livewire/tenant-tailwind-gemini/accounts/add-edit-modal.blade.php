@@ -62,7 +62,7 @@
                     </div>
 
                     <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200">
-                        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500" id="branchActive" wire:model="data.active">
+                        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 dark:border-slate-600" id="branchActive" wire:model="data.active">
                         <span>{{ __('general.pages.accounts.is_active') }}</span>
                     </label>
                 </form>

@@ -26,7 +26,7 @@
                             <td>{{ __('general.pages.reports.tax.vat_summary.vat_receivable_purchases') }}</td>
                             <td class="text-end">{{ currencyFormat($report['vat_receivable'] ?? 0, true) }}</td>
                         </tr>
-                        <tr class="bg-emerald-50 font-semibold text-slate-900">
+                        <tr class="bg-emerald-50 font-semibold text-slate-900 dark:bg-emerald-900/30 dark:text-white">
                             <td>{{ __('general.pages.reports.tax.vat_summary.net_vat') }}</td>
                             <td class="text-end">{{ currencyFormat($report['net'] ?? 0, true) }}</td>
                         </tr>

@@ -51,7 +51,7 @@
                                 @foreach ($list as $per)
                                     <label class="inline-flex items-start gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-900">
                                         <input
-                                            class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                                            class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 dark:border-slate-600"
                                             type="checkbox"
                                             wire:click="setPermission('{{ $key }}','{{ $per }}', $event.target.checked)"
                                             id="{{ $per }}"

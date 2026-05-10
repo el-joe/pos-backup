@@ -6,7 +6,7 @@
             <img src="{{ tenantSetting('logo', asset('mohaaseb_en_dark.png')) }}" alt="{{ tenantSetting('business_name', tenant()->name) }}" class="h-9 w-9 flex-shrink-0 rounded-lg border border-gray-200 bg-white object-contain p-1 dark:border-gray-700 dark:bg-gray-900">
             <div x-show="sidebarOpen || !isDesktop" x-cloak class="min-w-0">
                 <div class="truncate text-base font-bold tracking-tight text-gray-900 dark:text-white">{{ tenantSetting('business_name', tenant()->name) }}</div>
-                <div class="text-xs uppercase tracking-[0.2em] text-gray-400">{{ __('general.layout.navigation') }}</div>
+                <div class="text-xs uppercase tracking-[0.2em] text-gray-400 dark:text-slate-500">{{ __('general.layout.navigation') }}</div>
             </div>
         </a>
 

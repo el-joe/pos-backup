@@ -9,6 +9,13 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
     ],
+    safelist: [
+        // Dynamic status-action button colors (see ContractingCrudComponent)
+        { pattern: /^text-(emerald|blue|violet|teal|rose|amber)-(400|600)$/ },
+        { pattern: /^hover:bg-(emerald|blue|violet|teal|rose|amber)-50$/ },
+        { pattern: /^dark:text-(emerald|blue|violet|teal|rose|amber)-400$/ },
+        { pattern: /^dark:hover:bg-(emerald|blue|violet|teal|rose|amber)-500\/10$/ },
+    ],
     theme: {
         extend: {
             fontFamily: {

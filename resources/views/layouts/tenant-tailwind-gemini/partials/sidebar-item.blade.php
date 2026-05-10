@@ -52,7 +52,7 @@
 
             <div x-show="open" x-cloak :class="(!sidebarOpen && isDesktop && {{ $isTopLevel ? 'true' : 'false' }}) ? 'absolute top-0 z-[60] w-56 rounded-xl border border-gray-200 bg-white py-2 shadow-xl dark:border-gray-700 dark:bg-gray-800 ltr:left-full ltr:ml-3 rtl:right-full rtl:mr-3' : '{{ $isTopLevel ? 'mt-1 space-y-1 ltr:ml-9 rtl:mr-9' : 'mt-1 space-y-1 ltr:ml-5 rtl:mr-5' }}'" @if($isTopLevel) x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0 scale-95" @else x-collapse @endif>
                 @if($isTopLevel)
-                    <div x-show="!sidebarOpen && isDesktop" x-cloak class="border-b border-gray-100 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-gray-400 dark:border-gray-700">{{ __($data['translated_title']) }}</div>
+                    <div x-show="!sidebarOpen && isDesktop" x-cloak class="border-b border-gray-100 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-gray-400 dark:border-gray-700 dark:text-slate-500">{{ __($data['translated_title']) }}</div>
                 @endif
                 @foreach ($data['children'] as $child)
                     {!! view('layouts.tenant-tailwind-gemini.partials.sidebar-item', ['data' => $child, 'depth' => $depth + 1])->render() !!}

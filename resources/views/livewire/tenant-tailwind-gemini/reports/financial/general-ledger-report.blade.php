@@ -15,7 +15,7 @@
                     @foreach($accounts as $account)
                         <button
                             type="button"
-                            class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition {{ $active_account === $account ? 'border-slate-900 bg-slate-900 text-white shadow-sm' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50' }}"
+                            class="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition {{ $active_account === $account ? 'border-slate-900 bg-slate-900 text-white shadow-sm' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50' }} dark:bg-slate-900 dark:text-slate-200"
                             wire:click="loadAccountLedger('{{ $account }}')"
                         >
                             <i class="fa fa-folder-open"></i>
@@ -29,8 +29,8 @@
                         <div class="{{ $active_account === $account ? 'block' : 'hidden' }}" id="tab{{ $i }}">
                             @if($active_account === $account)
                                 <div class="mb-4">
-                                    <div class="mb-3 flex items-center justify-between border-b border-slate-200 pb-3">
-                                        <h5 class="mb-0 text-base font-semibold text-slate-900">
+                                    <div class="mb-3 flex items-center justify-between border-b border-slate-200 pb-3 dark:border-slate-700">
+                                        <h5 class="mb-0 text-base font-semibold text-slate-900 dark:text-white">
                                             <i class="fa fa-folder-open me-1 text-sky-600"></i> {{ $account }}
                                         </h5>
                                         <span class="inline-flex items-center rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
@@ -72,7 +72,7 @@
                     @endforeach
                 </div>
             @else
-                <div class="rounded-3xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-medium text-sky-700">
+                <div class="rounded-3xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm font-medium text-sky-700 dark:bg-sky-900/30">
                     <i class="fa fa-info-circle me-1"></i> {{ __('general.pages.reports.financial.general_ledger.no_transactions') }}
                 </div>
             @endif
