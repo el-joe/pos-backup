@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // PlanSeeder::class,
-            // CpanelSeeder::class,
-            // BlogSeeder::class,
-            // FaqSeeder::class,
+            PlanSeeder::class,
+            CpanelSeeder::class,
+            BlogSeeder::class,
+            FaqSeeder::class,
             PermissionSeeder::class,
         ]);
     }
