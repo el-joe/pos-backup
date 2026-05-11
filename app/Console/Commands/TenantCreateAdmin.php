@@ -228,6 +228,17 @@ class TenantCreateAdmin extends Command
                 'group' => 'product',
                 'options' => null
             ],
+            [
+                'title'=> 'settings.panel_layout',
+                'key'=> 'panel_layout',
+                'value' => 'hud',
+                'type' => TenantSettingEnum::SELECT->value,
+                'group' => 'system',
+                'options' => json_encode([
+                    'hud' => 'HUD',
+                    'tenant-tailwind-gemini' => 'Mohaaseb Tailwind',
+                ])
+            ],
             // [
             //     'title' => 'settings.default_tax',
             //     'key' => 'default_tax',
