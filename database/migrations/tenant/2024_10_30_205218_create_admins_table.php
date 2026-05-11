@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->unique();
+            $table->string('phone')->nullable()->unique();
             $table->boolean('active')->default(1);
             $table->string('password');
             $table->enum('type',['super_admin','admin'])->default('super_admin');
