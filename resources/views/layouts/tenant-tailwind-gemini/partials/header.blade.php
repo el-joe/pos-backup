@@ -46,7 +46,8 @@
 
         <div class="min-w-0">
             <div class="truncate text-lg font-semibold text-gray-800 dark:text-white">
-                {{ $title ?? admin()?->name ?? tenantSetting('business_name', tenant()->name) }}</div>
+                {{ $title ?? admin()?->name ?? tenantSetting('business_name', tenant()->name) }}
+            </div>
         </div>
     </div>
 
@@ -65,7 +66,8 @@
                     class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
                     <div
                         class="border-b border-gray-100 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:border-gray-700 dark:text-slate-500">
-                        {{ __('general.layout.all_branches') }}</div>
+                        {{ __('general.layout.all_branches') }}
+                    </div>
                     <div class="max-h-60 overflow-y-auto p-2">
                         <a href="{{ url('/admin/switch-branch/') }}"
                             class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition {{ empty($currentBranch) ? 'bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' }}">
@@ -96,14 +98,16 @@
             <span x-text="rtl ? 'LTR' : 'RTL'"></span>
         </button> --}}
 
-        <!-- <button type="button" @click="darkMode = !darkMode" class="rounded-full p-2 text-gray-500 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
+        <button type="button" @click="darkMode = !darkMode"
+            class="rounded-full p-2 text-gray-500 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
             <svg x-show="!darkMode" x-cloak class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
             </svg>
             <svg x-show="darkMode" x-cloak class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM4.343 4.343A1 1 0 105.757 2.93l-.707-.707A1 1 0 103.636 3.636l.707.707zm-1.414 9.9l-.707.707a1 1 0 101.414 1.414l.707-.707a1 1 0 10-1.414-1.414zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-8-6a1 1 0 100 2H3a1 1 0 100-2H2zm15 0a1 1 0 100 2h1a1 1 0 100-2h-1z" />
+                <path
+                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM4.343 4.343A1 1 0 105.757 2.93l-.707-.707A1 1 0 103.636 3.636l.707.707zm-1.414 9.9l-.707.707a1 1 0 101.414 1.414l.707-.707a1 1 0 10-1.414-1.414zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-8-6a1 1 0 100 2H3a1 1 0 100-2H2zm15 0a1 1 0 100 2h1a1 1 0 100-2h-1z" />
             </svg>
-        </button> -->
+        </button>
 
         <div class="relative" x-data="{ open: false }" @click.away="open = false">
             <button type="button" @click="open = !open"
@@ -120,7 +124,8 @@
             <div x-show="open" x-transition x-cloak
                 class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
                 <div class="border-b border-gray-100 p-3 text-sm font-bold dark:border-gray-700">
-                    {{ __('general.layout.notifications') }}</div>
+                    {{ __('general.layout.notifications') }}
+                </div>
                 <div class="max-h-80 overflow-y-auto">
                     @forelse (($__unreaded_notifications ?? []) as $notification)
                         <div class="border-b border-gray-100 last:border-0 dark:border-gray-700">
@@ -128,7 +133,8 @@
                         </div>
                     @empty
                         <div class="p-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('general.layout.no_new_notifications') }}</div>
+                            {{ __('general.layout.no_new_notifications') }}
+                        </div>
                     @endforelse
                 </div>
                 <div
@@ -143,13 +149,15 @@
             <button type="button" @click="open = !open" class="flex items-center gap-2 focus:outline-none">
                 <div
                     class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-blue-500 bg-blue-600 text-sm font-bold text-white">
-                    {{ strtoupper(substr(admin()?->name ?? 'A', 0, 1)) }}</div>
+                    {{ strtoupper(substr(admin()?->name ?? 'A', 0, 1)) }}
+                </div>
             </button>
             <div x-show="open" x-transition x-cloak
                 class="absolute right-0 rtl:left-0 rtl:right-auto mt-2 w-48 rounded-xl border border-gray-200 bg-white py-2 shadow-lg dark:border-gray-700 dark:bg-gray-800 z-50">
                 <div
                     class="px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-gray-400 dark:text-gray-500">
-                    {{ __('general.pages.admins.name') }}</div>
+                    {{ __('general.pages.admins.name') }}
+                </div>
                 <div class="px-4 pb-3 text-sm font-semibold text-gray-800 dark:text-gray-100">{{ admin()?->name }}</div>
                 <div class="my-1 border-t border-gray-100 dark:border-gray-700"></div>
                 <a href="{{ route('admin.logout') }}"
