@@ -4,12 +4,12 @@
         <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
             <div>
                 <label class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.sales.invoice_no') }}</label>
-                <input type="text" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-brand-500" placeholder="{{ __('general.pages.sales.search_placeholder') }}" wire:model.blur="filters.search">
+                <input type="text" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-brand-500" placeholder="{{ __('general.pages.sales.search_placeholder') }}" wire:model.blur="filters.search">
             </div>
 
             <div>
                 <label class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.sales.due_filter') }}</label>
-                <select class="select2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-brand-500" name="filters.due_filter">
+                <select class="select2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:focus:border-brand-500" name="filters.due_filter">
                     <option value="all">{{ __('general.pages.sales.due_filter_all') }}</option>
                     <option value="paid">{{ __('general.pages.sales.due_filter_paid') }}</option>
                     <option value="unpaid">{{ __('general.pages.sales.due_filter_unpaid') }}</option>
@@ -18,20 +18,20 @@
 
             <div>
                 <label class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.sales.customer') }}</label>
-                <select class="select2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-brand-500" name="filters.customer_id">
+                <select class="select2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:focus:border-brand-500" name="filters.customer_id">
                     <option value="">{{ __('general.pages.sales.all_customers') }}</option>
                     @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}" {{ ($filters['customer_id'] ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
+                    <option value="{{ $customer->id }}" {{ ($filters['customer_id'] ?? '') == $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
                     @endforeach
                 </select>
             </div>
 
             <div>
                 <label class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.sales.branch') }}</label>
-                <select class="select2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-brand-500" name="filters.branch_id">
+                <select class="select2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:focus:border-brand-500" name="filters.branch_id">
                     <option value="">{{ __('general.pages.sales.all_branches_option') }}</option>
                     @foreach ($branches as $branch)
-                        <option value="{{ $branch->id }}" {{ ($filters['branch_id'] ?? '') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                    <option value="{{ $branch->id }}" {{ ($filters['branch_id'] ?? '') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -48,20 +48,20 @@
         <x-slot:actions>
             <div class="flex flex-wrap items-center gap-2">
                 @adminCan('sales.export')
-                    <button class="inline-flex items-center gap-2 rounded-xl border border-emerald-500 bg-white px-3 py-2 text-sm font-medium text-emerald-600 transition-colors hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20 dark:focus:ring-offset-slate-900" wire:click="$set('export', 'excel')">
-                        <i class="fa fa-file-excel"></i> {{ __('general.pages.sales.export') }}
-                    </button>
+                <button class="inline-flex items-center gap-2 rounded-xl border border-emerald-500 bg-white px-3 py-2 text-sm font-medium text-emerald-600 transition-colors hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20 dark:focus:ring-offset-slate-900" wire:click="$set('export', 'excel')">
+                    <i class="fa fa-file-excel"></i> {{ __('general.pages.sales.export') }}
+                </button>
                 @endadminCan
                 @adminCan('pos.create')
-                    <a class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" href="{{ route('admin.pos') }}">
-                        <i class="fa fa-plus"></i> {{ __('general.pages.sales.new_selling_order') }}
-                    </a>
-                    <a class="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" href="{{ route('admin.pos.deferred') }}">
-                        <i class="fa fa-clock"></i> {{ __('general.titles.deferred_pos') }}
-                    </a>
-                    <a class="inline-flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/20 dark:focus:ring-offset-slate-900" href="{{ route('admin.sales.deferred') }}">
-                        <i class="fa fa-truck"></i> {{ __('general.titles.deferred_sales') }}
-                    </a>
+                <a class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" href="{{ route('admin.pos') }}">
+                    <i class="fa fa-plus"></i> {{ __('general.pages.sales.new_selling_order') }}
+                </a>
+                <a class="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" href="{{ route('admin.pos.deferred') }}">
+                    <i class="fa fa-clock"></i> {{ __('general.titles.deferred_pos') }}
+                </a>
+                <a class="inline-flex items-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/20 dark:focus:ring-offset-slate-900" href="{{ route('admin.sales.deferred') }}">
+                    <i class="fa fa-truck"></i> {{ __('general.titles.deferred_sales') }}
+                </a>
                 @endadminCan
             </div>
         </x-slot:actions>
@@ -81,61 +81,61 @@
             </thead>
             <tbody class="divide-y divide-slate-100 border-t border-slate-100 dark:divide-slate-800 dark:border-slate-800">
                 @forelse ($sales as $sale)
-                    <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                        <td class="px-5 py-4">{{ $sale->id }}</td>
-                        <td class="px-5 py-4 font-medium text-slate-900 dark:text-white">{{ $sale->invoice_number }}</td>
-                        <td class="px-5 py-4">{{ $sale->customer?->name }}</td>
-                        <td class="px-5 py-4">{{ $sale->branch?->name }}</td>
-                        <td class="px-5 py-4">{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
-                        <td class="px-5 py-4">
-                            <span class="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">{{ currencyFormat($sale->due_amount ?? 0, true) }}</span>
-                        </td>
-                        <td class="px-5 py-4">
-                            <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-{{ $sale->refund_status->colorClass() }}">
-                                {{ $sale->refund_status->label() }}
-                            </span>
-                        </td>
-                        <td class="px-5 py-4 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                @adminCan('sales.show')
-                                    <a href="{{ route('admin.sales.details', $sale->id) }}" class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20" title="{{ __('general.pages.sales.details') }}">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
-                                @endadminCan
-                                @adminCan('sales.pay')
-                                    <button class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20" wire:click="setCurrent({{ $sale->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal" title="{{ __('general.pages.sales.save_payment') }}">
-                                        <i class="fa fa-credit-card"></i>
-                                    </button>
-                                @endadminCan
-                                @adminCan('sales.show-invoice')
-                                    <a href="{{ route('sales.invoice', encodedData(['type' => '80mm','order_id'=>$sale->id, 'action' => 'print'])) }}" class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-300 dark:hover:bg-sky-500/20" title="{{ __('general.pages.sales.print') }}" target="_blank">
-                                        <i class="fa fa-print"></i>
-                                    </a>
-                                    <a href="{{ route('sales.invoice', encodedData(['type' => 'a4','order_id'=>$sale->id, 'action' => 'pdf'])) }}" class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 transition hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/20" title="{{ __('general.pages.sales.export_pdf') }}" target="_blank">
-                                        <i class="fa fa-file-pdf"></i>
-                                    </a>
-                                @endadminCan
-                            </div>
-                        </td>
-                    </tr>
+                <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <td class="px-5 py-4">{{ $sale->id }}</td>
+                    <td class="px-5 py-4 font-medium text-slate-900 dark:text-white">{{ $sale->invoice_number }}</td>
+                    <td class="px-5 py-4">{{ $sale->customer?->name }}</td>
+                    <td class="px-5 py-4">{{ $sale->branch?->name }}</td>
+                    <td class="px-5 py-4">{{ currencyFormat($sale->grand_total_amount ?? 0, true) }}</td>
+                    <td class="px-5 py-4">
+                        <span class="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">{{ currencyFormat($sale->due_amount ?? 0, true) }}</span>
+                    </td>
+                    <td class="px-5 py-4">
+                        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold bg-{{ $sale->refund_status->colorClass() }}">
+                            {{ $sale->refund_status->label() }}
+                        </span>
+                    </td>
+                    <td class="px-5 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            @adminCan('sales.show')
+                            <a href="{{ route('admin.sales.details', $sale->id) }}" class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-300 dark:hover:bg-blue-500/20" title="{{ __('general.pages.sales.details') }}">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            @endadminCan
+                            @adminCan('sales.pay')
+                            <button class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20" wire:click="setCurrent({{ $sale->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal" title="{{ __('general.pages.sales.save_payment') }}">
+                                <i class="fa fa-credit-card"></i>
+                            </button>
+                            @endadminCan
+                            @adminCan('sales.show-invoice')
+                            <a href="{{ route('sales.invoice', encodedData(['type' => '80mm','order_id'=>$sale->id, 'action' => 'print'])) }}" class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition hover:bg-sky-100 dark:bg-sky-500/10 dark:text-sky-300 dark:hover:bg-sky-500/20" title="{{ __('general.pages.sales.print') }}" target="_blank">
+                                <i class="fa fa-print"></i>
+                            </a>
+                            <a href="{{ route('sales.invoice', encodedData(['type' => 'a4','order_id'=>$sale->id, 'action' => 'pdf'])) }}" class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 transition hover:bg-amber-100 dark:bg-amber-500/10 dark:text-amber-300 dark:hover:bg-amber-500/20" title="{{ __('general.pages.sales.export_pdf') }}" target="_blank">
+                                <i class="fa fa-file-pdf"></i>
+                            </a>
+                            @endadminCan
+                        </div>
+                    </td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="8" class="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
-                    </tr>
+                <tr>
+                    <td colspan="8" class="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.messages.no_data_found') }}</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
 
         @if($sales->hasPages())
-            <x-slot:footer>
-                {{ $sales->links() }}
-            </x-slot:footer>
+        <x-slot:footer>
+            {{ $sales->links() }}
+        </x-slot:footer>
         @endif
     </x-tenant-tailwind-gemini.table-card>
 
     <div wire:ignore.self class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content overflow-hidden rounded-[28px] border-0 shadow-2xl dark:bg-slate-900">
+            <div class="modal-content overflow-hidden rounded-[28px] border-0 shadow-2xl dark:!bg-slate-900">
                 <div class="bg-gradient-to-r from-brand-600 to-sky-500 px-6 py-5 text-white">
                     <div class="flex items-center justify-between gap-4">
                         <h5 class="text-lg font-semibold" id="paymentModalLabel">{{ __('general.pages.sales.payment_modal_title') }}</h5>
@@ -156,7 +156,7 @@
                                 </span>
                             </div>
                             @error('payment.amount')
-                                <small class="mt-1 block text-sm text-rose-600 dark:text-rose-300">{{ $message }}</small>
+                            <small class="mt-1 block text-sm text-rose-600 dark:text-rose-300">{{ $message }}</small>
                             @enderror
                         </div>
 
@@ -165,11 +165,11 @@
                             <select class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-500" id="paymentMethod" wire:model="payment.account_id">
                                 <option value="">{{ __('general.pages.sales.select_account') }}</option>
                                 @foreach (($current?->customer?->accounts ?? []) as $acc)
-                                    <option value="{{ $acc->id }}">{{ $acc->paymentMethod?->name }} - {{ $acc->name }}</option>
+                                <option value="{{ $acc->id }}">{{ $acc->paymentMethod?->name }} - {{ $acc->name }}</option>
                                 @endforeach
                             </select>
                             @error('payment.account_id')
-                                <small class="mt-1 block text-sm text-rose-600 dark:text-rose-300">{{ $message }}</small>
+                            <small class="mt-1 block text-sm text-rose-600 dark:text-rose-300">{{ $message }}</small>
                             @enderror
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                         <label for="paymentNote" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.sales.note') }}</label>
                         <textarea class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-brand-500" id="paymentNote" wire:model="payment.note" rows="3" placeholder="{{ __('general.pages.sales.optional_notes') }}"></textarea>
                         @error('payment.note')
-                            <small class="mt-1 block text-sm text-rose-600 dark:text-rose-300">{{ $message }}</small>
+                        <small class="mt-1 block text-sm text-rose-600 dark:text-rose-300">{{ $message }}</small>
                         @enderror
                     </div>
 
@@ -200,23 +200,23 @@
                                 </thead>
                                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                                     <?php
-                                        $payments = $current?->transactions
-                                            ? $current?->transactions->whereIn('type', [
-                                                App\Enums\TransactionTypeEnum::SALE_PAYMENT,
-                                                App\Enums\TransactionTypeEnum::SALE_PAYMENT_REFUND,
-                                            ])->load('lines') : [];
+                                    $payments = $current?->transactions
+                                        ? $current?->transactions->whereIn('type', [
+                                            App\Enums\TransactionTypeEnum::SALE_PAYMENT,
+                                            App\Enums\TransactionTypeEnum::SALE_PAYMENT_REFUND,
+                                        ])->load('lines') : [];
                                     ?>
                                     @forelse($payments as $payment)
-                                        <tr>
-                                            <td class="px-4 py-3">{{ dateTimeFormat($payment->created_at,true,false) }}</td>
-                                            <td class="px-4 py-3"><span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{{ currencyFormat($payment->amount, true) }}</span></td>
-                                            <td class="px-4 py-3">{{ $payment->account() ? ($payment->account('credit')->paymentMethod?->name ? $payment->account('credit')->paymentMethod?->name .' - '  : '' ) . $payment->account('credit')->name : __('general.messages.n_a') }}</td>
-                                            <td class="px-4 py-3">{{ $payment->note }}</td>
-                                        </tr>
+                                    <tr>
+                                        <td class="px-4 py-3">{{ dateTimeFormat($payment->created_at,true,false) }}</td>
+                                        <td class="px-4 py-3"><span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{{ currencyFormat($payment->amount, true) }}</span></td>
+                                        <td class="px-4 py-3">{{ $payment->account() ? ($payment->account('credit')->paymentMethod?->name ? $payment->account('credit')->paymentMethod?->name .' - '  : '' ) . $payment->account('credit')->name : __('general.messages.n_a') }}</td>
+                                        <td class="px-4 py-3">{{ $payment->note }}</td>
+                                    </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="4" class="px-4 py-6 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.no_payments') }}</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-6 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.sales.no_payments') }}</td>
+                                    </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -225,7 +225,7 @@
                 </div>
 
                 <div class="border-t border-slate-200 px-6 py-4 dark:border-slate-800">
-                    <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" data-bs-dismiss="modal">
+                    <button type="button" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" data-bs-dismiss="modal">
                         <i class="fa fa-times"></i> {{ __('general.pages.sales.close') }}
                     </button>
                 </div>

@@ -1,5 +1,5 @@
 <aside
-    class="fixed inset-y-0 z-50 flex w-64 flex-col border-e border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:bg-gray-800 lg:static lg:z-auto lg:flex"
+    class="fixed inset-y-0 z-50 flex w-64 flex-col border-e border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:!bg-gray-800 lg:static lg:z-auto lg:flex"
     :class="sidebarOpen ? 'translate-x-0 lg:w-64' : '-translate-x-full lg:w-20 lg:translate-x-0'">
     <div class="flex h-16 items-center border-b border-gray-200 px-4 dark:border-gray-700" :class="sidebarOpen || !isDesktop ? 'justify-between' : 'justify-center'">
         <a href="{{ panelAwareUrl(route('admin.statistics')) }}" class="flex min-w-0 items-center gap-3">
@@ -17,7 +17,7 @@
 
     <nav class="custom-scroll flex-1 overflow-y-auto p-4 space-y-2">
         @foreach (config('sidebar-links') as $sidebarData)
-            {!! view('layouts.tenant-tailwind-gemini.partials.sidebar-item', ['data' => $sidebarData, 'depth' => 0])->render() !!}
+        {!! view('layouts.tenant-tailwind-gemini.partials.sidebar-item', ['data' => $sidebarData, 'depth' => 0])->render() !!}
         @endforeach
     </nav>
 </aside>

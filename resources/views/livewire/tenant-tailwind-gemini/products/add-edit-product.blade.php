@@ -1,6 +1,6 @@
 <div class="space-y-6">
     <div class="grid gap-4 lg:grid-cols-3">
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:col-span-2">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:!bg-slate-900 lg:col-span-2">
             <div class="flex flex-wrap items-start justify-between gap-4">
                 <div>
                     <p class="text-sm font-medium uppercase tracking-[0.24em] text-brand-600 dark:text-brand-300">{{ __('general.pages.products.code') }}</p>
@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:!bg-slate-900">
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.products.is_active') }}</p>
             <div class="mt-3 flex items-center gap-3">
                 <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300">
@@ -68,14 +68,14 @@
                 <label for="branch_id" class="form-label">{{ __('general.pages.products.branch') }}</label>
                 <div class="flex gap-2">
                     @if(admin()->branch_id == null)
-                        <select id="branch_id" name="data.branch_id" class="form-select select2">
-                            <option value="">{{ __('general.pages.products.select_branch') }}</option>
-                            @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}" {{ ($data['branch_id'] ?? false) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
+                    <select id="branch_id" name="data.branch_id" class="form-select select2">
+                        <option value="">{{ __('general.pages.products.select_branch') }}</option>
+                        @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ ($data['branch_id'] ?? false) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                        @endforeach
+                    </select>
                     @else
-                        <input type="text" class="form-control" value="{{ admin()->branch->name }}" readonly disabled>
+                    <input type="text" class="form-control" value="{{ admin()->branch->name }}" readonly disabled>
                     @endif
                     <button class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-sm transition hover:bg-brand-700" data-bs-toggle="modal" data-bs-target="#editBranchModal" wire:click="$dispatch('branch-set-current', {id : null})">+</button>
                 </div>
@@ -87,7 +87,7 @@
                     <select id="brand_id" name="data.brand_id" class="form-select select2">
                         <option value="">{{ __('general.pages.products.select_brand') }}</option>
                         @foreach ($brands as $brand)
-                            <option value="{{ $brand->id }}" {{ ($data['brand_id'] ?? false) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                        <option value="{{ $brand->id }}" {{ ($data['brand_id'] ?? false) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                         @endforeach
                     </select>
                     <button class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-sm transition hover:bg-brand-700" data-bs-toggle="modal" data-bs-target="#editBrandModal" wire:click="$dispatch('brand-set-current', {id : null})">+</button>
@@ -100,7 +100,7 @@
                     <select id="category_id" name="data.category_id" class="form-select select2">
                         <option value="">{{ __('general.pages.products.select_category') }}</option>
                         @foreach ($categories as $parent)
-                            {{ recursiveChildrenForOptions($parent, 'children', 'id', 'name', 0, true, $data['category_id'] ?? ($this->data['category_id'] ?? null)) }}
+                        {{ recursiveChildrenForOptions($parent, 'children', 'id', 'name', 0, true, $data['category_id'] ?? ($this->data['category_id'] ?? null)) }}
                         @endforeach
                     </select>
                     <button class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-sm transition hover:bg-brand-700" data-bs-toggle="modal" data-bs-target="#editCategoryModal" wire:click="$dispatch('category-set-current', {id : null})">+</button>
@@ -113,7 +113,7 @@
                     <select id="unit_id" name="data.unit_id" class="form-select select2">
                         <option value="">{{ __('general.pages.products.select_unit') }}</option>
                         @foreach ($units as $unit)
-                            <option value="{{ $unit->id }}" {{ ($data['unit_id'] ?? false) == $unit->id ? 'selected' : '' }}>{{ $unit->name }}</option>
+                        <option value="{{ $unit->id }}" {{ ($data['unit_id'] ?? false) == $unit->id ? 'selected' : '' }}>{{ $unit->name }}</option>
                         @endforeach
                     </select>
                     <button class="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-sm transition hover:bg-brand-700" data-bs-toggle="modal" data-bs-target="#editUnitModal" wire:click="$dispatch('unit-set-current', {id : null})">+</button>
@@ -162,23 +162,23 @@
 
                 <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50">
                     @if (($data['image'] ?? false) && method_exists($data['image'], 'temporaryUrl'))
-                        <div class="relative inline-block">
-                            <button type="button" class="absolute -left-3 -top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeImage()">
-                                <i class="fa fa-trash text-xs"></i>
-                            </button>
-                            <img src="{{ $data['image']->temporaryUrl() }}" alt="Image Preview" class="h-32 w-32 rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
-                        </div>
+                    <div class="relative inline-block">
+                        <button type="button" class="absolute -left-3 -top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeImage()">
+                            <i class="fa fa-trash text-xs"></i>
+                        </button>
+                        <img src="{{ $data['image']->temporaryUrl() }}" alt="Image Preview" class="h-32 w-32 rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
+                    </div>
                     @elseif($product?->image_path)
-                        <div class="relative inline-block">
-                            <button type="button" class="absolute -left-3 -top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeImage()">
-                                <i class="fa fa-trash text-xs"></i>
-                            </button>
-                            <img src="{{ $product->image_path }}" alt="Current Image" class="h-32 w-32 rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
-                        </div>
+                    <div class="relative inline-block">
+                        <button type="button" class="absolute -left-3 -top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeImage()">
+                            <i class="fa fa-trash text-xs"></i>
+                        </button>
+                        <img src="{{ $product->image_path }}" alt="Current Image" class="h-32 w-32 rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
+                    </div>
                     @else
-                        <div class="flex h-32 items-center justify-center rounded-2xl border border-slate-200 bg-white text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
-                            {{ __('general.pages.products.main_image') }}
-                        </div>
+                    <div class="flex h-32 items-center justify-center rounded-2xl border border-slate-200 bg-white text-sm text-slate-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-400">
+                        {{ __('general.pages.products.main_image') }}
+                    </div>
                     @endif
                 </div>
             </div>
@@ -193,29 +193,29 @@
 
                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
                     @if (($data['gallery'] ?? false) && is_array($data['gallery']))
-                        @foreach ($data['gallery'] as $index => $file)
-                            @if (method_exists($file, 'temporaryUrl'))
-                                <div class="relative">
-                                    <button type="button" class="absolute -left-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeGalleryImage({{ $index }})">
-                                        <i class="fa fa-trash text-xs"></i>
-                                    </button>
-                                    <img src="{{ $file->temporaryUrl() }}" alt="Gallery Image" class="h-24 w-full rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
-                                </div>
-                            @endif
-                        @endforeach
+                    @foreach ($data['gallery'] as $index => $file)
+                    @if (method_exists($file, 'temporaryUrl'))
+                    <div class="relative">
+                        <button type="button" class="absolute -left-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeGalleryImage({{ $index }})">
+                            <i class="fa fa-trash text-xs"></i>
+                        </button>
+                        <img src="{{ $file->temporaryUrl() }}" alt="Gallery Image" class="h-24 w-full rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
+                    </div>
+                    @endif
+                    @endforeach
                     @elseif($data['gallery_path'] ?? false)
-                        @foreach ($data['gallery_path'] as $index => $imagePath)
-                            <div class="relative">
-                                <button type="button" class="absolute -left-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeExistingGalleryImage({{ $index }})">
-                                    <i class="fa fa-trash text-xs"></i>
-                                </button>
-                                <img src="{{ $imagePath }}" alt="Current Gallery Image" class="h-24 w-full rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
-                            </div>
-                        @endforeach
+                    @foreach ($data['gallery_path'] as $index => $imagePath)
+                    <div class="relative">
+                        <button type="button" class="absolute -left-2 -top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm" wire:click="removeExistingGalleryImage({{ $index }})">
+                            <i class="fa fa-trash text-xs"></i>
+                        </button>
+                        <img src="{{ $imagePath }}" alt="Current Gallery Image" class="h-24 w-full rounded-2xl border border-slate-200 object-cover dark:border-slate-700">
+                    </div>
+                    @endforeach
                     @else
-                        <div class="col-span-full flex h-24 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400">
-                            {{ __('general.pages.products.gallery_images') }}
-                        </div>
+                    <div class="col-span-full flex h-24 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-400">
+                        {{ __('general.pages.products.gallery_images') }}
+                    </div>
                     @endif
                 </div>
             </div>
@@ -225,7 +225,7 @@
                     <button type="button" wire:click="save" class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
                         <i class="fa fa-check me-2"></i> {{ __('general.pages.products.submit') }}
                     </button>
-                    <button type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
+                    <button type="button" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800">
                         <i class="fa fa-times me-2"></i> {{ __('general.pages.products.cancel') }}
                     </button>
                 </div>
@@ -235,9 +235,9 @@
 </div>
 
 @push('scripts')
-    @livewire('admin.branches.branch-modal')
-    @livewire('admin.brands.brand-modal')
-    @livewire('admin.categories.category-modal')
-    @livewire('admin.units.unit-modal')
-    @include('layouts.tenant-tailwind-gemini.partials.select2-script')
+@livewire('admin.branches.branch-modal')
+@livewire('admin.brands.brand-modal')
+@livewire('admin.categories.category-modal')
+@livewire('admin.units.unit-modal')
+@include('layouts.tenant-tailwind-gemini.partials.select2-script')
 @endpush

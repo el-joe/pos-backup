@@ -1,5 +1,5 @@
 <div>
-<header class="pt-32 pb-16 bg-gradient-to-b from-brand-50 to-white dark:from-slate-900 dark:to-slate-800 text-center transition-colors duration-300">
+    <header class="pt-32 pb-16 bg-gradient-to-b from-brand-50 to-white dark:from-slate-900 dark:to-slate-800 text-center transition-colors duration-300">
         <div class="container mx-auto px-6" data-aos="fade-up">
             <p class="text-brand-500 font-bold uppercase tracking-wide text-sm mb-2">{{ __('gemini-landing.blogs_page.badge') }}</p>
             <h1 class="text-4xl lg:text-5xl font-extrabold text-brand-dark dark:text-white mb-6">{{ __('gemini-landing.blogs_page.title') }}</h1>
@@ -41,7 +41,7 @@
         @endif
     </section>
 
-    <section class="py-16 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+    <section class="py-16 bg-slate-50 dark:!bg-slate-900 transition-colors duration-300">
         <div class="container mx-auto px-6">
             <div class="flex flex-wrap justify-center gap-4 mb-12" data-aos="fade-up">
                 <button class="px-6 py-2 rounded-full bg-brand-500 text-white font-semibold shadow-lg shadow-brand-500/30">{{ __('gemini-landing.blogs_page.categories.all') }}</button>
@@ -53,23 +53,23 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse ($blogs as $blog)
-                    <article class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group border border-transparent dark:border-slate-700" data-aos="fade-up" data-aos-delay="0">
-                        <div class="h-48 overflow-hidden relative">
-                            <div class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-bold text-brand-600 uppercase">{{ $blog->category?->name ?? __('gemini-landing.blogs_page.card_category') }}</div>
-                            <img src="{{ $blog->image_path }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="{{ $blog->title }}">
+                <article class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group border border-transparent dark:border-slate-700" data-aos="fade-up" data-aos-delay="0">
+                    <div class="h-48 overflow-hidden relative">
+                        <div class="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur px-3 py-1 rounded text-xs font-bold text-brand-600 uppercase">{{ $blog->category?->name ?? __('gemini-landing.blogs_page.card_category') }}</div>
+                        <img src="{{ $blog->image_path }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 dark:opacity-80" alt="{{ $blog->title }}">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-xs text-slate-400 mb-3 gap-4">
+                            <span>{{ carbon($blog->published_at)->format('M d, Y') }}</span>
+                            <span>• {{ __('gemini-landing.blogs_page.by_admin') }}</span>
                         </div>
-                        <div class="p-6">
-                            <div class="flex items-center text-xs text-slate-400 mb-3 gap-4">
-                                <span>{{ carbon($blog->published_at)->format('M d, Y') }}</span>
-                                <span>• {{ __('gemini-landing.blogs_page.by_admin') }}</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3 group-hover:text-brand-500 transition-colors">{{ $blog->title }}</h3>
-                            <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-3">{{ $blog->excerpt }}</p>
-                            <a href="{{ route('blogs.show', $blog->slug) }}" class="text-brand-600 dark:text-brand-400 font-bold text-sm hover:underline">{{ __('gemini-landing.blogs.read_full') }} &rarr;</a>
-                        </div>
-                    </article>
+                        <h3 class="text-xl font-bold text-brand-dark dark:text-white mb-3 group-hover:text-brand-500 transition-colors">{{ $blog->title }}</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-3">{{ $blog->excerpt }}</p>
+                        <a href="{{ route('blogs.show', $blog->slug) }}" class="text-brand-600 dark:text-brand-400 font-bold text-sm hover:underline">{{ __('gemini-landing.blogs.read_full') }} &rarr;</a>
+                    </div>
+                </article>
                 @empty
-                    <p class="text-center text-slate-500 dark:text-slate-400 col-span-full">{{ __('gemini-landing.blogs.no_blogs') }}</p>
+                <p class="text-center text-slate-500 dark:text-slate-400 col-span-full">{{ __('gemini-landing.blogs.no_blogs') }}</p>
                 @endforelse
             </div>
 

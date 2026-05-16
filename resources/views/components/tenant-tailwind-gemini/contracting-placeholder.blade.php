@@ -3,7 +3,7 @@
 <div class="gemini-legacy-page">
     <div class="px-4 py-4 sm:px-6 lg:px-8">
         <div
-            class="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700/60 dark:bg-slate-900">
+            class="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700/60 dark:!bg-slate-900">
             <div
                 class="flex items-start gap-4 border-b border-slate-200 bg-gradient-to-br from-brand-500/10 to-transparent px-6 py-5 dark:border-slate-700/60">
                 <div

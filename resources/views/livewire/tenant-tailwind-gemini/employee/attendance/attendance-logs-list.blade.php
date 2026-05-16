@@ -1,13 +1,13 @@
 @php
-    $canCheckIn = !$todayOpenLog;
-    $canCheckOut = (bool) $todayOpenLog;
-    $todayClockIn = $todayOpenLog?->clock_in_at ?? $todayLog?->clock_in_at;
-    $todayClockOut = $todayOpenLog?->clock_out_at ?? $todayLog?->clock_out_at;
-    $todayStatus = $todayOpenLog ? 'Checked in' : ($todayClockOut ? 'Completed' : 'Not started');
+$canCheckIn = !$todayOpenLog;
+$canCheckOut = (bool) $todayOpenLog;
+$todayClockIn = $todayOpenLog?->clock_in_at ?? $todayLog?->clock_in_at;
+$todayClockOut = $todayOpenLog?->clock_out_at ?? $todayLog?->clock_out_at;
+$todayStatus = $todayOpenLog ? 'Checked in' : ($todayClockOut ? 'Completed' : 'Not started');
 @endphp
 
 <div class="space-y-6">
-    <section class="relative overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <section class="relative overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-r from-emerald-500/15 via-brand-500/10 to-cyan-500/15"></div>
         <div class="absolute right-0 top-0 h-40 w-40 -translate-y-12 translate-x-12 rounded-full bg-emerald-500/10 blur-3xl dark:bg-emerald-400/10"></div>
 
@@ -74,35 +74,35 @@
             </thead>
             <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
                 @forelse($logs as $log)
-                    <tr class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
-                        <td class="px-5 py-4 font-medium text-slate-900 dark:text-white">#{{ $log->id }}</td>
-                        <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $log->sheet?->date?->format('Y-m-d') ?? '-' }}</td>
-                        <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ optional($log->clock_in_at)->format('Y-m-d H:i') ?? '-' }}</td>
-                        <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ optional($log->clock_out_at)->format('Y-m-d H:i') ?? '-' }}</td>
-                        <td class="px-5 py-4">
-                            <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">{{ $log->status?->label() ?? '-' }}</span>
-                        </td>
-                        <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $log->source?->label() ?? '-' }}</td>
-                    </tr>
+                <tr class="transition hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
+                    <td class="px-5 py-4 font-medium text-slate-900 dark:text-white">#{{ $log->id }}</td>
+                    <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $log->sheet?->date?->format('Y-m-d') ?? '-' }}</td>
+                    <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ optional($log->clock_in_at)->format('Y-m-d H:i') ?? '-' }}</td>
+                    <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ optional($log->clock_out_at)->format('Y-m-d H:i') ?? '-' }}</td>
+                    <td class="px-5 py-4">
+                        <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">{{ $log->status?->label() ?? '-' }}</span>
+                    </td>
+                    <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $log->source?->label() ?? '-' }}</td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="6" class="px-5 py-12 text-center">
-                            <div class="mx-auto max-w-sm space-y-2">
-                                <div class="text-base font-semibold text-slate-900 dark:text-white">No attendance records yet.</div>
-                                <p class="text-sm text-slate-500 dark:text-slate-400">Your recent check-ins and check-outs will appear here once activity is recorded.</p>
-                            </div>
-                        </td>
-                    </tr>
+                <tr>
+                    <td colspan="6" class="px-5 py-12 text-center">
+                        <div class="mx-auto max-w-sm space-y-2">
+                            <div class="text-base font-semibold text-slate-900 dark:text-white">No attendance records yet.</div>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Your recent check-ins and check-outs will appear here once activity is recorded.</p>
+                        </div>
+                    </td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
 
         @if($logs->hasPages())
-            <x-slot:footer>
-                <div class="flex justify-center">
-                    {{ $logs->links('pagination::default5') }}
-                </div>
-            </x-slot:footer>
+        <x-slot:footer>
+            <div class="flex justify-center">
+                {{ $logs->links('pagination::default5') }}
+            </div>
+        </x-slot:footer>
         @endif
     </x-tenant-tailwind-gemini.table-card>
 </div>

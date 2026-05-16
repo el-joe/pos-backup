@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
-    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="flex items-start gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-800">
             <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
                 <i class="fa fa-building text-lg"></i>
@@ -20,7 +20,7 @@
                         </label>
                         <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200 focus:outline-none dark:text-slate-400 dark:file:bg-slate-800 dark:file:text-slate-300 dark:hover:file:bg-slate-700" wire:model="branchesFile" accept=".xlsx,.xls,.csv">
                         @error('branchesFile')
-                            <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="flex items-start gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-800">
             <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                 <i class="fa fa-box text-lg"></i>
@@ -71,7 +71,7 @@
                         </label>
                         <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200 focus:outline-none dark:text-slate-400 dark:file:bg-slate-800 dark:file:text-slate-300 dark:hover:file:bg-slate-700" wire:model="productsFile" accept=".xlsx,.xls,.csv">
                         @error('productsFile')
-                            <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -104,7 +104,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="flex items-start gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-800">
             <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-50 text-sky-600 dark:bg-sky-500/10 dark:text-sky-400">
                 <i class="fa fa-tags text-lg"></i>
@@ -124,7 +124,7 @@
                         </label>
                         <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200 focus:outline-none dark:text-slate-400 dark:file:bg-slate-800 dark:file:text-slate-300 dark:hover:file:bg-slate-700" wire:model="categoriesFile" accept=".xlsx,.xls,.csv">
                         @error('categoriesFile')
-                            <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="flex items-start gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-800">
             <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
                 <i class="fa fa-certificate text-lg"></i>
@@ -175,7 +175,7 @@
                         </label>
                         <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200 focus:outline-none dark:text-slate-400 dark:file:bg-slate-800 dark:file:text-slate-300 dark:hover:file:bg-slate-700" wire:model="brandsFile" accept=".xlsx,.xls,.csv">
                         @error('brandsFile')
-                            <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -205,7 +205,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="flex items-start gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-800">
             <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400">
                 <i class="fa fa-ruler text-lg"></i>
@@ -225,7 +225,7 @@
                         </label>
                         <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200 focus:outline-none dark:text-slate-400 dark:file:bg-slate-800 dark:file:text-slate-300 dark:hover:file:bg-slate-700" wire:model="unitsFile" accept=".xlsx,.xls,.csv">
                         @error('unitsFile')
-                            <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -256,7 +256,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="flex items-start gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-800">
             <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-teal-50 text-teal-600 dark:bg-teal-500/10 dark:text-teal-400">
                 <i class="fa fa-users text-lg"></i>
@@ -276,7 +276,7 @@
                         </label>
                         <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200 focus:outline-none dark:text-slate-400 dark:file:bg-slate-800 dark:file:text-slate-300 dark:hover:file:bg-slate-700" wire:model="customersFile" accept=".xlsx,.xls,.csv">
                         @error('customersFile')
-                            <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -308,7 +308,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:!bg-slate-900">
         <div class="flex items-start gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-800">
             <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-600 dark:bg-slate-800/80 dark:text-slate-400">
                 <i class="fa fa-truck text-lg"></i>
@@ -328,7 +328,7 @@
                         </label>
                         <input type="file" class="block w-full text-sm text-slate-500 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-slate-700 hover:file:bg-slate-200 focus:outline-none dark:text-slate-400 dark:file:bg-slate-800 dark:file:text-slate-300 dark:hover:file:bg-slate-700" wire:model="suppliersFile" accept=".xlsx,.xls,.csv">
                         @error('suppliersFile')
-                            <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
 

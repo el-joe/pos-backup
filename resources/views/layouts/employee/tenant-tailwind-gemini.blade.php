@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ $__locale }}" dir="{{ $__locale != 'ar' ? 'ltr' : 'rtl' }}" x-data="{ darkMode: localStorage.getItem('gemini-dark-mode') === '1', rtl: localStorage.getItem('gemini-rtl') === '1' || document.documentElement.getAttribute('dir') === 'rtl' }" :class="{ 'dark': darkMode }" :dir="rtl ? 'rtl' : 'ltr'" x-cloak>
+
 <head>
     <meta charset="utf-8">
     <title>{{ tenantSetting('business_name', tenant()->name) }} | {{ $title ?? '' }}</title>
@@ -10,13 +11,18 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
 
     @include('layouts.tenant-tailwind-gemini.partials.styles')
-    <style>[x-cloak] { display: none !important; }</style>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
     @stack('styles')
     @livewireStyles
 </head>
+
 <body class="bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
     <div class="min-h-screen">
-        <header class="border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
+        <header class="border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:!bg-slate-900/90">
             <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 lg:px-8">
                 <div>
                     <div class="text-sm text-slate-500 dark:text-slate-400">{{ tenantSetting('business_name', tenant()->name) }}</div>
@@ -56,4 +62,5 @@
         });
     </script>
 </body>
+
 </html>
