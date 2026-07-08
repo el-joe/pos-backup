@@ -8,7 +8,9 @@
 
 @if(defaultLayout() === 'tenant-tailwind-gemini')
     <x-tenant-tailwind-gemini.collapsed-card :title="$title" :description="$description" :icon="$icon" :expanded="$expanded" {{ $attributes }}>
-        @isset($actions)<x-slot:actions>{{ $actions }}</x-slot:actions>@endisset
+        @isset($actions)
+            <x-slot:actions>{{ $actions }}</x-slot:actions>
+        @endisset
         {{ $slot }}
     </x-tenant-tailwind-gemini.collapsed-card>
 @else

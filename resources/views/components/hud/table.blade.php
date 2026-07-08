@@ -7,9 +7,13 @@
 
 @if(defaultLayout() === 'tenant-tailwind-gemini')
     <x-tenant-tailwind-gemini.table :columns="$columns" :striped="$striped" :hover="$hover" :responsive="$responsive" {{ $attributes }}>
-        @isset($head)<x-slot:head>{{ $head }}</x-slot:head>@endisset
+        @isset($head)
+            <x-slot:head>{{ $head }}</x-slot:head>
+        @endisset
         {{ $slot }}
-        @isset($foot)<x-slot:foot>{{ $foot }}</x-slot:foot>@endisset
+        @isset($foot)
+            <x-slot:foot>{{ $foot }}</x-slot:foot>
+        @endisset
     </x-tenant-tailwind-gemini.table>
 @else
     @php

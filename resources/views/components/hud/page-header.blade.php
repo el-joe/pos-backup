@@ -7,7 +7,9 @@
 
 @if(defaultLayout() === 'tenant-tailwind-gemini')
     <x-tenant-tailwind-gemini.page-header :title="$title" :description="$description" :icon="$icon" :breadcrumbs="$breadcrumbs" {{ $attributes }}>
-        @isset($actions)<x-slot:actions>{{ $actions }}</x-slot:actions>@endisset
+        @isset($actions)
+            <x-slot:actions>{{ $actions }}</x-slot:actions>
+        @endisset
     </x-tenant-tailwind-gemini.page-header>
 @else
 <div {{ $attributes->merge(['class' => 'd-flex flex-wrap justify-content-between align-items-start mb-3 gap-3']) }}>

@@ -8,7 +8,9 @@
 
 @if(defaultLayout() === 'tenant-tailwind-gemini')
     <x-tenant-tailwind-gemini.dropdown :align="$align" :icon="$icon" :label="$label" :triggerClass="$triggerClass" {{ $attributes }}>
-        @isset($trigger)<x-slot:trigger>{{ $trigger }}</x-slot:trigger>@endisset
+        @isset($trigger)
+            <x-slot:trigger>{{ $trigger }}</x-slot:trigger>
+        @endisset
         {{ $slot }}
     </x-tenant-tailwind-gemini.dropdown>
 @else

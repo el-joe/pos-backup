@@ -14,9 +14,13 @@
 
 @if(defaultLayout() === 'tenant-tailwind-gemini')
         <x-tenant-tailwind-gemini.modal :name="$name" :title="$title" :icon="$icon" :size="$size" :wireModel="$wireModel" :show="$show" :closeOnBackdrop="$closeOnBackdrop" :scrollable="$scrollable" :openEvent="$openEvent" :closeEvent="$closeEvent" {{ $attributes }}>
-            @isset($header)<x-slot:header>{{ $header }}</x-slot:header>@endisset
+            @isset($header)
+                <x-slot:header>{{ $header }}</x-slot:header>
+            @endisset
             {{ $slot }}
-        @isset($footer)<x-slot:footer>{{ $footer }}</x-slot:footer>@endisset
+        @isset($footer)
+            <x-slot:footer>{{ $footer }}</x-slot:footer>
+        @endisset
     </x-tenant-tailwind-gemini.modal>
 @else
     @php

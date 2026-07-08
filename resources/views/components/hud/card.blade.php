@@ -7,10 +7,16 @@
 
 @if(defaultLayout() === 'tenant-tailwind-gemini')
     <x-tenant-tailwind-gemini.card :title="$title" :description="$description" :icon="$icon" :padded="$padded" {{ $attributes }}>
-        @isset($header)<x-slot:header>{{ $header }}</x-slot:header>@endisset
-        @isset($actions)<x-slot:actions>{{ $actions }}</x-slot:actions>@endisset
+        @isset($header)
+            <x-slot:header>{{ $header }}</x-slot:header>
+        @endisset
+        @isset($actions)
+            <x-slot:actions>{{ $actions }}</x-slot:actions>
+        @endisset
         {{ $slot }}
-        @isset($footer)<x-slot:footer>{{ $footer }}</x-slot:footer>@endisset
+        @isset($footer)
+            <x-slot:footer>{{ $footer }}</x-slot:footer>
+        @endisset
     </x-tenant-tailwind-gemini.card>
 @else
 <div {{ $attributes->merge(['class' => 'card shadow-sm mb-3']) }}>
