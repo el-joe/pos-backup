@@ -1,5 +1,5 @@
 <div class="space-y-6">
-    <section class="rounded-[28px] border border-slate-200 bg-white px-6 py-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:px-8">
+    <section class="rounded-[28px] border border-slate-200 bg-white px-6 py-6 shadow-sm dark:border-slate-800 dark:!bg-slate-900 lg:px-8">
         <div class="max-w-3xl space-y-2">
             <span class="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700 dark:border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-300">
                 <i class="fa fa-plus-circle"></i>
@@ -10,20 +10,20 @@
         </div>
     </section>
 
-    <section class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:p-8">
+    <section class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:!bg-slate-900 lg:p-8">
         <div class="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
             <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <div>
                     <label class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.depreciation_expenses.branch') }}</label>
                     @if(admin()->branch_id == null)
-                        <select class="select2 mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" name="data.branch_id">
-                            <option value="">{{ __('general.pages.depreciation_expenses.select_branch') }}</option>
-                            @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}" {{ ($data['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
+                    <select class="select2 mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" name="data.branch_id">
+                        <option value="">{{ __('general.pages.depreciation_expenses.select_branch') }}</option>
+                        @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ ($data['branch_id']??'') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                        @endforeach
+                    </select>
                     @else
-                        <input type="text" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300" value="{{ admin()->branch?->name }}" disabled>
+                    <input type="text" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300" value="{{ admin()->branch?->name }}" disabled>
                     @endif
                 </div>
 
@@ -32,7 +32,7 @@
                     <select class="select2 mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" name="data.fixed_asset_id">
                         <option value="">{{ __('general.pages.depreciation_expenses.select_asset') }}</option>
                         @foreach ($assets as $asset)
-                            <option value="{{ $asset->id }}" {{ ($data['fixed_asset_id']??0) == $asset->id ? 'selected' : '' }}>{{ $asset->code }} - {{ $asset->name }}</option>
+                        <option value="{{ $asset->id }}" {{ ($data['fixed_asset_id']??0) == $asset->id ? 'selected' : '' }}>{{ $asset->code }} - {{ $asset->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -42,7 +42,7 @@
                     <select class="select2 mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" name="data.expense_category_id">
                         <option value="">{{ __('general.pages.depreciation_expenses.select_category') }}</option>
                         @foreach ($expenseCategories as $cat)
-                            <option value="{{ $cat->id }}" {{ ($data['expense_category_id']??0) == $cat->id ? 'selected' : '' }}>{{ $cat->display_name }}</option>
+                        <option value="{{ $cat->id }}" {{ ($data['expense_category_id']??0) == $cat->id ? 'selected' : '' }}>{{ $cat->display_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -72,10 +72,10 @@
                 </div>
 
                 @if(($data['fixed_asset_entry_type'] ?? 'depreciation') === 'lifespan_extension')
-                    <div>
-                        <label class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.fixed_assets.added_useful_life_months') }}</label>
-                        <input type="number" step="1" min="0" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" wire:model="data.added_useful_life_months">
-                    </div>
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.fixed_assets.added_useful_life_months') }}</label>
+                    <input type="number" step="1" min="0" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" wire:model="data.added_useful_life_months">
+                </div>
                 @endif
 
                 <div class="md:col-span-2 xl:col-span-3">

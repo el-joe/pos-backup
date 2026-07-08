@@ -1,15 +1,15 @@
 <div class="space-y-6">
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:!bg-slate-900">
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.titles.deferred_purchases') }}</p>
             <p class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{{ $purchases->total() }}</p>
         </div>
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:col-span-2 xl:col-span-2">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:!bg-slate-900 md:col-span-2 xl:col-span-2">
             <div class="flex flex-wrap gap-2 sm:justify-end">
                 @adminCan('purchases.create')
                 <a href="{{ route('admin.purchases.add', ['is_deferred' => 1]) }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900"><i class="fa fa-plus"></i> {{ __('general.pages.purchases.add_deferred_purchase') }}</a>
                 @endadminCan
-                <a href="{{ route('admin.purchases.list') }}" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"><i class="fa fa-list"></i> {{ __('general.pages.purchases.all_purchases') }}</a>
+                <a href="{{ route('admin.purchases.list') }}" class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"><i class="fa fa-list"></i> {{ __('general.pages.purchases.all_purchases') }}</a>
             </div>
         </div>
     </div>
@@ -29,26 +29,26 @@
             </thead>
             <tbody class="divide-y divide-slate-100 border-t border-slate-100 dark:divide-slate-800 dark:border-slate-800">
                 @forelse ($purchases as $purchase)
-                    <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                        <td class="px-5 py-4">{{ $purchase->id }}</td>
-                        <td class="px-5 py-4 font-medium text-slate-900 dark:text-white">{{ $purchase->ref_no }}</td>
-                        <td class="px-5 py-4">{{ $purchase->supplier?->name }}</td>
-                        <td class="px-5 py-4">{{ $purchase->branch?->name }}</td>
-                        <td class="px-5 py-4">{{ currencyFormat($purchase->total_amount ?? 0, true) }}</td>
-                        <td class="px-5 py-4"><span class="inline-flex rounded-full bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">{{ currencyFormat($purchase->due_amount ?? 0, true) }}</span></td>
-                        <td class="px-5 py-4 text-right text-nowrap">
-                            <div class="flex items-center justify-end gap-2">
-                                @adminCan('purchases.show')
-                                    <a href="{{ route('admin.purchases.details', $purchase->id) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-500/10" title="{{ __('general.pages.purchases.details') }}"><i class="fa fa-eye"></i></a>
-                                @endadminCan
-                                <button class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-amber-600 transition-colors hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-500/10" onclick="if(confirm('{{ __('general.pages.purchases.confirm_receive_inventory_now') }}')) { @this.receiveInventory({{ $purchase->id }}) }" title="{{ __('general.pages.purchases.receive_inventory') }}"><i class="fa fa-truck"></i></button>
-                            </div>
-                        </td>
-                    </tr>
+                <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <td class="px-5 py-4">{{ $purchase->id }}</td>
+                    <td class="px-5 py-4 font-medium text-slate-900 dark:text-white">{{ $purchase->ref_no }}</td>
+                    <td class="px-5 py-4">{{ $purchase->supplier?->name }}</td>
+                    <td class="px-5 py-4">{{ $purchase->branch?->name }}</td>
+                    <td class="px-5 py-4">{{ currencyFormat($purchase->total_amount ?? 0, true) }}</td>
+                    <td class="px-5 py-4"><span class="inline-flex rounded-full bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">{{ currencyFormat($purchase->due_amount ?? 0, true) }}</span></td>
+                    <td class="px-5 py-4 text-right text-nowrap">
+                        <div class="flex items-center justify-end gap-2">
+                            @adminCan('purchases.show')
+                            <a href="{{ route('admin.purchases.details', $purchase->id) }}" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-blue-600 transition-colors hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-500/10" title="{{ __('general.pages.purchases.details') }}"><i class="fa fa-eye"></i></a>
+                            @endadminCan
+                            <button class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-amber-600 transition-colors hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-500/10" onclick="if(confirm('{{ __('general.pages.purchases.confirm_receive_inventory_now') }}')) { @this.receiveInventory({{ $purchase->id }}) }" title="{{ __('general.pages.purchases.receive_inventory') }}"><i class="fa fa-truck"></i></button>
+                        </div>
+                    </td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="7" class="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.purchases.no_deferred_purchases_pending_receipt') }}</td>
-                    </tr>
+                <tr>
+                    <td colspan="7" class="px-5 py-8 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.purchases.no_deferred_purchases_pending_receipt') }}</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>

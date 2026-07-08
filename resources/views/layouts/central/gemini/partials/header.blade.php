@@ -2,7 +2,7 @@
 
 @php($lang = $__currentLang ?? app()->getLocale())
 
-<nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md dark:bg-slate-900/90 dark:border-b dark:border-slate-800">
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 bg-white/80 backdrop-blur-md dark:!bg-slate-900/90 dark:border-b dark:border-slate-800">
     <div class="container mx-auto px-6 flex justify-between items-center">
 
         <a href="/" class="flex items-center gap-2.5 group">
@@ -29,12 +29,12 @@
         <div class="hidden lg:flex items-center gap-3">
             <div class="relative">
                 <?php
-                    $languages = [
-                        'en' => ['image'=> 'https://flagcdn.com/w40/us.png', 'code' => 'en', 'name' => 'English'],
-                        'ar' => ['image'=> 'https://flagcdn.com/w40/sa.png', 'code' => 'ar', 'name' => 'العربية']
-                    ];
-                    $currentLang = $languages[app()->getLocale()] ?? $languages['en'];
-                    $anotherLang = app()->getLocale() == 'en' ? $languages['ar'] : $languages['en'];
+                $languages = [
+                    'en' => ['image' => 'https://flagcdn.com/w40/us.png', 'code' => 'en', 'name' => 'English'],
+                    'ar' => ['image' => 'https://flagcdn.com/w40/sa.png', 'code' => 'ar', 'name' => 'العربية']
+                ];
+                $currentLang = $languages[app()->getLocale()] ?? $languages['en'];
+                $anotherLang = app()->getLocale() == 'en' ? $languages['ar'] : $languages['en'];
                 ?>
                 <button id="lang-menu-btn" class="flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white hover:border-brand-500 transition shadow-sm dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">
                     <img src="{{ $currentLang['image'] }}" alt="{{ $currentLang['name'] }}" class="w-5 h-5 rounded-full object-cover">
@@ -67,7 +67,7 @@
         </button>
     </div>
 
-    <div id="mobile-menu" class="hidden absolute w-full top-full start-0 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-xl p-6 flex flex-col gap-4 lg:hidden">
+    <div id="mobile-menu" class="hidden absolute w-full top-full start-0 bg-white dark:!bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-xl p-6 flex flex-col gap-4 lg:hidden">
         <a href="/" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.home') }}</a>
         <a href="{{ route('blogs.index') }}" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.blogs') }}</a>
         <a href="{{ route('pricing') }}" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.pricing') }}</a>
