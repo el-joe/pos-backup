@@ -1,0 +1,71 @@
+<style>
+.mhsb-post-1{--mhsb-primary:#2563eb;--mhsb-dark:#0f172a;--mhsb-muted:#64748b;--mhsb-bg:#f8fafc;--mhsb-border:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,sans-serif;color:#1e293b;line-height:1.8;max-width:100%}
+.mhsb-post-1 *{box-sizing:border-box}
+.mhsb-post-1 h1{font-size:2rem;font-weight:800;color:var(--mhsb-dark);margin:0 0 1rem}
+.mhsb-post-1 h2{font-size:1.5rem;font-weight:700;color:var(--mhsb-dark);margin:2rem 0 1rem;padding-top:.5rem;border-top:1px solid var(--mhsb-border)}
+.mhsb-post-1 h2:first-of-type{border-top:none;padding-top:0}
+.mhsb-post-1 p{margin:0 0 1rem;font-size:1.05rem}
+.mhsb-post-1 strong{color:var(--mhsb-dark)}
+.mhsb-post-1 .mhsb-toc{background:var(--mhsb-bg);border:1px solid var(--mhsb-border);border-radius:12px;padding:1.25rem 1.5rem;margin:0 0 2rem}
+.mhsb-post-1 .mhsb-toc p{margin:0 0 .5rem;font-weight:700;color:var(--mhsb-dark)}
+.mhsb-post-1 .mhsb-toc ul{margin:0;padding-inline-start:1.25rem}
+.mhsb-post-1 .mhsb-toc a{color:var(--mhsb-primary);text-decoration:none}
+.mhsb-post-1 .mhsb-toc a:hover{text-decoration:underline}
+.mhsb-post-1 ul.mhsb-list{margin:0 0 1rem;padding-inline-start:1.25rem}
+.mhsb-post-1 ul.mhsb-list li{margin-bottom:.5rem}
+.mhsb-post-1 .mhsb-callout{background:#eff6ff;border-inline-start:4px solid var(--mhsb-primary);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-size:.98rem}
+.mhsb-post-1 .mhsb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+.mhsb-post-1 .mhsb-card{background:#fff;border:1px solid var(--mhsb-border);border-radius:12px;padding:1.25rem}
+.mhsb-post-1 .mhsb-card h3{margin:0 0 .5rem;font-size:1.05rem;color:var(--mhsb-primary)}
+.mhsb-post-1 .mhsb-card p{margin:0;font-size:.95rem;color:var(--mhsb-muted)}
+.mhsb-post-1 .mhsb-cta{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border-radius:14px;padding:1.75rem;text-align:center;margin:2rem 0}
+.mhsb-post-1 .mhsb-cta p{color:#fff;margin:0 0 1rem}
+.mhsb-post-1 .mhsb-cta a{display:inline-block;background:#fff;color:var(--mhsb-primary);font-weight:700;padding:.65rem 1.5rem;border-radius:999px;text-decoration:none}
+.mhsb-post-1 code{background:var(--mhsb-bg);padding:.1rem .4rem;border-radius:4px;font-size:.9em}
+</style>
+<div class="mhsb-post-1">
+
+<h1>The Complete Guide to ERP and POS Integration with Mohaaseb</h1>
+
+<div class="mhsb-toc">
+<p>In this guide</p>
+<ul>
+<li><a href="#the-fundamentals">ERP and POS Integration: The Fundamentals</a></li>
+<li><a href="#key-workflows">Key Workflows an Integrated ERP and POS Enable</a></li>
+<li><a href="#mohaaseb-architecture">How Mohaaseb Was Built for ERP and POS Integration</a></li>
+<li><a href="#launch-checklist">Launch Checklist on Mohaaseb.com</a></li>
+</ul>
+</div>
+
+<h2 id="the-fundamentals">ERP and POS Integration: The Fundamentals</h2>
+<p><strong>ERP</strong> (Enterprise Resource Planning) covers the operational backbone of a business — purchasing, inventory, accounting, and reporting. <strong>POS</strong> (Point of Sale) is where the customer-facing transaction happens. <strong>ERP and POS integration</strong> is the practice of tying these together so that every sale updates the ERP instantly, and every ERP-side decision — pricing, promotions, stock levels — is reflected at the register in real time.</p>
+<p>Done well, integration turns the POS from a simple cash register into a live data source that feeds the entire business.</p>
+
+<h2 id="key-workflows">Key Workflows an Integrated ERP and POS Enable</h2>
+<div class="mhsb-grid">
+<div class="mhsb-card"><h3>Sell-Through Visibility</h3><p>Managers see which products are moving fastest across every branch, without waiting for a weekly report.</p></div>
+<div class="mhsb-card"><h3>Automated Reordering</h3><p>When stock at the POS hits a threshold, the ERP's purchasing module can flag or trigger a reorder automatically.</p></div>
+<div class="mhsb-card"><h3>Accurate Cost of Goods Sold</h3><p>Because POS sales and ERP inventory valuation share the same data, gross margin figures are always current.</p></div>
+<div class="mhsb-card"><h3>Consistent Pricing</h3><p>Price changes made in the ERP apply instantly at every POS terminal — no manual updates per branch.</p></div>
+</div>
+
+<h2 id="mohaaseb-architecture">How Mohaaseb Was Built for ERP and POS Integration</h2>
+<p><strong>Mohaaseb</strong> doesn't bolt a POS module onto an existing ERP, or the reverse — both were designed together from the same data model. That single design decision is what makes real-time ERP and POS integration possible without custom connectors or third-party middleware.</p>
+<ul class="mhsb-list">
+<li>Products, pricing, and tax rules are defined once and used identically by POS and ERP.</li>
+<li>Every POS sale writes directly to inventory and the general ledger — the same transaction, not a later sync.</li>
+<li>Multi-branch businesses get consolidated, real-time reporting across every register and warehouse.</li>
+</ul>
+<div class="mhsb-callout">
+Because ERP and POS integration is architectural, not bolted on, upgrades to one side of Mohaaseb never break the other.
+</div>
+
+<h2 id="launch-checklist">Launch Checklist on Mohaaseb.com</h2>
+<p>To get ERP and POS integration running on <strong>mohaaseb.com</strong>: set up your chart of accounts, import your product catalog, configure tax rules, and open your first register. From there every sale is automatically an ERP transaction — inventory, accounting, and reporting update together, in real time.</p>
+
+<div class="mhsb-cta">
+<p>See real ERP and POS integration in action.</p>
+<a href="https://mohaaseb.com">Get Started on Mohaaseb.com</a>
+</div>
+
+</div>

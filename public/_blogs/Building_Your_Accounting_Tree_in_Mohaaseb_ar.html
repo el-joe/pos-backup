@@ -1,0 +1,60 @@
+<style>
+.mhsb-post-tree1-ar{--p:#0d9488;--dark:#0f172a;--muted:#64748b;--bg:#f0fdfa;--border:#99f6e4;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#1e293b;line-height:1.9;direction:rtl;text-align:right}
+.mhsb-post-tree1-ar *{box-sizing:border-box}
+.mhsb-post-tree1-ar h1{font-size:2rem;font-weight:800;color:var(--dark);margin:0 0 1rem}
+.mhsb-post-tree1-ar h2{font-size:1.45rem;font-weight:700;color:var(--dark);margin:2rem 0 1rem}
+.mhsb-post-tree1-ar p{margin:0 0 1rem;font-size:1.05rem}
+.mhsb-post-tree1-ar strong{color:var(--dark)}
+.mhsb-post-tree1-ar .mhsb-tree{list-style:none;margin:1.5rem 0;padding:0;border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden}
+.mhsb-post-tree1-ar .mhsb-tree li{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem}
+.mhsb-post-tree1-ar .mhsb-tree li:last-child{border-bottom:none}
+.mhsb-post-tree1-ar .mhsb-tree li.mhsb-l2{padding-inline-start:2.5rem;background:var(--bg)}
+.mhsb-post-tree1-ar .mhsb-tree li.mhsb-l3{padding-inline-start:3.75rem;background:var(--bg);font-size:.95rem;color:var(--muted)}
+.mhsb-post-tree1-ar .mhsb-icon{flex:0 0 auto;width:1.6rem;height:1.6rem;border-radius:6px;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.mhsb-post-tree1-ar .mhsb-quote{background:var(--bg);border-inline-start:4px solid var(--p);border-radius:8px;padding:1rem 1.25rem;margin:1.5rem 0;font-style:italic;color:var(--dark)}
+.mhsb-post-tree1-ar .mhsb-cta{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;border-radius:14px;padding:1.75rem;text-align:center;margin:2rem 0}
+.mhsb-post-tree1-ar .mhsb-cta p{color:#fff;margin:0 0 1rem}
+.mhsb-post-tree1-ar .mhsb-cta a{display:inline-block;background:#fff;color:var(--p);font-weight:700;padding:.65rem 1.5rem;border-radius:999px;text-decoration:none}
+</style>
+<div class="mhsb-post-tree1-ar">
+
+<h1>بناء الشجرة المحاسبية في محاسب: دليل عملي</h1>
+
+<p>تُعد <strong>الشجرة المحاسبية</strong> (دليل الحسابات) المنظم جيدًا العمود الفقري لأي تقارير مالية موثوقة. في <strong>محاسب</strong>، شجرتك المحاسبية ليست قائمة دفتر ثابتة، بل بنية حية مرتبطة مباشرة بنشاط <strong>ERP</strong> و<strong>POS</strong>، بحيث تنعكس كل عملية بيع وشراء وحركة مخزون في الفرع الصحيح تلقائيًا.</p>
+
+<h2>لماذا تهم الشجرة المحاسبية</h2>
+<p>معظم الأخطاء المحاسبية تعود إلى شجرة سيئة التنظيم: إيرادات مختلطة بالتزامات، أو فروع بلا علاقة أب-ابن واضحة. يفرض محاسب هيكلاً نظيفًا من اليوم الأول، بحيث يعرف محاسبك دائمًا أين تنتمي كل عملية.</p>
+
+<h2>الهيكل القياسي</h2>
+<ul class="mhsb-tree">
+<li><span class="mhsb-icon">1</span><strong>الأصول</strong></li>
+<li class="mhsb-l2"><span class="mhsb-icon">1.1</span>النقدية والحسابات البنكية</li>
+<li class="mhsb-l3">تتم مزامنتها تلقائيًا من إغلاقات درج النقد في نقطة البيع</li>
+<li class="mhsb-l2"><span class="mhsb-icon">1.2</span>المخزون</li>
+<li class="mhsb-l3">يُحدَّث مباشرة من حركات المخزون في ERP</li>
+<li><span class="mhsb-icon">2</span><strong>الالتزامات</strong></li>
+<li class="mhsb-l2"><span class="mhsb-icon">2.1</span>الحسابات الدائنة</li>
+<li><span class="mhsb-icon">3</span><strong>حقوق الملكية</strong></li>
+<li><span class="mhsb-icon">4</span><strong>الإيرادات</strong></li>
+<li class="mhsb-l2"><span class="mhsb-icon">4.1</span>المبيعات حسب الفرع</li>
+<li class="mhsb-l3">تُسحب مباشرة من كل جهاز نقطة بيع</li>
+<li><span class="mhsb-icon">5</span><strong>المصروفات</strong></li>
+<li class="mhsb-l2"><span class="mhsb-icon">5.1</span>تكلفة البضاعة المباعة</li>
+</ul>
+
+<h2>ربط الشجرة بـ ERP وPOS</h2>
+<p>عندما يُغلق الكاشير عملية بيع على <strong>نقطة البيع (POS)</strong>، لا يكتفي محاسب بتسجيل معاملة فقط، بل يُرحّلها مباشرة إلى حسابات الإيرادات والضرائب الصحيحة ضمن شجرتك المحاسبية. وعندما تستلم طبقة <strong>ERP</strong> مخزونًا جديدًا، يُحدَّث حساب أصول المخزون فورًا دون الحاجة لأي قيد يدوي.</p>
+
+<div class="mhsb-quote">
+"توقفت عن تصدير جداول بيانات لمحاسبي. الشجرة في محاسب أصبحت تروي القصة كاملة." — أحد مستخدمي محاسب
+</div>
+
+<h2>تخصيص شجرتك</h2>
+<p>كل عمل مختلف عن الآخر. يتيح لك محاسب إضافة حسابات فرعية تحت أي فرع — حسب القسم أو المشروع أو مركز التكلفة — مع الحفاظ على الهيكل الرئيسي سليمًا، بحيث تبقى التقارير الموحدة دقيقة عبر شركتك بالكامل على <strong>mohaaseb.com</strong>.</p>
+
+<div class="mhsb-cta">
+<p>ابنِ شجرتك المحاسبية بالطريقة الصحيحة منذ البداية.</p>
+<a href="https://mohaaseb.com">استكشف mohaaseb.com</a>
+</div>
+
+</div>

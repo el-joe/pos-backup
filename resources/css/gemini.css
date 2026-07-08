@@ -296,3 +296,30 @@ html.dark .swal2-popup .swal2-close {
 html.dark .swal2-popup .swal2-close:hover {
     color: rgb(241 245 249);
 }
+
+/*
+ * Blog post bodies are injected as raw HTML (each with its own scoped
+ * .mhsb-post-N / .mhsb-blog-N <style> block) and hardcode dark, light-mode
+ * text colors. These overrides keep the top-level heading/paragraph text
+ * readable against the dark page background without touching every seeded
+ * blog file, while leaving self-contained boxes (list items, quotes, CTA)
+ * untouched since those already carry their own light backgrounds.
+ */
+html.dark article.prose [class^="mhsb-"],
+html.dark article.prose [class*=" mhsb-"] {
+    color: rgb(203 213 225);
+}
+
+html.dark article.prose [class^="mhsb-"] > h1,
+html.dark article.prose [class^="mhsb-"] > h2,
+html.dark article.prose [class^="mhsb-"] > h3,
+html.dark article.prose [class*=" mhsb-"] > h1,
+html.dark article.prose [class*=" mhsb-"] > h2,
+html.dark article.prose [class*=" mhsb-"] > h3 {
+    color: rgb(241 245 249) !important;
+}
+
+html.dark article.prose [class^="mhsb-"] > p > strong,
+html.dark article.prose [class*=" mhsb-"] > p > strong {
+    color: rgb(241 245 249) !important;
+}
