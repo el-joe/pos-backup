@@ -1,0 +1,787 @@
+# POS-Backup Project Guide (for AI briefing — no code access)
+
+Generated: 2026-07-08. This file is a structural map of a Laravel 11 multi-tenant
+POS / ERP / HRM / Contracting SaaS application, intended to brief a fresh AI
+conversation so it can help plan improvements without direct code access.
+
+================================================================================
+## 1. OVERVIEW
+================================================================================
+
+This is a multi-tenant Point-of-Sale + ERP + HRM + Contracting management SaaS
+built on Laravel 11 with the `stancl/tenancy` package (single-database-per-tenant
+style multi-tenancy, domain-identified). The app has three main "sides":
+
+1. **Central website** (marketing site + tenant registration + pricing/checkout)
+   — routes/central.php, app/Http/Controllers/Central/Site
+2. **CPanel** (super-admin backoffice for the SaaS owner: manage tenants, plans,
+   subscriptions, blogs, pages, partners, translations, payment methods)
+   — routes/central_panel.php, app/Http/Controllers/Central/CPanel,
+     app/Livewire/Central/CPanel
+3. **Tenant app** (the actual POS/ERP product used by each tenant business):
+   POS sales, purchases, stock, HRM (attendance/payroll/leaves/claims),
+   Contracting/construction module (projects, BOQs, tenders, purchase orders,
+   equipment, timesheets, chart of accounts, journal entries), fixed assets,
+   reports (financial/sales/purchases/inventory/tax/performance), and an
+   Employee self-service portal.
+   — routes/tenant.php, app/Http/Controllers/Tenant, app/Http/Controllers/Admin,
+     app/Livewire/Admin/*, app/Livewire/Employee/*, app/Models/Tenant/*
+
+The tenant app appears to have **at least 3 parallel view-layer implementations**
+of the same UI: `resources/views/livewire/admin`, `resources/views/livewire/hud`,
+and `resources/views/livewire/tenant-tailwind-gemini` — each mirroring the same
+folder structure (accounts, branches, contracting, hrm, reports, etc.) with the
+same Livewire PHP classes presumably switching Blade view based on a
+`defaultLayout`/theme setting (see AppServiceProvider `View::share('defaultLayout', ...)`).
+This tripling of view code is worth flagging for consolidation.
+
+Business domains covered: multi-branch retail/POS, purchasing, stock/inventory
+(with stock transfers & stock-taking/adjustments), sales, refunds, sale/purchase
+"requests" (quotation-like workflow before conversion), discounts, taxes (VAT),
+accounts & transactions (double-entry-ish ledger), checks (cheque) management,
+fixed assets + depreciation, expenses & expense categories, cash registers,
+HRM (employees, departments, designations, contracts, attendance, leave,
+expense claims, payroll runs/slips), and a full "Contracting" ERP module
+(tenders, BOQs, supplier quotations, projects, contracts, extracts,
+purchase requests/orders, inventory, warehouses, items, chart of accounts,
+cost centers, journal entries, workers, timesheets, equipment/equipment logs).
+
+Central side also has: blogs (heavily used — dozens of migrations seed blog
+content, apparently for SEO), pages, FAQs, sliders, partners & partner
+commissions, plans & subscriptions (with payment methods integration:
+Paymob, PayPal), register requests (tenant sign-up approval flow), countries/
+currencies/languages (i18n + currency conversion), contact form, SEO
+(ralphjsmit/laravel-seo), sitemap generation.
+
+================================================================================
+## 2. TECH STACK
+================================================================================
+
+**App name (config/app.php):** `env('APP_NAME', 'Laravel')` — not overridden in
+repo, so real name comes from `.env` (not inspected here).
+
+**composer.json** — `laravel/laravel` skeleton, PHP ^8.2, Laravel Framework ^11.9.
+
+Key `require` packages:
+- `stancl/tenancy` ^3.8 — **multi-tenancy** (see section 6)
+- `livewire/livewire` ^3.5 — primary UI/reactivity layer (186 Livewire components)
+- `jantinnerezo/livewire-alert` ^4.0 — SweetAlert-style alerts from Livewire
+- `spatie/laravel-permission` ^6.22 — roles & permissions (used for admins/roles)
+- `spatie/laravel-sitemap` ^7.3 — sitemap generation (see GenerateSitemap command)
+- `spatie/image` ^3.8 — image manipulation
+- `maatwebsite/excel` ^3.1 — Excel/CSV import-export (app/Imports, app/Exports)
+- `ralphjsmit/laravel-seo` ^1.7 — SEO meta management (SeoHelper)
+- `mgcodeur/laravel-currency-converter` ^1.0 — currency conversion (ConvertCurrencies command)
+- `stevebauman/location` ^7.6 — IP/geo location
+- `laravel/tinker` ^2.9
+
+Dev: `fakerphp/faker`, `laravel/pail`, `laravel/pint`, `laravel/sail`,
+`mockery/mockery`, `nunomaduro/collision`, `phpunit/phpunit` ^11.
+
+Autoloading: `App\` -> app/, plus a global `app/helpers.php` file autoloaded
+directly (functions file, not a class).
+
+**package.json** (frontend build):
+- Dependencies: `alpinejs` ^3.15.8, `@alpinejs/collapse` ^3.15.8
+- Dev dependencies: `vite` ^5.0, `laravel-vite-plugin` ^1.0, `tailwindcss` ^3.4.13,
+  `postcss`/`autoprefixer`, `axios`, `concurrently`
+- Scripts: `build` (vite build), `dev` (vite)
+- No React/Vue — UI is server-rendered Blade + Livewire + Alpine.js + Tailwind.
+- `resources/js/`: app.js, bootstrap.js, gemini.js, gemini-tailwind.js (two JS
+  bundles, suggesting two theme variants — "default" and "gemini" — matching
+  the layouts/ duplication noted below).
+- `resources/css/`: app.css, gemini.css, gemini-tailwind.css.
+
+Composer `dev` script runs `php artisan serve` + `queue:listen` + `pail` (log
+viewer) + `vite` concurrently — standard Laravel 11 local dev flow. Queue is
+used (ShouldQueue on Mail classes), Sessions/Cache use `database` driver
+(session/cache DB tables exist as migrations).
+
+================================================================================
+## 3. MULTI-TENANCY (stancl/tenancy)
+================================================================================
+
+Package: `stancl/tenancy` ^3.8. Two config files:
+- `config/tenancy.php` — main tenancy config. `tenant_model` => `App\Models\Tenant`.
+  Has `central_domains` array (domains NOT treated as tenants — central website).
+  Has a `database` connection/tenant-DB config block.
+- `config/tenancy_live.php` — looks like a second/production-specific tenancy
+  config variant (worth checking why two files exist / whether one is dead code).
+
+Identification: **domain-based** — `App\Http\Middleware\InitializeTenancyByDomain`
+extends stancl's `IdentificationMiddleware`, applied first in the
+`routes/tenant.php` middleware group alongside `PreventAccessFromCentralDomains`.
+
+`App\Models\Tenant` extends stancl's `BaseTenant` and implements
+`TenantWithDatabase` — i.e. **one database per tenant**.
+
+`app/Providers/TenancyServiceProvider.php` wires: tenant created/deleted events
+(likely provisioning/tearing down the tenant DB), tenancy bootstrapped/ended
+hooks, custom Livewire update-route handling per tenant, a `View::composer('*')`
+global view composer, and forces tenancy middleware to highest priority
+(`makeTenancyMiddlewareHighestPriority`).
+
+Tenant-specific migrations live in `database/migrations/tenant/` (~70 files,
+run against each tenant's own database) vs. central migrations directly under
+`database/migrations/` (tenants/domains tables, countries/currencies/languages,
+plans/subscriptions, blogs, cpanel admins, payment methods, etc.)
+
+Console commands with tenant awareness: `ClearTenantCache`, `TenantCreateAdmin`,
+`Console/Commands/Tenant/CleanAllSoftDeletes`, `StockQuantityAlertCheck`,
+`SalesSummaryReport`, `CustomersDueAmountsAlert`, `SupplierDueAmountsAlert` (these
+iterate tenants and run scheduled per-tenant jobs/alerts/emails).
+
+================================================================================
+## 4. DIRECTORY SITEMAP
+================================================================================
+
+### app/ (top-level dirs)
+```
+app/Console/Commands/            10 commands (+ Tenant/ subfolder)
+app/Enums/                       23 enum files (+ Tenant/ subfolder)
+app/Exports/                     GeneralExport.php
+app/Helpers/                     PurchaseHelper, SaleHelper, SeoHelper
+app/Http/Controllers/            10 controllers across Admin/Central/Tenant
+app/Http/Middleware/             16 middleware (+ Tenant/ subfolder, 8 of them)
+app/Http/Requests/               RegisterTenantRequest.php (only 1 Form Request)
+app/Imports/                     7 Excel import classes
+app/Interface/                   BaseInterface.php
+app/Livewire/                    186 Livewire component classes, 3 top groups:
+                                    Admin/ (~140), Central/ (~30), Employee/ (~10)
+app/Mail/                        8 Mailable classes
+app/Models/                      21 central models + ~85 Tenant/* models
+                                    (incl. Tenant/Contracting/* subfolder, 20 models)
+app/Notifications/               GeneralNotification.php
+app/Payments/                    Interfaces/, Providers/ (Paymob, Paypal), Services/
+app/Providers/                   AppServiceProvider, HelperServiceProvider,
+                                    TenancyServiceProvider
+app/Repositories/                24 repositories (+ Hrm/ subfolder, 10 of them)
+app/Services/                    28 services (+ Hrm/ subfolder, 10 of them)
+app/Traits/                      LivewireOperations, Translator
+app/View/Components/             TableComponent, Table5Component
+```
+
+### routes/
+```
+routes/web.php            11 lines  — just loops config('tenancy.central_domains')
+                                       and includes central.php per central domain
+routes/central.php        54 lines  — central marketing site + register + payment
+routes/central_panel.php  77 lines  — CPanel (super-admin) backoffice routes
+routes/tenant.php         516 lines — the whole tenant POS/ERP/HRM app (171 Route:: calls)
+routes/console.php        10 lines  — artisan closures/schedule
+```
+
+### database/
+```
+database/migrations/            ~35 central migrations (tenants, domains, countries,
+                                 currencies, languages, plans, subscriptions, blogs
+                                 [many "seed_*_blogs" migrations — content seeded via
+                                 migration, unusual pattern worth flagging], admins,
+                                 sliders, files, payment methods/transactions, faqs,
+                                 pages, seo, partners, features, permission tables)
+database/migrations/tenant/     ~75 tenant-DB migrations (admins, files, branches,
+                                 contacts, categories, brands, units, products, taxes,
+                                 purchases/sales + their variables/items, stock,
+                                 users, shipping companies, expenses, stock transfers,
+                                 stock taking, discounts, payment methods, accounts,
+                                 transactions, cash registers, HRM enterprise tables,
+                                 contracting tables, fixed assets, checks, refunds,
+                                 sale/purchase requests, audit logs, notifications,
+                                 permission tables, soft-delete retrofits)
+database/factories/             UserFactory.php
+database/seeders/                DatabaseSeeder, CentralSeeder, CpanelSeeder,
+                                 BlogSeeder, FaqSeeder, PageSeeder, PlanSeeder,
+                                 Tenant/PermissionSeeder, data/countries.json,
+                                 data/currencies.json
+```
+
+### config/ (files, no content dumped)
+app.php, auth.php, cache.php, cpanel-sidebar-links.php, currency-converter.php,
+database.php, excel.php, filesystems.php, icons.php, livewire.php, location.php,
+logging.php, mail.php, permission.php, queue.php, seo.php, services.php,
+session.php, sidebar-links.php, sitemap.php, tenancy_live.php, tenancy.php
+
+Note: `cpanel-sidebar-links.php` and `sidebar-links.php` suggest sidebar nav is
+config-driven rather than hardcoded in Blade — good pattern to know about when
+adding new modules/menu items.
+
+### resources/views/ (top-level, grouped)
+```
+admin/                 3 files (loose, likely legacy/misc admin views)
+central/               20 files — cpanel/ (+auth/), gemini-pages/, site/, tenant/
+components/            65 files — admin/, hud/, layouts/, tenant-tailwind-gemini/
+emails/                8 files — mail blade templates
+employee/              1 file
+hud/                   1 file (+ hud/pos-page/ subfolder — POS terminal UI)
+invoices/              8 files — printable invoice templates (80mm/A4, ar/en, refund variants)
+layouts/               45 files across admin/, central/(site, gemini), cpanel/,
+                       employee/, hud/, tenant-tailwind-gemini/ — each with partials/
+livewire/              403 files — THE bulk of views, triplicated across:
+                         livewire/admin/**      (mirrors app/Livewire/Admin structure)
+                         livewire/hud/**        (parallel theme/skin)
+                         livewire/central/**    (cpanel + site + gemini-pages)
+tenant-tailwind-gemini/ 2 files (+ auth/ subfolder) — third tenant-app skin
+vendor/                15 files — published livewire/ and pagination/ vendor views
+```
+This confirms the "3 parallel tenant-app skins" (admin / hud / tenant-tailwind-gemini)
+observation from the Overview — each Livewire PHP class's `render()` likely picks
+a Blade view name based on active layout/theme, tripling view maintenance surface.
+
+### resources/js, resources/css
+```
+resources/js/app.js
+resources/js/bootstrap.js
+resources/js/gemini.js
+resources/js/gemini-tailwind.js
+resources/css/app.css
+resources/css/gemini.css
+resources/css/gemini-tailwind.css
+```
+Two theme bundles: default ("app") and "gemini"/"gemini-tailwind" — consistent
+with the multi-skin view structure above.
+
+================================================================================
+## 5. ROUTES SUMMARY
+================================================================================
+
+### routes/web.php (11 lines)
+Not a real route file — just iterates `config('tenancy.central_domains')` and
+`Route::domain($domain)->group()` to include `routes/central.php` for each
+configured central domain. All actual central routes live in central.php.
+
+### routes/central.php (54 lines) — public marketing site
+Single top-level group: `prefix '/'`, middleware `[SiteTranslationMiddleware,
+RedirectToSecure]`. Routes (unnamed group, all under central domains):
+- `register` (GET/POST, throttled 5/10) -> RegisterController@register/postRegister
+- `register/accept/{id}` -> acceptRegistration
+- `contact`, `contact-us` -> HomeController
+- `checkout/{token?}` -> Livewire CheckoutPage
+- `pricing`, `pricing/compare` -> PricingPage / HomeController@pricingCompare
+- `faqs`, `blogs`, `blogs/{slug}` (no-lang fallback versions)
+- Nested lang-prefixed group `{lang?}` (regex-constrained to en|ar[-xx]) with
+  `as => lang.`, middleware `CentralWebsitesetLocal`: localized blogs, faqs,
+  `{slug}` static page, and `/` -> `central-home`
+- `lang/{locale}` -> changeLanguage
+- `payment/{type}` group (type constrained check|success|failed) -> PaymentController callback/paymentCallbackPage
+- catch-all `{slug}` -> PageController@renderPage (regex excludes cpanel/faqs/blogs/pricing/register/payment)
+- `require __DIR__.'/central_panel.php'` at the end
+
+### routes/central_panel.php (77 lines) — CPanel backoffice
+Single group: `prefix 'cpanel', as 'cpanel.', middleware [CpanelTranslationMiddleware]`.
+- Public: `login` (GET/POST), `logout`
+- Nested group `middleware ['auth:' . CPANEL_ADMINS_GUARD]` containing ~35 GET
+  routes, mostly `ComponentClass::class` (full-page Livewire routes) rather than
+  controller actions: dashboard, admins.list, blogs (list/create/edit), pages
+  (list/create/edit), faqs (list/create/edit), file-manager, contacts.list,
+  countries/currencies/languages.list, translations, subscriptions.list,
+  plans.list, features.list, register-requests.list, customers (list/create/details),
+  sliders.list, partners (list/create/edit), partner-commissions.list,
+  payment-methods (list/create/edit).
+
+### routes/tenant.php (516 lines, 171 Route:: calls — 144 GET, 3 POST, rest via
+route()/redirect/view helpers) — the tenant product
+Top-level `Route::middleware(['web', InitializeTenancyByDomain::class,
+PreventAccessFromCentralDomains::class, AdminTranslationMiddleware::class])` group.
+- `/` -> redirect to `admin/login`
+- `employee` group (`as employee.`):
+  - guest sub-group (EmployeeGuestMiddleware): login (GET/POST)
+  - auth sub-group (EmployeeAuthMiddleware): logout, dashboard, profile,
+    payslips.list, leaves.list, claims.list, attendance.list
+- `admin` group (`as admin.`):
+  - public: login (GET/POST), notifications.markAsRead (POST)
+  - auth sub-group (AdminAuthMiddleware) — the bulk of the app:
+    - logout, statistics (`/`), cash.register.open, notifications.list,
+      switch.branch, branches/categories/brands/units/taxes .list
+    - **hrm** subgroup (`prefix hrm, as hrm.`), each route further gated by a
+      dedicated permission middleware (HrmMasterDataPermissionCheck,
+      HrmLeavesPermissionCheck, HrmClaimsPermissionCheck, HrmPayrollPermissionCheck,
+      HrmAttendancePermissionCheck): master-data, departments, designations,
+      employees, contracts, leave-types, leave-requests, claim-categories,
+      expense-claims, payroll-runs, payslips, attendance-sheets (list + details)
+    - **contracting** subgroup (`prefix contracting, as contracting.`): tenders,
+      boqs, supplier-quotations, projects, contracts, extracts, purchase-requests,
+      purchase-orders, inventory, warehouses, items, chart-of-accounts,
+      cost-centers, journal-entries, workers, timesheets, equipment,
+      equipment-logs (all `.list`)
+    - pos, pos/deferred, discounts.list, expense-categories.list, expenses.list,
+      payment-methods.list, accounts.list
+    - fixed-assets (list/create/details), depreciation-expenses (list/create/details)
+    - users/{type?}.list, users/{id}/details, customers/{id}/pay, suppliers/{id}/pay
+    - products (list, {id} add-edit, {id}/details)
+    - purchases (list, deferred, create, {id} details)
+    - purchase-requests (list, create, {id} details)
+    - sales (index, deferred, {id} details)
+    - sale-requests (list, create, {id} details)
+    - transactions.list, checks.list
+    - **reports** subgroup (`prefix reports, as reports.`, middleware
+      ReportsPermissionCheck) with nested sub-groups: financial.* (trail-balance,
+      income-statement, balance-sheet, cash-flow-statement, general-ledger,
+      fixed-assets, depreciation-expenses), sales.* (7 reports), purchases.*
+      (7 reports), inventory.* (4 reports), taxes.* (2 reports), performance.*
+      (7 reports), plus top-level cashier.report, cash.register.report,
+      branch.profitability, audit.report
+    - stock-adjustments (list/create/{id}/details), stock-transfers (list/create/{id}/details), stocks.list
+    - admins.list, roles.list, roles/{id?}.show
+    - subscriptions.list, imports, settings
+    - refunds (list, {id}/details, create)
+  - `sales/invoice/{token}` -> InvoiceController@show (outside admin/ prefix)
+  - `change-language/{lang}` closure route
+- Outside the tenancy-web group: `download-file` closure (file download by query
+  param `file` — **note: looks like it takes an arbitrary file path from the
+  request with no visible path validation**, worth a security look), 8
+  `Route::view()` invoice print templates (80mm/A4, ar/en, refund variants), and
+  a `test/{tenant}` debug closure route that initializes tenancy manually and
+  seeds default Check accounts (looks like leftover dev/debug code, not gated by
+  any auth — **flag for removal before production** if not already removed).
+- Trailing block of `// TODO` comments documents a real product roadmap: e-invoice
+  integration, multi-currency sales, static pages on central site, booking/
+  reservation system, mobile app — useful context for "planning improvements."
+
+### routes/console.php (10 lines)
+Artisan closures / scheduled command registrations (not detailed further — small file).
+
+================================================================================
+## 6. MODELS (app/Models)
+================================================================================
+
+### Central models (app/Models/*.php)
+| Model | Extends | Traits | Notable |
+|---|---|---|---|
+| Admin | Authenticatable | | CPanel admin/guard user |
+| Blog | Model | | `scopePublished()` |
+| Contact | Model | | contact form submissions |
+| Country | Model | | fillable: name, code, default_language |
+| Currency | Model | | fillable: name, code, symbol, conversion_rate |
+| Faq | Model | | `scopePublished()` |
+| Feature | Model | | plan feature catalogue |
+| File | Model | | polymorphic file storage (model_id/model_type) |
+| Language | Model | | |
+| Page | Model | | `scopePublished()` — static pages CMS |
+| PartnerCommission | Model | SoftDeletes | |
+| Partner | Model | SoftDeletes | |
+| PaymentMethod | Model | SoftDeletes, HasFactory | central payment methods |
+| PaymentTransaction | Model | | |
+| PlanFeature | Model | | plan<->feature pivot-like model |
+| Plan | Model | | `scopeActive()` — subscription plans |
+| RegisterRequest | Model | | tenant signup approval queue (large fillable ~193 line) |
+| Slider | Model | | homepage slider fillable: title, number, active |
+| Subscription | Model | | tenant<->plan subscription |
+| **Tenant** | stancl `BaseTenant` | implements `TenantWithDatabase` | central tenancy record |
+
+### Tenant models (app/Models/Tenant/*.php) — run inside each tenant's own DB
+Core retail/POS: `Product` (belongsTo Unit/Category/Brand, hasMany Stock &
+SaleItem, morphOne/morphMany File for image/gallery, `scopeActive`/`scopeInactive`),
+`Stock`, `Category`, `Brand`, `Unit`, `Tax`, `Branch` (`scopeActive`), `Setting`,
+`ShippingCompany`, `File` (polymorphic).
+
+Sales/Purchases: `Sale`, `SaleItem`, `SaleRequest`/`SaleRequestItem`
+(`scopeFilter`), `Purchase`, `PurchaseItem`, `PurchaseRequest`/`PurchaseRequestItem`
+(`scopeFilter`), `Refund`/`RefundItem`, `Discount`/`DiscountHistory`.
+
+Stock movement: `StockTransfer`/`StockTransferItem`, `StockTaking`/
+`StockTakingProduct`.
+
+Finance/Accounting: `Account`, `Transaction`/`TransactionLine`, `Check`
+(cheque tracking), `Expense`/`ExpenseCategory`, `CashRegister`, `FixedAsset`
+(`scopeFilter`, largest model — 311+ lines) with `FixedAssetExtension`,
+`OrderPayment`, `PaymentMethod` (tenant-scoped variant, separate from central one).
+
+Users/People: `User` (tenant-scoped, SoftDeletes), `Admin` (tenant admin,
+`Authenticatable`), `Team`, `AuditLog`.
+
+HRM: `Employee` (`Authenticatable`, `scopeFilter`), `Department`/`Designation`
+(both `scopeFilter`), `EmployeeContract`, `AttendanceLog`/`AttendanceSheet`
+(`scopeFilter`), `LeaveType`/`LeaveRequest` (`scopeFilter`), `ExpenseClaimCategory`/
+`ExpenseClaim`/`ExpenseClaimLine` (`scopeFilter`), `PayrollRun`/`PayrollSlip`/
+`PayrollSlipLine` (`scopeFilter`).
+
+Contracting/Construction ERP (app/Models/Tenant/Contracting/*, 20 models,
+mostly SoftDeletes): `Tender`, `Boq`/`BoqItem`, `SupplierQuotation`/
+`SupplierQuotationItem`, `Project`/`ProjectTask`, `Contract`, `Extract`/
+`ExtractLine`/`ExtractDeduction`, `PurchaseRequest`/`PurchaseRequestItem`,
+`PurchaseOrder`/`PurchaseOrderItem`, `InventoryTransaction`, `Warehouse`,
+`ConstructionItem`, `ChartOfAccount`, `CostCenter`, `JournalEntry`/
+`JournalEntryLine`, `Worker`, `LaborTimesheet`, `Equipment`/`EquipmentLog`.
+
+Note: several class names collide with the central-side or Tenant-root
+namespace by base name (`PurchaseRequest`/`PurchaseRequestItem`,
+`PaymentMethod`, `File` all exist both directly under `Tenant/` and under
+`Tenant/Contracting/`) — always fully-qualify when discussing these.
+
+Relationship pattern observed: relationships are almost universally
+`belongsTo`/`hasMany` with occasional `->withTrashed()` chaining and
+`morphOne`/`morphMany` for the `File` polymorphic attachment model. Full
+relationship dump available in scratch notes if needed; not all ~85 tenant
+models had greppable relationship methods in this pass (some may use
+different accessor styles or none at all — junction/line-item models
+typically only had fillable + belongsTo, no reverse hasMany).
+
+================================================================================
+## 7. CONTROLLERS (app/Http/Controllers)
+================================================================================
+
+Only 10 traditional controllers exist — the app is overwhelmingly Livewire-
+component-driven (full-page Livewire classes are routed directly, bypassing
+controllers). Controllers exist mainly for auth flows, invoices, and payment
+callbacks that don't fit the Livewire component model.
+
+| Controller | Extends | Methods | Route(s) |
+|---|---|---|---|
+| Admin\GeneralController | Controller | `generateInvoice($type,$id)` | commented-out route in tenant.php (`admin/invoices/{type}/{id}`) — dead code currently |
+| Admin\InvoiceController | Controller | `show($token)` | tenant.php: `sales/invoice/{token}` -> `sales.invoice` |
+| Central\CPanel\AuthController | Controller | `login()`, `postLogin(Request)`, `logout()` | central_panel.php: cpanel login/postLogin/logout |
+| Central\Site\HomeController | Controller | `index($lang=null)`, `blogs($lang=null)`, `blogDetailsNoLang($slug)`, `blogDetails($lang,$slug)`, `faqs($lang=null)`, `contactUsView()`, `contactUs(Request)`, `checkout(Request,?token)`, `pricingCompare()`, `pricing()`, `changeLanguage($locale)` | central.php: home/blogs/faqs/contact/pricing/lang routes |
+| Central\Site\PageController | Controller | `renderPageWithLang($lang=null,$slug)`, `renderPage($slug)` | central.php: localized static page + catch-all static page |
+| Central\Site\PaymentController | Controller | `callback(Request,$type)`, `paymentCallbackPage(Request,$type)` | central.php: `payment/{type}` group (Paymob/PayPal webhook + user-facing callback page) |
+| Central\Tenant\RegisterController | Controller | `register()`, `postRegister(RegisterTenantRequest)`, `acceptRegistration($id)` | central.php: register / register-accept — this is the **tenant self-signup flow** (creates a new Tenant + provisions DB, presumably via TenancyServiceProvider events) |
+| Controller (base) | — | (empty base class) | n/a |
+| Tenant\AuthController | Controller | `login()`, `postLogin(Request)`, `switchBranch($branch=null)`, `logout()`, `markAsRead($id)` | tenant.php: admin/login, admin/postLogin, admin/switch-branch/{branch?}, admin/logout, admin/notifications/mark-as-read/{id} |
+| Tenant\EmployeeAuthController | Controller | `login()`, `postLogin(Request)`, `logout()` | tenant.php: employee/login, employee/postLogin, employee/logout |
+
+================================================================================
+## 8. LIVEWIRE COMPONENTS (app/Livewire) — 186 files
+================================================================================
+
+Organized into 3 areas mirrored by routes:
+
+**app/Livewire/Admin/** (~140 components) — the tenant back-office, one folder
+per business area, generally following a `<Thing>List` (index/table) +
+`<Thing>Modal`/`Add<Thing>`/`<Thing>Details` (CRUD form/detail) pattern:
+Accounts, Admins (+RoleDetails/RolesList — permission management UI),
+Bookables/Bookings (present in views but not currently reflected as folders in
+app/Livewire — check for planned/removed booking feature), Branches, Brands,
+CashRegister, Categories, Checks, **Contracting/** (13 sub-areas: Boqs,
+ChartOfAccounts, Contracts, CostCenters, Equipment, EquipmentLogs, Extracts,
+Inventory, Items, JournalEntries, Projects, PurchaseOrders, PurchaseRequests,
+SupplierQuotations, Tenders, Timesheets, Warehouses, Workers, plus a generic
+`ContractingCrudComponent` and `ContractingPlaceholder` — suggesting a shared/
+generic CRUD base component pattern used across the Contracting module),
+DepreciationExpenses, Discounts, Expenses, FixedAssets, **Hrm/** (Attendance,
+Claims, Contracts, Departments, Designations, Employees, Leaves, MasterData,
+Payroll — plus a `MasterDataPage` umbrella page), Imports, Notifications,
+Payables (CustomerPayable, SupplierPayable), PaymentMethods, Plans
+(PlansList, SubscriptionsPage), `PosPage`/`DeferredPosPage` (the POS terminal
+itself), Products, PurchaseRequests, Purchases (+DeferredPurchasesList),
+Refunds, **Reports/** (largest single group — ~35 report components across
+Admins, Financial, Inventory, Performance, Purchases, Sales, Tax
+subfolders — one component per report type), SaleRequests, Sales
+(+DeferredSalesList), Settings, `Statistics` (dashboard home), Stocks
+(+StockTaking, StockTransfer), Taxes, Transactions, Units, Users.
+
+**app/Livewire/Central/** — CPanel (Admins/roles, Blogs, Contacts, Countries,
+Currencies, Customers, Faqs, Features, FileManager, HomePage, Languages, Pages,
+Partners/PartnerCommissions, PaymentMethods, Plans (CpanelPlansList,
+PlanDiscountsPage), RegisterRequests, Slider, Subscriptions, Translations) and
+Site (BlogsList, CheckoutPage, PlanSection, PricingPage — public marketing
+site Livewire islands).
+
+**app/Livewire/Employee/** — self-service portal: Attendance
+(AttendanceLogsList), Claims (ExpenseClaimsList), Leaves (LeaveRequestsList),
+Payslips (PayslipsList), plus `Dashboard` and `Profile`.
+
+**app/Livewire/Operations.php** — a loose top-level component (not in a
+subfolder), purpose not fully clear from directory listing alone — worth
+checking directly if relevant to planned changes.
+
+Common patterns observed via signature grep: components heavily use the
+`LivewireOperations` trait (see Traits section) for SweetAlert-style
+confirm/alert modals, and a repeated constructor-injected Service+Repository
+pair for list/find/save/delete operations (see Services/Repositories section).
+
+Given the "3 skins" observation (admin / hud / tenant-tailwind-gemini) — these
+186 PHP classes are almost certainly shared, with only the Blade view path
+varying per active theme.
+
+================================================================================
+## 9. SERVICES / REPOSITORIES
+================================================================================
+
+### Pattern
+Nearly every tenant business entity has: a **Repository** (data access, extends
+`BaseRepository`) + a **Service** (business logic, constructor-injects the
+Repository, exposes `list/find/save/delete` plus domain-specific methods) +
+sometimes a Livewire component consuming the Service directly.
+
+**app/Repositories/BaseRepository.php** implements `App\Interface\BaseInterface`:
+`setInstance(Model|Builder $model): void`, `getInstance()`,
+`list($relations=[], $filter=[], $perPage=null, $orderByDesc=null)`,
+`find(string|int|null $id, $relations=[], $filter=[])`,
+`first($relations=[], $filter=[])`,
+`findOrFail(string|int $id, $relations=[], $filter=[])`,
+`count($filter=[])`, `create(array $data)`, `update(string|int $id, array $data)`,
+`delete(string|int $id)`.
+
+Concrete repositories (all `extends BaseRepository`, constructor-inject their
+Eloquent model): AccountRepository, AdminRepository, BranchRepository,
+BrandRepository, CashRegisterRepository, CategoryRepository,
+DiscountRepository, ExpenseCategoryRepository, ExpenseRepository,
+FixedAssetRepository, PaymentMethodRepository, ProductRepository,
+PurchaseRepository, PurchaseRequestRepository, SaleRequestRepository,
+SellRepository, StockRepository, StockTakingRepository,
+StockTransferRepository, TaxRepository, TransactionRepository, UnitRepository,
+UserRepository — plus **Hrm/** subfolder: AttendanceSheetRepository,
+DepartmentRepository, DesignationRepository, EmployeeContractRepository,
+EmployeeRepository, ExpenseClaimCategoryRepository, ExpenseClaimRepository,
+LeaveRequestRepository, LeaveTypeRepository, PayrollRunRepository,
+PayrollSlipRepository. Most just override the constructor; business logic
+lives in the Service layer.
+
+Services (28 top-level + 10 Hrm/) generally expose:
+`list/activeList($relations=[],$filter=[],$perPage=null,$orderByDesc=null)`,
+`find($id=null,$relations=[])`, `count($filter=[])`, `save($id=null,$data)`,
+`delete($id)`, plus domain methods, e.g.:
+- **AccountService**: `getSupplierAccounts($supplierId)`,
+  `getBranchPaymentAccounts(?int $branchId): Collection`,
+  `getPaymentAccountsForBranchIds(array $branchIds): Collection`,
+  `createAccountForUser($user)`.
+- **CashRegisterService**: `getOpenedCashRegister($relations=[])`,
+  `increment($id,$field,$amount=1)`, `decrement($id,$field,$amount=1)`.
+- **DiscountService**: `saveHistory(Discount $discount, $sale)`.
+- **CheckService** (cheque lifecycle, uses DB transactions):
+  `collect(int $checkId, ?int $collectedAccountId=null, ?string $note=null): Check`,
+  `bounce(int $checkId, ?string $note=null): Check`,
+  `clearIssued(int $checkId, ?int $clearedAccountId=null, ?string $note=null): Check`
+  — each wraps the state change + related ledger transaction in `DB::transaction()`.
+
+Other services worth noting: `PlanPricingService`, `PlanFeaturePresentationService`
+(plan/pricing display logic for central site), `SellService`/`ProductService`/
+`StockService`/`StockTakingService`/`StockTransferService`/`PurchaseService`/
+`PurchaseRequestService`/`SaleRequestService`/`ExpenseService`/`TaxService`/
+`TransactionService`/`UserService`/`UnitService`/`BranchService`/`BrandService`/
+`CategoryService`/`PaymentMethodService`/`ExpenseCategoryService`/`FixedAssetService`/
+`AdminService`, and Hrm/: `AttendanceSheetService`, `DepartmentService`,
+`DesignationService`, `EmployeeContractService`, `EmployeeService`,
+`ExpenseClaimCategoryService`, `ExpenseClaimService`, `LeaveRequestService`,
+`LeaveTypeService`, `PayrollRunService`, `PayrollSlipService`.
+
+================================================================================
+## 10. PAYMENTS
+================================================================================
+
+`app/Payments/Interfaces/PaymentMethodInterface`: `pay($data)`,
+`capture($transactionId)`, `refund($transactionId)`, `getGrandTotalAmount($amount)`.
+
+Providers implementing it: **Paymob** (Egyptian payment gateway — `pay`,
+`capture`, `refund`, plus `createIntention($secret,$integrationIds,$amount,$token)`
+and `retriveIntention($publicKey,$clientSecret)`) and **Paypal** (`pay`,
+`capture`, `refund`, plus `createAccessToken($clientId,$secret)` and
+`createPayment($returnUrl,$cancelUrl,$amount,$currency)`).
+
+`PaymentService` is a thin wrapper: constructor-injects a
+`PaymentMethodInterface $gateway` (presumably bound at runtime to Paymob or
+Paypal depending on the selected central `PaymentMethod`), exposes
+`pay($data)`/`capture($transactionId)`. Used by `PaymentController::callback`
+for the subscription checkout flow (central site pricing/checkout ->
+Subscription + PaymentTransaction records).
+
+================================================================================
+## 11. OTHER (Middleware / Requests / Traits / Enums / Helpers / Notifications /
+##          Mail / Imports / Exports / Console / Providers / View Components)
+================================================================================
+
+### Middleware (16 total)
+Central/general: `AdminTranslationMiddleware`, `CentralWebsitesetLocal`,
+`CpanelTranslationMiddleware`, `RedirectToSecure`, `SiteTranslationMiddleware`
+— all implement `handle(Request $request, Closure $next): Response`, mostly
+locale-setting concerns. `InitializeTenancyByDomain extends IdentificationMiddleware`
+is the tenancy bootstrapper (constructor-injects `Tenancy $tenancy,
+DomainTenantResolver $resolver`).
+Tenant/ subfolder (8): `AdminAuthMiddleware`, `EmployeeAuthMiddleware`,
+`EmployeeGuestMiddleware`, and 5 **permission-check** middlewares
+(`HrmAttendancePermissionCheck`, `HrmClaimsPermissionCheck`,
+`HrmLeavesPermissionCheck`, `HrmMasterDataPermissionCheck`,
+`HrmPayrollPermissionCheck`) plus `ReportsPermissionCheck` — this is how
+module-level authorization is enforced (route-group middleware, not policies).
+
+### Http/Requests
+Only one: `RegisterTenantRequest extends FormRequest` — `authorize(): bool`,
+`rules(): array`, `messages()`. Notably this is the **only** FormRequest in the
+whole app — all other validation presumably happens inline in Livewire
+components (via Livewire's own `$this->validate()`), which is consistent with
+the Livewire-centric architecture but means validation rules are scattered
+across 186 files rather than centralized.
+
+### Traits (app/Traits)
+- **LivewireOperations** (trait, used across most Livewire components):
+  `swal($title,$message,$type='success')`, `_swal(...)`, `deleteSwal()`,
+  `alert($type,$title,$position='top-end')`, `popup(...)`, `confirm($confirmEvent,
+  $type='success',$title,$text='',$confirmBtnText,$cancelBtnText='Cancel')`,
+  `deleteAlert($confirmEvent='delete')`, `updateSwal()`, `dismiss()`,
+  `openModal($selector)`, `validator($data=null,$rules=null)`, `validator2(...)`,
+  `removeFile($id)`, `redirectWithTimeout($url,$timeout=500)`,
+  `redirectToDownload($url)`, `resetFilters()` — a shared UI/UX helper layer
+  wrapping livewire-alert + validation + file handling for all CRUD components.
+- **Translator** (trait): magic `__get($name)`, `translations()`, `t($key)` —
+  in-model/component translation accessor helper.
+
+### Enums (23 files, all backed `enum ... : string`, mostly with `label()` and
+some with `colorClass()`/`translatedLabel()` for UI badges):
+AccountTypeEnum (also `toArray`, `isInvalided`, static `defaultExpensesAccounts()`),
+AttendanceLogSourceEnum, AttendanceLogStatusEnum, AttendanceSheetStatusEnum,
+AuditLogActionEnum, CheckDirectionEnum, CheckStatusEnum, EmployeeStatusEnum,
+ExpenseClaimStatusEnum, LeaveRequestStatusEnum, ModulesEnum, PayrollRunStatusEnum,
+PayrollSlipLineTypeEnum, PlanFeaturesEnum, PurchaseRequestStatusEnum,
+PurchaseStatusEnum, RefundStatusEnum, SaleRequestStatusEnum,
+StockTransferStatusEnum, Tenant/ExpenseTypeEnum (static `values()`/`labels()`),
+TenantSettingEnum, TransactionTypeEnum, UserTypeEnum.
+
+### Helpers (app/Helpers — plain static-method classes, autoloaded via
+composer's `files` directive is only for `app/helpers.php`; these classes are
+PSR-4 autoloaded normally)
+- **PurchaseHelper**: `calcSubtotal`, `calcDiscount`, `calcTotalAfterDiscount`,
+  `calcTax`, `calcGrandTotal` — pure calculation helpers for purchase totals.
+- **SaleHelper**: `itemTotal`, `subTotal`, `discountAmount`,
+  `singleDiscountAmount`, `taxAmount`, `singleTaxAmount`, `grandTotal`,
+  `singleGrandTotal`, `getGrandTotalQuery()` — the pricing/discount/tax engine
+  for POS sales, mirrors PurchaseHelper for the sales side.
+- **SeoHelper**: `__construct()`, `buildSchema(array $data): SchemaCollection`,
+  `buildSEOData(array $data): SEOData`, static `render($page, array $data=[])
+  : SEOData`, static `getAllLocalesWithCountry(): array`, static `UrlLang()` —
+  wraps ralphjsmit/laravel-seo for structured SEO data per page/locale.
+
+### Notifications
+`GeneralNotification extends Notification` — generic, constructor-injects
+`$translationKey, $translationParams=[]`, implements `via()`/`toArray()` — a
+single reusable notification class parameterized by translation key rather
+than one class per notification type.
+
+### Mail (8 Mailables, all `implements ShouldQueue`, all with
+`envelope()`/`content()`/`attachments()`):
+AdminRegisterRequestMail, ContactUsMail, CustomerDueAmountEmail,
+RegisterRequestAcceptMail, RegisterRequestMail, SalesSummaryReport (mail),
+StockQtyCheckMail, SupplierDueAmountEmail — these back the scheduled alert
+console commands (CustomersDueAmountsAlert, SupplierDueAmountsAlert,
+StockQuantityAlertCheck, SalesSummaryReport command) and the tenant
+registration workflow.
+
+### Imports (7, all `implements ToCollection, WithHeadingRow, WithValidation`,
+via maatwebsite/excel): BranchesImport, BrandsImport, CategoriesImport,
+CustomersImport, ProductsImport, SuppliersImport, UnitsImport — each exposes
+`collection($rows)`, `rules(): array`, some also `chunkSize(): int` and a
+`__construct()`. Backs the `Livewire/Admin/Imports/ImportsPage` bulk-import UI.
+
+### Exports
+`GeneralExport implements FromCollection` — generic constructor
+`($data, $columns, $headers)`, single `collection()` method building an
+array-combine header row + mapped data — reused across export features rather
+than one export class per report (contrasts with the "35 report components"
+in Livewire — export formatting is centralized while report *querying* is not).
+
+### Console Commands (10 + 1 in Tenant/ subfolder)
+`BackfillChecksSetup` (`handle(): int` — one-off data migration for checks
+feature), `ClearTenantCache` (iterates `Tenant::all()->each`), `ConvertCurrencies`
+(uses laravel-currency-converter package), `CustomersDueAmountsAlert` /
+`SupplierDueAmountsAlert` (both have `handle()` + `action()`, mail due-amount
+alerts), `GenerateSitemap` (uses spatie/laravel-sitemap + iterates
+`Page::published()`), `SalesSummaryReport` (per-tenant, per-super-admin email
+report), `StockQuantityAlertCheck` (per-tenant, per-branch stock check via
+`tenancy()->find($tenant_id)->run(...)`), `Tenant\CleanAllSoftDeletes`
+(`cleanSoftDeletes($days)` — purges old soft-deleted records),
+`TenantCreateAdmin` (large command — `defaultBranch()`, `defaultPaymentMethods()`,
+`setPermissions()`, `defaultSettings()`, `setExpenseCategories()` — this is the
+**tenant bootstrap/provisioning script** run when a new tenant is created,
+seeding default branch/payment methods/roles/settings/expense categories).
+
+### Providers
+- **AppServiceProvider**: `register()`, `boot()` — sets up `View::share('defaultLayout', ...)`
+  (the mechanism selecting which of the 3 UI skins to render) and custom Blade
+  directives `@adminCan`/`@endadminCan` (permission-gated Blade sections, likely
+  wrapping spatie/laravel-permission checks).
+- **HelperServiceProvider**: `register()`, `boot()` — likely just to ensure
+  `app/helpers.php` global functions are available / registers helper bindings.
+- **TenancyServiceProvider**: `events()` (tenant created/deleted event listeners
+  — DB provisioning/teardown), `register()`, `boot()` (sets up Livewire tenant-
+  aware update route twice — for two different Livewire asset paths per skin?,
+  `View::composer('*', ...)`), `bootEvents()`, `mapRoutes()`,
+  `makeTenancyMiddlewareHighestPriority()`.
+
+### View Components
+`TableComponent` and `Table5Component` (both `extends Component`,
+constructor `(public $columns, public $headers, public $rows=[],
+public $totals=null)`, `render(): View|Closure|string`) — shared generic
+data-table Blade components used across the many list views; the "5" variant
+likely a newer/different-column-count iteration — worth checking if
+`TableComponent` (non-5) is legacy/should be deprecated in favor of Table5Component.
+
+================================================================================
+## 12. DATABASE — MIGRATIONS (filenames only, see section 4 for grouped summary)
+================================================================================
+Full filename lists are in section 4 (Directory Sitemap → database/). Highlights
+for planning purposes:
+- Central DB has a cluster of **~15 "seed_*_blogs" migrations all dated
+  2026-07-08** (e.g. `seed_cloud_accounting_blogs`, `seed_new_mohaaseb_blogs`,
+  `seed_sales_inventory_mohaaseb_blogs`, `seed_erp_pos_difference_blogs`,
+  `seed_smarterpguide_comparison_blogs`, `seed_arabic_cloud_accounting_mohaaseb_blogs`,
+  etc.) — using migrations to seed marketing blog content is unconventional
+  (normally seeders would be used); this inflates the migrations table and
+  makes rollback risky. Worth flagging as a candidate to move to a seeder.
+- Two duplicate-looking migrations exist: `2026_12_06_153822_add_soft_deleted_to_every_table.php`
+  and `2027_12_06_153822_add_soft_deleted_to_every_table.php` (tenant/) — likely
+  a copy-paste artifact with a future-dated duplicate; worth checking if both
+  are needed/were both actually run.
+- A migration filename without a date prefix exists:
+  `database/migrations/tenant/add_soft_delete_to_branches_table.php` — breaks
+  the normal Laravel timestamp-ordering convention, could cause migration
+  ordering issues.
+- Tenant DB schema evolved heavily post-launch: many `add_X_to_Y_table`
+  migrations retrofitting columns (branch_id, tax fields, deferred revenue,
+  soft deletes) onto already-shipped tables — normal iterative development but
+  worth knowing the schema has accreted rather than been designed upfront.
+
+================================================================================
+## 13. VIEWS STRUCTURE
+================================================================================
+See section 4 for the full directory breakdown. Key takeaway: `resources/views/livewire/`
+(403 files) is triplicated across `admin/`, `hud/`, and `tenant-tailwind-gemini/`
+subtrees with **identical folder structure** (accounts, branches, brands,
+cash-register, categories, checks, contracting/*, depreciation-expenses,
+discounts, employee/*, expenses, fixed-assets, hrm/*, imports, notifications,
+payables, payment-methods, plans, products, purchase-requests, purchases,
+refunds, reports/*, sale-requests, sales, settings, stocks, stock-taking,
+taxes, transactions, units, users). This is the single biggest structural fact
+for planning improvements: **any UI/UX change to a tenant-app screen likely
+needs to be applied in up to 3 places** unless there's a shared partial
+strategy already in place. Recommend investigating `AppServiceProvider`'s
+`defaultLayout` mechanism and whether the "hud" or "tenant-tailwind-gemini"
+skins are legacy/deprecated candidates for removal, or whether one is a WIP
+theme migration that should replace the other two once complete.
+
+================================================================================
+## 14. QUICK REFERENCE — FILE COUNTS
+================================================================================
+- Livewire components: 186
+- Tenant models: ~85 (across app/Models/Tenant + Tenant/Contracting)
+- Central models: 21
+- Services: 38 (28 + 10 Hrm)
+- Repositories: 24 (14 + 10 Hrm... actually 24 total incl. Hrm/, see section 9)
+- Controllers: 10 (very thin layer — Livewire does most of the work)
+- Middleware: 16
+- Enums: 23
+- Mail classes: 8 (all queued)
+- Import classes: 7
+- Console commands: 10 (+1 Tenant subfolder)
+- Route files: 5 (web.php 11 lines, central.php 54, central_panel.php 77,
+  tenant.php 516 [171 Route:: calls], console.php 10)
+- Migrations: ~35 central + ~75 tenant
+- Views: livewire/ 403 files, layouts/ 45, components/ 65, invoices/ 8, emails/ 8
+
+================================================================================
+## 15. SUGGESTED AREAS TO PROBE FURTHER WHEN PLANNING IMPROVEMENTS
+================================================================================
+1. Confirm whether all 3 view "skins" (admin/hud/tenant-tailwind-gemini) are
+   actively used in production or if 1-2 are dead weight — big consolidation
+   opportunity if so.
+2. Review the `download-file` closure route in tenant.php for path-traversal
+   risk (arbitrary `?file=` query param passed to `file_exists`/`response()->download`).
+3. Review/remove the `test/{tenant}` debug route in tenant.php — unauthenticated
+   tenancy-initializing debug code left in a route file.
+4. Investigate why blog content is seeded via ~15 dated migrations instead of
+   a seeder — consider migrating that content to `BlogSeeder`.
+5. Only one FormRequest class in the entire app — confirm Livewire's own
+   `$this->validate()` is consistently used elsewhere and there isn't
+   inconsistent/missing validation in older components.
+6. Two tenancy config files (`tenancy.php` / `tenancy_live.php`) — confirm which
+   is authoritative and whether the other is stale.
+7. `TableComponent` vs `Table5Component` — check if the former is legacy.
+8. Two near-duplicate "add soft delete to every table" migrations dated a year
+   apart — verify no double-application issue.
