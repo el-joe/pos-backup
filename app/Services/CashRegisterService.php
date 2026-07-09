@@ -20,7 +20,7 @@ class CashRegisterService
         return $this->repo->find($id, $relations);
     }
 
-    function getOpenedCashRegister($relations = [])
+    function getOpenedCashRegister($relations = [], $lock = false)
     {
         $filters = [
             // 'opened_at' => now(),
@@ -30,7 +30,7 @@ class CashRegisterService
             'branch_id' => branch()?->id,
         ];
 
-        return $this->repo->first($relations, $filters);
+        return $this->repo->first($relations, $filters, $lock);
     }
 
     function save($id = null,$data) {

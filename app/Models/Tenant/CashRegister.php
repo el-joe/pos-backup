@@ -10,7 +10,9 @@ class CashRegister extends Model
         'branch_id', 'admin_id', 'opening_balance', 'total_sales', 'total_sale_refunds',
         'total_purchases', 'total_purchase_refunds', 'total_expenses', 'total_expense_refunds',
         'total_deposits', 'total_withdrawals', 'closing_balance', 'opened_at', 'closed_at',
-        'status', 'notes'
+        'status', 'notes', 'currency_code', 'exchange_rate', 'expected_closing_balance',
+        'discrepancy', 'discrepancy_reason', 'discrepancy_approved_by', 'discrepancy_approved_at',
+        'open_session_key',
     ];
 
     protected $casts = [
@@ -26,7 +28,28 @@ class CashRegister extends Model
         'closing_balance' => 'float',
         'opened_at' => 'datetime',
         'closed_at' => 'datetime',
+        'exchange_rate' => 'float',
+        'expected_closing_balance' => 'float',
+        'discrepancy' => 'float',
+        'discrepancy_approved_at' => 'datetime',
     ];
+
+    protected static function booted()
+    {
+        static::saving(function (CashRegister $register) {
+            if ($register->status === 'open') {
+                $register->open_session_key = $register->admin_id . '-' . $register->branch_id;
+            } elseif ($register->status === 'closed') {
+                $register->open_session_key = null;
+            }
+        });
+
+        static::updating(function (CashRegister $register) {
+            if ($register->getOriginal('status') === 'closed') {
+                throw new \RuntimeException('Closed cash register sessions are immutable.');
+            }
+        });
+    }
 
     function scopeFilter($query,$filters = []) {
         return $query->when($filters['opened_at'] ?? null, function($q,$openedAt) {

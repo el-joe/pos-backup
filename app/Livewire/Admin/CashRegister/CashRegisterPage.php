@@ -27,10 +27,18 @@ class CashRegisterPage extends Component
 
         $branches = $this->branchService->activeList();
 
+        $recentSessions = $this->cashRegisterService->list(
+            [],
+            ['admin_id' => admin()->id, 'branch_id' => admin()->branch_id ?? $this->branchId ?? null],
+            5,
+            'opened_at'
+        );
+
         return layoutView('cash-register.cash-register-page', [
             'aggregates' => $this->aggregates,
             'currentRegister' => $this->currentRegister,
             'branches' => $branches,
+            'recentSessions' => $recentSessions,
         ])->title(__('general.titles.cash-register'));
     }
     public $aggregates = [];
@@ -42,6 +50,11 @@ class CashRegisterPage extends Component
     public $closing_balance_input;
     public $closing_notes;
     public $branchId;
+
+    // Reconciliation / discrepancy override
+    public bool $requiresOverride = false;
+    public $discrepancyPreview;
+    public $override_reason;
 
     // Deposit / Withdrawal fields
     public $deposit_amount_input;
@@ -64,37 +77,20 @@ class CashRegisterPage extends Component
     {
         // find latest open register
         $this->currentRegister = $this->cashRegisterService->getOpenedCashRegister();
+        $this->requiresOverride = false;
+        $this->discrepancyPreview = null;
 
-        // compute sums for numeric fillable fields
-        $row = DB::table('cash_registers')
-            ->where('id',$this->currentRegister ? $this->currentRegister->id : 0)
-            ->selectRaw(implode(',', [
-                'COALESCE(SUM(opening_balance),0) as opening_balance',
-                'COALESCE(SUM(total_sales),0) as total_sales',
-                'COALESCE(SUM(total_sale_refunds),0) as total_sale_refunds',
-                'COALESCE(SUM(total_purchases),0) as total_purchases',
-                'COALESCE(SUM(total_purchase_refunds),0) as total_purchase_refunds',
-                'COALESCE(SUM(total_expenses),0) as total_expenses',
-                'COALESCE(SUM(total_expense_refunds),0) as total_expense_refunds',
-                'COALESCE(SUM(total_deposits),0) as total_deposits',
-                'COALESCE(SUM(total_withdrawals),0) as total_withdrawals',
-                'COALESCE(SUM(closing_balance),0) as closing_balance',
-            ]))
-            ->first();
+        if (! $this->currentRegister) {
+            $this->aggregates = [];
+            return;
+        }
 
-        $this->aggregates = (array) $row;
-        $this->aggregates['calculated_closing_balance'] = round(
-            (float) ($this->aggregates['opening_balance'] ?? 0)
-            + (float) ($this->aggregates['total_sales'] ?? 0)
-            + (float) ($this->aggregates['total_purchase_refunds'] ?? 0)
-            + (float) ($this->aggregates['total_expense_refunds'] ?? 0)
-            + (float) ($this->aggregates['total_deposits'] ?? 0)
-            - (float) ($this->aggregates['total_sale_refunds'] ?? 0)
-            - (float) ($this->aggregates['total_purchases'] ?? 0)
-            - (float) ($this->aggregates['total_expenses'] ?? 0)
-            - (float) ($this->aggregates['total_withdrawals'] ?? 0),
-            2
-        );
+        $this->aggregates = $this->currentRegister->only([
+            'opening_balance', 'total_sales', 'total_sale_refunds', 'total_purchases',
+            'total_purchase_refunds', 'total_expenses', 'total_expense_refunds',
+            'total_deposits', 'total_withdrawals', 'closing_balance',
+        ]);
+        $this->aggregates['calculated_closing_balance'] = $this->currentRegister->calculated_closing_balance;
     }
 
     public function openRegister()
@@ -105,19 +101,39 @@ class CashRegisterPage extends Component
             'opening_balance_input' => 'required|numeric',
         ])) return;
 
-        $cashRegister = CashRegister::create([
-            'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
-            'admin_id' => admin()->id ?? null,
-            'opening_balance' => $this->opening_balance_input,
-            'status' => 'open',
-            'opened_at' => now(),
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $this->transactionService->createOpenBalanceTransaction([
-            'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
-            'amount' => $this->opening_balance_input,
-            'date' => now(),
-        ]);
+            $cashRegister = CashRegister::create([
+                'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
+                'admin_id' => admin()->id ?? null,
+                'opening_balance' => $this->opening_balance_input,
+                'status' => 'open',
+                'opened_at' => now(),
+                'currency_code' => currency()?->code,
+                'exchange_rate' => currency()?->conversion_rate ?? 1,
+            ]);
+
+            $this->transactionService->createOpenBalanceTransaction([
+                'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
+                'amount' => $this->opening_balance_input,
+                'date' => now(),
+            ]);
+
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            if ($e->getCode() === '23000') {
+                $this->alert('error', __('general.messages.register_already_open'));
+                $this->loadData();
+                return;
+            }
+            throw $e;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->alert('error', __('general.messages.error_processing_request', ['message' => $e->getMessage()]));
+            return;
+        }
 
         superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use($cashRegister){
             $admin->notifyCashRegisterOpened($cashRegister);
@@ -128,6 +144,17 @@ class CashRegisterPage extends Component
         $this->opening_balance_input = null;
         $this->loadData();
         $this->alert('success', __('general.messages.cash_register_opened'));
+    }
+
+    public function confirmCloseRegister()
+    {
+        $this->confirm(
+            'closeRegister',
+            'warning',
+            __('general.pages.cash_register.confirm_close_title'),
+            __('general.pages.cash_register.confirm_close_text'),
+            __('general.pages.cash_register.close_register')
+        );
     }
 
     public function closeRegister()
@@ -145,13 +172,40 @@ class CashRegisterPage extends Component
             return;
         }
 
+        $expected = $reg->calculated_closing_balance;
+        $discrepancy = round((float) $this->closing_balance_input - $expected, 2);
+        $threshold = (float) config('cash_register.discrepancy_threshold');
+
+        if (abs($discrepancy) > $threshold && ! $this->requiresOverride) {
+            $this->requiresOverride = true;
+            $this->discrepancyPreview = $discrepancy;
+            return;
+        }
+
+        if ($this->requiresOverride && ! $this->override_reason) {
+            $this->addError('override_reason', __('general.messages.override_reason_required'));
+            return;
+        }
+
         try{
             DB::beginTransaction();
+            $reg = $this->cashRegisterService->getOpenedCashRegister([], true);
+            if (! $reg) {
+                DB::rollBack();
+                $this->alert('error', __('general.messages.no_open_register_found'));
+                return;
+            }
+
             $reg->update([
                 'closing_balance' => $this->closing_balance_input,
+                'expected_closing_balance' => $expected,
+                'discrepancy' => $discrepancy,
                 'closed_at' => now(),
                 'status' => 'closed',
                 'notes' => $this->closing_notes,
+                'discrepancy_reason' => $this->requiresOverride ? $this->override_reason : null,
+                'discrepancy_approved_by' => $this->requiresOverride ? admin()->id : null,
+                'discrepancy_approved_at' => $this->requiresOverride ? now() : null,
             ]);
             DB::commit();
         }catch (\Exception $e){
@@ -172,8 +226,19 @@ class CashRegisterPage extends Component
 
         AuditLog::log(AuditLogActionEnum::CASH_REGISTER_CLOSED, ['id' => $reg->id]);
 
+        if ($this->requiresOverride) {
+            AuditLog::log(AuditLogActionEnum::CASH_REGISTER_DISCREPANCY_OVERRIDDEN, [
+                'id' => $reg->id,
+                'discrepancy' => $discrepancy,
+                'reason' => $this->override_reason,
+            ]);
+        }
+
         $this->closing_balance_input = null;
         $this->closing_notes = null;
+        $this->requiresOverride = false;
+        $this->discrepancyPreview = null;
+        $this->override_reason = null;
         $this->loadData();
         $this->alert('success', __('general.messages.cash_register_closed'));
     }

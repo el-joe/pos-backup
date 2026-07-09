@@ -31,7 +31,7 @@ $highlightCards = [
 'tone' => 'from-amber-500/15 to-amber-500/5 text-amber-600 dark:text-amber-300',
 ],
 [
-'label' => __('general.pages.cash_register.closing_balance'),
+'label' => __('general.pages.cash_register.expected_closing_balance'),
 'value' => currencyFormat($aggregates['calculated_closing_balance'] ?? 0, true),
 'icon' => 'fa fa-vault',
 'tone' => 'from-violet-500/15 to-violet-500/5 text-violet-600 dark:text-violet-300',
@@ -77,7 +77,7 @@ $highlightCards = [
                         </tr>
                         @endforeach
                         <tr class="bg-slate-50 dark:bg-slate-950/60">
-                            <td class="px-5 py-4 text-sm font-bold text-slate-900 dark:text-white">{{ __('general.pages.cash_register.closing_balance') }}</td>
+                            <td class="px-5 py-4 text-sm font-bold text-slate-900 dark:text-white">{{ __('general.pages.cash_register.expected_closing_balance') }}</td>
                             <td class="px-5 py-4 text-end text-sm font-bold text-slate-900 dark:text-white">{{ currencyFormat($aggregates['calculated_closing_balance'] ?? 0, true) }}</td>
                         </tr>
                     </tbody>
@@ -95,12 +95,15 @@ $highlightCards = [
                                     <div class="mt-2 text-xl font-bold">{{ __('general.pages.cash_register.open_since') }}</div>
                                     <div class="mt-1 text-sm text-white/75">{{ dateTimeFormat($currentRegister->opened_at) }}</div>
                                 </div>
-                                <span class="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">Open</span>
+                                <span class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]"><i class="fa fa-check-circle"></i> {{ __('general.pages.cash_register.status_open') }}</span>
                             </div>
                             <div class="mt-5 flex items-end justify-between gap-3">
                                 <div>
                                     <div class="text-xs uppercase tracking-[0.18em] text-white/60">{{ __('general.pages.cash_register.opening_balance') }}</div>
                                     <div class="mt-2 text-2xl font-black">{{ currencyFormat($currentRegister->opening_balance, true) }}</div>
+                                    @if($currentRegister->currency_code)
+                                    <span class="mt-1 inline-flex rounded-full bg-white/10 px-2 py-0.5 text-xs">{{ $currentRegister->currency_code }}</span>
+                                    @endif
                                 </div>
                                 <div class="rounded-2xl bg-white/10 px-4 py-3 text-sm text-white/80">
                                     {{ $currentRegister->branch?->name ?? admin()?->branch?->name ?? __('general.pages.cash_register.select_branch') }}
@@ -120,7 +123,7 @@ $highlightCards = [
                                 <div class="space-y-4">
                                     <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.amount') }}</label>
-                                        <input type="number" step="any" min="0" class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:focus:border-blue-500" wire:model="deposit_amount_input">
+                                        <input type="number" step="any" min="0" class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:focus:border-blue-500" dir="ltr" wire:model="deposit_amount_input">
                                     </div>
                                     <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.notes') }}</label>
@@ -141,7 +144,7 @@ $highlightCards = [
                                 <div class="space-y-4">
                                     <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.amount') }}</label>
-                                        <input type="number" step="any" min="0" class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:focus:border-amber-500" wire:model="withdrawal_amount_input">
+                                        <input type="number" step="any" min="0" class="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white dark:focus:border-amber-500" dir="ltr" wire:model="withdrawal_amount_input">
                                     </div>
                                     <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.notes') }}</label>
@@ -159,16 +162,43 @@ $highlightCards = [
                                         <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.closing_balance') }}</p>
                                     </div>
                                 </div>
-                                <div class="space-y-4">
+                                <div class="space-y-4" x-data="{
+                                        expected: {{ (float) ($aggregates['calculated_closing_balance'] ?? 0) }},
+                                        counted: {{ (float) ($closing_balance_input ?? 0) }},
+                                        get difference() { return (parseFloat(this.counted || 0) - parseFloat(this.expected || 0)).toFixed(2); }
+                                    }">
                                     <div>
-                                        <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.closing_balance') }}</label>
-                                        <input type="number" step="any" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model="closing_balance_input">
+                                        <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.expected_closing_balance') }}</label>
+                                        <input type="text" readonly dir="ltr" value="{{ number_format($aggregates['calculated_closing_balance'] ?? 0, 2) }}" class="block w-full rounded-xl border border-rose-100 bg-rose-50/60 px-4 py-2.5 text-end text-sm text-slate-900 dark:border-rose-500/20 dark:!bg-slate-900/60 dark:text-white">
+                                    </div>
+                                    <div>
+                                        <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.counted_cash') }}</label>
+                                        <input type="number" step="any" dir="ltr" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-end text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model.live="closing_balance_input" x-model="counted">
+                                    </div>
+                                    <div>
+                                        <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.difference') }}</label>
+                                        <input type="text" readonly dir="ltr" class="block w-full rounded-xl border border-rose-100 bg-rose-50/60 px-4 py-2.5 text-end text-sm text-slate-900 dark:border-rose-500/20 dark:!bg-slate-900/60 dark:text-white" x-bind:value="difference">
                                     </div>
                                     <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.notes') }}</label>
                                         <textarea rows="2" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model="closing_notes"></textarea>
                                     </div>
-                                    <button type="button" wire:click="closeRegister" class="inline-flex w-full items-center justify-center rounded-2xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900">{{ __('general.pages.cash_register.close_register') }}</button>
+
+                                    @if($requiresOverride)
+                                        <div class="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+                                            <i class="fa fa-triangle-exclamation"></i>
+                                            {{ __('general.pages.cash_register.manager_override_required') }}
+                                            <span class="font-semibold">({{ number_format($discrepancyPreview, 2) }})</span>
+                                        </div>
+                                        <div>
+                                            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.override_reason') }}</label>
+                                            <textarea rows="2" class="block w-full rounded-xl border border-amber-300 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm dark:border-amber-500/30 dark:!bg-slate-900 dark:text-white" wire:model="override_reason"></textarea>
+                                            @error('override_reason') <span class="text-xs text-rose-600">{{ $message }}</span> @enderror
+                                        </div>
+                                        <button type="button" wire:click="closeRegister" class="inline-flex w-full items-center justify-center rounded-2xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700">{{ __('general.pages.cash_register.confirm_override_and_close') }}</button>
+                                    @else
+                                        <button type="button" wire:click="confirmCloseRegister" class="inline-flex w-full items-center justify-center rounded-2xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900">{{ __('general.pages.cash_register.close_register') }}</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -210,6 +240,38 @@ $highlightCards = [
                 </div>
             </x-tenant-tailwind-gemini.table-card>
         </div>
+
+        @if($currentRegister)
+        <x-tenant-tailwind-gemini.table-card :title="__('general.pages.cash_register.recent_sessions')">
+            <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
+                <thead class="bg-slate-50 dark:bg-slate-950/60">
+                    <tr>
+                        <th class="px-5 py-3 text-start text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.open_since') }}</th>
+                        <th class="px-5 py-3 text-end text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.closing_balance') }}</th>
+                        <th class="px-5 py-3 text-end text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    @foreach($recentSessions as $session)
+                    <tr>
+                        <td class="px-5 py-3 text-slate-600 dark:text-slate-300">{{ dateTimeFormat($session->opened_at) }}</td>
+                        <td class="px-5 py-3 text-end text-slate-600 dark:text-slate-300">{{ currencyFormat($session->closing_balance, true) }}</td>
+                        <td class="px-5 py-3 text-end">
+                            @if($session->status === 'open')
+                            <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300"><i class="fa fa-check-circle"></i> {{ __('general.pages.cash_register.status_open') }}</span>
+                            @else
+                            <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300"><i class="fa fa-lock"></i> {{ __('general.pages.cash_register.status_closed') }}</span>
+                            @endif
+                            @if($session->discrepancy && abs($session->discrepancy) > 0.009)
+                            <span class="ms-1 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-600 dark:bg-amber-500/10 dark:text-amber-300"><i class="fa fa-triangle-exclamation"></i> {{ __('general.pages.cash_register.discrepancy') }}</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </x-tenant-tailwind-gemini.table-card>
+        @endif
     </div>
     @else
     <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-600 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300">

@@ -15,6 +15,7 @@ class CashRegisterReport extends Component
     public $branch_id;
     public $admin_id;
     public $registers = [];
+    public $totals = [];
 
     public function mount()
     {
@@ -58,9 +59,9 @@ class CashRegisterReport extends Component
         $this->loadRegisters();
     }
 
-    public function loadRegisters()
+    protected function baseQuery()
     {
-        $query = CashRegister::query()->with(['branch', 'admin']);
+        $query = CashRegister::query();
         if ($this->from_date && $this->to_date) {
             $query->whereDate('opened_at', '>=', $this->from_date)
                   ->whereDate('opened_at', '<=', $this->to_date);
@@ -71,7 +72,22 @@ class CashRegisterReport extends Component
         if ($this->admin_id) {
             $query->where('admin_id', $this->admin_id);
         }
-        $this->registers = $query->orderBy('opened_at', 'desc')->get();
+
+        return $query;
+    }
+
+    public function loadRegisters()
+    {
+        $this->registers = $this->baseQuery()->with(['branch', 'admin'])->orderBy('opened_at', 'desc')->get();
+
+        $sumColumns = [
+            'opening_balance', 'total_sales', 'total_sale_refunds', 'total_purchases',
+            'total_purchase_refunds', 'total_expenses', 'total_expense_refunds',
+            'total_deposits', 'total_withdrawals', 'closing_balance', 'discrepancy',
+        ];
+        $this->totals = $this->baseQuery()->selectRaw(
+            implode(',', array_map(fn($c) => "COALESCE(SUM($c),0) as $c", $sumColumns))
+        )->first()?->toArray() ?? [];
     }
 
     public function render()

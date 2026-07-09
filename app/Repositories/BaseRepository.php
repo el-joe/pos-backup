@@ -37,16 +37,18 @@ class BaseRepository implements BaseInterface {
         return $model;
     }
 
-    function find(string|int|null $id,$relations = [],$filter = []) {
+    function find(string|int|null $id,$relations = [],$filter = [],$lock = false) {
         return $this->instance
             // ->when(count($relations) > 0, fn($q) => $q->with($relations))
             ->when(count($filter) > 0, fn($q) => $q->filter($filter))
+            ->when($lock, fn($q) => $q->lockForUpdate())
             ->find($id);
     }
 
-    function first($relations = [],$filter = []) {
+    function first($relations = [],$filter = [],$lock = false) {
         return $this->instance->when(count($relations) > 0 ,fn($q) => $q->with($relations))
             ->when(count($filter) > 0 , fn($q) => $q->filter($filter))
+            ->when($lock, fn($q) => $q->lockForUpdate())
             ->first();
     }
 

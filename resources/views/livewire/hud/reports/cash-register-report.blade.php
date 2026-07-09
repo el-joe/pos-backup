@@ -54,6 +54,8 @@
                                 <th>{{ __('general.pages.reports.cash_register_report.total_deposits') }}</th>
                                 <th>{{ __('general.pages.reports.cash_register_report.total_withdrawals') }}</th>
                                 <th>{{ __('general.pages.reports.cash_register_report.closing_balance') }}</th>
+                                <th>{{ __('general.pages.cash_register.discrepancy') }}</th>
+                                <th>{{ __('general.pages.cash_register.currency') }}</th>
                                 <th>{{ __('general.pages.reports.cash_register_report.status') }}</th>
                                 <th>{{ __('general.pages.reports.cash_register_report.notes') }}</th>
                             </tr>
@@ -75,6 +77,13 @@
                                     <td class="text-end">{{ currencyFormat($register->total_deposits, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($register->total_withdrawals, true) }}</td>
                                     <td class="text-end">{{ currencyFormat($register->closing_balance, true) }}</td>
+                                    <td class="text-end">
+                                        {{ currencyFormat($register->discrepancy ?? 0, true) }}
+                                        @if($register->discrepancy && abs($register->discrepancy) > 0.009)
+                                            <span class="badge bg-warning text-dark">!</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $register->currency_code ?? '-' }}</td>
                                     <td class="text-center">
                                         <span class="badge bg-{{ $register->status == 'open' ? 'success' : 'danger' }}">
                                             {{ ucfirst($register->status) }}
@@ -84,10 +93,29 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="16" class="text-center text-muted">{{ __('general.pages.reports.cash_register_report.no_data') }}</td>
+                                    <td colspan="18" class="text-center text-muted">{{ __('general.pages.reports.cash_register_report.no_data') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
+                        @if($registers->isNotEmpty())
+                        <tfoot>
+                            <tr class="fw-semibold">
+                                <td colspan="4">Grand Total</td>
+                                <td class="text-end">{{ currencyFormat($totals['opening_balance'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_sales'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_sale_refunds'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_purchases'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_purchase_refunds'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_expenses'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_expense_refunds'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_deposits'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['total_withdrawals'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['closing_balance'] ?? 0, true) }}</td>
+                                <td class="text-end">{{ currencyFormat($totals['discrepancy'] ?? 0, true) }}</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                        @endif
                     </table>
                 </div>
         </x-hud.table-card>

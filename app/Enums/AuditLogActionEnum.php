@@ -8,6 +8,7 @@ enum AuditLogActionEnum : string
     case CASH_REGISTER_CLOSED = 'cash_register_closed';
     case CASH_REGISTER_DEPOSIT = 'cash_register_deposit';
     case CASH_REGISTER_WITHDRAWAL = 'cash_register_withdrawal';
+    case CASH_REGISTER_DISCREPANCY_OVERRIDDEN = 'cash_register_discrepancy_overridden';
     case CREATE_SALE_ORDER = 'create_sale_order';
     case IMPORT_BRANCHES = 'import_branches';
     case IMPORT_CATEGORIES = 'import_categories';

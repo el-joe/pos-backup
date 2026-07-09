@@ -1,4 +1,8 @@
-<div class="row">
+<div class="row" x-data="{
+        expected: {{ (float) ($aggregates['calculated_closing_balance'] ?? 0) }},
+        counted: {{ (float) ($closing_balance_input ?? 0) }},
+        get difference() { return (parseFloat(this.counted || 0) - parseFloat(this.expected || 0)).toFixed(2); }
+    }">
     <div class="col-md-8">
         <div class="white-box">
             <h3 class="box-title">Cash Register Summary</h3>
@@ -49,11 +53,44 @@
                         <td class="text-right">{{ number_format($aggregates['total_withdrawals'] ?? 0, 2) }}</td>
                     </tr>
                     <tr style="font-weight:600; background:#f1f8e9;">
-                        <td>Closing Balance</td>
+                        <td>Expected Closing Balance</td>
                         <td class="text-right">{{ number_format($aggregates['calculated_closing_balance'] ?? 0, 2) }}</td>
                     </tr>
                 </tbody>
             </table>
+
+            @if($currentRegister)
+                <h4 class="box-title">Recent Sessions</h4>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Opened</th>
+                            <th>Closed</th>
+                            <th class="text-right">Closing Balance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentSessions as $session)
+                            <tr>
+                                <td>{{ $session->opened_at?->format('Y-m-d H:i') }}</td>
+                                <td>{{ $session->closed_at?->format('Y-m-d H:i') ?? '-' }}</td>
+                                <td class="text-right">{{ number_format($session->closing_balance, 2) }}</td>
+                                <td>
+                                    @if($session->status === 'open')
+                                        <span class="badge badge-success"><i class="fa fa-check-circle"></i> Open</span>
+                                    @else
+                                        <span class="badge badge-secondary"><i class="fa fa-lock"></i> Closed</span>
+                                    @endif
+                                    @if($session->discrepancy && abs($session->discrepancy) > 0.009)
+                                        <span class="badge badge-warning"><i class="fa fa-exclamation-triangle"></i> Discrepancy</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
         </div>
     </div>
 
@@ -62,14 +99,19 @@
             <h4 class="box-title">Open / Close Register</h4>
 
             @if($currentRegister)
-                <p><strong>Open since:</strong> {{ $currentRegister->opened_at }}</p>
+                <p>
+                    <strong>Open since:</strong> {{ $currentRegister->opened_at }}
+                    @if($currentRegister->currency_code)
+                        <span class="badge badge-info">{{ $currentRegister->currency_code }}</span>
+                    @endif
+                </p>
                 <p><strong>Opening balance:</strong> {{ number_format($currentRegister->opening_balance, 2) }}</p>
 
                 <hr>
                 <h5>Cash Deposit</h5>
                 <div class="form-group">
                     <label>Amount</label>
-                    <input type="number" class="form-control" wire:model="deposit_amount_input">
+                    <input type="number" class="form-control" dir="ltr" style="text-align:right" wire:model="deposit_amount_input">
                 </div>
                 <div class="form-group">
                     <label>Notes</label>
@@ -81,7 +123,7 @@
                 <h5>Cash Withdrawal</h5>
                 <div class="form-group">
                     <label>Amount</label>
-                    <input type="number" class="form-control" wire:model="withdrawal_amount_input">
+                    <input type="number" class="form-control" dir="ltr" style="text-align:right" wire:model="withdrawal_amount_input">
                 </div>
                 <div class="form-group">
                     <label>Notes</label>
@@ -91,18 +133,40 @@
 
                 <hr>
                 <div class="form-group">
-                    <label>Closing Balance</label>
-                    <input type="number" class="form-control" wire:model="closing_balance_input">
+                    <label>Expected Closing Balance</label>
+                    <input type="text" class="form-control" dir="ltr" style="text-align:right" readonly value="{{ number_format($aggregates['calculated_closing_balance'] ?? 0, 2) }}">
+                </div>
+                <div class="form-group">
+                    <label>Counted Cash</label>
+                    <input type="number" class="form-control" dir="ltr" style="text-align:right" wire:model.live="closing_balance_input" x-model="counted">
+                </div>
+                <div class="form-group">
+                    <label>Difference</label>
+                    <input type="text" class="form-control" dir="ltr" style="text-align:right" readonly x-bind:value="difference">
                 </div>
                 <div class="form-group">
                     <label>Notes</label>
                     <textarea class="form-control" wire:model="closing_notes"></textarea>
                 </div>
-                <button wire:click="closeRegister" class="btn btn-danger">Close Register</button>
+
+                @if($requiresOverride)
+                    <div class="alert alert-warning">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        The counted cash differs from the expected balance (difference: {{ number_format($discrepancyPreview, 2) }}) by more than the allowed threshold. Provide a reason to override and close anyway.
+                    </div>
+                    <div class="form-group">
+                        <label>Override Reason</label>
+                        <textarea class="form-control" wire:model="override_reason"></textarea>
+                        @error('override_reason') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                    <button wire:click="closeRegister" class="btn btn-danger">Confirm Override & Close</button>
+                @else
+                    <button wire:click="confirmCloseRegister" class="btn btn-danger">Close Register</button>
+                @endif
             @else
                 <div class="form-group">
                     <label>Opening Balance</label>
-                    <input type="number" class="form-control" wire:model="opening_balance_input">
+                    <input type="number" class="form-control" dir="ltr" style="text-align:right" wire:model="opening_balance_input">
                 </div>
                 @if(admin()->branch_id === null)
                     <div class="form-group">

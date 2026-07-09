@@ -13,24 +13,18 @@
                     <label for="branch_id" class="control-label">Branch</label>
                     <select id="branch_id" wire:model.defer="branch_id" class="form-control input-sm">
                         <option value="">All Branches</option>
-                        {{-- Optionally populate with branches if available --}}
-                        @if(function_exists('branches'))
-                            @foreach(branches() as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                            @endforeach
-                        @endif
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-3">
                     <label for="admin_id" class="control-label">Admin/Cashier</label>
                     <select id="admin_id" wire:model.defer="admin_id" class="form-control input-sm">
                         <option value="">All Admins</option>
-                        {{-- Optionally populate with admins if available --}}
-                        @if(function_exists('admins'))
-                            @foreach(admins() as $admin)
-                                <option value="{{ $admin->id }}">{{ $admin->name }}</option>
-                            @endforeach
-                        @endif
+                        @foreach($admins as $admin)
+                            <option value="{{ $admin->id }}">{{ $admin->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-md-3" style="margin-top:25px;">
@@ -59,6 +53,8 @@
                             <th>Total Deposits</th>
                             <th>Total Withdrawals</th>
                             <th>Closing Balance</th>
+                            <th>Discrepancy</th>
+                            <th>Currency</th>
                             <th>Status</th>
                             <th>Notes</th>
                         </tr>
@@ -80,15 +76,41 @@
                                 <td>{{ number_format($register->total_deposits, 2) }}</td>
                                 <td>{{ number_format($register->total_withdrawals, 2) }}</td>
                                 <td>{{ number_format($register->closing_balance, 2) }}</td>
+                                <td>
+                                    {{ number_format($register->discrepancy ?? 0, 2) }}
+                                    @if($register->discrepancy && abs($register->discrepancy) > 0.009)
+                                        <span class="label label-warning">Discrepancy</span>
+                                    @endif
+                                </td>
+                                <td>{{ $register->currency_code ?? '-' }}</td>
                                 <td><span class="label label-{{ $register->status == 'open' ? 'success' : 'danger' }}">{{ ucfirst($register->status) }}</span></td>
                                 <td>{{ $register->notes }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="16" class="text-center">No cash register records found for the selected period.</td>
+                                <td colspan="18" class="text-center">No cash register records found for the selected period.</td>
                             </tr>
                         @endforelse
                     </tbody>
+                    @if($registers->isNotEmpty())
+                    <tfoot>
+                        <tr style="font-weight:600;">
+                            <td colspan="4">Grand Total</td>
+                            <td>{{ number_format($totals['opening_balance'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_sales'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_sale_refunds'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_purchases'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_purchase_refunds'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_expenses'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_expense_refunds'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_deposits'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['total_withdrawals'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['closing_balance'] ?? 0, 2) }}</td>
+                            <td>{{ number_format($totals['discrepancy'] ?? 0, 2) }}</td>
+                            <td colspan="3"></td>
+                        </tr>
+                    </tfoot>
+                    @endif
                 </table>
             </div>
     </x-admin.table-card>
