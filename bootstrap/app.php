@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // ]);
         $middleware->alias([
             'tenant.system' => \App\Http\Middleware\Tenant\CheckTenantSystem::class,
+            'track.pageview' => \App\Http\Middleware\TrackPageView::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -3,6 +3,7 @@
 namespace App\Livewire\Central\CPanel;
 
 use App\Models\Blog;
+use App\Models\Contact;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Faq;
@@ -11,15 +12,24 @@ use App\Models\PartnerCommission;
 use App\Models\RegisterRequest;
 use App\Models\Subscription;
 use App\Models\Tenant;
+use App\Services\AnalyticsService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.cpanel')]
 class HomePage extends Component
 {
+    public string $trafficPeriod = '30';
+
+    public function setTrafficPeriod(string $days): void
+    {
+        $this->trafficPeriod = $days;
+    }
+
     public function render()
     {
         $now = now();
+        $analytics = app(AnalyticsService::class);
 
         $stats = [
             'pending_register_requests' => RegisterRequest::where('status', 'pending')->count(),
@@ -35,6 +45,12 @@ class HomePage extends Component
             'subscriptions_expiring_soon' => Subscription::where('status', 'paid')
                 ->whereBetween('end_date', [$now, (clone $now)->addDays(3)])
                 ->count(),
+            'contacts_unread' => Contact::unread()->count(),
+            'new_tenants_this_month' => $analytics->getNewTenantsThisMonth(),
+            'revenue_this_month' => $analytics->getRevenueThisMonth(),
+            'revenue_last_month' => $analytics->getRevenueLastMonth(),
+            'mrr' => $analytics->getMRR(),
+            'churn_rate' => $analytics->getChurnRate(),
         ];
 
         $paidAmounts = Subscription::query()
@@ -107,6 +123,23 @@ class HomePage extends Component
         usort($tenantsByCountry, fn ($a, $b) => ($b['total'] ?? 0) <=> ($a['total'] ?? 0));
         $tenantsByCountry = array_slice($tenantsByCountry, 0, 10);
 
-        return view('livewire.central.cpanel.home-page', compact('stats', 'paidAmountsByCurrency', 'tenantsMapData', 'tenantsByCountry'));
+        $periodDays = (int) $this->trafficPeriod;
+        $traffic = $analytics->getTrafficSummary($periodDays);
+        $topPages = $analytics->getTopPages($periodDays);
+        $trafficByCountry = $analytics->getTrafficByCountry($periodDays);
+        $revenueByPlan = $analytics->getSubscriptionsByPlan();
+        $expiringSoon = $analytics->getExpiringSubscriptions(7);
+
+        return view('livewire.central.cpanel.home-page', compact(
+            'stats',
+            'paidAmountsByCurrency',
+            'tenantsMapData',
+            'tenantsByCountry',
+            'traffic',
+            'topPages',
+            'trafficByCountry',
+            'revenueByPlan',
+            'expiringSoon'
+        ));
     }
 }

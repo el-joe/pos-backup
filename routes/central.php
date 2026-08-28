@@ -7,12 +7,13 @@ use App\Http\Controllers\Central\Tenant\RegisterController;
 use App\Http\Middleware\CentralWebsitesetLocal;
 use App\Http\Middleware\RedirectToSecure;
 use App\Http\Middleware\SiteTranslationMiddleware;
+use App\Http\Middleware\TrackPageView;
 use App\Livewire\Central\Site\CheckoutPage;
 use App\Livewire\Central\Site\PricingPage;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => '/', 'middleware' => [SiteTranslationMiddleware::class, RedirectToSecure::class]], function () {
+Route::group(['prefix' => '/', 'middleware' => [SiteTranslationMiddleware::class, RedirectToSecure::class, TrackPageView::class]], function () {
 
     Route::get('register', [RegisterController::class, 'register']);
     Route::post('register', [RegisterController::class, 'postRegister'])->name('register-domain')->middleware('throttle:5,10');
