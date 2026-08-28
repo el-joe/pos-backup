@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 <head>
+    <script>
+        (function() {
+            var theme = localStorage.getItem('admin-theme') || 'dark';
+            document.documentElement.setAttribute('data-bs-theme', theme);
+        })();
+    </script>
     <meta charset="utf-8">
     <title>{{ env('APP_NAME','Mohaaseb') }} | Employee Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,11 +15,28 @@
 
     <link href="{{ asset('hud/assets/css/vendor.min.css') }}" rel="stylesheet">
     <link href="{{ asset('hud/assets/css/app.min.css') }}" rel="stylesheet">
+
+    <style>
+        [data-bs-theme="light"] .login-content {
+            background: rgba(255,255,255,0.95);
+            color: #1a1a2e;
+        }
+        [data-bs-theme="light"] .login-content .form-label { color: #333; }
+        [data-bs-theme="light"] .login-content h1 { color: #1a1a2e; }
+        [data-bs-theme="light"] .login-content .text-inverse { color: #555 !important; }
+        [data-bs-theme="light"] .form-control.bg-inverse { background: #f5f5f5 !important; color: #333 !important; }
+        [data-bs-theme="dark"] .login-content { color: #ffffff; }
+        [data-bs-theme="dark"] .login-content .form-label { color: #e0e0e0; }
+    </style>
 </head>
 <body class='pace-top'>
     <div id="app" class="app app-full-height app-without-header">
         <div class="login">
-            <div class="login-content">
+            <div class="login-content position-relative">
+                <button type="button" class="btn btn-sm btn-outline-theme position-absolute top-0 end-0 m-3"
+                        onclick="toggleLoginTheme()" id="themeToggleBtn">
+                    <i class="fa fa-moon" id="themeIcon"></i>
+                </button>
                 <form action="{{ route('employee.postLogin') }}" method="POST" name="employee_login_form">
                     @csrf
                     <h1 class="text-center">Employee Sign In</h1>
@@ -47,5 +70,20 @@
 
     <script src="{{ asset('hud/assets/js/vendor.min.js') }}"></script>
     <script src="{{ asset('hud/assets/js/app.min.js') }}"></script>
+
+    <script>
+        function toggleLoginTheme() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-bs-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-bs-theme', next);
+            localStorage.setItem('admin-theme', next);
+            document.getElementById('themeIcon').className = next === 'dark' ? 'fa fa-moon' : 'fa fa-sun';
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var saved = localStorage.getItem('admin-theme') || 'dark';
+            document.getElementById('themeIcon').className = saved === 'dark' ? 'fa fa-moon' : 'fa fa-sun';
+        });
+    </script>
 </body>
 </html>
