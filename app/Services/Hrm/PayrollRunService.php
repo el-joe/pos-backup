@@ -101,8 +101,13 @@ class PayrollRunService
                 throw new \RuntimeException('Already posted');
             }
 
-            $expenseAccount = Account::default('Expense', AccountTypeEnum::EXPENSE->value, admin()->branch_id);
-            $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, admin()->branch_id);
+            $branchId = admin()?->branch_id ?? null;
+            if (!$branchId) {
+                throw new \RuntimeException('Unable to determine branch for posting payroll to ledger');
+            }
+
+            $expenseAccount = Account::default('Expense', AccountTypeEnum::EXPENSE->value, $branchId);
+            $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
 
             $transaction = app(TransactionService::class)->create([
                 'date' => now(),
@@ -110,7 +115,7 @@ class PayrollRunService
                 'type' => TransactionTypeEnum::EXPENSE->value,
                 'reference_type' => PayrollRun::class,
                 'reference_id' => $run->id,
-                'branch_id' => admin()->branch_id,
+                'branch_id' => $branchId,
                 'note' => "Payroll run #{$run->id}",
                 'amount' => $run->total_payout,
                 'lines' => [
