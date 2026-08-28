@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Central\Site;
 
-use App\Models\Feature;
 use App\Models\Plan;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -18,70 +17,64 @@ class PricingPage extends Component
 
     public function mount(): void
     {
+        $billingCycle = request()->query('billing_cycle');
+        if (in_array($billingCycle, ['monthly', 'annual'], true)) {
+            $this->billingPeriod = $billingCycle;
+        }
+
         $plans = Plan::query()
             ->active()
-            ->with(['plan_features.feature' => function ($query) {
-                $query->where('active', true);
-            }])
-            ->orderBy('sort_order')
-            ->orderByDesc('recommended')
-            ->orderBy('price_month')
-            ->orderBy('id')
-            ->limit(3)
-            ->get();
-
-        $features = Feature::query()
-            ->where('active', true)
-            ->orderBy('id')
-            ->get();
+            ->whereIn('slug', ['monthly', 'annual'])
+            ->get()
+            ->keyBy('slug');
 
         $locale = app()->getLocale();
+        $includedFeatures = $this->includedFeatures();
 
-        $this->plans = $plans->map(function (Plan $plan) use ($features, $locale) {
-            $rows = $features->map(function (Feature $feature) use ($plan, $locale) {
-                $planFeature = $plan->plan_features->firstWhere('feature_id', $feature->id);
-
-                $featureName = $feature->{'name_' . $locale} ?? $feature->name_en ?? $feature->name_ar ?? '';
-                $featureType = (string) ($feature->type ?? 'boolean');
-                $value = (int) ($planFeature->value ?? 0);
-
-                $content = $locale === 'ar'
-                    ? ($planFeature->content_ar ?? $planFeature->content_en ?? null)
-                    : ($planFeature->content_en ?? $planFeature->content_ar ?? null);
-                $content = is_string($content) ? trim($content) : null;
-
-                $displayValue = null;
-                if ($featureType === 'text') {
-                    $displayValue = ($content !== null && $content !== '')
-                        ? $content
-                        : ($value > 0 ? (string) $value : '—');
-                }
+        $this->plans = collect(['monthly', 'annual'])
+            ->filter(fn (string $slug) => $plans->has($slug))
+            ->map(function (string $slug) use ($plans, $locale, $includedFeatures) {
+                $plan = $plans->get($slug);
 
                 return [
-                    'name' => $featureName,
-                    'type' => $featureType,
-                    'enabled' => $value > 0,
-                    'display_value' => $displayValue,
+                    'id' => $plan->id,
+                    'slug' => $plan->slug,
+                    'name' => $plan->localizedName($locale),
+                    'month' => round((float) $plan->price_month, 2),
+                    'year' => round((float) $plan->price_year, 2),
+                    'recommended' => $slug === 'annual',
+                    'features' => $includedFeatures,
                 ];
             })->values()->all();
 
-            $tier = strtolower((string) ($plan->tier ?? ''));
-
-            return [
-                'id' => $plan->id,
-                'slug' => $plan->slug,
-                'name' => $plan->name,
-                'tier' => $tier,
-                'month' => round((float) $plan->price_month, 2),
-                'year' => round((float) $plan->price_year, 2),
-                'trial_months' => (bool) ($plan->three_months_free ?? false) ? 3 : 0,
-                'recommended' => (bool) $plan->recommended,
-                'features' => $rows,
-            ];
-        })->values()->all();
-
-        $defaultPlan = collect($this->plans)->firstWhere('recommended', true) ?? (collect($this->plans)->first() ?? null);
+        $defaultPlan = collect($this->plans)->firstWhere('slug', $this->billingPeriod === 'yearly' ? 'annual' : 'monthly')
+            ?? collect($this->plans)->first();
         $this->selectedPlanId = isset($defaultPlan['id']) ? (int) $defaultPlan['id'] : null;
+    }
+
+    private function includedFeatures(): array
+    {
+        $locale = app()->getLocale();
+
+        return $locale === 'ar'
+            ? [
+                'نقطة بيع (POS) كاملة',
+                'إدارة الموارد البشرية (HRM)',
+                'إدارة المقاولات',
+                'المحاسبة والفواتير',
+                'إدارة المخزون والفروع',
+                'التقارير المتقدمة',
+                'دعم فني غير محدود',
+            ]
+            : [
+                'Full POS System',
+                'HRM Management',
+                'Contracting Management',
+                'Accounting & Invoicing',
+                'Inventory & Branches',
+                'Advanced Reports',
+                'Unlimited Support',
+            ];
     }
 
     public function setBilling(string $period): void
@@ -103,15 +96,13 @@ class PricingPage extends Component
     {
         $plan = $this->selectedPlan();
         if (!$plan) {
-            return redirect()->route('pricing-compare');
+            return redirect()->route('pricing');
         }
 
         $payload = [
             'period' => $this->isYearly() ? 'year' : 'month',
             'plan_id' => $plan['id'],
             'slug' => $plan['slug'],
-            'systems_allowed' => ['pos'],
-            'systems' => $this->selectedPlansPayload(),
         ];
 
         $token = encodedData($payload);
@@ -139,27 +130,6 @@ class PricingPage extends Component
         return collect($this->plans)->first(fn (array $plan) => (int) $plan['id'] === $selectedPlanId);
     }
 
-    public function selectedCount(): int
-    {
-        return $this->selectedPlan() ? 1 : 0;
-    }
-
-    public function selectedPlansPayload(): array
-    {
-        $plan = $this->selectedPlan();
-        if (!$plan) {
-            return [];
-        }
-
-        return [[
-            'module' => 'pos',
-            'plan_id' => $plan['id'],
-            'slug' => $plan['slug'],
-            'name' => $plan['name'],
-            'trial_months' => (int) ($plan['trial_months'] ?? 0),
-        ]];
-    }
-
     public function totalPrice(): float
     {
         $plan = $this->selectedPlan();
@@ -172,22 +142,7 @@ class PricingPage extends Component
 
     public function dueNow(): float
     {
-        $plan = $this->selectedPlan();
-        if (!$plan) {
-            return 0.0;
-        }
-
-        if ((int) ($plan['trial_months'] ?? 0) > 0) {
-            return 0.0;
-        }
-
-        return round((float) ($this->isYearly() ? $plan['year'] : $plan['month']), 2);
-    }
-
-    public function hasTrialSelection(): bool
-    {
-        $plan = $this->selectedPlan();
-        return $plan ? ((int) ($plan['trial_months'] ?? 0) > 0) : false;
+        return $this->totalPrice();
     }
 
     public function render()

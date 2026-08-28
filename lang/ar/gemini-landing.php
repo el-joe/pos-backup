@@ -162,6 +162,7 @@ return [
             'billing_monthly' => 'شهري',
             'billing_yearly' => 'سنوي',
             'save_20' => 'وفّر 20%',
+            'save_15' => 'وفّر 15%',
             'most_popular' => 'الأكثر شيوعًا',
             'card_subtitle' => 'كل ما تحتاجه للبدء.',
             'free_trial' => 'تجربة مجانية لمدة :months أشهر',

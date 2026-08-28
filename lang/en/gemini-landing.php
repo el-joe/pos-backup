@@ -162,6 +162,7 @@ return [
         'billing_monthly' => 'Monthly',
         'billing_yearly' => 'Yearly',
         'save_20' => 'Save 20%',
+        'save_15' => 'Save 15%',
         'most_popular' => 'Most Popular',
         'card_subtitle' => 'Everything you need to get started.',
         'free_trial' => ':months months free trial',

@@ -14,7 +14,6 @@ use App\Http\Controllers\Central\CPanel\BlogController;
 use App\Http\Controllers\Central\CPanel\PageController;
 use App\Http\Controllers\Central\CPanel\FaqController;
 use App\Livewire\Central\CPanel\Faqs\FaqsList;
-use App\Livewire\Central\CPanel\Features\FeaturesList;
 use App\Livewire\Central\CPanel\Blogs\BlogsList;
 use App\Livewire\Central\CPanel\Pages\PagesList;
 use App\Livewire\Central\CPanel\Partners\PartnerCommissionsList;
@@ -66,7 +65,6 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('translations', TranslationsEditor::class)->name('translations');
         Route::get('subscriptions', SubscriptionsList::class)->name('subscriptions.list');
         Route::get('plans', CpanelPlansList::class)->name('plans.list');
-        Route::get('features', FeaturesList::class)->name('features.list');
         Route::get('register-requests', RegisterRequestsList::class)->name('register-requests.list');
         Route::get('customers', CustomersList::class)->name('customers.list');
         Route::get('customers/create', CustomerCreate::class)->name('customers.create');

@@ -5,11 +5,23 @@
         {{-- CURRENT SUBSCRIPTION --}}
         @if($currentSubscription)
         @php
-            $totalDays     = carbon($currentSubscription->start_date)->diffInDays(carbon($currentSubscription->end_date));
-            $usedDays      = ceil(carbon($currentSubscription->start_date)->diffInDays(now()));
-            $remainingDays = max($totalDays - $usedDays, 0);
-            $progress      = $totalDays > 0 ? min(($usedDays / $totalDays) * 100, 100) : 0;
+            $statusBadge = [
+                'paid' => 'success',
+                'expired' => 'danger',
+                'cancelled' => 'warning',
+            ][$currentSubscription->status] ?? 'secondary';
+
+            $isMonthly = $currentSubscription->billing_cycle === 'monthly';
         @endphp
+
+        @if($currentSubscription->status === 'paid' && !is_null($daysRemaining) && $daysRemaining < 30)
+            <div class="col-12 mb-3">
+                <div class="alert alert-warning d-flex align-items-center mb-0">
+                    <i class="fa fa-triangle-exclamation me-2"></i>
+                    {{ __('general.pages.subscriptions.expires_in_days', ['days' => $daysRemaining]) }}
+                </div>
+            </div>
+        @endif
 
         <div class="col-8 mb-4">
             <div class="card shadow-sm overflow-hidden">
@@ -20,7 +32,7 @@
                         <i class="fa fa-crown me-2"></i>
                         <strong>{{ __('general.pages.subscriptions.active_subscription') }}</strong>
                     </div>
-                    <span class="badge bg-light text-primary">
+                    <span class="badge bg-{{ $statusBadge }}">
                         {{ ucfirst($currentSubscription->status) }}
                     </span>
                 </div>
@@ -32,7 +44,7 @@
                         <div class="col-md-3 col-6 mb-3">
                             <div class="text-muted small">{{ __('general.pages.subscriptions.plan') }}</div>
                             <div class="fw-bold fs-5">
-                                {{ $currentSubscription->plan?->name }}
+                                {{ $currentSubscription->plan?->localizedName() }}
                             </div>
                         </div>
 
@@ -63,13 +75,13 @@
                         <div class="d-flex justify-content-between mb-1">
                             <small class="text-muted">{{ __('general.pages.subscriptions.subscription_progress') }}</small>
                             <small class="fw-semibold text-primary">
-                                {{ __('general.pages.subscriptions.days_remaining', ['days' => $remainingDays]) }}
+                                {{ __('general.pages.subscriptions.days_remaining', ['days' => $daysRemaining]) }}
                             </small>
                         </div>
                         <div class="progress" style="height: 8px;">
                             <div
                                 class="progress-bar bg-success"
-                                style="width: {{ $progress }}%">
+                                style="width: {{ $percentRemaining }}%">
                             </div>
                         </div>
                     </div>
@@ -82,10 +94,15 @@
                             </button>
                         @endif
 
-                        @if($currentSubscription->canCancel() && adminCan('subscriptions.cancel'))
-                            <button class="btn btn-outline-danger" wire:click="cancelSubscription">
-                                <i class="fa fa-times me-1"></i> {{ __('general.pages.subscriptions.cancel_and_refund') }}
-                            </button>
+                        <a href="{{ $this->changePlanUrl($isMonthly ? 'annual' : 'monthly') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-right-left me-1"></i> {{ __('general.pages.subscriptions.change_plan') }}
+                        </a>
+
+                        @if($isMonthly)
+                            <a href="{{ $this->changePlanUrl('annual') }}" class="btn btn-warning">
+                                <i class="fa fa-arrow-up me-1"></i> {{ __('general.pages.subscriptions.upgrade_to_annual') }}
+                                <span class="badge bg-dark ms-1">{{ __('general.pages.subscriptions.save_percent', ['percent' => 15]) }}</span>
+                            </a>
                         @endif
                     </div>
 
@@ -154,13 +171,20 @@
                         </thead>
                         <tbody>
                             @forelse ($subscriptions as $subscription)
+                                @php
+                                    $rowBadge = [
+                                        'paid' => 'success',
+                                        'expired' => 'danger',
+                                        'cancelled' => 'warning',
+                                    ][$subscription->status] ?? 'secondary';
+                                @endphp
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $subscription->plan?->name }}</td>
+                                    <td>{{ $subscription->plan?->localizedName() }}</td>
                                     <td>{{ dateTimeFormat($subscription->start_date,true,false) }}</td>
                                     <td>{{ dateTimeFormat($subscription->end_date,true,false) }}</td>
                                     <td>
-                                        <span class="badge bg-secondary">
+                                        <span class="badge bg-{{ $rowBadge }}">
                                             {{ ucfirst($subscription->status) }}
                                         </span>
                                     </td>

@@ -92,12 +92,6 @@ return [
         "route"     => 'cpanel.plans.list'
     ],
     [
-        "title"     => "Features",
-        'translated_title' => 'general.titles.features',
-        "icon"      => "fa fa-list-check fa-fw",
-        "route"     => 'cpanel.features.list'
-    ],
-    [
         "title"     => "Tenants",
         'translated_title' => 'general.titles.tenants',
         "icon"      => "fa fa-users fa-fw",

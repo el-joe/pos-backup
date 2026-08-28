@@ -26,19 +26,12 @@ class CheckoutPage extends Component
 
     public $plan, $period, $slug;
 
-    private array $modules = ['pos', 'hrm', 'booking'];
-
     public $data = [
         'domain_mode'=>'subdomain',
         'subdomain' => null,
         'domain' => null,
         'final_domain' => null,
-        'systems_allowed' => ['pos'],
-        'selected_plans' => [
-            'pos' => null,
-            'hrm' => null,
-            'booking' => null,
-        ],
+        'plan_id' => null,
         'privacy_policy_agree' => false,
         'terms_conditions_agree' => false,
         'payment_method_id' => null,
@@ -60,23 +53,11 @@ class CheckoutPage extends Component
         'data.admin_email'=>'required|email|max:255',
         'data.admin_phone'=>'nullable|string|max:50',
         'data.admin_password'=>'required|string|min:6',
-        'data.systems_allowed' => 'required|array|min:1',
-        'data.systems_allowed.*' => 'required|in:pos,hrm,booking',
-        'data.selected_plans' => 'nullable|array',
-        'data.selected_plans.pos' => 'nullable|exists:plans,id',
-        'data.selected_plans.hrm' => 'nullable|exists:plans,id',
-        'data.selected_plans.booking' => 'nullable|exists:plans,id',
+        'data.plan_id' => 'required|exists:plans,id',
         'data.privacy_policy_agree' => 'accepted',
         'data.terms_conditions_agree' => 'accepted',
         'data.payment_method_id' => 'nullable|integer',
     ];
-
-    // function updateDomain()
-    // {
-    //     // Keep only characters that match /^[a-zA-Z0-9_]+$/
-    //     $raw = $this->data['subdomain'] ?? '';
-    //     $this->updatingDataSubdomain($raw);
-    // }
 
     function updatingDataSubdomain($value){
         $clean = preg_replace('/[^a-z0-9_]/', '', $value);
@@ -87,10 +68,7 @@ class CheckoutPage extends Component
 
     function updatingDataDomain($value)
     {
-        // if domain mode is domain, set final_domain to domain and make sure domain is valid url
-        $domain = $value ?? '';
-        $domain = trim($domain);
-        // prepend scheme if missing for validation
+        $domain = trim($value ?? '');
         $testUrl = (preg_match('/^https?:\/\//i', $domain) ? $domain : 'http://' . $domain);
         if (filter_var($testUrl, FILTER_VALIDATE_URL)) {
             $this->data['final_domain'] = $domain;
@@ -110,123 +88,39 @@ class CheckoutPage extends Component
 
     function mount()
     {
-        // New flow: token payload from PricingPage / landing checkout.
         $token = request()->route('token') ?? request()->query('token');
         $decodedToken = is_string($token) && trim($token) !== '' ? decodedData($token) : null;
 
-        $initializedFromToken = false;
-        if (is_array($decodedToken) && (isset($decodedToken['plan_id']) || isset($decodedToken['slug']))) {
-            $this->period = ($decodedToken['period'] ?? 'month') === 'year' ? 'year' : 'month';
+        $this->period = (is_array($decodedToken) && ($decodedToken['period'] ?? 'month') === 'year') ? 'year' : 'month';
 
+        $plan = null;
+        if (is_array($decodedToken)) {
             $planId = (int) ($decodedToken['plan_id'] ?? 0);
             $planSlug = trim((string) ($decodedToken['slug'] ?? ''));
 
-            $plan = null;
             if ($planId > 0) {
                 $plan = Plan::query()->active()->find($planId);
             }
-
             if (!$plan && $planSlug !== '') {
                 $plan = Plan::query()->active()->where('slug', $planSlug)->first();
             }
-
-            if ($plan) {
-                $this->plan = Plan::with('planFeatures.feature')->find($plan->id);
-                $this->slug = $this->plan?->slug;
-                $planModule = is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name;
-                $planModule = in_array($planModule, $this->modules, true) ? $planModule : 'pos';
-
-                $this->data['systems_allowed'] = [$planModule];
-                foreach ($this->modules as $module) {
-                    $this->data['selected_plans'][$module] = $module === $planModule ? $plan->id : null;
-                }
-                $initializedFromToken = true;
-            }
         }
 
-        if (!$initializedFromToken && is_array($decodedToken) && isset($decodedToken['systems'])) {
-            $this->period = ($decodedToken['period'] ?? 'month') === 'year' ? 'year' : 'month';
-
-            $requestedSystems = collect($decodedToken['systems'] ?? [])
-                ->filter(fn ($item) => is_array($item))
-                ->values();
-
-            $selectedSystemPlans = [];
-            foreach ($requestedSystems as $requestedSystem) {
-                $module = (string) ($requestedSystem['module'] ?? '');
-                if (!in_array($module, $this->modules, true)) {
-                    continue;
-                }
-
-                $planId = (int) ($requestedSystem['plan_id'] ?? 0);
-                $planSlug = trim((string) ($requestedSystem['slug'] ?? ''));
-
-                $plan = null;
-                if ($planId > 0) {
-                    $plan = Plan::query()->active()->where('id', $planId)->first();
-                } elseif ($planSlug !== '') {
-                    $plan = Plan::query()->active()->where('module_name', $module)->where('slug', $planSlug)->first();
-                }
-
-                if (!$plan) {
-                    continue;
-                }
-
-                $planModule = is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name;
-                if ($planModule !== $module) {
-                    continue;
-                }
-
-                $selectedSystemPlans[$module] = $plan;
-            }
-
-            if (count($selectedSystemPlans) > 0) {
-                $this->data['systems_allowed'] = array_values(array_keys($selectedSystemPlans));
-                foreach ($this->modules as $module) {
-                    $this->data['selected_plans'][$module] = $selectedSystemPlans[$module]->id ?? null;
-                }
-
-                $primaryPlan = collect($selectedSystemPlans)->first();
-                $this->plan = $primaryPlan
-                    ? Plan::with('planFeatures.feature')->find($primaryPlan->id)
-                    : null;
-                $this->slug = $this->plan?->slug;
-                $initializedFromToken = true;
-            }
-        }
-
-        // Old flow (single plan): query param "plan" contains encoded slug/period.
-        if (!$initializedFromToken) {
+        if (!$plan) {
             $newPlanSlug = request()->query('plan');
             $data = decodedData($newPlanSlug);
-            if (!is_array($data)) {
-                $data = [];
-            }
+            $slug = is_array($data) ? ($data['slug'] ?? null) : null;
 
-            $this->period = ($data['period'] ?? 'month') === 'year' ? 'year' : 'month';
-            $this->slug = $slug = $data['slug'] ?? null;
+            $plan = $slug ? Plan::query()->active()->where('slug', $slug)->first() : null;
 
-            $this->plan = $slug
-                ? Plan::with('planFeatures.feature')->whereSlug($slug)->first()
-                : null;
-
-            if (!$this->plan) {
-                $this->plan = Plan::query()
-                    ->active()
-                    ->with('planFeatures.feature')
-                    ->orderByDesc('recommended')
-                    ->orderBy('price_month')
-                    ->first();
-            }
-
-            if ($this->plan) {
-                $defaultModule = is_object($this->plan->module_name) ? $this->plan->module_name->value : (string) $this->plan->module_name;
-                $this->data['systems_allowed'] = in_array($defaultModule, $this->modules, true) ? [$defaultModule] : ['pos'];
-                foreach ($this->modules as $module) {
-                    $this->data['selected_plans'][$module] = $defaultModule === $module ? $this->plan->id : null;
-                }
+            if (!$plan) {
+                $plan = Plan::query()->active()->orderBy('price_month')->first();
             }
         }
+
+        $this->plan = $plan;
+        $this->slug = $plan?->slug;
+        $this->data['plan_id'] = $plan?->id;
 
         $countryCode = old('data.country_id') ?? strtoupper(session('country'));
         $currencyCode = old('data.currency_id') ?? strtoupper(session('country'));
@@ -242,139 +136,21 @@ class CheckoutPage extends Component
         }
     }
 
-    private function buildSelectedSystemPlans(array $systemsAllowed, string $period): array
+    private function calculatePricing(Plan $plan, string $period): array
     {
-        $systemsAllowed = collect($systemsAllowed)
-            ->filter(fn ($system) => in_array($system, $this->modules, true))
-            ->unique()
-            ->values()
-            ->all();
-
-        $selectedPlanIds = collect($this->data['selected_plans'] ?? [])
-            ->filter(fn ($id) => !empty($id))
-            ->map(fn ($id) => (int) $id)
-            ->values();
-
-        $plansById = Plan::query()
-            ->whereIn('id', $selectedPlanIds)
-            ->where('active', true)
-            ->get()
-            ->keyBy('id');
-
-        $selectedSystemPlans = [];
-        foreach ($systemsAllowed as $module) {
-            $planId = (int) ($this->data['selected_plans'][$module] ?? 0);
-            $plan = $planId > 0 ? $plansById->get($planId) : null;
-
-            if (!$plan) {
-                $fallbackPlanId = (int) Plan::query()
-                    ->active()
-                    ->where('module_name', $module)
-                    ->orderByDesc('recommended')
-                    ->orderBy('price_month')
-                    ->value('id');
-                $plan = $fallbackPlanId > 0 ? Plan::query()->active()->find($fallbackPlanId) : null;
-            }
-
-            if (!$plan) {
-                continue;
-            }
-
-            $planModule = is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name;
-            if ($planModule !== $module) {
-                continue;
-            }
-
-            $selectedSystemPlans[$module] = $plan;
-        }
-
-        return $selectedSystemPlans;
-    }
-
-    private function calculateMultiModulePricing(array $selectedSystemPlans, string $period): array
-    {
-        $systemsAllowed = array_values(array_keys($selectedSystemPlans));
-        $systemsCount = max(1, count($systemsAllowed));
-
-        $pricingBySystem = [];
-        $totalPrice = 0.0;
-        $payableNow = 0.0;
-        $maxTrialMonths = 0;
-
-        foreach ($selectedSystemPlans as $module => $plan) {
-            $modulePricing = app(PlanPricingService::class)->calculate($plan, $period, $systemsCount);
-            $modulePrice = (float) ($modulePricing['final_price'] ?? 0);
-            $moduleTrialMonths = (int) ($modulePricing['free_trial_months'] ?? 0);
-
-            $pricingBySystem[$module] = [
-                'plan_id' => $plan->id,
-                'plan_name' => $plan->name,
-                'pricing' => $modulePricing,
-                'payable_now' => $moduleTrialMonths > 0 ? 0.0 : $modulePrice,
-            ];
-
-            $totalPrice += $modulePrice;
-            if ($moduleTrialMonths === 0) {
-                $payableNow += $modulePrice;
-            }
-            $maxTrialMonths = max($maxTrialMonths, $moduleTrialMonths);
-        }
-
-        $totalPrice = round($totalPrice, 2);
-        $payableNow = round($payableNow, 2);
-
-        return [
-            // Common keys used across the app.
-            'period' => $period,
-            'systems_count' => $systemsCount,
-            'free_trial_months' => $maxTrialMonths,
-            'is_free_trial' => $maxTrialMonths > 0,
-
-            // Aggregated totals.
-            'total_price' => $totalPrice,
-            'due_now' => $payableNow,
-
-            // Legacy keys expected by existing checkout blade.
-            'base_price' => $totalPrice,
-            'final_price' => $totalPrice,
-            'total_discount_amount' => 0,
-            'plan_discount_amount' => 0,
-            'multi_system_discount_amount' => 0,
-
-            // Per-system breakdown.
-            'per_system' => $pricingBySystem,
-        ];
+        return app(PlanPricingService::class)->calculate($plan, $period, 1);
     }
 
     private function buildPlanPayloadFromCheckout(array $newData): array
     {
         $period = ($newData['period'] ?? 'month') === 'year' ? 'year' : 'month';
-        $systemsAllowed = collect($newData['systems_allowed'] ?? [])
-            ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
-            ->unique()
-            ->values()
-            ->all();
-        if (count($systemsAllowed) === 0) {
-            $systemsAllowed = ['pos'];
-        }
 
-        $planPayload = [
-            'id' => $newData['plan_id'] ?? 1,
+        return [
+            'id' => $newData['plan_id'] ?? null,
             'period' => $period,
-            'systems_allowed' => $systemsAllowed,
+            'systems_allowed' => ['pos'],
+            'pricing' => $newData['pricing'] ?? [],
         ];
-
-        if (isset($newData['selected_plans']) && is_array($newData['selected_plans'])) {
-            $planPayload['selected_plans'] = $newData['selected_plans'];
-        }
-        if (isset($newData['selected_system_plans']) && is_array($newData['selected_system_plans'])) {
-            $planPayload['selected_system_plans'] = $newData['selected_system_plans'];
-        }
-        if (isset($newData['pricing']) && is_array($newData['pricing'])) {
-            $planPayload['pricing'] = $newData['pricing'];
-        }
-
-        return $planPayload;
     }
 
     private function createRegisterRequestForCheckout(array $newData, ?PaymentMethod $paymentMethod, array $paymentPayload): RegisterRequest
@@ -423,7 +199,6 @@ class CheckoutPage extends Component
 
     function completeSubscription()
     {
-
         if (empty($this->data['admin_name'])) {
             $first = trim((string) ($this->data['admin_first_name'] ?? ''));
             $last = trim((string) ($this->data['admin_last_name'] ?? ''));
@@ -435,47 +210,21 @@ class CheckoutPage extends Component
 
         $this->validate();
 
-        $systemsAllowed = collect($this->data['systems_allowed'] ?? [])
-            ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
-            ->unique()
-            ->values()
-            ->all();
-        if (count($systemsAllowed) === 0) {
-            $systemsAllowed = ['pos'];
-        }
-
         $period = $this->period === 'year' ? 'year' : 'month';
-        $selectedSystemPlans = $this->buildSelectedSystemPlans($systemsAllowed, $period);
 
-        if (count($selectedSystemPlans) === 0) {
-            $this->addError('data.selected_plans.pos', 'Please select at least one valid plan.');
+        $plan = Plan::query()->active()->find($this->data['plan_id']);
+        if (!$plan) {
+            $this->addError('data.plan_id', 'Please select a valid plan.');
             return;
         }
 
-        $systemsAllowed = array_values(array_keys($selectedSystemPlans));
-        $pricing = $this->calculateMultiModulePricing($selectedSystemPlans, $period);
-        $amount = (float) ($pricing['due_now'] ?? 0);
-
-        $primaryPlan = collect($selectedSystemPlans)->first();
-
-        $selectedPlansMap = [];
-        foreach ($selectedSystemPlans as $module => $plan) {
-            $selectedPlansMap[$module] = $plan->id;
-        }
+        $pricing = $this->calculatePricing($plan, $period);
+        $freeTrialMonths = (int) ($pricing['free_trial_months'] ?? 0);
+        $amount = $freeTrialMonths > 0 ? 0.0 : (float) ($pricing['final_price'] ?? 0);
 
         $newData = $this->data + [
-            'plan_id' => $primaryPlan?->id,
+            'plan_id' => $plan->id,
             'period' => $period,
-            'systems_allowed' => $systemsAllowed,
-            'selected_plans' => $selectedPlansMap,
-            'selected_system_plans' => collect($selectedSystemPlans)->map(function ($plan, $module) {
-                return [
-                    'module' => $module,
-                    'id' => $plan->id,
-                    'name' => $plan->name,
-                    'slug' => $plan->slug,
-                ];
-            })->values()->all(),
             'pricing' => $pricing,
             'amount' => $amount,
         ];
@@ -552,7 +301,6 @@ class CheckoutPage extends Component
         $requestPayload['metadata'] = $dataToString;
 
         PaymentTransaction::create([
-            // 'tenant_id',
             'payment_method_id' => $paymentMethod->id,
             'amount' => $newData['amount'],
             'status' => 'pending',
@@ -581,100 +329,41 @@ class CheckoutPage extends Component
 
     public function render()
     {
-        $moduleTitles = [
-            'pos' => 'POS & ERP System',
-            'hrm' => 'HRM System',
-            'booking' => 'Booking & Reservations',
-        ];
-
         $countries = Country::orderBy('name')->get();
         $currencies = Currency::orderBy('name')->get();
         $currentCurrency = Currency::find($this->data['currency_id'] ?? null);
-        $systemsAllowed = collect($this->data['systems_allowed'] ?? [])
-            ->filter(fn ($system) => in_array($system, $this->modules, true))
-            ->unique()
-            ->values()
-            ->all();
 
         $period = $this->period === 'year' ? 'year' : 'month';
-        $selectedSystemPlans = $this->buildSelectedSystemPlans($systemsAllowed, $period);
 
         $selectedSystemsSummary = [];
         $selectedFeatureNames = [];
         $selectedDueNow = 0.0;
         $hasAnyFreeTrial = false;
+        $pricingSummary = [];
 
-        if (count($selectedSystemPlans) > 0) {
-            $systemsCount = max(1, count($selectedSystemPlans));
+        $plan = $this->data['plan_id'] ? Plan::query()->active()->find($this->data['plan_id']) : $this->plan;
 
-            $plansWithFeatures = Plan::query()
-                ->whereIn('id', collect($selectedSystemPlans)->map(fn ($plan) => $plan->id)->values()->all())
-                ->with(['plan_features.feature' => function ($query) {
-                    $query->where('active', true);
-                }])
-                ->get()
-                ->keyBy('id');
+        if ($plan) {
+            $pricing = $this->calculatePricing($plan, $period);
+            $price = (float) ($pricing['final_price'] ?? 0);
+            $freeTrialMonths = (int) ($pricing['free_trial_months'] ?? 0);
+            $payableNow = $freeTrialMonths > 0 ? 0.0 : $price;
 
-            foreach ($selectedSystemPlans as $plan) {
-                $planWithFeatures = $plansWithFeatures->get($plan->id) ?? $plan;
+            $selectedSystemsSummary[] = [
+                'module' => 'pos',
+                'module_title' => __('gemini-landing.checkout_page.system_fallback'),
+                'plan_name' => $plan->localizedName(),
+                'price' => $price,
+                'free_trial_months' => $freeTrialMonths,
+                'payable_now' => $payableNow,
+            ];
 
-                $pricing = app(PlanPricingService::class)->calculate($planWithFeatures, $period, $systemsCount);
-                $price = (float) ($pricing['final_price'] ?? 0);
-                $freeTrialMonths = (int) ($pricing['free_trial_months'] ?? 0);
-                $payableNow = $freeTrialMonths > 0 ? 0.0 : $price;
+            $selectedFeatureNames = [];
 
-                $module = is_object($planWithFeatures->module_name)
-                    ? $planWithFeatures->module_name->value
-                    : (string) $planWithFeatures->module_name;
-
-                $selectedSystemsSummary[] = [
-                    'module' => $module,
-                    'module_title' => $moduleTitles[$module] ?? ucfirst($module),
-                    'plan_name' => $planWithFeatures->name,
-                    'price' => $price,
-                    'free_trial_months' => $freeTrialMonths,
-                    'payable_now' => $payableNow,
-                ];
-
-                $featureNames = $planWithFeatures->plan_features
-                    ->filter(function ($planFeature) {
-                        if (!$planFeature->feature) {
-                            return false;
-                        }
-
-                        if ($planFeature->feature->type === 'boolean') {
-                            return (int) $planFeature->value === 1;
-                        }
-
-                        return ((int) $planFeature->value > 0)
-                            || (is_string($planFeature->content_en) && trim($planFeature->content_en) !== '')
-                            || (is_string($planFeature->content_ar) && trim($planFeature->content_ar) !== '');
-                    })
-                    ->sortBy('feature_id')
-                    ->map(function ($planFeature) {
-                        $feature = $planFeature->feature;
-                        $name = app()->getLocale() === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
-                        return $name ?: ($feature->name_en ?: $feature->code);
-                    })
-                    ->unique()
-                    ->values()
-                    ->take(4)
-                    ->all();
-
-                $selectedFeatureNames = array_values(array_unique(array_merge($selectedFeatureNames, $featureNames)));
-
-                $selectedDueNow += $payableNow;
-                if ($freeTrialMonths > 0) {
-                    $hasAnyFreeTrial = true;
-                }
-            }
+            $selectedDueNow = round($payableNow, 2);
+            $hasAnyFreeTrial = $freeTrialMonths > 0;
+            $pricingSummary = $pricing;
         }
-
-        $selectedDueNow = round($selectedDueNow, 2);
-
-        $pricingSummary = count($selectedSystemPlans) > 0
-            ? $this->calculateMultiModulePricing($selectedSystemPlans, $period)
-            : ( $this->plan ? app(PlanPricingService::class)->calculate($this->plan, $period, max(1, count($systemsAllowed))) : [] );
 
         $viewName = 'livewire.central.' . defaultLandingLayout() . '.checkout-page';
         if (!view()->exists($viewName)) {

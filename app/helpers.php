@@ -521,33 +521,16 @@ if (!function_exists('subscriptionFeatureData')) {
 if (!function_exists('subscriptionFeatureEnabled')) {
     function subscriptionFeatureEnabled(?string $code, bool $default = true, ?\App\Models\Subscription $subscription = null): bool
     {
-        if (!is_string($code) || trim($code) === '') {
-            return $default;
-        }
-
-        $feature = subscriptionFeatureData($code, $subscription);
-        if (!is_array($feature)) {
-            return $default;
-        }
-
-        return (bool) ($feature['status'] ?? $default);
+        // All features are fully available regardless of plan.
+        return true;
     }
 }
 
 if (!function_exists('subscriptionFeatureLimit')) {
     function subscriptionFeatureLimit(?string $code, int $default = 0, ?\App\Models\Subscription $subscription = null): int
     {
-        if (!is_string($code) || trim($code) === '') {
-            return $default;
-        }
-
-        $feature = subscriptionFeatureData($code, $subscription);
-        if (!is_array($feature)) {
-            return $default;
-        }
-
-        $limit = $feature['limit'] ?? null;
-        return is_numeric($limit) ? (int) $limit : $default;
+        // No plan-based limits remain; callers already pass a generous default.
+        return $default;
     }
 }
 

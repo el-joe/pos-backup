@@ -252,85 +252,8 @@ class HomeController extends Controller
 
     function pricingCompare()
     {
-        $plans = Plan::query()
-            ->active()
-            ->with(['plan_features.feature' => function ($query) {
-                $query->where('active', true);
-            }])
-            ->orderBy('price_month')
-            ->orderBy('id')
-            ->get();
-
-        $plansByModule = $plans->groupBy(fn (Plan $plan) => $plan->module_name->value);
-
-        $features = Feature::query()
-            ->where('active', true)
-            ->orderBy('id')
-            ->get();
-        $featuresByModule = $features->groupBy('module_name');
-
-        $locale = app()->getLocale();
-        $modules = ['pos', 'hrm', 'booking'];
-        $systemData = [];
-
-        foreach ($modules as $module) {
-            $modulePlans = ($plansByModule[$module] ?? collect())->values();
-            $moduleFeatures = ($featuresByModule[$module] ?? collect())->values();
-
-            $systemData[$module] = [
-                'title' => match ($module) {
-                    'pos' => 'POS & ERP Systems',
-                    'hrm' => 'HRM & Payroll',
-                    'booking' => 'Reservation System',
-                    default => ucfirst($module),
-                },
-                'plans' => $modulePlans->map(function (Plan $plan) use ($locale, $moduleFeatures) {
-                    $featureNames = app(PlanFeaturePresentationService::class)
-                        ->resolveDisplayPlanFeatureNames($plan, $moduleFeatures, $locale, 3);
-
-                    return [
-                        'id' => $plan->id,
-                        'slug' => $plan->slug,
-                        'name' => $plan->name,
-                        'desc' => '',
-                        'price' => (float) (app(PlanPricingService::class)->calculate($plan, 'month', 1)['final_price'] ?? 0),
-                        'yearly' => (float) (app(PlanPricingService::class)->calculate($plan, 'year', 1)['final_price'] ?? 0),
-                        'three_months_free' => (bool) ($plan->three_months_free ?? false),
-                        'free_trial_months' => (int) (($plan->three_months_free ?? false) ? 3 : 0),
-                        'features' => $featureNames,
-                        'popular' => (bool) $plan->recommended,
-                    ];
-                })->all(),
-                'table' => $moduleFeatures->map(function (Feature $feature) use ($modulePlans, $locale) {
-                    $label = $locale === 'ar' ? ($feature->name_ar ?? null) : ($feature->name_en ?? null);
-                    $label = $label ?: ($feature->name_en ?: $feature->code);
-
-                    $values = $modulePlans->map(function (Plan $plan) use ($feature, $locale) {
-                        $planFeature = $plan->plan_features->firstWhere('feature_id', $feature->id);
-                        if (!$planFeature) {
-                            return $feature->type === 'boolean' ? '×' : '—';
-                        }
-
-                        if ($feature->type === 'boolean') {
-                            return (int) $planFeature->value === 1 ? '✓' : '×';
-                        }
-
-                        $content = $locale === 'ar' ? $planFeature->content_ar : $planFeature->content_en;
-                        if (is_string($content) && trim($content) !== '') {
-                            return trim($content);
-                        }
-
-                        $value = $planFeature->value;
-                        return is_numeric($value) && (int) $value !== 0 ? (string) (int) $value : '—';
-                    })->values()->all();
-
-                    return array_merge([$label], $values);
-                })->values()->all(),
-            ];
-        }
-
-        $seoData = SeoHelper::render('pricing-compare');
-        return landingLayoutView('pricing-compare',get_defined_vars());
+        // The 2-static-plan pricing model has no per-module comparison table anymore.
+        return redirect()->route('pricing');
     }
 
     function pricing()

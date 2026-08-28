@@ -44,12 +44,11 @@
     </header>
 
     <section class="container px-6 mx-auto max-w-7xl lg:px-8">
-        <div class="grid grid-cols-1 gap-8 mx-auto mt-8 lg:grid-cols-3 max-w-md lg:max-w-none items-stretch">
+        <div class="grid grid-cols-1 gap-8 mx-auto mt-8 lg:grid-cols-2 max-w-md lg:max-w-2xl items-stretch">
             @foreach($plans as $plan)
             @php
             $isSelected = (int) ($selectedPlanId ?? 0) === (int) $plan['id'];
             $displayPrice = $this->isYearly() ? ($plan['year'] ?? 0) : ($plan['month'] ?? 0);
-            $hasTrialText = ((int) ($plan['trial_months'] ?? 0)) > 0;
             @endphp
 
             <div role="button"
@@ -90,31 +89,22 @@
                         <span class="text-base font-medium text-slate-500 dark:text-slate-400">/{{ $this->isYearly() ? __('gemini-landing.common.period_year') : __('gemini-landing.common.period_month') }}</span>
                     </div>
 
+                    @if(!empty($plan['recommended']))
                     <div class="h-6 mb-6">
-                        @if($hasTrialText)
                         <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                            <i class="fa-solid fa-gift text-xs" aria-hidden="true"></i>
-                            {{ __('gemini-landing.pricing_page.free_trial', ['months' => (int) $plan['trial_months']]) }}
+                            <i class="fa-solid fa-tag text-xs" aria-hidden="true"></i>
+                            {{ __('gemini-landing.pricing_page.save_15') }}
                         </span>
-                        @endif
                     </div>
+                    @endif
 
                     <div class="flex-1 pt-8 border-t border-slate-100 dark:border-slate-800">
                         <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-400">
                             @foreach(($plan['features'] ?? []) as $feature)
-                            @if(($feature['type'] ?? 'boolean') === 'text')
-                            <li class="flex items-center justify-between gap-4">
-                                <span class="text-slate-600 dark:text-slate-400">{{ $feature['name'] }}</span>
-                                <span class="font-semibold text-slate-900 dark:text-white">{{ $feature['display_value'] ?? '—' }}</span>
+                            <li class="flex items-center gap-3">
+                                <i class="text-sm fa-solid fa-check text-indigo-600 dark:text-indigo-400" aria-hidden="true"></i>
+                                <span class="text-slate-700 dark:text-slate-300">{{ $feature }}</span>
                             </li>
-                            @else
-                            <li class="flex items-center justify-between gap-4">
-                                <span class="{{ !empty($feature['enabled']) ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500 line-through decoration-slate-300 dark:decoration-slate-700' }}">
-                                    {{ $feature['name'] }}
-                                </span>
-                                <i class="text-sm fa-solid {{ !empty($feature['enabled']) ? 'fa-check text-indigo-600 dark:text-indigo-400' : 'fa-xmark text-slate-300 dark:text-slate-700' }}" aria-hidden="true"></i>
-                            </li>
-                            @endif
                             @endforeach
                         </ul>
                     </div>
@@ -123,7 +113,7 @@
                         <button type="button"
                             wire:click.stop="checkoutPlan({{ (int) $plan['id'] }})"
                             class="group inline-flex items-center justify-center w-full gap-3 px-6 py-4 rounded-xl text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 dark:focus:ring-offset-slate-900 bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:shadow-indigo-500/20">
-                            <span class="relative z-10 text-white">{{ $hasTrialText ? __('gemini-landing.pricing_page.cta_try_free') : __('gemini-landing.pricing_page.cta_subscribe_now') }}</span>
+                            <span class="relative z-10 text-white">{{ __('gemini-landing.pricing_page.cta_subscribe_now') }}</span>
                             <i class="fa-solid fa-arrow-right relative z-10 text-white transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"></i>
                         </button>
                     </div>
