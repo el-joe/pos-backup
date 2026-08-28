@@ -11,6 +11,8 @@ return [
         'checks' => 'Checks',
         'pages' => 'Pages',
         'faqs' => 'FAQs',
+        'newsletter-subscribers' => 'Newsletter Subscribers',
+        'newsletter-campaigns' => 'Email Campaigns',
         'file_manager' => 'File Manager',
         'contacts' => 'Contacts',
         'branches' => 'Branches',

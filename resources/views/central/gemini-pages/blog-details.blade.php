@@ -73,8 +73,11 @@
                         </div>
                         <h4 class="font-bold text-lg mb-2">{{ __('gemini-landing.blog_details.weekly_insights_title') }}</h4>
                         <p class="text-brand-100 dark:text-slate-400 text-sm mb-4">{{ __('gemini-landing.blog_details.weekly_insights_subtitle') }}</p>
-                        <input type="email" placeholder="{{ __('gemini-landing.blog_details.email_address') }}" class="w-full px-4 py-3 rounded-lg text-slate-800 mb-3 text-sm focus:outline-none border-none">
-                        <button class="w-full bg-brand-500 py-3 rounded-lg font-bold text-sm hover:bg-brand-400 transition">{{ __('gemini-landing.blog_details.subscribe') }}</button>
+                        <form id="blog-newsletter-form" class="newsletter-form">
+                            <input type="email" name="email" required placeholder="{{ __('gemini-landing.blog_details.email_address') }}" class="w-full px-4 py-3 rounded-lg text-slate-800 mb-3 text-sm focus:outline-none border-none">
+                            <button type="submit" class="w-full bg-brand-500 py-3 rounded-lg font-bold text-sm hover:bg-brand-400 transition">{{ __('gemini-landing.blog_details.subscribe') }}</button>
+                            <p class="newsletter-message text-xs mt-3 hidden"></p>
+                        </form>
                     </div>
 
                 </aside>

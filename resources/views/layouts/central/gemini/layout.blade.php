@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     @if(isset($seoHtml))
@@ -92,6 +93,68 @@
     @include('layouts.central.gemini.partials.footer')
 
     @include('layouts.central.gemini.partials.scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('form.newsletter-form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    var emailInput = form.querySelector('input[name="email"]');
+                    var messageEl = form.querySelector('.newsletter-message')
+                        || (form.parentElement ? form.parentElement.querySelector('.newsletter-message') : null);
+                    var submitBtn = form.querySelector('button[type="submit"]');
+                    var token = document.querySelector('meta[name="csrf-token"]');
+
+                    if (!emailInput || !token) return;
+
+                    if (submitBtn) submitBtn.disabled = true;
+
+                    fetch('{{ route('newsletter.subscribe') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': token.getAttribute('content'),
+                        },
+                        body: JSON.stringify({ email: emailInput.value }),
+                    })
+                        .then(function (response) {
+                            return response.json().then(function (data) {
+                                return { ok: response.ok, data: data };
+                            });
+                        })
+                        .then(function (result) {
+                            if (!messageEl) return;
+                            messageEl.classList.remove('hidden');
+                            if (result.ok && result.data.success) {
+                                messageEl.textContent = result.data.message || 'Subscribed successfully';
+                                messageEl.classList.add('text-green-400');
+                                messageEl.classList.remove('text-red-400');
+                                form.reset();
+                            } else {
+                                var errorMessage = result.data.message
+                                    || (result.data.errors && Object.values(result.data.errors)[0][0])
+                                    || 'Something went wrong. Please try again.';
+                                messageEl.textContent = errorMessage;
+                                messageEl.classList.add('text-red-400');
+                                messageEl.classList.remove('text-green-400');
+                            }
+                        })
+                        .catch(function () {
+                            if (!messageEl) return;
+                            messageEl.classList.remove('hidden');
+                            messageEl.textContent = 'Something went wrong. Please try again.';
+                            messageEl.classList.add('text-red-400');
+                        })
+                        .finally(function () {
+                            if (submitBtn) submitBtn.disabled = false;
+                        });
+                });
+            });
+        });
+    </script>
+
     @stack('scripts')
 </body>
 

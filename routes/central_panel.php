@@ -13,8 +13,11 @@ use App\Livewire\Central\CPanel\Customers\CustomersList;
 use App\Http\Controllers\Central\CPanel\BlogController;
 use App\Http\Controllers\Central\CPanel\PageController;
 use App\Http\Controllers\Central\CPanel\FaqController;
+use App\Http\Controllers\Central\CPanel\CampaignController;
 use App\Livewire\Central\CPanel\Faqs\FaqsList;
 use App\Livewire\Central\CPanel\Blogs\BlogsList;
+use App\Livewire\Central\CPanel\Newsletter\CampaignsList;
+use App\Livewire\Central\CPanel\Newsletter\SubscribersList;
 use App\Livewire\Central\CPanel\Pages\PagesList;
 use App\Livewire\Central\CPanel\Partners\PartnerCommissionsList;
 use App\Livewire\Central\CPanel\Partners\PartnerForm;
@@ -57,6 +60,16 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::post('faqs', [FaqController::class, 'store'])->name('faqs.store');
         Route::get('faqs/{id}', [FaqController::class, 'edit'])->whereNumber('id')->name('faqs.edit');
         Route::put('faqs/{id}', [FaqController::class, 'update'])->whereNumber('id')->name('faqs.update');
+
+        Route::get('newsletter', SubscribersList::class)->name('newsletter.subscribers');
+        Route::get('newsletter/campaigns', CampaignsList::class)->name('newsletter.campaigns');
+        Route::get('newsletter/campaigns/create', [CampaignController::class, 'create'])->name('newsletter.campaigns.create');
+        Route::post('newsletter/campaigns', [CampaignController::class, 'store'])->name('newsletter.campaigns.store');
+        Route::get('newsletter/campaigns/{id}', [CampaignController::class, 'edit'])->whereNumber('id')->name('newsletter.campaigns.edit');
+        Route::put('newsletter/campaigns/{id}', [CampaignController::class, 'update'])->whereNumber('id')->name('newsletter.campaigns.update');
+        Route::post('newsletter/campaigns/{id}/preview', [CampaignController::class, 'sendPreview'])->whereNumber('id')->name('newsletter.campaigns.preview');
+        Route::post('newsletter/campaigns/{id}/send', [CampaignController::class, 'send'])->whereNumber('id')->name('newsletter.campaigns.send');
+
         Route::get('file-manager', FileManagerPage::class)->name('file-manager');
         Route::get('contacts', ContactsList::class)->name('contacts.list');
         Route::get('countries', CountriesList::class)->name('countries.list');

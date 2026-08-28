@@ -45,6 +45,20 @@
                 </ul>
             </div>
         </div>
+
+        <div class="border-t border-slate-200 dark:border-slate-800 pt-8 pb-8 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+            <div>
+                <h4 class="font-bold text-brand-dark dark:text-white mb-1">{{ __('gemini-landing.blog_details.weekly_insights_title') }}</h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('gemini-landing.blog_details.weekly_insights_subtitle') }}</p>
+            </div>
+            <div class="w-full md:w-auto">
+                <form id="footer-newsletter-form" class="newsletter-form flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <input type="email" name="email" required placeholder="{{ __('gemini-landing.blog_details.email_address') }}" class="px-4 py-3 rounded-lg text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none w-full sm:w-64">
+                    <button type="submit" class="bg-brand-500 hover:bg-brand-400 transition text-white font-bold text-sm px-6 py-3 rounded-lg whitespace-nowrap">{{ __('gemini-landing.blog_details.subscribe') }}</button>
+                </form>
+                <p class="newsletter-message text-xs mt-2 hidden"></p>
+            </div>
+        </div>
         <div class="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col sm:flex-row gap-3 justify-between items-center text-xs text-slate-400">
             <div>&copy; 2025 Codefanz.com {{ __('website.footer.all_rights_reserved') }}</div>
             <a href="{{ url('sitemap.xml') }}" class="hover:text-brand-500">{{ __('website.footer.sitemap') }}</a>

@@ -11,6 +11,8 @@ return [
         'pages' => 'الصفحات',
         'checks' => 'الشيكات',
         'faqs' => 'الأسئلة الشائعة',
+        'newsletter-subscribers' => 'مشتركو النشرة البريدية',
+        'newsletter-campaigns' => 'الحملات البريدية',
         'file_manager' => 'مدير الملفات',
         'contacts' => 'جهات الاتصال',
         'branches' => 'الفروع',

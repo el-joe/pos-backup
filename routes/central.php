@@ -21,6 +21,9 @@ Route::group(['prefix' => '/', 'middleware' => [SiteTranslationMiddleware::class
     Route::get('contact', [HomeController::class, 'contactUsView'])->name('contact');
     Route::post('contact-us', [HomeController::class, 'contactUs'])->name('contact-us');
 
+    Route::post('newsletter/subscribe', [HomeController::class, 'newsletterSubscribe'])->name('newsletter.subscribe');
+    Route::get('newsletter/unsubscribe/{token}', [HomeController::class, 'newsletterUnsubscribe'])->name('newsletter.unsubscribe');
+
     Route::get('checkout/{token?}', CheckoutPage::class)->name('tenant-checkout');
     Route::get('pricing/compare', [HomeController::class, 'pricingCompare'])->name('pricing-compare');
     Route::get('pricing', PricingPage::class)->name('pricing');

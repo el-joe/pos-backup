@@ -8,6 +8,7 @@ use App\Models\Blog;
 use App\Models\Contact;
 use App\Models\Faq;
 use App\Models\Feature;
+use App\Models\NewsletterSubscriber;
 use App\Models\Plan;
 use App\Models\Slider;
 use App\Services\PlanFeaturePresentationService;
@@ -15,7 +16,9 @@ use App\Services\PlanPricingService;
 use App\Services\SeoService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use RalphJSmit\Laravel\SEO\SchemaCollection;
 use RalphJSmit\Laravel\SEO\Support\AlternateTag;
 use RalphJSmit\Laravel\SEO\Support\ImageMeta;
@@ -395,6 +398,56 @@ class HomeController extends Controller
 
         $seoData = SeoHelper::render('pricing');
         return landingLayoutView('pricing',get_defined_vars());
+    }
+
+    function newsletterSubscribe(Request $request)
+    {
+        $key = 'newsletter-subscribe:' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Too many attempts. Please try again later.',
+            ], 429);
+        }
+
+        $validated = $request->validate([
+            'email' => 'required|email|max:191',
+            'name' => 'nullable|string|max:100',
+        ]);
+
+        RateLimiter::hit($key, 3600);
+
+        NewsletterSubscriber::updateOrCreate(
+            ['email' => $validated['email']],
+            [
+                'name' => $validated['name'] ?? null,
+                'subscribed_at' => now(),
+                'unsubscribed_at' => null,
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Subscribed successfully',
+        ]);
+    }
+
+    function newsletterUnsubscribe(string $token)
+    {
+        try {
+            $email = Crypt::decryptString(urldecode($token));
+        } catch (\Exception $e) {
+            return redirect()->route('central-home')->with('error', 'Invalid unsubscribe link.');
+        }
+
+        $subscriber = NewsletterSubscriber::where('email', $email)->first();
+
+        if ($subscriber) {
+            $subscriber->update(['unsubscribed_at' => now()]);
+        }
+
+        return redirect()->route('central-home')->with('success', 'You have been unsubscribed from our newsletter.');
     }
 
     function changeLanguage($locale) {

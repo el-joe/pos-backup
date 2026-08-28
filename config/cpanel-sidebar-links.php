@@ -38,6 +38,18 @@ return [
         "route"     => 'cpanel.faqs.list'
     ],
     [
+        "title"     => "Newsletter Subscribers",
+        'translated_title' => 'general.titles.newsletter-subscribers',
+        "icon"      => "fa fa-users-line fa-fw",
+        "route"     => 'cpanel.newsletter.subscribers'
+    ],
+    [
+        "title"     => "Email Campaigns",
+        'translated_title' => 'general.titles.newsletter-campaigns',
+        "icon"      => "fa fa-paper-plane fa-fw",
+        "route"     => 'cpanel.newsletter.campaigns'
+    ],
+    [
         "title"     => "File Manager",
         'translated_title' => 'general.titles.file_manager',
         "icon"      => "fa fa-folder-open fa-fw",
