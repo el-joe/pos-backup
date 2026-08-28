@@ -17,6 +17,7 @@ class TrackPageView
 
     public function handle(Request $request, Closure $next): Response
     {
+
         if ($request->isMethod('GET') && ! $request->is('cpanel*') && ! $request->is('api/*')) {
             $this->track($request);
         }
@@ -44,6 +45,7 @@ class TrackPageView
             userAgent: $userAgent,
             ip: $ip,
             sessionId: $request->hasSession() ? $request->session()->getId() : null,
+            countryCode: 'us',
         );
     }
 

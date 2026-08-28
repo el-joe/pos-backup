@@ -15,6 +15,7 @@ use App\Models\Tenant;
 use App\Services\AnalyticsService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Stevebauman\Location\Facades\Location;
 
 #[Layout('layouts.cpanel')]
 class HomePage extends Component
@@ -119,7 +120,6 @@ class HomePage extends Component
                 'total' => $total,
             ];
         }
-
         usort($tenantsByCountry, fn ($a, $b) => ($b['total'] ?? 0) <=> ($a['total'] ?? 0));
         $tenantsByCountry = array_slice($tenantsByCountry, 0, 10);
 

@@ -24,12 +24,13 @@ class TrackPageViewJob implements ShouldQueue
         public ?string $userAgent,
         public ?string $ip,
         public ?string $sessionId,
+        public ?string $countryCode = null,
     ) {}
 
     public function handle(): void
     {
         try {
-            $countryCode = $this->ip ? Location::get($this->ip)?->countryCode : null;
+            $countryCode = $this->countryCode ?: $this->resolveCountryCodeFromIp();
 
             DB::connection('central')->table('page_views')->insert([
                 'path' => mb_substr($this->path, 0, 500),
@@ -44,5 +45,16 @@ class TrackPageViewJob implements ShouldQueue
         } catch (Throwable $e) {
             Log::warning('Failed to record page view: ' . $e->getMessage());
         }
+    }
+
+    protected function resolveCountryCodeFromIp(): ?string
+    {
+        if (! $this->ip) {
+            return null;
+        }
+
+        $location = Location::get($this->ip);
+
+        return $location ? $location->countryCode : null;
     }
 }
