@@ -28,7 +28,8 @@
         @endif
 		<!-- BEGIN #content -->
 		<div id="content" class="app-content {{ isset($withoutSidebar) ? 'p-1 ps-xl-4 pe-xl-4 pt-xl-3 pb-xl-3' : '' }}">
-            {{ $slot }}
+            {{ $slot ?? '' }}
+            @yield('content')
 		</div>
 		<!-- END #content -->
         {{-- @include('layouts.cpanel.partials.theme-panel') --}}
