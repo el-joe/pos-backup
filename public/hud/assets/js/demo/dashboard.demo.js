@@ -252,11 +252,14 @@ var handleRenderChart = function() {
       }
     }
   };
-  var apexServerChart = new ApexCharts(
-    document.querySelector('#chart-server'),
-    serverChartOptions
-  );
-  apexServerChart.render();
+  var chartServerElm = document.querySelector('#chart-server');
+  if (chartServerElm) {
+    var apexServerChart = new ApexCharts(
+      chartServerElm,
+      serverChartOptions
+    );
+    apexServerChart.render();
+  }
 };
 
 var handleRenderMap = function() {
