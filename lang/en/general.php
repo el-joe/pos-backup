@@ -60,6 +60,7 @@ return [
         'administrators' => 'Administrators',
         'users' => 'Users',
         'admins' => 'Admins',
+        'permissions_audit' => 'Permissions Audit',
         'roles-permissions' => 'Roles & Permissions',
         'reports' => 'Reports',
         'financial-reports' => 'Financial Reports',

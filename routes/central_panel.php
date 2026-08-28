@@ -3,6 +3,7 @@
 use App\Http\Controllers\Central\CPanel\AuthController;
 use App\Http\Middleware\CpanelTranslationMiddleware;
 use App\Livewire\Central\CPanel\Admins\AdminsList;
+use App\Livewire\Central\CPanel\Admins\PermissionsAuditPage;
 use App\Livewire\Central\CPanel\Contacts\ContactsList;
 use App\Livewire\Central\CPanel\Countries\CountriesList;
 use App\Livewire\Central\CPanel\Currencies\CurrenciesList;
@@ -39,6 +40,7 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
     Route::group(['middleware' => ['auth:' . CPANEL_ADMINS_GUARD]], function () {
         Route::get('/', HomePage::class)->name('dashboard');
         Route::get('admins',AdminsList::class)->name('admins.list');
+        Route::get('admins/permissions', PermissionsAuditPage::class)->name('admins.permissions');
         Route::get('blogs', BlogsList::class)->name('blogs.list');
         Route::get('blogs/create', [BlogController::class, 'create'])->name('blogs.create');
         Route::post('blogs', [BlogController::class, 'store'])->name('blogs.store');

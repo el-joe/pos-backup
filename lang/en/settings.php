@@ -20,4 +20,7 @@ return [
     'theme_color' => 'Theme Color',
     'theme_mode' => 'Theme Mode',
     'panel_layout' => 'Panel Layout',
+    'seed_permissions' => 'Seed Permissions',
+    'permissions_seeded' => 'Permissions synced successfully',
+    'no_permission' => 'You do not have permission to perform this action',
 ];

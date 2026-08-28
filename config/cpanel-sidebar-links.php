@@ -14,6 +14,12 @@ return [
         "route"     => 'cpanel.admins.list'
     ],
     [
+        "title"     => "Permissions Audit",
+        'translated_title' => 'general.titles.permissions_audit',
+        "icon"      => "fa fa-key fa-fw",
+        "route"     => 'cpanel.admins.permissions'
+    ],
+    [
         "title"     => "Blogs",
         'translated_title' => 'general.titles.blogs',
         "icon"      => "fa fa-newspaper fa-fw",

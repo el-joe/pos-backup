@@ -31,15 +31,24 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">{{ __('general.pages.settings.'.($activeGroup)) }}</h4>
-                    <button type="button" wire:click="save" class="btn btn-primary" wire:loading.attr="disabled">
-                        <span wire:loading.remove>
-                            <i class="fa fa-save me-1"></i> {{ __('general.pages.settings.save') }}
-                        </span>
-                        <span wire:loading>
-                            <span class="spinner-border spinner-border-sm me-1"></span>
-                            {{ __('general.pages.settings.saving') }}
-                        </span>
-                    </button>
+                    <div class="d-flex align-items-center gap-2">
+                        @if(admin()->type === 'super_admin')
+                            <button type="button" wire:click="seedPermissions"
+                                wire:confirm="Are you sure? This will resync all permissions."
+                                class="btn btn-outline-secondary" wire:loading.attr="disabled">
+                                <i class="fa fa-sync me-1"></i> {{ __('settings.seed_permissions') }}
+                            </button>
+                        @endif
+                        <button type="button" wire:click="save" class="btn btn-primary" wire:loading.attr="disabled">
+                            <span wire:loading.remove>
+                                <i class="fa fa-save me-1"></i> {{ __('general.pages.settings.save') }}
+                            </span>
+                            <span wire:loading>
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                {{ __('general.pages.settings.saving') }}
+                            </span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="card-body">

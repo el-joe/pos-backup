@@ -60,6 +60,7 @@ return [
         'administrators' => 'المسؤولون',
         'users' => 'المستخدمون',
         'admins' => 'المشرفون',
+        'permissions_audit' => 'مراجعة الصلاحيات',
         'roles-permissions' => 'الأدوار والصلاحيات',
         'reports' => 'التقارير',
         'financial-reports' => 'التقارير المالية',

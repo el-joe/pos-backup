@@ -15,6 +15,13 @@
 
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.settings.' . $activeGroup)" icon="fa fa-cog" :render-table="false">
         <x-slot:actions>
+            @if(admin()->type === 'super_admin')
+                <button type="button" wire:click="seedPermissions"
+                    wire:confirm="Are you sure? This will resync all permissions."
+                    class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" wire:loading.attr="disabled">
+                    <i class="fa fa-sync"></i> {{ __('settings.seed_permissions') }}
+                </button>
+            @endif
             <button type="button" wire:click="save" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600" wire:loading.attr="disabled">
                 <span wire:loading.remove class="inline-flex items-center gap-2">
                     <i class="fa fa-save"></i> {{ __('general.pages.settings.save') }}

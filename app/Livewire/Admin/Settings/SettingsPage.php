@@ -2,13 +2,16 @@
 
 namespace App\Livewire\Admin\Settings;
 
+use App\Enums\AuditLogActionEnum;
 use App\Enums\TenantSettingEnum;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Language;
+use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Setting;
 use App\Models\Tenant\Tax;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -278,6 +281,25 @@ class SettingsPage extends Component
 
         $this->alert('success', __('general.messages.settings_saved_successfully'));
         $this->js('setTimeout(() => { location.reload(); }, 1000);');
+    }
+
+    public function seedPermissions(): void
+    {
+        if (admin()->type !== 'super_admin') {
+            $this->popup('error', __('settings.no_permission'));
+            return;
+        }
+
+        try {
+            Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\Tenant\\PermissionSeeder', '--force' => true]);
+            app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
+            AuditLog::log(AuditLogActionEnum::CREATE_RECORD, ['route' => 'settings']);
+
+            $this->popup('success', __('settings.permissions_seeded'));
+        } catch (\Throwable $e) {
+            $this->popup('error', $e->getMessage());
+        }
     }
 
     public function getGroupedSettingsProperty()

@@ -20,4 +20,7 @@ return [
     'theme_color' => 'لون السمة',
     'theme_mode' => 'وضع السمة',
     'panel_layout' => 'تخطيط اللوحة',
+    'seed_permissions' => 'مزامنة الصلاحيات',
+    'permissions_seeded' => 'تمت مزامنة الصلاحيات بنجاح',
+    'no_permission' => 'ليس لديك صلاحية للقيام بهذا الإجراء',
 ];
