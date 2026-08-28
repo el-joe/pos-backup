@@ -37,7 +37,10 @@ class BackfillLedgerCommand extends Command
             $sub->selectRaw(1)
                 ->from('journal_entries')
                 ->whereColumn('journal_entries.referenceable_id', 'transactions.id')
-                ->where('journal_entries.referenceable_type', Transaction::class);
+                ->whereIn('journal_entries.referenceable_type', [
+                    Transaction::class,
+                    'App\\Models\\Tenant\\Transaction',
+                ]);
         });
 
         $total = $query->count();
