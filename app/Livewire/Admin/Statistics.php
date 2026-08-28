@@ -2,12 +2,18 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Tenant\Branch;
+use App\Models\Tenant\CashRegister;
 use App\Models\Tenant\Expense;
+use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Refund;
 use App\Models\Tenant\Sale;
+use App\Models\Tenant\SaleItem;
+use App\Models\Tenant\Stock;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Statistics extends Component
@@ -26,6 +32,15 @@ class Statistics extends Component
     public $operatingBreakdownData = [];
     public $collectionsSnapshotLabels = [];
     public $collectionsSnapshotData = [];
+
+    public $branches = [];
+    public $topProducts = [];
+    public $topCustomers = [];
+    public $topSuppliers = [];
+    public $lowStockProducts = [];
+    public $paymentMethodBreakdown = [];
+    public $cashRegisterSummary = [];
+    public $profitSummary = [];
 
     protected function salesFilters(array $overrides = []): array
     {
@@ -143,6 +158,19 @@ class Statistics extends Component
 
         $this->getDailyChartData();
         $this->getMonthlyChartData();
+
+        $this->topProducts = $this->getTopProducts();
+        $this->topCustomers = $this->getTopCustomers();
+        $this->topSuppliers = $this->getTopSuppliers();
+        $this->lowStockProducts = $this->getLowStockProducts();
+        $this->paymentMethodBreakdown = $this->getPaymentMethodBreakdown();
+        $this->cashRegisterSummary = $this->getCashRegisterSummary();
+        $this->profitSummary = $this->getProfitSummary();
+
+        $this->data['totalRefunds'] = $totalSalesRefunded + $totalPurchaseRefunded;
+        $this->data['grossProfit'] = $this->profitSummary['gross_profit'];
+        $this->data['netProfit'] = $this->profitSummary['net_profit'];
+        $this->data['profitMarginPct'] = $this->profitSummary['profit_margin_pct'];
     }
 
     function getDailyChartData(){
@@ -235,7 +263,208 @@ class Statistics extends Component
         })->toArray();
     }
 
+    public function getTopProducts(int $limit = 10): array
+    {
+        $filters = $this->salesFilters();
+
+        return SaleItem::query()
+            ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+            ->join('products', 'products.id', '=', 'sale_items.product_id')
+            ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
+            ->when($filters['branch_id'] ?? null, fn($q, $v) => $q->where('sales.branch_id', $v))
+            ->when($filters['customer_id'] ?? null, fn($q, $v) => $q->where('sales.customer_id', $v))
+            ->when($filters['from_date'] ?? null, fn($q, $v) => $q->whereDate('sales.order_date', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn($q, $v) => $q->whereDate('sales.order_date', '<=', $v))
+            ->groupBy('products.id', 'products.name', 'brands.name')
+            ->orderByDesc(DB::raw('SUM(sale_items.qty - COALESCE(sale_items.refunded_qty, 0))'))
+            ->limit($limit)
+            ->get([
+                'products.name as product_name',
+                'brands.name as brand',
+                DB::raw('SUM(sale_items.qty - COALESCE(sale_items.refunded_qty, 0)) as total_qty'),
+                DB::raw('SUM((sale_items.qty - COALESCE(sale_items.refunded_qty, 0)) * sale_items.sell_price) as total_revenue'),
+            ])
+            ->map(fn($row) => [
+                'product_name' => $row->product_name,
+                'brand' => $row->brand,
+                'total_qty' => (float) $row->total_qty,
+                'total_revenue' => (float) $row->total_revenue,
+            ])
+            ->toArray();
+    }
+
+    public function getTopCustomers(int $limit = 10): array
+    {
+        // grand_total_amount is a computed accessor (tax/discount aware), so
+        // aggregate in PHP rather than in SQL.
+        return Sale::filter($this->salesFilters())
+            ->whereNotNull('customer_id')
+            ->with('customer')
+            ->get()
+            ->groupBy('customer_id')
+            ->map(function ($sales) {
+                $customer = $sales->first()->customer;
+
+                return [
+                    'customer_name' => $customer->name ?? '-',
+                    'total_purchases_count' => $sales->count(),
+                    'total_amount' => (float) $sales->sum(fn($sale) => $sale->grand_total_amount),
+                ];
+            })
+            ->sortByDesc('total_amount')
+            ->take($limit)
+            ->values()
+            ->toArray();
+    }
+
+    public function getTopSuppliers(int $limit = 10): array
+    {
+        // total_amount is a computed accessor, so aggregate in PHP.
+        return Purchase::filter($this->purchaseFilters())
+            ->whereNotNull('supplier_id')
+            ->with('supplier')
+            ->get()
+            ->groupBy('supplier_id')
+            ->map(function ($purchases) {
+                $supplier = $purchases->first()->supplier;
+
+                return [
+                    'supplier_name' => $supplier->name ?? '-',
+                    'total_purchases_count' => $purchases->count(),
+                    'total_amount' => (float) $purchases->sum(fn($purchase) => $purchase->total_amount),
+                ];
+            })
+            ->sortByDesc('total_amount')
+            ->take($limit)
+            ->values()
+            ->toArray();
+    }
+
+    public function getLowStockProducts(): array
+    {
+        return Stock::query()
+            ->join('products', 'products.id', '=', 'stocks.product_id')
+            ->leftJoin('branches', 'branches.id', '=', 'stocks.branch_id')
+            ->when($this->filter['branch_id'] ?? null, fn($q, $v) => $q->where('stocks.branch_id', $v))
+            ->whereColumn('stocks.qty', '<', DB::raw('COALESCE(products.alert_qty, 5)'))
+            ->orderBy('stocks.qty')
+            ->limit(20)
+            ->get([
+                'products.name as product_name',
+                'stocks.qty as current_qty',
+                DB::raw('COALESCE(products.alert_qty, 5) as alert_qty'),
+                'branches.name as branch_name',
+            ])
+            ->map(fn($row) => [
+                'product_name' => $row->product_name,
+                'current_qty' => (float) $row->current_qty,
+                'alert_qty' => (float) $row->alert_qty,
+                'branch_name' => $row->branch_name,
+            ])
+            ->toArray();
+    }
+
+    public function getPaymentMethodBreakdown(): array
+    {
+        $filters = $this->salesFilters();
+
+        $saleIds = Sale::filter($filters)->pluck('id');
+
+        $rows = OrderPayment::query()
+            ->join('accounts', 'accounts.id', '=', 'order_payments.account_id')
+            ->join('payment_methods', 'payment_methods.id', '=', 'accounts.payment_method_id')
+            ->where('order_payments.payable_type', Sale::class)
+            ->whereIn('order_payments.payable_id', $saleIds)
+            ->groupBy('payment_methods.id', 'payment_methods.name')
+            ->get([
+                'payment_methods.name as method_name',
+                DB::raw('COUNT(order_payments.id) as count'),
+                DB::raw('SUM(order_payments.amount) as total_amount'),
+            ]);
+
+        $grandTotal = (float) $rows->sum('total_amount');
+
+        return $rows->map(fn($row) => [
+            'method_name' => $row->method_name,
+            'count' => (int) $row->count,
+            'total_amount' => (float) $row->total_amount,
+            'percentage' => $grandTotal > 0 ? round(((float) $row->total_amount / $grandTotal) * 100, 1) : 0,
+        ])->toArray();
+    }
+
+    public function getCashRegisterSummary(): array
+    {
+        $register = CashRegister::filter([
+            'branch_id' => $this->filter['branch_id'] ?? (admin()->branch_id ?? null),
+            'not_closed' => true,
+        ])->latest('opened_at')->first();
+
+        if (!$register) {
+            return [
+                'is_open' => false,
+                'opening_balance' => 0,
+                'closing_balance' => 0,
+                'total_sales' => 0,
+                'total_expenses' => 0,
+            ];
+        }
+
+        return [
+            'is_open' => true,
+            'opening_balance' => (float) $register->opening_balance,
+            'closing_balance' => (float) $register->calculated_closing_balance,
+            'total_sales' => (float) $register->total_sales,
+            'total_expenses' => (float) $register->total_expenses,
+        ];
+    }
+
+    public function getProfitSummary(): array
+    {
+        $filters = $this->salesFilters();
+
+        $totalSales = (float) Sale::filter($filters)->get()->sum(fn($sale) => $sale->grand_total_amount);
+
+        $totalCogs = (float) SaleItem::query()
+            ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+            ->when($filters['branch_id'] ?? null, fn($q, $v) => $q->where('sales.branch_id', $v))
+            ->when($filters['customer_id'] ?? null, fn($q, $v) => $q->where('sales.customer_id', $v))
+            ->when($filters['from_date'] ?? null, fn($q, $v) => $q->whereDate('sales.order_date', '>=', $v))
+            ->when($filters['to_date'] ?? null, fn($q, $v) => $q->whereDate('sales.order_date', '<=', $v))
+            ->sum(DB::raw('(sale_items.qty - COALESCE(sale_items.refunded_qty, 0)) * sale_items.unit_cost'));
+
+        $totalExpenses = (float) Expense::filter($this->expenseFilters())->sum('amount');
+
+        $grossProfit = $totalSales - $totalCogs;
+        $netProfit = $grossProfit - $totalExpenses;
+        $profitMarginPct = $totalSales > 0 ? round(($netProfit / $totalSales) * 100, 2) : 0;
+
+        return [
+            'gross_profit' => round($grossProfit, 2),
+            'net_profit' => round($netProfit, 2),
+            'profit_margin_pct' => $profitMarginPct,
+        ];
+    }
+
+    public function applyFilters()
+    {
+        $this->getData();
+    }
+
+    public function resetFilters()
+    {
+        $this->filter = [
+            'branch_id' => null,
+            'from_date' => now()->startOfMonth()->toDateString(),
+            'to_date' => now()->toDateString(),
+        ];
+
+        $this->getData();
+    }
+
     function mount() {
+        $this->filter['from_date'] = $this->filter['from_date'] ?? now()->startOfMonth()->toDateString();
+        $this->filter['to_date'] = $this->filter['to_date'] ?? now()->toDateString();
+        $this->branches = Branch::orderBy('name')->get(['id', 'name'])->toArray();
         $this->getData();
     }
 
