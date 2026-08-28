@@ -88,12 +88,13 @@ class PayrollRunsList extends Component
             return;
         }
 
-        $this->payrollRunService->update($this->current->id, [
-            'status' => PayrollRunStatusEnum::APPROVED->value,
-        ]);
-
         try {
-            $this->payrollRunService->generateSlips($this->current->fresh());
+            DB::transaction(function () {
+                $this->payrollRunService->update($this->current->id, [
+                    'status' => PayrollRunStatusEnum::APPROVED->value,
+                ]);
+                $this->payrollRunService->generateSlips($this->current->fresh());
+            });
             $this->popup('success', __('general.messages.hrm.payroll_run_approved'));
         } catch (\Throwable $e) {
             $this->popup('error', $e->getMessage());
