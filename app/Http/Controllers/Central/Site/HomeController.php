@@ -12,6 +12,7 @@ use App\Models\Plan;
 use App\Models\Slider;
 use App\Services\PlanFeaturePresentationService;
 use App\Services\PlanPricingService;
+use App\Services\SeoService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -30,12 +31,51 @@ class HomeController extends Controller
             ->limit(4)
             ->get();
 
+        $locale = app()->getLocale();
+
+        $seoHtml = SeoService::page([
+            'title' => 'Mohaaseb — Cloud ERP, POS & Accounting Software',
+            'description' => 'Manage your business with Mohaaseb. Complete POS, accounting, HRM, and contracting ERP system for Arabic and English businesses.',
+            'canonical' => url('/' . $locale),
+            'og_type' => 'website',
+            'locale' => $locale === 'ar' ? 'ar_EG' : 'en_US',
+            'hreflang' => [
+                ['lang' => 'en', 'url' => url('/en')],
+                ['lang' => 'ar', 'url' => url('/ar')],
+            ],
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'Organization',
+                'name' => 'Mohaaseb',
+                'url' => url('/'),
+                'logo' => asset('light-logo.svg'),
+                // No social links config found in the codebase (grepped config/*.php,
+                // Setting model) — leave sameAs empty until such a config exists.
+                'sameAs' => [],
+            ],
+        ]);
+
         return landingLayoutView('home',get_defined_vars());
     }
 
     function blogs($lang = null)
     {
         $seoData = SeoHelper::render('blogs');
+
+        $locale = app()->getLocale();
+        $seoHtml = SeoService::page([
+            'title' => 'Blog — Mohaaseb',
+            'description' => 'Tips, guides, and updates about business management, accounting, and ERP software.',
+            'canonical' => url($locale . '/blogs'),
+            'og_type' => 'website',
+            'locale' => $locale === 'ar' ? 'ar_EG' : 'en_US',
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'Blog',
+                'name' => 'Blog — Mohaaseb',
+                'url' => url($locale . '/blogs'),
+            ],
+        ]);
 
         return landingLayoutView('blogs', get_defined_vars());
     }
@@ -69,6 +109,30 @@ class HomeController extends Controller
             'content' => $blog->content,
         ]);
 
+        $canonical = route('lang.blogs.show', ['lang' => app()->getLocale(), 'slug' => $blog->slug]);
+        $ogImage = url($blog->image_path);
+
+        $seoHtml = SeoService::page([
+            'title' => $blog->title . ' | Mohaaseb Blog',
+            'description' => strip_tags((string) $blog->excerpt),
+            'canonical' => $canonical,
+            'og_image' => $ogImage,
+            'og_type' => 'article',
+            'locale' => app()->getLocale() === 'ar' ? 'ar_EG' : 'en_US',
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'Article',
+                'headline' => $blog->title,
+                'datePublished' => optional($blog->created_at)->toIso8601String(),
+                'dateModified' => optional($blog->updated_at)->toIso8601String(),
+                'image' => $ogImage,
+                'author' => [
+                    '@type' => 'Organization',
+                    'name' => 'Mohaaseb',
+                ],
+            ],
+        ]);
+
         return landingLayoutView('blog-details', get_defined_vars());
     }
 
@@ -90,11 +154,40 @@ class HomeController extends Controller
             ])->all(),
         ]);
 
+        $canonical = url("/{$lang}/faqs");
+        $mainEntity = $faqs->map(fn (Faq $faq) => [
+            '@type' => 'Question',
+            'name' => $faq->question,
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => strip_tags((string) $faq->answer),
+            ],
+        ])->values()->all();
+
+        $seoHtml = SeoService::page([
+            'title' => 'Frequently Asked Questions — Mohaaseb',
+            'description' => 'Find answers to common questions about Mohaaseb ERP and billing.',
+            'canonical' => $canonical,
+            'locale' => app()->getLocale() === 'ar' ? 'ar_EG' : 'en_US',
+            'schema' => $mainEntity ? [
+                '@context' => 'https://schema.org',
+                '@type' => 'FAQPage',
+                'mainEntity' => $mainEntity,
+            ] : [],
+        ]);
+
         return landingLayoutView('faqs', get_defined_vars());
     }
 
     function contactUsView()
     {
+        $seoHtml = SeoService::page([
+            'title' => 'Contact Us — Mohaaseb',
+            'description' => 'Get in touch with the Mohaaseb team for support or inquiries.',
+            'canonical' => url('/contact'),
+            'locale' => app()->getLocale() === 'ar' ? 'ar_EG' : 'en_US',
+        ]);
+
         return landingLayoutView('contact', get_defined_vars());
     }
 

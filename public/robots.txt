@@ -9,6 +9,9 @@ Disallow: /private/
 Disallow: /*.json$
 Disallow: /*?*search=
 Disallow: /*?*q=
+Disallow: /cpanel
+Disallow: /register
+Disallow: /payment
 
 User-agent: AhrefsBot
 Disallow: /
@@ -19,4 +22,4 @@ Disallow: /
 User-agent: MJ12bot
 Disallow: /
 
-Sitemap: https://mohaaseb.com/sitemap.xml
+Sitemap: http://mohaaseb.loc/sitemap.xml

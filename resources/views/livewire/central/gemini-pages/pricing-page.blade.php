@@ -18,37 +18,14 @@
         <p class="max-w-2xl mx-auto mt-6 text-lg leading-relaxed text-slate-500 dark:text-slate-400">
             {{ __('gemini-landing.pricing_page.subtitle') }}
         </p>
-
-        <div class="flex items-center justify-center mt-12">
-            <div class="relative inline-flex p-1.5 bg-slate-100/80 dark:bg-slate-800/60 backdrop-blur-md rounded-full ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-inner" role="group" aria-label="{{ __('gemini-landing.pricing_page.billing_frequency_aria') }}">
-
-                <button type="button"
-                    wire:click="setBilling('monthly')"
-                    aria-pressed="{{ !$this->isYearly() ? 'true' : 'false' }}"
-                    class="relative z-10 w-32 py-2.5 text-sm font-bold text-center rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 {{ !$this->isYearly() ? 'bg-white text-slate-900 shadow-md shadow-slate-200/50 ring-1 ring-slate-200/50 dark:bg-slate-700 dark:text-white dark:shadow-none dark:ring-slate-600' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50' }}">
-                    {{ __('gemini-landing.pricing_page.billing_monthly') }}
-                </button>
-
-                <button type="button"
-                    wire:click="setBilling('yearly')"
-                    aria-pressed="{{ $this->isYearly() ? 'true' : 'false' }}"
-                    class="relative z-10 flex items-center justify-center w-44 gap-2 py-2.5 text-sm font-bold text-center rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 {{ $this->isYearly() ? 'bg-white text-slate-900 shadow-md shadow-slate-200/50 ring-1 ring-slate-200/50 dark:bg-slate-700 dark:text-white dark:shadow-none dark:ring-slate-600' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50' }}">
-                    {{ __('gemini-landing.pricing_page.billing_yearly') }}
-                    <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-black tracking-wider text-emerald-700 uppercase bg-emerald-100/80 rounded-full dark:bg-emerald-500/20 dark:text-emerald-400 shadow-sm border border-emerald-200/50 dark:border-emerald-500/30">
-                        {{ __('gemini-landing.pricing_page.save_20') }}
-                    </span>
-                </button>
-
-            </div>
-        </div>
     </header>
 
-    <section class="container px-6 mx-auto max-w-7xl lg:px-8">
-        <div class="grid grid-cols-1 gap-8 mx-auto mt-8 lg:grid-cols-2 max-w-md lg:max-w-2xl items-stretch">
+    <section class="container px-6 mx-auto max-w-6xl lg:px-8">
+        <div class="grid max-w-2xl grid-cols-1 gap-10 mx-auto mt-8 lg:grid-cols-2 lg:max-w-none items-stretch">
             @foreach($plans as $plan)
             @php
             $isSelected = (int) ($selectedPlanId ?? 0) === (int) $plan['id'];
-            $displayPrice = $this->isYearly() ? ($plan['year'] ?? 0) : ($plan['month'] ?? 0);
+            $displayPrice = $plan['month'] ?? 0;
             @endphp
 
             <div role="button"
@@ -57,10 +34,10 @@
                 wire:keydown.enter.prevent="setPlan({{ (int) $plan['id'] }})"
                 wire:keydown.space.prevent="setPlan({{ (int) $plan['id'] }})"
                 aria-pressed="{{ $isSelected ? 'true' : 'false' }}"
-                class="relative flex flex-col w-full text-left transition-all duration-300 bg-white border rounded-2xl dark:!bg-slate-900 focus:outline-none {{ $isSelected ? 'border-indigo-600 ring-2 ring-indigo-600 shadow-xl dark:border-indigo-500 dark:ring-indigo-500 scale-[1.02] z-10' : 'border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md hover:-translate-y-1' }}">
+                class="relative flex flex-col w-full text-left transition-all duration-300 bg-white border rounded-3xl dark:!bg-slate-900 focus:outline-none {{ $isSelected ? 'border-indigo-600 ring-2 ring-indigo-600 shadow-2xl dark:border-indigo-500 dark:ring-indigo-500 scale-[1.02] z-10' : 'border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-xl hover:-translate-y-1' }}">
 
                 @if($isSelected)
-                <div class="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl bg-indigo-600 dark:bg-indigo-500" aria-hidden="true"></div>
+                <div class="absolute inset-x-0 top-0 h-1.5 rounded-t-3xl bg-indigo-600 dark:bg-indigo-500" aria-hidden="true"></div>
                 @endif
 
                 @if(!empty($plan['recommended']))
@@ -72,7 +49,7 @@
                 </div>
                 @endif
 
-                <div class="flex flex-col flex-1 p-8 xl:p-10">
+                <div class="flex flex-col flex-1 p-10 xl:p-12">
                     <div class="mb-6">
                         <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
                             {{ $plan['name'] }}
@@ -83,10 +60,10 @@
                     </div>
 
                     <div class="flex items-baseline gap-2 mb-2">
-                        <span class="text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                        <span class="text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                             ${{ number_format((float) $displayPrice, 0) }}
                         </span>
-                        <span class="text-base font-medium text-slate-500 dark:text-slate-400">/{{ $this->isYearly() ? __('gemini-landing.common.period_year') : __('gemini-landing.common.period_month') }}</span>
+                        <span class="text-base font-medium text-slate-500 dark:text-slate-400">/{{ __('gemini-landing.common.period_month') }}</span>
                     </div>
 
                     @if(!empty($plan['recommended']))

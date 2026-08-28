@@ -13,6 +13,7 @@ use App\Models\RegisterRequest;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Services\PlanPricingService;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
@@ -24,6 +25,12 @@ class RegisterController extends Controller
 {
     function register() {
         $countries = Country::select('id','name')->get();
+
+        $seoHtml = SeoService::page([
+            'title' => 'Register',
+            'robots' => 'noindex,nofollow',
+        ]);
+
         return view('central.tenant.register', get_defined_vars());
     }
 

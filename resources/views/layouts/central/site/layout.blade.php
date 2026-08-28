@@ -4,9 +4,15 @@
 	<meta charset="utf-8">
     {{-- <title>@yield('title', __('website.titles.main'))</title> --}}
 
-    @isset($seoData)
+    @if(isset($seoHtml))
+    {!! $seoHtml !!}
+    @elseif(isset($seoData))
     {!! seo($seoData) !!}
-    @endisset
+    @endif
+
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Mohaaseb","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"99","priceCurrency":"SAR"}}
+    </script>
 
     <meta name="keywords" content="mohaaseb.com, ERP software,mohaseb erp system, POS system, business management, inventory management, accounting software, sales management, purchase management, reporting software,erp,enterprise resource management software, enterprise resource planning software, enterprise resource planning software, enterprise resource software, erp enterprise resource planning software, erp software, erp system">
 

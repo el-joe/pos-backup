@@ -3,6 +3,7 @@
 namespace App\Livewire\Central\Site;
 
 use App\Models\Plan;
+use App\Services\SeoService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -147,6 +148,40 @@ class PricingPage extends Component
 
     public function render()
     {
-        return view('livewire.central.'. defaultLandingLayout() .'.pricing-page');
+        $monthly = collect($this->plans)->firstWhere('slug', 'monthly');
+        $annual = collect($this->plans)->firstWhere('slug', 'annual');
+
+        $offers = array_values(array_filter([
+            $monthly ? [
+                '@type' => 'Offer',
+                'name' => 'Monthly',
+                'price' => (string) $monthly['month'],
+                'priceCurrency' => 'SAR',
+                'billingDuration' => 'P1M',
+            ] : null,
+            $annual ? [
+                '@type' => 'Offer',
+                'name' => 'Annual',
+                'price' => (string) $annual['year'],
+                'priceCurrency' => 'SAR',
+                'billingDuration' => 'P1Y',
+            ] : null,
+        ]));
+
+        $seoHtml = SeoService::page([
+            'title' => 'Pricing — Mohaaseb ERP Plans',
+            'description' => 'Simple transparent pricing. Monthly and annual plans with full access to all features.',
+            'canonical' => route('pricing'),
+            'locale' => app()->getLocale() === 'ar' ? 'ar_EG' : 'en_US',
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@type' => 'Product',
+                'name' => 'Mohaaseb ERP',
+                'offers' => $offers,
+            ],
+        ]);
+
+        return view('livewire.central.'. defaultLandingLayout() .'.pricing-page')
+            ->layout('layouts.central.gemini.layout', ['seoHtml' => $seoHtml]);
     }
 }
