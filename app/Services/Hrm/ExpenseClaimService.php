@@ -91,7 +91,10 @@ class ExpenseClaimService
             if (!$claim) {
                 throw new \RuntimeException('Expense claim not found');
             }
-            if ($claim->status !== ExpenseClaimStatusEnum::APPROVED) {
+            $statusValue = $claim->status instanceof ExpenseClaimStatusEnum
+                ? $claim->status->value
+                : $claim->status;
+            if ($statusValue !== ExpenseClaimStatusEnum::APPROVED->value) {
                 throw new \RuntimeException('Only approved claims can be paid');
             }
             if ($claim->transaction_id) {
