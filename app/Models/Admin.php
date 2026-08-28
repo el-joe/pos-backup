@@ -14,6 +14,7 @@ class Admin extends Authenticatable
         'email',
         'password',
         'active',
+        'type',
     ];
 
     function setPasswordAttribute($value)

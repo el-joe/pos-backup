@@ -25,9 +25,8 @@
             @foreach($plans as $plan)
             @php
             $isSelected = (int) ($selectedPlanId ?? 0) === (int) $plan['id'];
-            $displayPrice = ($plan['type'] ?? 'monthly') === 'yearly'
-                ? round(($plan['price'] ?? 0) / 12, 2)
-                : ($plan['price'] ?? 0);
+            $isYearly = ($plan['type'] ?? 'monthly') === 'yearly';
+            $displayPrice = $plan['price'] ?? 0;
             @endphp
 
             <div role="button"
@@ -65,7 +64,7 @@
                         <span class="text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                             ${{ number_format((float) $displayPrice, 0) }}
                         </span>
-                        <span class="text-base font-medium text-slate-500 dark:text-slate-400">/{{ __('gemini-landing.common.period_month') }}</span>
+                        <span class="text-base font-medium text-slate-500 dark:text-slate-400">/{{ $isYearly ? __('gemini-landing.common.period_year') : __('gemini-landing.common.period_month') }}</span>
                     </div>
 
                     @if(!empty($plan['recommended']))

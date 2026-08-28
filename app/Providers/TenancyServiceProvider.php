@@ -107,6 +107,10 @@ class TenancyServiceProvider extends ServiceProvider
                         Permission::upsert($permissionsData, ['name', 'guard_name']);
                         $permissionRegistrar->forgetCachedPermissions();
                     }
+
+                    if (Schema::hasTable('roles')) {
+                        app(\Database\Seeders\Tenant\DefaultRolesSeeder::class)->run();
+                    }
                 }
             ],
             Events\RevertingToCentralContext::class => [],

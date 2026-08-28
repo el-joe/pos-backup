@@ -35,6 +35,11 @@ class SaleRequestDetails extends Component
 
     public function updateStatus(string $status): void
     {
+        if (!adminCan('sale_requests.update')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'request.id' => 'required',
         ]);
@@ -46,6 +51,11 @@ class SaleRequestDetails extends Component
 
     public function convertToOrder(): void
     {
+        if (!adminCan('sale_requests.approve')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         // $sale = $this->saleRequestService->convertToSaleOrder($this->request->id);
         // $this->redirect(route('admin.sales.details', $sale->id));
     }

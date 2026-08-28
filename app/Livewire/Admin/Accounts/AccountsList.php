@@ -61,6 +61,11 @@ class AccountsList extends Component
     }
 
     function delete() {
+        if (!adminCan('accounts.delete')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         if(!$this->current) {
             $this->popup('error','Account not found');
             return;

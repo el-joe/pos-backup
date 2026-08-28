@@ -47,6 +47,11 @@ class DeferredSalesList extends Component
     }
 
     function savePayment() {
+        if (!adminCan('deferred_sales.pay')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'payment.account_id' => 'required|exists:accounts,id',
             'payment.amount' => 'required|numeric|min:0.01|max:'.$this->current->due_amount,
@@ -88,6 +93,11 @@ class DeferredSalesList extends Component
 
     public function deliverInventory(int $saleId): void
     {
+        if (!adminCan('deferred_sales.deliver')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         try{
             $sale = $this->sellService->deliverDeferredInventory($saleId);
 

@@ -119,6 +119,11 @@ class AddSaleRequest extends Component
 
     public function saveRequest(): void
     {
+        if (!adminCan('sale_requests.create')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'data.branch_id' => 'required|integer',
             'data.customer_id' => 'required|integer',

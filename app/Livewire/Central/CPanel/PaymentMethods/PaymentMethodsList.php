@@ -29,6 +29,11 @@ class PaymentMethodsList extends Component
 
     public function delete(): void
     {
+        if (cpanelAdmin()->type !== 'super_admin') {
+            $this->popup('error', 'You are not authorized to perform this action');
+            return;
+        }
+
         if (!$this->current) {
             $this->popup('error', 'Payment Method not found');
             return;

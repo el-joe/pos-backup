@@ -35,6 +35,11 @@ class PurchaseRequestDetails extends Component
 
     public function updateStatus(string $status): void
     {
+        if (!adminCan('purchase_requests.update')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->request->update(['status' => $status]);
         $this->request = $this->request->refresh();
         $this->alert('success', 'Status updated.');
@@ -42,6 +47,11 @@ class PurchaseRequestDetails extends Component
 
     public function convertToOrder(): void
     {
+        if (!adminCan('purchase_requests.approve')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         // $purchase = $this->purchaseRequestService->convertToPurchaseOrder($this->request->id);
         // $this->redirect(route('admin.purchases.details', $purchase->id));
     }

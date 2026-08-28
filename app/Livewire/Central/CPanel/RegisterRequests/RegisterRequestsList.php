@@ -55,6 +55,11 @@ class RegisterRequestsList extends Component
 
     function changeStatus($id, $status)
     {
+        if (cpanelAdmin()->type !== 'super_admin') {
+            $this->popup('error', 'You are not authorized to perform this action');
+            return;
+        }
+
         $this->current = RegisterRequest::find($id);
         $this->current->status = $status;
 

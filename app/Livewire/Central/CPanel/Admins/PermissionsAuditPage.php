@@ -56,6 +56,11 @@ class PermissionsAuditPage extends Component
 
     public function seedAll()
     {
+        if (cpanelAdmin()->type !== 'super_admin') {
+            $this->popup('error', 'You are not authorized to perform this action');
+            return;
+        }
+
         foreach (Tenant::all() as $tenant) {
             tenancy()->initialize($tenant);
             Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\Tenant\\PermissionSeeder', '--force' => true]);
@@ -69,6 +74,11 @@ class PermissionsAuditPage extends Component
 
     public function seedSingle($tenantId)
     {
+        if (cpanelAdmin()->type !== 'super_admin') {
+            $this->popup('error', 'You are not authorized to perform this action');
+            return;
+        }
+
         $tenant = Tenant::find($tenantId);
 
         if (!$tenant) {

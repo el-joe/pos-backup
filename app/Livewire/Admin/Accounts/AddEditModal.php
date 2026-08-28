@@ -53,6 +53,11 @@ class AddEditModal extends Component
 
 
     function save() {
+        if (!adminCan('accounts.create,accounts.update')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         if($this->subPage && !isset($this->data['type'])){
             unset($this->rules['type']);
         }

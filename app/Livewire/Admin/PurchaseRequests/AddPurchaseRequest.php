@@ -136,6 +136,11 @@ class AddPurchaseRequest extends Component
 
     public function saveRequest(): void
     {
+        if (!adminCan('purchase_requests.create')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         if(!$this->validator($this->data,[
             'branch_id' => 'required|integer',
             'request_date' => 'required|date',

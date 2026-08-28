@@ -150,6 +150,11 @@ class AddStockTransfer extends Component
     }
 
     function save() {
+        if (!adminCan('stock_transfers.create')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $dataToSave = [
             ...($this->data??[]),
             'items' => $this->items,

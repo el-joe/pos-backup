@@ -39,6 +39,11 @@ class DeferredPurchasesList extends Component
 
     public function receiveInventory(int $purchaseId): void
     {
+        if (!adminCan('deferred_purchases.receive')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         try{
             $purchase = $this->purchaseService->receiveDeferredInventory($purchaseId);
 

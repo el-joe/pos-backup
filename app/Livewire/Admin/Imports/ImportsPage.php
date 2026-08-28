@@ -30,6 +30,11 @@ class ImportsPage extends Component
 
     public function importBranches()
     {
+        if (!adminCan('imports.create')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'branchesFile' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
@@ -46,6 +51,11 @@ class ImportsPage extends Component
 
     public function importProducts()
     {
+        if (!adminCan('imports.create')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'productsFile' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
@@ -62,6 +72,11 @@ class ImportsPage extends Component
 
     public function importCategories()
     {
+        if (!adminCan('imports.create')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'categoriesFile' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
@@ -78,6 +93,11 @@ class ImportsPage extends Component
 
     public function importBrands()
     {
+        if (!adminCan('imports.create')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'brandsFile' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
@@ -94,6 +114,11 @@ class ImportsPage extends Component
 
     public function importUnits()
     {
+        if (!adminCan('imports.create')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'unitsFile' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
@@ -110,6 +135,11 @@ class ImportsPage extends Component
 
     public function importCustomers()
     {
+        if (!adminCan('imports.create')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'customersFile' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
@@ -126,6 +156,11 @@ class ImportsPage extends Component
 
     public function importSuppliers()
     {
+        if (!adminCan('imports.create')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->validate([
             'suppliersFile' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
@@ -142,6 +177,10 @@ class ImportsPage extends Component
 
     public function downloadTemplate($type)
     {
+        if (!adminCan('imports.list,imports.create')) {
+            abort(403);
+        }
+
         $templates = [
             'branches' => [
                 ['name', 'email', 'phone', 'address', 'website', 'active'],

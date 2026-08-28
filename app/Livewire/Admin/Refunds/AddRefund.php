@@ -91,6 +91,11 @@ class AddRefund extends Component
     }
 
     function saveRefund(){
+        if (!adminCan('refunds.create')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
         $this->data['order_type'] = $this->order_type;
         $this->data['order_id'] = $this->order_id;
 

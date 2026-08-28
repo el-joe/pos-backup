@@ -252,7 +252,7 @@ if (!function_exists('defaultPermissionsList')) {
             "categories" => ["list", "create", "update", "delete", 'export'],
             "brands" => ["list", "create", "update", "delete", 'export'],
             "units" => ["list", "create", "update", "delete", 'export'],
-            "stock_transfers" => ["list", "show", "create", "export"],
+            "stock_transfers" => ["list", "show", "create", "approve", "export"],
             "stock_adjustments" => ["list", "show", "create", 'export'],
             "sales" => ["list", "show", "update", "delete", "pay", 'show-invoice', 'export'],
             "customers" => ["list", "show", "create", "update", "delete", 'export'],
@@ -273,6 +273,20 @@ if (!function_exists('defaultPermissionsList')) {
             "discounts" => ["list", "create", "update", "delete", 'export'],
             "taxes" => ["list", "create", "update", "delete", 'export'],
             "general_settings" => ["update"],
+
+            // Sale / purchase requests, refunds, deferred flows
+            'sale_requests' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'export'],
+            'purchase_requests' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'export'],
+            'refunds' => ['list', 'show', 'create', 'delete', 'export'],
+            'deferred_pos' => ['create'],
+            'deferred_purchases' => ['list', 'show', 'receive', 'export'],
+            'deferred_sales' => ['list', 'show', 'pay', 'deliver', 'export'],
+            'accounts' => ['list', 'show', 'create', 'update', 'delete', 'export'],
+            'notifications' => ['list'],
+            'imports' => ['list', 'create'],
+            'api_settings' => ['list', 'update'],
+            'onboarding' => ['dismiss'],
+            'business_type' => ['update'],
 
             // HRM (Admin Panel)
             'hrm_dashboard' => ['list'],

@@ -209,6 +209,11 @@ class PaymentMethodForm extends Component
 
     public function save(): void
     {
+        if (cpanelAdmin()->type !== 'super_admin') {
+            $this->popup('error', 'You are not authorized to perform this action');
+            return;
+        }
+
         $this->validate($this->rules());
 
         $requiredFields = $this->parseRequiredFields();
