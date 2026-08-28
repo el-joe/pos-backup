@@ -62,8 +62,8 @@ class HomePage extends Component
             ->values();
 
         $tenantCountryCounts = Tenant::query()
-            ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(data, '$.country_id')) as country_id, COUNT(*) as total")
-            ->whereRaw("JSON_EXTRACT(data, '$.country_id') IS NOT NULL")
+            ->selectRaw('country_id, COUNT(*) as total')
+            ->whereNotNull('country_id')
             ->groupBy('country_id')
             ->get();
 
