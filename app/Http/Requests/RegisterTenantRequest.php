@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\BusinessTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterTenantRequest extends FormRequest
@@ -23,6 +24,7 @@ class RegisterTenantRequest extends FormRequest
     {
         // i want check if domain is valid domain name or subdomain to current domain
         return [
+            'business_type' => 'required|string|in:' . implode(',', array_column(BusinessTypeEnum::cases(), 'value')),
             'id'=>'required|string|unique:tenants|regex:/^[a-zA-Z0-9_]+$/',
             'phone'=>'required|string',
             'email'=>'required|email',
@@ -36,6 +38,8 @@ class RegisterTenantRequest extends FormRequest
 
     function messages() {
         return [
+            'business_type.required' => 'Please select your business type.',
+            'business_type.in' => 'Please select a valid business type.',
             'id.regex'=>'The id may only contain letters, numbers, and underscores.',
             'domain.regex'=>'The domain format is invalid.',
             'subdomain.regex'=>'The subdomain format is invalid.',

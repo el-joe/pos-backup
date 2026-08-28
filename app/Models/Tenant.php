@@ -21,6 +21,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'currency_id',
         'tax_number',
         'active',
+        'business_type',
     ];
 
     /**
@@ -38,6 +39,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'currency_id',
             'tax_number',
             'active',
+            'business_type',
         ]);
     }
 
@@ -92,6 +94,12 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         $this->syncDataAttribute('active', $value);
     }
 
+    protected function setBusinessTypeAttribute($value): void
+    {
+        $this->attributes['business_type'] = $value;
+        $this->syncDataAttribute('business_type', $value);
+    }
+
     protected function syncDataAttribute(string $key, $value): void
     {
         $data = json_decode($this->attributes['data'] ?? '{}', true) ?: [];
@@ -113,7 +121,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
         $data = json_decode($this->attributes[static::getDataColumn()] ?? '{}', true) ?: [];
 
-        foreach (['name', 'email', 'phone', 'country_id', 'currency_id', 'tax_number', 'active'] as $column) {
+        foreach (['name', 'email', 'phone', 'country_id', 'currency_id', 'tax_number', 'active', 'business_type'] as $column) {
             if (array_key_exists($column, $this->attributes)) {
                 $data[$column] = $this->attributes[$column];
             }

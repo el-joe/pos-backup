@@ -37,6 +37,21 @@
                         </span>
                     </div>
                 </div>
+                @php $tenantBusinessType = \App\Enums\BusinessTypeEnum::tryFrom($tenant->business_type ?? ''); @endphp
+                <div class="col-md-4">
+                    <div class="fw-semibold">Business Type</div>
+                    <div>{{ $tenantBusinessType ? $tenantBusinessType->label() . ' / ' . $tenantBusinessType->labelAr() : '-' }}</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="fw-semibold">Recommended Modules</div>
+                    <div>
+                        @forelse($tenantBusinessType?->recommendedModules() ?? [] as $module)
+                            <span class="badge bg-light text-dark border">{{ $module->label() }}</span>
+                        @empty
+                            -
+                        @endforelse
+                    </div>
+                </div>
             </div>
         </div>
 

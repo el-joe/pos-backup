@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Central\Tenant;
 
+use App\Enums\BusinessTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterTenantRequest;
 use App\Mail\AdminRegisterRequestMail;
@@ -95,9 +96,12 @@ class RegisterController extends Controller
         $id = Str::slug($request->company['name'], '_');
         $id = preg_replace('/[^a-zA-Z0-9_]/', '_', $id);
 
+        $businessType = BusinessTypeEnum::tryFrom($request->company['business_type'] ?? $request->business_type ?? '');
+        $recommendedSystems = array_map(fn ($m) => $m->value, ($businessType?->recommendedModules() ?? []));
+
         $plan = Plan::find($request->plan['id']);
         $period = $request->plan['period'] ?? 'month';
-        $systemsAllowed = collect($request->plan['systems_allowed'] ?? ['pos'])
+        $systemsAllowed = collect($request->plan['systems_allowed'] ?? ($recommendedSystems ?: ['pos']))
             ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))
             ->unique()
             ->values()
@@ -126,6 +130,7 @@ class RegisterController extends Controller
             'tax_number'=>$request->company['tax_number'] ?? null,
             'partner_id' => $request->partner_id ?? null,
             'active'=>false,
+            'business_type' => $businessType?->value,
         ]);
 
         Subscription::create([

@@ -23,6 +23,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Business Type</th>
                             <th>Time</th>
                             <th class="text-center">Read Status</th>
                             <th>Status</th>
@@ -41,6 +42,14 @@
                                 <td>{{ $d['company']['name'] }}</td>
                                 <td>{{ $d['company']['email'] }}</td>
                                 <td>{{ $d['company']['phone'] }}</td>
+                                <td>
+                                    @php $businessType = \App\Enums\BusinessTypeEnum::tryFrom($d['company']['business_type'] ?? $d['business_type'] ?? ''); @endphp
+                                    @if($businessType)
+                                        <span class="badge bg-light text-dark border">{{ $businessType->label() }}</span>
+                                    @else
+                                        <span class="text-muted">—</span>
+                                    @endif
+                                </td>
 
                                 <td class="text-nowrap small text-muted">
                                     {{ $req->created_at->translatedFormat('d M Y h:i A') }}
@@ -133,6 +142,8 @@
                                     <h6 class="card-title text-primary mb-3"><i class="bi bi-building"></i> Company</h6>
                                     <table class="table table-sm table-borderless mb-0">
                                         <tbody>
+                                            @php $detailsBusinessType = \App\Enums\BusinessTypeEnum::tryFrom($selectedDetails['company']['business_type'] ?? $selectedDetails['business_type'] ?? ''); @endphp
+                                            <tr><th class="text-muted" style="width: 100px;">Business Type</th><td>{{ $detailsBusinessType ? $detailsBusinessType->label() . ' / ' . $detailsBusinessType->labelAr() : 'N/A' }}</td></tr>
                                             <tr><th class="text-muted" style="width: 100px;">Name</th><td>{{ $selectedDetails['company']['name'] ?? 'N/A' }}</td></tr>
                                             <tr><th class="text-muted">Email</th><td>{{ $selectedDetails['company']['email'] ?? 'N/A' }}</td></tr>
                                             <tr><th class="text-muted">Phone</th><td>{{ $selectedDetails['company']['phone'] ?? 'N/A' }}</td></tr>

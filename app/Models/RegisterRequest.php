@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BusinessTypeEnum;
 use App\Mail\RegisterRequestAcceptMail;
 use App\Services\PlanPricingService;
 use Illuminate\Database\Eloquent\Model;
@@ -118,6 +119,8 @@ class RegisterRequest extends Model
 
                 $primaryPlan = collect($selectedSystemPlans)->first();
 
+                $businessType = BusinessTypeEnum::tryFrom($request->company['business_type'] ?? $request->business_type ?? '');
+
                 $tenant = Tenant::create([
                     'id' => $id,
                     'name' => $request->company['name'],
@@ -129,6 +132,7 @@ class RegisterRequest extends Model
                     'tax_number' => $request->company['tax_number'] ?? null,
                     'partner_id' => $request->partner_id ?? null,
                     'active' => false,
+                    'business_type' => $businessType?->value,
                 ]);
 
                 Subscription::create([

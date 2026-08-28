@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="{{ asset('template/') }}/css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('template/') }}/images/favicon.png" />
+    <style>
+        .business-type-card { transition: border-color .15s ease; }
+        .business-type-card.active { border-color: #4B49AC !important; border-width: 2px; background: rgba(75, 73, 172, .06); }
+        .business-type-card .mdi { font-size: 1.4rem; }
+    </style>
 </head>
 
 <body>
@@ -40,8 +45,37 @@
                             @endif
                             <h4>New here?</h4>
                             <h6 class="font-weight-light">Join us today! It takes only few steps</h6>
-                            <form class="pt-3" action="{{ route('register-domain') }}" method="POST">
+
+                            <div id="business_type_step" style="{{ old('business_type') ? 'display:none;' : '' }}">
+                                <h6 class="mb-3">Select Your Business Type / اختر نوع نشاطك التجاري</h6>
+                                @error('business_type')
+                                <small class="text-danger d-block mb-2">{{ $message }}</small>
+                                @enderror
+                                @foreach(collect(\App\Enums\BusinessTypeEnum::cases())->groupBy(fn($t) => $t->category()) as $category => $types)
+                                <div class="mb-3">
+                                    <div class="font-weight-bold mb-2">{{ \App\Enums\BusinessTypeEnum::categoryLabel($category) }}</div>
+                                    <div class="row">
+                                        @foreach($types as $type)
+                                        <div class="col-6 col-md-4 mb-2">
+                                            <button type="button" class="btn btn-outline-secondary w-100 h-100 text-left business-type-card" data-value="{{ $type->value }}">
+                                                <i class="mdi {{ $type->icon() }} text-primary"></i>
+                                                <div class="small font-weight-medium">{{ $type->label() }}</div>
+                                                <div class="small text-muted" dir="rtl">{{ $type->labelAr() }}</div>
+                                            </button>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <form class="pt-3" action="{{ route('register-domain') }}" method="POST" id="register_form" style="{{ old('business_type') ? '' : 'display:none;' }}">
                                 @csrf
+                                <div class="alert alert-light border d-flex align-items-center justify-content-between" id="business_type_badge" style="display:none;">
+                                    <span><i class="mdi mdi-check-circle text-success"></i> <span id="business_type_badge_label"></span></span>
+                                    <a href="#" id="business_type_change_link">Change</a>
+                                </div>
+                                <input type="hidden" name="business_type" id="business_type_input" value="{{ old('business_type') }}">
                                 <div class="form-group">
                                     <label>Business Name</label>
                                     <div class="input-group">
@@ -280,6 +314,44 @@
 
             // Initial state
             updateView();
+        })();
+    </script>
+    <script>
+        (function() {
+            const stepEl = document.getElementById('business_type_step');
+            const formEl = document.getElementById('register_form');
+            const input = document.getElementById('business_type_input');
+            const badge = document.getElementById('business_type_badge');
+            const badgeLabel = document.getElementById('business_type_badge_label');
+            const changeLink = document.getElementById('business_type_change_link');
+            const cards = document.querySelectorAll('.business-type-card');
+
+            function selectType(card) {
+                cards.forEach(c => c.classList.remove('active', 'border-primary'));
+                card.classList.add('active', 'border-primary');
+                input.value = card.dataset.value;
+                const label = card.querySelector('.font-weight-medium')?.textContent.trim() || card.dataset.value;
+                const labelAr = card.querySelector('.text-muted')?.textContent.trim() || '';
+                badgeLabel.textContent = label + (labelAr ? ' / ' + labelAr : '');
+                badge.style.display = '';
+                stepEl.style.display = 'none';
+                formEl.style.display = '';
+            }
+
+            cards.forEach(card => {
+                if (card.dataset.value === input.value) {
+                    selectType(card);
+                }
+                card.addEventListener('click', () => selectType(card));
+            });
+
+            if (changeLink) {
+                changeLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    formEl.style.display = 'none';
+                    stepEl.style.display = '';
+                });
+            }
         })();
     </script>
 </body>
