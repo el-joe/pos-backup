@@ -25,7 +25,9 @@
             @foreach($plans as $plan)
             @php
             $isSelected = (int) ($selectedPlanId ?? 0) === (int) $plan['id'];
-            $displayPrice = $plan['month'] ?? 0;
+            $displayPrice = ($plan['type'] ?? 'monthly') === 'yearly'
+                ? round(($plan['price'] ?? 0) / 12, 2)
+                : ($plan['price'] ?? 0);
             @endphp
 
             <div role="button"

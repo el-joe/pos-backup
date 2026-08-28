@@ -41,8 +41,8 @@ class PricingPage extends Component
                     'id' => $plan->id,
                     'slug' => $plan->slug,
                     'name' => $plan->localizedName($locale),
-                    'month' => round((float) $plan->price_month, 2),
-                    'year' => round((float) $plan->price_year, 2),
+                    'price' => round((float) $plan->price, 2),
+                    'type' => $plan->type,
                     'recommended' => $slug === 'annual',
                     'features' => $includedFeatures,
                 ];
@@ -138,7 +138,7 @@ class PricingPage extends Component
             return 0.0;
         }
 
-        return round((float) ($this->isYearly() ? $plan['year'] : $plan['month']), 2);
+        return round((float) $plan['price'], 2);
     }
 
     public function dueNow(): float
@@ -155,14 +155,14 @@ class PricingPage extends Component
             $monthly ? [
                 '@type' => 'Offer',
                 'name' => 'Monthly',
-                'price' => (string) $monthly['month'],
+                'price' => (string) $monthly['price'],
                 'priceCurrency' => 'SAR',
                 'billingDuration' => 'P1M',
             ] : null,
             $annual ? [
                 '@type' => 'Offer',
                 'name' => 'Annual',
-                'price' => (string) $annual['year'],
+                'price' => (string) $annual['price'],
                 'priceCurrency' => 'SAR',
                 'billingDuration' => 'P1Y',
             ] : null,

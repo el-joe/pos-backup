@@ -33,7 +33,7 @@ class PlanSection extends Component
     {
         $plans = Plan::where('active', true)
             ->whereIn('slug', ['monthly', 'annual'])
-            ->orderBy('price_month')->get();
+            ->orderBy('price')->get();
 
         $currentCurrency = Currency::find($this->currency_id ?? null);
 

@@ -20,12 +20,15 @@
                                 <input type="text" class="form-control" wire:model="data.{{ $slug }}.name_ar" dir="rtl">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Price / Month</label>
-                                <input type="number" step="0.01" class="form-control" wire:model="data.{{ $slug }}.price_month">
+                                <label class="form-label">Price</label>
+                                <input type="number" step="0.01" class="form-control" wire:model="data.{{ $slug }}.price">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Price / Year</label>
-                                <input type="number" step="0.01" class="form-control" wire:model="data.{{ $slug }}.price_year">
+                                <label class="form-label">Type</label>
+                                <select class="form-select" wire:model="data.{{ $slug }}.type">
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
                             </div>
                             <div class="col-12">
                                 <div class="form-check form-switch">

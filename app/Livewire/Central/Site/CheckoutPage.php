@@ -114,7 +114,7 @@ class CheckoutPage extends Component
             $plan = $slug ? Plan::query()->active()->where('slug', $slug)->first() : null;
 
             if (!$plan) {
-                $plan = Plan::query()->active()->orderBy('price_month')->first();
+                $plan = Plan::query()->active()->orderBy('price')->first();
             }
         }
 

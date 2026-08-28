@@ -13,15 +13,21 @@ class Plan extends Model
         'name',
         'name_en',
         'name_ar',
-        'price_month',
-        'price_year',
+        'type',
+        'price',
         'slug',
         'active',
     ];
 
     protected $casts = [
         'active' => 'boolean',
+        'price' => 'float',
     ];
+
+    public function isYearly(): bool
+    {
+        return $this->type === 'yearly';
+    }
 
     protected static function boot()
     {

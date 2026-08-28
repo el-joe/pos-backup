@@ -15,8 +15,8 @@ class PlansSeeder extends Seeder
                 'name' => 'Monthly Plan',
                 'name_en' => 'Monthly Plan',
                 'name_ar' => 'الخطة الشهرية',
-                'price_month' => 99.00,
-                'price_year' => 0,
+                'type' => 'monthly',
+                'price' => 99.00,
                 'active' => true,
             ]
         );
@@ -27,8 +27,8 @@ class PlansSeeder extends Seeder
                 'name' => 'Annual Plan',
                 'name_en' => 'Annual Plan',
                 'name_ar' => 'الخطة السنوية',
-                'price_month' => 0,
-                'price_year' => 990.00,
+                'type' => 'yearly',
+                'price' => 990.00,
                 'active' => true,
             ]
         );

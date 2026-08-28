@@ -283,7 +283,7 @@ class HomeController extends Controller
                     $query->where('active', true);
                 }])
                 ->orderByDesc('recommended')
-                ->orderBy('price_month')
+                ->orderBy('price')
                 ->first();
 
             if ($fallbackPlan) {
@@ -356,7 +356,7 @@ class HomeController extends Controller
             ->with(['plan_features.feature' => function ($query) {
                 $query->where('active', true);
             }])
-            ->orderBy('price_month')
+            ->orderBy('price')
             ->orderBy('id')
             ->get();
 

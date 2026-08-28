@@ -8,8 +8,8 @@ class PlanPricingService
 {
     public function calculate(Plan $plan, string $period = 'month', int $systemsCount = 1): array
     {
-        $normalizedPeriod = $period === 'year' ? 'year' : 'month';
-        $basePrice = (float) ($normalizedPeriod === 'year' ? $plan->price_year : $plan->price_month);
+        $normalizedPeriod = $plan->isYearly() ? 'year' : 'month';
+        $basePrice = (float) $plan->price;
 
         $planDiscountPercent = 0.0;
         $planDiscountAmount = 0.0;

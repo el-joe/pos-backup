@@ -17,8 +17,8 @@ class CpanelPlansList extends Component
     public $rules = [
         'data.*.name_en' => 'required|string|max:255',
         'data.*.name_ar' => 'required|string|max:255',
-        'data.*.price_month' => 'required|numeric|min:0',
-        'data.*.price_year' => 'required|numeric|min:0',
+        'data.*.price' => 'required|numeric|min:0',
+        'data.*.type' => 'required|in:monthly,yearly',
         'data.*.active' => 'boolean',
     ];
 
@@ -31,13 +31,15 @@ class CpanelPlansList extends Component
     {
         $plans = Plan::query()->whereIn('slug', ['monthly', 'annual'])->get()->keyBy('slug');
 
+        $defaultTypes = ['monthly' => 'monthly', 'annual' => 'yearly'];
+
         foreach (['monthly', 'annual'] as $slug) {
             $plan = $plans->get($slug);
             $this->data[$slug] = [
                 'name_en' => $plan?->name_en ?? '',
                 'name_ar' => $plan?->name_ar ?? '',
-                'price_month' => $plan?->price_month ?? 0,
-                'price_year' => $plan?->price_year ?? 0,
+                'price' => $plan?->price ?? 0,
+                'type' => $plan?->type ?? $defaultTypes[$slug],
                 'active' => (bool) ($plan?->active ?? true),
             ];
         }
@@ -54,8 +56,8 @@ class CpanelPlansList extends Component
         $this->validate([
             'data.'.$slug.'.name_en' => 'required|string|max:255',
             'data.'.$slug.'.name_ar' => 'required|string|max:255',
-            'data.'.$slug.'.price_month' => 'required|numeric|min:0',
-            'data.'.$slug.'.price_year' => 'required|numeric|min:0',
+            'data.'.$slug.'.price' => 'required|numeric|min:0',
+            'data.'.$slug.'.type' => 'required|in:monthly,yearly',
         ]);
 
         $row = $this->data[$slug];
@@ -64,8 +66,8 @@ class CpanelPlansList extends Component
             'name' => $row['name_en'],
             'name_en' => $row['name_en'],
             'name_ar' => $row['name_ar'],
-            'price_month' => $row['price_month'],
-            'price_year' => $row['price_year'],
+            'price' => $row['price'],
+            'type' => $row['type'],
             'active' => !empty($row['active']),
         ]);
 

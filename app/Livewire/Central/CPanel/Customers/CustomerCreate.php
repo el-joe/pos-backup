@@ -55,7 +55,7 @@ class CustomerCreate extends Component
                 ->where('active', true)
                 ->where('module_name', $module)
                 ->orderByDesc('recommended')
-                ->orderBy('price_month')
+                ->orderBy('price')
                 ->value('id');
 
             if ($module === 'pos') {
@@ -259,7 +259,7 @@ class CustomerCreate extends Component
         $plansByModule = Plan::query()
             ->where('active', true)
             ->orderBy('module_name')
-            ->orderBy('price_month')
+            ->orderBy('price')
             ->orderBy('name')
             ->get()
             ->groupBy(fn (Plan $plan) => is_object($plan->module_name) ? $plan->module_name->value : (string) $plan->module_name);
