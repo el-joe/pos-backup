@@ -22,7 +22,11 @@ class CheckTenantSystem
         });
 
         if (!$hasAccess) {
-            return response()->json(['message' => 'Subscription required for: ' . $system], 403);
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Subscription required for: ' . $system], 403);
+            }
+
+            abort(403, 'Subscription required for: ' . $system);
         }
 
         return $next($request);
