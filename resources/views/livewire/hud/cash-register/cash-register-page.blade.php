@@ -1,4 +1,4 @@
-<div class="row g-4">
+<div class="row g-4" wire:poll.10s="loadData">
     @if(adminCan('cash_register.create'))
     <div class="col-md-8">
         <div class="card shadow-sm">
@@ -106,7 +106,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">{{ __('general.pages.cash_register.closing_balance') }}</label>
-                        <input type="number" class="form-control" wire:model="closing_balance_input">
+                        <input type="number" class="form-control" wire:model="closing_balance_input" x-on:focus="$wire.fillClosingBalance()">
                     </div>
 
                     <div class="mb-3">

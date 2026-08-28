@@ -19,11 +19,17 @@ class CheckService
         /** @var Check $check */
         $check = Check::with(['payable', 'customer', 'branch'])->findOrFail($checkId);
 
+        if (!$check->check_number) {
+            throw new \RuntimeException('Check number is required before processing this check');
+        }
         if ($check->direction !== CheckDirectionEnum::RECEIVED->value) {
             throw new \RuntimeException('Only received checks can be collected');
         }
         if ($check->status !== CheckStatusEnum::UNDER_COLLECTION->value) {
             throw new \RuntimeException('Check is not under collection');
+        }
+        if (!$check->customer_id) {
+            throw new \RuntimeException('Check requires a customer to be processed');
         }
 
         return DB::transaction(function () use ($check, $collectedAccountId, $note) {
@@ -72,6 +78,9 @@ class CheckService
         /** @var Check $check */
         $check = Check::with(['customer', 'branch'])->findOrFail($checkId);
 
+        if (!$check->check_number) {
+            throw new \RuntimeException('Check number is required before processing this check');
+        }
         if ($check->direction !== CheckDirectionEnum::RECEIVED->value) {
             throw new \RuntimeException('Only received checks can bounce');
         }
@@ -79,7 +88,7 @@ class CheckService
             throw new \RuntimeException('Only under-collection checks can bounce');
         }
         if (!$check->customer_id) {
-            throw new \RuntimeException('Bounced check requires customer');
+            throw new \RuntimeException('Check requires a customer to be processed');
         }
 
         return DB::transaction(function () use ($check, $note) {
@@ -135,11 +144,17 @@ class CheckService
         /** @var Check $check */
         $check = Check::with(['payable', 'supplier', 'branch'])->findOrFail($checkId);
 
+        if (!$check->check_number) {
+            throw new \RuntimeException('Check number is required before processing this check');
+        }
         if ($check->direction !== CheckDirectionEnum::ISSUED->value) {
             throw new \RuntimeException('Only issued checks can be cleared');
         }
         if ($check->status !== CheckStatusEnum::ISSUED->value) {
             throw new \RuntimeException('Check is not in issued status');
+        }
+        if (!$check->supplier_id) {
+            throw new \RuntimeException('Issued check requires a supplier to be processed');
         }
 
         return DB::transaction(function () use ($check, $clearedAccountId, $note) {
@@ -177,6 +192,71 @@ class CheckService
                 'status' => CheckStatusEnum::CLEARED->value,
                 'cleared_account_id' => $bankOrCash->id,
                 'cleared_at' => now(),
+            ]);
+
+            return $check->refresh();
+        });
+    }
+
+    public function bounceIssued(int $checkId, ?string $note = null): Check
+    {
+        /** @var Check $check */
+        $check = Check::with(['payable', 'supplier', 'branch'])->findOrFail($checkId);
+
+        if (!$check->check_number) {
+            throw new \RuntimeException('Check number is required before processing this check');
+        }
+        if ($check->direction !== CheckDirectionEnum::ISSUED->value) {
+            throw new \RuntimeException('Only issued checks can be bounced as issued');
+        }
+        if ($check->status !== CheckStatusEnum::ISSUED->value) {
+            throw new \RuntimeException('Issued check is not in issued status');
+        }
+        if (!$check->supplier_id) {
+            throw new \RuntimeException('Issued check requires a supplier to be processed');
+        }
+
+        return DB::transaction(function () use ($check, $note) {
+            $branchId = $check->branch_id;
+
+            $issuedChecks = Account::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branchId);
+
+            $supplierAccount = Account::where('model_type', \App\Models\Tenant\User::class)
+                ->where('model_id', $check->supplier_id)
+                ->where('type', 'supplier')
+                ->first();
+
+            if (!$supplierAccount) {
+                $supplier = \App\Models\Tenant\User::findOrFail($check->supplier_id);
+                $supplierAccount = app(AccountService::class)->createAccountForUser($supplier);
+            }
+
+            $this->transactionService->create([
+                'date' => now(),
+                'description' => 'Bounced Issued Check'.($check->check_number ? ' #'.$check->check_number : ''),
+                'type' => TransactionTypeEnum::CHECK_BOUNCE->value,
+                'reference_type' => Check::class,
+                'reference_id' => $check->id,
+                'branch_id' => $branchId,
+                'note' => $note ?? $check->note ?? '',
+                'amount' => (float)$check->amount,
+                'lines' => [
+                    [
+                        'account_id' => $issuedChecks->id,
+                        'type' => 'debit',
+                        'amount' => (float)$check->amount,
+                    ],
+                    [
+                        'account_id' => $supplierAccount->id,
+                        'type' => 'credit',
+                        'amount' => (float)$check->amount,
+                    ],
+                ],
+            ]);
+
+            $check->update([
+                'status' => CheckStatusEnum::BOUNCED->value,
+                'bounced_at' => now(),
             ]);
 
             return $check->refresh();

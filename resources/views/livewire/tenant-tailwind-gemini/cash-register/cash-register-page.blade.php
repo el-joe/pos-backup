@@ -39,7 +39,7 @@ $highlightCards = [
 ];
 @endphp
 
-<div>
+<div wire:poll.10s="loadData">
     @if(adminCan('cash_register.create'))
     <div class="space-y-6">
         <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -162,7 +162,7 @@ $highlightCards = [
                                 <div class="space-y-4">
                                     <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.closing_balance') }}</label>
-                                        <input type="number" step="any" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model="closing_balance_input">
+                                        <input type="number" step="any" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model="closing_balance_input" x-on:focus="$wire.fillClosingBalance()">
                                     </div>
                                     <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.notes') }}</label>

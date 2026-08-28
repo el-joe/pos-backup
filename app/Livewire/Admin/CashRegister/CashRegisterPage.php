@@ -7,6 +7,7 @@ use App\Models\Tenant\AuditLog;
 use App\Traits\LivewireOperations;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use App\Models\Tenant\CashRegister;
 use App\Services\BranchService;
@@ -97,6 +98,27 @@ class CashRegisterPage extends Component
         );
     }
 
+    public function getCalculatedClosingBalanceProperty(): float
+    {
+        return round(
+            (float) ($this->aggregates['opening_balance'] ?? 0)
+            + (float) ($this->aggregates['total_sales'] ?? 0)
+            + (float) ($this->aggregates['total_purchase_refunds'] ?? 0)
+            + (float) ($this->aggregates['total_expense_refunds'] ?? 0)
+            + (float) ($this->aggregates['total_deposits'] ?? 0)
+            - (float) ($this->aggregates['total_sale_refunds'] ?? 0)
+            - (float) ($this->aggregates['total_purchases'] ?? 0)
+            - (float) ($this->aggregates['total_expenses'] ?? 0)
+            - (float) ($this->aggregates['total_withdrawals'] ?? 0),
+            2
+        );
+    }
+
+    public function fillClosingBalance(): void
+    {
+        $this->closing_balance_input = $this->calculatedClosingBalance;
+    }
+
     public function openRegister()
     {
         if(!$this->validator([
@@ -147,8 +169,21 @@ class CashRegisterPage extends Component
 
         try{
             DB::beginTransaction();
+
+            $calculated = $reg->fresh()->calculated_closing_balance;
+            $adminValue = (float) $this->closing_balance_input;
+            $closingBalance = $adminValue;
+
+            if ($calculated != 0 && abs($adminValue - $calculated) / abs($calculated) > 0.01) {
+                Log::warning('Cash register closing balance discrepancy', [
+                    'cash_register_id' => $reg->id,
+                    'calculated_closing_balance' => $calculated,
+                    'admin_provided_closing_balance' => $adminValue,
+                ]);
+            }
+
             $reg->update([
-                'closing_balance' => $this->closing_balance_input,
+                'closing_balance' => $closingBalance,
                 'closed_at' => now(),
                 'status' => 'closed',
                 'notes' => $this->closing_notes,

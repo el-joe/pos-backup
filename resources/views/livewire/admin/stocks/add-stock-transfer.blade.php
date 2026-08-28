@@ -105,7 +105,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" wire:model.blur="items.{{ $index }}.qty" step="any" min="1" max="{{ $product['max_stock'] ?? 0 }}" placeholder="0.00" style="min-width:70px;">
+                                        <input type="number" class="form-control" wire:model.blur="items.{{ $index }}.qty" step="0.001" min="1" max="{{ $product['max_stock'] ?? 0 }}" placeholder="0.00" style="min-width:70px;">
                                         <span class="text-muted">Max: {{ $product['max_stock'] }}</span>
                                     </td>
                                     <td>

@@ -133,7 +133,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" step="1" min="1" class="form-control" wire:model.live="products.{{ $index }}.qty">
+                                        <input type="number" step="0.001" min="1" max="9999999.999" class="form-control" wire:model.live="products.{{ $index }}.qty">
                                     </td>
                                     <td>
                                         <input type="number" step="0.01" min="0" class="form-control" wire:model.live="products.{{ $index }}.sell_price">

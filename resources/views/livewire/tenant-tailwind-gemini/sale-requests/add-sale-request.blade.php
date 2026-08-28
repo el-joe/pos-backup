@@ -150,7 +150,7 @@
                                 </select>
                             </td>
                             <td class="px-4 py-4">
-                                <input type="number" step="1" min="1" class="block w-24 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white" wire:model.live="products.{{ $index }}.qty">
+                                <input type="number" step="0.001" min="1" max="9999999.999" class="block w-24 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white" wire:model.live="products.{{ $index }}.qty">
                             </td>
                             <td class="px-4 py-4">
                                 <input type="number" step="0.01" min="0" class="block w-32 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:!bg-slate-900 dark:text-white" wire:model.live="products.{{ $index }}.sell_price">

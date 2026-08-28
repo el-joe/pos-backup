@@ -130,7 +130,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" wire:model.blur="items.{{ $index }}.qty" step="any" min="1" max="{{ $product['max_stock'] ?? 0 }}" placeholder="0.00">
+                                    <input type="number" class="form-control" wire:model.blur="items.{{ $index }}.qty" step="0.001" min="1" max="{{ $product['max_stock'] ?? 0 }}" placeholder="0.00">
                                     <small class="text-muted">{{ __('general.pages.pos-page.max') }}: {{ $product['max_stock'] }}</small>
                                 </td>
                                 <td>{{ currencyFormat($product['unit_cost'], true) }}</td>

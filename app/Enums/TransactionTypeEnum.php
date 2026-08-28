@@ -9,8 +9,10 @@ enum TransactionTypeEnum : string
     case PURCHASE_INVOICE_REFUND = 'purchase_invoice_refund';
     case PURCHASE_PAYMENT_REFUND = 'purchase_payment_refund';
     case SALE_INVOICE = 'sale_invoice';
+    case SALE_INVOICE_COGS = 'sale_invoice_cogs';
     case SALE_PAYMENT = 'sale_payment';
     case SALE_INVOICE_REFUND = 'sale_invoice_refund';
+    case SALE_INVOICE_COGS_REFUND = 'sale_invoice_cogs_refund';
     case SALE_PAYMENT_REFUND = 'sale_payment_refund';
     case EXPENSE = 'expense';
     case EXPENSE_REFUND = 'expense_refund';
@@ -35,8 +37,10 @@ enum TransactionTypeEnum : string
             self::PURCHASE_INVOICE_REFUND => 'Purchase Invoice Refund',
             self::PURCHASE_PAYMENT_REFUND => 'Purchase Payment Refund',
             self::SALE_INVOICE => 'Sale Invoice',
+            self::SALE_INVOICE_COGS => 'Sale Invoice COGS',
             self::SALE_PAYMENT => 'Sale Payment',
             self::SALE_INVOICE_REFUND => 'Sale Invoice Refund',
+            self::SALE_INVOICE_COGS_REFUND => 'Sale Invoice COGS Refund',
             self::SALE_PAYMENT_REFUND => 'Sale Payment Refund',
             self::EXPENSE => 'Expense',
             self::EXPENSE_REFUND => 'Expense Refund',

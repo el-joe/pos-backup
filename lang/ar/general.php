@@ -1666,6 +1666,12 @@ return [
             'types' => [
                 'earning' => 'استحقاق',
                 'deduction' => 'استقطاع',
+                'basic' => 'الراتب الأساسي',
+                'overtime' => 'العمل الإضافي',
+                'bonus' => 'مكافأة',
+                'allowance' => 'بدل',
+                'unpaid_leave_deduction' => 'خصم إجازة بدون أجر',
+                'absence_deduction' => 'خصم غياب',
             ],
             'sources' => [
                 'employee' => 'الموظف',
@@ -2197,6 +2203,7 @@ return [
         'check_collected_successfully' => 'تم تحصيل الشيك بنجاح.',
         'check_bounced_successfully' => 'تم ارتداد الشيك بنجاح.',
         'issued_check_cleared_successfully' => 'تم تصفية الشيك الصادر بنجاح.',
+        'issued_check_bounced_successfully' => 'تم ارتداد الشيك الصادر بنجاح.',
         'settings_saved_successfully' => 'تم حفظ الإعدادات بنجاح!',
         'tax_not_found' => 'لم يتم العثور على الضريبة.',
         'tax_deleted_successfully' => 'تم حذف الضريبة بنجاح.',

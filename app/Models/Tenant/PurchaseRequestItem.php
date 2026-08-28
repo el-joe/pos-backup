@@ -18,6 +18,12 @@ class PurchaseRequestItem extends Model
         'sell_price',
     ];
 
+    protected $casts = [
+        'purchase_price' => 'decimal:4',
+        'sell_price'     => 'decimal:4',
+        'qty'            => 'decimal:3',
+    ];
+
     public function request()
     {
         return $this->belongsTo(PurchaseRequest::class, 'purchase_request_id');

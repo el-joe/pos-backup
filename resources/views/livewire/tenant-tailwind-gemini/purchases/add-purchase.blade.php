@@ -170,7 +170,7 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td><input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.qty" min="1" placeholder="0.00"></td>
+                                <td><input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.qty" step="0.001" min="1" max="9999999.999" placeholder="0.00"></td>
                                 <td><input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.purchase_price" step="0.01" min="0" placeholder="0.00"></td>
                                 <td><input type="number" class="form-control" wire:model.blur="orderProducts.{{ $index }}.discount_percentage" step="0.01" min="0" placeholder="0.00"></td>
                                 <td class="text-muted">{{ currencyFormat($product['unit_cost_after_discount'], true) }}</td>

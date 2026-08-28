@@ -38,7 +38,7 @@ class AddStockTransfer extends Component
         'items' => 'required|array|min:1',
         'items.*.product_id' => 'required|exists:products,id',
         'items.*.unit_id' => 'required|exists:units,id',
-        'items.*.qty' => 'required|numeric|min:1', // check if qty is <= max_stock
+        'items.*.qty' => 'required|numeric|min:1|max:9999999.999', // check if qty is <= max_stock
     ];
 
     function boot() {

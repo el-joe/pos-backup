@@ -9,6 +9,10 @@ class Stock extends Model
 {
     protected $fillable = ['product_id','unit_id','branch_id','unit_cost','qty','sell_price'];
 
+    protected $casts = [
+        'qty' => 'decimal:3',
+    ];
+
     function product() {
         return $this->belongsTo(Product::class,'product_id')->withTrashed();
     }
@@ -19,6 +23,12 @@ class Stock extends Model
 
     function branch() {
         return $this->belongsTo(Branch::class,'branch_id')->withTrashed();
+    }
+
+    function scopeForProduct($query, $productId, $unitId, $branchId) {
+        return $query->where('product_id', $productId)
+            ->where('unit_id', $unitId)
+            ->where('branch_id', $branchId);
     }
 
     function scopeFilter($query, $filters = []) {

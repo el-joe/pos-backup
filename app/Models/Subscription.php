@@ -124,6 +124,16 @@ class Subscription extends Model
         return $this->belongsTo(PaymentTransaction::class, 'payment_transaction_id');
     }
 
+    function systems()
+    {
+        return $this->hasMany(SubscriptionSystem::class);
+    }
+
+    function hasSystem(string $slug): bool
+    {
+        return $this->systems()->where('system_slug', $slug)->exists();
+    }
+
     function scopeForTenant($query, $tenantId)
     {
         return $query->where('tenant_id', $tenantId);

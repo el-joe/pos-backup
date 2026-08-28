@@ -147,7 +147,7 @@ class AddPurchaseRequest extends Component
             'orderProducts' => 'required|array|min:1',
             'orderProducts.*.id' => 'required|integer',
             'orderProducts.*.unit_id' => 'required|integer',
-            'orderProducts.*.qty' => 'required|numeric|min:1',
+            'orderProducts.*.qty' => 'required|numeric|min:1|max:9999999.999',
         ]))return;
 
         $request = $this->purchaseRequestService->save(null, [

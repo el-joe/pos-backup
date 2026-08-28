@@ -133,7 +133,7 @@
                                         <td>
                                             <input type="number" class="form-control"
                                                 wire:model.blur="orderProducts.{{ $index }}.qty"
-                                                min="1" placeholder="0.00">
+                                                step="0.001" min="1" max="9999999.999" placeholder="0.00">
                                         </td>
                                         <td>
                                             <input type="number" class="form-control"

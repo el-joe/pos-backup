@@ -25,6 +25,7 @@ class ExpenseClaimsList extends Component
 
     public bool $collapseFilters = false;
     public $current;
+    public $paymentAccountId = null;
 
     public function boot(): void
     {
@@ -65,15 +66,46 @@ class ExpenseClaimsList extends Component
             return;
         }
 
-        $this->expenseClaimService->update($this->current->id, [
-            'status' => ExpenseClaimStatusEnum::APPROVED->value,
-            'approved_by' => admin()->id,
-            'approved_at' => Carbon::now(),
-        ]);
+        try {
+            $this->expenseClaimService->approve($this->current->id, admin()->id);
+            $this->popup('success', __('general.messages.hrm.expense_claim_approved'));
+        } catch (\Throwable $e) {
+            $this->popup('error', $e->getMessage());
+        }
 
-        $this->popup('success', __('general.messages.hrm.expense_claim_approved'));
         $this->dismiss();
         $this->reset('current');
+        $this->dispatch('re-render');
+    }
+
+    public function payAlert($id): void
+    {
+        if (!adminCan('hrm_claims.pay')) {
+            abort(403);
+        }
+        $this->setCurrent($id);
+        $this->confirm('pay', 'question', __('general.pages.hrm.pay_action'), __('general.messages.hrm.confirm_pay_expense_claim'), __('general.pages.hrm.pay_action'));
+    }
+
+    public function pay(): void
+    {
+        if (!adminCan('hrm_claims.pay')) {
+            abort(403);
+        }
+        if (!$this->current) {
+            $this->popup('error', __('general.messages.hrm.expense_claim_not_found'));
+            return;
+        }
+
+        try {
+            $this->expenseClaimService->pay($this->current->id, $this->paymentAccountId);
+            $this->popup('success', __('general.messages.hrm.expense_claim_paid'));
+        } catch (\Throwable $e) {
+            $this->popup('error', $e->getMessage());
+        }
+
+        $this->dismiss();
+        $this->reset('current', 'paymentAccountId');
         $this->dispatch('re-render');
     }
 

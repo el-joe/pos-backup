@@ -1686,6 +1686,12 @@ return [
             'types' => [
                 'earning' => 'Earning',
                 'deduction' => 'Deduction',
+                'basic' => 'Basic Salary',
+                'overtime' => 'Overtime',
+                'bonus' => 'Bonus',
+                'allowance' => 'Allowance',
+                'unpaid_leave_deduction' => 'Unpaid Leave Deduction',
+                'absence_deduction' => 'Absence Deduction',
             ],
             'sources' => [
                 'employee' => 'Employee',
@@ -2223,6 +2229,7 @@ return [
         'check_collected_successfully' => 'Check collected successfully.',
         'check_bounced_successfully' => 'Check bounced successfully.',
         'issued_check_cleared_successfully' => 'Issued check cleared successfully.',
+        'issued_check_bounced_successfully' => 'Issued check bounced successfully.',
         'settings_saved_successfully' => 'Settings saved successfully!',
         'tax_not_found' => 'Tax not found.',
         'tax_deleted_successfully' => 'Tax deleted successfully.',

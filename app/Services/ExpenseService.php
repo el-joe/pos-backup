@@ -73,6 +73,13 @@ class ExpenseService
 
             $expense->increment('total_paid', $newAmount);
 
+            $cashRegister = app(\App\Services\CashRegisterService::class)->getOpenedCashRegister();
+            if ($cashRegister) {
+                app(\App\Services\CashRegisterService::class)->increment(
+                    $cashRegister->id, 'total_expenses', $newAmount
+                );
+            }
+
             return $expense;
         }
 

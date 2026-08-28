@@ -113,8 +113,8 @@ class SellService
             $this->transactionService->create($transactionData);
 
             $transactionData = [
-                'description' => 'Sale Payment Inventory for #'.$sell->invoice_number,
-                'type' => TransactionTypeEnum::SALE_INVOICE->value,
+                'description' => 'COGS Entry for #'.$sell->invoice_number,
+                'type' => TransactionTypeEnum::SALE_INVOICE_COGS->value,
                 'reference_type' => Sale::class,
                 'reference_id' => $sell->id,
                 'branch_id' => $sell->branch_id,
@@ -193,8 +193,8 @@ class SellService
             $this->transactionService->create($transactionData);
 
             $transactionData = [
-                'description' => 'Deferred Sale Inventory for #'.$sale->invoice_number,
-                'type' => TransactionTypeEnum::SALE_INVOICE->value,
+                'description' => 'Deferred COGS Entry for #'.$sale->invoice_number,
+                'type' => TransactionTypeEnum::SALE_INVOICE_COGS->value,
                 'reference_type' => Sale::class,
                 'reference_id' => $sale->id,
                 'branch_id' => $sale->branch_id,
@@ -555,8 +555,8 @@ class SellService
         $this->transactionService->create($transactionData);
 
         $transactionData = [
-            'description' => 'Sale Refund Inventory for #'.$saleOrder->invoice_number,
-            'type' => TransactionTypeEnum::SALE_INVOICE_REFUND->value,
+            'description' => 'COGS Refund for #'.$saleOrder->invoice_number,
+            'type' => TransactionTypeEnum::SALE_INVOICE_COGS_REFUND->value,
             'reference_type' => Sale::class,
             'reference_id' => $saleOrder->id,
             'branch_id' => $saleOrder->branch_id,
@@ -595,6 +595,13 @@ class SellService
 
         // Refund Qty from stock
         $this->stockService->addStock(productId: $saleItem->product_id,unitId: $saleItem->unit_id,qty: $qty,branchId: $saleOrder->branch_id);
+
+        $cashRegister = app(\App\Services\CashRegisterService::class)->getOpenedCashRegister();
+        if ($cashRegister) {
+            app(\App\Services\CashRegisterService::class)->increment(
+                $cashRegister->id, 'total_sale_refunds', $grandTotalFromRefundedQty
+            );
+        }
 
         $saleOrder->refresh();
 

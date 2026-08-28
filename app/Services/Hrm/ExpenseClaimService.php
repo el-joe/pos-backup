@@ -2,10 +2,17 @@
 
 namespace App\Services\Hrm;
 
+use App\Enums\AccountTypeEnum;
 use App\Enums\AuditLogActionEnum;
+use App\Enums\ExpenseClaimStatusEnum;
+use App\Enums\TransactionTypeEnum;
+use App\Models\Tenant\Account;
 use App\Models\Tenant\AuditLog;
+use App\Models\Tenant\ExpenseClaim;
 use App\Models\Tenant\ExpenseClaimLine;
 use App\Repositories\Hrm\ExpenseClaimRepository;
+use App\Services\CashRegisterService;
+use App\Services\TransactionService;
 use Illuminate\Support\Facades\DB;
 
 class ExpenseClaimService
@@ -54,6 +61,76 @@ class ExpenseClaimService
         AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Expense claim', 'id' => $id]);
 
         return $claim;
+    }
+
+    public function approve(int $claimId, int $approverId): ExpenseClaim
+    {
+        $claim = $this->repo->find($claimId);
+        if (!$claim) {
+            throw new \RuntimeException('Expense claim not found');
+        }
+        if ($claim->status !== ExpenseClaimStatusEnum::SUBMITTED) {
+            throw new \RuntimeException('Only submitted claims can be approved');
+        }
+
+        $claim->update([
+            'status' => ExpenseClaimStatusEnum::APPROVED->value,
+            'approved_by' => $approverId,
+            'approved_at' => now(),
+        ]);
+
+        AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Expense claim approved', 'id' => $claimId]);
+
+        return $claim->refresh();
+    }
+
+    public function pay(int $claimId, int $paymentAccountId): ExpenseClaim
+    {
+        return DB::transaction(function () use ($claimId, $paymentAccountId) {
+            $claim = $this->repo->find($claimId, ['employee']);
+            if (!$claim) {
+                throw new \RuntimeException('Expense claim not found');
+            }
+            if ($claim->status !== ExpenseClaimStatusEnum::APPROVED) {
+                throw new \RuntimeException('Only approved claims can be paid');
+            }
+            if ($claim->transaction_id) {
+                throw new \RuntimeException('This claim has already been paid');
+            }
+
+            $expenseAccount = Account::default('Expense', AccountTypeEnum::EXPENSE->value, admin()->branch_id);
+            $paymentAccount = Account::findOrFail($paymentAccountId);
+
+            $transaction = app(TransactionService::class)->create([
+                'date' => now(),
+                'description' => 'Expense Claim Payment for Employee: ' . ($claim->employee?->name ?? $claimId),
+                'type' => TransactionTypeEnum::EXPENSE->value,
+                'reference_type' => ExpenseClaim::class,
+                'reference_id' => $claim->id,
+                'branch_id' => admin()->branch_id,
+                'note' => 'Expense claim #' . $claimId,
+                'amount' => $claim->total_amount,
+                'lines' => [
+                    ['account_id' => $expenseAccount->id, 'type' => 'debit', 'amount' => $claim->total_amount],
+                    ['account_id' => $paymentAccount->id, 'type' => 'credit', 'amount' => $claim->total_amount],
+                ],
+            ]);
+
+            $claim->update([
+                'status' => ExpenseClaimStatusEnum::PAID->value,
+                'transaction_id' => $transaction->id,
+            ]);
+
+            $cashRegisterService = app(CashRegisterService::class);
+            $cashRegister = $cashRegisterService->getOpenedCashRegister();
+            if ($cashRegister) {
+                $cashRegisterService->increment($cashRegister->id, 'total_expenses', $claim->total_amount);
+            }
+
+            AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Expense claim paid', 'id' => $claimId]);
+
+            return $claim->refresh();
+        });
     }
 
     public function delete($id)

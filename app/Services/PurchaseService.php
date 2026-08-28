@@ -693,6 +693,13 @@ class PurchaseService
         // Refund Qty from stock
         $this->stockService->reduceStock(productId: $purchaseItem->product_id,unitId: $purchaseItem->unit_id,qty: $qty,branchId: $purchaseOrder->branch_id);
 
+        $cashRegister = app(\App\Services\CashRegisterService::class)->getOpenedCashRegister();
+        if ($cashRegister) {
+            app(\App\Services\CashRegisterService::class)->increment(
+                $cashRegister->id, 'total_purchase_refunds', $grandTotalFromRefundedQty
+            );
+        }
+
         $purchaseOrder->refresh();
 
         $purchaseDue = $purchaseOrder->due_amount;

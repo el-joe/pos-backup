@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Hrm\Payroll;
 use App\Enums\PayrollRunStatusEnum;
 use App\Services\Hrm\PayrollRunService;
 use App\Traits\LivewireOperations;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -91,7 +92,12 @@ class PayrollRunsList extends Component
             'status' => PayrollRunStatusEnum::APPROVED->value,
         ]);
 
-        $this->popup('success', __('general.messages.hrm.payroll_run_approved'));
+        try {
+            $this->payrollRunService->generateSlips($this->current->fresh());
+            $this->popup('success', __('general.messages.hrm.payroll_run_approved'));
+        } catch (\Throwable $e) {
+            $this->popup('error', $e->getMessage());
+        }
         $this->dismiss();
         $this->reset('current');
         $this->dispatch('re-render');
@@ -112,10 +118,18 @@ class PayrollRunsList extends Component
             return;
         }
 
-        // Accounting transaction posting will be integrated later.
-        $this->payrollRunService->update($this->current->id, [
-            'status' => PayrollRunStatusEnum::PAID->value,
-        ]);
+        try {
+            DB::transaction(function () {
+                $this->payrollRunService->postToLedger($this->current);
+                $this->payrollRunService->update($this->current->id, [
+                    'status' => PayrollRunStatusEnum::PAID->value,
+                ]);
+            });
+        } catch (\Throwable $e) {
+            $this->popup('error', $e->getMessage());
+            $this->dismiss();
+            return;
+        }
 
         $this->popup('success', __('general.messages.hrm.payroll_run_marked_paid'));
         $this->dismiss();

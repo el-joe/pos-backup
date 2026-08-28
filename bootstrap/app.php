@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         //     \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
         //     \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,
         // ]);
+        $middleware->alias([
+            'tenant.system' => \App\Http\Middleware\Tenant\CheckTenantSystem::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

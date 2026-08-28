@@ -12,6 +12,12 @@ class PurchaseItem extends Model
         'purchase_id','product_id','unit_id','qty','purchase_price','discount_percentage','tax_percentage','x_margin','sell_price','refunded_qty','refunded_at',
     ];
 
+    protected $casts = [
+        'purchase_price' => 'decimal:4',
+        'sell_price'     => 'decimal:4',
+        'qty'            => 'decimal:3',
+    ];
+
     function purchase() {
         return $this->belongsTo(Purchase::class,'purchase_id');
     }

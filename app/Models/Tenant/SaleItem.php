@@ -9,6 +9,12 @@ class SaleItem extends Model
 {
     protected $fillable = ['sale_id', 'unit_id' , 'product_id', 'qty' , 'taxable','unit_cost', 'sell_price' ,'refunded_qty','refunded_at'];
 
+    protected $casts = [
+        'unit_cost'  => 'decimal:4',
+        'sell_price' => 'decimal:4',
+        'qty'        => 'decimal:3',
+    ];
+
     public function sale() {
         return $this->belongsTo(Sale::class);
     }

@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Tenant\Stock;
 use App\Repositories\StockRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class StockService
 {
@@ -46,24 +49,23 @@ class StockService
     function addStock($productId, $unitId, $qty,$sellPrice = 0,$unitCost = 0, $branchId = null) {
         $product = $this->productService->find($productId, ['units']);
 
-        if($product) {
-            $unitStock = $product->stocks()->when($branchId, function($q) use ($branchId) {
-                $q->where('branch_id', $branchId);
-            },function ($q) {
-                $q->where(function($q) {
-                    $q->whereNull('branch_id')->orWhere('branch_id', 0);
-                });
-            })->firstWhere('unit_id', $unitId);
+        if(!$product) {
+            return null;
+        }
 
-            if($unitStock) {
-                $unitStock->update([
-                    'qty' => $unitStock->qty + $qty,
-                    'sell_price' => $sellPrice == 0 ? $unitStock->sell_price : $sellPrice,
-                    'unit_cost' => $unitCost == 0 ? $unitStock->unit_cost : $unitCost,
+        $branchId = $branchId ?: 0;
+
+        return DB::transaction(function () use ($productId, $unitId, $qty, $sellPrice, $unitCost, $branchId) {
+            $stock = Stock::forProduct($productId, $unitId, $branchId)->lockForUpdate()->first();
+
+            if($stock) {
+                $stock->update([
+                    'qty' => $stock->qty + $qty,
+                    'sell_price' => $sellPrice == 0 ? $stock->sell_price : $sellPrice,
+                    'unit_cost' => $unitCost == 0 ? $stock->unit_cost : $unitCost,
                 ]);
-                return $unitStock;
             }else{
-                return $product->stocks()->create([
+                $stock = Stock::create([
                     'product_id' => $productId,
                     'unit_id' => $unitId,
                     'qty' => $qty,
@@ -72,53 +74,61 @@ class StockService
                     'branch_id' => $branchId,
                 ]);
             }
-        }
 
-        return null;
+            return $stock;
+        });
     }
 
     function removeFromStock($productId, $unitId, $qty, $branchId = null) {
         $product = $this->productService->find($productId, ['units']);
 
-        if($product) {
-            $unitStock = $product->stocks()->when($branchId, function($q) use ($branchId) {
-                $q->where('branch_id', $branchId);
-            },function ($q) {
-                $q->where(function($q) {
-                    $q->whereNull('branch_id')->orWhere('branch_id', 0);
-                });
-            })->firstWhere('unit_id', $unitId);
-
-            if($unitStock) {
-                // decrease stock qty
-                $unitStock->decrement('qty', $qty);
-                return $unitStock;
-            }
+        if(!$product) {
+            return null;
         }
 
-        return null;
+        $branchId = $branchId ?: 0;
+
+        return DB::transaction(function () use ($productId, $unitId, $qty, $branchId) {
+            $stock = Stock::forProduct($productId, $unitId, $branchId)->lockForUpdate()->first();
+
+            if(!$stock) {
+                Log::warning('removeFromStock: stock row not found', [
+                    'product_id' => $productId,
+                    'unit_id' => $unitId,
+                    'branch_id' => $branchId,
+                ]);
+                return null;
+            }
+
+            $stock->decrement('qty', $qty);
+            return $stock;
+        });
     }
 
     function reduceStock($productId, $unitId, $qty, $branchId = null) {
         $product = $this->productService->find($productId, ['units']);
 
-        if($product) {
-            $unitStock = $product->stocks()->when($branchId, function($q) use ($branchId) {
-                $q->where('branch_id', $branchId);
-            },function ($q) {
-                $q->where(function($q) {
-                    $q->whereNull('branch_id')->orWhere('branch_id', 0);
-                });
-            })->firstWhere('unit_id', $unitId);
-
-            if($unitStock) {
-                // decrease stock qty
-                $unitStock->decrement('qty', $qty);
-                return $unitStock;
-            }
+        if(!$product) {
+            return null;
         }
 
-        return null;
+        $branchId = $branchId ?: 0;
+
+        return DB::transaction(function () use ($productId, $unitId, $qty, $branchId) {
+            $stock = Stock::forProduct($productId, $unitId, $branchId)->lockForUpdate()->first();
+
+            if(!$stock) {
+                Log::warning('reduceStock: stock row not found', [
+                    'product_id' => $productId,
+                    'unit_id' => $unitId,
+                    'branch_id' => $branchId,
+                ]);
+                return null;
+            }
+
+            $stock->decrement('qty', $qty);
+            return $stock;
+        });
     }
 
     function delete($id) {

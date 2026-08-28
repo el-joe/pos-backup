@@ -129,7 +129,7 @@ class AddSaleRequest extends Component
             'products' => 'required|array|min:1',
             'products.*.id' => 'required|integer',
             'products.*.unit_id' => 'required|integer',
-            'products.*.qty' => 'required|numeric|min:1',
+            'products.*.qty' => 'required|numeric|min:1|max:9999999.999',
             'products.*.sell_price' => 'required|numeric|min:0',
         ]);
 

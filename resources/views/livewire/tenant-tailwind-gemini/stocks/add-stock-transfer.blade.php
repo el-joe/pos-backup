@@ -138,7 +138,7 @@ $totalExpenses = collect($data['expenses'] ?? [])->sum(fn ($expense) => (float) 
                                         </select>
                                     </td>
                                     <td class="px-4 py-4">
-                                        <input type="number" step="any" min="1" max="{{ $product['max_stock'] ?? 0 }}" wire:model.blur="items.{{ $index }}.qty" placeholder="0.00" class="block w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm dark:border-slate-700 dark:!bg-slate-900 dark:text-white">
+                                        <input type="number" step="0.001" min="1" max="{{ $product['max_stock'] ?? 0 }}" wire:model.blur="items.{{ $index }}.qty" placeholder="0.00" class="block w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm dark:border-slate-700 dark:!bg-slate-900 dark:text-white">
                                         <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">{{ __('general.pages.pos-page.max') }}: {{ $product['max_stock'] }}</div>
                                     </td>
                                     <td class="px-4 py-4 text-end text-slate-600 dark:text-slate-300">{{ currencyFormat($product['unit_cost'], true) }}</td>

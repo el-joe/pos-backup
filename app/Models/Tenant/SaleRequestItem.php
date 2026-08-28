@@ -21,7 +21,10 @@ class SaleRequestItem extends Model
     ];
 
     protected $casts = [
-        'taxable' => 'boolean',
+        'taxable'    => 'boolean',
+        'unit_cost'  => 'decimal:4',
+        'sell_price' => 'decimal:4',
+        'qty'        => 'decimal:3',
     ];
 
     public function request()
