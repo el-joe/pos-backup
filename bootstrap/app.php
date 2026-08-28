@@ -21,5 +21,46 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
+            if ($request->is('api/v1/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+        });
+
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->is('api/v1/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized',
+                    'code' => 401,
+                ], 401);
+            }
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
+            if ($request->is('api/v1/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Not Found',
+                    'code' => 404,
+                ], 404);
+            }
+        });
+
+        $exceptions->render(function (\Throwable $e, $request) {
+            if ($request->is('api/v1/*') && !($e instanceof \Illuminate\Http\Exceptions\HttpResponseException)) {
+                $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+                if ($status >= 400 && $status < 600) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $e->getMessage() ?: 'Server Error',
+                        'code' => $status,
+                    ], $status);
+                }
+            }
+        });
     })->create();

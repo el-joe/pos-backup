@@ -10,31 +10,90 @@
                 {{ ucfirst($group) }}
             </button>
             @endforeach
+            <button
+                type="button"
+                wire:click.prevent="setActiveGroup('api')"
+                class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm font-medium transition-colors {{ $activeGroup === 'api' ? 'bg-brand-500 text-white' : 'border border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800' }}">
+                <i class="fa fa-key"></i>
+                API
+            </button>
         </div>
     </x-tenant-tailwind-gemini.table-card>
 
-    <x-tenant-tailwind-gemini.table-card :title="__('general.pages.settings.' . $activeGroup)" icon="fa fa-cog" :render-table="false">
+    <x-tenant-tailwind-gemini.table-card :title="$activeGroup === 'api' ? 'API' : __('general.pages.settings.' . $activeGroup)" icon="fa fa-cog" :render-table="false">
         <x-slot:actions>
-            @if(admin()->type === 'super_admin')
-                <button type="button" wire:click="seedPermissions"
-                    wire:confirm="Are you sure? This will resync all permissions."
-                    class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" wire:loading.attr="disabled">
-                    <i class="fa fa-sync"></i> {{ __('settings.seed_permissions') }}
+            @if($activeGroup !== 'api')
+                @if(admin()->type === 'super_admin')
+                    <button type="button" wire:click="seedPermissions"
+                        wire:confirm="Are you sure? This will resync all permissions."
+                        class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" wire:loading.attr="disabled">
+                        <i class="fa fa-sync"></i> {{ __('settings.seed_permissions') }}
+                    </button>
+                @endif
+                <button type="button" wire:click="save" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600" wire:loading.attr="disabled">
+                    <span wire:loading.remove class="inline-flex items-center gap-2">
+                        <i class="fa fa-save"></i> {{ __('general.pages.settings.save') }}
+                    </span>
+                    <span wire:loading class="inline-flex items-center gap-2">
+                        <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
+                        {{ __('general.pages.settings.saving') }}
+                    </span>
                 </button>
             @endif
-            <button type="button" wire:click="save" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600" wire:loading.attr="disabled">
-                <span wire:loading.remove class="inline-flex items-center gap-2">
-                    <i class="fa fa-save"></i> {{ __('general.pages.settings.save') }}
-                </span>
-                <span wire:loading class="inline-flex items-center gap-2">
-                    <span class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
-                    {{ __('general.pages.settings.saving') }}
-                </span>
-            </button>
         </x-slot:actions>
 
         <div class="p-5">
-            @if(isset($this->groupedSettings[$activeGroup]))
+            @if($activeGroup === 'api')
+            <div x-data="{
+                    token: null,
+                    masked: @js(admin()->api_token ? substr(admin()->api_token, 0, 8).'***' : null),
+                    copied: false,
+                    copy() {
+                        if (!this.token) return;
+                        navigator.clipboard.writeText(this.token).then(() => {
+                            this.copied = true;
+                            setTimeout(() => this.copied = false, 2000);
+                        });
+                    }
+                 }"
+                 x-on:api-token-generated.window="token = $event.detail.token; masked = null;">
+                <p class="mb-4 text-sm text-slate-500 dark:text-slate-400">
+                    Use this token to authenticate requests to the REST API by sending it in the
+                    <code>X-API-Token</code> header (or as the <code>api_token</code> query parameter).
+                    Full documentation is available at
+                    <a class="text-brand-500 hover:underline" href="{{ url('api/docs') }}" target="_blank" rel="noopener">/api/docs</a>.
+                </p>
+
+                <template x-if="!token">
+                    <div class="mb-4">
+                        <label class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Current Token</label>
+                        <input type="text" readonly :value="masked ?? 'Not generated yet'"
+                               class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:!bg-slate-900 dark:text-white">
+                    </div>
+                </template>
+
+                <template x-if="token">
+                    <div class="mb-4">
+                        <label class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">New Token (copy it now — it won't be shown again)</label>
+                        <div class="flex gap-2">
+                            <input type="text" readonly x-model="token"
+                                   class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:!bg-slate-900 dark:text-white">
+                            <button type="button" x-on:click="copy()"
+                                    class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200">
+                                <i class="fa fa-copy"></i>
+                                <span x-text="copied ? 'Copied!' : 'Copy'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+
+                <button type="button" wire:click="regenerateApiToken"
+                        wire:confirm="Regenerating the token will invalidate the previous one. Continue?"
+                        class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600" wire:loading.attr="disabled">
+                    <i class="fa fa-sync"></i> Regenerate Token
+                </button>
+            </div>
+            @elseif(isset($this->groupedSettings[$activeGroup]))
             <form wire:submit.prevent="save" class="grid gap-4 md:grid-cols-2">
                 @foreach($this->groupedSettings[$activeGroup] as $setting)
                 <div class="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:!bg-slate-900">

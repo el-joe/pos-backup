@@ -15,6 +15,12 @@
                             {{ ucfirst($group) }}
                         </a>
                     @endforeach
+                    <a href="#"
+                       wire:click.prevent="setActiveGroup('api')"
+                       class="list-group-item list-group-item-action {{ $activeGroup === 'api' ? 'active' : '' }}">
+                        <i class="fa fa-key me-2"></i>
+                        API
+                    </a>
                 </div>
 
                 <div class="card-arrow">
@@ -30,29 +36,81 @@
         <div class="col-xl-10 col-lg-9 col-md-8">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">{{ __('general.pages.settings.'.($activeGroup)) }}</h4>
+                    <h4 class="mb-0">{{ $activeGroup === 'api' ? 'API' : __('general.pages.settings.'.($activeGroup)) }}</h4>
                     <div class="d-flex align-items-center gap-2">
-                        @if(admin()->type === 'super_admin')
-                            <button type="button" wire:click="seedPermissions"
-                                wire:confirm="Are you sure? This will resync all permissions."
-                                class="btn btn-outline-secondary" wire:loading.attr="disabled">
-                                <i class="fa fa-sync me-1"></i> {{ __('settings.seed_permissions') }}
+                        @if($activeGroup !== 'api')
+                            @if(admin()->type === 'super_admin')
+                                <button type="button" wire:click="seedPermissions"
+                                    wire:confirm="Are you sure? This will resync all permissions."
+                                    class="btn btn-outline-secondary" wire:loading.attr="disabled">
+                                    <i class="fa fa-sync me-1"></i> {{ __('settings.seed_permissions') }}
+                                </button>
+                            @endif
+                            <button type="button" wire:click="save" class="btn btn-primary" wire:loading.attr="disabled">
+                                <span wire:loading.remove>
+                                    <i class="fa fa-save me-1"></i> {{ __('general.pages.settings.save') }}
+                                </span>
+                                <span wire:loading>
+                                    <span class="spinner-border spinner-border-sm me-1"></span>
+                                    {{ __('general.pages.settings.saving') }}
+                                </span>
                             </button>
                         @endif
-                        <button type="button" wire:click="save" class="btn btn-primary" wire:loading.attr="disabled">
-                            <span wire:loading.remove>
-                                <i class="fa fa-save me-1"></i> {{ __('general.pages.settings.save') }}
-                            </span>
-                            <span wire:loading>
-                                <span class="spinner-border spinner-border-sm me-1"></span>
-                                {{ __('general.pages.settings.saving') }}
-                            </span>
-                        </button>
                     </div>
                 </div>
 
                 <div class="card-body">
-                    @if(isset($this->groupedSettings[$activeGroup]))
+                    @if($activeGroup === 'api')
+                        <div x-data="{
+                                token: null,
+                                masked: @js(admin()->api_token ? substr(admin()->api_token, 0, 8).'***' : null),
+                                copied: false,
+                                copy() {
+                                    if (!this.token) return;
+                                    navigator.clipboard.writeText(this.token).then(() => {
+                                        this.copied = true;
+                                        setTimeout(() => this.copied = false, 2000);
+                                    });
+                                }
+                             }"
+                             x-on:api-token-generated.window="token = $event.detail.token; masked = null;">
+                            <p class="text-muted">
+                                Use this token to authenticate requests to the REST API by sending it in the
+                                <code>X-API-Token</code> header (or as the <code>api_token</code> query parameter).
+                                Full documentation is available at
+                                <a href="{{ url('api/docs') }}" target="_blank" rel="noopener">/api/docs</a>.
+                            </p>
+
+                            <template x-if="!token">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Current Token</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" readonly
+                                               :value="masked ?? 'Not generated yet'">
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template x-if="token">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">New Token (copy it now — it won't be shown again)</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" readonly x-model="token" x-ref="tokenInput">
+                                        <button type="button" class="btn btn-outline-secondary" x-on:click="copy()">
+                                            <i class="fa fa-copy me-1"></i>
+                                            <span x-text="copied ? 'Copied!' : 'Copy'"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <button type="button" wire:click="regenerateApiToken"
+                                    wire:confirm="Regenerating the token will invalidate the previous one. Continue?"
+                                    class="btn btn-primary" wire:loading.attr="disabled">
+                                <i class="fa fa-sync me-1"></i> Regenerate Token
+                            </button>
+                        </div>
+                    @elseif(isset($this->groupedSettings[$activeGroup]))
                         <form wire:submit.prevent="save">
                             <div class="row g-4">
                                 @foreach($this->groupedSettings[$activeGroup] as $setting)

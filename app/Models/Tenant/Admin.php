@@ -6,6 +6,7 @@ use App\Notifications\GeneralNotification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
@@ -13,7 +14,11 @@ class Admin extends Authenticatable
     use HasRoles,Notifiable,SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'type','active','branch_id','deleted_at'
+        'name', 'email', 'phone', 'password', 'api_token', 'type','active','branch_id','deleted_at'
+    ];
+
+    protected $hidden = [
+        'password', 'remember_token', 'api_token',
     ];
 
     const TYPE = [
@@ -24,6 +29,14 @@ class Admin extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function generateApiToken(): string
+    {
+        $token = hash('sha256', Str::random(60));
+        $this->update(['api_token' => $token]);
+
+        return $token;
     }
 
     function image()

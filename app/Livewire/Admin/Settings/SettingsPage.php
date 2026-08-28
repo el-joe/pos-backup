@@ -283,6 +283,13 @@ class SettingsPage extends Component
         $this->js('setTimeout(() => { location.reload(); }, 1000);');
     }
 
+    public function regenerateApiToken(): void
+    {
+        $token = admin()->generateApiToken();
+        $this->dispatch('api-token-generated', token: $token);
+        $this->popup('success', 'API token regenerated successfully');
+    }
+
     public function seedPermissions(): void
     {
         if (admin()->type !== 'super_admin') {

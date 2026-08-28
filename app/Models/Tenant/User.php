@@ -35,6 +35,10 @@ class User extends Model
         return $this->hasMany(Sale::class, 'customer_id');
     }
 
+    function purchases() {
+        return $this->hasMany(Purchase::class, 'supplier_id');
+    }
+
     function scopeFilter($q,$filters = []) {
         return $q->when($filters['type'] ?? null, fn($q,$type) => $q->where('type',$type))
             ->when(isset($filters['active']), fn($q) => $filters['active'] != 'all' ? $q->where('active',$filters['active']) : $q)
