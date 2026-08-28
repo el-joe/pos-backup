@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\AccountTypeEnum;
 use App\Models\Tenant\Transaction;
 use App\Models\Tenant\Contracting\ChartOfAccount;
 use App\Models\Tenant\Contracting\JournalEntry;
@@ -23,6 +24,15 @@ class LedgerBridgeService
         if ($existing) return $existing;
 
         $map = config('tenant.account_coa_map', []);
+
+        if (app()->environment('local', 'staging')) {
+            $validTypes = array_column(AccountTypeEnum::cases(), 'value');
+            $unknownKeys = array_diff(array_keys($map), $validTypes);
+            if ($unknownKeys) {
+                Log::error('LedgerBridge config has unknown account type keys: ' . implode(', ', $unknownKeys));
+            }
+        }
+
         $lines = $transaction->lines()->with('account')->get();
 
         if ($lines->isEmpty()) return null;
