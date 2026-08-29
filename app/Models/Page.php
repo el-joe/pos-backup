@@ -158,4 +158,62 @@ class Page extends Model
 
         return $this->content_en ?: ($this->content_ar ?: '');
     }
+
+    /**
+     * Inject id="" anchors into h2/h3/h4 tags of the content and return
+     * the rendered HTML alongside a flat table of contents.
+     *
+     * @return array{html: string, toc: array<int, array{id: string, text: string, level: int}>}
+     */
+    public function getContentWithToc(): array
+    {
+        $html = $this->content;
+
+        if (trim($html) === '') {
+            return ['html' => $html, 'toc' => []];
+        }
+
+        $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $doc->loadHTML('<?xml encoding="utf-8" ?><div id="__docs_root">' . $html . '</div>', LIBXML_NOERROR | LIBXML_NOWARNING);
+        libxml_clear_errors();
+
+        $toc = [];
+        $used = [];
+        $xpath = new \DOMXPath($doc);
+
+        foreach ($xpath->query('//h2 | //h3 | //h4') as $heading) {
+            $text = trim($heading->textContent);
+
+            if ($text === '') {
+                continue;
+            }
+
+            $slug = Str::slug($text, '-') ?: 'section';
+            $id = $slug;
+            $i = 2;
+
+            while (isset($used[$id])) {
+                $id = $slug . '-' . $i++;
+            }
+
+            $used[$id] = true;
+            $heading->setAttribute('id', $id);
+
+            $toc[] = [
+                'id' => $id,
+                'text' => $text,
+                'level' => (int) substr($heading->nodeName, 1),
+            ];
+        }
+
+        $root = $doc->getElementById('__docs_root');
+        $renderedHtml = '';
+
+        foreach (iterator_to_array($root->childNodes) as $child) {
+            $renderedHtml .= $doc->saveHTML($child);
+        }
+
+        return ['html' => $renderedHtml, 'toc' => $toc];
+    }
 }

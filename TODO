@@ -58,3 +58,5 @@ HR Configurations (leave types, salary structure, etc.)
 
 mo7aaseb.com
 hesabna.com
+
+pa db:seed --class=DocumentationSeeder
