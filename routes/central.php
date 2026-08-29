@@ -56,8 +56,12 @@ Route::group(['prefix' => '/', 'middleware' => [SiteTranslationMiddleware::class
 
     Route::get('api/payment-methods', [PaymentController::class, 'availableMethods'])->name('api.payment-methods');
 
+    Route::get('docs', [HomeController::class, 'docsIndex'])->name('docs.index');
+    Route::get('docs/{slug}', [HomeController::class, 'docsPage'])->name('docs.show');
+    Route::post('docs-feedback', [HomeController::class, 'docsFeedback'])->name('docs.feedback');
+
     // static pages where not in ar|en group
-    Route::get('{slug}', [PageController::class, 'renderPage'])->where('slug', '^(?!cpanel|faqs|blogs|pricing|register|payment).*$')->name('static-page');
+    Route::get('{slug}', [PageController::class, 'renderPage'])->where('slug', '^(?!cpanel|faqs|blogs|pricing|register|payment|docs).*$')->name('static-page');
 });
 
 // add central_panel routes here

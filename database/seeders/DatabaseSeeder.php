@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CpanelSeeder::class,
             BlogSeeder::class,
             FaqSeeder::class,
+            DocumentationSeeder::class,
             PermissionSeeder::class,
         ]);
     }

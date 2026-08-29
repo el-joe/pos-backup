@@ -19,10 +19,15 @@ class Page extends Model
         'content_en',
         'content_ar',
         'is_published',
+        'page_type',
+        'section',
+        'sort_order',
+        'youtube_videos',
     ];
 
     protected $casts = [
         'is_published' => 'boolean',
+        'youtube_videos' => 'array',
     ];
 
     protected static function booted(): void
@@ -64,6 +69,61 @@ class Page extends Model
     public function scopePublished($query)
     {
         return $query->where('is_published', true);
+    }
+
+    public function scopeDocumentation($query)
+    {
+        return $query->where('page_type', 'documentation');
+    }
+
+    public function scopeBySection($query, $section)
+    {
+        return $query->where('section', $section);
+    }
+
+    /**
+     * Convert a YouTube watch/share URL into a safe embed URL.
+     * Only youtube.com and youtu.be hosts are accepted.
+     */
+    public function getYoutubeEmbedUrl(string $url): string
+    {
+        $url = trim($url);
+
+        if ($url === '') {
+            return '';
+        }
+
+        $parts = parse_url($url);
+
+        if (!$parts || empty($parts['host'])) {
+            return '';
+        }
+
+        $host = strtolower($parts['host']);
+        $host = preg_replace('/^www\./', '', $host);
+
+        $videoId = '';
+
+        if ($host === 'youtu.be') {
+            $videoId = ltrim($parts['path'] ?? '', '/');
+        } elseif ($host === 'youtube.com' || $host === 'm.youtube.com') {
+            if (!empty($parts['path']) && str_starts_with($parts['path'], '/embed/')) {
+                $videoId = substr($parts['path'], strlen('/embed/'));
+            } else {
+                parse_str($parts['query'] ?? '', $query);
+                $videoId = $query['v'] ?? '';
+            }
+        } else {
+            return '';
+        }
+
+        $videoId = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $videoId);
+
+        if ($videoId === '') {
+            return '';
+        }
+
+        return 'https://www.youtube.com/embed/' . $videoId;
     }
 
     public function getTitleAttribute(): string

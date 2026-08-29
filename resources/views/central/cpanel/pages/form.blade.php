@@ -71,6 +71,45 @@
                         </div>
                     </div>
 
+                    <div class="col-md-3">
+                        <label class="form-label">Page Type</label>
+                        <div class="d-flex gap-3 pt-2">
+                            <div class="form-check">
+                                <input class="form-check-input page-type-radio" type="radio" id="page_type_static"
+                                       name="page_type" value="static"
+                                       @checked(old('page_type', $page->page_type ?? 'static') === 'static')>
+                                <label class="form-check-label" for="page_type_static">Static Page</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input page-type-radio" type="radio" id="page_type_documentation"
+                                       name="page_type" value="documentation"
+                                       @checked(old('page_type', $page->page_type ?? 'static') === 'documentation')>
+                                <label class="form-check-label" for="page_type_documentation">Documentation Page</label>
+                            </div>
+                        </div>
+                        @error('page_type')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-3 docs-only">
+                        <label class="form-label">Section</label>
+                        <input type="text" name="section" class="form-control @error('section') is-invalid @enderror"
+                               placeholder="pos, hrm, accounting..." value="{{ old('section', $page->section ?? '') }}">
+                        @error('section')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-3 docs-only">
+                        <label class="form-label">Sort Order</label>
+                        <input type="number" name="sort_order" class="form-control @error('sort_order') is-invalid @enderror"
+                               value="{{ old('sort_order', $page->sort_order ?? 0) }}">
+                        @error('sort_order')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="col-md-6">
                         <label class="form-label">Short Description (EN)</label>
                         <textarea name="short_description_en" rows="3"
@@ -107,6 +146,57 @@
                         @enderror
                     </div>
 
+                    <div class="col-12 docs-only">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label mb-0">YouTube Videos</label>
+                            <button type="button" id="add-video-row" class="btn btn-sm btn-outline-theme">
+                                <i class="fa fa-plus"></i> Add Video
+                            </button>
+                        </div>
+                        <div id="video-rows"></div>
+                        <template id="video-row-template">
+                            <div class="card mb-2 video-row">
+                                <div class="card-body">
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Title (EN)</label>
+                                            <input type="text" class="form-control" data-field="title_en">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Title (AR)</label>
+                                            <input type="text" dir="rtl" class="form-control" data-field="title_ar">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label class="form-label">YouTube URL</label>
+                                            <input type="text" class="form-control" placeholder="https://www.youtube.com/watch?v=..." data-field="url">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Position</label>
+                                            <select class="form-select" data-field="position">
+                                                <option value="top">Top</option>
+                                                <option value="middle">Middle</option>
+                                                <option value="bottom">Bottom</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Description (EN)</label>
+                                            <textarea class="form-control" rows="2" data-field="description_en"></textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Description (AR)</label>
+                                            <textarea class="form-control" dir="rtl" rows="2" data-field="description_ar"></textarea>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-outline-danger remove-video-row">
+                                                <i class="fa fa-trash"></i> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
                     <div class="col-12 d-flex justify-content-end">
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-save"></i> Save
@@ -125,8 +215,89 @@
     </div>
 </div>
 
+@push('styles')
+    <style>
+        .docs-only { display: none; }
+    </style>
+@endpush
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.js"></script>
+
+    <script>
+        (function () {
+            const existingVideos = @json(old('youtube_videos', $page->youtube_videos ?? []));
+
+            function toggleDocsFields() {
+                const isDocs = $('input[name="page_type"]:checked').val() === 'documentation';
+                $('.docs-only').toggle(isDocs);
+            }
+
+            function addVideoRow(data) {
+                data = data || {};
+                const $template = $($('#video-row-template').html());
+
+                $template.find('[data-field="title_en"]').val(data.title_en || '');
+                $template.find('[data-field="title_ar"]').val(data.title_ar || '');
+                $template.find('[data-field="url"]').val(data.url || '');
+                $template.find('[data-field="position"]').val(data.position || 'top');
+                $template.find('[data-field="description_en"]').val(data.description_en || '');
+                $template.find('[data-field="description_ar"]').val(data.description_ar || '');
+
+                $('#video-rows').append($template);
+            }
+
+            $('#add-video-row').on('click', function () {
+                addVideoRow();
+            });
+
+            $(document).on('click', '.remove-video-row', function () {
+                $(this).closest('.video-row').remove();
+            });
+
+            $(existingVideos).each(function (i, video) {
+                addVideoRow(video);
+            });
+
+            $('.page-type-radio').on('change', toggleDocsFields);
+            toggleDocsFields();
+
+            $('#page-form').on('submit', function () {
+                $('#video-rows .video-row').each(function (index) {
+                    const $row = $(this);
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'youtube_videos[' + index + '][title_en]',
+                    }).val($row.find('[data-field="title_en"]').val()).appendTo($row);
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'youtube_videos[' + index + '][title_ar]',
+                    }).val($row.find('[data-field="title_ar"]').val()).appendTo($row);
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'youtube_videos[' + index + '][url]',
+                    }).val($row.find('[data-field="url"]').val()).appendTo($row);
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'youtube_videos[' + index + '][position]',
+                    }).val($row.find('[data-field="position"]').val()).appendTo($row);
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'youtube_videos[' + index + '][description_en]',
+                    }).val($row.find('[data-field="description_en"]').val()).appendTo($row);
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'youtube_videos[' + index + '][description_ar]',
+                    }).val($row.find('[data-field="description_ar"]').val()).appendTo($row);
+                });
+            });
+        })();
+    </script>
 
     <script>
         $(document).ready(function () {

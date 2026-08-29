@@ -22,6 +22,7 @@
         <div class="hidden lg:flex items-center gap-8 font-semibold text-slate-600 dark:text-slate-300">
             <a href="/" class="hover:text-brand-500 transition-colors">{{ __('gemini-landing.nav.home') }}</a>
             <a href="{{ route('blogs.index') }}" class="hover:text-brand-500 transition-colors">{{ __('gemini-landing.nav.blogs') }}</a>
+            <a href="{{ route('docs.index') }}" class="hover:text-brand-500 transition-colors">{{ __('Docs') }}</a>
             <a href="{{ route('pricing') }}" class="hover:text-brand-500 transition-colors">{{ __('gemini-landing.nav.pricing') }}</a>
             <a href="{{ route('contact') }}" class="hover:text-brand-500 transition-colors">{{ __('gemini-landing.nav.contact') }}</a>
         </div>
@@ -70,6 +71,7 @@
     <div id="mobile-menu" class="hidden absolute w-full top-full start-0 bg-white dark:!bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-xl p-6 flex flex-col gap-4 lg:hidden">
         <a href="/" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.home') }}</a>
         <a href="{{ route('blogs.index') }}" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.blogs') }}</a>
+        <a href="{{ route('docs.index') }}" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('Docs') }}</a>
         <a href="{{ route('pricing') }}" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.pricing') }}</a>
         <a href="{{ route('contact') }}" class="block font-medium hover:text-brand-500 dark:text-slate-300">{{ __('gemini-landing.nav.contact') }}</a>
 

@@ -109,9 +109,27 @@ class GenerateSitemap extends Command
         });
 
         // Published static pages
-        Page::published()->get()->each(function (Page $page) use (&$urls) {
+        Page::published()->where('page_type', 'static')->get()->each(function (Page $page) use (&$urls) {
             $urls[] = [
                 'loc' => url("/{$page->slug}"),
+                'lastmod' => ($page->updated_at ?? Carbon::now())->toAtomString(),
+                'changefreq' => 'monthly',
+                'priority' => '0.6',
+            ];
+        });
+
+        // Documentation index
+        $urls[] = [
+            'loc' => url('/docs'),
+            'lastmod' => now()->toAtomString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.6',
+        ];
+
+        // Published documentation pages
+        Page::published()->where('page_type', 'documentation')->get()->each(function (Page $page) use (&$urls) {
+            $urls[] = [
+                'loc' => url("/docs/{$page->slug}"),
                 'lastmod' => ($page->updated_at ?? Carbon::now())->toAtomString(),
                 'changefreq' => 'monthly',
                 'priority' => '0.6',

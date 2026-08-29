@@ -9,6 +9,7 @@ use App\Models\Contact;
 use App\Models\Faq;
 use App\Models\Feature;
 use App\Models\NewsletterSubscriber;
+use App\Models\Page;
 use App\Models\Plan;
 use App\Models\Slider;
 use App\Services\PlanFeaturePresentationService;
@@ -472,5 +473,59 @@ class HomeController extends Controller
         //     }
         // }
         return redirect($newUrl);
+    }
+
+    function docsIndex()
+    {
+        $sections = Page::documentation()->published()->select('section')->distinct()->pluck('section');
+
+        $pagesBySection = Page::documentation()
+            ->where('is_published', true)
+            ->orderBy('sort_order')
+            ->get()
+            ->groupBy('section');
+
+        $locale = app()->getLocale();
+
+        $seoHtml = SeoService::page([
+            'title' => 'Documentation | Mohaaseb',
+            'description' => 'Learn how to use Mohaaseb — POS, Sales, Inventory, Accounting, HRM, Contracting and more.',
+            'canonical' => url('/docs'),
+            'locale' => $locale === 'ar' ? 'ar_EG' : 'en_US',
+        ]);
+
+        return view('central.docs.index', compact('sections', 'pagesBySection', 'seoHtml'));
+    }
+
+    function docsPage(string $slug)
+    {
+        $page = Page::where('slug', $slug)->where('page_type', 'documentation')->firstOrFail();
+
+        $relatedPages = Page::documentation()
+            ->where('section', $page->section)
+            ->where('id', '!=', $page->id)
+            ->orderBy('sort_order')
+            ->get();
+
+        $seoHtml = SeoService::page([
+            'title' => $page->title . ' | Mohaaseb Documentation',
+            'description' => (string) $page->short_description,
+            'canonical' => route('docs.show', ['slug' => $page->slug]),
+            'locale' => app()->getLocale() === 'ar' ? 'ar_EG' : 'en_US',
+        ]);
+
+        return view('central.docs.show', compact('page', 'relatedPages', 'seoHtml'));
+    }
+
+    function docsFeedback(Request $request)
+    {
+        $data = $request->validate([
+            'slug' => 'required|string|max:255',
+            'helpful' => 'required|boolean',
+        ]);
+
+        \Illuminate\Support\Facades\Log::info('Docs feedback received', $data);
+
+        return response()->json(['success' => true]);
     }
 }
