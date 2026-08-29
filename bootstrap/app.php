@@ -11,7 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->validateCsrfTokens(except : ['livewire/*']);
+        $middleware->validateCsrfTokens(except : ['livewire/*', 'webhooks/*']);
         // $middleware->web([
         //     \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
         //     \Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains::class,

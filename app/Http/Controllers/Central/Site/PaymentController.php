@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Central\Site;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminRegisterRequestMail;
 use App\Mail\RegisterRequestMail;
+use App\Models\PaymentMethod;
 use App\Models\PaymentTransaction;
 use App\Models\Plan;
 use App\Models\RegisterRequest;
 use App\Payments\Services\PaymentService;
+use App\Services\Payment\PaymobService;
+use App\Services\Payment\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -130,5 +133,31 @@ class PaymentController extends Controller
     function paymentCallbackPage(Request $request,$type) {
         $message = $request->query('message');
         return view('central.'. defaultLandingLayout() .'.payment-callback',get_defined_vars());
+    }
+
+    function stripeWebhook(Request $request, StripeService $stripeService)
+    {
+        $stripeService->handleWebhook($request);
+
+        return response()->json(['received' => true]);
+    }
+
+    function paymobCallback(Request $request, PaymobService $paymobService)
+    {
+        $paymobService->handleCallback($request);
+
+        return response()->json(['received' => true]);
+    }
+
+    function availableMethods(Request $request)
+    {
+        $countryId = $request->query('country_id');
+
+        $methods = PaymentMethod::query()
+            ->where('active', true)
+            ->when($countryId, fn ($q) => $q->forCountry($countryId))
+            ->get(['id', 'name', 'icon_path', 'provider', 'gateway_type', 'manual', 'fee_percentage', 'fixed_fee']);
+
+        return response()->json($methods);
     }
 }

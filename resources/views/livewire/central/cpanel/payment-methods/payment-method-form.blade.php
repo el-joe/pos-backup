@@ -88,6 +88,17 @@
                     @error('data.provider') <div class="text-danger small">{{ $message }}</div> @enderror
                 </div>
 
+                <div class="col-md-6">
+                    <label class="form-label">Gateway Type</label>
+                    <select class="form-select" wire:model.defer="data.gateway_type">
+                        <option value="stripe">Stripe</option>
+                        <option value="paymob">Paymob</option>
+                        <option value="manual">Manual</option>
+                        <option value="other">Other</option>
+                    </select>
+                    @error('data.gateway_type') <div class="text-danger small">{{ $message }}</div> @enderror
+                </div>
+
                 <div class="col-md-3">
                     <label class="form-label">Fee Percentage</label>
                     <input type="number" step="0.01" min="0" class="form-control" wire:model.defer="data.fee_percentage">
@@ -148,6 +159,24 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <div class="col-12">
+                    <h6 class="mb-2">Supported Countries</h6>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="isWorldwide" wire:model.live="isWorldwide">
+                        <label class="form-check-label" for="isWorldwide">Worldwide (available in all countries)</label>
+                    </div>
+
+                    @unless($isWorldwide)
+                        <select class="form-select select2" multiple wire:model.defer="supportedCountries">
+                            @foreach($countries as $country)
+                                <option value="{{ $country->id }}">{{ $country->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('supportedCountries') <div class="text-danger small">{{ $message }}</div> @enderror
+                        <div class="form-text">This payment method will only be shown to visitors/tenants from the selected countries.</div>
+                    @endunless
                 </div>
 
                 @if(($data['manual'] ?? false))

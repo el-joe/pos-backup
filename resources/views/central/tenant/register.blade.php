@@ -174,7 +174,7 @@
                                                 <i class="mdi mdi-earth text-primary"></i>
                                             </span>
                                         </div>
-                                        <select class="form-control form-control-lg border-left-0" name="country_id" required>
+                                        <select class="form-control form-control-lg border-left-0" name="country_id" id="country_id" required onchange="loadPaymentMethods(this.value)">
                                             <option value="">Select Country</option>
                                             @foreach($countries as $country)
                                             <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
@@ -185,6 +185,45 @@
                                     <small class="text-danger">{{$message}}</small>
                                     @enderror
                                 </div>
+                                <div class="form-group">
+                                    <label>Payment Method</label>
+                                    <div id="payment-methods-container" class="d-flex flex-wrap gap-2">
+                                        <small class="text-muted">Select a country to see available payment methods.</small>
+                                    </div>
+                                </div>
+                                <script>
+                                    function loadPaymentMethods(countryId) {
+                                        const container = document.getElementById('payment-methods-container');
+                                        if (!countryId) {
+                                            container.innerHTML = '<small class="text-muted">Select a country to see available payment methods.</small>';
+                                            return;
+                                        }
+                                        container.innerHTML = '<small class="text-muted">Loading...</small>';
+                                        fetch(`{{ url('api/payment-methods') }}?country_id=${encodeURIComponent(countryId)}`)
+                                            .then(response => response.json())
+                                            .then(methods => {
+                                                if (!methods.length) {
+                                                    container.innerHTML = '<small class="text-danger">No payment methods available for this country. Please contact us.</small>';
+                                                    return;
+                                                }
+                                                container.innerHTML = methods.map(m => `
+                                                    <label class="border rounded px-3 py-2 d-flex align-items-center gap-2">
+                                                        <input type="radio" name="payment_method_id" value="${m.id}">
+                                                        <span>${m.name}</span>
+                                                    </label>
+                                                `).join('');
+                                            })
+                                            .catch(() => {
+                                                container.innerHTML = '<small class="text-danger">Unable to load payment methods.</small>';
+                                            });
+                                    }
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const countrySelect = document.getElementById('country_id');
+                                        if (countrySelect && countrySelect.value) {
+                                            loadPaymentMethods(countrySelect.value);
+                                        }
+                                    });
+                                </script>
                                 <div class="form-group">
                                     <label>Password</label>
                                     <div class="input-group">

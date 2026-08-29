@@ -245,7 +245,7 @@ return [
             'confirm_password' => 'تأكيد كلمة المرور',
 
             'payment_method' => 'طريقة الدفع',
-            'no_payment_methods' => 'لا توجد طرق دفع متاحة حالياً.',
+            'no_payment_methods' => 'لا توجد طرق دفع متاحة لبلدك. يرجى التواصل معنا لمعرفة خيارات الدفع.',
             'manual_payment_title' => 'الدفع اليدوي',
             'manual_payment_subtitle' => 'يرجى تحويل المبلغ باستخدام البيانات التالية ثم رفع إيصال الدفع للمتابعة.',
             'upload_receipt' => 'رفع إيصال الدفع',

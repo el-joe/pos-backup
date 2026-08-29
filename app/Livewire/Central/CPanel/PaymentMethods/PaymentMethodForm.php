@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Central\CPanel\PaymentMethods;
 
+use App\Models\Country;
 use App\Models\PaymentMethod;
 use App\Traits\LivewireOperations;
 use Illuminate\Support\Arr;
@@ -33,6 +34,10 @@ class PaymentMethodForm extends Component
      */
     public array $detailsInputs = [];
 
+    public array $supportedCountries = [];
+
+    public bool $isWorldwide = true;
+
     public function rules(): array
     {
         return [
@@ -48,6 +53,10 @@ class PaymentMethodForm extends Component
             'data.fixed_fee' => 'nullable|numeric|min:0',
             'data.active' => 'boolean',
             'data.manual' => 'boolean',
+            'data.gateway_type' => 'nullable|in:stripe,paymob,manual,other',
+            'isWorldwide' => 'boolean',
+            'supportedCountries' => 'array',
+            'supportedCountries.*' => 'integer|exists:central.countries,id',
             'requiredFieldsText' => 'nullable|string',
             'credentialsInputs' => 'array',
             'credentialsInputs.*.value' => 'nullable|string|max:500',
@@ -76,12 +85,21 @@ class PaymentMethodForm extends Component
                 'fee_percentage',
                 'fixed_fee',
                 'active',
+                'gateway_type',
+                'supported_countries',
             ]);
 
             $this->data['active'] = (bool)($this->data['active'] ?? false);
             $this->data['manual'] = (bool)($this->data['manual'] ?? false);
             $this->data['fee_percentage'] = $this->data['fee_percentage'] ?? 0;
             $this->data['fixed_fee'] = $this->data['fixed_fee'] ?? 0;
+            $this->data['gateway_type'] = $this->data['gateway_type'] ?? 'other';
+
+            $supportedCountries = $this->data['supported_countries'] ?? null;
+            $this->isWorldwide = $supportedCountries === null;
+            $this->supportedCountries = is_array($supportedCountries)
+                ? array_map('intval', $supportedCountries)
+                : [];
         } else {
             $this->data = [
                 'name' => '',
@@ -94,7 +112,11 @@ class PaymentMethodForm extends Component
                 'fee_percentage' => 0,
                 'fixed_fee' => 0,
                 'active' => true,
+                'gateway_type' => 'other',
             ];
+
+            $this->isWorldwide = true;
+            $this->supportedCountries = [];
         }
 
         $this->requiredFieldsText = implode("\n", (array)($this->data['required_fields'] ?? []));
@@ -263,10 +285,12 @@ class PaymentMethodForm extends Component
             'name' => $this->data['name'] ?? '',
             'icon_path' => trim((string)($this->data['icon_path'] ?? '')) ?: null,
             'provider' => $this->data['provider'] ?? '',
+            'gateway_type' => $this->data['gateway_type'] ?? 'other',
             'manual' => (bool)($this->data['manual'] ?? false),
             'required_fields' => $requiredFields,
             'credentials' => $credentials,
             'details' => $details,
+            'supported_countries' => $this->isWorldwide ? null : array_values(array_map('intval', $this->supportedCountries)),
             'fee_percentage' => $this->data['fee_percentage'] ?? 0,
             'fixed_fee' => $this->data['fixed_fee'] ?? 0,
             'active' => (bool)($this->data['active'] ?? false),
@@ -287,6 +311,7 @@ class PaymentMethodForm extends Component
     {
         return view('livewire.central.cpanel.payment-methods.payment-method-form', [
             'requiredFields' => $this->parseRequiredFields(),
+            'countries' => Country::orderBy('name')->get(),
         ]);
     }
 }

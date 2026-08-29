@@ -50,6 +50,12 @@ Route::group(['prefix' => '/', 'middleware' => [SiteTranslationMiddleware::class
         Route::get('/', [PaymentController::class, 'callback'])->name('payment.callback');
         Route::get('/callback', [PaymentController::class, 'paymentCallbackPage'])->name('payment-callback');
     });
+
+    Route::post('webhooks/stripe', [PaymentController::class, 'stripeWebhook'])->name('webhooks.stripe');
+    Route::post('webhooks/paymob', [PaymentController::class, 'paymobCallback'])->name('webhooks.paymob');
+
+    Route::get('api/payment-methods', [PaymentController::class, 'availableMethods'])->name('api.payment-methods');
+
     // static pages where not in ar|en group
     Route::get('{slug}', [PageController::class, 'renderPage'])->where('slug', '^(?!cpanel|faqs|blogs|pricing|register|payment).*$')->name('static-page');
 });

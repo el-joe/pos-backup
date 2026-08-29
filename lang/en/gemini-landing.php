@@ -245,7 +245,7 @@ return [
         'confirm_password' => 'Confirm Password',
 
         'payment_method' => 'Payment Method',
-        'no_payment_methods' => 'No payment methods available right now.',
+        'no_payment_methods' => 'No payment methods available for your country. Please contact us for payment options.',
         'manual_payment_title' => 'Manual Payment',
         'manual_payment_subtitle' => 'Please transfer the amount using the details below, then upload the receipt to continue.',
         'upload_receipt' => 'Upload receipt',

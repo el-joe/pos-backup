@@ -16,10 +16,13 @@ class PaymentMethod extends Model
         'name',
         'icon_path',
         'provider',
+        'gateway_type',
+        'is_active',
         'manual',
         'credentials',
         'required_fields',
         'details',
+        'supported_countries',
         'fee_percentage',
         'fixed_fee',
         'active',
@@ -30,12 +33,27 @@ class PaymentMethod extends Model
         'credentials' => 'array',
         'required_fields' => 'array',
         'details' => 'array',
+        'supported_countries' => 'array',
         'active' => 'boolean',
+        'is_active' => 'boolean',
+    ];
+
+    protected $hidden = [
+        'credentials',
     ];
 
     // Scopes
     function scopeActive($query)
     {
         return $query->where('active', true);
+    }
+
+    function scopeForCountry($query, $countryId)
+    {
+        return $query->where(function ($q) use ($countryId) {
+            $q->whereNull('supported_countries')
+                ->orWhereJsonContains('supported_countries', $countryId)
+                ->orWhereJsonContains('supported_countries', (string) $countryId);
+        });
     }
 }

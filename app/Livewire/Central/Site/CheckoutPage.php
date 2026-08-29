@@ -372,6 +372,7 @@ class CheckoutPage extends Component
 
         $paymentMethods = PaymentMethod::query()
             ->where('active', true)
+            ->when($this->data['country_id'] ?? null, fn ($q, $countryId) => $q->forCountry($countryId))
             ->orderBy('id')
             ->get();
 
