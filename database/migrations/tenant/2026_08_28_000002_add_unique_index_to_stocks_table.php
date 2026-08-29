@@ -12,8 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::transaction(function () {
-            DB::statement('
+        DB::statement('
                 CREATE TEMPORARY TABLE tmp_stock_keepers AS
                 SELECT MIN(id) as keep_id, product_id, unit_id, branch_id, SUM(qty) as total_qty
                 FROM stocks
@@ -56,21 +55,22 @@ return new class extends Migration
 
             DB::statement('
                 DELETE s FROM stocks s
-                JOIN (SELECT product_id, unit_id, branch_id FROM tmp_stock_keepers) t
+                JOIN tmp_stock_keepers t
                     ON s.product_id = t.product_id
                     AND s.unit_id = t.unit_id
                     AND s.branch_id = t.branch_id
-                WHERE s.id NOT IN (SELECT keep_id FROM tmp_stock_keepers)
+                WHERE s.id <> t.keep_id
             ');
 
             DB::statement('DROP TEMPORARY TABLE tmp_stock_keepers');
 
             Log::info("Collapsed {$duplicateGroups} duplicate stock groups before adding unique index");
 
-            Schema::table('stocks', function ($table) {
-                $table->unique(['product_id', 'unit_id', 'branch_id'], 'stocks_product_unit_branch_unique');
-            });
-        });
+            if (! Schema::hasIndex('stocks', 'stocks_product_unit_branch_unique')) {
+                Schema::table('stocks', function ($table) {
+                    $table->unique(['product_id', 'unit_id', 'branch_id'], 'stocks_product_unit_branch_unique');
+                });
+            }
     }
 
     /**
