@@ -22,6 +22,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'tax_number',
         'active',
         'business_type',
+        'trial_used_at',
+    ];
+
+    protected $casts = [
+        'trial_used_at' => 'datetime',
     ];
 
     /**
@@ -40,6 +45,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'tax_number',
             'active',
             'business_type',
+            'trial_used_at',
         ]);
     }
 
@@ -100,6 +106,17 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         $this->syncDataAttribute('business_type', $value);
     }
 
+    protected function setTrialUsedAtAttribute($value): void
+    {
+        $this->attributes['trial_used_at'] = $value;
+        $this->syncDataAttribute('trial_used_at', $value);
+    }
+
+    public function hasUsedTrial(): bool
+    {
+        return !empty($this->trial_used_at);
+    }
+
     protected function syncDataAttribute(string $key, $value): void
     {
         $data = json_decode($this->attributes['data'] ?? '{}', true) ?: [];
@@ -121,7 +138,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
         $data = json_decode($this->attributes[static::getDataColumn()] ?? '{}', true) ?: [];
 
-        foreach (['name', 'email', 'phone', 'country_id', 'currency_id', 'tax_number', 'active', 'business_type'] as $column) {
+        foreach (['name', 'email', 'phone', 'country_id', 'currency_id', 'tax_number', 'active', 'business_type', 'trial_used_at'] as $column) {
             if (array_key_exists($column, $this->attributes)) {
                 $data[$column] = $this->attributes[$column];
             }

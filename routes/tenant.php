@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\GeneralController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Tenant\AuthController;
 use App\Http\Controllers\Tenant\EmployeeAuthController;
-use App\Http\Middleware\{AdminTranslationMiddleware, InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck, Tenant\AdminAuthMiddleware, Tenant\HrmMasterDataPermissionCheck, Tenant\EmployeeAuthMiddleware, Tenant\EmployeeGuestMiddleware};
+use App\Http\Middleware\{AdminTranslationMiddleware, InitializeTenancyByDomain, RedirectFromWWW, Tenant\ReportsPermissionCheck, Tenant\AdminAuthMiddleware, Tenant\EnsureSubscriptionActive, Tenant\HrmMasterDataPermissionCheck, Tenant\EmployeeAuthMiddleware, Tenant\EmployeeGuestMiddleware};
 use App\Livewire\Admin\Accounts\AccountsList;
 use App\Livewire\Admin\Admins\{AdminsList, RoleDetails, RolesList};
 use App\Livewire\Admin\Branches\BranchesList;
@@ -181,7 +181,7 @@ Route::middleware([
 
         Route::post('notifications/mark-as-read/{id}', [AuthController::class, 'markAsRead'])->name('notifications.markAsRead');
 
-        Route::middleware([AdminAuthMiddleware::class])->group(function () {
+        Route::middleware([AdminAuthMiddleware::class, EnsureSubscriptionActive::class])->group(function () {
 
             Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 

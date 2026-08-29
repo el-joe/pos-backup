@@ -169,12 +169,45 @@
                     </div>
 
                     @unless($isWorldwide)
-                        <select class="form-select select2" multiple wire:model.defer="supportedCountries">
-                            @foreach($countries as $country)
-                                <option value="{{ $country->id }}">{{ $country->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('supportedCountries') <div class="text-danger small">{{ $message }}</div> @enderror
+                        <div class="country-picker" x-data="{ q: '' }">
+                            <div class="country-picker-search">
+                                <i class="fa fa-search"></i>
+                                <input type="text" x-model="q" placeholder="Search countries...">
+                            </div>
+
+                            @if(count($supportedCountries ?? []))
+                                <div class="country-picker-chips">
+                                    @foreach($countries as $country)
+                                        @continue(!in_array($country->id, $supportedCountries ?? []))
+                                        <span class="country-chip">
+                                            {{ $country->name }}
+                                            <button type="button" wire:click="toggleCountry({{ $country->id }})" aria-label="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <div class="country-picker-list">
+                                @forelse($countries as $country)
+                                    <label
+                                        class="country-picker-option"
+                                        x-show="!q || {{ Illuminate\Support\Js::from(mb_strtolower($country->name)) }}.includes(q.toLowerCase())"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            wire:click="toggleCountry({{ $country->id }})"
+                                            @checked(in_array($country->id, $supportedCountries ?? []))
+                                        >
+                                        <span>{{ $country->name }}</span>
+                                    </label>
+                                @empty
+                                    <div class="country-picker-empty">No countries available.</div>
+                                @endforelse
+                            </div>
+                        </div>
+                        @error('supportedCountries') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         <div class="form-text">This payment method will only be shown to visitors/tenants from the selected countries.</div>
                     @endunless
                 </div>
@@ -254,6 +287,130 @@
 </div>
 
 @push('styles')
+<style>
+    .country-picker {
+        border: 1px solid var(--bs-border-color);
+        border-radius: .5rem;
+        background-color: var(--bs-body-bg);
+        overflow: hidden;
+    }
+
+    .country-picker-search {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .5rem .75rem;
+        border-bottom: 1px solid var(--bs-border-color);
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .country-picker-search i {
+        color: var(--bs-secondary-color);
+        font-size: .8rem;
+    }
+
+    .country-picker-search input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        outline: none;
+        color: var(--bs-body-color);
+        font-size: .875rem;
+        padding: .25rem 0;
+    }
+
+    .country-picker-search input::placeholder {
+        color: var(--bs-secondary-color);
+    }
+
+    .country-picker-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .375rem;
+        padding: .625rem .75rem;
+        border-bottom: 1px solid var(--bs-border-color);
+    }
+
+    .country-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .375rem;
+        padding: .25rem .5rem .25rem .625rem;
+        border-radius: 999px;
+        background-color: rgba(111, 66, 193, .12);
+        color: var(--bs-primary, #6f42c1);
+        font-size: .8125rem;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .country-chip button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border: none;
+        background: transparent;
+        color: inherit;
+        opacity: .7;
+        padding: 0;
+        font-size: .7rem;
+        cursor: pointer;
+    }
+
+    .country-chip button:hover {
+        opacity: 1;
+    }
+
+    .country-picker-list {
+        max-height: 240px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+    }
+
+    .country-picker-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .country-picker-list::-webkit-scrollbar-thumb {
+        background-color: var(--bs-border-color);
+        border-radius: 4px;
+    }
+
+    .country-picker-option {
+        display: flex;
+        align-items: center;
+        gap: .625rem;
+        padding: .5rem .75rem;
+        margin: 0;
+        cursor: pointer;
+        font-size: .875rem;
+        color: var(--bs-body-color);
+        border-bottom: 1px solid var(--bs-border-color-translucent, var(--bs-border-color));
+        transition: background-color .1s ease-in-out;
+    }
+
+    .country-picker-option:last-child {
+        border-bottom: none;
+    }
+
+    .country-picker-option:hover {
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .country-picker-option input[type="checkbox"] {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .country-picker-empty {
+        padding: 1rem;
+        text-align: center;
+        color: var(--bs-secondary-color);
+        font-size: .875rem;
+    }
+</style>
     <link href="{{ asset('template/vendors/select2/select2.min.css') }}" rel="stylesheet" />
 @endpush
 

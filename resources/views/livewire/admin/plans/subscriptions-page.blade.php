@@ -32,8 +32,13 @@
                         <i class="fa fa-crown me-2"></i>
                         <strong>{{ __('general.pages.subscriptions.active_subscription') }}</strong>
                     </div>
-                    <span class="badge bg-{{ $statusBadge }}">
-                        {{ ucfirst($currentSubscription->status) }}
+                    <span>
+                        @if($currentSubscription->is_trial)
+                            <span class="badge bg-info me-1">{{ __('general.pages.subscriptions.free_trial') }}</span>
+                        @endif
+                        <span class="badge bg-{{ $statusBadge }}">
+                            {{ ucfirst($currentSubscription->status) }}
+                        </span>
                     </span>
                 </div>
 
@@ -51,7 +56,7 @@
                         <div class="col-md-3 col-6 mb-3">
                             <div class="text-muted small">{{ __('general.pages.subscriptions.price') }}</div>
                             <div class="fw-bold fs-5">
-                                {{ currencyFormat($currentSubscription->price, true) }}
+                                {{ $currentSubscription->is_trial ? __('general.pages.subscriptions.free_trial') : currencyFormat($currentSubscription->price, true) }}
                             </div>
                         </div>
 

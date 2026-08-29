@@ -332,14 +332,16 @@
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" id="privacy_policy_agree" wire:model.live="data.privacy_policy_agree">
                                 <label class="form-check-label" for="privacy_policy_agree">
-                                    {!! __('website.i_agree_to_the_privacy_policy') !!} *
+                                    {{ __('website.i_agree_to_the') }}
+                                    <a href="{{ route('lang.static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'privacy-policy']) }}" target="_blank">{{ __('website.privacy_policy_link') }}</a> *
                                 </label>
                             </div>
                             @error('data.privacy_policy_agree') <small class="text-danger">{{ $message }}</small> @enderror
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="terms_conditions_agree" wire:model.live="data.terms_conditions_agree">
                                 <label class="form-check-label" for="terms_conditions_agree">
-                                    {!! __('website.i_agree_to_the_terms_conditions') !!} *
+                                    {{ __('website.i_agree_to_the') }}
+                                    <a href="{{ route('lang.static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'terms-conditions']) }}" target="_blank">{{ __('website.terms_conditions_link') }}</a> *
                                 </label>
                             </div>
                             @error('data.terms_conditions_agree') <small class="text-danger">{{ $message }}</small> @enderror

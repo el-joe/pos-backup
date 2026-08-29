@@ -92,6 +92,7 @@ class Subscription extends Model
         'start_date',
         'end_date',
         'status',
+        'is_trial',
         'payment_transaction_id',
         'billing_cycle',
     ];
@@ -102,6 +103,7 @@ class Subscription extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'billing_cycle' => 'string',
+        'is_trial' => 'boolean',
     ];
 
     function tenant()

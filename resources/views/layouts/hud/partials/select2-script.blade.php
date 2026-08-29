@@ -15,6 +15,49 @@
     background-color: var(--bs-border-color);
     border-radius: 4px;
 }
+
+/* Professional search box inside the dropdown */
+.select2-container--bootstrap-5 .select2-dropdown {
+    box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .15);
+    overflow: hidden;
+}
+.select2-container--bootstrap-5 .select2-search--dropdown {
+    padding: 10px;
+    background-color: var(--bs-body-bg);
+}
+.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field {
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--bs-border-color) !important;
+    outline: none !important;
+    font-size: .875rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field:focus {
+    border-color: var(--bs-primary, #6f42c1) !important;
+    box-shadow: 0 0 0 .2rem rgba(111, 66, 193, .15) !important;
+}
+.select2-container--bootstrap-5 .select2-results__option {
+    transition: background-color .1s ease-in-out;
+}
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+    background-color: var(--bs-tertiary-bg) !important;
+    border: 1px solid var(--bs-border-color) !important;
+    color: var(--bs-body-color) !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+    color: var(--bs-body-color) !important;
+    opacity: .6;
+}
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove:hover {
+    opacity: 1;
+    color: var(--bs-danger, #dc3545) !important;
+}
 </style>
 <script>
         function formatOption(option) {
@@ -96,7 +139,16 @@
                 'select2:select select2:unselect',
                 function (e) {
                     const elem = $(e.currentTarget);
-                    @this.set(elem.attr('name'), elem.val());
+                    const name = elem.attr('name');
+
+                    // Elements bound via wire:model already sync on native
+                    // "change" (which select2 triggers). Only elements that
+                    // rely on an explicit name (no wire:model) need this.
+                    if (!name || elem.attr('wire:model') || elem.attr('wire:model.defer') || elem.attr('wire:model.live')) {
+                        return;
+                    }
+
+                    @this.set(name, elem.val());
                 }
             );
         }

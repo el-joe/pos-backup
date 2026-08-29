@@ -45,6 +45,7 @@ class PricingPage extends Component
                     'type' => $plan->type,
                     'recommended' => $slug === 'annual',
                     'features' => $includedFeatures,
+                    'free_trial_days' => (int) $plan->free_trial_days,
                 ];
             })->values()->all();
 
@@ -93,27 +94,45 @@ class PricingPage extends Component
         $this->selectedPlanId = $planId;
     }
 
-    public function proceedToCheckout()
+    public function proceedToCheckout(bool $trial = false)
     {
         $plan = $this->selectedPlan();
         if (!$plan) {
             return redirect()->route('pricing');
         }
 
+        if ($trial && (int) ($plan['free_trial_days'] ?? 0) <= 0) {
+            $trial = false;
+        }
+
         $payload = [
             'period' => $this->isYearly() ? 'year' : 'month',
             'plan_id' => $plan['id'],
             'slug' => $plan['slug'],
+            'trial' => $trial,
         ];
 
         $token = encodedData($payload);
-        return redirect()->route('tenant-checkout', ['token' => $token]);
+
+        $params = ['token' => $token];
+        $tenantId = request()->query('tenant');
+        if ($tenantId) {
+            $params['tenant'] = $tenantId;
+        }
+
+        return redirect()->route('tenant-checkout', $params);
     }
 
     public function checkoutPlan(int $planId)
     {
         $this->setPlan($planId);
         return $this->proceedToCheckout();
+    }
+
+    public function checkoutPlanTrial(int $planId)
+    {
+        $this->setPlan($planId);
+        return $this->proceedToCheckout(true);
     }
 
     public function isYearly(): bool

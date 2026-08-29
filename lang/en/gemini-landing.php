@@ -168,6 +168,7 @@ return [
         'free_trial' => ':months months free trial',
         'cta_try_free' => 'Try it for free',
         'cta_subscribe_now' => 'Subscribe now',
+        'cta_try_free' => 'Try it free for :days days',
     ],
 
     'pricing_compare' => [

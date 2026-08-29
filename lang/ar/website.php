@@ -1,8 +1,9 @@
 <?php
 
 return [
-    'i_agree_to_the_privacy_policy' => 'أوافق على <a href="/privacy-policy" target="_blank">سياسة الخصوصية</a>',
-    'i_agree_to_the_terms_conditions' => 'أوافق على <a href="/terms-conditions" target="_blank">الشروط والأحكام</a>',
+    'i_agree_to_the' => 'أوافق على',
+    'privacy_policy_link' => 'سياسة الخصوصية',
+    'terms_conditions_link' => 'الشروط والأحكام',
     'home' => [
         'title' => 'نظام ERP قوي لإدارة الأعمال | Mohaaseb',
         'section1_title' => 'نظام ERP قوي لإدارة أعمال أكثر ذكاءً',

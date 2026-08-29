@@ -15,7 +15,12 @@
                         <i class="fa fa-crown"></i>
                         <span class="text-sm font-semibold uppercase tracking-[0.2em]">{{ __('general.pages.subscriptions.active_subscription') }}</span>
                     </div>
-                    <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">{{ ucfirst($currentSubscription->status) }}</span>
+                    <span class="flex items-center gap-2">
+                        @if($currentSubscription->is_trial)
+                            <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">{{ __('general.pages.subscriptions.free_trial') }}</span>
+                        @endif
+                        <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">{{ ucfirst($currentSubscription->status) }}</span>
+                    </span>
                 </div>
 
                 <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -25,7 +30,7 @@
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-700 dark:bg-slate-800/60">
                         <p class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.subscriptions.price') }}</p>
-                        <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">{{ currencyFormat($currentSubscription->price, true) }}</p>
+                        <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">{{ $currentSubscription->is_trial ? __('general.pages.subscriptions.free_trial') : currencyFormat($currentSubscription->price, true) }}</p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-700 dark:bg-slate-800/60">
                         <p class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.subscriptions.start_date') }}</p>

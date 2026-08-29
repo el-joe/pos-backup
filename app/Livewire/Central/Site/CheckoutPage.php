@@ -8,6 +8,7 @@ use App\Models\PaymentMethod;
 use App\Models\Partner;
 use App\Models\PaymentTransaction;
 use App\Models\Plan;
+use App\Models\Tenant;
 use App\Payments\Services\PaymentService;
 use App\Services\PlanPricingService;
 use App\Traits\LivewireOperations;
@@ -25,6 +26,8 @@ class CheckoutPage extends Component
     use WithFileUploads;
 
     public $plan, $period, $slug;
+
+    public bool $isTrial = false;
 
     public $data = [
         'domain_mode'=>'subdomain',
@@ -92,6 +95,7 @@ class CheckoutPage extends Component
         $decodedToken = is_string($token) && trim($token) !== '' ? decodedData($token) : null;
 
         $this->period = (is_array($decodedToken) && ($decodedToken['period'] ?? 'month') === 'year') ? 'year' : 'month';
+        $this->isTrial = is_array($decodedToken) && !empty($decodedToken['trial']);
 
         $plan = null;
         if (is_array($decodedToken)) {
@@ -150,6 +154,8 @@ class CheckoutPage extends Component
             'period' => $period,
             'systems_allowed' => ['pos'],
             'pricing' => $newData['pricing'] ?? [],
+            'is_trial' => !empty($newData['is_trial']),
+            'trial_days' => (int) ($newData['trial_days'] ?? 0),
         ];
     }
 
@@ -222,11 +228,35 @@ class CheckoutPage extends Component
         $freeTrialMonths = (int) ($pricing['free_trial_months'] ?? 0);
         $amount = $freeTrialMonths > 0 ? 0.0 : (float) ($pricing['final_price'] ?? 0);
 
+        $wantsTrial = $this->isTrial;
+        if ($wantsTrial && !$plan->hasFreeTrial()) {
+            $this->addError('data.plan_id', 'This plan does not offer a free trial.');
+            return;
+        }
+
+        if ($wantsTrial) {
+            $tenantId = request()->query('tenant');
+            if ($tenantId) {
+                $existingTenant = Tenant::find($tenantId);
+                if ($existingTenant && $existingTenant->hasUsedTrial()) {
+                    $this->addError('data.plan_id', 'You have already used your free trial.');
+                    return;
+                }
+            }
+        }
+
+        $isTrial = $wantsTrial && $plan->hasFreeTrial();
+        if ($isTrial) {
+            $amount = 0.0;
+        }
+
         $newData = $this->data + [
             'plan_id' => $plan->id,
             'period' => $period,
             'pricing' => $pricing,
             'amount' => $amount,
+            'is_trial' => $isTrial,
+            'trial_days' => $isTrial ? (int) $plan->free_trial_days : 0,
         ];
 
         if(session()->has('p_ref')){

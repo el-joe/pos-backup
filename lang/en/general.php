@@ -2141,6 +2141,7 @@ return [
         ],
         'subscriptions' => [
             'active_subscription' => 'Active Subscription',
+            'free_trial' => 'Free Trial',
             'plan' => 'Plan',
             'price' => 'Price',
             'start_date' => 'Start Date',

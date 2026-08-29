@@ -79,6 +79,12 @@ class RegisterRequest extends Model
                     return;
                 }
 
+                $isTrial = !empty($request->plan['is_trial']);
+                $trialDays = (int) ($request->plan['trial_days'] ?? 0);
+                if ($isTrial && $trialDays <= 0) {
+                    $isTrial = false;
+                }
+
                 $systemsAllowed = array_values(array_keys($selectedSystemPlans));
                 $systemsCount = max(1, count($systemsAllowed));
 
@@ -135,6 +141,11 @@ class RegisterRequest extends Model
                     'business_type' => $businessType?->value,
                 ]);
 
+                $startDate = now();
+                $endDate = $isTrial
+                    ? $startDate->copy()->addDays($trialDays)
+                    : now()->addMonths(app(PlanPricingService::class)->cycleMonths($period) + (int) ($pricing['free_trial_months'] ?? 0));
+
                 Subscription::create([
                     'tenant_id' => $tenant->id,
                     'plan_id' => $primaryPlan?->id,
@@ -150,16 +161,22 @@ class RegisterRequest extends Model
                             ];
                         })->values()->all(),
                     ]),
-                    'price' => (float) ($pricing['due_now'] ?? 0),
+                    'price' => $isTrial ? 0.0 : (float) ($pricing['due_now'] ?? 0),
                     'systems_allowed' => $systemsAllowed,
-                    'start_date' => now(),
-                    'end_date' => now()->addMonths(app(PlanPricingService::class)->cycleMonths($period) + (int) ($pricing['free_trial_months'] ?? 0)),
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
                     'status' => 'paid',
+                    'is_trial' => $isTrial,
                     // 'payment_gateway',
                     // 'payment_details',
                     // 'payment_callback_details',
                     'billing_cycle' => $period == 'month' ? 'monthly' : 'yearly',
                 ]);
+
+                if ($isTrial) {
+                    $tenant->trial_used_at = now();
+                    $tenant->save();
+                }
 
                 $domain = $tenant->domains()->create([
                     'domain' => $request->company['domain']

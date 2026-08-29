@@ -168,6 +168,7 @@ return [
             'free_trial' => 'تجربة مجانية لمدة :months أشهر',
             'cta_try_free' => 'جرّبه مجانًا',
             'cta_subscribe_now' => 'اشترك الآن',
+            'cta_try_free' => 'جرّبها مجانًا لمدة :days يومًا',
         ],
 
         'pricing_compare' => [

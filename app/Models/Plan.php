@@ -15,6 +15,7 @@ class Plan extends Model
         'name_ar',
         'type',
         'price',
+        'free_trial_days',
         'slug',
         'active',
     ];
@@ -22,11 +23,17 @@ class Plan extends Model
     protected $casts = [
         'active' => 'boolean',
         'price' => 'float',
+        'free_trial_days' => 'integer',
     ];
 
     public function isYearly(): bool
     {
         return $this->type === 'yearly';
+    }
+
+    public function hasFreeTrial(): bool
+    {
+        return (int) $this->free_trial_days > 0;
     }
 
     protected static function boot()

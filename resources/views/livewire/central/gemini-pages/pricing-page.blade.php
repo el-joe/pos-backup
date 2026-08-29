@@ -94,6 +94,15 @@
                             <span class="relative z-10 text-white">{{ __('gemini-landing.pricing_page.cta_subscribe_now') }}</span>
                             <i class="fa-solid fa-arrow-right relative z-10 text-white transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true"></i>
                         </button>
+
+                        @if(($plan['free_trial_days'] ?? 0) > 0)
+                        <button type="button"
+                            wire:click.stop="checkoutPlanTrial({{ (int) $plan['id'] }})"
+                            class="inline-flex items-center justify-center w-full gap-2 px-6 py-3 mt-3 rounded-xl text-sm font-semibold text-indigo-600 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition-colors duration-300">
+                            <i class="fa-solid fa-gift" aria-hidden="true"></i>
+                            <span>{{ __('gemini-landing.pricing_page.cta_try_free', ['days' => (int) $plan['free_trial_days']]) }}</span>
+                        </button>
+                        @endif
                     </div>
                 </div>
             </div>

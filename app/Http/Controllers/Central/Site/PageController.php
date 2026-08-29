@@ -14,7 +14,7 @@ class PageController extends Controller
 
         $seoHtml = $this->buildSeoHtml($page);
 
-        return view('central.site.page', get_defined_vars());
+        return view('central.gemini-pages.page', get_defined_vars());
     }
 
     function renderPage($slug)
@@ -23,7 +23,7 @@ class PageController extends Controller
 
         $seoHtml = $this->buildSeoHtml($page);
 
-        return view('central.site.page', get_defined_vars());
+        return view('central.gemini-pages.page', get_defined_vars());
     }
 
     private function buildSeoHtml(Page $page): string

@@ -30,6 +30,10 @@
                                     <option value="yearly">Yearly</option>
                                 </select>
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Free trial (days)</label>
+                                <input type="number" min="0" step="1" class="form-control" wire:model="data.{{ $slug }}.free_trial_days">
+                            </div>
                             <div class="col-12">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" wire:model="data.{{ $slug }}.active" id="active_{{ $slug }}">

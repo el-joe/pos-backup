@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,
             DocumentationSeeder::class,
             PermissionSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }

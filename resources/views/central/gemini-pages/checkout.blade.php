@@ -103,8 +103,8 @@
                             <input type="checkbox" id="terms" class="mt-1 w-5 h-5 text-brand-500 border-slate-300 dark:border-slate-600 rounded focus:ring-brand-500 cursor-pointer bg-white dark:bg-slate-900">
                             <label for="terms" class="text-sm text-slate-500 dark:text-slate-400">
                                 {!! __('gemini-landing.checkout_page.terms_html', [
-                                    'terms' => '<a href="terms.html" class="text-brand-500 hover:underline">' . __('gemini-landing.checkout_page.terms_of_service') . '</a>',
-                                    'privacy' => '<a href="privacy.html" class="text-brand-500 hover:underline">' . __('gemini-landing.checkout_page.privacy_policy') . '</a>',
+                                    'terms' => '<a href="' . route('lang.static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'terms-conditions']) . '" target="_blank" class="text-brand-500 hover:underline">' . __('gemini-landing.checkout_page.terms_of_service') . '</a>',
+                                    'privacy' => '<a href="' . route('lang.static-page.localized', ['lang' => app()->getLocale(), 'slug' => 'privacy-policy']) . '" target="_blank" class="text-brand-500 hover:underline">' . __('gemini-landing.checkout_page.privacy_policy') . '</a>',
                                 ]) !!}
                             </label>
                         </div>

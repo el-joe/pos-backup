@@ -2119,6 +2119,7 @@ return [
         ],
         'subscriptions' => [
             'active_subscription' => 'الاشتراك النشط',
+            'free_trial' => 'فترة تجريبية مجانية',
             'plan' => 'الخطة',
             'price' => 'السعر',
             'start_date' => 'تاريخ البدء',

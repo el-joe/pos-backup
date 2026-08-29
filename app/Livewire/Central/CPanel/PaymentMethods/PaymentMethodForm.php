@@ -141,6 +141,15 @@ class PaymentMethodForm extends Component
         $this->detailsInputs = array_values($this->detailsInputs);
     }
 
+    public function toggleCountry(int $countryId): void
+    {
+        if (in_array($countryId, $this->supportedCountries, true)) {
+            $this->supportedCountries = array_values(array_diff($this->supportedCountries, [$countryId]));
+        } else {
+            $this->supportedCountries[] = $countryId;
+        }
+    }
+
     private function parseRequiredFields(): array
     {
         $lines = preg_split("/\r\n|\n|\r/", (string)$this->requiredFieldsText);
