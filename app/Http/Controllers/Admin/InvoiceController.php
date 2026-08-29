@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\Tenant\Sale;
+use App\Services\EInvoice\EInvoiceService;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -17,6 +19,8 @@ class InvoiceController extends Controller
 
         $order = Sale::where('id', $orderId)->firstOrFail();
 
-        return view("invoices.invoice-{$type}{$lang}", get_defined_vars());
+        $countryCode = strtoupper(Country::find(tenant('country_id'))?->code ?? 'default');
+
+        return view("invoices.invoice-{$type}{$lang}", compact('order', 'countryCode'));
     }
 }

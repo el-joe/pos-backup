@@ -7,6 +7,8 @@
 </head>
 <body>
 
+@php $einvoiceStandard = \App\Services\EInvoice\EInvoiceService::getStandard($countryCode ?? 'default'); @endphp
+
 <div class="invoice-container">
 
     <!-- Header -->
@@ -92,10 +94,17 @@
                 <td>خصم</td>
                 <td>{{ currencyFormat($order->discount_amount ?? 0, true) }}</td>
             </tr>
+            @if($einvoiceStandard['vat_required'])
+            <tr>
+                <td>{{ __('invoice.vat_amount') }}</td>
+                <td>{{ currencyFormat($order->tax_amount ?? 0, true) }}</td>
+            </tr>
+            @else
             <tr>
                 <td>ضريبة القيمة المضافة</td>
                 <td>{{ currencyFormat($order->tax_amount ?? 0, true) }}</td>
             </tr>
+            @endif
             <tr class="grand-total">
                 <td>الإجمالي النهائي</td>
                 <td>{{ currencyFormat($order->grand_total_amount, true) }}</td>
@@ -113,8 +122,22 @@
         </div>
     </div>
 
+    @if($einvoiceStandard['qr_required'])
+    <div class="einvoice-qr text-center mt-3">
+        <img src="data:image/png;base64,{{ \App\Services\EInvoice\EInvoiceService::generateQrCode($order) }}"
+             alt="E-Invoice QR" width="100" height="100">
+        <small class="d-block">{{ __('invoice.scan_to_verify') }}</small>
+    </div>
+    @endif
+
     <div class="note">
         <p>هذه فاتورة بيع صالحة للأغراض المحاسبية والضريبية</p>
+    </div>
+
+    <div class="einvoice-standard text-muted small text-center mt-2">
+        @if($einvoiceStandard['standard'] !== 'generic')
+            {{ $einvoiceStandard['label'] }} {{ __('invoice.compliant') }}
+        @endif
     </div>
 
 </div>

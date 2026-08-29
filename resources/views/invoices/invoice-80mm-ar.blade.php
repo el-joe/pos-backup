@@ -7,6 +7,8 @@
 </head>
 <body>
 
+@php $einvoiceStandard = \App\Services\EInvoice\EInvoiceService::getStandard($countryCode ?? 'default'); @endphp
+
 <div class="receipt">
 
     <!-- بيانات الشركة -->
@@ -81,7 +83,7 @@
         <span>-{{ currencyFormat($order->discount_amount ?? 0, true) }}</span>
     </div>
     <div class="row">
-        <span>ضريبة القيمة المضافة</span>
+        <span>{{ $einvoiceStandard['vat_required'] ? __('invoice.vat_amount') : 'ضريبة القيمة المضافة' }}</span>
         <span>{{ currencyFormat($order->tax_amount ?? 0, true) }}</span>
     </div>
 
@@ -109,10 +111,24 @@
 
     <hr>
 
+    @if($einvoiceStandard['qr_required'])
+    <div class="einvoice-qr center mt-3">
+        <img src="data:image/png;base64,{{ \App\Services\EInvoice\EInvoiceService::generateQrCode($order) }}"
+             alt="E-Invoice QR" width="100" height="100">
+        <small class="d-block">{{ __('invoice.scan_to_verify') }}</small>
+    </div>
+    @endif
+
     <!-- تذييل -->
     <div class="center footer">
         <p>شكرًا لتعاملكم معنا</p>
         <p>مشغل بواسطة {{ tenant('name') }} POS</p>
+    </div>
+
+    <div class="einvoice-standard center">
+        @if($einvoiceStandard['standard'] !== 'generic')
+            <small>{{ $einvoiceStandard['label'] }} {{ __('invoice.compliant') }}</small>
+        @endif
     </div>
 
 </div>
