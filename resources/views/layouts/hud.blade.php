@@ -41,6 +41,7 @@
     @livewireScripts
     @stack('scripts')
     @livewire('operations')
+    @livewire('admin.onboarding-tour')
 
     <script>
         window.addEventListener('download-file', event => {

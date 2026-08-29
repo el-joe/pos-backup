@@ -137,6 +137,7 @@ return [
         'cashier-performance' => 'أداء المستخدم / الكاشير',
         'settings' => 'الإعدادات',
         'general-settings' => 'الإعدادات العامة',
+        'docs' => 'التوثيق',
         'plans-subscriptions' => 'الخطط والاشتراكات',
         'plans' => 'الخطط',
         'features' => 'الميزات',

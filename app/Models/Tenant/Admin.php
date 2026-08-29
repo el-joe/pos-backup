@@ -14,7 +14,11 @@ class Admin extends Authenticatable
     use HasRoles,Notifiable,SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'api_token', 'type','active','branch_id','deleted_at'
+        'name', 'email', 'phone', 'password', 'api_token', 'type','active','branch_id','deleted_at','onboarding_completed_at'
+    ];
+
+    protected $casts = [
+        'onboarding_completed_at' => 'datetime',
     ];
 
     protected $hidden = [

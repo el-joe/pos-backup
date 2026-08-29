@@ -418,3 +418,5 @@
         </div>
         <!-- ===== Right-Sidebar-End ===== -->
     </div>
+
+    @livewire('admin.setup-checklist')

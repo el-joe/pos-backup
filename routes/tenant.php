@@ -21,6 +21,7 @@ use App\Livewire\Admin\Imports\ImportsPage;
 use App\Livewire\Admin\Notifications\NotificationsList;
 use App\Livewire\Admin\PaymentMethods\PaymentMethodsList;
 use App\Livewire\Admin\Plans\SubscriptionsPage;
+use App\Livewire\Admin\Docs\DocsPage;
 use App\Livewire\Admin\DeferredPosPage;
 use App\Livewire\Admin\PosPage;
 use App\Livewire\Admin\Products\{AddEditProduct, ProductsList, ProductDetails};
@@ -444,6 +445,7 @@ Route::middleware([
 
             Route::get('imports', ImportsPage::class)->name('imports');
             Route::get('settings', SettingsPage::class)->name('settings');
+            Route::get('docs/{section?}', DocsPage::class)->name('docs');
 
             Route::get('refunds', RefundsList::class)->name('refunds.list');
             Route::get('refunds/{id}/details', RefundDetails::class)->name('refunds.details');

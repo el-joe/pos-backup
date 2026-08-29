@@ -36,6 +36,7 @@
     @livewireScripts
     @stack('scripts')
     @livewire('operations')
+    @livewire('admin.onboarding-tour')
 </body>
 
 </html>

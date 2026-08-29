@@ -137,6 +137,7 @@ return [
         'cashier-performance' => 'User / Cashier Performance',
         'settings' => 'Settings',
         'general-settings' => 'General Settings',
+        'docs' => 'Documentation',
         'plans-subscriptions' => 'Plans & Subscriptions',
         'plans' => 'Plans',
         'features' => 'Features',

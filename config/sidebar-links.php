@@ -881,5 +881,11 @@ return [
                 'can' => 'general_settings.update'
             ]
         ]
+    ],
+    [
+        "title" => "Documentation",
+        'translated_title' => 'general.titles.docs',
+        "icon" => "fa fa-book-open fa-fw",
+        "route" => 'admin.docs',
     ]
 ];
