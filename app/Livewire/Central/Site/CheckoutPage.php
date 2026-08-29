@@ -376,8 +376,11 @@ class CheckoutPage extends Component
         if ($plan) {
             $pricing = $this->calculatePricing($plan, $period);
             $price = (float) ($pricing['final_price'] ?? 0);
-            $freeTrialMonths = (int) ($pricing['free_trial_months'] ?? 0);
-            $payableNow = $freeTrialMonths > 0 ? 0.0 : $price;
+            $isTrialSelection = $this->isTrial && $plan->hasFreeTrial();
+            $freeTrialMonths = $isTrialSelection
+                ? (int) ceil(((int) $plan->free_trial_days) / 30)
+                : (int) ($pricing['free_trial_months'] ?? 0);
+            $payableNow = $isTrialSelection || $freeTrialMonths > 0 ? 0.0 : $price;
 
             $selectedSystemsSummary[] = [
                 'module' => 'pos',
