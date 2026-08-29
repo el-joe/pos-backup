@@ -53,7 +53,7 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-semibold">Email Address</label>
-                            <input type="text" name="email" value="{{ old('email') }}" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950" autocomplete="email">
+                            <input type="text" name="email" value="{{ old('email') }}" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-black outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" autocomplete="email">
                             @error('email')
                             <div class="mt-2 text-sm text-rose-500">{{ $message }}</div>
                             @enderror
@@ -61,7 +61,7 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-semibold">Password</label>
-                            <input type="password" name="password" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950" autocomplete="current-password">
+                            <input type="password" name="password" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-black outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100" autocomplete="current-password">
                             @error('password')
                             <div class="mt-2 text-sm text-rose-500">{{ $message }}</div>
                             @enderror
