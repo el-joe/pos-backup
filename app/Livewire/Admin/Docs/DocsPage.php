@@ -9,8 +9,12 @@ class DocsPage extends Component
     public string $section = 'overview';
 
     public array $sections = [
-        'overview', 'pos', 'products', 'sales', 'purchases',
-        'accounting', 'hrm', 'contracting', 'settings', 'api',
+        'overview', 'pos', 'products', 'sales', 'purchases', 'refunds',
+        'purchase-requests', 'sale-requests', 'users', 'expenses', 'discounts',
+        'accounting', 'fixed-assets', 'depreciation', 'reports', 'stock',
+        'checks', 'transactions', 'hrm', 'contracting', 'branches', 'taxes',
+        'payment-methods', 'accounts', 'admins', 'roles', 'subscriptions',
+        'imports', 'notifications', 'employee-portal', 'settings', 'api',
     ];
 
     public function mount(?string $section = null): void

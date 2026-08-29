@@ -9,7 +9,7 @@ class CustomerResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
@@ -22,6 +22,30 @@ class CustomerResource extends JsonResource
             'createdAt' => $this->created_at?->format('Y-m-d\TH:i:sP'),
             'updatedAt' => $this->updated_at?->format('Y-m-d\TH:i:sP'),
         ];
+
+        if ($this->relationLoaded('recentSales')) {
+            $data['recentSales'] = $this->recentSales->map(fn ($sale) => [
+                'id' => $sale->id,
+                'invoiceNumber' => $sale->invoice_number ?? $sale->id,
+                'total' => (float) $sale->grand_total_amount,
+                'paidAmount' => (float) $sale->paid_amount,
+                'dueAmount' => (float) $sale->due_amount,
+                'date' => optional($sale->order_date)->format('Y-m-d') ?? $sale->created_at?->format('Y-m-d'),
+            ])->values();
+        }
+
+        if ($this->relationLoaded('recentPurchases')) {
+            $data['recentPurchases'] = $this->recentPurchases->map(fn ($purchase) => [
+                'id' => $purchase->id,
+                'invoiceNumber' => $purchase->ref_no ?? $purchase->id,
+                'total' => (float) $purchase->total_amount,
+                'paidAmount' => (float) $purchase->paid_amount,
+                'dueAmount' => (float) $purchase->due_amount,
+                'date' => optional($purchase->order_date)->format('Y-m-d') ?? $purchase->created_at?->format('Y-m-d'),
+            ])->values();
+        }
+
+        return $data;
     }
 
     /**
