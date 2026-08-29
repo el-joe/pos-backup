@@ -24,6 +24,7 @@ class SettingsPage extends Component
     public $activeGroup = 'business';
     public $settings = [];
     public $uploadedFiles = [];
+    public ?string $newApiToken = null;
 
     function boot(){
         if(Setting::count() == 0 || request()->has('reset')){
@@ -248,6 +249,7 @@ class SettingsPage extends Component
     public function setActiveGroup($group)
     {
         $this->activeGroup = $group;
+        $this->newApiToken = null;
     }
 
     public function save()
@@ -285,8 +287,7 @@ class SettingsPage extends Component
 
     public function regenerateApiToken(): void
     {
-        $token = admin()->generateApiToken();
-        $this->dispatch('api-token-generated', token: $token);
+        $this->newApiToken = admin()->generateApiToken();
         $this->popup('success', 'API token regenerated successfully');
     }
 

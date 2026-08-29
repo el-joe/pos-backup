@@ -45,18 +45,15 @@
         <div class="p-5">
             @if($activeGroup === 'api')
             <div x-data="{
-                    token: null,
-                    masked: @js(admin()->api_token ? substr(admin()->api_token, 0, 8).'***' : null),
                     copied: false,
-                    copy() {
-                        if (!this.token) return;
-                        navigator.clipboard.writeText(this.token).then(() => {
+                    copy(value) {
+                        if (!value) return;
+                        navigator.clipboard.writeText(value).then(() => {
                             this.copied = true;
                             setTimeout(() => this.copied = false, 2000);
                         });
                     }
-                 }"
-                 x-on:api-token-generated.window="token = $event.detail.token; masked = null;">
+                 }">
                 <p class="mb-4 text-sm text-slate-500 dark:text-slate-400">
                     Use this token to authenticate requests to the REST API by sending it in the
                     <code>X-API-Token</code> header (or as the <code>api_token</code> query parameter).
@@ -64,28 +61,26 @@
                     <a class="text-brand-500 hover:underline" href="{{ url('api/docs') }}" target="_blank" rel="noopener">/api/docs</a>.
                 </p>
 
-                <template x-if="!token">
+                @if(! $newApiToken)
                     <div class="mb-4">
                         <label class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Current Token</label>
-                        <input type="text" readonly :value="masked ?? 'Not generated yet'"
+                        <input type="text" readonly value="{{ admin()->api_token ? substr(admin()->api_token, 0, 8).'***' : 'Not generated yet' }}"
                                class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:!bg-slate-900 dark:text-white">
                     </div>
-                </template>
-
-                <template x-if="token">
+                @else
                     <div class="mb-4">
                         <label class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">New Token (copy it now — it won't be shown again)</label>
                         <div class="flex gap-2">
-                            <input type="text" readonly x-model="token"
+                            <input type="text" readonly value="{{ $newApiToken }}"
                                    class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:!bg-slate-900 dark:text-white">
-                            <button type="button" x-on:click="copy()"
+                            <button type="button" x-on:click="copy(@js($newApiToken))"
                                     class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:!bg-slate-900 dark:text-slate-200">
                                 <i class="fa fa-copy"></i>
                                 <span x-text="copied ? 'Copied!' : 'Copy'"></span>
                             </button>
                         </div>
                     </div>
-                </template>
+                @endif
 
                 <button type="button" wire:click="regenerateApiToken"
                         wire:confirm="Regenerating the token will invalidate the previous one. Continue?"

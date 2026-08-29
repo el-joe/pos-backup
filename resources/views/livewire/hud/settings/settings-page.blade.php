@@ -62,18 +62,15 @@
                 <div class="card-body">
                     @if($activeGroup === 'api')
                         <div x-data="{
-                                token: null,
-                                masked: @js(admin()->api_token ? substr(admin()->api_token, 0, 8).'***' : null),
                                 copied: false,
-                                copy() {
-                                    if (!this.token) return;
-                                    navigator.clipboard.writeText(this.token).then(() => {
+                                copy(value) {
+                                    if (!value) return;
+                                    navigator.clipboard.writeText(value).then(() => {
                                         this.copied = true;
                                         setTimeout(() => this.copied = false, 2000);
                                     });
                                 }
-                             }"
-                             x-on:api-token-generated.window="token = $event.detail.token; masked = null;">
+                             }">
                             <p class="text-muted">
                                 Use this token to authenticate requests to the REST API by sending it in the
                                 <code>X-API-Token</code> header (or as the <code>api_token</code> query parameter).
@@ -81,28 +78,26 @@
                                 <a href="{{ url('api/docs') }}" target="_blank" rel="noopener">/api/docs</a>.
                             </p>
 
-                            <template x-if="!token">
+                            @if(! $newApiToken)
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">Current Token</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" readonly
-                                               :value="masked ?? 'Not generated yet'">
+                                               value="{{ admin()->api_token ? substr(admin()->api_token, 0, 8).'***' : 'Not generated yet' }}">
                                     </div>
                                 </div>
-                            </template>
-
-                            <template x-if="token">
+                            @else
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold">New Token (copy it now — it won't be shown again)</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" readonly x-model="token" x-ref="tokenInput">
-                                        <button type="button" class="btn btn-outline-secondary" x-on:click="copy()">
+                                        <input type="text" class="form-control" readonly value="{{ $newApiToken }}">
+                                        <button type="button" class="btn btn-outline-secondary" x-on:click="copy(@js($newApiToken))">
                                             <i class="fa fa-copy me-1"></i>
                                             <span x-text="copied ? 'Copied!' : 'Copy'"></span>
                                         </button>
                                     </div>
                                 </div>
-                            </template>
+                            @endif
 
                             <button type="button" wire:click="regenerateApiToken"
                                     wire:confirm="Regenerating the token will invalidate the previous one. Continue?"
