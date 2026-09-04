@@ -129,7 +129,7 @@
     </table>
 
     <div class="{{ $isHud ? 'd-flex justify-content-center mt-3' : ($isGemini ? 'mt-4 flex justify-center' : 'pagination-wrapper t-a-c') }}">
-        {{ $isHud ? $rows->links('pagination::default5') : $rows->links() }}
+        {{ $isHud ? $rows->links('pagination::default5') : $rows->links($isGemini ? 'vendor.pagination.tenant-tailwind-gemini' : 'vendor.pagination.default5') }}
     </div>
 </div>
 
