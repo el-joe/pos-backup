@@ -359,6 +359,8 @@
                 const input = label.querySelector('input');
                 label.classList.toggle('border-brand-500', input.checked);
                 label.classList.toggle('bg-brand-50', input.checked);
+                label.classList.toggle('border-slate-200', !input.checked);
+                label.classList.toggle('bg-slate-50', !input.checked);
             });
         }
 
@@ -489,6 +491,8 @@
                 const input = label.querySelector('input');
                 label.classList.toggle('border-brand-500', input.checked);
                 label.classList.toggle('bg-brand-50', input.checked);
+                label.classList.toggle('border-slate-200', !input.checked);
+                label.classList.toggle('bg-slate-50', !input.checked);
             });
         }
 
