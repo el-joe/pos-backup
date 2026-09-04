@@ -235,7 +235,16 @@
                                                             <div class="mb-2"><span class="badge bg-primary px-2 py-1 fs-6">{{ $selectedDetails['payment']['payment_method_name'] }}</span></div>
                                                         @endif
                                                         @if(isset($selectedDetails['payment']['amount']))
-                                                            <div class="mb-1 text-muted"><strong>Amount: </strong>{{ $selectedDetails['payment']['amount'] }}</div>
+                                                            <div class="mb-1 text-muted"><strong>Amount: </strong>${{ number_format((float) $selectedDetails['payment']['amount'], 2) }}</div>
+                                                        @endif
+                                                        @if(isset($selectedDetails['payment']['converted_amount']) && isset($selectedDetails['payment']['currency_code']))
+                                                            <div class="mb-1"><strong>Converted Amount: </strong>
+                                                                <span class="badge bg-success px-2 py-1 fs-6">
+                                                                    {{ number_format((float) $selectedDetails['payment']['converted_amount'], 2) }}
+                                                                    {{ $selectedDetails['payment']['currency_symbol'] ?? $selectedDetails['payment']['currency_code'] }}
+                                                                    ({{ $selectedDetails['payment']['currency_code'] }})
+                                                                </span>
+                                                            </div>
                                                         @endif
                                                         @if(isset($selectedDetails['payment']['manual']) && $selectedDetails['payment']['manual'])
                                                             <div class="mb-2"><span class="badge border border-dark text-dark px-2 py-1"><i class="bi bi-cash me-1"></i> Manual Transfer</span></div>
