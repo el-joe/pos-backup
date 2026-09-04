@@ -626,6 +626,18 @@ if (!function_exists('currencyFormat')) {
     }
 }
 
+if (!function_exists('usdFormat')) {
+    /**
+     * Subscription billing (plan prices, wallet balance) is always denominated in
+     * USD regardless of the tenant's own configured accounting currency, so it
+     * must never go through currencyFormat()/currency().
+     */
+    function usdFormat($amount, $withComma = false)
+    {
+        return '$' . number_format((float) $amount, 2, '.', $withComma ? ',' : '');
+    }
+}
+
 if (!function_exists('dateTimeFormat')) {
     function dateTimeFormat($date, $dateFormat = true, $timeFormat = true)
     {

@@ -54,7 +54,7 @@
                         <div class="col-md-3 col-6 mb-3">
                             <div class="text-muted small">{{ __('general.pages.subscriptions.price') }}</div>
                             <div class="fw-bold fs-5">
-                                {{ $currentSubscription->is_trial ? __('general.pages.subscriptions.free_trial') : currencyFormat($currentSubscription->price, true) }}
+                                {{ $currentSubscription->is_trial ? __('general.pages.subscriptions.free_trial') : usdFormat($currentSubscription->price, true) }}
                             </div>
                         </div>
 
@@ -125,7 +125,7 @@
                 <div class="card-body d-flex flex-column justify-content-center">
                     <div class="text-muted mb-2">{{ __('general.pages.subscriptions.available_balance') }}</div>
                     <div class="display-6 fw-bold text-primary mb-3">
-                        {{ currencyFormat($accountBalance,true) }}
+                        {{ usdFormat($accountBalance,true) }}
                     </div>
                     @if(adminCan('subscriptions.renew'))
                     <button type="button" class="btn btn-outline-primary btn-sm" id="openTopUpBtn">
@@ -186,7 +186,7 @@
                                         </span>
                                     </td>
                                     <td class="text-end fw-semibold">
-                                        {{ currencyFormat($subscription->price, true) }}
+                                        {{ usdFormat($subscription->price, true) }}
                                     </td>
                                 </tr>
                             @empty
@@ -225,7 +225,7 @@
                         <select class="form-select" id="selectedPlanId">
                             @foreach($plans as $plan)
                                 <option value="{{ $plan->id }}" {{ $selectedPlanId == $plan->id ? 'selected' : '' }}>
-                                    {{ $plan->localizedName() }} — {{ currencyFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}
+                                    {{ $plan->localizedName() }} — {{ usdFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}
                                 </option>
                             @endforeach
                         </select>
@@ -234,7 +234,7 @@
 
                     <div class="alert alert-light border d-flex justify-content-between align-items-center {{ $pricingPreview ? '' : 'd-none' }}" id="pricingPreviewBox">
                         <span class="fw-semibold">{{ __('general.pages.subscriptions.total') }}</span>
-                        <span class="fs-5 fw-bold text-primary" id="pricingPreviewAmount">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
+                        <span class="fs-5 fw-bold text-primary" id="pricingPreviewAmount">{{ usdFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
                     </div>
 
                     <label class="form-label fw-semibold">Payment Method</label>
@@ -244,7 +244,7 @@
                                 <input type="radio" name="changePlanMethod" class="d-none" value="balance">
                                 <i class="fa fa-wallet fs-3 text-primary"></i>
                                 <span class="fw-semibold text-center">{{ __('general.pages.subscriptions.account_balance') }}</span>
-                                <span class="small text-muted">{{ currencyFormat($accountBalance, true) }} available</span>
+                                <span class="small text-muted">{{ usdFormat($accountBalance, true) }} available</span>
                             </label>
                         </div>
                         @foreach($paymentMethods as $pm)

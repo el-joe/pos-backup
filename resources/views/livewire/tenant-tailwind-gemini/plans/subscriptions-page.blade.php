@@ -30,7 +30,7 @@
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-700 dark:bg-slate-800/60">
                         <p class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.subscriptions.price') }}</p>
-                        <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">{{ $currentSubscription->is_trial ? __('general.pages.subscriptions.free_trial') : currencyFormat($currentSubscription->price, true) }}</p>
+                        <p class="mt-2 text-lg font-semibold text-slate-900 dark:text-white">{{ $currentSubscription->is_trial ? __('general.pages.subscriptions.free_trial') : usdFormat($currentSubscription->price, true) }}</p>
                     </div>
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center dark:border-slate-700 dark:bg-slate-800/60">
                         <p class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.subscriptions.start_date') }}</p>
@@ -66,7 +66,7 @@
         <x-tenant-tailwind-gemini.table-card :title="__('general.pages.subscriptions.account_balance')" icon="fa fa-wallet">
             <div class="flex h-full min-h-[18rem] flex-col items-center justify-center gap-3 p-5 text-center">
                 <p class="text-sm font-medium uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">{{ __('general.pages.subscriptions.available_balance') }}</p>
-                <p class="text-4xl font-semibold text-brand-700 dark:text-brand-300">{{ currencyFormat($accountBalance, true) }}</p>
+                <p class="text-4xl font-semibold text-brand-700 dark:text-brand-300">{{ usdFormat($accountBalance, true) }}</p>
                 @if(adminCan('subscriptions.renew'))
                 <button type="button" id="openTopUpBtn" class="inline-flex items-center gap-2 rounded-xl border border-brand-200 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 dark:border-slate-700 dark:text-brand-300 dark:hover:bg-slate-800">
                     <i class="fa fa-plus"></i> Add Balance
@@ -100,7 +100,7 @@
                             <td>
                                 <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ ucfirst($subscription->status) }}</span>
                             </td>
-                            <td class="text-end fw-semibold">{{ currencyFormat($subscription->price, true) }}</td>
+                            <td class="text-end fw-semibold">{{ usdFormat($subscription->price, true) }}</td>
                         </tr>
                         @empty
                         <tr>
@@ -131,7 +131,7 @@
                     <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">{{ __('general.pages.subscriptions.plan') }}</label>
                     <select id="selectedPlanId" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-700 dark:!bg-slate-800 dark:text-white">
                         @foreach($plans as $plan)
-                            <option value="{{ $plan->id }}" {{ $selectedPlanId == $plan->id ? 'selected' : '' }}>{{ $plan->name }} — {{ currencyFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}</option>
+                            <option value="{{ $plan->id }}" {{ $selectedPlanId == $plan->id ? 'selected' : '' }}>{{ $plan->name }} — {{ usdFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}</option>
                         @endforeach
                     </select>
                     <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="plan_id"></p>
@@ -139,7 +139,7 @@
 
                 <div class="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800 {{ $pricingPreview ? '' : 'hidden' }}" id="pricingPreviewBox">
                     <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">{{ __('general.pages.subscriptions.total') }}</span>
-                    <span class="text-lg font-extrabold text-brand-700 dark:text-brand-300" id="pricingPreviewAmount">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
+                    <span class="text-lg font-extrabold text-brand-700 dark:text-brand-300" id="pricingPreviewAmount">{{ usdFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
                 </div>
 
                 <div>
@@ -149,7 +149,7 @@
                             <input type="radio" name="changePlanMethod" class="hidden" value="balance">
                             <i class="fa fa-wallet text-2xl text-brand-500"></i>
                             <span class="text-center text-xs font-bold text-slate-700 dark:text-white">{{ __('general.pages.subscriptions.account_balance') }}</span>
-                            <span class="text-[11px] text-slate-500 dark:text-slate-400">{{ currencyFormat($accountBalance, true) }}</span>
+                            <span class="text-[11px] text-slate-500 dark:text-slate-400">{{ usdFormat($accountBalance, true) }}</span>
                         </label>
                         @foreach($paymentMethods as $pm)
                         <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 transition dark:border-slate-700 dark:!bg-slate-900" data-method="{{ $pm->id }}" data-manual="{{ $pm->manual ? '1' : '0' }}">

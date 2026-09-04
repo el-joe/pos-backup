@@ -110,7 +110,7 @@ class SubscriptionsController extends Controller
                     'systems_allowed' => $systemsAllowed,
                     'price' => $amount,
                     'pay_from_balance' => true,
-                    'currency_id' => $currentSubscription?->currency_id ?? $this->usdCurrencyId(),
+                    'currency_id' => $this->usdCurrencyId(),
                     'status' => 'pending',
                 ]);
                 $subscriptionRequest->update(['status' => 'approved']);
