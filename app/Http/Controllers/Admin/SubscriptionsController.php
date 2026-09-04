@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
 use App\Models\PaymentMethod;
 use App\Models\PaymentTransaction;
 use App\Models\Plan;
@@ -109,7 +110,7 @@ class SubscriptionsController extends Controller
                     'systems_allowed' => $systemsAllowed,
                     'price' => $amount,
                     'pay_from_balance' => true,
-                    'currency_id' => $currentSubscription?->currency_id,
+                    'currency_id' => $currentSubscription?->currency_id ?? $this->usdCurrencyId(),
                     'status' => 'pending',
                 ]);
                 $subscriptionRequest->update(['status' => 'approved']);
@@ -179,7 +180,7 @@ class SubscriptionsController extends Controller
             'price' => $amount,
             'payment_method_id' => $paymentMethod->id,
             'manual' => false,
-            'currency_id' => $currentSubscription?->currency_id,
+            'currency_id' => $currentSubscription?->currency_id ?? $this->usdCurrencyId(),
             'status' => 'pending',
         ]);
 
@@ -291,6 +292,15 @@ class SubscriptionsController extends Controller
         $period = $plan->isYearly() ? 'year' : 'month';
 
         return app(PlanPricingService::class)->calculate($plan, $period, max(1, count($systemsAllowed)));
+    }
+
+    /**
+     * Subscription plans are always billed in USD (see initiateGatewayPayment()),
+     * so a subscription with no prior currency to inherit from defaults to it.
+     */
+    private function usdCurrencyId(): ?int
+    {
+        return Currency::query()->where('code', 'USD')->value('id');
     }
 
     /**
