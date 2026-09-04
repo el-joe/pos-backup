@@ -18,6 +18,7 @@ use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use App\Http\Middleware\InitializeTenancyByDomain;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Pagination\Paginator;
 use Spatie\Permission\Models\Permission;
 
 class TenancyServiceProvider extends ServiceProvider
@@ -77,6 +78,20 @@ class TenancyServiceProvider extends ServiceProvider
             Events\InitializingTenancy::class => [],
             Events\TenancyInitialized::class => [
                 Listeners\BootstrapTenancy::class,
+                function () {
+                    // AppServiceProvider::boot() runs before tenancy is initialized, so
+                    // tenant()-based layout detection there always resolves to the
+                    // central-app default. Re-apply it now that the tenant is known.
+                    $defaultLayout = defaultLayout();
+
+                    Paginator::defaultView($defaultLayout === 'tenant-tailwind-gemini'
+                        ? 'vendor.pagination.tenant-tailwind-gemini'
+                        : 'vendor.pagination.default5');
+
+                    Paginator::defaultSimpleView($defaultLayout === 'tenant-tailwind-gemini'
+                        ? 'vendor.pagination.simple-tailwind'
+                        : 'vendor.pagination.simple-default');
+                },
             ],
 
             Events\EndingTenancy::class => [],
