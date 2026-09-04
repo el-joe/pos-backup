@@ -138,15 +138,20 @@ if (!function_exists('controllerLayoutView')) {
     function controllerLayoutView($pageName, $with = [], $isSubPage = false)
     {
         $defaultView = resolveLivewireView($pageName);
-        $content = view($defaultView, $with)->render();
+        $contentView = view($defaultView, $with);
 
         if ($isSubPage) {
-            return response($content);
+            return $contentView;
         }
 
+        // Pass the unrendered View (not a pre-rendered string) as the slot, so its
+        // @push/@stack calls happen inside the same top-level render pass as the
+        // layout's @stack — rendering it separately first flushes the stack state
+        // (Illuminate\View\Factory::flushStateIfDoneRendering) before the layout
+        // ever gets to read it.
         $defaultLayout = resolveTenantLayoutView();
         $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
-        $layoutData['slot'] = new \Illuminate\Support\HtmlString($content);
+        $layoutData['slot'] = $contentView;
 
         return view($defaultLayout, $layoutData);
     }
