@@ -1,6 +1,6 @@
 <aside
     class="fixed inset-y-0 z-50 flex w-64 flex-col border-e border-gray-200 bg-white transition-all duration-300 dark:border-gray-700 dark:!bg-gray-800 lg:static lg:z-auto lg:flex"
-    :class="sidebarOpen ? 'translate-x-0 lg:w-64' : '-translate-x-full lg:w-20 lg:translate-x-0'">
+    :class="sidebarOpen ? 'translate-x-0 lg:w-64' : '-translate-x-full rtl:translate-x-full lg:w-20 lg:translate-x-0'">
     <div class="flex h-16 items-center border-b border-gray-200 px-4 dark:border-gray-700" :class="sidebarOpen || !isDesktop ? 'justify-between' : 'justify-center'">
         <a href="{{ panelAwareUrl(route('admin.statistics')) }}" class="flex min-w-0 items-center gap-3">
             <img src="{{ tenantSetting('logo', asset('mohaaseb_en_dark.png')) }}" alt="{{ tenantSetting('business_name', tenant()->name) }}" class="h-9 w-9 flex-shrink-0 rounded-lg border border-gray-200 bg-white object-contain p-1 dark:border-gray-700 dark:bg-gray-900">

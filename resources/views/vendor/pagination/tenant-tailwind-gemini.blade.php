@@ -12,7 +12,7 @@
 
         <div class="inline-flex flex-wrap items-center gap-2">
             @if ($paginator->onFirstPage())
-                <span class="inline-flex h-10 min-w-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm text-slate-300 dark:border-slate-700 dark:text-slate-600">&lsaquo;</span>
+                <span class="inline-flex h-10 min-w-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm text-slate-300 dark:border-slate-700 dark:text-slate-600"><i class="fa fa-chevron-left rtl:-scale-x-100 text-xs"></i></span>
             @else
                 <a class="inline-flex h-10 min-w-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm text-slate-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300"
                    href="{{ $paginator->previousPageUrl() }}"
@@ -20,7 +20,7 @@
                        wire:click.prevent="gotoPage({{ $paginator->currentPage() - 1 }}, '{{ $paginator->getPageName() }}')"
                    @endif
                    rel="prev"
-                   aria-label="@lang('pagination.previous')">&lsaquo;</a>
+                   aria-label="@lang('pagination.previous')"><i class="fa fa-chevron-left rtl:-scale-x-100 text-xs"></i></a>
             @endif
 
             @foreach ($elements as $element)
@@ -50,9 +50,9 @@
                        wire:click.prevent="gotoPage({{ $paginator->currentPage() + 1 }}, '{{ $paginator->getPageName() }}')"
                    @endif
                    rel="next"
-                   aria-label="@lang('pagination.next')">&rsaquo;</a>
+                   aria-label="@lang('pagination.next')"><i class="fa fa-chevron-right rtl:-scale-x-100 text-xs"></i></a>
             @else
-                <span class="inline-flex h-10 min-w-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm text-slate-300 dark:border-slate-700 dark:text-slate-600">&rsaquo;</span>
+                <span class="inline-flex h-10 min-w-10 items-center justify-center rounded-xl border border-slate-200 px-3 text-sm text-slate-300 dark:border-slate-700 dark:text-slate-600"><i class="fa fa-chevron-right rtl:-scale-x-100 text-xs"></i></span>
             @endif
         </div>
     </nav>

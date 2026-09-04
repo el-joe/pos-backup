@@ -17,7 +17,7 @@
                 <nav class="mb-1 flex flex-wrap items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                     @foreach($breadcrumbs as $i => $crumb)
                         @if($i > 0)
-                            <i class="fa fa-chevron-right text-[0.6rem] opacity-60"></i>
+                            <i class="fa fa-chevron-right rtl:-scale-x-100 text-[0.6rem] opacity-60"></i>
                         @endif
                         @if(is_array($crumb) && !empty($crumb['href']))
                             <a href="{{ $crumb['href'] }}" class="hover:text-brand-600 dark:hover:text-brand-300">{{ $crumb['label'] ?? '' }}</a>
