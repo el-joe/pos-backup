@@ -76,7 +76,7 @@
                     <a href="{{ url()->previous() !== url()->current() ? url()->previous() : '/' }}" class="flex items-center justify-center py-4 text-sm font-semibold text-gray-700 transition-all bg-white border border-gray-200 rounded-xl hover:bg-gray-50 focus:ring-4 focus:ring-gray-100 dark:text-gray-200 dark:!bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 active:scale-[0.98]">
                         {{ __('website.payment.cancel') ?? 'Cancel' }}
                     </a>
-                    <a href="{{ route('central.checkout') ?? '/checkout' }}" class="flex items-center justify-center py-4 text-sm font-semibold text-white transition-all bg-rose-500 rounded-xl hover:bg-rose-600 focus:ring-4 focus:ring-rose-200 dark:focus:ring-rose-900 shadow-lg shadow-rose-500/30 active:scale-[0.98]">
+                    <a href="{{ route('tenant-checkout') }}" class="flex items-center justify-center py-4 text-sm font-semibold text-white transition-all bg-rose-500 rounded-xl hover:bg-rose-600 focus:ring-4 focus:ring-rose-200 dark:focus:ring-rose-900 shadow-lg shadow-rose-500/30 active:scale-[0.98]">
                         {{ __('website.payment.try_again') ?? 'Try Again' }}
                     </a>
                 </div>
