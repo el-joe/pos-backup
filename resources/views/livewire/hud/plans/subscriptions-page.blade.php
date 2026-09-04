@@ -10,8 +10,6 @@
                 'expired' => 'danger',
                 'cancelled' => 'warning',
             ][$currentSubscription->status] ?? 'secondary';
-
-            $isMonthly = $currentSubscription->billing_cycle === 'monthly';
         @endphp
 
         @if($currentSubscription->status === 'paid' && !is_null($daysRemaining) && $daysRemaining < 30)
@@ -94,7 +92,7 @@
                     {{-- ACTIONS --}}
                     @if(adminCan('subscriptions.renew'))
                     <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-primary" wire:click="openChangePlanPanel">
+                        <button type="button" class="btn btn-primary" id="openChangePlanBtn">
                             <i class="fa fa-right-left me-1"></i> {{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}
                         </button>
                     </div>
@@ -130,7 +128,7 @@
                         {{ currencyFormat($accountBalance,true) }}
                     </div>
                     @if(adminCan('subscriptions.renew'))
-                    <button class="btn btn-outline-primary btn-sm" wire:click="openTopUpPanel">
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="openTopUpBtn">
                         <i class="fa fa-plus me-1"></i> Add Balance
                     </button>
                     @endif
@@ -212,40 +210,38 @@
         </div>
     </div>
 
-    @if($showChangePlanPanel)
-    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,.5);" wire:key="change-plan-modal">
+    @if(adminCan('subscriptions.renew'))
+    <div class="modal d-none" id="changePlanModal" tabindex="-1" style="background: rgba(0,0,0,.5);">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><i class="fa fa-right-left me-2"></i>{{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}</h5>
-                    <button type="button" class="btn-close" wire:click="closeChangePlanPanel"></button>
+                    <button type="button" class="btn-close" id="closeChangePlanBtn"></button>
                 </div>
                 <div class="modal-body">
 
                     <div class="mb-4">
                         <label class="form-label fw-semibold">{{ __('general.pages.subscriptions.plan') }}</label>
-                        <select class="form-select" wire:model.live="selectedPlanId">
+                        <select class="form-select" id="selectedPlanId">
                             @foreach($plans as $plan)
-                                <option value="{{ $plan->id }}">
+                                <option value="{{ $plan->id }}" {{ $selectedPlanId == $plan->id ? 'selected' : '' }}>
                                     {{ $plan->localizedName() }} — {{ currencyFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('selectedPlanId') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                        <div class="text-danger small mt-1 d-none" data-error-for="plan_id"></div>
                     </div>
 
-                    @if($pricingPreview)
-                    <div class="alert alert-light border d-flex justify-content-between align-items-center">
+                    <div class="alert alert-light border d-flex justify-content-between align-items-center {{ $pricingPreview ? '' : 'd-none' }}" id="pricingPreviewBox">
                         <span class="fw-semibold">{{ __('general.pages.subscriptions.total') }}</span>
-                        <span class="fs-5 fw-bold text-primary">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
+                        <span class="fs-5 fw-bold text-primary" id="pricingPreviewAmount">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
                     </div>
-                    @endif
 
                     <label class="form-label fw-semibold">Payment Method</label>
-                    <div class="row g-3 mb-3">
+                    <div class="row g-3 mb-3" id="changePlanPaymentMethods">
                         <div class="col-md-4">
-                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer {{ $payFromBalance ? 'border-primary bg-primary-subtle' : '' }}" style="cursor:pointer">
-                                <input type="radio" class="d-none" wire:click="$set('payFromBalance', true)">
+                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer" style="cursor:pointer" data-method="balance">
+                                <input type="radio" name="changePlanMethod" class="d-none" value="balance">
                                 <i class="fa fa-wallet fs-3 text-primary"></i>
                                 <span class="fw-semibold text-center">{{ __('general.pages.subscriptions.account_balance') }}</span>
                                 <span class="small text-muted">{{ currencyFormat($accountBalance, true) }} available</span>
@@ -253,75 +249,51 @@
                         </div>
                         @foreach($paymentMethods as $pm)
                         <div class="col-md-4">
-                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer {{ (!$payFromBalance && $selectedPaymentMethodId == $pm->id) ? 'border-primary bg-primary-subtle' : '' }}" style="cursor:pointer">
-                                <input type="radio" class="d-none" wire:click="$set('selectedPaymentMethodId', {{ $pm->id }})">
+                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer" style="cursor:pointer" data-method="{{ $pm->id }}" data-manual="{{ $pm->manual ? '1' : '0' }}">
+                                <input type="radio" name="changePlanMethod" class="d-none" value="{{ $pm->id }}">
                                 <i class="fa fa-money-bill-wave fs-3 text-secondary"></i>
                                 <span class="fw-semibold text-center">{{ $pm->name }}</span>
                             </label>
                         </div>
                         @endforeach
                     </div>
-                    @error('payFromBalance') <div class="text-danger small mb-2">{{ $message }}</div> @enderror
-                    @error('selectedPaymentMethodId') <div class="text-danger small mb-2">{{ $message }}</div> @enderror
+                    <div class="text-danger small mb-2 d-none" data-error-for="pay_from_balance"></div>
+                    <div class="text-danger small mb-2 d-none" data-error-for="payment_method_id"></div>
 
-                    @if(!$payFromBalance && ($selectedPaymentMethod->manual ?? false))
-                    <div class="bg-light border rounded-3 p-3 mb-3">
+                    <div class="bg-light border rounded-3 p-3 mb-3 d-none" id="changePlanManualBox">
                         <h6 class="fw-bold text-primary mb-1">Manual Payment</h6>
                         <p class="small text-muted mb-3">Please transfer the amount using the details below, then upload the receipt to continue.</p>
 
-                        @php $details = $selectedPaymentMethod->details ?? []; $locale = app()->getLocale(); @endphp
-                        @if(is_array($details) && count($details) > 0)
-                        <div class="bg-white p-3 rounded border mb-3 small">
-                            @foreach($details as $row)
-                                @php
-                                    $label = $row['label'][$locale] ?? ($row['label']['en'] ?? ($row['key'] ?? ''));
-                                    $value = $row['value'][$locale] ?? ($row['value']['en'] ?? '');
-                                @endphp
-                                <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
-                                    <span class="fw-semibold">{{ $label }}:</span>
-                                    <span>{{ $value }}</span>
-                                </div>
-                            @endforeach
-                        </div>
-                        @endif
+                        <div class="bg-white p-3 rounded border mb-3 small" id="changePlanManualDetails"></div>
 
-                        @if($selectedPaymentMethod->currency && $pricingPreview)
-                        <div class="bg-white p-3 rounded border mb-3 d-flex justify-content-between align-items-center">
+                        <div class="bg-white p-3 rounded border mb-3 d-flex justify-content-between align-items-center d-none" id="changePlanManualAmountBox">
                             <span class="fw-semibold">Amount to transfer</span>
-                            <span class="fs-5 fw-bold text-primary">
-                                {{ number_format(((float) ($pricingPreview['final_price'] ?? 0)) * (float) $selectedPaymentMethod->currency->conversion_rate, 2) }}
-                                {{ $selectedPaymentMethod->currency->code }}
-                            </span>
+                            <span class="fs-5 fw-bold text-primary" id="changePlanManualAmount"></span>
                         </div>
-                        @endif
 
                         <label class="form-label fw-semibold">Upload Receipt <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" wire:model="receiptFile" accept=".pdf,.jpg,.jpeg,.png">
-                        <div wire:loading wire:target="receiptFile" class="small text-primary mt-1"><i class="fa fa-spinner fa-spin me-1"></i>Uploading...</div>
-                        @error('receiptFile') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                        <input type="file" class="form-control" id="changePlanReceiptFile" accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="text-danger small mt-1 d-none" data-error-for="receipt_file"></div>
                     </div>
-                    @endif
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" wire:click="closeChangePlanPanel">Cancel</button>
-                    <button type="button" class="btn btn-primary" wire:click="processSubscriptionChange" wire:loading.attr="disabled" wire:target="processSubscriptionChange">
-                        <span wire:loading.remove wire:target="processSubscriptionChange"><i class="fa fa-check me-1"></i> Confirm</span>
-                        <span wire:loading wire:target="processSubscriptionChange"><i class="fa fa-spinner fa-spin me-1"></i> Processing...</span>
+                    <button type="button" class="btn btn-secondary" id="cancelChangePlanBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmChangePlanBtn">
+                        <span id="confirmChangePlanIdle"><i class="fa fa-check me-1"></i> Confirm</span>
+                        <span id="confirmChangePlanBusy" class="d-none"><i class="fa fa-spinner fa-spin me-1"></i> Processing...</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    @endif
 
-    @if($showTopUpPanel)
-    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,.5);" wire:key="topup-modal">
+    <div class="modal d-none" id="topUpModal" tabindex="-1" style="background: rgba(0,0,0,.5);">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><i class="fa fa-wallet me-2"></i>Add Balance</h5>
-                    <button type="button" class="btn-close" wire:click="closeTopUpPanel"></button>
+                    <button type="button" class="btn-close" id="closeTopUpBtn"></button>
                 </div>
                 <div class="modal-body">
 
@@ -329,69 +301,47 @@
                         <label class="form-label fw-semibold">Amount (USD)</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" min="1" class="form-control" wire:model.live="topUpAmount" placeholder="e.g. 50">
+                            <input type="number" step="0.01" min="1" class="form-control" id="topUpAmount" placeholder="e.g. 50">
                         </div>
-                        @error('topUpAmount') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                        <div class="text-danger small mt-1 d-none" data-error-for="amount"></div>
                     </div>
 
                     <label class="form-label fw-semibold">Payment Method</label>
-                    <div class="row g-3 mb-3">
+                    <div class="row g-3 mb-3" id="topUpPaymentMethods">
                         @foreach($paymentMethods as $pm)
                         <div class="col-md-4">
-                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer {{ $topUpPaymentMethodId == $pm->id ? 'border-primary bg-primary-subtle' : '' }}" style="cursor:pointer">
-                                <input type="radio" class="d-none" wire:click="$set('topUpPaymentMethodId', {{ $pm->id }})">
+                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer" style="cursor:pointer" data-method="{{ $pm->id }}" data-manual="{{ $pm->manual ? '1' : '0' }}">
+                                <input type="radio" name="topUpMethod" class="d-none" value="{{ $pm->id }}">
                                 <i class="fa fa-money-bill-wave fs-3 text-secondary"></i>
                                 <span class="fw-semibold text-center">{{ $pm->name }}</span>
                             </label>
                         </div>
                         @endforeach
                     </div>
-                    @error('topUpPaymentMethodId') <div class="text-danger small mb-2">{{ $message }}</div> @enderror
+                    <div class="text-danger small mb-2 d-none" data-error-for="payment_method_id"></div>
 
-                    @if($topUpPaymentMethod->manual ?? false)
-                    <div class="bg-light border rounded-3 p-3 mb-3">
+                    <div class="bg-light border rounded-3 p-3 mb-3 d-none" id="topUpManualBox">
                         <h6 class="fw-bold text-primary mb-1">Manual Payment</h6>
                         <p class="small text-muted mb-3">Please transfer the amount using the details below, then upload the receipt to continue.</p>
 
-                        @php $details = $topUpPaymentMethod->details ?? []; $locale = app()->getLocale(); @endphp
-                        @if(is_array($details) && count($details) > 0)
-                        <div class="bg-white p-3 rounded border mb-3 small">
-                            @foreach($details as $row)
-                                @php
-                                    $label = $row['label'][$locale] ?? ($row['label']['en'] ?? ($row['key'] ?? ''));
-                                    $value = $row['value'][$locale] ?? ($row['value']['en'] ?? '');
-                                @endphp
-                                <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
-                                    <span class="fw-semibold">{{ $label }}:</span>
-                                    <span>{{ $value }}</span>
-                                </div>
-                            @endforeach
-                        </div>
-                        @endif
+                        <div class="bg-white p-3 rounded border mb-3 small" id="topUpManualDetails"></div>
 
-                        @if($topUpPaymentMethod->currency && $topUpAmount)
-                        <div class="bg-white p-3 rounded border mb-3 d-flex justify-content-between align-items-center">
+                        <div class="bg-white p-3 rounded border mb-3 d-flex justify-content-between align-items-center d-none" id="topUpManualAmountBox">
                             <span class="fw-semibold">Amount to transfer</span>
-                            <span class="fs-5 fw-bold text-primary">
-                                {{ number_format(((float) $topUpAmount) * (float) $topUpPaymentMethod->currency->conversion_rate, 2) }}
-                                {{ $topUpPaymentMethod->currency->code }}
-                            </span>
+                            <span class="fs-5 fw-bold text-primary" id="topUpManualAmount"></span>
                         </div>
-                        @endif
 
                         <label class="form-label fw-semibold">Upload Receipt <span class="text-danger">*</span></label>
-                        <input type="file" class="form-control" wire:model="topUpReceiptFile" accept=".pdf,.jpg,.jpeg,.png">
-                        <div wire:loading wire:target="topUpReceiptFile" class="small text-primary mt-1"><i class="fa fa-spinner fa-spin me-1"></i>Uploading...</div>
-                        @error('topUpReceiptFile') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                        <input type="file" class="form-control" id="topUpReceiptFile" accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="text-danger small mt-1 d-none" data-error-for="receipt_file"></div>
                     </div>
-                    @endif
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" wire:click="closeTopUpPanel">Cancel</button>
-                    <button type="button" class="btn btn-primary" wire:click="processTopUp" wire:loading.attr="disabled" wire:target="processTopUp">
-                        <span wire:loading.remove wire:target="processTopUp"><i class="fa fa-check me-1"></i> Confirm</span>
-                        <span wire:loading wire:target="processTopUp"><i class="fa fa-spinner fa-spin me-1"></i> Processing...</span>
+                    <button type="button" class="btn btn-secondary" id="cancelTopUpBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmTopUpBtn">
+                        <span id="confirmTopUpIdle"><i class="fa fa-check me-1"></i> Confirm</span>
+                        <span id="confirmTopUpBusy" class="d-none"><i class="fa fa-spinner fa-spin me-1"></i> Processing...</span>
                     </button>
                 </div>
             </div>
@@ -400,3 +350,324 @@
     @endif
 
 </div>
+
+@push('scripts')
+<script>
+(function () {
+    const csrfToken = '{{ csrf_token() }}';
+    const paymentMethods = @json($paymentMethods->keyBy('id'));
+    const locale = '{{ app()->getLocale() }}';
+    const routes = {
+        planPricing: '{{ route('admin.subscriptions.plan-pricing', ['plan' => '__ID__']) }}',
+        changePlan: '{{ route('admin.subscriptions.change-plan') }}',
+        topUp: '{{ route('admin.subscriptions.top-up') }}',
+    };
+
+    function formatMoney(amount, code) {
+        return Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + code;
+    }
+
+    function renderManualDetails(container, pm) {
+        container.innerHTML = '';
+        const details = pm.details || [];
+        if (!Array.isArray(details) || details.length === 0) return;
+        details.forEach(function (row) {
+            const label = (row.label && (row.label[locale] || row.label.en)) || row.key || '';
+            const value = (row.value && (row.value[locale] || row.value.en)) || '';
+            const line = document.createElement('div');
+            line.className = 'd-flex justify-content-between border-bottom pb-1 mb-1';
+            line.innerHTML = '<span class="fw-semibold"></span><span></span>';
+            line.querySelector('span').textContent = label + ':';
+            line.querySelectorAll('span')[1].textContent = value;
+            container.appendChild(line);
+        });
+    }
+
+    function clearErrors(modal) {
+        modal.querySelectorAll('[data-error-for]').forEach(function (el) {
+            el.textContent = '';
+            el.classList.add('d-none');
+        });
+    }
+
+    function showErrors(modal, errors) {
+        clearErrors(modal);
+        Object.keys(errors || {}).forEach(function (field) {
+            const el = modal.querySelector('[data-error-for="' + field + '"]');
+            if (el) {
+                el.textContent = Array.isArray(errors[field]) ? errors[field][0] : errors[field];
+                el.classList.remove('d-none');
+            }
+        });
+    }
+
+    function showSuccess(message) {
+        if (window.Swal) {
+            Swal.fire({ icon: 'success', title: message, showConfirmButton: false, timer: 3000, position: 'center' });
+        } else {
+            alert(message);
+        }
+    }
+
+    function showError(message) {
+        if (window.Swal) {
+            Swal.fire({ icon: 'error', title: message, showConfirmButton: false, timer: 3000, position: 'center' });
+        } else {
+            alert(message);
+        }
+    }
+
+    // ---- Change Plan modal ----
+    const changePlanModal = document.getElementById('changePlanModal');
+    if (changePlanModal) {
+        const openBtn = document.getElementById('openChangePlanBtn');
+        const closeBtn = document.getElementById('closeChangePlanBtn');
+        const cancelBtn = document.getElementById('cancelChangePlanBtn');
+        const confirmBtn = document.getElementById('confirmChangePlanBtn');
+        const planSelect = document.getElementById('selectedPlanId');
+        const pricingBox = document.getElementById('pricingPreviewBox');
+        const pricingAmount = document.getElementById('pricingPreviewAmount');
+        const methodButtons = changePlanModal.querySelectorAll('#changePlanPaymentMethods [data-method]');
+        const manualBox = document.getElementById('changePlanManualBox');
+        const manualDetails = document.getElementById('changePlanManualDetails');
+        const manualAmountBox = document.getElementById('changePlanManualAmountBox');
+        const manualAmount = document.getElementById('changePlanManualAmount');
+        const receiptInput = document.getElementById('changePlanReceiptFile');
+
+        let currentPricing = null;
+
+        function selectedMethod() {
+            const checked = changePlanModal.querySelector('input[name="changePlanMethod"]:checked');
+            return checked ? checked.value : null;
+        }
+
+        function updateMethodStyles() {
+            methodButtons.forEach(function (label) {
+                const input = label.querySelector('input');
+                label.classList.toggle('border-primary', input.checked);
+                label.classList.toggle('bg-primary-subtle', input.checked);
+            });
+        }
+
+        function updateManualBox() {
+            const method = selectedMethod();
+            const pm = method && method !== 'balance' ? paymentMethods[method] : null;
+            if (pm && pm.manual) {
+                manualBox.classList.remove('d-none');
+                renderManualDetails(manualDetails, pm);
+                if (pm.currency && currentPricing) {
+                    const converted = (parseFloat(currentPricing.final_price || 0) * parseFloat(pm.currency.conversion_rate)).toFixed(2);
+                    manualAmount.textContent = converted + ' ' + pm.currency.code;
+                    manualAmountBox.classList.remove('d-none');
+                } else {
+                    manualAmountBox.classList.add('d-none');
+                }
+            } else {
+                manualBox.classList.add('d-none');
+            }
+        }
+
+        function loadPricing() {
+            const planId = planSelect.value;
+            if (!planId) return;
+            fetch(routes.planPricing.replace('__ID__', planId), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    currentPricing = data.pricing;
+                    pricingAmount.textContent = Number(currentPricing.final_price || 0).toFixed(2);
+                    pricingBox.classList.remove('d-none');
+                    updateManualBox();
+                });
+        }
+
+        methodButtons.forEach(function (label) {
+            label.addEventListener('click', function () {
+                label.querySelector('input').checked = true;
+                updateMethodStyles();
+                updateManualBox();
+            });
+        });
+
+        planSelect.addEventListener('change', loadPricing);
+
+        openBtn && openBtn.addEventListener('click', function () {
+            clearErrors(changePlanModal);
+            receiptInput.value = '';
+            changePlanModal.classList.remove('d-none');
+            loadPricing();
+        });
+
+        [closeBtn, cancelBtn].forEach(function (btn) {
+            btn && btn.addEventListener('click', function () {
+                changePlanModal.classList.add('d-none');
+            });
+        });
+
+        confirmBtn.addEventListener('click', function () {
+            const method = selectedMethod();
+            const formData = new FormData();
+            formData.append('plan_id', planSelect.value);
+            formData.append('pay_from_balance', method === 'balance' ? '1' : '0');
+            if (method && method !== 'balance') {
+                formData.append('payment_method_id', method);
+            }
+            if (receiptInput.files[0]) {
+                formData.append('receipt_file', receiptInput.files[0]);
+            }
+
+            confirmBtn.disabled = true;
+            document.getElementById('confirmChangePlanIdle').classList.add('d-none');
+            document.getElementById('confirmChangePlanBusy').classList.remove('d-none');
+
+            fetch(routes.changePlan, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+                body: formData,
+            })
+                .then(function (r) { return r.json().then(function (data) { return { status: r.status, data: data }; }); })
+                .then(function (res) {
+                    if (res.status >= 200 && res.status < 300) {
+                        changePlanModal.classList.add('d-none');
+                        showSuccess(res.data.message || 'Done.');
+                        setTimeout(function () { window.location.reload(); }, 1200);
+                    } else if (res.data.redirect) {
+                        window.location = res.data.redirect;
+                    } else if (res.data.errors) {
+                        showErrors(changePlanModal, res.data.errors);
+                    } else {
+                        showError(res.data.message || 'Something went wrong.');
+                    }
+                })
+                .catch(function () {
+                    showError('Something went wrong.');
+                })
+                .finally(function () {
+                    confirmBtn.disabled = false;
+                    document.getElementById('confirmChangePlanIdle').classList.remove('d-none');
+                    document.getElementById('confirmChangePlanBusy').classList.add('d-none');
+                });
+        });
+    }
+
+    // ---- Top Up modal ----
+    const topUpModal = document.getElementById('topUpModal');
+    if (topUpModal) {
+        const openBtn = document.getElementById('openTopUpBtn');
+        const closeBtn = document.getElementById('closeTopUpBtn');
+        const cancelBtn = document.getElementById('cancelTopUpBtn');
+        const confirmBtn = document.getElementById('confirmTopUpBtn');
+        const amountInput = document.getElementById('topUpAmount');
+        const methodButtons = topUpModal.querySelectorAll('#topUpPaymentMethods [data-method]');
+        const manualBox = document.getElementById('topUpManualBox');
+        const manualDetails = document.getElementById('topUpManualDetails');
+        const manualAmountBox = document.getElementById('topUpManualAmountBox');
+        const manualAmount = document.getElementById('topUpManualAmount');
+        const receiptInput = document.getElementById('topUpReceiptFile');
+
+        function selectedMethod() {
+            const checked = topUpModal.querySelector('input[name="topUpMethod"]:checked');
+            return checked ? checked.value : null;
+        }
+
+        function updateMethodStyles() {
+            methodButtons.forEach(function (label) {
+                const input = label.querySelector('input');
+                label.classList.toggle('border-primary', input.checked);
+                label.classList.toggle('bg-primary-subtle', input.checked);
+            });
+        }
+
+        function updateManualBox() {
+            const method = selectedMethod();
+            const pm = method ? paymentMethods[method] : null;
+            if (pm && pm.manual) {
+                manualBox.classList.remove('d-none');
+                renderManualDetails(manualDetails, pm);
+                const amt = parseFloat(amountInput.value || 0);
+                if (pm.currency && amt) {
+                    const converted = (amt * parseFloat(pm.currency.conversion_rate)).toFixed(2);
+                    manualAmount.textContent = converted + ' ' + pm.currency.code;
+                    manualAmountBox.classList.remove('d-none');
+                } else {
+                    manualAmountBox.classList.add('d-none');
+                }
+            } else {
+                manualBox.classList.add('d-none');
+            }
+        }
+
+        methodButtons.forEach(function (label) {
+            label.addEventListener('click', function () {
+                label.querySelector('input').checked = true;
+                updateMethodStyles();
+                updateManualBox();
+            });
+        });
+
+        amountInput.addEventListener('input', updateManualBox);
+
+        openBtn && openBtn.addEventListener('click', function () {
+            clearErrors(topUpModal);
+            amountInput.value = '';
+            receiptInput.value = '';
+            methodButtons.forEach(function (label) { label.querySelector('input').checked = false; });
+            updateMethodStyles();
+            manualBox.classList.add('d-none');
+            topUpModal.classList.remove('d-none');
+        });
+
+        [closeBtn, cancelBtn].forEach(function (btn) {
+            btn && btn.addEventListener('click', function () {
+                topUpModal.classList.add('d-none');
+            });
+        });
+
+        confirmBtn.addEventListener('click', function () {
+            const method = selectedMethod();
+            const formData = new FormData();
+            formData.append('amount', amountInput.value);
+            if (method) {
+                formData.append('payment_method_id', method);
+            }
+            if (receiptInput.files[0]) {
+                formData.append('receipt_file', receiptInput.files[0]);
+            }
+
+            confirmBtn.disabled = true;
+            document.getElementById('confirmTopUpIdle').classList.add('d-none');
+            document.getElementById('confirmTopUpBusy').classList.remove('d-none');
+
+            fetch(routes.topUp, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+                body: formData,
+            })
+                .then(function (r) { return r.json().then(function (data) { return { status: r.status, data: data }; }); })
+                .then(function (res) {
+                    if (res.status >= 200 && res.status < 300) {
+                        topUpModal.classList.add('d-none');
+                        showSuccess(res.data.message || 'Done.');
+                        setTimeout(function () { window.location.reload(); }, 1200);
+                    } else if (res.data.redirect) {
+                        window.location = res.data.redirect;
+                    } else if (res.data.errors) {
+                        showErrors(topUpModal, res.data.errors);
+                    } else {
+                        showError(res.data.message || 'Something went wrong.');
+                    }
+                })
+                .catch(function () {
+                    showError('Something went wrong.');
+                })
+                .finally(function () {
+                    confirmBtn.disabled = false;
+                    document.getElementById('confirmTopUpIdle').classList.remove('d-none');
+                    document.getElementById('confirmTopUpBusy').classList.add('d-none');
+                });
+        });
+    }
+})();
+</script>
+@endpush

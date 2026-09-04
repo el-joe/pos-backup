@@ -52,18 +52,13 @@
                     </div>
                 </div>
 
+                @if(adminCan('subscriptions.renew'))
                 <div class="flex flex-wrap gap-3">
-                    @if(adminCan('subscriptions.renew'))
-                    <button class="inline-flex items-center gap-2 rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700" wire:click="openChangePlanPanel">
+                    <button type="button" id="openChangePlanBtn" class="inline-flex items-center gap-2 rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700">
                         <i class="fa fa-right-left"></i> {{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}
                     </button>
-                    @endif
-                    @if($currentSubscription->canCancel() && adminCan('subscriptions.cancel'))
-                    <button class="inline-flex items-center gap-2 rounded-2xl border border-rose-300 bg-white px-5 py-3 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-rose-300 dark:hover:bg-rose-500/10" wire:click="cancelSubscription">
-                        <i class="fa fa-times"></i> {{ __('general.pages.subscriptions.cancel_and_refund') }}
-                    </button>
-                    @endif
                 </div>
+                @endif
             </div>
         </x-tenant-tailwind-gemini.table-card>
         @endif
@@ -73,7 +68,7 @@
                 <p class="text-sm font-medium uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">{{ __('general.pages.subscriptions.available_balance') }}</p>
                 <p class="text-4xl font-semibold text-brand-700 dark:text-brand-300">{{ currencyFormat($accountBalance, true) }}</p>
                 @if(adminCan('subscriptions.renew'))
-                <button class="inline-flex items-center gap-2 rounded-xl border border-brand-200 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 dark:border-slate-700 dark:text-brand-300 dark:hover:bg-slate-800" wire:click="openTopUpPanel">
+                <button type="button" id="openTopUpBtn" class="inline-flex items-center gap-2 rounded-xl border border-brand-200 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 dark:border-slate-700 dark:text-brand-300 dark:hover:bg-slate-800">
                     <i class="fa fa-plus"></i> Add Balance
                 </button>
                 @endif
@@ -118,14 +113,14 @@
         </div>
     </x-tenant-tailwind-gemini.table-card>
 
-    @if($showChangePlanPanel)
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" wire:key="change-plan-modal">
+    @if(adminCan('subscriptions.renew'))
+    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4" id="changePlanModal">
         <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-xl dark:bg-slate-900">
             <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4 dark:border-slate-700">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white">
                     <i class="fa fa-right-left mr-2"></i>{{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}
                 </h3>
-                <button wire:click="closeChangePlanPanel" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <button type="button" id="closeChangePlanBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                     <i class="fa fa-times text-lg"></i>
                 </button>
             </div>
@@ -134,101 +129,74 @@
 
                 <div>
                     <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">{{ __('general.pages.subscriptions.plan') }}</label>
-                    <select wire:model.live="selectedPlanId" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-700 dark:!bg-slate-800 dark:text-white">
+                    <select id="selectedPlanId" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-700 dark:!bg-slate-800 dark:text-white">
                         @foreach($plans as $plan)
-                            <option value="{{ $plan->id }}">{{ $plan->name }} — {{ currencyFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}</option>
+                            <option value="{{ $plan->id }}" {{ $selectedPlanId == $plan->id ? 'selected' : '' }}>{{ $plan->name }} — {{ currencyFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}</option>
                         @endforeach
                     </select>
-                    @error('selectedPlanId') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="plan_id"></p>
                 </div>
 
-                @if($pricingPreview)
-                <div class="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
+                <div class="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800 {{ $pricingPreview ? '' : 'hidden' }}" id="pricingPreviewBox">
                     <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">{{ __('general.pages.subscriptions.total') }}</span>
-                    <span class="text-lg font-extrabold text-brand-700 dark:text-brand-300">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
+                    <span class="text-lg font-extrabold text-brand-700 dark:text-brand-300" id="pricingPreviewAmount">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
                 </div>
-                @endif
 
                 <div>
                     <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Payment Method</label>
-                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border p-3 transition {{ $payFromBalance ? 'border-brand-500 bg-brand-50 dark:bg-slate-800' : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:!bg-slate-900' }}">
-                            <input type="radio" class="hidden" wire:click="$set('payFromBalance', true)">
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" id="changePlanPaymentMethods">
+                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 transition dark:border-slate-700 dark:!bg-slate-900" data-method="balance">
+                            <input type="radio" name="changePlanMethod" class="hidden" value="balance">
                             <i class="fa fa-wallet text-2xl text-brand-500"></i>
                             <span class="text-center text-xs font-bold text-slate-700 dark:text-white">{{ __('general.pages.subscriptions.account_balance') }}</span>
                             <span class="text-[11px] text-slate-500 dark:text-slate-400">{{ currencyFormat($accountBalance, true) }}</span>
                         </label>
                         @foreach($paymentMethods as $pm)
-                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border p-3 transition {{ (!$payFromBalance && $selectedPaymentMethodId == $pm->id) ? 'border-brand-500 bg-brand-50 dark:bg-slate-800' : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:!bg-slate-900' }}">
-                            <input type="radio" class="hidden" wire:click="$set('selectedPaymentMethodId', {{ $pm->id }})">
+                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 transition dark:border-slate-700 dark:!bg-slate-900" data-method="{{ $pm->id }}" data-manual="{{ $pm->manual ? '1' : '0' }}">
+                            <input type="radio" name="changePlanMethod" class="hidden" value="{{ $pm->id }}">
                             <i class="fa-solid fa-money-bill-wave text-2xl text-slate-400"></i>
                             <span class="text-center text-xs font-bold text-slate-700 dark:text-white">{{ $pm->name }}</span>
                         </label>
                         @endforeach
                     </div>
-                    @error('payFromBalance') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
-                    @error('selectedPaymentMethodId') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="pay_from_balance"></p>
+                    <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="payment_method_id"></p>
                 </div>
 
-                @if(!$payFromBalance && ($selectedPaymentMethod->manual ?? false))
-                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-slate-700 dark:!bg-slate-800">
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-slate-700 dark:!bg-slate-800 hidden" id="changePlanManualBox">
                     <h4 class="mb-1 text-sm font-bold text-blue-900 dark:text-blue-400">Manual Payment</h4>
                     <p class="mb-3 text-xs text-blue-800 dark:text-slate-400">Please transfer the amount using the details below, then upload the receipt to continue.</p>
 
-                    @php $details = $selectedPaymentMethod->details ?? []; $locale = app()->getLocale(); @endphp
-                    @if(is_array($details) && count($details) > 0)
-                    <div class="mb-3 space-y-2 rounded-lg border border-blue-50 bg-white p-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
-                        @foreach($details as $row)
-                            @php
-                                $label = $row['label'][$locale] ?? ($row['label']['en'] ?? ($row['key'] ?? ''));
-                                $value = $row['value'][$locale] ?? ($row['value']['en'] ?? '');
-                            @endphp
-                            <div class="flex justify-between gap-4 border-b border-slate-100 pb-1 last:border-b-0 last:pb-0 dark:border-slate-700">
-                                <span class="font-bold">{{ $label }}:</span>
-                                <span class="text-right">{{ $value }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                    @endif
+                    <div class="mb-3 space-y-2 rounded-lg border border-blue-50 bg-white p-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300" id="changePlanManualDetails"></div>
 
-                    @if($selectedPaymentMethod->currency && $pricingPreview)
-                    <div class="mb-3 flex items-center justify-between rounded-lg border border-blue-50 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                    <div class="mb-3 flex items-center justify-between rounded-lg border border-blue-50 bg-white p-3 dark:border-slate-700 dark:bg-slate-900 hidden" id="changePlanManualAmountBox">
                         <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Amount to transfer</span>
-                        <span class="text-lg font-extrabold text-brand-dark dark:text-white">
-                            {{ number_format(((float) ($pricingPreview['final_price'] ?? 0)) * (float) $selectedPaymentMethod->currency->conversion_rate, 2) }}
-                            {{ $selectedPaymentMethod->currency->code }}
-                        </span>
+                        <span class="text-lg font-extrabold text-brand-dark dark:text-white" id="changePlanManualAmount"></span>
                     </div>
-                    @endif
 
                     <label class="mb-2 block text-xs font-bold uppercase text-slate-500 dark:text-slate-400">Upload Receipt <span class="text-rose-500">*</span></label>
-                    <input type="file" wire:model="receiptFile" accept=".pdf,.jpg,.jpeg,.png"
+                    <input type="file" id="changePlanReceiptFile" accept=".pdf,.jpg,.jpeg,.png"
                         class="block w-full rounded-lg border border-slate-200 bg-white p-2 text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:file:bg-slate-700 dark:file:text-brand-400">
-                    <div wire:loading wire:target="receiptFile" class="mt-2 text-xs font-medium text-brand-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Uploading...</div>
-                    @error('receiptFile') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="receipt_file"></p>
                 </div>
-                @endif
 
             </div>
 
             <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700">
-                <button wire:click="closeChangePlanPanel" class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
-                <button wire:click="processSubscriptionChange" wire:loading.attr="disabled" wire:target="processSubscriptionChange"
-                    class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:opacity-60">
-                    <span wire:loading.remove wire:target="processSubscriptionChange"><i class="fa fa-check mr-1"></i> Confirm</span>
-                    <span wire:loading wire:target="processSubscriptionChange"><i class="fa fa-spinner fa-spin mr-1"></i> Processing...</span>
+                <button type="button" id="cancelChangePlanBtn" class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
+                <button type="button" id="confirmChangePlanBtn" class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:opacity-60">
+                    <span id="confirmChangePlanIdle"><i class="fa fa-check mr-1"></i> Confirm</span>
+                    <span id="confirmChangePlanBusy" class="hidden"><i class="fa fa-spinner fa-spin mr-1"></i> Processing...</span>
                 </button>
             </div>
         </div>
     </div>
-    @endif
 
-    @if($showTopUpPanel)
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" wire:key="topup-modal">
+    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4" id="topUpModal">
         <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-xl dark:bg-slate-900">
             <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4 dark:border-slate-700">
                 <h3 class="text-lg font-bold text-slate-900 dark:text-white"><i class="fa fa-wallet mr-2"></i>Add Balance</h3>
-                <button wire:click="closeTopUpPanel" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <button type="button" id="closeTopUpBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                     <i class="fa fa-times text-lg"></i>
                 </button>
             </div>
@@ -239,76 +207,380 @@
                     <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Amount (USD)</label>
                     <div class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 dark:border-slate-700 dark:!bg-slate-800">
                         <span class="text-slate-400">$</span>
-                        <input type="number" step="0.01" min="1" wire:model.live="topUpAmount" placeholder="e.g. 50"
+                        <input type="number" step="0.01" min="1" id="topUpAmount" placeholder="e.g. 50"
                             class="w-full border-0 bg-transparent p-0 text-sm text-slate-900 focus:outline-none focus:ring-0 dark:text-white">
                     </div>
-                    @error('topUpAmount') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="amount"></p>
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Payment Method</label>
-                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" id="topUpPaymentMethods">
                         @foreach($paymentMethods as $pm)
-                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border p-3 transition {{ $topUpPaymentMethodId == $pm->id ? 'border-brand-500 bg-brand-50 dark:bg-slate-800' : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:!bg-slate-900' }}">
-                            <input type="radio" class="hidden" wire:click="$set('topUpPaymentMethodId', {{ $pm->id }})">
+                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 transition dark:border-slate-700 dark:!bg-slate-900" data-method="{{ $pm->id }}" data-manual="{{ $pm->manual ? '1' : '0' }}">
+                            <input type="radio" name="topUpMethod" class="hidden" value="{{ $pm->id }}">
                             <i class="fa-solid fa-money-bill-wave text-2xl text-slate-400"></i>
                             <span class="text-center text-xs font-bold text-slate-700 dark:text-white">{{ $pm->name }}</span>
                         </label>
                         @endforeach
                     </div>
-                    @error('topUpPaymentMethodId') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="payment_method_id"></p>
                 </div>
 
-                @if($topUpPaymentMethod->manual ?? false)
-                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-slate-700 dark:!bg-slate-800">
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-slate-700 dark:!bg-slate-800 hidden" id="topUpManualBox">
                     <h4 class="mb-1 text-sm font-bold text-blue-900 dark:text-blue-400">Manual Payment</h4>
                     <p class="mb-3 text-xs text-blue-800 dark:text-slate-400">Please transfer the amount using the details below, then upload the receipt to continue.</p>
 
-                    @php $details = $topUpPaymentMethod->details ?? []; $locale = app()->getLocale(); @endphp
-                    @if(is_array($details) && count($details) > 0)
-                    <div class="mb-3 space-y-2 rounded-lg border border-blue-50 bg-white p-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
-                        @foreach($details as $row)
-                            @php
-                                $label = $row['label'][$locale] ?? ($row['label']['en'] ?? ($row['key'] ?? ''));
-                                $value = $row['value'][$locale] ?? ($row['value']['en'] ?? '');
-                            @endphp
-                            <div class="flex justify-between gap-4 border-b border-slate-100 pb-1 last:border-b-0 last:pb-0 dark:border-slate-700">
-                                <span class="font-bold">{{ $label }}:</span>
-                                <span class="text-right">{{ $value }}</span>
-                            </div>
-                        @endforeach
-                    </div>
-                    @endif
+                    <div class="mb-3 space-y-2 rounded-lg border border-blue-50 bg-white p-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300" id="topUpManualDetails"></div>
 
-                    @if($topUpPaymentMethod->currency && $topUpAmount)
-                    <div class="mb-3 flex items-center justify-between rounded-lg border border-blue-50 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                    <div class="mb-3 flex items-center justify-between rounded-lg border border-blue-50 bg-white p-3 dark:border-slate-700 dark:bg-slate-900 hidden" id="topUpManualAmountBox">
                         <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Amount to transfer</span>
-                        <span class="text-lg font-extrabold text-brand-dark dark:text-white">
-                            {{ number_format(((float) $topUpAmount) * (float) $topUpPaymentMethod->currency->conversion_rate, 2) }}
-                            {{ $topUpPaymentMethod->currency->code }}
-                        </span>
+                        <span class="text-lg font-extrabold text-brand-dark dark:text-white" id="topUpManualAmount"></span>
                     </div>
-                    @endif
 
                     <label class="mb-2 block text-xs font-bold uppercase text-slate-500 dark:text-slate-400">Upload Receipt <span class="text-rose-500">*</span></label>
-                    <input type="file" wire:model="topUpReceiptFile" accept=".pdf,.jpg,.jpeg,.png"
+                    <input type="file" id="topUpReceiptFile" accept=".pdf,.jpg,.jpeg,.png"
                         class="block w-full rounded-lg border border-slate-200 bg-white p-2 text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:file:bg-slate-700 dark:file:text-brand-400">
-                    <div wire:loading wire:target="topUpReceiptFile" class="mt-2 text-xs font-medium text-brand-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Uploading...</div>
-                    @error('topUpReceiptFile') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    <p class="mt-1 text-xs text-rose-500 hidden" data-error-for="receipt_file"></p>
                 </div>
-                @endif
 
             </div>
 
             <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700">
-                <button wire:click="closeTopUpPanel" class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
-                <button wire:click="processTopUp" wire:loading.attr="disabled" wire:target="processTopUp"
-                    class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:opacity-60">
-                    <span wire:loading.remove wire:target="processTopUp"><i class="fa fa-check mr-1"></i> Confirm</span>
-                    <span wire:loading wire:target="processTopUp"><i class="fa fa-spinner fa-spin mr-1"></i> Processing...</span>
+                <button type="button" id="cancelTopUpBtn" class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
+                <button type="button" id="confirmTopUpBtn" class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:opacity-60">
+                    <span id="confirmTopUpIdle"><i class="fa fa-check mr-1"></i> Confirm</span>
+                    <span id="confirmTopUpBusy" class="hidden"><i class="fa fa-spinner fa-spin mr-1"></i> Processing...</span>
                 </button>
             </div>
         </div>
     </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+(function () {
+    const csrfToken = '{{ csrf_token() }}';
+    const paymentMethods = @json($paymentMethods->keyBy('id'));
+    const locale = '{{ app()->getLocale() }}';
+    const routes = {
+        planPricing: '{{ route('admin.subscriptions.plan-pricing', ['plan' => '__ID__']) }}',
+        changePlan: '{{ route('admin.subscriptions.change-plan') }}',
+        topUp: '{{ route('admin.subscriptions.top-up') }}',
+    };
+
+    function renderManualDetails(container, pm) {
+        container.innerHTML = '';
+        const details = pm.details || [];
+        if (!Array.isArray(details) || details.length === 0) return;
+        details.forEach(function (row) {
+            const label = (row.label && (row.label[locale] || row.label.en)) || row.key || '';
+            const value = (row.value && (row.value[locale] || row.value.en)) || '';
+            const line = document.createElement('div');
+            line.className = 'flex justify-between gap-4 border-b border-slate-100 pb-1 last:border-b-0 last:pb-0 dark:border-slate-700';
+            line.innerHTML = '<span class="font-bold"></span><span class="text-right"></span>';
+            line.querySelector('span').textContent = label + ':';
+            line.querySelectorAll('span')[1].textContent = value;
+            container.appendChild(line);
+        });
+    }
+
+    function clearErrors(modal) {
+        modal.querySelectorAll('[data-error-for]').forEach(function (el) {
+            el.textContent = '';
+            el.classList.add('hidden');
+        });
+    }
+
+    function showErrors(modal, errors) {
+        clearErrors(modal);
+        Object.keys(errors || {}).forEach(function (field) {
+            const el = modal.querySelector('[data-error-for="' + field + '"]');
+            if (el) {
+                el.textContent = Array.isArray(errors[field]) ? errors[field][0] : errors[field];
+                el.classList.remove('hidden');
+            }
+        });
+    }
+
+    function showSuccess(message) {
+        if (window.Swal) {
+            Swal.fire({ icon: 'success', title: message, showConfirmButton: false, timer: 3000, position: 'center' });
+        } else {
+            alert(message);
+        }
+    }
+
+    function showError(message) {
+        if (window.Swal) {
+            Swal.fire({ icon: 'error', title: message, showConfirmButton: false, timer: 3000, position: 'center' });
+        } else {
+            alert(message);
+        }
+    }
+
+    function openModal(modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModal(modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    // ---- Change Plan modal ----
+    const changePlanModal = document.getElementById('changePlanModal');
+    if (changePlanModal) {
+        const openBtn = document.getElementById('openChangePlanBtn');
+        const closeBtn = document.getElementById('closeChangePlanBtn');
+        const cancelBtn = document.getElementById('cancelChangePlanBtn');
+        const confirmBtn = document.getElementById('confirmChangePlanBtn');
+        const planSelect = document.getElementById('selectedPlanId');
+        const pricingBox = document.getElementById('pricingPreviewBox');
+        const pricingAmount = document.getElementById('pricingPreviewAmount');
+        const methodButtons = changePlanModal.querySelectorAll('#changePlanPaymentMethods [data-method]');
+        const manualBox = document.getElementById('changePlanManualBox');
+        const manualDetails = document.getElementById('changePlanManualDetails');
+        const manualAmountBox = document.getElementById('changePlanManualAmountBox');
+        const manualAmount = document.getElementById('changePlanManualAmount');
+        const receiptInput = document.getElementById('changePlanReceiptFile');
+
+        let currentPricing = null;
+
+        function selectedMethod() {
+            const checked = changePlanModal.querySelector('input[name="changePlanMethod"]:checked');
+            return checked ? checked.value : null;
+        }
+
+        function updateMethodStyles() {
+            methodButtons.forEach(function (label) {
+                const input = label.querySelector('input');
+                label.classList.toggle('border-brand-500', input.checked);
+                label.classList.toggle('bg-brand-50', input.checked);
+            });
+        }
+
+        function updateManualBox() {
+            const method = selectedMethod();
+            const pm = method && method !== 'balance' ? paymentMethods[method] : null;
+            if (pm && pm.manual) {
+                manualBox.classList.remove('hidden');
+                renderManualDetails(manualDetails, pm);
+                if (pm.currency && currentPricing) {
+                    const converted = (parseFloat(currentPricing.final_price || 0) * parseFloat(pm.currency.conversion_rate)).toFixed(2);
+                    manualAmount.textContent = converted + ' ' + pm.currency.code;
+                    manualAmountBox.classList.remove('hidden');
+                } else {
+                    manualAmountBox.classList.add('hidden');
+                }
+            } else {
+                manualBox.classList.add('hidden');
+            }
+        }
+
+        function loadPricing() {
+            const planId = planSelect.value;
+            if (!planId) return;
+            fetch(routes.planPricing.replace('__ID__', planId), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    currentPricing = data.pricing;
+                    pricingAmount.textContent = Number(currentPricing.final_price || 0).toFixed(2);
+                    pricingBox.classList.remove('hidden');
+                    updateManualBox();
+                });
+        }
+
+        methodButtons.forEach(function (label) {
+            label.addEventListener('click', function () {
+                label.querySelector('input').checked = true;
+                updateMethodStyles();
+                updateManualBox();
+            });
+        });
+
+        planSelect.addEventListener('change', loadPricing);
+
+        openBtn && openBtn.addEventListener('click', function () {
+            clearErrors(changePlanModal);
+            receiptInput.value = '';
+            openModal(changePlanModal);
+            loadPricing();
+        });
+
+        [closeBtn, cancelBtn].forEach(function (btn) {
+            btn && btn.addEventListener('click', function () {
+                closeModal(changePlanModal);
+            });
+        });
+
+        confirmBtn.addEventListener('click', function () {
+            const method = selectedMethod();
+            const formData = new FormData();
+            formData.append('plan_id', planSelect.value);
+            formData.append('pay_from_balance', method === 'balance' ? '1' : '0');
+            if (method && method !== 'balance') {
+                formData.append('payment_method_id', method);
+            }
+            if (receiptInput.files[0]) {
+                formData.append('receipt_file', receiptInput.files[0]);
+            }
+
+            confirmBtn.disabled = true;
+            document.getElementById('confirmChangePlanIdle').classList.add('hidden');
+            document.getElementById('confirmChangePlanBusy').classList.remove('hidden');
+
+            fetch(routes.changePlan, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+                body: formData,
+            })
+                .then(function (r) { return r.json().then(function (data) { return { status: r.status, data: data }; }); })
+                .then(function (res) {
+                    if (res.status >= 200 && res.status < 300) {
+                        closeModal(changePlanModal);
+                        showSuccess(res.data.message || 'Done.');
+                        setTimeout(function () { window.location.reload(); }, 1200);
+                    } else if (res.data.redirect) {
+                        window.location = res.data.redirect;
+                    } else if (res.data.errors) {
+                        showErrors(changePlanModal, res.data.errors);
+                    } else {
+                        showError(res.data.message || 'Something went wrong.');
+                    }
+                })
+                .catch(function () {
+                    showError('Something went wrong.');
+                })
+                .finally(function () {
+                    confirmBtn.disabled = false;
+                    document.getElementById('confirmChangePlanIdle').classList.remove('hidden');
+                    document.getElementById('confirmChangePlanBusy').classList.add('hidden');
+                });
+        });
+    }
+
+    // ---- Top Up modal ----
+    const topUpModal = document.getElementById('topUpModal');
+    if (topUpModal) {
+        const openBtn = document.getElementById('openTopUpBtn');
+        const closeBtn = document.getElementById('closeTopUpBtn');
+        const cancelBtn = document.getElementById('cancelTopUpBtn');
+        const confirmBtn = document.getElementById('confirmTopUpBtn');
+        const amountInput = document.getElementById('topUpAmount');
+        const methodButtons = topUpModal.querySelectorAll('#topUpPaymentMethods [data-method]');
+        const manualBox = document.getElementById('topUpManualBox');
+        const manualDetails = document.getElementById('topUpManualDetails');
+        const manualAmountBox = document.getElementById('topUpManualAmountBox');
+        const manualAmount = document.getElementById('topUpManualAmount');
+        const receiptInput = document.getElementById('topUpReceiptFile');
+
+        function selectedMethod() {
+            const checked = topUpModal.querySelector('input[name="topUpMethod"]:checked');
+            return checked ? checked.value : null;
+        }
+
+        function updateMethodStyles() {
+            methodButtons.forEach(function (label) {
+                const input = label.querySelector('input');
+                label.classList.toggle('border-brand-500', input.checked);
+                label.classList.toggle('bg-brand-50', input.checked);
+            });
+        }
+
+        function updateManualBox() {
+            const method = selectedMethod();
+            const pm = method ? paymentMethods[method] : null;
+            if (pm && pm.manual) {
+                manualBox.classList.remove('hidden');
+                renderManualDetails(manualDetails, pm);
+                const amt = parseFloat(amountInput.value || 0);
+                if (pm.currency && amt) {
+                    const converted = (amt * parseFloat(pm.currency.conversion_rate)).toFixed(2);
+                    manualAmount.textContent = converted + ' ' + pm.currency.code;
+                    manualAmountBox.classList.remove('hidden');
+                } else {
+                    manualAmountBox.classList.add('hidden');
+                }
+            } else {
+                manualBox.classList.add('hidden');
+            }
+        }
+
+        methodButtons.forEach(function (label) {
+            label.addEventListener('click', function () {
+                label.querySelector('input').checked = true;
+                updateMethodStyles();
+                updateManualBox();
+            });
+        });
+
+        amountInput.addEventListener('input', updateManualBox);
+
+        openBtn && openBtn.addEventListener('click', function () {
+            clearErrors(topUpModal);
+            amountInput.value = '';
+            receiptInput.value = '';
+            methodButtons.forEach(function (label) { label.querySelector('input').checked = false; });
+            updateMethodStyles();
+            manualBox.classList.add('hidden');
+            openModal(topUpModal);
+        });
+
+        [closeBtn, cancelBtn].forEach(function (btn) {
+            btn && btn.addEventListener('click', function () {
+                closeModal(topUpModal);
+            });
+        });
+
+        confirmBtn.addEventListener('click', function () {
+            const method = selectedMethod();
+            const formData = new FormData();
+            formData.append('amount', amountInput.value);
+            if (method) {
+                formData.append('payment_method_id', method);
+            }
+            if (receiptInput.files[0]) {
+                formData.append('receipt_file', receiptInput.files[0]);
+            }
+
+            confirmBtn.disabled = true;
+            document.getElementById('confirmTopUpIdle').classList.add('hidden');
+            document.getElementById('confirmTopUpBusy').classList.remove('hidden');
+
+            fetch(routes.topUp, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+                body: formData,
+            })
+                .then(function (r) { return r.json().then(function (data) { return { status: r.status, data: data }; }); })
+                .then(function (res) {
+                    if (res.status >= 200 && res.status < 300) {
+                        closeModal(topUpModal);
+                        showSuccess(res.data.message || 'Done.');
+                        setTimeout(function () { window.location.reload(); }, 1200);
+                    } else if (res.data.redirect) {
+                        window.location = res.data.redirect;
+                    } else if (res.data.errors) {
+                        showErrors(topUpModal, res.data.errors);
+                    } else {
+                        showError(res.data.message || 'Something went wrong.');
+                    }
+                })
+                .catch(function () {
+                    showError('Something went wrong.');
+                })
+                .finally(function () {
+                    confirmBtn.disabled = false;
+                    document.getElementById('confirmTopUpIdle').classList.remove('hidden');
+                    document.getElementById('confirmTopUpBusy').classList.add('hidden');
+                });
+        });
+    }
+})();
+</script>
+@endpush
