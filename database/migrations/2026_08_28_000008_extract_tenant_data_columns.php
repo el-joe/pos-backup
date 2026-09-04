@@ -26,7 +26,11 @@ return new class extends Migration
             country_id = JSON_UNQUOTE(JSON_EXTRACT(data, '$.country_id')),
             currency_id= JSON_UNQUOTE(JSON_EXTRACT(data, '$.currency_id')),
             tax_number = JSON_UNQUOTE(JSON_EXTRACT(data, '$.tax_number')),
-            active     = COALESCE(JSON_UNQUOTE(JSON_EXTRACT(data, '$.active')), 1)
+            active     = IF(
+                             JSON_UNQUOTE(JSON_EXTRACT(data, '$.active')) IN ('false', '0'),
+                             0,
+                             1
+                         )
         WHERE data IS NOT NULL");
 
         Schema::table('tenants', fn (Blueprint $table) => $table->index(['email']));
