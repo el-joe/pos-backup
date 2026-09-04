@@ -49,7 +49,7 @@ class SubscriptionsController extends Controller
         $selectedPlan = $selectedPlanId ? $plans->firstWhere('id', $selectedPlanId) : null;
         $pricingPreview = $selectedPlan ? $this->pricingFor($selectedPlan, $currentSubscription?->systems_allowed ?? ['pos']) : null;
 
-        return layoutView('plans.subscriptions-page', get_defined_vars());
+        return controllerLayoutView('plans.subscriptions-page', get_defined_vars());
     }
 
     public function planPricing(Request $request, Plan $plan): JsonResponse

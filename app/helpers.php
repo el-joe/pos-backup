@@ -129,6 +129,29 @@ if (!function_exists('layoutView')) {
     }
 }
 
+if (!function_exists('controllerLayoutView')) {
+    /**
+     * Like layoutView(), but for plain Controller actions. Livewire's ->layout()
+     * macro only wraps content when rendered through Livewire's own component
+     * lifecycle, so a Controller-returned view must be wrapped manually here.
+     */
+    function controllerLayoutView($pageName, $with = [], $isSubPage = false)
+    {
+        $defaultView = resolveLivewireView($pageName);
+        $content = view($defaultView, $with)->render();
+
+        if ($isSubPage) {
+            return response($content);
+        }
+
+        $defaultLayout = resolveTenantLayoutView();
+        $layoutData = isset($with['withoutSidebar']) ? ['withoutSidebar' => $with['withoutSidebar']] : [];
+        $layoutData['slot'] = new \Illuminate\Support\HtmlString($content);
+
+        return view($defaultLayout, $layoutData);
+    }
+}
+
 if (!function_exists('employeeLayoutView')) {
     function employeeLayoutView($pageName, $with = [], $isSubPage = false)
     {
