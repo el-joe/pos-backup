@@ -10,13 +10,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tenants', function (Blueprint $table) {
-            $table->string('name')->nullable()->after('id');
-            $table->string('email', 191)->nullable()->after('name');
-            $table->string('phone', 50)->nullable()->after('email');
-            $table->unsignedBigInteger('country_id')->nullable()->after('phone');
-            $table->unsignedBigInteger('currency_id')->nullable()->after('country_id');
-            $table->string('tax_number', 100)->nullable()->after('currency_id');
-            $table->boolean('active')->default(true)->after('tax_number');
+            if (! Schema::hasColumn('tenants', 'name')) {
+                $table->string('name')->nullable()->after('id');
+            }
+            if (! Schema::hasColumn('tenants', 'email')) {
+                $table->string('email', 191)->nullable()->after('name');
+            }
+            if (! Schema::hasColumn('tenants', 'phone')) {
+                $table->string('phone', 50)->nullable()->after('email');
+            }
+            if (! Schema::hasColumn('tenants', 'country_id')) {
+                $table->unsignedBigInteger('country_id')->nullable()->after('phone');
+            }
+            if (! Schema::hasColumn('tenants', 'currency_id')) {
+                $table->unsignedBigInteger('currency_id')->nullable()->after('country_id');
+            }
+            if (! Schema::hasColumn('tenants', 'tax_number')) {
+                $table->string('tax_number', 100)->nullable()->after('currency_id');
+            }
+            if (! Schema::hasColumn('tenants', 'active')) {
+                $table->boolean('active')->default(true)->after('tax_number');
+            }
         });
 
         DB::statement("UPDATE tenants SET
@@ -33,8 +47,17 @@ return new class extends Migration
                          )
         WHERE data IS NOT NULL");
 
-        Schema::table('tenants', fn (Blueprint $table) => $table->index(['email']));
-        Schema::table('tenants', fn (Blueprint $table) => $table->index(['active', 'country_id']));
+        if (! $this->indexExists('tenants', 'tenants_email_index')) {
+            Schema::table('tenants', fn (Blueprint $table) => $table->index(['email']));
+        }
+        if (! $this->indexExists('tenants', 'tenants_active_country_id_index')) {
+            Schema::table('tenants', fn (Blueprint $table) => $table->index(['active', 'country_id']));
+        }
+    }
+
+    private function indexExists(string $table, string $indexName): bool
+    {
+        return collect(Schema::getIndexes($table))->contains('name', $indexName);
     }
 
     public function down(): void

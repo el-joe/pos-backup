@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://mohaaseb.loc</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en"/>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en"/>
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en"/>
@@ -26,201 +26,25 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/pricing</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>http://mohaaseb.loc/faqs</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://mohaaseb.loc/blogs</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-system-vs-pos-system-choosing-the-right-business-management-software"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/7-essential-erp-pos-system-modules-for-small-businesses</loc>
-    <lastmod>2026-02-16T14:02:02+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/7-essential-erp-pos-system-modules-for-small-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/7-essential-erp-pos-system-modules-for-small-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/7-essential-erp-pos-system-modules-for-small-businesses</loc>
-    <lastmod>2026-02-16T14:02:02+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/7-essential-erp-pos-system-modules-for-small-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/7-essential-erp-pos-system-modules-for-small-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/smart-erp-pos-systems-the-complete-guide-for-modern-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/smart-erp-pos-systems-how-mohaaseb-helps-small-businesses-scale-faster"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/unlocking-efficiency-smart-erp-and-pos-systems-that-transform-your-business"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/unlocking-business-potential-with-mohaaseb-the-ultimate-smart-erp-pos-system-for-inventory-management"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses</loc>
-    <lastmod>2026-02-16T14:02:02+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses</loc>
-    <lastmod>2026-02-16T14:02:02+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-erp-system-pos-system-the-complete-guide-for-small-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-stock-management-best-practices-with-erp-system-and-pos-system"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-invoicing-automation-from-pos-system-to-erp-system-accounting"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-multi-location-inventory-management-and-stock-management-with-large-reports"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/discovering-mohaaseb-the-erppos-system-thats-making-business-easier</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/discovering-mohaaseb-the-erppos-system-thats-making-business-easier"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/discovering-mohaaseb-the-erppos-system-thats-making-business-easier"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/discovering-mohaaseb-the-erppos-system-thats-making-business-easier</loc>
-    <lastmod>2026-02-20T20:41:17+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/discovering-mohaaseb-the-erppos-system-thats-making-business-easier"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/discovering-mohaaseb-the-erppos-system-thats-making-business-easier"/>
-  </url>
-  <url>
     <loc>http://mohaaseb.loc/en/blogs/cloud-general-accounting-with-mohaaseb-the-smart-erppos-solution</loc>
-    <lastmod>2026-07-08T15:11:19+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/cloud-general-accounting-with-mohaaseb-the-smart-erppos-solution"/>
@@ -228,7 +52,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/cloud-general-accounting-with-mohaaseb-the-smart-erppos-solution</loc>
-    <lastmod>2026-07-08T15:11:19+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/cloud-general-accounting-with-mohaaseb-the-smart-erppos-solution"/>
@@ -236,7 +60,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/why-every-business-needs-a-mohaaseb-accountant-paired-with-a-smart-erppos-system</loc>
-    <lastmod>2026-07-08T15:10:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-every-business-needs-a-mohaaseb-accountant-paired-with-a-smart-erppos-system"/>
@@ -244,7 +68,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/why-every-business-needs-a-mohaaseb-accountant-paired-with-a-smart-erppos-system</loc>
-    <lastmod>2026-07-08T15:10:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-every-business-needs-a-mohaaseb-accountant-paired-with-a-smart-erppos-system"/>
@@ -252,7 +76,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/mohaasebcom-the-all-in-one-erp-pos-and-cloud-accounting-platform</loc>
-    <lastmod>2026-07-08T15:10:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-the-all-in-one-erp-pos-and-cloud-accounting-platform"/>
@@ -260,7 +84,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/mohaasebcom-the-all-in-one-erp-pos-and-cloud-accounting-platform</loc>
-    <lastmod>2026-07-08T15:10:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-the-all-in-one-erp-pos-and-cloud-accounting-platform"/>
@@ -268,7 +92,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/sales-and-inventory-management-how-mohaaseb-erp-pos-keeps-your-business-in-sync</loc>
-    <lastmod>2026-07-08T15:11:19+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/sales-and-inventory-management-how-mohaaseb-erp-pos-keeps-your-business-in-sync"/>
@@ -276,95 +100,15 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/sales-and-inventory-management-how-mohaaseb-erp-pos-keeps-your-business-in-sync</loc>
-    <lastmod>2026-07-08T15:11:19+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/sales-and-inventory-management-how-mohaaseb-erp-pos-keeps-your-business-in-sync"/>
     <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/sales-and-inventory-management-how-mohaaseb-erp-pos-keeps-your-business-in-sync"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system</loc>
-    <lastmod>2026-07-08T15:10:55+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system</loc>
-    <lastmod>2026-07-08T15:10:55+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting</loc>
-    <lastmod>2026-07-08T15:10:55+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting</loc>
-    <lastmod>2026-07-08T15:10:55+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:11:18+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:11:18+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses</loc>
-    <lastmod>2026-07-08T15:11:18+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses</loc>
-    <lastmod>2026-07-08T15:11:18+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform</loc>
-    <lastmod>2026-07-08T15:11:18+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform</loc>
-    <lastmod>2026-07-08T15:11:18+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
-  </url>
-  <url>
     <loc>http://mohaaseb.loc/en/blogs/purchasing-inventory-management-how-mohaaseb-erp-pos-keeps-stock-and-suppliers-in-sync</loc>
-    <lastmod>2026-07-08T15:11:19+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/purchasing-inventory-management-how-mohaaseb-erp-pos-keeps-stock-and-suppliers-in-sync"/>
@@ -372,159 +116,15 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/purchasing-inventory-management-how-mohaaseb-erp-pos-keeps-stock-and-suppliers-in-sync</loc>
-    <lastmod>2026-07-08T15:11:19+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/purchasing-inventory-management-how-mohaaseb-erp-pos-keeps-stock-and-suppliers-in-sync"/>
     <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/purchasing-inventory-management-how-mohaaseb-erp-pos-keeps-stock-and-suppliers-in-sync"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:11:46+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:11:46+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control</loc>
-    <lastmod>2026-07-08T15:11:46+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control</loc>
-    <lastmod>2026-07-08T15:11:46+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock</loc>
-    <lastmod>2026-07-08T15:11:46+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock</loc>
-    <lastmod>2026-07-08T15:11:46+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:11:49+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:11:49+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three</loc>
-    <lastmod>2026-07-08T15:11:49+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three</loc>
-    <lastmod>2026-07-08T15:11:49+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/getting-started-with-mohaasebcom-your-first-week-checklist</loc>
-    <lastmod>2026-07-08T15:11:49+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/getting-started-with-mohaasebcom-your-first-week-checklist</loc>
-    <lastmod>2026-07-08T15:11:49+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb</loc>
-    <lastmod>2026-07-08T15:12:22+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb</loc>
-    <lastmod>2026-07-08T15:12:22+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/what-is-erp-a-complete-guide-by-mohaaseb</loc>
-    <lastmod>2026-07-08T15:12:22+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/what-is-erp-a-complete-guide-by-mohaaseb</loc>
-    <lastmod>2026-07-08T15:12:22+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:12:22+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:12:22+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
-  </url>
-  <url>
     <loc>http://mohaaseb.loc/en/blogs/the-complete-guide-to-a-sales-and-inventory-management-system-with-mohaaseb-erp-pos</loc>
-    <lastmod>2026-07-08T15:12:33+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-guide-to-a-sales-and-inventory-management-system-with-mohaaseb-erp-pos"/>
@@ -532,7 +132,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/the-complete-guide-to-a-sales-and-inventory-management-system-with-mohaaseb-erp-pos</loc>
-    <lastmod>2026-07-08T15:12:33+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-guide-to-a-sales-and-inventory-management-system-with-mohaaseb-erp-pos"/>
@@ -540,7 +140,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/how-mohaasebcom-powers-smart-sales-and-inventory-management-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:12:33+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-mohaasebcom-powers-smart-sales-and-inventory-management-for-growing-businesses"/>
@@ -548,7 +148,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/how-mohaasebcom-powers-smart-sales-and-inventory-management-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:12:33+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-mohaasebcom-powers-smart-sales-and-inventory-management-for-growing-businesses"/>
@@ -556,7 +156,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/sales-and-inventory-management-system-explained-erp-pos-and-mohaaseb-in-action</loc>
-    <lastmod>2026-07-08T15:12:33+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/sales-and-inventory-management-system-explained-erp-pos-and-mohaaseb-in-action"/>
@@ -564,159 +164,159 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/sales-and-inventory-management-system-explained-erp-pos-and-mohaaseb-in-action</loc>
-    <lastmod>2026-07-08T15:12:33+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/sales-and-inventory-management-system-explained-erp-pos-and-mohaaseb-in-action"/>
     <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/sales-and-inventory-management-system-explained-erp-pos-and-mohaaseb-in-action"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses</loc>
-    <lastmod>2026-07-08T15:12:43+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses</loc>
-    <lastmod>2026-07-08T15:12:43+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-the-real-difference-explained-by-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both</loc>
-    <lastmod>2026-07-08T15:12:43+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/what-is-erp-a-complete-guide-by-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both</loc>
-    <lastmod>2026-07-08T15:12:43+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/what-is-erp-a-complete-guide-by-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-erp-a-complete-guide-by-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end</loc>
-    <lastmod>2026-07-08T15:12:43+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end</loc>
-    <lastmod>2026-07-08T15:12:43+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-pos-understanding-point-of-sale-with-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together</loc>
-    <lastmod>2026-07-08T15:13:17+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together</loc>
-    <lastmod>2026-07-08T15:13:17+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/manage-purchases-and-stock-with-mohaaseb-the-erp-and-pos-system-built-for-growing-businesses"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/the-complete-erp-guide-for-mohaasebcom-users</loc>
-    <lastmod>2026-07-08T15:13:17+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/the-complete-erp-guide-for-mohaasebcom-users</loc>
-    <lastmod>2026-07-08T15:13:17+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-erp-to-pos-how-mohaasebcom-simplifies-purchase-orders-and-stock-control"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system</loc>
-    <lastmod>2026-07-08T15:13:17+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system</loc>
-    <lastmod>2026-07-08T15:13:17+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/5-smart-ways-mohaasebs-pos-and-erp-tools-help-you-manage-purchases-and-stock"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/pos-vs-retail-erp-which-one-should-your-business-choose</loc>
-    <lastmod>2026-07-08T15:13:40+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/pos-vs-retail-erp-which-one-should-your-business-choose</loc>
-    <lastmod>2026-07-08T15:13:40+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/best-cloud-financial-management-software-a-complete-guide-with-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:13:40+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses</loc>
-    <lastmod>2026-07-08T15:13:40+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-for-accountants-and-small-businesses"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/what-is-a-pos-system-everything-business-owners-need-to-know</loc>
-    <lastmod>2026-07-08T15:13:40+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/what-is-a-pos-system-everything-business-owners-need-to-know</loc>
-    <lastmod>2026-07-08T15:13:40+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/discover-mohaasebcom-the-all-in-one-erp-pos-accounting-platform"/>
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/purchase-and-inventory-management-how-mohaaseb-connects-buying-to-stock</loc>
-    <lastmod>2026-07-08T15:13:59+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/purchase-and-inventory-management-how-mohaaseb-connects-buying-to-stock"/>
@@ -724,7 +324,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/purchase-and-inventory-management-how-mohaaseb-connects-buying-to-stock</loc>
-    <lastmod>2026-07-08T15:13:59+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/purchase-and-inventory-management-how-mohaaseb-connects-buying-to-stock"/>
@@ -732,7 +332,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/one-system-not-two-how-mohaaseb-unifies-erp-and-pos</loc>
-    <lastmod>2026-07-08T15:13:59+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/one-system-not-two-how-mohaaseb-unifies-erp-and-pos"/>
@@ -740,7 +340,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/one-system-not-two-how-mohaaseb-unifies-erp-and-pos</loc>
-    <lastmod>2026-07-08T15:13:59+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/one-system-not-two-how-mohaaseb-unifies-erp-and-pos"/>
@@ -748,7 +348,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/what-is-mohaasebcom-a-full-overview-of-the-erp-pos-platform</loc>
-    <lastmod>2026-07-08T15:13:59+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-mohaasebcom-a-full-overview-of-the-erp-pos-platform"/>
@@ -756,111 +356,95 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/what-is-mohaasebcom-a-full-overview-of-the-erp-pos-platform</loc>
-    <lastmod>2026-07-08T15:13:59+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-mohaasebcom-a-full-overview-of-the-erp-pos-platform"/>
     <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-mohaasebcom-a-full-overview-of-the-erp-pos-platform"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide</loc>
-    <lastmod>2026-07-08T15:14:13+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide</loc>
-    <lastmod>2026-07-08T15:14:13+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-vs-pos-how-mohaaseb-combines-both-into-one-complete-system"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/how-mohaasebs-erp-streamlines-your-back-office</loc>
-    <lastmod>2026-07-08T15:14:13+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/how-mohaasebs-erp-streamlines-your-back-office</loc>
-    <lastmod>2026-07-08T15:14:13+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaasebcom-is-the-smart-choice-for-pos-erp-and-accounting"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register</loc>
-    <lastmod>2026-07-08T15:14:13+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register</loc>
-    <lastmod>2026-07-08T15:14:13+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaaseb-the-cloud-accounting-app-built-for-growing-businesses"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping</loc>
-    <lastmod>2026-07-08T15:14:20+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping</loc>
-    <lastmod>2026-07-08T15:14:20+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-pos-and-your-accountant-how-mohaaseb-connects-all-three"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting</loc>
-    <lastmod>2026-07-08T15:14:20+00:00</lastmod>
+    <loc>http://mohaaseb.loc/en/blogs/getting-started-with-mohaasebcom-your-first-week-checklist</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting</loc>
-    <lastmod>2026-07-08T15:14:20+00:00</lastmod>
+    <loc>http://mohaaseb.loc/ar/blogs/getting-started-with-mohaasebcom-your-first-week-checklist</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/en/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts</loc>
-    <lastmod>2026-07-08T15:14:20+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts</loc>
-    <lastmod>2026-07-08T15:14:20+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/getting-started-with-mohaasebcom-your-first-week-checklist"/>
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/smarterpguide-vs-mohaaseb-which-erp-pos-platform-wins</loc>
-    <lastmod>2026-07-08T15:14:55+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/smarterpguide-vs-mohaaseb-which-erp-pos-platform-wins"/>
@@ -868,7 +452,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/smarterpguide-vs-mohaaseb-which-erp-pos-platform-wins</loc>
-    <lastmod>2026-07-08T15:14:55+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/smarterpguide-vs-mohaaseb-which-erp-pos-platform-wins"/>
@@ -876,7 +460,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/erp-and-pos-explained-the-smarterpguide-way-vs-the-mohaaseb-way</loc>
-    <lastmod>2026-07-08T15:14:55+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-explained-the-smarterpguide-way-vs-the-mohaaseb-way"/>
@@ -884,7 +468,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/erp-and-pos-explained-the-smarterpguide-way-vs-the-mohaaseb-way</loc>
-    <lastmod>2026-07-08T15:14:55+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-explained-the-smarterpguide-way-vs-the-mohaaseb-way"/>
@@ -892,7 +476,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/why-mohaaseb-beats-smarterpguide-recommendations-for-erp-pos</loc>
-    <lastmod>2026-07-08T15:14:55+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-beats-smarterpguide-recommendations-for-erp-pos"/>
@@ -900,15 +484,255 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/why-mohaaseb-beats-smarterpguide-recommendations-for-erp-pos</loc>
-    <lastmod>2026-07-08T15:14:55+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-beats-smarterpguide-recommendations-for-erp-pos"/>
     <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaaseb-beats-smarterpguide-recommendations-for-erp-pos"/>
   </url>
   <url>
+    <loc>http://mohaaseb.loc/en/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/general-cloud-accounting-explained-how-mohaaseb-unifies-erp-and-pos-bookkeeping"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcom-the-complete-platform-for-erp-pos-and-general-cloud-accounting"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/from-pos-sale-to-cloud-general-ledger-how-mohaaseb-erp-automates-your-accounts"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/pos-vs-retail-erp-which-one-should-your-business-choose</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/pos-vs-retail-erp-which-one-should-your-business-choose</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-vs-retail-erp-which-one-should-your-business-choose"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-an-erp-system-a-practical-guide-for-growing-businesses"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/what-is-a-pos-system-everything-business-owners-need-to-know</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/what-is-a-pos-system-everything-business-owners-need-to-know</loc>
+    <lastmod>2026-09-04T13:11:19+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/what-is-a-pos-system-everything-business-owners-need-to-know"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-smart-erp-guide-how-mohaaseb-powers-modern-pos-businesses"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-and-pos-explained-why-mohaasebcom-unifies-both"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcoms-smart-erp-guide-mastering-pos-operations-end-to-end"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/building-your-accounting-tree-in-mohaaseb-a-practical-guide"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/how-mohaasebs-erp-streamlines-your-back-office</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/how-mohaasebs-erp-streamlines-your-back-office</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/how-mohaasebs-erp-streamlines-your-back-office"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/why-mohaaseb-pos-is-more-than-just-a-cash-register"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/erp-crm-pos-unified-how-mohaaseb-brings-every-system-together"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/the-complete-erp-guide-for-mohaasebcom-users</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/the-complete-erp-guide-for-mohaasebcom-users</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/the-complete-erp-guide-for-mohaasebcom-users"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/en/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
+  </url>
+  <url>
+    <loc>http://mohaaseb.loc/ar/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system</loc>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/pos-that-talks-to-your-erp-inside-mohaasebs-unified-system"/>
+  </url>
+  <url>
     <loc>http://mohaaseb.loc/en/blogs/erp-and-pos-integration-how-mohaasebcom-connects-your-whole-business</loc>
-    <lastmod>2026-07-08T15:16:21+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-integration-how-mohaasebcom-connects-your-whole-business"/>
@@ -916,7 +740,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/erp-and-pos-integration-how-mohaasebcom-connects-your-whole-business</loc>
-    <lastmod>2026-07-08T15:16:21+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/erp-and-pos-integration-how-mohaasebcom-connects-your-whole-business"/>
@@ -924,7 +748,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/why-erp-and-pos-integration-matters-a-mohaaseb-deep-dive</loc>
-    <lastmod>2026-07-08T15:16:22+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-erp-and-pos-integration-matters-a-mohaaseb-deep-dive"/>
@@ -932,7 +756,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/why-erp-and-pos-integration-matters-a-mohaaseb-deep-dive</loc>
-    <lastmod>2026-07-08T15:16:22+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-erp-and-pos-integration-matters-a-mohaaseb-deep-dive"/>
@@ -940,7 +764,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/the-complete-guide-to-erp-and-pos-integration-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:16:22+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-guide-to-erp-and-pos-integration-with-mohaaseb"/>
@@ -948,7 +772,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/the-complete-guide-to-erp-and-pos-integration-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:16:22+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/the-complete-guide-to-erp-and-pos-integration-with-mohaaseb"/>
@@ -956,7 +780,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/why-mohaaseb-is-the-arabic-cloud-accounting-app-growing-businesses-trust</loc>
-    <lastmod>2026-07-08T15:22:10+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-is-the-arabic-cloud-accounting-app-growing-businesses-trust"/>
@@ -964,7 +788,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/why-mohaaseb-is-the-arabic-cloud-accounting-app-growing-businesses-trust</loc>
-    <lastmod>2026-07-08T15:22:10+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/why-mohaaseb-is-the-arabic-cloud-accounting-app-growing-businesses-trust"/>
@@ -972,7 +796,7 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/en/blogs/how-your-mhasb-closes-the-month-faster-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:22:10+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-your-mhasb-closes-the-month-faster-with-mohaaseb"/>
@@ -980,115 +804,21 @@
   </url>
   <url>
     <loc>http://mohaaseb.loc/ar/blogs/how-your-mhasb-closes-the-month-faster-with-mohaaseb</loc>
-    <lastmod>2026-07-08T15:22:10+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/how-your-mhasb-closes-the-month-faster-with-mohaaseb"/>
     <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/how-your-mhasb-closes-the-month-faster-with-mohaaseb"/>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/en/blogs/mohaasebcom-vs-traditional-accounting-software-what-changes</loc>
-    <lastmod>2026-07-08T15:22:10+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-vs-traditional-accounting-software-what-changes"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcom-vs-traditional-accounting-software-what-changes"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/ar/blogs/mohaasebcom-vs-traditional-accounting-software-what-changes</loc>
-    <lastmod>2026-07-08T15:22:10+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="http://mohaaseb.loc/en/blogs/mohaasebcom-vs-traditional-accounting-software-what-changes"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="http://mohaaseb.loc/ar/blogs/mohaasebcom-vs-traditional-accounting-software-what-changes"/>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/about-us</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/privacy-policy</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/refund-cancellation-policy</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/fair-usage-policy</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/terms-conditions</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>http://mohaaseb.loc/docs</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>http://mohaaseb.loc/docs/docs-getting-started</loc>
-    <lastmod>2026-08-29T12:00:16+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/docs/docs-point-of-sale</loc>
-    <lastmod>2026-08-29T12:14:16+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/docs/docs-products-inventory</loc>
-    <lastmod>2026-08-29T11:58:57+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/docs/docs-sales-management</loc>
-    <lastmod>2026-08-29T11:58:57+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/docs/docs-purchase-management</loc>
-    <lastmod>2026-08-29T11:58:57+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/docs/docs-accounting-finance</loc>
-    <lastmod>2026-08-29T11:58:57+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/docs/docs-hrm</loc>
-    <lastmod>2026-08-29T11:58:57+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>http://mohaaseb.loc/docs/docs-settings-configuration</loc>
-    <lastmod>2026-08-29T11:58:57+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>http://mohaaseb.loc/contact</loc>
-    <lastmod>2026-08-29T19:27:31+00:00</lastmod>
+    <lastmod>2026-09-04T13:11:20+00:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
