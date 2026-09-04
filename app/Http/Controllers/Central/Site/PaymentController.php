@@ -127,11 +127,15 @@ class PaymentController extends Controller
             }
         }
 
-        return redirect()->route('payment-callback',['type'=>$type]);
+        return redirect()->route('payment-callback', [
+            'type' => $type,
+            'token' => $request->query('token'),
+        ]);
     }
 
     function paymentCallbackPage(Request $request,$type) {
         $message = $request->query('message');
+        $token = $request->query('token');
         return view('central.'. defaultLandingLayout() .'.payment-callback',get_defined_vars());
     }
 

@@ -90,6 +90,8 @@ return [
         'failed_subtitle' => 'Unfortunately, your payment could not be processed.',
         'failed_message' => 'Please try again or contact support if the issue persists.',
         'try_again' => 'Try Again',
+        'declined' => 'Declined',
+        'cancel' => 'Cancel',
     ],
 
     'checkout' => [

@@ -327,7 +327,7 @@ class CheckoutPage extends Component
                 'description' => 'Mohaaseb Subscription Payment',
                 'metadata' => $newData,
                 'return_url' => url('/payment/check'),
-                'cancel_url' => url('/payment/failed'),
+                'cancel_url' => url('/payment/failed', ['token' => $dataToString]),
                 'token' => $dataToString
             ]);
         } catch (\Throwable $e) {

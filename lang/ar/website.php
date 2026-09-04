@@ -89,6 +89,8 @@ return [
         'confirmed' => 'تم التأكيد',
         'having_trouble' => 'هل تواجه مشكلة في الدفع؟',
         'contact_support' => 'تواصل مع الدعم',
+        'declined' => 'مرفوض',
+        'cancel' => 'إلغاء',
     ],
 
     'checkout' => [
