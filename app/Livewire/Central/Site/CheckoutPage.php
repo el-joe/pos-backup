@@ -317,16 +317,29 @@ class CheckoutPage extends Component
             return;
         }
 
-        $paymentService = new PaymentService(new $paymentProvider());
-        $requestPayload = $paymentService->pay([
-            'amount' => $newData['amount'],
-            'currency' => 'USD',
-            'description' => 'Mohaaseb Subscription Payment',
-            'metadata' => $newData,
-            'return_url' => url('/payment/check'),
-            'cancel_url' => url('/payment/failed'),
-            'token' => $dataToString
-        ]);
+        $provider = new $paymentProvider();
+        $paymentService = new PaymentService($provider);
+
+        try {
+            $requestPayload = $paymentService->pay([
+                'amount' => $newData['amount'],
+                'currency' => 'USD',
+                'description' => 'Mohaaseb Subscription Payment',
+                'metadata' => $newData,
+                'return_url' => url('/payment/check'),
+                'cancel_url' => url('/payment/failed'),
+                'token' => $dataToString
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+            $this->addError('data.payment_method_id', 'The payment gateway is temporarily unavailable. Please try again shortly.');
+            return;
+        }
+
+        if (($requestPayload['status'] ?? null) === 'error') {
+            $this->addError('data.payment_method_id', $requestPayload['message'] ?? 'Unable to start the payment process.');
+            return;
+        }
 
         $requestPayload['metadata'] = $dataToString;
 
@@ -338,7 +351,10 @@ class CheckoutPage extends Component
             'transaction_reference' => $requestPayload['payment']['id'] ?? null,
         ]);
 
-        $redirectUrl = $requestPayload['payment']['links'][1]['href'] ?? null;
+        $redirectUrl = method_exists($provider, 'getApproveUrl')
+            ? $provider->getApproveUrl($requestPayload['payment'] ?? [])
+            : ($requestPayload['payment']['links'][1]['href'] ?? null);
+
         if (!$redirectUrl) {
             $this->addError('data.payment_method_id', 'Unable to start the payment process.');
             return;

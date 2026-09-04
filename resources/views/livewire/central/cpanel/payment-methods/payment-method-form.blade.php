@@ -147,7 +147,14 @@
                                     <tr>
                                         <td><code>{{ $key }}</code></td>
                                         <td>
-                                            <input type="text" class="form-control" wire:model.defer="credentialsInputs.{{ $idx }}.value" placeholder="Value">
+                                            @if($key === 'mode')
+                                                <select class="form-select" wire:model.defer="credentialsInputs.{{ $idx }}.value">
+                                                    <option value="sandbox">Sandbox (test)</option>
+                                                    <option value="live">Live (production)</option>
+                                                </select>
+                                            @else
+                                                <input type="text" class="form-control" wire:model.defer="credentialsInputs.{{ $idx }}.value" placeholder="Value">
+                                            @endif
                                             @error('credentialsInputs.'.$idx.'.value') <div class="text-danger small">{{ $message }}</div> @enderror
                                         </td>
                                     </tr>
