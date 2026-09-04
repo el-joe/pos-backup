@@ -149,6 +149,7 @@ return [
         'translations' => 'الترجمات',
         'register-requests' => 'طلبات التسجيل',
         'subscription-requests' => 'طلبات تغيير الاشتراك',
+        'wallet-topup-requests' => 'طلبات شحن الرصيد',
         'partners' => 'الشركاء',
         'partner-commissions' => 'عمولات الشركاء',
         'hrm' => 'الموارد البشرية',

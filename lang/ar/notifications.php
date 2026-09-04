@@ -219,4 +219,9 @@ return [
             <i class="bi bi-chevron-right"></i>
         </div>
     </a>',
+
+    'subscription_request_approved' => 'تمت الموافقة على طلب الاشتراك الخاص بك لخطة :plan وتم تطبيقه.',
+    'subscription_request_rejected' => 'تم رفض طلب الاشتراك الخاص بك لخطة :plan.',
+    'wallet_topup_approved' => 'تمت الموافقة على طلب شحن الرصيد بقيمة :amount$ وتمت إضافته لرصيدك.',
+    'wallet_topup_rejected' => 'تم رفض طلب شحن الرصيد بقيمة :amount$.',
 ];

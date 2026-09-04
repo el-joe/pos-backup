@@ -462,6 +462,47 @@ if (!function_exists('superAdmins')) {
     }
 }
 
+if (!function_exists('notifyTenantAdmins')) {
+    function notifyTenantAdmins($tenantId, string $message, ?string $route = null)
+    {
+        $tenant = \App\Models\Tenant::find($tenantId);
+        if (!$tenant) {
+            return;
+        }
+
+        tenancy()->initialize($tenant);
+        try {
+            superAdmins()->each(function ($admin) use ($message, $route) {
+                $admin->notify(new \App\Notifications\GeneralNotification('notifications.audit_event', [
+                    'route' => $route ?? '#',
+                    'message' => $message,
+                ]));
+            });
+        } finally {
+            tenancy()->end();
+        }
+    }
+}
+
+if (!function_exists('cpanelPendingBadgeCount')) {
+    function cpanelPendingBadgeCount(?string $route): ?int
+    {
+        $counts = [
+            'cpanel.register-requests.list' => fn () => \App\Models\RegisterRequest::where('status', 'pending')->count(),
+            'cpanel.subscription-requests.list' => fn () => \App\Models\SubscriptionRequest::where('status', 'pending')->count(),
+            'cpanel.wallet-topup-requests.list' => fn () => \App\Models\WalletTopupRequest::where('status', 'pending')->count(),
+        ];
+
+        if (!$route || !isset($counts[$route])) {
+            return null;
+        }
+
+        $count = $counts[$route]();
+
+        return $count > 0 ? $count : null;
+    }
+}
+
 if (!function_exists('encodedData')) {
     function encodedData($data)
     {

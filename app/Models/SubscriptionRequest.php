@@ -41,9 +41,29 @@ class SubscriptionRequest extends Model
     {
         parent::boot();
 
+        static::created(function (SubscriptionRequest $request) {
+            if ($request->pay_from_balance) {
+                return;
+            }
+
+            \Illuminate\Support\Facades\Mail::to(env('ADMIN_EMAIL', 'eljoe1717@gmail.com'))
+                ->send(new \App\Mail\AdminSubscriptionRequestMail($request, 'Subscription Renewal / Change Request'));
+        });
+
         static::updated(function (SubscriptionRequest $request) {
-            if ($request->isDirty('status') && $request->status === 'approved') {
+            if (!$request->isDirty('status')) {
+                return;
+            }
+
+            if ($request->status === 'approved') {
                 $request->applyToSubscription();
+                notifyTenantAdmins($request->tenant_id, __('notifications.subscription_request_approved', [
+                    'plan' => $request->plan?->name,
+                ]));
+            } elseif ($request->status === 'rejected') {
+                notifyTenantAdmins($request->tenant_id, __('notifications.subscription_request_rejected', [
+                    'plan' => $request->plan?->name,
+                ]));
             }
         });
     }

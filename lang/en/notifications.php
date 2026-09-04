@@ -215,4 +215,9 @@ return [
             <i class="bi bi-chevron-right"></i>
         </div>
     </a>',
+
+    'subscription_request_approved' => 'Your subscription request for the :plan plan has been approved and applied.',
+    'subscription_request_rejected' => 'Your subscription request for the :plan plan has been rejected.',
+    'wallet_topup_approved' => 'Your wallet top-up request of $:amount has been approved and credited to your balance.',
+    'wallet_topup_rejected' => 'Your wallet top-up request of $:amount has been rejected.',
 ];

@@ -41,10 +41,14 @@
         $checkRouteParams = ($data['route_params'] ??false) ? checkRouteParams($data['route_params']) : true;
     @endphp
     @if(!isset($data['subscription_check']) || (isset($data['subscription_check']) && subscriptionFeatureEnabled($data['subscription_check'] ?? null, false, $__current_subscription ?? null)))
+        @php $badgeCount = cpanelPendingBadgeCount($data['route'] ?? null); @endphp
         <div class="menu-item {{ request()->routeIs($data['route']) && $checkRouteParams ? 'active' : '' }}  mb-1">
             <a href="{{ $data['route'] == "#" ? "#" : route($data['route'],$data['route_params']??null) }}" class="menu-link">
                 <span class="menu-icon"><i class="{{$data['icon']}}"></i></span>
                 <span class="menu-text">{{__($data['translated_title'])}}</span>
+                @if($badgeCount)
+                    <span class="badge bg-danger rounded-pill ms-auto">{{ $badgeCount }}</span>
+                @endif
             </a>
         </div>
     @endif

@@ -104,6 +104,12 @@ return [
         "route"     => 'cpanel.subscription-requests.list'
     ],
     [
+        "title"     => "Wallet Top-up Requests",
+        'translated_title' => 'general.titles.wallet-topup-requests',
+        "icon"      => "fa fa-wallet fa-fw",
+        "route"     => 'cpanel.wallet-topup-requests.list'
+    ],
+    [
         "title"     => "Plans",
         'translated_title' => 'general.titles.plans',
         "icon"      => "fa fa-layer-group fa-fw",

@@ -149,6 +149,7 @@ return [
         'translations' => 'Translations',
         'register-requests' => 'Register Requests',
         'subscription-requests' => 'Subscription Requests',
+        'wallet-topup-requests' => 'Wallet Top-up Requests',
         'sliders' => 'Sliders',
         'partners' => 'Partners',
         'partner-commissions' => 'Partner Commissions',

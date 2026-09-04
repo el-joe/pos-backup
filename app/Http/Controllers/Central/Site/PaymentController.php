@@ -64,6 +64,30 @@ class PaymentController extends Controller
                     return redirect()->route('payment-callback', ['type' => 'failed']);
                 }
 
+                if (($data['kind'] ?? null) === 'subscription_request') {
+                    $subscriptionRequest = \App\Models\SubscriptionRequest::find($data['reference_id'] ?? null);
+                    if ($subscriptionRequest && $subscriptionRequest->status === 'pending') {
+                        $subscriptionRequest->update(['status' => 'approved']);
+                    }
+
+                    return redirect()->route('payment-callback', [
+                        'type' => 'success',
+                        'token' => $request->query('token'),
+                    ]);
+                }
+
+                if (($data['kind'] ?? null) === 'wallet_topup') {
+                    $topUpRequest = \App\Models\WalletTopupRequest::find($data['reference_id'] ?? null);
+                    if ($topUpRequest && $topUpRequest->status === 'pending') {
+                        $topUpRequest->update(['status' => 'approved']);
+                    }
+
+                    return redirect()->route('payment-callback', [
+                        'type' => 'success',
+                        'token' => $request->query('token'),
+                    ]);
+                }
+
                 $period = ($data['period'] ?? 'month') === 'year' ? 'year' : 'month';
                 $systemsAllowed = collect($data['systems_allowed'] ?? [])
                     ->filter(fn ($system) => in_array($system, ['pos', 'hrm', 'booking'], true))

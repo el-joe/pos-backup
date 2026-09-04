@@ -80,6 +80,7 @@ Route::group(['prefix'=> 'cpanel','as' => 'cpanel.','middleware'=> [CpanelTransl
         Route::get('plans', CpanelPlansList::class)->name('plans.list');
         Route::get('register-requests', RegisterRequestsList::class)->name('register-requests.list');
         Route::get('subscription-requests', \App\Livewire\Central\CPanel\SubscriptionRequests\SubscriptionRequestsList::class)->name('subscription-requests.list');
+        Route::get('wallet-topup-requests', \App\Livewire\Central\CPanel\WalletTopupRequests\WalletTopupRequestsList::class)->name('wallet-topup-requests.list');
         Route::get('customers', CustomersList::class)->name('customers.list');
         Route::get('customers/create', CustomerCreate::class)->name('customers.create');
         Route::get('customers/{id}', CustomerDetails::class)->name('customers.details');
