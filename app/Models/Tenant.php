@@ -23,6 +23,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'active',
         'business_type',
         'trial_used_at',
+        'balance',
     ];
 
     protected $casts = [
@@ -46,6 +47,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'active',
             'business_type',
             'trial_used_at',
+            'balance',
         ]);
     }
 
