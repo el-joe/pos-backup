@@ -53,6 +53,12 @@ class PaymentMethodForm extends Component
             'data.fixed_fee' => 'nullable|numeric|min:0',
             'data.active' => 'boolean',
             'data.manual' => 'boolean',
+            'data.currency_id' => [
+                'nullable',
+                Rule::requiredIf((bool)($this->data['manual'] ?? false)),
+                'integer',
+                'exists:central.currencies,id',
+            ],
             'data.gateway_type' => 'nullable|in:stripe,paymob,manual,other',
             'isWorldwide' => 'boolean',
             'supportedCountries' => 'array',
@@ -79,6 +85,7 @@ class PaymentMethodForm extends Component
                 'icon_path',
                 'provider',
                 'manual',
+                'currency_id',
                 'credentials',
                 'required_fields',
                 'details',
@@ -91,6 +98,7 @@ class PaymentMethodForm extends Component
 
             $this->data['active'] = (bool)($this->data['active'] ?? false);
             $this->data['manual'] = (bool)($this->data['manual'] ?? false);
+            $this->data['currency_id'] = $this->data['currency_id'] ?? null;
             $this->data['fee_percentage'] = $this->data['fee_percentage'] ?? 0;
             $this->data['fixed_fee'] = $this->data['fixed_fee'] ?? 0;
             $this->data['gateway_type'] = $this->data['gateway_type'] ?? 'other';
@@ -106,6 +114,7 @@ class PaymentMethodForm extends Component
                 'icon_path' => null,
                 'provider' => '',
                 'manual' => false,
+                'currency_id' => null,
                 'credentials' => [],
                 'required_fields' => [],
                 'details' => null,
@@ -296,6 +305,7 @@ class PaymentMethodForm extends Component
             'provider' => $this->data['provider'] ?? '',
             'gateway_type' => $this->data['gateway_type'] ?? 'other',
             'manual' => (bool)($this->data['manual'] ?? false),
+            'currency_id' => (bool)($this->data['manual'] ?? false) ? ($this->data['currency_id'] ?? null) : null,
             'required_fields' => $requiredFields,
             'credentials' => $credentials,
             'details' => $details,
@@ -321,6 +331,7 @@ class PaymentMethodForm extends Component
         return view('livewire.central.cpanel.payment-methods.payment-method-form', [
             'requiredFields' => $this->parseRequiredFields(),
             'countries' => Country::orderBy('name')->get(),
+            'currencies' => \App\Models\Currency::orderBy('code')->get(),
         ]);
     }
 }

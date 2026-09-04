@@ -19,6 +19,7 @@ class PaymentMethod extends Model
         'gateway_type',
         'is_active',
         'manual',
+        'currency_id',
         'credentials',
         'required_fields',
         'details',
@@ -55,5 +56,10 @@ class PaymentMethod extends Model
                 ->orWhereJsonContains('supported_countries', $countryId)
                 ->orWhereJsonContains('supported_countries', (string) $countryId);
         });
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
     }
 }

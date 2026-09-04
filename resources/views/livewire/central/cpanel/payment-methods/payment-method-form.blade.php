@@ -220,6 +220,18 @@
                 </div>
 
                 @if(($data['manual'] ?? false))
+                    <div class="col-md-4">
+                        <label class="form-label">Default Currency</label>
+                        <select class="form-select" wire:model.defer="data.currency_id">
+                            <option value="">Select currency...</option>
+                            @foreach($currencies as $currency)
+                                <option value="{{ $currency->id }}">{{ $currency->code }} ({{ $currency->symbol }})</option>
+                            @endforeach
+                        </select>
+                        @error('data.currency_id') <div class="text-danger small">{{ $message }}</div> @enderror
+                        <div class="form-text">Amounts for this manual payment method will be converted from USD and shown to customers in this currency at checkout.</div>
+                    </div>
+
                     <div class="col-12">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6 class="mb-0">Manual Details (JSON)</h6>

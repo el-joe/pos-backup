@@ -299,11 +299,24 @@ class CheckoutPage extends Component
                 ? $this->receiptFile->store('register-requests/receipts', 'public')
                 : null;
 
-            $this->createRegisterRequestForCheckout($newData, $paymentMethod, [
+            $manualPaymentPayload = [
                 'manual' => true,
                 'amount' => (float) ($newData['amount'] ?? 0),
                 'receipt_path' => $receiptPath,
-            ]);
+            ];
+
+            if ($paymentMethod->currency) {
+                $manualPaymentPayload['currency_id'] = $paymentMethod->currency->id;
+                $manualPaymentPayload['currency_code'] = $paymentMethod->currency->code;
+                $manualPaymentPayload['currency_symbol'] = $paymentMethod->currency->symbol;
+                $manualPaymentPayload['conversion_rate'] = (float) $paymentMethod->currency->conversion_rate;
+                $manualPaymentPayload['converted_amount'] = round(
+                    (float) ($newData['amount'] ?? 0) * (float) $paymentMethod->currency->conversion_rate,
+                    2
+                );
+            }
+
+            $this->createRegisterRequestForCheckout($newData, $paymentMethod, $manualPaymentPayload);
 
             return redirect()->route('payment-callback', [
                 'type' => 'success',

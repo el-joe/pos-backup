@@ -231,6 +231,16 @@
                         </div>
                         @endif
 
+                        @if($selectedPaymentMethod->currency)
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-lg mb-4 flex justify-between items-center border border-blue-50 dark:border-slate-700">
+                            <span class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ __('gemini-landing.checkout_page.amount_to_transfer') }}</span>
+                            <span class="text-lg font-extrabold text-brand-dark dark:text-white">
+                                {{ number_format(((float) ($selectedDueNow ?? 0)) * (float) $selectedPaymentMethod->currency->conversion_rate, 2) }}
+                                {{ $selectedPaymentMethod->currency->code }}
+                            </span>
+                        </div>
+                        @endif
+
                         <div>
                             <label class="block text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">{{ __('gemini-landing.checkout_page.upload_receipt') }} <span class="text-red-500">*</span></label>
                             <input type="file" wire:model="receiptFile" class="block w-full text-sm text-slate-500 dark:text-slate-400

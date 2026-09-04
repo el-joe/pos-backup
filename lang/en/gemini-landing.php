@@ -249,6 +249,7 @@ return [
         'no_payment_methods' => 'No payment methods available for your country. Please contact us for payment options.',
         'manual_payment_title' => 'Manual Payment',
         'manual_payment_subtitle' => 'Please transfer the amount using the details below, then upload the receipt to continue.',
+        'amount_to_transfer' => 'Amount to transfer',
         'upload_receipt' => 'Upload receipt',
         'uploading_receipt' => 'Uploading receipt...',
 
