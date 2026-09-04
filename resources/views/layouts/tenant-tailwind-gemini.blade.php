@@ -35,7 +35,11 @@
 
             <main class="custom-scroll flex-1 overflow-y-auto bg-gray-100 p-4 dark:bg-gray-900 lg:p-8">
                 <div class="gemini-legacy-page">
-                    {{ $slot }}
+                    @if(isset($slot))
+                        {!! $slot !!}
+                    @else
+                        @yield('content')
+                    @endif
                 </div>
             </main>
         </div>
