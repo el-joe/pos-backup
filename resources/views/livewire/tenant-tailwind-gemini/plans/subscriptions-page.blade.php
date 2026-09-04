@@ -53,9 +53,9 @@
                 </div>
 
                 <div class="flex flex-wrap gap-3">
-                    @if($currentSubscription->canRenew() && adminCan('subscriptions.renew'))
-                    <button class="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700" wire:click="renewSubscription">
-                        <i class="fa fa-sync"></i> {{ __('general.pages.subscriptions.renew') }}
+                    @if(adminCan('subscriptions.renew'))
+                    <button class="inline-flex items-center gap-2 rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700" wire:click="openChangePlanPanel">
+                        <i class="fa fa-right-left"></i> {{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}
                     </button>
                     @endif
                     @if($currentSubscription->canCancel() && adminCan('subscriptions.cancel'))
@@ -112,4 +112,109 @@
             </div>
         </div>
     </x-tenant-tailwind-gemini.table-card>
+
+    @if($showChangePlanPanel)
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" wire:key="change-plan-modal">
+        <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-xl dark:bg-slate-900">
+            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+                    <i class="fa fa-right-left mr-2"></i>{{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}
+                </h3>
+                <button wire:click="closeChangePlanPanel" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                    <i class="fa fa-times text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-5 px-6 py-5">
+
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">{{ __('general.pages.subscriptions.plan') }}</label>
+                    <select wire:model.live="selectedPlanId" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-700 dark:!bg-slate-800 dark:text-white">
+                        @foreach($plans as $plan)
+                            <option value="{{ $plan->id }}">{{ $plan->name }} — {{ currencyFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}</option>
+                        @endforeach
+                    </select>
+                    @error('selectedPlanId') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                </div>
+
+                @if($pricingPreview)
+                <div class="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
+                    <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">{{ __('general.pages.subscriptions.total') }}</span>
+                    <span class="text-lg font-extrabold text-brand-700 dark:text-brand-300">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
+                </div>
+                @endif
+
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Payment Method</label>
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border p-3 transition {{ $payFromBalance ? 'border-brand-500 bg-brand-50 dark:bg-slate-800' : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:!bg-slate-900' }}">
+                            <input type="radio" class="hidden" wire:click="$set('payFromBalance', true)">
+                            <i class="fa fa-wallet text-2xl text-brand-500"></i>
+                            <span class="text-center text-xs font-bold text-slate-700 dark:text-white">{{ __('general.pages.subscriptions.account_balance') }}</span>
+                            <span class="text-[11px] text-slate-500 dark:text-slate-400">{{ currencyFormat($accountBalance, true) }}</span>
+                        </label>
+                        @foreach($paymentMethods as $pm)
+                        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border p-3 transition {{ (!$payFromBalance && $selectedPaymentMethodId == $pm->id) ? 'border-brand-500 bg-brand-50 dark:bg-slate-800' : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:!bg-slate-900' }}">
+                            <input type="radio" class="hidden" wire:click="$set('selectedPaymentMethodId', {{ $pm->id }})">
+                            <i class="fa-solid fa-money-bill-wave text-2xl text-slate-400"></i>
+                            <span class="text-center text-xs font-bold text-slate-700 dark:text-white">{{ $pm->name }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                    @error('payFromBalance') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    @error('selectedPaymentMethodId') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                </div>
+
+                @if(!$payFromBalance && ($selectedPaymentMethod->manual ?? false))
+                <div class="rounded-xl border border-blue-100 bg-blue-50 p-4 dark:border-slate-700 dark:!bg-slate-800">
+                    <h4 class="mb-1 text-sm font-bold text-blue-900 dark:text-blue-400">Manual Payment</h4>
+                    <p class="mb-3 text-xs text-blue-800 dark:text-slate-400">Please transfer the amount using the details below, then upload the receipt to continue.</p>
+
+                    @php $details = $selectedPaymentMethod->details ?? []; $locale = app()->getLocale(); @endphp
+                    @if(is_array($details) && count($details) > 0)
+                    <div class="mb-3 space-y-2 rounded-lg border border-blue-50 bg-white p-3 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+                        @foreach($details as $row)
+                            @php
+                                $label = $row['label'][$locale] ?? ($row['label']['en'] ?? ($row['key'] ?? ''));
+                                $value = $row['value'][$locale] ?? ($row['value']['en'] ?? '');
+                            @endphp
+                            <div class="flex justify-between gap-4 border-b border-slate-100 pb-1 last:border-b-0 last:pb-0 dark:border-slate-700">
+                                <span class="font-bold">{{ $label }}:</span>
+                                <span class="text-right">{{ $value }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                    @endif
+
+                    @if($selectedPaymentMethod->currency && $pricingPreview)
+                    <div class="mb-3 flex items-center justify-between rounded-lg border border-blue-50 bg-white p-3 dark:border-slate-700 dark:bg-slate-900">
+                        <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Amount to transfer</span>
+                        <span class="text-lg font-extrabold text-brand-dark dark:text-white">
+                            {{ number_format(((float) ($pricingPreview['final_price'] ?? 0)) * (float) $selectedPaymentMethod->currency->conversion_rate, 2) }}
+                            {{ $selectedPaymentMethod->currency->code }}
+                        </span>
+                    </div>
+                    @endif
+
+                    <label class="mb-2 block text-xs font-bold uppercase text-slate-500 dark:text-slate-400">Upload Receipt <span class="text-rose-500">*</span></label>
+                    <input type="file" wire:model="receiptFile" accept=".pdf,.jpg,.jpeg,.png"
+                        class="block w-full rounded-lg border border-slate-200 bg-white p-2 text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:file:bg-slate-700 dark:file:text-brand-400">
+                    <div wire:loading wire:target="receiptFile" class="mt-2 text-xs font-medium text-brand-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Uploading...</div>
+                    @error('receiptFile') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                </div>
+                @endif
+
+            </div>
+
+            <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4 dark:border-slate-700">
+                <button wire:click="closeChangePlanPanel" class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel</button>
+                <button wire:click="processSubscriptionChange" wire:loading.attr="disabled" wire:target="processSubscriptionChange"
+                    class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 disabled:opacity-60">
+                    <span wire:loading.remove wire:target="processSubscriptionChange"><i class="fa fa-check mr-1"></i> Confirm</span>
+                    <span wire:loading wire:target="processSubscriptionChange"><i class="fa fa-spinner fa-spin mr-1"></i> Processing...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

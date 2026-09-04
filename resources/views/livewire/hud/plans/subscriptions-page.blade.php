@@ -92,24 +92,13 @@
                     </div>
 
                     {{-- ACTIONS --}}
+                    @if(adminCan('subscriptions.renew'))
                     <div class="d-flex flex-wrap gap-2">
-                        @if($currentSubscription->canRenew() && adminCan('subscriptions.renew'))
-                            <button class="btn btn-success" wire:click="renewSubscription">
-                                <i class="fa fa-sync me-1"></i> {{ __('general.pages.subscriptions.renew') }}
-                            </button>
-                        @endif
-
-                        <a href="{{ $this->changePlanUrl($isMonthly ? 'annual' : 'monthly') }}" class="btn btn-outline-primary">
-                            <i class="fa fa-right-left me-1"></i> {{ __('general.pages.subscriptions.change_plan') }}
-                        </a>
-
-                        @if($isMonthly)
-                            <a href="{{ $this->changePlanUrl('annual') }}" class="btn btn-warning">
-                                <i class="fa fa-arrow-up me-1"></i> {{ __('general.pages.subscriptions.upgrade_to_annual') }}
-                                <span class="badge bg-dark ms-1">{{ __('general.pages.subscriptions.save_percent', ['percent' => 15]) }}</span>
-                            </a>
-                        @endif
+                        <button class="btn btn-primary" wire:click="openChangePlanPanel">
+                            <i class="fa fa-right-left me-1"></i> {{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}
+                        </button>
                     </div>
+                    @endif
 
                 </div>
 
@@ -217,5 +206,108 @@
             </div>
         </div>
     </div>
+
+    @if($showChangePlanPanel)
+    <div class="modal d-block" tabindex="-1" style="background: rgba(0,0,0,.5);" wire:key="change-plan-modal">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa fa-right-left me-2"></i>{{ __('general.pages.subscriptions.renew') }} / {{ __('general.pages.subscriptions.change_plan') }}</h5>
+                    <button type="button" class="btn-close" wire:click="closeChangePlanPanel"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">{{ __('general.pages.subscriptions.plan') }}</label>
+                        <select class="form-select" wire:model.live="selectedPlanId">
+                            @foreach($plans as $plan)
+                                <option value="{{ $plan->id }}">
+                                    {{ $plan->localizedName() }} — {{ currencyFormat($plan->price, true) }} / {{ $plan->isYearly() ? 'year' : 'month' }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('selectedPlanId') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+
+                    @if($pricingPreview)
+                    <div class="alert alert-light border d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">{{ __('general.pages.subscriptions.total') }}</span>
+                        <span class="fs-5 fw-bold text-primary">{{ currencyFormat($pricingPreview['final_price'] ?? 0, true) }}</span>
+                    </div>
+                    @endif
+
+                    <label class="form-label fw-semibold">Payment Method</label>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer {{ $payFromBalance ? 'border-primary bg-primary-subtle' : '' }}" style="cursor:pointer">
+                                <input type="radio" class="d-none" wire:click="$set('payFromBalance', true)">
+                                <i class="fa fa-wallet fs-3 text-primary"></i>
+                                <span class="fw-semibold text-center">{{ __('general.pages.subscriptions.account_balance') }}</span>
+                                <span class="small text-muted">{{ currencyFormat($accountBalance, true) }} available</span>
+                            </label>
+                        </div>
+                        @foreach($paymentMethods as $pm)
+                        <div class="col-md-4">
+                            <label class="border rounded-3 p-3 d-flex flex-column align-items-center gap-2 h-100 cursor-pointer {{ (!$payFromBalance && $selectedPaymentMethodId == $pm->id) ? 'border-primary bg-primary-subtle' : '' }}" style="cursor:pointer">
+                                <input type="radio" class="d-none" wire:click="$set('selectedPaymentMethodId', {{ $pm->id }})">
+                                <i class="fa fa-money-bill-wave fs-3 text-secondary"></i>
+                                <span class="fw-semibold text-center">{{ $pm->name }}</span>
+                            </label>
+                        </div>
+                        @endforeach
+                    </div>
+                    @error('payFromBalance') <div class="text-danger small mb-2">{{ $message }}</div> @enderror
+                    @error('selectedPaymentMethodId') <div class="text-danger small mb-2">{{ $message }}</div> @enderror
+
+                    @if(!$payFromBalance && ($selectedPaymentMethod->manual ?? false))
+                    <div class="bg-light border rounded-3 p-3 mb-3">
+                        <h6 class="fw-bold text-primary mb-1">Manual Payment</h6>
+                        <p class="small text-muted mb-3">Please transfer the amount using the details below, then upload the receipt to continue.</p>
+
+                        @php $details = $selectedPaymentMethod->details ?? []; $locale = app()->getLocale(); @endphp
+                        @if(is_array($details) && count($details) > 0)
+                        <div class="bg-white p-3 rounded border mb-3 small">
+                            @foreach($details as $row)
+                                @php
+                                    $label = $row['label'][$locale] ?? ($row['label']['en'] ?? ($row['key'] ?? ''));
+                                    $value = $row['value'][$locale] ?? ($row['value']['en'] ?? '');
+                                @endphp
+                                <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                                    <span class="fw-semibold">{{ $label }}:</span>
+                                    <span>{{ $value }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                        @endif
+
+                        @if($selectedPaymentMethod->currency && $pricingPreview)
+                        <div class="bg-white p-3 rounded border mb-3 d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold">Amount to transfer</span>
+                            <span class="fs-5 fw-bold text-primary">
+                                {{ number_format(((float) ($pricingPreview['final_price'] ?? 0)) * (float) $selectedPaymentMethod->currency->conversion_rate, 2) }}
+                                {{ $selectedPaymentMethod->currency->code }}
+                            </span>
+                        </div>
+                        @endif
+
+                        <label class="form-label fw-semibold">Upload Receipt <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" wire:model="receiptFile" accept=".pdf,.jpg,.jpeg,.png">
+                        <div wire:loading wire:target="receiptFile" class="small text-primary mt-1"><i class="fa fa-spinner fa-spin me-1"></i>Uploading...</div>
+                        @error('receiptFile') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                    </div>
+                    @endif
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" wire:click="closeChangePlanPanel">Cancel</button>
+                    <button type="button" class="btn btn-primary" wire:click="processSubscriptionChange" wire:loading.attr="disabled" wire:target="processSubscriptionChange">
+                        <span wire:loading.remove wire:target="processSubscriptionChange"><i class="fa fa-check me-1"></i> Confirm</span>
+                        <span wire:loading wire:target="processSubscriptionChange"><i class="fa fa-spinner fa-spin me-1"></i> Processing...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 
 </div>

@@ -148,6 +148,7 @@ return [
         'languages' => 'Languages',
         'translations' => 'Translations',
         'register-requests' => 'Register Requests',
+        'subscription-requests' => 'Subscription Requests',
         'sliders' => 'Sliders',
         'partners' => 'Partners',
         'partner-commissions' => 'Partner Commissions',

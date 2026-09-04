@@ -98,6 +98,12 @@ return [
         "route"     => 'cpanel.subscriptions.list'
     ],
     [
+        "title"     => "Subscription Requests",
+        'translated_title' => 'general.titles.subscription-requests',
+        "icon"      => "fa fa-right-left fa-fw",
+        "route"     => 'cpanel.subscription-requests.list'
+    ],
+    [
         "title"     => "Plans",
         'translated_title' => 'general.titles.plans',
         "icon"      => "fa fa-layer-group fa-fw",

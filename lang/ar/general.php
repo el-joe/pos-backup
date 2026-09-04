@@ -148,6 +148,7 @@ return [
         'languages' => 'اللغات',
         'translations' => 'الترجمات',
         'register-requests' => 'طلبات التسجيل',
+        'subscription-requests' => 'طلبات تغيير الاشتراك',
         'partners' => 'الشركاء',
         'partner-commissions' => 'عمولات الشركاء',
         'hrm' => 'الموارد البشرية',
