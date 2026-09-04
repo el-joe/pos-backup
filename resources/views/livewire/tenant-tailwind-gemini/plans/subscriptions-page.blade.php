@@ -420,6 +420,12 @@
             });
         });
 
+        changePlanModal.addEventListener('mousedown', function (e) {
+            if (e.target === changePlanModal) {
+                closeModal(changePlanModal);
+            }
+        });
+
         confirmBtn.addEventListener('click', function () {
             const method = selectedMethod();
             const formData = new FormData();
@@ -539,6 +545,12 @@
             btn && btn.addEventListener('click', function () {
                 closeModal(topUpModal);
             });
+        });
+
+        topUpModal.addEventListener('mousedown', function (e) {
+            if (e.target === topUpModal) {
+                closeModal(topUpModal);
+            }
         });
 
         confirmBtn.addEventListener('click', function () {

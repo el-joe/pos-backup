@@ -505,6 +505,12 @@
             });
         });
 
+        changePlanModal.addEventListener('mousedown', function (e) {
+            if (e.target === changePlanModal) {
+                changePlanModal.classList.add('d-none');
+            }
+        });
+
         confirmBtn.addEventListener('click', function () {
             const method = selectedMethod();
             const formData = new FormData();
@@ -622,6 +628,12 @@
             btn && btn.addEventListener('click', function () {
                 topUpModal.classList.add('d-none');
             });
+        });
+
+        topUpModal.addEventListener('mousedown', function (e) {
+            if (e.target === topUpModal) {
+                topUpModal.classList.add('d-none');
+            }
         });
 
         confirmBtn.addEventListener('click', function () {
