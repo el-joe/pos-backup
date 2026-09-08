@@ -6,6 +6,7 @@ use App\Enums\AccountTypeEnum;
 use App\Enums\CheckDirectionEnum;
 use App\Enums\CheckStatusEnum;
 use App\Enums\PurchaseStatusEnum;
+use App\Enums\SaleStatusEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Helpers\PurchaseHelper;
 use App\Helpers\SaleHelper;
@@ -15,6 +16,8 @@ use App\Models\Tenant\Expense;
 use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
+use App\Models\Tenant\Refund;
+use App\Models\Tenant\RefundItem;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\SaleItem;
 use App\Models\Tenant\Check;
@@ -44,111 +47,134 @@ class SellService
     }
 
 
+    /**
+     * Editing a posted sale is intentionally NOT supported: re-posting from a new item set
+     * without reversing the original sale_invoice/sale_invoice_cogs/payment transactions and
+     * returning the old items' stock would double-post revenue, COGS, and stock deductions.
+     * Every current caller already only ever passes $id = null (POS, sale requests, the sales
+     * API); this guard makes that constraint explicit instead of leaving a half-built edit path.
+     * To correct a posted sale, refund/credit-note the wrong items via refundSaleItem() and
+     * issue a new sale.
+     */
     function save($id = null,$data) {
         if($id) {
-            $sell = $this->repo->find($id);
-        }else{
+            throw new \RuntimeException('Editing a posted sale is not supported. Refund the incorrect items and create a new sale instead.');
+        }
+
+        return DB::transaction(function () use ($data) {
             $sell = new Sale();
-        }
 
-        $isDeferred = (bool)($data['is_deferred'] ?? false);
+            $isDeferred = (bool)($data['is_deferred'] ?? false);
 
-        if (!empty($data['discount_id'])) {
-            $discount = $this->discountService->find($data['discount_id']);
-            if (!$discount) {
-                throw new \RuntimeException('Discount not found.');
+            if (!empty($data['discount_id'])) {
+                $discount = $this->discountService->find($data['discount_id']);
+                if (!$discount) {
+                    throw new \RuntimeException('Discount not found.');
+                }
+                $this->discountService->assertEligible($discount);
             }
-            $this->discountService->assertEligible($discount);
-        }
 
-        // fill purchase data
-        $sell->fill([
-            'customer_id' => $data['customer_id'],
-            'branch_id' => $data['branch_id'],
-            'invoice_number' => $data['invoice_number'],
-            'order_date' => $data['order_date'],
-            'tax_id' => $data['tax_id'] ?? null,
-            'tax_percentage' => $data['tax_percentage'] ?? 0,
-            'discount_id' => $data['discount_id'] ?? null,
-            'discount_type' => $data['discount_type'] ?? null,
-            'discount_value' => $data['discount_value'] ?? 0,
-            'max_discount_amount' => $data['max_discount_amount'] ?? 0,
-            'sales_threshold' => $data['sales_threshold'] ?? null,
-            'paid_amount' => 0,
-            'due_date' => $data['due_date'] ?? null,
-            'is_deferred' => $isDeferred,
-        ])->save();
+            // fill purchase data
+            $sell->fill([
+                'customer_id' => $data['customer_id'],
+                'branch_id' => $data['branch_id'],
+                'invoice_number' => $data['invoice_number'],
+                'order_date' => $data['order_date'],
+                'tax_id' => $data['tax_id'] ?? null,
+                'tax_percentage' => $data['tax_percentage'] ?? 0,
+                'discount_id' => $data['discount_id'] ?? null,
+                'discount_type' => $data['discount_type'] ?? null,
+                'discount_value' => $data['discount_value'] ?? 0,
+                'max_discount_amount' => $data['max_discount_amount'] ?? 0,
+                'sales_threshold' => $data['sales_threshold'] ?? null,
+                'paid_amount' => 0,
+                'due_date' => $data['due_date'] ?? null,
+                'is_deferred' => $isDeferred,
+                'status' => SaleStatusEnum::PENDING->value,
+            ])->save();
 
-        if(!$isDeferred){
-            // Remove stock first so the true weighted-average issue cost is known before we
-            // record sale_items/COGS — the client-supplied unit_cost must never be trusted.
-            foreach ($data['products'] as &$item) {
-                $stock = $this->stockService->removeFromStock(productId: $item['id'],unitId: $item['unit_id'],qty: ($item['qty']??$item['quantity']),branchId: $data['branch_id']);
-                if($stock){
-                    $item['unit_cost'] = (float) $stock->unit_cost;
+            if(!$isDeferred){
+                // Remove stock first so the true weighted-average issue cost is known before we
+                // record sale_items/COGS — the client-supplied unit_cost must never be trusted.
+                foreach ($data['products'] as &$item) {
+                    $stock = $this->stockService->removeFromStock(productId: $item['id'],unitId: $item['unit_id'],qty: ($item['qty']??$item['quantity']),branchId: $data['branch_id']);
+                    if($stock){
+                        $item['unit_cost'] = (float) $stock->unit_cost;
+                    }
+                }
+                unset($item);
+            }
+
+            // fill sale items data
+            $sell->saleItems()->delete();
+            foreach ($data['products'] as $item) {
+                $sell->saleItems()->create([
+                    'sale_id' => $sell->id,
+                    'product_id' => $item['id'],
+                    'unit_id' => $item['unit_id'],
+                    'qty' => $item['qty'] ?? $item['quantity'],
+                    'taxable' => $item['taxable'] ?? 0,
+                    'unit_cost' => $item['unit_cost'] ?? 0,
+                    'sell_price' => $item['sell_price'] ?? 0
+                ]);
+            }
+
+            // Save history of discount if applied
+            if(isset($data['discount_id']) && $data['discount_id']){
+                $discount = $this->discountService->find($data['discount_id']);
+                if($discount){
+                    $this->discountService->saveHistory($discount, $sell);
                 }
             }
-            unset($item);
-        }
 
-        // fill sale items data
-        $sell->saleItems()->delete();
-        foreach ($data['products'] as $item) {
-            $sell->saleItems()->create([
-                'sale_id' => $sell->id,
-                'product_id' => $item['id'],
-                'unit_id' => $item['unit_id'],
-                'qty' => $item['qty'] ?? $item['quantity'],
-                'taxable' => $item['taxable'] ?? 0,
-                'unit_cost' => $item['unit_cost'] ?? 0,
-                'sell_price' => $item['sell_price'] ?? 0
-            ]);
-        }
+            if(!$isDeferred){
+                $sell->refresh();
+                $invoiceData = $data;
+                // The invoice/AR side must always be sized from the sale's own items, never
+                // from whatever payment amount the caller happened to pass in.
+                $invoiceData['grand_total'] = $sell->grand_total_amount;
+                $invoiceData['tax_amount'] = $sell->tax_amount;
+                $invoiceData['discount_amount'] = $sell->discount_amount;
 
-        // Save history of discount if applied
-        if(isset($data['discount_id']) && $data['discount_id']){
-            $discount = $this->discountService->find($data['discount_id']);
-            if($discount){
-                $this->discountService->saveHistory($discount, $sell);
+                // Grouped by type = Sale Invoice
+                $transactionData = [
+                    'description' => 'Sale Payment for #'.$sell->invoice_number,
+                    'type' => TransactionTypeEnum::SALE_INVOICE->value,
+                    'reference_type' => Sale::class,
+                    'reference_id' => $sell->id,
+                    'branch_id' => $sell->branch_id,
+                    'note' => $data['payment_note'] ?? '',
+                    'amount' => $invoiceData['grand_total'],
+                    'lines' => $this->saleInvoiceLines($invoiceData,'create')
+                ];
+
+                $this->transactionService->create($transactionData);
+
+                $transactionData = [
+                    'description' => 'COGS Entry for #'.$sell->invoice_number,
+                    'type' => TransactionTypeEnum::SALE_INVOICE_COGS->value,
+                    'reference_type' => Sale::class,
+                    'reference_id' => $sell->id,
+                    'branch_id' => $sell->branch_id,
+                    'note' => $data['payment_note'] ?? '',
+                    'amount' => $data['payment_amount'] ?? 0,
+                    'lines' => $this->saleInventoryLines($data,'create')
+                ];
+
+                $this->transactionService->create($transactionData);
             }
-        }
-
-        if(!$isDeferred){
-            // Grouped by type = Sale Invoice
-            $transactionData = [
-                'description' => 'Sale Payment for #'.$sell->invoice_number,
-                'type' => TransactionTypeEnum::SALE_INVOICE->value,
-                'reference_type' => Sale::class,
-                'reference_id' => $sell->id,
-                'branch_id' => $sell->branch_id,
-                'note' => $data['payment_note'] ?? '',
-                'amount' => $data['payment_amount'] ?? 0,
-                'lines' => $this->saleInvoiceLines($data,'create')
-            ];
-
-            $this->transactionService->create($transactionData);
-
-            $transactionData = [
-                'description' => 'COGS Entry for #'.$sell->invoice_number,
-                'type' => TransactionTypeEnum::SALE_INVOICE_COGS->value,
-                'reference_type' => Sale::class,
-                'reference_id' => $sell->id,
-                'branch_id' => $sell->branch_id,
-                'note' => $data['payment_note'] ?? '',
-                'amount' => $data['payment_amount'] ?? 0,
-                'lines' => $this->saleInventoryLines($data,'create')
-            ];
-
-            $this->transactionService->create($transactionData);
-        }
 
 
-        if(count($data['payments']??[]) > 0){
-            // Grouped by type = Payments
-            $this->addPayment($sell->id, $data);
-        }
+            if(count($data['payments']??[]) > 0){
+                // Grouped by type = Payments
+                $this->addPayment($sell->id, $data);
+            }
 
-        return $sell->refresh();
+            $sell->refresh();
+            $this->syncStatus($sell);
+
+            return $sell->refresh();
+        });
     }
 
     public function deliverDeferredInventory(int $saleId): Sale
@@ -180,6 +206,7 @@ class SellService
             'tax_amount' => $sale->tax_amount,
             'discount_amount' => $sale->discount_amount,
             'payment_amount' => $sale->grand_total_amount,
+            'grand_total' => $sale->grand_total_amount,
             'products' => $sale->saleItems->map(function($item){
                 return [
                     'id' => $item->product_id,
@@ -246,6 +273,8 @@ class SellService
                 'inventory_delivered_at' => now(),
             ]);
 
+            $this->syncStatus($sale);
+
             DB::commit();
         }catch(\Throwable $e){
             DB::rollBack();
@@ -260,7 +289,19 @@ class SellService
         if(!$sell) return;
 
         $payments = $data['payments'] ?? [];
-        $amount = $data['paid_amount'] ?? $data['payment_amount'] ?? array_sum(array_map(fn($p) => (float)($p['amount'] ?? 0), $payments));
+        // array_sum(payments) is the single source of truth for how much is actually being
+        // paid — a caller-supplied paid_amount/payment_amount that disagrees with the
+        // itemised payments (e.g. a grand-total figure sent alongside a genuine partial
+        // payment) must never be trusted.
+        $amount = array_sum(array_map(fn($p) => (float)($p['amount'] ?? 0), $payments));
+
+        if(!$reverse && $amount > 0){
+            $grandTotal = (float) $sell->grand_total_amount;
+            $wouldBePaid = (float) $sell->paid_amount + $amount;
+            if($wouldBePaid - $grandTotal > 0.005){
+                throw new \RuntimeException('Payment amount exceeds the remaining balance of the invoice.');
+            }
+        }
 
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
@@ -316,6 +357,9 @@ class SellService
                 }
             }
         }
+
+        $sell->refresh();
+        $this->syncStatus($sell);
 
         return $sell->refresh();
     }
@@ -527,8 +571,10 @@ class SellService
     function createCustomerLine($data,$type = 'debit',$reverse = false) {
 
         $getCustomerAccount = $this->getCustomerAccount($data['customer_id']??null, $data['payment_account']??null);
-        // get grand total from data
-        $grandTotal = $data['payment_amount'] ?? $data['grand_total'] ?? 0;
+        // The invoice/AR line must always be sized from the invoice's own grand total,
+        // never from whatever payment happens to be attached — a genuine partial payment
+        // must not shrink the receivable.
+        $grandTotal = $data['grand_total'] ?? 0;
         //`transaction_id`, `account_id`, `type`, `amount`
 
         if($reverse && $type == 'debit'){
@@ -544,9 +590,21 @@ class SellService
         ];
     }
 
-    function refundSaleItem($id,$qty) {
+    function refundSaleItem($id,$qty,$reason = null) {
+        return DB::transaction(function () use ($id, $qty, $reason) {
+            return $this->doRefundSaleItem($id, $qty, $reason);
+        });
+    }
+
+    private function doRefundSaleItem($id,$qty,$reason = null) {
         $saleItem = SaleItem::findOrFail($id);
         $saleOrder = $saleItem->sale;
+
+        $refundableQty = (float) $saleItem->qty - (float) $saleItem->refunded_qty;
+        if((float) $qty <= 0 || (float) $qty > $refundableQty + 0.0001){
+            throw new \RuntimeException('Refund quantity exceeds the refundable quantity for this item.');
+        }
+
         $product = (clone $saleItem)->toArray();
         $product['qty'] = $qty;
         $discountAmount = SaleHelper::singleDiscountAmount($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value, $saleOrder->max_discount_amount ?? 0, $saleOrder->sales_threshold);
@@ -556,6 +614,22 @@ class SellService
         $grandTotalFromRefundedQty = SaleHelper::singleGrandTotal($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value, $taxPercentage, $saleOrder->max_discount_amount ?? 0, $saleOrder->sales_threshold);
         $dueAmount = $saleOrder->due_amount;
         $totalRefunded = $grandTotalFromRefundedQty - $dueAmount;
+
+        $refund = Refund::create([
+            'branch_id' => $saleOrder->branch_id,
+            'order_type' => Sale::class,
+            'order_id' => $saleOrder->id,
+            'reason' => $reason,
+        ]);
+
+        RefundItem::create([
+            'refund_id' => $refund->id,
+            'product_id' => $saleItem->product_id,
+            'unit_id' => $saleItem->unit_id,
+            'qty' => $qty,
+            'refundable_type' => SaleItem::class,
+            'refundable_id' => $saleItem->id,
+        ]);
 
         // reverse sale invoice type transaction
         $refundInvoiceData = [
@@ -606,6 +680,17 @@ class SellService
         // refund sale payments
         if($totalRefunded <= 0){
         }else{
+            // Prefer refunding to the account the customer actually paid with; only fall
+            // back to the generic customer control account when no payment can be identified.
+            $originalPaymentAccountId = OrderPayment::where('payable_type', Sale::class)
+                ->where('payable_id', $saleOrder->id)
+                ->where('refunded', 0)
+                ->whereNotNull('account_id')
+                ->orderByDesc('id')
+                ->value('account_id');
+
+            $refundAccountId = $originalPaymentAccountId ?? $this->getCustomerAccount($saleOrder->customer_id)->id;
+
             $refundPaymentData = [
                 'grand_total' => $totalRefunded,
                 'payment_note' => 'Refund for sale item #'. ($saleItem->product?->name ?? 'N/A'),
@@ -613,11 +698,14 @@ class SellService
                 'payment_amount' => $totalRefunded,
                 'branch_id' => $saleOrder->branch_id,
                 'customer_id' => $saleOrder->customer_id,
-                'payment_account' => $this->getCustomerAccount($saleOrder->customer_id)->id
+                'payment_account' => $refundAccountId,
             ];
 
             $refundPaymentData['payments'] = [
-                $refundPaymentData
+                [
+                    'account_id' => $refundAccountId,
+                    'amount' => $totalRefunded,
+                ],
             ];
 
             $this->addPayment($saleOrder->id, $refundPaymentData, true);
@@ -638,20 +726,29 @@ class SellService
         }
 
         $saleOrder->refresh();
+        $this->syncStatus($saleOrder);
 
-        // $saleDue = $saleOrder->due_amount;
-        // $total = $saleOrder->grand_total_amount;
-
-        // if($saleDue <= 0){
-        //     $saleOrder->update(['status' => SaleStatusEnum::FULL_PAID->value]);
-        // }elseif($saleDue > 0 && $saleDue < $total){
-        //     $saleOrder->update(['status' => SaleStatusEnum::PARTIAL_PAID->value]);
-        // }elseif($saleDue == $total){
-        //     $saleOrder->update(['status' => SaleStatusEnum::PENDING->value]);
-        // }
-        return $saleOrder;
+        return $saleOrder->refresh();
     }
 
+
+    function syncStatus(Sale $sale): void
+    {
+        $sale->refresh();
+        $due = $sale->due_amount;
+        $total = $sale->grand_total_amount;
+
+        $status = match(true) {
+            $sale->refund_status === \App\Enums\RefundStatusEnum::FULL_REFUND => SaleStatusEnum::REFUNDED->value,
+            $due <= 0 && $total > 0 => SaleStatusEnum::FULL_PAID->value,
+            $sale->paid_amount > 0 && $due > 0 => SaleStatusEnum::PARTIAL_PAID->value,
+            default => SaleStatusEnum::PENDING->value,
+        };
+
+        if ($sale->status !== $status) {
+            $sale->update(['status' => $status]);
+        }
+    }
 
     function delete($id) {
         $purchase = $this->repo->find($id);

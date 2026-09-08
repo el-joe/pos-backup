@@ -9,8 +9,6 @@ use App\Models\Tenant\AuditLog;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\PurchaseItem;
-use App\Models\Tenant\Refund;
-use App\Models\Tenant\RefundItem;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\SaleItem;
 use App\Services\BranchService;
@@ -131,31 +129,15 @@ class AddRefund extends Component
 
         DB::beginTransaction();
         try {
-            $data = $this->data;
-            $data['order_type'] = $this->order_type == 'sale' ? Sale::class : Purchase::class;
-            $refund = Refund::create($data);
-            foreach($refundItems as $itemId => $qty){
-                if($qty == 0){
-                    continue;
-                }
-                $orderItem = $this->getOrder()->{$this->order_type == 'sale' ? 'saleItems' : 'purchaseItems'}()->where('id',$itemId)->first();
-                if(!$orderItem){
-                    throw new \Exception('Invalid order item selected for refund.');
-                }
-                RefundItem::create([
-                    'refund_id' => $refund->id,
-                    'product_id' => $orderItem->product_id,
-                    'unit_id' => $orderItem->unit_id,
-                    'qty' => $qty,
-                    'refundable_type' => get_class($orderItem),
-                    'refundable_id' => $orderItem->id,
-                ]);
-            }
-
+            // Refund + RefundItem rows are now created inside SellService::refundSaleItem() /
+            // PurchaseService::refundPurchaseItem() themselves (one row per refunded item), so
+            // every refund entry point — this form, the API, and SaleDetails/PurchaseDetails —
+            // converges on the same data shape instead of only the ones that remembered to
+            // write these rows manually.
             if($this->order_type === 'sale'){
-                $this->refundSaleItem($refund->id);
+                $this->refundSaleItem($this->data['reason'] ?? null);
             } elseif($this->order_type === 'purchase'){
-                $this->refundPurchaseItem($refund->id);
+                $this->refundPurchaseItem($this->data['reason'] ?? null);
             }
 
             $this->alert('success', __('general.messages.created_successfully', ['type' => __('general.pages.refunds.refund')]));
@@ -168,12 +150,12 @@ class AddRefund extends Component
         }
     }
 
-    function refundSaleItem($refundId) {
+    function refundSaleItem($reason = null) {
         foreach($this->refundItems as $id => $qty){
             if($qty == 0){
                 continue;
             }
-            $this->sellService->refundSaleItem($id,$qty);
+            $this->sellService->refundSaleItem($id,$qty,$reason);
         }
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
@@ -190,11 +172,11 @@ class AddRefund extends Component
             $this->cashRegisterService->increment($cashRegister->id, 'total_sale_refunds', $totalRefunded);
         }
 
-        AuditLog::log(AuditLogActionEnum::RETURN_SALE_ORDER, ['order_id' => $refundId, 'route' => route('admin.refunds.list')]);
+        AuditLog::log(AuditLogActionEnum::RETURN_SALE_ORDER, ['order_id' => $this->order_id, 'route' => route('admin.refunds.list')]);
 
         $route = route('admin.refunds.list', ['order_type' => 'sale']);
-        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($refundId, $route){
-            $admin->notifyReturnSaleOrder($refundId, $route);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($route){
+            $admin->notifyReturnSaleOrder($this->order_id, $route);
         });
     }
 
@@ -214,7 +196,7 @@ class AddRefund extends Component
         return numFormat($totalRefunded,3);
     }
 
-    function refundPurchaseItem($refundId) {
+    function refundPurchaseItem($reason = null) {
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
@@ -236,11 +218,11 @@ class AddRefund extends Component
             $this->purchaseService->refundPurchaseItem($id,$qty);
         }
 
-        AuditLog::log(AuditLogActionEnum::RETURN_PURCHASE_ORDER, ['order_id' => $refundId, 'route' => route('admin.refunds.list')]);
+        AuditLog::log(AuditLogActionEnum::RETURN_PURCHASE_ORDER, ['order_id' => $this->order_id, 'route' => route('admin.refunds.list')]);
 
         $route = route('admin.refunds.list', ['order_type' => 'purchase']);
-        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($refundId, $route){
-            $admin->notifyReturnPurchaseOrder($refundId, $route);
+        superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($route){
+            $admin->notifyReturnPurchaseOrder($this->order_id, $route);
         });
     }
 

@@ -49,12 +49,21 @@ class PurchaseService
     }
 
 
+    /**
+     * Editing a posted purchase is intentionally NOT supported, for the same reason as
+     * SellService::save(): re-posting from a new item set without reversing the original
+     * purchase_invoice/payment transactions and returning the old items' stock would double-post
+     * inventory value and stock quantities. No current caller passes $id, so this guard makes
+     * that constraint explicit instead of leaving a half-built edit path. To correct a posted
+     * purchase, refund the incorrect items via refundPurchaseItem() and create a new purchase.
+     */
     function save($id = null,$data) {
         if($id) {
-            $purchase = $this->repo->find($id);
-        }else{
-            $purchase = new Purchase();
+            throw new \RuntimeException('Editing a posted purchase is not supported. Refund the incorrect items and create a new purchase instead.');
         }
+
+        return DB::transaction(function () use ($data) {
+        $purchase = new Purchase();
 
         $isDeferred = (bool)($data['is_deferred'] ?? false);
         $discountType = in_array(($data['discount_type'] ?? null), ['fixed', 'percentage'], true)
@@ -150,6 +159,7 @@ class PurchaseService
         $this->addPayment($purchase->id, $data);
 
         return $purchase;
+        });
     }
 
     public function receiveDeferredInventory(int $purchaseId): Purchase
@@ -643,8 +653,19 @@ class PurchaseService
     }
 
     function refundPurchaseItem($id,$qty) {
+        return DB::transaction(function () use ($id, $qty) {
+            return $this->doRefundPurchaseItem($id, $qty);
+        });
+    }
+
+    private function doRefundPurchaseItem($id,$qty) {
         $purchaseItem = PurchaseItem::findOrFail($id);
         $purchaseOrder = $purchaseItem->purchase;
+
+        $refundableQty = (float) $purchaseItem->qty - (float) $purchaseItem->refunded_qty;
+        if((float) $qty <= 0 || (float) $qty > $refundableQty + 0.0001){
+            throw new \RuntimeException('Refund quantity exceeds the refundable quantity for this item.');
+        }
         $refundedQtyAmount = $purchaseItem->unit_amount_after_tax * $qty;
         $discountAmount = PurchaseHelper::calcDiscount($refundedQtyAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
         $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($refundedQtyAmount, $discountAmount);

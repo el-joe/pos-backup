@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Api\Tenant;
 use App\Http\Resources\Tenant\RefundResource;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Refund;
-use App\Models\Tenant\RefundItem;
 use App\Models\Tenant\Sale;
 use App\Services\PurchaseService;
 use App\Services\SellService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class RefundsApiController extends ApiController
 {
@@ -100,46 +98,26 @@ class RefundsApiController extends ApiController
             }
         }
 
-        DB::beginTransaction();
+        // Refund + RefundItem rows are created inside SellService::refundSaleItem() /
+        // PurchaseService::refundPurchaseItem() themselves (one row per refunded item), so
+        // this endpoint, the Livewire refund form, and SaleDetails/PurchaseDetails all
+        // converge on the same data shape instead of duplicating the row creation here.
         try {
-            $refund = Refund::create([
-                'branch_id' => $validated['branch_id'],
-                'order_type' => $orderModelClass,
-                'order_id' => $validated['order_id'],
-                'reason' => $validated['reason'] ?? null,
-            ]);
-
-            foreach ($refundItems as $itemId => $item) {
-                $orderItem = $order->{$itemRelation}()->where('id', $itemId)->first();
-                if (!$orderItem) {
-                    throw new \Exception('Invalid order item selected for refund.');
-                }
-                RefundItem::create([
-                    'refund_id' => $refund->id,
-                    'product_id' => $orderItem->product_id,
-                    'unit_id' => $orderItem->unit_id,
-                    'qty' => $item['qty'],
-                    'refundable_type' => get_class($orderItem),
-                    'refundable_id' => $orderItem->id,
-                ]);
-            }
-
             if ($orderType === 'sale') {
                 foreach ($refundItems as $itemId => $item) {
-                    $sellService->refundSaleItem($itemId, $item['qty']);
+                    $sellService->refundSaleItem($itemId, $item['qty'], $validated['reason'] ?? null);
                 }
             } else {
                 foreach ($refundItems as $itemId => $item) {
                     $purchaseService->refundPurchaseItem($itemId, $item['qty']);
                 }
             }
-
-            DB::commit();
         } catch (\Exception $e) {
-            DB::rollBack();
             return $this->error($e->getMessage(), 422);
         }
 
-        return $this->success(new RefundResource($refund->load('items')), 201);
+        $refund = Refund::with('items')->where('order_type', $orderModelClass)->where('order_id', $validated['order_id'])->latest('id')->first();
+
+        return $this->success(new RefundResource($refund), 201);
     }
 }

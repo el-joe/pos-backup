@@ -265,6 +265,44 @@ class TransactionService
     }
 
 
+    /**
+     * Creates a mirrored contra-entry for $t (every line's debit/credit flipped, same amounts)
+     * and links it back via reversed_by_transaction_id. Never deletes or mutates $t's own lines —
+     * both the original and the reversal remain in the ledger for audit purposes.
+     */
+    function reverse(\App\Models\Tenant\Transaction $t, string $reason): \App\Models\Tenant\Transaction
+    {
+        if ($t->reversed_by_transaction_id) {
+            return $t->refresh()->reversal;
+        }
+
+        $lines = $t->lines()->get()->map(fn ($line) => [
+            'account_id' => $line->account_id,
+            'type' => $line->type === 'debit' ? 'credit' : 'debit',
+            'amount' => $line->amount,
+        ])->all();
+
+        return DB::transaction(function () use ($t, $lines, $reason) {
+            $reversal = $this->create([
+                'date' => now(),
+                'description' => 'Reversal of Transaction #' . $t->id . ': ' . $t->description,
+                'type' => $t->type instanceof \BackedEnum ? $t->type->value : $t->type,
+                'reference_type' => $t->reference_type,
+                'reference_id' => $t->reference_id,
+                'branch_id' => $t->branch_id,
+                'note' => $reason,
+                'lines' => $lines,
+            ]);
+
+            $t->update([
+                'reversed_by_transaction_id' => $reversal->id,
+                'reversal_reason' => $reason,
+            ]);
+
+            return $reversal;
+        });
+    }
+
     function delete($id) {
         $transaction = $this->repo->find($id);
         if($transaction) {

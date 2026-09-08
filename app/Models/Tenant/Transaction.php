@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $fillable = [
-        'date','description','reference_type','reference_id','branch_id','note','type','amount'
+        'date','description','reference_type','reference_id','branch_id','note','type','amount',
+        'reversed_by_transaction_id','reversal_reason',
     ];
 
     protected $casts = [
@@ -17,6 +18,10 @@ class Transaction extends Model
 
     function reference() {
         return $this->morphTo();
+    }
+
+    function reversal() {
+        return $this->belongsTo(self::class, 'reversed_by_transaction_id');
     }
 
     function lines() {

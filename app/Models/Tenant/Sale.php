@@ -13,7 +13,7 @@ class Sale extends Model
         'customer_id','branch_id','invoice_number','order_date','created_by',
         'tax_id','tax_percentage','discount_id','discount_type','discount_value',
         'paid_amount','max_discount_amount','sales_threshold','due_date',
-        'is_deferred','inventory_delivered_at'
+        'is_deferred','inventory_delivered_at','status'
     ];
 
     protected $casts = [
