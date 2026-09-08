@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Tenant;
 
+use App\Http\Requests\Api\Tenant\UpdateRefundRequest;
 use App\Http\Resources\Tenant\RefundResource;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Refund;
@@ -14,7 +15,7 @@ class RefundsApiController extends ApiController
 {
     protected function permission(): string
     {
-        return 'refunds.list,refunds.show,refunds.create';
+        return 'refunds.list,refunds.show,refunds.create,refunds.update';
     }
 
     public function index(Request $request)
@@ -120,4 +121,24 @@ class RefundsApiController extends ApiController
 
         return $this->success(new RefundResource($refund), 201);
     }
+
+    public function update(UpdateRefundRequest $request, int $id)
+    {
+        $refund = Refund::find($id);
+        if (!$refund) {
+            return $this->error('Not Found', 404);
+        }
+
+        // Only non-financial metadata (reason) is editable — see UpdateRefundRequest docblock.
+        $refund->update($request->validated());
+
+        return $this->success(new RefundResource($refund->load('items')));
+    }
+
+    // No destroy() endpoint: a refund's qty/amount is already posted to the ledger at
+    // creation time via SellService::refundSaleItem() / PurchaseService::refundPurchaseItem(),
+    // and neither service exposes a reversal for those entries. Deleting the Refund row alone
+    // would strand GL lines the same way hard-deleting a Check does (blocked in prompt 09) —
+    // so destroy is intentionally not implemented until a proper reversal exists in the service
+    // layer.
 }

@@ -11,7 +11,7 @@ class PurchasesApiController extends ApiController
 {
     protected function permission(): string
     {
-        return 'purchases.list,purchases.show,purchases.create';
+        return 'purchases.list,purchases.show,purchases.create,purchases.delete,deferred_purchases.receive';
     }
 
     public function index(Request $request)
@@ -66,5 +66,36 @@ class PurchasesApiController extends ApiController
         $purchase = $purchaseService->save(null, $validated);
 
         return $this->success(new PurchaseResource($purchase->load(['supplier', 'branch', 'purchaseItems.product'])), 201);
+    }
+
+    // Note: no update() endpoint is exposed here, mirroring sales — PurchaseService::save()
+    // explicitly refuses to edit a posted purchase for the same accounting-integrity reason.
+
+    public function destroy(int $id, PurchaseService $purchaseService)
+    {
+        $purchase = Purchase::find($id);
+        if (!$purchase) {
+            return $this->error('Not Found', 404);
+        }
+
+        $purchaseService->delete($id);
+
+        return $this->success(null);
+    }
+
+    public function receiveInventory(int $id, PurchaseService $purchaseService)
+    {
+        $purchase = Purchase::find($id);
+        if (!$purchase) {
+            return $this->error('Not Found', 404);
+        }
+
+        try {
+            $purchase = $purchaseService->receiveDeferredInventory($id);
+        } catch (\RuntimeException $e) {
+            return $this->error($e->getMessage(), 422);
+        }
+
+        return $this->success(new PurchaseResource($purchase->load(['supplier', 'branch', 'purchaseItems.product'])));
     }
 }

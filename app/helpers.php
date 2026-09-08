@@ -290,7 +290,7 @@ if (!function_exists('defaultPermissionsList')) {
             "expenses" => ["list", "create", "update", "delete", 'export'],
             "payment_methods" => ["list", "create", "update", "delete", 'export'],
             "transactions" => ["list", 'export'],
-            "checks" => ["list", "collect", "bounce", "clear"],
+            "checks" => ["list", "create", "collect", "bounce", "clear"],
             "fixed_assets" => ["list", "show", "create", "update", "delete", "export"],
             "depreciation_expenses" => ["list", "show", "create", "update", "delete", "export"],
             "user_management" => ["list", "create", "update", "delete", 'export'],
@@ -305,7 +305,7 @@ if (!function_exists('defaultPermissionsList')) {
             // Sale / purchase requests, refunds, deferred flows
             'sale_requests' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'export'],
             'purchase_requests' => ['list', 'show', 'create', 'update', 'delete', 'approve', 'export'],
-            'refunds' => ['list', 'show', 'create', 'delete', 'export'],
+            'refunds' => ['list', 'show', 'create', 'update', 'delete', 'export'],
             'deferred_pos' => ['create'],
             'deferred_purchases' => ['list', 'show', 'receive', 'export'],
             'deferred_sales' => ['list', 'show', 'pay', 'deliver', 'export'],

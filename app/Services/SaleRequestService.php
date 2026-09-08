@@ -73,6 +73,30 @@ class SaleRequestService
         });
     }
 
+    public function approve(int $saleRequestId): SaleRequest
+    {
+        $request = $this->repo->find($saleRequestId);
+        if (!$request) {
+            abort(404);
+        }
+
+        $request->update(['status' => SaleRequestStatusEnum::ACCEPTED->value]);
+
+        return $request->refresh();
+    }
+
+    public function reject(int $saleRequestId): SaleRequest
+    {
+        $request = $this->repo->find($saleRequestId);
+        if (!$request) {
+            abort(404);
+        }
+
+        $request->update(['status' => SaleRequestStatusEnum::REJECTED->value]);
+
+        return $request->refresh();
+    }
+
     public function convertToSaleOrder(int $saleRequestId, array $override = []): Sale
     {
         $request = $this->repo->find($saleRequestId, ['items']);

@@ -11,7 +11,7 @@ class SalesApiController extends ApiController
 {
     protected function permission(): string
     {
-        return 'sales.list,sales.show,pos.create';
+        return 'sales.list,sales.show,pos.create,sales.delete,deferred_sales.deliver';
     }
 
     public function index(Request $request)
@@ -77,5 +77,38 @@ class SalesApiController extends ApiController
         $sale = $sellService->save(null, $validated);
 
         return $this->success(new SaleResource($sale->load(['customer', 'branch', 'saleItems.product'])), 201);
+    }
+
+    // Note: no update() endpoint is exposed here. SellService::save() explicitly refuses to
+    // edit a posted sale (RuntimeException 'Editing a posted sale is not supported...') — that
+    // guard was added upstream to keep the ledger honest, so the API deliberately does not
+    // work around it. Use refunds (RefundsApiController) + a new sale instead, same as the panel.
+
+    public function destroy(int $id, SellService $sellService)
+    {
+        $sale = Sale::find($id);
+        if (!$sale) {
+            return $this->error('Not Found', 404);
+        }
+
+        $sellService->delete($id);
+
+        return $this->success(null);
+    }
+
+    public function deliverDeferred(int $id, SellService $sellService)
+    {
+        $sale = Sale::find($id);
+        if (!$sale) {
+            return $this->error('Not Found', 404);
+        }
+
+        try {
+            $sale = $sellService->deliverDeferredInventory($id);
+        } catch (\RuntimeException $e) {
+            return $this->error($e->getMessage(), 422);
+        }
+
+        return $this->success(new SaleResource($sale->load(['customer', 'branch', 'saleItems.product'])));
     }
 }

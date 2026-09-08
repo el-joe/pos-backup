@@ -26,5 +26,11 @@
 	"reports": ["list", "create", "update", "delete"],
 	"discounts": ["list", "create", "update", "delete"],
     "taxes": ["list", "create", "update", "delete"],
-    "settings": ["update"]
+    "settings": ["update"],
+    "checks": ["list", "create", "collect", "bounce", "clear"],
+    "sale_requests": ["list", "show", "create", "update", "delete", "approve"],
+    "purchase_requests": ["list", "show", "create", "update", "delete", "approve"],
+    "refunds": ["list", "show", "create", "update", "delete"],
+    "deferred_purchases": ["list", "show", "receive"],
+    "deferred_sales": ["list", "show", "pay", "deliver"]
 }

@@ -71,6 +71,30 @@ class PurchaseRequestService
         });
     }
 
+    public function approve(int $purchaseRequestId): PurchaseRequest
+    {
+        $request = $this->repo->find($purchaseRequestId);
+        if (!$request) {
+            abort(404);
+        }
+
+        $request->update(['status' => PurchaseRequestStatusEnum::APPROVED->value]);
+
+        return $request->refresh();
+    }
+
+    public function reject(int $purchaseRequestId): PurchaseRequest
+    {
+        $request = $this->repo->find($purchaseRequestId);
+        if (!$request) {
+            abort(404);
+        }
+
+        $request->update(['status' => PurchaseRequestStatusEnum::REJECTED->value]);
+
+        return $request->refresh();
+    }
+
     public function convertToPurchaseOrder(int $purchaseRequestId, array $override = []): Purchase
     {
         $request = $this->repo->find($purchaseRequestId, ['items']);
