@@ -118,6 +118,19 @@ class Account extends Model
     }
 
     /**
+     * The one place that decides which control account a check payment hits. A check the
+     * business RECEIVES (e.g. a customer's sale payment) is an asset until collected —
+     * Checks Under Collection. A check the business ISSUES (a payment out — purchase,
+     * fixed asset, refund) is a liability until it clears — Issued Checks. Never the reverse.
+     */
+    static function forCheckDirection(string $direction, $branch_id = null): self
+    {
+        return $direction === 'issued'
+            ? self::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branch_id)
+            : self::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branch_id, 'check');
+    }
+
+    /**
      * Code generation for user-created accounts (Accounts CRUD page) only.
      * System control accounts must never go through this — their code is
      * derived deterministically from (type, branch_id) in default().

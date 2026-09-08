@@ -44,6 +44,7 @@ class FixedAssetsList extends Component
             'transactions' => fn($q) => $q->where('type', TransactionTypeEnum::FIXED_ASSETS)->with('lines')->orderByDesc('id'),
             'orderPayments' => fn($q) => $q->with(['account.paymentMethod'])->latest('id'),
             'checks',
+            'depreciationEntries' => fn($q) => $q->orderByDesc('period_year')->orderByDesc('period_month'),
         ]);
     }
 

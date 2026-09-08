@@ -134,7 +134,8 @@ class FixedAssetService
         $payableAccount = Account::default('Fixed Assets Payable', AccountTypeEnum::LONGTERM_LIABILITY->value, $branchId);
 
         if ($methodSlug === 'check') {
-            $creditAccount = Account::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branchId);
+            // A fixed asset payment is a check the business ISSUES.
+            $creditAccount = Account::forCheckDirection('issued', $branchId);
         } else {
             $creditAccount = $paymentAccount;
         }

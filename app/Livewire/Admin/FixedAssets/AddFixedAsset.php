@@ -174,6 +174,18 @@ class AddFixedAsset extends Component
             'data.payment_status' => 'required|in:pending,partial_paid,full_paid',
         ]);
 
+        // Exactly one depreciation basis: useful_life_months XOR depreciation_rate.
+        $hasLife = (int) ($this->data['useful_life_months'] ?? 0) > 0;
+        $hasRate = (float) ($this->data['depreciation_rate'] ?? 0) > 0;
+        if ($hasLife && $hasRate) {
+            $this->addError('data.depreciation_rate', __('general.pages.fixed_assets.conflicting_depreciation_basis'));
+            return;
+        }
+        if (!$hasLife && !$hasRate && ($this->data['status'] ?? null) !== FixedAsset::STATUS_UNDER_CONSTRUCTION) {
+            $this->addError('data.useful_life_months', __('general.pages.fixed_assets.depreciation_basis_required'));
+            return;
+        }
+
         $cost = (float)($this->data['cost'] ?? 0);
         $payments = $this->validatePayments($cost);
         if ($payments === false) {

@@ -31,6 +31,10 @@ class FixedAsset extends Model
         'cost',
         'paid_amount',
         'salvage_value',
+        'accumulated_depreciation',
+        'last_depreciated_on',
+        'disposed_at',
+        'disposal_proceeds',
         'useful_life_months',
         'depreciation_rate',
         'depreciation_method',
@@ -42,9 +46,13 @@ class FixedAsset extends Model
     protected $casts = [
         'purchase_date' => 'date',
         'depreciation_start_date' => 'date',
+        'last_depreciated_on' => 'date',
+        'disposed_at' => 'datetime',
         'cost' => 'decimal:2',
         'paid_amount' => 'decimal:2',
         'salvage_value' => 'decimal:2',
+        'accumulated_depreciation' => 'decimal:2',
+        'disposal_proceeds' => 'decimal:2',
         'useful_life_months' => 'integer',
         'depreciation_rate' => 'decimal:4',
     ];
@@ -157,23 +165,24 @@ class FixedAsset extends Model
         return $this->calculateMonthlyDepreciation(now());
     }
 
-    public function getRecordedAccumulatedDepreciationAttribute(): float
+    /**
+     * Legacy diagnostic only: depreciation faked through the Expense module before the
+     * depreciation engine existed (see DepreciationService). Real accumulated depreciation
+     * now lives in the accumulated_depreciation column, maintained by DepreciationService.
+     */
+    public function getLegacyExpenseDepreciationAttribute(): float
     {
-        return (float) $this->depreciationExpenses()
-            ->sum('amount');
+        return (float) $this->depreciationExpenses()->sum('amount');
     }
 
+    /**
+     * What accumulated depreciation *should* be as of $asOf under the configured formula —
+     * used for reporting/dry-run comparisons against the real accumulated_depreciation column,
+     * never assigned to it directly (no auto-backfill).
+     */
     public function getCalculatedAccumulatedDepreciationAttribute(): float
     {
         return $this->calculateAccumulatedDepreciation(now());
-    }
-
-    public function getAccumulatedDepreciationAttribute(): float
-    {
-        $recorded = (float) $this->recorded_accumulated_depreciation;
-        $calculated = (float) $this->calculated_accumulated_depreciation;
-
-        return max($recorded, $calculated);
     }
 
     public function getNetBookValueAttribute(): float
@@ -306,6 +315,38 @@ class FixedAsset extends Model
 
         $monthlyRate = max(0.0, $annualRate / 100 / 12);
         return max(0.0, $carryingValue * $monthlyRate);
+    }
+
+    public function getDepreciableBaseAttribute(): float
+    {
+        return max(0.0, (float) ($this->cost ?? 0) - max(0.0, (float) ($this->salvage_value ?? 0)));
+    }
+
+    public function getIsFullyDepreciatedAttribute(): bool
+    {
+        return (float) $this->accumulated_depreciation >= $this->depreciable_base;
+    }
+
+    public function getIsDisposedAttribute(): bool
+    {
+        return $this->disposed_at !== null || in_array($this->status, [self::STATUS_DISPOSED, self::STATUS_SOLD], true);
+    }
+
+    public function depreciationEntries()
+    {
+        return $this->hasMany(FixedAssetDepreciationEntry::class, 'fixed_asset_id');
+    }
+
+    /**
+     * An asset's depreciation basis must be exactly one of: useful_life_months (straight line
+     * duration) or depreciation_rate (declining balance rate) — not both, not neither.
+     */
+    public function hasConflictingDepreciationBasis(): bool
+    {
+        $hasLife = (int) ($this->useful_life_months ?? 0) > 0;
+        $hasRate = (float) ($this->depreciation_rate ?? 0) > 0;
+
+        return $hasLife && $hasRate;
     }
 
     public function scopeFilter($q, $filters = [])

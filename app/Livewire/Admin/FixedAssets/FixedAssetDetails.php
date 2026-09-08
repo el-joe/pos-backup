@@ -27,7 +27,7 @@ class FixedAssetDetails extends Component
 
     public function mount(): void
     {
-        $this->asset = $this->fixedAssetService->first($this->id, ['branch', 'createdBy', 'lifespanExtensions', 'orderPayments.account.paymentMethod', 'checks']);
+        $this->asset = $this->fixedAssetService->first($this->id, ['branch', 'createdBy', 'lifespanExtensions', 'orderPayments.account.paymentMethod', 'checks', 'depreciationEntries']);
         if (!$this->asset) {
             abort(404);
         }
@@ -35,6 +35,8 @@ class FixedAssetDetails extends Component
 
     public function render()
     {
+        // Legacy: depreciation faked through the Expense module before the depreciation
+        // engine existed. Shown for reference only — never posted to going forward.
         $depreciationExpenses = $this->expenseService->list(
             relations: ['category', 'branch'],
             filter: [
@@ -47,6 +49,11 @@ class FixedAssetDetails extends Component
         );
 
         $lifespanExtensions = $this->asset->lifespanExtensions()->orderByDesc('id')->get();
+
+        $depreciationSchedule = $this->asset->depreciationEntries()
+            ->orderByDesc('period_year')
+            ->orderByDesc('period_month')
+            ->get();
 
         return layoutView('fixed-assets.fixed-asset-details', get_defined_vars())
             ->title(__('general.pages.fixed_assets.fixed_asset_details'));

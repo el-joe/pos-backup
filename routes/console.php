@@ -11,6 +11,13 @@ Schedule::command('app:sales-summary-report')->dailyAt('23:55');
 Schedule::command('app:convert-currencies')->dailyAt('01:00');
 Schedule::command('app:generate-sitemap')->daily();
 
+// Posts current-period depreciation only (idempotent per asset per period) — never a
+// historical backfill, which is a deliberate, approved, manual operation (see prompt 09).
+Schedule::command('tenant:run-depreciation --dry-run=0')
+    ->monthlyOn(1, '02:00')
+    ->runInBackground()
+    ->withoutOverlapping();
+
 Schedule::call(function () {
     DB::connection('central')->table('page_views')
         ->where('created_at', '<', now()->subDays(90))

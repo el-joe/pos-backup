@@ -384,7 +384,8 @@ class PurchaseService
         }
 
         if($methodSlug === 'check') {
-            $issuedChecks = Account::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $data['branch_id']);
+            // A purchase payment is a check the business ISSUES.
+            $issuedChecks = Account::forCheckDirection('issued', $data['branch_id']);
             $paidAmount = ($data['payment_status'] ?? 'full_paid') == 'full_paid'
                 ? (float)($data['grand_total'] ?? 0)
                 : (float)($data['payment_amount'] ?? 0);

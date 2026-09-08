@@ -86,6 +86,42 @@
         </div>
     </x-tenant-tailwind-gemini.table-card>
 
+    <x-tenant-tailwind-gemini.table-card :title="__('general.pages.fixed_assets.depreciation_schedule')" icon="fa fa-calculator">
+        <x-slot:actions>
+            <span class="inline-flex items-center gap-2 rounded-2xl bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                {{ __('general.pages.fixed_assets.accumulated_depreciation') }}: {{ currencyFormat($asset->accumulated_depreciation ?? 0, true) }}
+                — {{ __('general.pages.fixed_assets.net_book_value') }}: {{ currencyFormat($asset->net_book_value ?? 0, true) }}
+            </span>
+        </x-slot:actions>
+
+        <div class="p-5">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>{{ __('general.pages.fixed_assets.period') }}</th>
+                            <th>{{ __('general.pages.depreciation_expenses.amount') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.accumulated_depreciation') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($depreciationSchedule as $entry)
+                        <tr>
+                            <td>{{ sprintf('%04d-%02d', $entry->period_year, $entry->period_month) }}</td>
+                            <td>{{ currencyFormat($entry->amount ?? 0, true) }}</td>
+                            <td>{{ currencyFormat($entry->accumulated_depreciation_after ?? 0, true) }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="3" class="py-10 text-center text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.fixed_assets.no_depreciation_posted_yet') }}</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </x-tenant-tailwind-gemini.table-card>
+
     <x-tenant-tailwind-gemini.table-card :title="__('general.pages.fixed_assets.depreciation_history')" icon="fa fa-line-chart">
         <x-slot:actions>
             <a class="inline-flex items-center gap-2 rounded-2xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700" href="{{ route('admin.depreciation-expenses.create', ['fixed_asset_id' => $asset->id]) }}">

@@ -35,7 +35,7 @@ class CheckService
         return DB::transaction(function () use ($check, $collectedAccountId, $note) {
             $branchId = $check->branch_id;
 
-            $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branchId,'check');
+            $checksUnderCollection = Account::forCheckDirection('received', $branchId);
             $bankOrCash = $collectedAccountId
                 ? Account::findOrFail($collectedAccountId)
                 : Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
@@ -94,7 +94,7 @@ class CheckService
         return DB::transaction(function () use ($check, $note) {
             $branchId = $check->branch_id;
 
-            $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branchId,'check');
+            $checksUnderCollection = Account::forCheckDirection('received', $branchId);
 
             // Customer receivable account
             $customerAccount = Account::where('model_type', \App\Models\Tenant\User::class)
@@ -160,7 +160,7 @@ class CheckService
         return DB::transaction(function () use ($check, $clearedAccountId, $note) {
             $branchId = $check->branch_id;
 
-            $issuedChecks = Account::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branchId);
+            $issuedChecks = Account::forCheckDirection('issued', $branchId);
             $bankOrCash = $clearedAccountId
                 ? Account::findOrFail($clearedAccountId)
                 : Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
@@ -219,7 +219,7 @@ class CheckService
         return DB::transaction(function () use ($check, $note) {
             $branchId = $check->branch_id;
 
-            $issuedChecks = Account::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branchId);
+            $issuedChecks = Account::forCheckDirection('issued', $branchId);
 
             $supplierAccount = Account::where('model_type', \App\Models\Tenant\User::class)
                 ->where('model_id', $check->supplier_id)

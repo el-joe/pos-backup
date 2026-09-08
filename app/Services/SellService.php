@@ -388,7 +388,8 @@ class SellService
             }
 
             if($methodSlug === 'check') {
-                $checksUnderCollection = Account::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $data['branch_id'],'check');
+                // A sale payment is a check the business RECEIVES.
+                $checksUnderCollection = Account::forCheckDirection('received', $data['branch_id']);
                 $lines[] = [
                     'account_id' => $checksUnderCollection->id,
                     'type' => $reverse ? 'credit' : 'debit',

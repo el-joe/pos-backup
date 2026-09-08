@@ -26,6 +26,8 @@ enum TransactionTypeEnum : string
     case CASH_WITHDRAWAL = 'cash_withdrawal';
     case CASH_OVER_SHORT = 'cash_over_short';
     case FIXED_ASSETS = 'fixed_assets';
+    case DEPRECIATION = 'depreciation';
+    case ASSET_DISPOSAL = 'asset_disposal';
     case CHECK_COLLECTION = 'check_collection';
     case CHECK_CLEARING = 'check_clearing';
     case CHECK_BOUNCE = 'check_bounce';
@@ -55,6 +57,8 @@ enum TransactionTypeEnum : string
             self::CASH_WITHDRAWAL => 'Cash Withdrawal',
             self::CASH_OVER_SHORT => 'Cash Over/Short',
             self::FIXED_ASSETS => 'Fixed Assets',
+            self::DEPRECIATION => 'Depreciation',
+            self::ASSET_DISPOSAL => 'Asset Disposal',
             self::CHECK_COLLECTION => 'Check Collection',
             self::CHECK_CLEARING => 'Check Clearing',
             self::CHECK_BOUNCE => 'Bounced Check',

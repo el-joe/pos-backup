@@ -90,6 +90,39 @@
 
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{{ __('general.pages.fixed_assets.depreciation_schedule') }}</h5>
+            <span class="badge bg-info">{{ __('general.pages.fixed_assets.accumulated_depreciation') }}: {{ currencyFormat($asset->accumulated_depreciation ?? 0, true) }} — {{ __('general.pages.fixed_assets.net_book_value') }}: {{ currencyFormat($asset->net_book_value ?? 0, true) }}</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>{{ __('general.pages.fixed_assets.period') }}</th>
+                            <th>{{ __('general.pages.depreciation_expenses.amount') }}</th>
+                            <th>{{ __('general.pages.fixed_assets.accumulated_depreciation') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($depreciationSchedule as $entry)
+                            <tr>
+                                <td>{{ sprintf('%04d-%02d', $entry->period_year, $entry->period_month) }}</td>
+                                <td>{{ currencyFormat($entry->amount ?? 0, true) }}</td>
+                                <td>{{ currencyFormat($entry->accumulated_depreciation_after ?? 0, true) }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center">{{ __('general.pages.fixed_assets.no_depreciation_posted_yet') }}</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">{{ __('general.pages.fixed_assets.depreciation_history') }}</h5>
             <a class="btn btn-sm btn-primary" href="{{ route('admin.depreciation-expenses.create', ['fixed_asset_id' => $asset->id]) }}">
                 <i class="fa fa-plus"></i> {{ __('general.pages.fixed_assets.new_depreciation_expense') }}

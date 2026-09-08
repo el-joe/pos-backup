@@ -27,6 +27,9 @@ enum AccountTypeEnum : string
     case COGS = 'cogs'; // cost of goods sold
     case INVENTORY_SHORTAGE = 'inventory_shortage'; // inventory loss adjustments
     case FIXED_ASSET = 'fixed_asset'; // fixed asset transactions && depreciation
+    case ACCUMULATED_DEPRECIATION = 'accumulated_depreciation'; // contra-asset
+    case DEPRECIATION_EXPENSE = 'depreciation_expense';
+    case GAIN_LOSS_ON_DISPOSAL = 'gain_loss_on_disposal'; // fixed asset disposal gain/loss
     // case CURRENT_ASSET = 'current_asset'; // sales credits , bank transactions
     // case CURRENT_LIABILITY = 'current_liability'; // purchase credits , expenses due within a year
     case LONGTERM_LIABILITY = 'longterm_liability'; // Long-term debts and liabilities
@@ -55,6 +58,9 @@ enum AccountTypeEnum : string
             AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'Maintenance & Depreciation Expense',
             AccountTypeEnum::INVENTORY_EXPENSE => 'Inventory Expense',
             AccountTypeEnum::FIXED_ASSET => 'Fixed Asset', // fixed asset transactions && depreciation
+            AccountTypeEnum::ACCUMULATED_DEPRECIATION => 'Accumulated Depreciation',
+            AccountTypeEnum::DEPRECIATION_EXPENSE => 'Depreciation Expense',
+            AccountTypeEnum::GAIN_LOSS_ON_DISPOSAL => 'Gain/Loss on Disposal',
             // AccountTypeEnum::CURRENT_ASSET => 'Current Asset', // purchase cash transactions && bank transactions
             // AccountTypeEnum::CURRENT_LIABILITY => 'Current Liability', // Current liabilities transactions
             AccountTypeEnum::LONGTERM_LIABILITY => 'Long-term Liability', // Long-term liabilities transactions
@@ -109,6 +115,9 @@ enum AccountTypeEnum : string
             self::COGS => 'تكلفة البضاعة المباعة',
             self::INVENTORY_SHORTAGE => 'عجز المخزون',
             self::FIXED_ASSET => 'الأصول الثابتة',
+            self::ACCUMULATED_DEPRECIATION => 'مجمع الإهلاك',
+            self::DEPRECIATION_EXPENSE => 'مصروف الإهلاك',
+            self::GAIN_LOSS_ON_DISPOSAL => 'أرباح/خسائر التخلص من الأصول',
             self::LONGTERM_LIABILITY => 'التزامات طويلة الأجل',
             self::VAT_PAYABLE => 'ضريبة القيمة المضافة المستحقة',
             self::VAT_RECEIVABLE => 'ضريبة القيمة المضافة القابلة للاسترداد',
@@ -139,6 +148,9 @@ enum AccountTypeEnum : string
             AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE => 'danger',
             AccountTypeEnum::INVENTORY_EXPENSE => 'danger',
             AccountTypeEnum::FIXED_ASSET => 'info',
+            AccountTypeEnum::ACCUMULATED_DEPRECIATION => 'info',
+            AccountTypeEnum::DEPRECIATION_EXPENSE => 'danger',
+            AccountTypeEnum::GAIN_LOSS_ON_DISPOSAL => 'warning',
             // AccountTypeEnum::CURRENT_ASSET => 'secondary',
             // AccountTypeEnum::CURRENT_LIABILITY => 'dark',
             AccountTypeEnum::LONGTERM_LIABILITY => 'dark',
