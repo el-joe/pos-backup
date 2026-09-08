@@ -41,6 +41,20 @@ class Check extends Model
         'cleared_at' => 'datetime',
     ];
 
+    /**
+     * Repair guard added by prompt 09 (defect #14): a hard-deleted check row leaves GL
+     * entries referencing it stranded (transaction_lines whose transaction is dated against
+     * a check that no longer exists). Soft-delete is fine (SoftDeletes trait); force-delete
+     * is blocked outright — reverse the associated transaction(s) via
+     * tenant:repair-financial-data --step=14 first, then soft-delete only.
+     */
+    protected static function booted(): void
+    {
+        static::forceDeleting(function () {
+            throw new \RuntimeException('Hard-deleting a Check is blocked (prompt 09 guard) — soft-delete instead, and reverse any GL entries referencing it first.');
+        });
+    }
+
     public function payable()
     {
         return $this->morphTo();

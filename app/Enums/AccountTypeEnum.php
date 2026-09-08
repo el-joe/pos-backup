@@ -43,6 +43,7 @@ enum AccountTypeEnum : string
 
     case UNEARNED_REVENUE = 'unearned_revenue'; // advance payments from customers---- new
     case ACCRUED_REVENUE = 'accrued_revenue'; // revenue earned but not yet received---- new
+    case PREPAID_ASSET = 'prepaid_asset'; // prepaid expenses recognized as a current asset until amortized ---- prompt 09
 
 
     function label(): string
@@ -82,6 +83,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_PRICE_VARIANCE => 'Purchase Price Variance',
             self::UNEARNED_REVENUE => 'Unearned Revenue',
             self::ACCRUED_REVENUE => 'Accrued Revenue',
+            self::PREPAID_ASSET => 'Prepaid Asset',
         };
     }
 
@@ -129,6 +131,7 @@ enum AccountTypeEnum : string
 
             self::UNEARNED_REVENUE => 'إيرادات مقدمة',
             self::ACCRUED_REVENUE => 'إيرادات مستحقة',
+            self::PREPAID_ASSET => 'مصروفات مقدمة (أصل)',
         };
     }
 
@@ -169,6 +172,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_PRICE_VARIANCE => 'warning',
             self::UNEARNED_REVENUE => 'secondary',
             self::ACCRUED_REVENUE => 'secondary',
+            self::PREPAID_ASSET => 'info',
         };
     }
 

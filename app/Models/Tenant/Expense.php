@@ -30,6 +30,31 @@ class Expense extends Model
         return $this->morphTo();
     }
 
+    /**
+     * Repair guard added by prompt 09 (defect #8): a soft-deleted Expense must not leave
+     * orphan GL entries behind (transactions.reference_type = Expense::class pointing at a
+     * row that no longer resolves). Reverse any transactions referencing this expense via
+     * TransactionService::reverse() — never delete/mutate the transaction rows themselves.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (Expense $expense) {
+            $transactions = Transaction::where('reference_type', self::class)
+                ->where('reference_id', $expense->id)
+                ->whereNull('reversed_by_transaction_id')
+                ->get();
+
+            if ($transactions->isEmpty()) {
+                return;
+            }
+
+            $service = app(\App\Services\TransactionService::class);
+            foreach ($transactions as $transaction) {
+                $service->reverse($transaction, 'Auto-reversal: source Expense #' . $expense->id . ' was deleted (Expense delete guard, prompt 09).');
+            }
+        });
+    }
+
     function scopeFilter($query,$filter = []) {
         return $query->when(isset($filter['branch_id']) && $filter['branch_id'], function($q) use ($filter) {
             $q->where('branch_id', $filter['branch_id']);
