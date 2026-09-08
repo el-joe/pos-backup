@@ -881,6 +881,10 @@ return [
             'close' => 'Close',
             'save' => 'Save',
             'type' => 'Type',
+            'payment_account' => 'Payment Account',
+            'select_payment_account' => 'Select Payment Account',
+            'amortisation_start_date' => 'Amortisation Start Date',
+            'amortisation_months' => 'Amortisation Period (months)',
             'types' => [
                 'normal' => 'Normal Expense',
                 'prepaid' => 'Prepaid Expense',

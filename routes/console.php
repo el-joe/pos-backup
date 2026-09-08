@@ -18,6 +18,13 @@ Schedule::command('tenant:run-depreciation --dry-run=0')
     ->runInBackground()
     ->withoutOverlapping();
 
+// Posts current-period prepaid expense amortisation only (idempotent per expense per
+// period) — never a historical backfill.
+Schedule::command('tenant:amortise-prepaid --dry-run=0')
+    ->monthlyOn(1, '02:15')
+    ->runInBackground()
+    ->withoutOverlapping();
+
 Schedule::call(function () {
     DB::connection('central')->table('page_views')
         ->where('created_at', '<', now()->subDays(90))

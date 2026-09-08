@@ -127,6 +127,30 @@
                             <input type="date" class="form-control" wire:model="data.expense_date" id="expenseDate">
                         </div>
 
+                        <div class="col-md-6">
+                            <label for="expensePaymentAccount" class="form-label">{{ __('general.pages.expenses.payment_account') }}</label>
+                            <select id="expensePaymentAccount" class="form-select" wire:model="data.payment_account">
+                                <option value="">{{ __('general.pages.expenses.select_payment_account') }}</option>
+                                @foreach (collect($paymentAccounts ?? []) as $paymentAcc)
+                                <option value="{{ data_get($paymentAcc, 'id') }}">
+                                    {{ data_get($paymentAcc, 'paymentMethod.name') }} - {{ data_get($paymentAcc, 'name') }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        @if(($data['type'] ?? '') == 'prepaid')
+                        <div class="col-md-6">
+                            <label for="amortisationStartDate" class="form-label">{{ __('general.pages.expenses.amortisation_start_date') }}</label>
+                            <input type="date" class="form-control" wire:model="data.amortisation_start_date" id="amortisationStartDate">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="amortisationMonths" class="form-label">{{ __('general.pages.expenses.amortisation_months') }}</label>
+                            <input type="number" min="1" step="1" class="form-control" wire:model="data.amortisation_months" id="amortisationMonths">
+                        </div>
+                        @endif
+
                         <div class="col-12">
                             <label for="expenseNote" class="form-label">{{ __('general.pages.expenses.note') }}</label>
                             <textarea class="form-control" wire:model="data.note" id="expenseNote" rows="3" placeholder="{{ __('general.pages.expenses.enter_note') }}"></textarea>

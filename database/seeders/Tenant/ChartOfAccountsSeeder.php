@@ -22,6 +22,7 @@ class ChartOfAccountsSeeder extends Seeder
             ['code' => '1050', 'name' => 'VAT Receivable / ضريبة مستردة', 'type' => 'asset', 'parent_code' => '1000'],
             ['code' => '1060', 'name' => 'Cash Over/Short / فروقات الخزينة', 'type' => 'asset', 'parent_code' => '1000'],
             ['code' => '1070', 'name' => 'Accrued Revenue / إيرادات مستحقة', 'type' => 'asset', 'parent_code' => '1000'],
+            ['code' => '1080', 'name' => 'Prepaid Expenses / مصروفات مقدمة', 'type' => 'asset', 'parent_code' => '1000'],
             ['code' => '1100', 'name' => 'Fixed Assets / الأصول الثابتة', 'type' => 'asset', 'parent_code' => null],
             ['code' => '1110', 'name' => 'Fixed Asset Cost / تكلفة الأصول الثابتة', 'type' => 'asset', 'parent_code' => '1100'],
             ['code' => '1120', 'name' => 'Accumulated Depreciation / مجمع الإهلاك', 'type' => 'asset', 'parent_code' => '1100'],
@@ -32,6 +33,7 @@ class ChartOfAccountsSeeder extends Seeder
             ['code' => '2020', 'name' => 'VAT Payable / ضريبة مستحقة', 'type' => 'liability', 'parent_code' => '2000'],
             ['code' => '2030', 'name' => 'Issued Checks / شيكات مصدرة', 'type' => 'liability', 'parent_code' => '2000'],
             ['code' => '2040', 'name' => 'Unearned Revenue / إيرادات غير مكتسبة', 'type' => 'liability', 'parent_code' => '2000'],
+            ['code' => '2050', 'name' => 'Accrued Expenses / مصروفات مستحقة', 'type' => 'liability', 'parent_code' => '2000'],
             ['code' => '2100', 'name' => 'Long-term Liabilities / مطلوبات طويلة الأجل', 'type' => 'liability', 'parent_code' => null],
 
             // Equity

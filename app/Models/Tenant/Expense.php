@@ -11,12 +11,25 @@ class Expense extends Model
     use SoftDeletes;
     protected $fillable = [
         'branch_id','expense_category_id','amount','expense_date','note',
-        'created_by','model_type','model_id','fixed_asset_entry_type','tax_percentage','type','total_paid'
+        'created_by','model_type','model_id','fixed_asset_entry_type','tax_percentage','type','total_paid',
+        'payment_account_id','accrued_at','settled_at','amortisation_start_date','amortisation_months',
     ];
 
     protected $casts = [
-        'type' => ExpenseTypeEnum::class
+        'type' => ExpenseTypeEnum::class,
+        'accrued_at' => 'datetime',
+        'settled_at' => 'datetime',
+        'amortisation_start_date' => 'date',
+        'amortisation_months' => 'integer',
     ];
+
+    public function paymentAccount() {
+        return $this->belongsTo(Account::class, 'payment_account_id');
+    }
+
+    public function amortisationEntries() {
+        return $this->hasMany(ExpenseAmortisationEntry::class, 'expense_id');
+    }
 
     public function category() {
         return $this->belongsTo(ExpenseCategory::class,'expense_category_id')->withTrashed();

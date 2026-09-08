@@ -130,6 +130,30 @@
                             <label for="expenseDate" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.expenses.date') }}</label>
                             <input type="date" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-500" wire:model="data.expense_date" id="expenseDate">
                         </div>
+
+                        <div>
+                            <label for="expensePaymentAccount" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.expenses.payment_account') }}</label>
+                            <select id="expensePaymentAccount" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-500" wire:model="data.payment_account">
+                                <option value="">{{ __('general.pages.expenses.select_payment_account') }}</option>
+                                @foreach (collect($paymentAccounts ?? []) as $paymentAcc)
+                                <option value="{{ data_get($paymentAcc, 'id') }}">
+                                    {{ data_get($paymentAcc, 'paymentMethod.name') }} - {{ data_get($paymentAcc, 'name') }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        @if(($data['type'] ?? '') == 'prepaid')
+                        <div>
+                            <label for="amortisationStartDate" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.expenses.amortisation_start_date') }}</label>
+                            <input type="date" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-500" wire:model="data.amortisation_start_date" id="amortisationStartDate">
+                        </div>
+
+                        <div>
+                            <label for="amortisationMonths" class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.expenses.amortisation_months') }}</label>
+                            <input type="number" min="1" step="1" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-500" wire:model="data.amortisation_months" id="amortisationMonths">
+                        </div>
+                        @endif
                     </div>
 
                     <div>

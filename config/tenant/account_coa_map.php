@@ -10,6 +10,7 @@ return [
     'vat_receivable' => '1050',
     'cash_over_short' => '1060',
     'accrued_revenue' => '1070',
+    'prepaid_asset' => '1080',
     'fixed_asset' => '1110',
     'accumulated_depreciation' => '1120',
 
@@ -17,6 +18,7 @@ return [
     'vat_payable' => '2020',
     'issued_checks' => '2030',
     'unearned_revenue' => '2040',
+    'accrued_expenses' => '2050',
     'longterm_liability' => '2100',
 
     'owner_account' => '3010',

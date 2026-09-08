@@ -878,6 +878,10 @@ return [
             'enter_note' => 'أدخل ملاحظة',
             'close' => 'إغلاق',
             'save' => 'حفظ',
+            'payment_account' => 'حساب الدفع',
+            'select_payment_account' => 'اختر حساب الدفع',
+            'amortisation_start_date' => 'تاريخ بدء الاستهلاك',
+            'amortisation_months' => 'مدة الاستهلاك (بالأشهر)',
             'types' => [
                 'normal' => 'مصروف عادي',
                 'prepaid' => 'مصروف مدفوع مقدما',

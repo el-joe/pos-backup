@@ -6,6 +6,7 @@ use App\Enums\AccountTypeEnum;
 use App\Enums\AuditLogActionEnum;
 use App\Enums\Tenant\ExpenseTypeEnum;
 use App\Models\Tenant\AuditLog;
+use App\Services\AccountService;
 use App\Services\BranchService;
 use App\Services\CashRegisterService;
 use App\Services\ExpenseCategoryService;
@@ -19,7 +20,7 @@ use Livewire\WithPagination;
 class ExpensesList extends Component
 {
     use LivewireOperations,WithPagination;
-    private $expenseService, $expenseCategoryService , $branchService, $cashRegisterService;
+    private $expenseService, $expenseCategoryService , $branchService, $cashRegisterService, $accountService;
 
     public $current;
     public $data = [];
@@ -31,6 +32,9 @@ class ExpensesList extends Component
         'note' => 'nullable|string',
         'tax_percentage' => 'nullable|numeric|min:0|max:100',
         'branch_id' => 'required|integer|exists:branches,id',
+        'payment_account' => 'nullable|integer|exists:accounts,id',
+        'amortisation_start_date' => 'nullable|date',
+        'amortisation_months' => 'nullable|integer|min:1',
     ];
 
     public $collapseFilters = false;
@@ -42,6 +46,7 @@ class ExpensesList extends Component
         $this->expenseCategoryService = app(ExpenseCategoryService::class);
         $this->branchService = app(BranchService::class);
         $this->cashRegisterService = app(CashRegisterService::class);
+        $this->accountService = app(AccountService::class);
     }
 
     function mount(){
@@ -302,6 +307,7 @@ class ExpensesList extends Component
         $expenseCategories = $this->expenseCategoryService->list([],['active'=>true,'without_account_types' => [AccountTypeEnum::MAINTENANCE_AND_DEPRECIATION_EXPENSE,AccountTypeEnum::FIXED_ASSET]]);
 
         $branches = $this->branchService->activeList();
+        $paymentAccounts = $this->accountService->getBranchPaymentAccounts($this->data['branch_id'] ?? $this->current?->branch_id);
 
         return layoutView('expenses.expenses-list', get_defined_vars())
             ->title(__( 'general.titles.expenses'));
