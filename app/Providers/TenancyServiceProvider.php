@@ -35,7 +35,7 @@ class TenancyServiceProvider extends ServiceProvider
                 JobPipeline::make([
                     Jobs\CreateDatabase::class,
                     Jobs\MigrateDatabase::class,
-                    // Jobs\SeedDatabase::class,
+                    Jobs\SeedDatabase::class,
 
                     // Your own jobs to prepare the tenant.
                     // Provision API keys, create S3 buckets, anything you want!
@@ -125,6 +125,12 @@ class TenancyServiceProvider extends ServiceProvider
 
                     if (Schema::hasTable('roles')) {
                         app(\Database\Seeders\Tenant\DefaultRolesSeeder::class)->run();
+                    }
+
+                    if (Schema::hasTable('chart_of_accounts') && !\App\Models\Tenant\Contracting\ChartOfAccount::query()->exists()) {
+                        \Illuminate\Support\Facades\Log::critical('Tenant has an empty chart_of_accounts — the ledger bridge cannot post any journal entries until it is seeded.', [
+                            'tenant_id' => $event->tenancy->tenant->getTenantKey(),
+                        ]);
                     }
                 }
             ],

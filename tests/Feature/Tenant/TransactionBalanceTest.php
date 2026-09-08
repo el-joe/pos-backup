@@ -21,7 +21,7 @@ class TransactionBalanceTest extends TestCase
         $repo = Mockery::mock(TransactionRepository::class);
         $repo->shouldNotReceive('create');
 
-        $service = new TransactionService($repo);
+        $service = new TransactionService($repo, new \App\Services\LedgerBridgeService());
 
         $this->expectException(TransactionBalanceException::class);
 
@@ -39,7 +39,7 @@ class TransactionBalanceTest extends TestCase
         $repo = Mockery::mock(TransactionRepository::class);
         $repo->shouldNotReceive('create');
 
-        $service = new TransactionService($repo);
+        $service = new TransactionService($repo, new \App\Services\LedgerBridgeService());
 
         $this->expectException(TransactionBalanceException::class);
 
@@ -54,7 +54,7 @@ class TransactionBalanceTest extends TestCase
         $repo = Mockery::mock(TransactionRepository::class);
         $repo->shouldNotReceive('create');
 
-        $service = new TransactionService($repo);
+        $service = new TransactionService($repo, new \App\Services\LedgerBridgeService());
 
         $this->expectException(TransactionBalanceException::class);
 
@@ -72,7 +72,7 @@ class TransactionBalanceTest extends TestCase
         $repo = Mockery::mock(TransactionRepository::class);
         $repo->shouldNotReceive('create');
 
-        $service = new TransactionService($repo);
+        $service = new TransactionService($repo, new \App\Services\LedgerBridgeService());
 
         $this->expectException(TransactionBalanceException::class);
 

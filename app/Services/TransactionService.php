@@ -8,12 +8,13 @@ use App\Exceptions\TransactionBalanceException;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Repositories\TransactionRepository;
+use App\Services\LedgerBridgeService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TransactionService
 {
-    public function __construct(private TransactionRepository $repo) {}
+    public function __construct(private TransactionRepository $repo, private LedgerBridgeService $ledgerBridge) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {
@@ -98,8 +99,12 @@ class TransactionService
                     'account_id' => $line['account_id'],
                     'type' => $line['type'] ?? 'debit',
                     'amount' => $line['amount'],
+                    'cost_center_id' => $line['cost_center_id'] ?? null,
+                    'project_id' => $line['project_id'] ?? null,
                 ]);
             }
+
+            $this->ledgerBridge->post($transaction);
 
             return $transaction;
         });
@@ -298,6 +303,8 @@ class TransactionService
                 'reversed_by_transaction_id' => $reversal->id,
                 'reversal_reason' => $reason,
             ]);
+
+            $this->ledgerBridge->reverse($t->refresh());
 
             return $reversal;
         });

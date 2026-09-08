@@ -29,7 +29,7 @@ class DepreciationTest extends TestCase
         config(['database.default' => 'testing_tenant']);
         DB::purge('testing_tenant');
 
-        foreach (['fixed_asset_depreciation_entries', 'fixed_assets', 'transaction_lines', 'transactions', 'accounts', 'payment_methods'] as $table) {
+        foreach (['journal_entry_lines', 'journal_entries', 'chart_of_accounts', 'fixed_asset_depreciation_entries', 'fixed_assets', 'transaction_lines', 'transactions', 'accounts', 'payment_methods'] as $table) {
             Schema::connection('testing_tenant')->dropIfExists($table);
         }
 
@@ -74,6 +74,8 @@ class DepreciationTest extends TestCase
             $table->id();
             $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('account_id');
+            $table->unsignedBigInteger('cost_center_id')->nullable();
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->string('type');
             $table->decimal('amount', 12, 2)->default(0);
             $table->unsignedBigInteger('created_by')->nullable();
@@ -117,6 +119,50 @@ class DepreciationTest extends TestCase
             $table->unique(['fixed_asset_id', 'period_year', 'period_month'], 'fa_depreciation_period_unique');
         });
 
+        Schema::connection('testing_tenant')->create('chart_of_accounts', function (Blueprint $table) {
+            $table->id();
+            $table->string('code')->unique();
+            $table->string('name');
+            $table->string('type');
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->text('notes')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::connection('testing_tenant')->create('journal_entries', function (Blueprint $table) {
+            $table->id();
+            $table->string('reference')->nullable();
+            $table->string('referenceable_type')->nullable();
+            $table->unsignedBigInteger('referenceable_id')->nullable();
+            $table->date('date')->nullable();
+            $table->string('description')->nullable();
+            $table->string('status')->default('draft');
+            $table->decimal('total_debit', 15, 2)->default(0);
+            $table->decimal('total_credit', 15, 2)->default(0);
+            $table->unsignedBigInteger('posted_by')->nullable();
+            $table->timestamp('posted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::connection('testing_tenant')->create('journal_entry_lines', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('journal_entry_id')->index();
+            $table->unsignedBigInteger('account_id')->index();
+            $table->unsignedBigInteger('cost_center_id')->nullable();
+            $table->unsignedBigInteger('project_id')->nullable();
+            $table->decimal('debit', 15, 2)->default(0);
+            $table->decimal('credit', 15, 2)->default(0);
+            $table->string('description')->nullable();
+            $table->timestamps();
+        });
+
+        \App\Models\Tenant\Contracting\ChartOfAccount::create(['code' => '1110', 'name' => 'Fixed Asset Cost', 'type' => 'asset']);
+        \App\Models\Tenant\Contracting\ChartOfAccount::create(['code' => '1120', 'name' => 'Accumulated Depreciation', 'type' => 'asset']);
+        \App\Models\Tenant\Contracting\ChartOfAccount::create(['code' => '6040', 'name' => 'Depreciation Expense', 'type' => 'expense']);
+
         $admin = new class extends \Illuminate\Foundation\Auth\User {
             public $id = 1;
         };
@@ -125,7 +171,7 @@ class DepreciationTest extends TestCase
 
     protected function tearDown(): void
     {
-        foreach (['fixed_asset_depreciation_entries', 'fixed_assets', 'transaction_lines', 'transactions', 'accounts', 'payment_methods'] as $table) {
+        foreach (['journal_entry_lines', 'journal_entries', 'chart_of_accounts', 'fixed_asset_depreciation_entries', 'fixed_assets', 'transaction_lines', 'transactions', 'accounts', 'payment_methods'] as $table) {
             Schema::connection('testing_tenant')->dropIfExists($table);
         }
         DB::purge('testing_tenant');
@@ -135,7 +181,7 @@ class DepreciationTest extends TestCase
 
     private function depreciationService(): DepreciationService
     {
-        return new DepreciationService(new TransactionService(new TransactionRepository(new \App\Models\Tenant\Transaction())));
+        return new DepreciationService(new TransactionService(new TransactionRepository(new \App\Models\Tenant\Transaction()), new \App\Services\LedgerBridgeService()));
     }
 
     private function makeAsset(array $overrides = []): FixedAsset
