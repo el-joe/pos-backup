@@ -193,6 +193,17 @@ enum AccountTypeEnum : string
         return in_array($this, [self::CUSTOMER, self::SUPPLIER]);
     }
 
+    /**
+     * Payment-capable = the tender an operator actually receives/pays with (cash, bank,
+     * owner drawings). Subsidiary accounts (customer/supplier), the check-clearing
+     * accounts (checks_under_collection/issued_checks are posted automatically, never
+     * picked by hand), and every nominal/control account (sales, cogs, inventory, vat,
+     * expenses, fixed assets, ...) are excluded.
+     */
+    function isPaymentCapable(): bool {
+        return in_array($this, [self::BRANCH_CASH, self::OWNER_ACCOUNT]);
+    }
+
     function expensesAccountsTranslation(){
         return match($this) {
             self::FINANCE_EXPENSE => 'مصروفات تمويلية',

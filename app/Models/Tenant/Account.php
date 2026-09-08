@@ -18,13 +18,27 @@ class Account extends Model
         'model_type',
         'model_id',
         'payment_method_id',
+        'is_payment_capable',
         'active',
         'deleted_at',
     ];
 
     protected $casts = [
         'type' => AccountTypeEnum::class,
+        'is_payment_capable' => 'boolean',
     ];
+
+    protected static function booted() {
+        static::saving(function (self $account) {
+            if ($account->type instanceof AccountTypeEnum) {
+                $account->is_payment_capable = $account->type->isPaymentCapable();
+            }
+        });
+    }
+
+    function scopePaymentCapable($q) {
+        return $q->where('is_payment_capable', true)->where('active', 1);
+    }
 
     function branch() {
         return $this->belongsTo(Branch::class)->withTrashed();
@@ -128,6 +142,24 @@ class Account extends Model
         return $direction === 'issued'
             ? self::default('Issued Checks', AccountTypeEnum::ISSUED_CHECKS->value, $branch_id)
             : self::default('Checks Under Collection', AccountTypeEnum::CHECKS_UNDER_COLLECTION->value, $branch_id, 'check');
+    }
+
+    /**
+     * Resolve a payment-account id supplied by a caller (POS, purchase/sale payment form,
+     * fixed asset payment form) and guarantee it is actually payment-capable before it is
+     * allowed to land on order_payments.account_id or a payment transaction line.
+     */
+    static function assertPaymentCapable($accountId): self {
+        if (!$accountId) {
+            throw new \RuntimeException(__('accounting.payment_account_required'));
+        }
+
+        $account = self::find($accountId);
+        if (!$account || !$account->is_payment_capable || !$account->active) {
+            throw new \RuntimeException(__('accounting.invalid_payment_account'));
+        }
+
+        return $account;
     }
 
     /**

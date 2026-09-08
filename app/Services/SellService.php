@@ -303,6 +303,14 @@ class SellService
             }
         }
 
+        $paymentAccounts = [];
+        foreach ($payments as $payment) {
+            $accountId = $payment['account_id'] ?? $payment['payment_account'] ?? null;
+            $paymentAccounts[$accountId] = Account::assertPaymentCapable($accountId);
+        }
+
+        $counterpartyAccount = $this->getCustomerAccount($data['customer_id'] ?? null);
+
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
             'type' => $reverse ? TransactionTypeEnum::SALE_PAYMENT_REFUND->value : TransactionTypeEnum::SALE_PAYMENT->value,
@@ -321,8 +329,12 @@ class SellService
             $sell->decrement('paid_amount',$amount);
         }
         foreach ($payments as $payment) {
+            $accountId = $payment['account_id'] ?? $payment['payment_account'] ?? null;
+            $paymentAccount = $paymentAccounts[$accountId];
+
             $orderPaymentData = [];
-            $orderPaymentData['account_id'] = $payment['account_id'] ?? $payment['payment_account'] ?? null;
+            $orderPaymentData['account_id'] = $paymentAccount->id;
+            $orderPaymentData['counterparty_account_id'] = $counterpartyAccount->id ?? null;
             $orderPaymentData['amount'] = (float)($payment['amount'] ?? 0);
 
             $orderPayment = OrderPayment::create([
@@ -330,14 +342,12 @@ class SellService
                 'payable_id' => $sellId,
                 'refunded' => $reverse ? 1 : 0,
                 'note' => $data['payment_note'] ?? '',
-                'account_id' => $orderPaymentData['account_id'],
                 ... $orderPaymentData
             ]);
 
             // If selected payment account uses CHECK method, create a check record
-            if(!$reverse && ($orderPaymentData['account_id'] ?? null)) {
-                $account = Account::with('paymentMethod')->find($orderPaymentData['account_id']);
-                $slug = $account?->paymentMethod?->slug;
+            if(!$reverse){
+                $slug = $paymentAccount->paymentMethod?->slug;
                 if($slug === 'check') {
                     Check::create([
                         'branch_id' => $sell->branch_id,
@@ -460,7 +470,7 @@ class SellService
         }
 
         // Credit customer receivable by total paid
-        $customerAccount = $this->getCustomerAccount($data['customer_id'] ?? null, null);
+        $customerAccount = $this->getCustomerAccount($data['customer_id'] ?? null);
         $lines[] = [
             'account_id' => $customerAccount->id,
             'type' => $reverse ? 'debit' : 'credit',
@@ -550,27 +560,23 @@ class SellService
         ];
     }
 
-    function getCustomerAccount($customerId = null, $paymentAccountId = null) {
-        if(!$paymentAccountId){
-            $getCustomerAccount = Account::where('model_type', User::class)
-                ->where('model_id', $customerId)
-                ->where('type', AccountTypeEnum::CUSTOMER->value)
-                ->orderBy('id')
-                ->first();
+    function getCustomerAccount($customerId = null) {
+        $getCustomerAccount = Account::where('model_type', User::class)
+            ->where('model_id', $customerId)
+            ->where('type', AccountTypeEnum::CUSTOMER->value)
+            ->orderBy('id')
+            ->first();
 
-            if(!$getCustomerAccount){
-                // create default customer account
-                $getCustomerAccount = $this->accountService->createAccountForUser(User::find($customerId));
-            }
-        }else{
-            $getCustomerAccount = Account::find($paymentAccountId);
+        if(!$getCustomerAccount){
+            // create default customer account
+            $getCustomerAccount = $this->accountService->createAccountForUser(User::find($customerId));
         }
         return $getCustomerAccount;
     }
 
     function createCustomerLine($data,$type = 'debit',$reverse = false) {
 
-        $getCustomerAccount = $this->getCustomerAccount($data['customer_id']??null, $data['payment_account']??null);
+        $getCustomerAccount = $this->getCustomerAccount($data['customer_id']??null);
         // The invoice/AR line must always be sized from the invoice's own grand total,
         // never from whatever payment happens to be attached — a genuine partial payment
         // must not shrink the receivable.
@@ -689,7 +695,8 @@ class SellService
                 ->orderByDesc('id')
                 ->value('account_id');
 
-            $refundAccountId = $originalPaymentAccountId ?? $this->getCustomerAccount($saleOrder->customer_id)->id;
+            $refundAccountId = $originalPaymentAccountId
+                ?? Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $saleOrder->branch_id)->id;
 
             $refundPaymentData = [
                 'grand_total' => $totalRefunded,

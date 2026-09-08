@@ -45,6 +45,7 @@ class LedgerBridgeTest extends TestCase
             $table->string('name');
             $table->string('code')->nullable();
             $table->string('type');
+            $table->boolean('is_payment_capable')->default(false);
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->boolean('active')->default(1);
             $table->timestamps();

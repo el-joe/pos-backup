@@ -10,6 +10,7 @@ class OrderPayment extends Model
         'payable_type',
         'payable_id',
         'account_id',
+        'counterparty_account_id',
         'amount',
         'refunded',
         'note',
@@ -23,6 +24,11 @@ class OrderPayment extends Model
     function account()
     {
         return $this->belongsTo(Account::class);
+    }
+
+    function counterpartyAccount()
+    {
+        return $this->belongsTo(Account::class, 'counterparty_account_id');
     }
 
     function paymentMethod()

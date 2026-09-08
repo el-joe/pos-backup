@@ -279,6 +279,8 @@ class PurchaseService
         $purchase = $this->repo->find($purchaseId);
         if(!$purchase) return;
 
+        $paymentAccount = Account::assertPaymentCapable($data['payment_account'] ?? null);
+
         $transactionData = [
             'description' => ($reverse ? 'Refund ' : '').'Purchase Payment for #'.$purchase->ref_no,
             'type' => $reverse ? TransactionTypeEnum::PURCHASE_PAYMENT_REFUND->value : TransactionTypeEnum::PURCHASE_PAYMENT->value,
@@ -291,14 +293,18 @@ class PurchaseService
         ];
 
         $this->transactionService->create($transactionData);
+        $paidDelta = $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0);
         if(!$reverse){
-            $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
+            $purchase->increment('paid_amount', $paidDelta);
+        }else{
+            $purchase->decrement('paid_amount', $paidDelta);
         }
 
-        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null, $data['payment_account'] ?? null);
+        $counterpartyAccount = $this->getSupplierAccount($data['supplier_id'] ?? null);
 
         $orderPaymentData = [];
-        $orderPaymentData['account_id'] = $getSupplierAccount->id ?? null;
+        $orderPaymentData['account_id'] = $paymentAccount->id;
+        $orderPaymentData['counterparty_account_id'] = $counterpartyAccount->id ?? null;
         $orderPaymentData['amount'] = (float)($data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
 
         $orderPayment = OrderPayment::create([
@@ -306,14 +312,12 @@ class PurchaseService
             'payable_id' => $purchaseId,
             'refunded' => $reverse ? 1 : 0,
             'note' => $data['payment_note'] ?? '',
-            'account_id' => $getSupplierAccount->id ?? null,
             ... $orderPaymentData
         ]);
 
-        // If supplier account payment method is CHECK, create issued check record
-        if(!$reverse && ($getSupplierAccount?->id ?? null)) {
-            $account = Account::with('paymentMethod')->find($getSupplierAccount->id);
-            $slug = $account?->paymentMethod?->slug;
+        // If the payment account's payment method is CHECK, create issued check record
+        if(!$reverse){
+            $slug = $paymentAccount->paymentMethod?->slug;
             if($slug === 'check') {
                 Check::create([
                     'branch_id' => $purchase->branch_id,
@@ -381,7 +385,7 @@ class PurchaseService
         // ------------------------- Payment entry --------------------------------
         // 3 status (pending, partial_paid, full_paid)
         if(($data['payment_status'] ?? 'pending') == 'pending'){
-            return;
+            return [];
         }
 
         $supplierDebitLine = $this->createSupplierDebitLine($data,$data['payment_status'] ?? 'full_paid', $reverse);
@@ -523,11 +527,10 @@ class PurchaseService
                 'payment_amount' => $totalRefunded,
                 'branch_id' => $purchaseOrder->branch_id,
                 'supplier_id' => $purchaseOrder->supplier_id,
+                'payment_account' => $this->getOriginalPaymentAccountId($purchaseOrder->id),
             ];
 
             $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
-
-            $purchaseOrder->decrement('paid_amount', $totalRefunded);
         }
 
         $purchaseOrder->refresh();
@@ -602,26 +605,40 @@ class PurchaseService
         ];
     }
 
-    function getSupplierAccount($supplierId = null,$paymentAccountId = null){
-        if(!isset($paymentAccountId)){
-            $getSupplierAccount = Account::where('model_type', User::class)
-                ->where('model_id', $supplierId)
-                ->where('type', AccountTypeEnum::SUPPLIER->value)
-                ->orderBy('id')
-                ->first();
+    /**
+     * Prefer refunding to the account the supplier was actually paid with; only the
+     * caller falls back to a generic account when no payment can be identified.
+     */
+    function getOriginalPaymentAccountId($purchaseId) {
+        $purchase = $this->repo->find($purchaseId);
 
-            if (!$getSupplierAccount) {
-                $getSupplierAccount = $this->accountService->createAccountForUser(User::find($supplierId));
-            }
-        }else{
-            $getSupplierAccount = Account::find($paymentAccountId);
+        $originalPaymentAccountId = OrderPayment::where('payable_type', Purchase::class)
+            ->where('payable_id', $purchaseId)
+            ->where('refunded', 0)
+            ->whereNotNull('account_id')
+            ->orderByDesc('id')
+            ->value('account_id');
+
+        return $originalPaymentAccountId
+            ?? Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $purchase?->branch_id)->id;
+    }
+
+    function getSupplierAccount($supplierId = null){
+        $getSupplierAccount = Account::where('model_type', User::class)
+            ->where('model_id', $supplierId)
+            ->where('type', AccountTypeEnum::SUPPLIER->value)
+            ->orderBy('id')
+            ->first();
+
+        if (!$getSupplierAccount) {
+            $getSupplierAccount = $this->accountService->createAccountForUser(User::find($supplierId));
         }
 
         return $getSupplierAccount;
     }
 
     function createSupplierCreditLine($data,$reverse = false) {
-        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null, $data['payment_account'] ?? null);
+        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null);
 
         // get grand total from data
         $grandTotal = $data['grand_total'] ?? 0;
@@ -635,7 +652,7 @@ class PurchaseService
     }
 
     function createSupplierDebitLine($data,$type = 'full_paid', $reverse = false) {
-        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null, $data['payment_account'] ?? null);
+        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null);
 
         // get paid amount from data
         if($type == 'full_paid'){
@@ -732,12 +749,10 @@ class PurchaseService
                 'payment_amount' => $totalRefunded,
                 'branch_id' => $purchaseOrder->branch_id,
                 'supplier_id' => $purchaseOrder->supplier_id,
-                'payment_account' => $this->getSupplierAccount($purchaseOrder->supplier_id, $data['payment_account'] ?? null)?->id ?? null,
+                'payment_account' => $this->getOriginalPaymentAccountId($purchaseOrder->id),
             ];
 
             $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
-
-            $purchaseOrder->decrement('paid_amount',$totalRefunded);
         }
 
         // refund purchase items qty

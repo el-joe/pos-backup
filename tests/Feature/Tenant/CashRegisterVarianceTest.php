@@ -52,6 +52,7 @@ class CashRegisterVarianceTest extends TestCase
             $table->string('model_type')->nullable();
             $table->unsignedBigInteger('model_id')->nullable();
             $table->string('type');
+            $table->boolean('is_payment_capable')->default(false);
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->timestamps();
             $table->boolean('active')->default(1);

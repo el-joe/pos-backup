@@ -46,7 +46,7 @@ class AccountService
             ->where('model_type', Branch::class)
             ->where('model_id', $branchId)
             ->where('branch_id', $branchId)
-            ->where('active', 1)
+            ->paymentCapable()
             ->whereNotNull('payment_method_id')
             ->orderBy('name')
             ->get();
@@ -64,7 +64,7 @@ class AccountService
             ->where('model_type', Branch::class)
             ->whereIn('model_id', $branchIds)
             ->whereIn('branch_id', $branchIds)
-            ->where('active', 1)
+            ->paymentCapable()
             ->whereNotNull('payment_method_id')
             ->orderBy('branch_id')
             ->orderBy('name')

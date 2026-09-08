@@ -120,16 +120,9 @@ class FixedAssetService
             throw new \RuntimeException('Fixed asset branch is required');
         }
 
-        $paymentAccountId = (int)($data['payment_account'] ?? 0);
-        if ($paymentAccountId <= 0) {
-            throw new \RuntimeException('Payment account is required');
-        }
-
-        $paymentAccount = Account::with('paymentMethod')->find($paymentAccountId);
-        if (!$paymentAccount) {
-            throw new \RuntimeException('Payment account not found');
-        }
-        $methodSlug = $paymentAccount?->paymentMethod?->slug;
+        $paymentAccount = Account::assertPaymentCapable($data['payment_account'] ?? null);
+        $paymentAccountId = $paymentAccount->id;
+        $methodSlug = $paymentAccount->paymentMethod?->slug;
 
         $payableAccount = Account::default('Fixed Assets Payable', AccountTypeEnum::LONGTERM_LIABILITY->value, $branchId);
 
@@ -175,6 +168,7 @@ class FixedAssetService
             'refunded' => $reverse ? 1 : 0,
             'note' => $data['payment_note'] ?? '',
             'account_id' => $paymentAccountId,
+            'counterparty_account_id' => $payableAccount->id,
             'amount' => $amount,
         ]);
 
