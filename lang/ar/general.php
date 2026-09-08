@@ -2300,6 +2300,7 @@ return [
         'error_saving_stock_transfer' => 'حدث خطأ أثناء حفظ تحويل المخزون: :message',
         'please_select_from_branch_first' => 'يرجى اختيار فرع التحويل أولًا.',
         'insufficient_stock_for_product' => 'لا يوجد مخزون كافٍ للمنتج :name. المخزون المتاح: :qty',
+        'negative_stock_not_allowed' => 'مخزون غير كافٍ: المتاح :available، المطلوب :requested. فعّل "السماح بالمخزون السالب" لتجاوز ذلك.',
         'stock_adjustment_saved_successfully' => 'تم حفظ تعديل المخزون بنجاح.',
         'error_saving_stock_adjustment' => 'حدث خطأ أثناء حفظ تعديل المخزون: :message',
         'confirm_return_stock_adjustment_item' => 'أنت تريد إرجاع هذا المخزون.',

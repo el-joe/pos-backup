@@ -36,6 +36,7 @@ enum AccountTypeEnum : string
     case PURCHASE_DISCOUNT = 'purchase_discount';
     case SALES_RETURN = 'sales_return';
     case PURCHASE_RETURN = 'purchase_return';
+    case PURCHASE_PRICE_VARIANCE = 'purchase_price_variance'; // WAC vs original invoice price on a purchase refund
 
     case UNEARNED_REVENUE = 'unearned_revenue'; // advance payments from customers---- new
     case ACCRUED_REVENUE = 'accrued_revenue'; // revenue earned but not yet received---- new
@@ -72,6 +73,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_DISCOUNT => 'Purchase Discount',
             AccountTypeEnum::SALES_RETURN => 'Sales Return',
             AccountTypeEnum::PURCHASE_RETURN => 'Purchase Return',
+            AccountTypeEnum::PURCHASE_PRICE_VARIANCE => 'Purchase Price Variance',
             self::UNEARNED_REVENUE => 'Unearned Revenue',
             self::ACCRUED_REVENUE => 'Accrued Revenue',
         };
@@ -114,6 +116,7 @@ enum AccountTypeEnum : string
             self::PURCHASE_DISCOUNT => 'خصم المشتريات',
             self::SALES_RETURN => 'مرتجعات المبيعات',
             self::PURCHASE_RETURN => 'مرتجعات المشتريات',
+            self::PURCHASE_PRICE_VARIANCE => 'فرق سعر الشراء',
 
             self::UNEARNED_REVENUE => 'إيرادات مقدمة',
             self::ACCRUED_REVENUE => 'إيرادات مستحقة',
@@ -151,6 +154,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_DISCOUNT => 'info',
             AccountTypeEnum::SALES_RETURN => 'warning',
             AccountTypeEnum::PURCHASE_RETURN => 'warning',
+            AccountTypeEnum::PURCHASE_PRICE_VARIANCE => 'warning',
             self::UNEARNED_REVENUE => 'secondary',
             self::ACCRUED_REVENUE => 'secondary',
         };

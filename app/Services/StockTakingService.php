@@ -65,8 +65,14 @@ class StockTakingService
 
             $stock = $this->stockService->first([],['id' => ($product['stock_id'] ?? null)]);
 
-            if($stock){
-                $stock->increment('qty', $difference);
+            if($stock && $difference != 0){
+                if($difference > 0){
+                    // Surplus: the counted qty is valued at the stock's current unit cost so
+                    // the weighted average is unaffected.
+                    $this->stockService->addStock($stock->product_id, $stock->unit_id, $difference, $stock->sell_price, $stock->unit_cost, $stock->branch_id);
+                }else{
+                    $this->stockService->removeFromStock($stock->product_id, $stock->unit_id, abs($difference), $stock->branch_id);
+                }
             }
         }
 
@@ -163,7 +169,13 @@ class StockTakingService
             ], true);
         }
 
-        $stProduct->stock->increment('qty', $stProduct->difference * -1);
+        $reverseQty = $stProduct->difference * -1;
+        $stock = $stProduct->stock;
+        if($reverseQty > 0){
+            $this->stockService->addStock($stock->product_id, $stock->unit_id, $reverseQty, $stock->sell_price, $stock->unit_cost, $stock->branch_id);
+        }elseif($reverseQty < 0){
+            $this->stockService->removeFromStock($stock->product_id, $stock->unit_id, abs($reverseQty), $stock->branch_id);
+        }
 
         $stProduct->update([
             'returned' => true

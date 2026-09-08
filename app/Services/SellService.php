@@ -68,6 +68,18 @@ class SellService
             'is_deferred' => $isDeferred,
         ])->save();
 
+        if(!$isDeferred){
+            // Remove stock first so the true weighted-average issue cost is known before we
+            // record sale_items/COGS — the client-supplied unit_cost must never be trusted.
+            foreach ($data['products'] as &$item) {
+                $stock = $this->stockService->removeFromStock(productId: $item['id'],unitId: $item['unit_id'],qty: ($item['qty']??$item['quantity']),branchId: $data['branch_id']);
+                if($stock){
+                    $item['unit_cost'] = (float) $stock->unit_cost;
+                }
+            }
+            unset($item);
+        }
+
         // fill sale items data
         $sell->saleItems()->delete();
         foreach ($data['products'] as $item) {
@@ -80,13 +92,6 @@ class SellService
                 'unit_cost' => $item['unit_cost'] ?? 0,
                 'sell_price' => $item['sell_price'] ?? 0
             ]);
-        }
-
-        if(!$isDeferred){
-            // fill stock data
-            foreach ($data['products'] as $item) {
-                $this->stockService->removeFromStock(productId: $item['id'],unitId: $item['unit_id'],qty: ($item['qty']??$item['quantity']),branchId: $data['branch_id']);
-            }
         }
 
         // Save history of discount if applied
@@ -179,6 +184,28 @@ class SellService
 
         DB::beginTransaction();
         try{
+            // Remove stock first so the true weighted-average issue cost is known before we
+            // record COGS — the cost captured at deferred-order time was only a client estimate.
+            foreach ($data['products'] as &$item) {
+                $stock = $this->stockService->removeFromStock(
+                    productId: $item['id'],
+                    unitId: $item['unit_id'],
+                    qty: ($item['qty'] ?? $item['quantity']),
+                    branchId: $sale->branch_id
+                );
+                if($stock){
+                    $item['unit_cost'] = (float) $stock->unit_cost;
+                }
+            }
+            unset($item);
+
+            foreach ($sale->saleItems as $saleItem) {
+                $match = collect($data['products'])->first(fn($p) => $p['id'] == $saleItem->product_id && $p['unit_id'] == $saleItem->unit_id);
+                if($match){
+                    $saleItem->update(['unit_cost' => $match['unit_cost']]);
+                }
+            }
+
             // Post the deferred invoice + inventory entries at delivery time
             $transactionData = [
                 'description' => 'Deferred Sale Invoice for #'.$sale->invoice_number,
@@ -203,15 +230,6 @@ class SellService
                 'lines' => $this->saleInventoryLines($data,'create')
             ];
             $this->transactionService->create($transactionData);
-
-            foreach ($data['products'] as $item) {
-                $this->stockService->removeFromStock(
-                    productId: $item['id'],
-                    unitId: $item['unit_id'],
-                    qty: ($item['qty'] ?? $item['quantity']),
-                    branchId: $sale->branch_id
-                );
-            }
 
             $sale->update([
                 'inventory_delivered_at' => now(),

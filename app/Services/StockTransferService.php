@@ -97,14 +97,16 @@ class StockTransferService
             'branch_id' => $stockTransfer->to_branch_id
         ]);
 
-
         $sellPrice = $toStock->sell_price ?? $fromStock->sell_price;
-        $unitCost = $toStock->unit_cost ?? $fromStock->unit_cost;
 
         if(isset($data['update_prices']) && !!$data['update_prices']) {
             $sellPrice = $fromStock->sell_price;
-            $unitCost = $fromStock->unit_cost;
         }
+
+        // Deduct stock from source branch first — the true weighted-average cost of the
+        // transferred qty is what actually moves to the destination branch, not a stale snapshot.
+        $removed = $this->stockService->removeFromStock($data['product_id'], $data['unit_id'], $data['qty'], $stockTransfer->from_branch_id);
+        $unitCost = $removed ? (float) $removed->unit_cost : (float) ($fromStock->unit_cost ?? $toStock->unit_cost ?? 0);
 
         $stockTransfer->items()->create([
             'product_id' => $data['product_id'],
@@ -115,9 +117,7 @@ class StockTransferService
             'sell_price' => $sellPrice,
         ]);
 
-        // Deduct stock from source branch
         $this->stockService->addStock($data['product_id'], $data['unit_id'], $data['qty'], $sellPrice, $unitCost, $stockTransfer->to_branch_id);
-        $this->stockService->reduceStock($data['product_id'], $data['unit_id'], $data['qty'], $stockTransfer->from_branch_id);
     }
 
     function makeTransactions($stockTransfer, $fromBranch, $toBranch, $items) {

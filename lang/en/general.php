@@ -2326,6 +2326,7 @@ return [
         'error_saving_stock_transfer' => 'Error occurred while saving stock transfer: :message',
         'please_select_from_branch_first' => 'Please select From Branch first.',
         'insufficient_stock_for_product' => 'Insufficient stock for product :name. Available stock: :qty',
+        'negative_stock_not_allowed' => 'Insufficient stock: available :available, requested :requested. Enable "allow negative stock" to override.',
         'stock_adjustment_saved_successfully' => 'Stock adjustment saved successfully.',
         'error_saving_stock_adjustment' => 'Error occurred while saving stock adjustment: :message',
         'confirm_return_stock_adjustment_item' => 'You want to return this stock.',

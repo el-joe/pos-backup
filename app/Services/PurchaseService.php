@@ -575,6 +575,22 @@ class PurchaseService
         ];
     }
 
+    /**
+     * Absorbs the gap between a purchase refund's WAC-valued Inventory credit and the
+     * original-invoice-priced Supplier debit so the reversal transaction still balances.
+     * $variance > 0 (WAC value > original price): DR Purchase Price Variance (loss).
+     * $variance < 0 (WAC value < original price): CR Purchase Price Variance (gain).
+     */
+    function createPurchasePriceVarianceLine($branchId, $variance) {
+        $account = Account::default('Purchase Price Variance', AccountTypeEnum::PURCHASE_PRICE_VARIANCE->value, $branchId);
+
+        return [
+            'account_id' => $account->id,
+            'type' => $variance > 0 ? 'debit' : 'credit',
+            'amount' => abs($variance),
+        ];
+    }
+
     function getSupplierAccount($supplierId = null,$paymentAccountId = null){
         if(!isset($paymentAccountId)){
             $getSupplierAccount = Account::where('model_type', User::class)
@@ -637,14 +653,23 @@ class PurchaseService
         $purchaseDueAmount = $purchaseOrder->due_amount;
         $totalRefunded = $grandTotalFromRefundedQty - $purchaseDueAmount;
 
-        // reverse purchase invoice type transaction
+        // Remove stock at the true weighted-average cost first — the original purchase price
+        // is no longer necessarily what this quantity is worth in inventory today.
+        $stock = $this->stockService->removeFromStock(productId: $purchaseItem->product_id,unitId: $purchaseItem->unit_id,qty: $qty,branchId: $purchaseOrder->branch_id);
+        $originalValue = round((float) $purchaseItem->unit_amount_after_tax * (float) $qty, 4);
+        $weightedAverageValue = $stock ? round((float) $qty * (float) $stock->unit_cost, 4) : $originalValue;
+        $weightedAverageUnitPrice = (float) $qty > 0 ? $weightedAverageValue / (float) $qty : (float) $purchaseItem->unit_amount_after_tax;
+        $priceVariance = round($weightedAverageValue - $originalValue, 4);
+
+        // reverse purchase invoice type transaction — Inventory is credited at the WAC value
+        // actually leaving stock, not the original invoice price.
         $refundInvoiceData = [
             'branch_id' => $purchaseOrder->branch_id,
             'orderProducts' => [
                 [
                     'qty' => (float)$qty,
                     'purchase_price' => (float)$purchaseItem->unit_amount_after_tax,
-                    'sub_total' => (float)$purchaseItem->unit_amount_after_tax,
+                    'sub_total' => $weightedAverageUnitPrice,
                 ]
             ],
             'tax_amount' => $taxAmount,
@@ -654,6 +679,12 @@ class PurchaseService
 
         ];
 
+        $lines = $this->purchaseInvoiceLines($refundInvoiceData,'create',true);
+
+        if(abs($priceVariance) > 0.005){
+            $lines[] = $this->createPurchasePriceVarianceLine($purchaseOrder->branch_id, $priceVariance);
+        }
+
         $transactionData = [
             'description' => 'Purchase Refund for #'.$purchaseOrder->ref_no,
             'type' => TransactionTypeEnum::PURCHASE_INVOICE_REFUND->value,
@@ -662,7 +693,7 @@ class PurchaseService
             'branch_id' => $purchaseOrder->branch_id,
             'note' => 'Refunded for purchase item #'. ($purchaseItem->product?->name ?? 'N/A'),
             'amount' => $grandTotalFromRefundedQty ?? 0,
-            'lines' => $this->purchaseInvoiceLines($refundInvoiceData,'create',true)
+            'lines' => $lines
         ];
 
         $this->transactionService->create($transactionData);
@@ -690,8 +721,8 @@ class PurchaseService
         // refund purchase items qty
         $purchaseItem->increment('refunded_qty',$qty);
 
-        // Refund Qty from stock
-        $this->stockService->reduceStock(productId: $purchaseItem->product_id,unitId: $purchaseItem->unit_id,qty: $qty,branchId: $purchaseOrder->branch_id);
+        // Stock was already removed above (at the true weighted-average cost) so the
+        // Purchase Price Variance line could be computed before the transaction posted.
 
         $cashRegister = app(\App\Services\CashRegisterService::class)->getOpenedCashRegister();
         if ($cashRegister) {

@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
-    protected $fillable = ['product_id','unit_id','branch_id','unit_cost','qty','sell_price'];
+    protected $fillable = ['product_id','unit_id','branch_id','unit_cost','total_value','qty','sell_price'];
 
     protected $casts = [
         'qty' => 'decimal:3',
+        'unit_cost' => 'decimal:4',
+        'total_value' => 'decimal:4',
     ];
 
     function product() {
