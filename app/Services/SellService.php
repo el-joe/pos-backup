@@ -52,6 +52,15 @@ class SellService
         }
 
         $isDeferred = (bool)($data['is_deferred'] ?? false);
+
+        if (!empty($data['discount_id'])) {
+            $discount = $this->discountService->find($data['discount_id']);
+            if (!$discount) {
+                throw new \RuntimeException('Discount not found.');
+            }
+            $this->discountService->assertEligible($discount);
+        }
+
         // fill purchase data
         $sell->fill([
             'customer_id' => $data['customer_id'],
@@ -63,6 +72,8 @@ class SellService
             'discount_id' => $data['discount_id'] ?? null,
             'discount_type' => $data['discount_type'] ?? null,
             'discount_value' => $data['discount_value'] ?? 0,
+            'max_discount_amount' => $data['max_discount_amount'] ?? 0,
+            'sales_threshold' => $data['sales_threshold'] ?? null,
             'paid_amount' => 0,
             'due_date' => $data['due_date'] ?? null,
             'is_deferred' => $isDeferred,
@@ -538,11 +549,11 @@ class SellService
         $saleOrder = $saleItem->sale;
         $product = (clone $saleItem)->toArray();
         $product['qty'] = $qty;
-        $discountAmount = SaleHelper::singleDiscountAmount($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value, $saleOrder->max_discount_amount ?? 0);
+        $discountAmount = SaleHelper::singleDiscountAmount($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value, $saleOrder->max_discount_amount ?? 0, $saleOrder->sales_threshold);
         $taxPercentage = $saleItem->taxable == 1 ? ($saleOrder->tax_percentage ?? 0) : 0;
-        $taxAmount = SaleHelper::singleTaxAmount($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value,$taxPercentage, $saleOrder->max_discount_amount ?? 0);
+        $taxAmount = SaleHelper::singleTaxAmount($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value,$taxPercentage, $saleOrder->max_discount_amount ?? 0, $saleOrder->sales_threshold);
         // -----------------------------------
-        $grandTotalFromRefundedQty = SaleHelper::singleGrandTotal($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value, $taxPercentage, $saleOrder->max_discount_amount ?? 0);
+        $grandTotalFromRefundedQty = SaleHelper::singleGrandTotal($product,$saleOrder->saleItems, $saleOrder->discount_type, $saleOrder->discount_value, $taxPercentage, $saleOrder->max_discount_amount ?? 0, $saleOrder->sales_threshold);
         $dueAmount = $saleOrder->due_amount;
         $totalRefunded = $grandTotalFromRefundedQty - $dueAmount;
 

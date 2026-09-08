@@ -84,7 +84,7 @@
                 <td>{{ $discount->id }}</td>
                 <td>{{ $discount->name }}</td>
                 <td>{{ $discount->code }}</td>
-                <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
+                <td>{{ $discount->value }} {{ $discount->type === 'percentage' ? '%' : currency()->symbol }}</td>
                 <td>{{ dateTimeFormat($discount->start_date, true, false) }}</td>
                 <td>{{ dateTimeFormat($discount->end_date, true, false) }}</td>
                 <td>
@@ -153,7 +153,7 @@
                         <label for="discountType">Type</label>
                         <select class="form-control" wire:model.live="data.type" id="discountType">
                             <option value="">Select Type</option>
-                            <option value="rate">Rate</option>
+                            <option value="percentage">Rate</option>
                             <option value="fixed">Fixed</option>
                         </select>
                     </div>
@@ -177,7 +177,7 @@
                         <input type="date" class="form-control" wire:model="data.end_date" id="discountEndDate">
                     </div>
                     @isset($data['type'])
-                        @if($data['type'] == 'rate')
+                        @if($data['type'] == 'percentage')
                             <div class="form-group col-6">
                                 <label for="discountMaxAmount">Max Discount Amount</label>
                                 <input type="number" class="form-control" wire:model="data.max_discount_amount" id="discountMaxAmount" placeholder="Enter max discount amount">

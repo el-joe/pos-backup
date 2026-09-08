@@ -29,7 +29,7 @@ class DiscountsList extends Component
     public $rules = [
         'name' => 'required|string|max:255',
         'code' => 'required|string|max:255',
-        'type' => 'required|string|in:fixed,rate',
+        'type' => 'required|string|in:fixed,percentage',
         'value' => 'required|numeric',
         'max_discount_amount' => 'nullable|numeric',
         'start_date' => 'nullable|date',

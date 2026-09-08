@@ -54,7 +54,7 @@ class PurchaseDetails extends Component
         $totalItems = $this->purchase->items_total_amount;
         $totalExpenses = $this->purchase->expenses_total_amount;
         $orderSubTotal = PurchaseHelper::calcSubtotal($totalItems,$totalExpenses);
-        $orderDiscountAmount = PurchaseHelper::calcDiscount($orderSubTotal,$this->purchase->discount_type,$this->purchase->discount_value);
+        $orderDiscountAmount = PurchaseHelper::calcDiscount($totalItems,$this->purchase->discount_type,$this->purchase->discount_value,$this->purchase->max_discount_amount,$this->purchase->sales_threshold);
         $orderTotalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($orderSubTotal,$orderDiscountAmount);
         $orderTaxAmount = PurchaseHelper::calcTax($orderTotalAfterDiscount,$this->purchase->tax_percentage);
         $orderGrandTotal = PurchaseHelper::calcGrandTotal($orderTotalAfterDiscount,$orderTaxAmount);
@@ -106,7 +106,7 @@ class PurchaseDetails extends Component
         $purchaseItem = PurchaseItem::findOrFail($purchaseItemId);
         $purchaseOrder = $purchaseItem->purchase;
         $refundedQtyAmount = $purchaseItem->unit_amount_after_tax * $qty;
-        $discountAmount = PurchaseHelper::calcDiscount($refundedQtyAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
+        $discountAmount = PurchaseHelper::calcDiscount($refundedQtyAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value, $purchaseOrder->max_discount_amount, $purchaseOrder->sales_threshold);
         $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($refundedQtyAmount, $discountAmount);
         $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
         // -----------------------------------
@@ -163,7 +163,8 @@ class PurchaseDetails extends Component
         $expense = Expense::find($id);
         $purchaseOrder = $expense?->model;
 
-        $discountAmount = PurchaseHelper::calcDiscount($expense->amount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
+        // A supplier discount applies only to the goods subtotal, never to freight/expenses.
+        $discountAmount = 0;
         $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($expense->amount, $discountAmount);
         $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
         $grandTotal = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);

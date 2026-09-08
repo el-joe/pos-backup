@@ -71,7 +71,7 @@
                     <td class="px-5 py-4 font-medium text-slate-900 dark:text-white">{{ $discount->id }}</td>
                     <td class="px-5 py-4 text-slate-700 dark:text-slate-200">{{ $discount->name }}</td>
                     <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $discount->code }}</td>
-                    <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
+                    <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ $discount->value }} {{ $discount->type === 'percentage' ? '%' : currency()->symbol }}</td>
                     <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ dateTimeFormat($discount->start_date,true,false) }}</td>
                     <td class="px-5 py-4 text-slate-600 dark:text-slate-300">{{ dateTimeFormat($discount->end_date,true,false) }}</td>
                     <td class="px-5 py-4">
@@ -150,7 +150,7 @@
                             <label for="discountType" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.discounts.type') }}</label>
                             <select class="select2 mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" name="data.type" id="discountType">
                                 <option value="">{{ __('general.pages.discounts.select_type') }}</option>
-                                <option value="rate" {{ ($data['type']??'') == 'rate' ? 'selected' : '' }}>{{ __('general.pages.discounts.rate') }}</option>
+                                <option value="percentage" {{ ($data['type']??'') == 'percentage' ? 'selected' : '' }}>{{ __('general.pages.discounts.rate') }}</option>
                                 <option value="fixed" {{ ($data['type']??'') == 'fixed' ? 'selected' : '' }}>{{ __('general.pages.discounts.fixed') }}</option>
                             </select>
                         </div>
@@ -173,7 +173,7 @@
                         </div>
 
                         @isset($data['type'])
-                        @if($data['type'] == 'rate')
+                        @if($data['type'] == 'percentage')
                         <div>
                             <label for="discountMaxAmount" class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.discounts.max_discount_amount') }}</label>
                             <input type="number" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:border-brand-400 dark:focus:bg-slate-900" wire:model="data.max_discount_amount" id="discountMaxAmount" placeholder="{{ __('general.pages.discounts.enter_max_discount_amount') }}">

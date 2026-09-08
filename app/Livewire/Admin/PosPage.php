@@ -143,9 +143,8 @@ class PosPage extends Component
             'type' => $discount->type,
             'code' => $discount->code,
             'value' => $discount->value,
-            'max_discount_amount' => $discount->max_discount_amount ?? 99999999,
-            'sales_threshold' => $discount->sales_threshold ?? 0,
-            'max' => $discount->type == 'fixed' ? ($discount->sales_threshold ?? 0) : ($discount->max_discount_amount ?? 0),
+            'max' => $discount->max_discount_amount ?? 0,
+            'sales_threshold' => $discount->sales_threshold,
         ];
 
         $this->alert('success', __('general.messages.discount_code_applied'));
@@ -238,11 +237,11 @@ class PosPage extends Component
 
     function calculateTotals() : array {
         $subTotal = SaleHelper::subTotal($this->data['products'] ?? []);
-        $discount = SaleHelper::discountAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0,$this->data['discount']['max'] ?? 0);
+        $discount = SaleHelper::discountAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $this->data['discount']['max'] ?? 0, $this->data['discount']['sales_threshold'] ?? null);
         $totalAfterDiscount = $subTotal - $discount;
         $taxPercentage = $this->branch?->tax?->rate ?? 0;
-        $tax = SaleHelper::taxAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $taxPercentage,$this->data['discount']['max'] ?? 0);
-        $total = $subTotal + $tax - $discount;
+        $tax = SaleHelper::taxAmount($this->data['products'] ?? [], $this->data['discount']['type'] ?? null, $this->data['discount']['value'] ?? 0, $taxPercentage, $this->data['discount']['max'] ?? 0, $this->data['discount']['sales_threshold'] ?? null);
+        $total = max(0, $subTotal + $tax - $discount);
         return get_defined_vars();
     }
 
@@ -270,6 +269,8 @@ class PosPage extends Component
             "discount_id" => $this->data['discount']['id'] ?? null,
             "discount_type" => $this->data['discount']['type'] ?? null,
             "discount_value" => $this->data['discount']['value'] ?? 0,
+            "max_discount_amount" => $this->data['discount']['max'] ?? 0,
+            "sales_threshold" => $this->data['discount']['sales_threshold'] ?? null,
             'is_deferred' => (bool)($this->data['is_deferred'] ?? $this->deferredMode),
             "payment_note" => $this->data['payment_note'] ?? null,
             "payment_amount" => $total ?? 0,

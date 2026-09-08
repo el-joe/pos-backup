@@ -13,7 +13,7 @@ class Purchase extends Model
 {
     protected $fillable = [
         'supplier_id','branch_id','ref_no','order_date','paid_amount','status',
-        'discount_type' , 'discount_value' , 'tax_id' , 'tax_percentage',
+        'discount_type' , 'discount_value' , 'sales_threshold' , 'max_discount_amount' , 'tax_id' , 'tax_percentage',
         'is_deferred','inventory_received_at'
     ];
 
@@ -54,8 +54,8 @@ class Purchase extends Model
 
     function getTotalAmountAttribute() {
         $totalItems = $this->items_total_amount;
-        $subTotal = PurchaseHelper::calcSubTotal($totalItems, $this->expenses_total_amount);
-        $discountAmount = PurchaseHelper::calcDiscount($subTotal,$this->discount_type,$this->discount_value);
+        $subTotal = PurchaseHelper::calcSubtotal($totalItems, $this->expenses_total_amount);
+        $discountAmount = PurchaseHelper::calcDiscount($totalItems, $this->discount_type, $this->discount_value, $this->max_discount_amount, $this->sales_threshold);
         $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($subTotal,$discountAmount);
         $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount,$this->tax_percentage);
 
@@ -70,8 +70,8 @@ class Purchase extends Model
 
     function getRefundedTotalAmountAttribute() {
         $totalItems = $this->refunded_items_total_amount;
-        $subTotal = PurchaseHelper::calcSubTotal($totalItems, 0);
-        $discountAmount = PurchaseHelper::calcDiscount($subTotal,$this->discount_type,$this->discount_value);
+        $subTotal = PurchaseHelper::calcSubtotal($totalItems, 0);
+        $discountAmount = PurchaseHelper::calcDiscount($totalItems, $this->discount_type, $this->discount_value, $this->max_discount_amount, $this->sales_threshold);
         $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($subTotal,$discountAmount);
         $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount,$this->tax_percentage);
 
@@ -116,8 +116,9 @@ class Purchase extends Model
                 $expensesTotalExpr = 'COALESCE((SELECT SUM(amount) FROM expenses WHERE expenses.model_type = \'".Purchase::class."\' AND expenses.model_id = purchases.id),0)';
                 $subTotalExpr = '('.$itemsTotalExpr.' + '.$expensesTotalExpr.')';
 
-                $discountExpr = '(CASE WHEN discount_type = \'percentage\' THEN ('.$subTotalExpr.' * discount_value / 100) ELSE discount_value END)';
-                $totalAfterDiscountExpr = '('.$subTotalExpr.' - '.$discountExpr.')';
+                $rawDiscountExpr = '(CASE WHEN discount_type = \'percentage\' THEN ('.$itemsTotalExpr.' * discount_value / 100) WHEN discount_type = \'fixed\' THEN discount_value ELSE 0 END)';
+                $discountExpr = 'LEAST(GREATEST('.$rawDiscountExpr.',0), '.$itemsTotalExpr.')';
+                $totalAfterDiscountExpr = 'GREATEST(0, ('.$subTotalExpr.' - '.$discountExpr.'))';
                 $taxExpr = '('.$totalAfterDiscountExpr.' * tax_percentage / 100)';
                 $totalAmountExpr = '('.$totalAfterDiscountExpr.' + '.$taxExpr.')';
 

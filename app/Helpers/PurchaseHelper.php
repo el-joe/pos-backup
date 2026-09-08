@@ -2,22 +2,33 @@
 
 namespace App\Helpers;
 
+use App\Enums\DiscountTypeEnum;
+
 class PurchaseHelper
 {
     static function calcSubtotal($orderProductsTotal, $expensesTotal) {
         return $orderProductsTotal + $expensesTotal;
     }
 
-    static function calcDiscount($subTotal = 0,$discountType = null,$discountValue = 0) {
-        $total = $subTotal;
-        $discountType = $discountType  ?? null;
-        $discountAmount = 0;
-        if($discountType == 'fixed') {
-            $discountAmount = $discountValue ?? 0;
-        } elseif($discountType == 'percentage') {
-            $discountAmount = ($total * ($discountValue ?? 0) / 100);
+    static function calcDiscount($discountableBase = 0, $discountType = null, $discountValue = 0, $max = 0, $threshold = null) {
+        $discountType = $discountType ?? null;
+        $discountValue = $discountValue ?? 0;
+
+        if (!$discountType || !$discountValue) return 0;
+        if ($threshold !== null && $threshold > 0 && $discountableBase < $threshold) return 0;
+
+        if ($discountType == DiscountTypeEnum::FIXED->value) {
+            $amount = (float) $discountValue;
+        } elseif ($discountType == DiscountTypeEnum::PERCENTAGE->value) {
+            $amount = $discountableBase * $discountValue / 100;
+        } else {
+            return 0;
         }
-        return $discountAmount;
+
+        if ($max) $amount = min($amount, $max);
+        $amount = min($amount, $discountableBase);
+
+        return max(0, $amount);
     }
 
     static function calcTotalAfterDiscount($subTotal = 0, $discountAmount = 0) {
@@ -30,6 +41,6 @@ class PurchaseHelper
     }
 
     static function calcGrandTotal($totalAfterDiscount = 0, $taxAmount = 0) {
-        return $totalAfterDiscount + $taxAmount;
+        return max(0, $totalAfterDiscount + $taxAmount);
     }
 }

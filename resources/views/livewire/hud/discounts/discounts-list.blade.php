@@ -82,7 +82,7 @@
                 <td>{{ $discount->id }}</td>
                 <td>{{ $discount->name }}</td>
                 <td>{{ $discount->code }}</td>
-                <td>{{ $discount->value }} {{ $discount->type === 'rate' ? '%' : currency()->symbol }}</td>
+                <td>{{ $discount->value }} {{ $discount->type === 'percentage' ? '%' : currency()->symbol }}</td>
                 <td>{{ dateTimeFormat($discount->start_date,true,false) }}</td>
                 <td>{{ dateTimeFormat($discount->end_date,true,false) }}</td>
                 <td>
@@ -152,7 +152,7 @@
                             <label for="discountType" class="form-label">{{ __('general.pages.discounts.type') }}</label>
                             <select class="form-select select2" name="data.type" id="discountType">
                                 <option value="">{{ __('general.pages.discounts.select_type') }}</option>
-                                <option value="rate" {{ ($data['type']??'') == 'rate' ? 'selected' : '' }}>{{ __('general.pages.discounts.rate') }}</option>
+                                <option value="percentage" {{ ($data['type']??'') == 'percentage' ? 'selected' : '' }}>{{ __('general.pages.discounts.rate') }}</option>
                                 <option value="fixed" {{ ($data['type']??'') == 'fixed' ? 'selected' : '' }}>{{ __('general.pages.discounts.fixed') }}</option>
                             </select>
                         </div>
@@ -175,7 +175,7 @@
                         </div>
 
                         @isset($data['type'])
-                            @if($data['type'] == 'rate')
+                            @if($data['type'] == 'percentage')
                                 <div class="col-md-6">
                                     <label for="discountMaxAmount" class="form-label">{{ __('general.pages.discounts.max_discount_amount') }}</label>
                                     <input type="number" class="form-control" wire:model="data.max_discount_amount" id="discountMaxAmount" placeholder="{{ __('general.pages.discounts.enter_max_discount_amount') }}">

@@ -32,6 +32,31 @@ class DiscountService
         return $discount;
     }
 
+    /**
+     * Confirms the discount is active, within its date window, and has not exhausted its usage_limit.
+     * Throws if any check fails, so a discount can never be attached to a sale outside its eligibility window.
+     */
+    function assertEligible(Discount $discount): void {
+        if (!$discount->active) {
+            throw new \RuntimeException("Discount [{$discount->code}] is not active.");
+        }
+
+        $today = date('Y-m-d');
+        if ($discount->start_date && $today < $discount->start_date) {
+            throw new \RuntimeException("Discount [{$discount->code}] is not yet valid.");
+        }
+        if ($discount->end_date && $today > $discount->end_date) {
+            throw new \RuntimeException("Discount [{$discount->code}] has expired.");
+        }
+
+        if ($discount->usage_limit) {
+            $usedCount = $discount->history()->count();
+            if ($usedCount >= $discount->usage_limit) {
+                throw new \RuntimeException("Discount [{$discount->code}] has reached its usage limit.");
+            }
+        }
+    }
+
     function save($id = null,$data) {
         if($id) {
             $discount = $this->repo->find($id);

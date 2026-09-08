@@ -184,7 +184,7 @@ class AddPurchase extends Component
             : 'fixed';
 
         $orderSubTotal = PurchaseHelper::calcSubtotal($this->calcOrderProductsTotal(),$this->calcExpensesTotal());
-        $orderDiscountAmount = PurchaseHelper::calcDiscount($orderSubTotal,$discountType,$this->data['discount_value'] ?? 0);
+        $orderDiscountAmount = PurchaseHelper::calcDiscount($this->calcOrderProductsTotal(),$discountType,$this->data['discount_value'] ?? 0);
         $orderTotalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($orderSubTotal,$orderDiscountAmount);
         $orderTaxAmount = PurchaseHelper::calcTax($orderTotalAfterDiscount,$this->data['tax_rate'] ?? 0);
         $orderGrandTotal = PurchaseHelper::calcGrandTotal($orderTotalAfterDiscount,$orderTaxAmount);

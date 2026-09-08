@@ -33,7 +33,7 @@ class SaleItem extends Model
     }
 
     function getTotalCostAttribute()  {
-        return numFormat($this->unit_cost * $this->actual_qty,3);
+        return numFormat($this->unit_cost * $this->actual_qty, 2);
     }
 
     function getTotalAttribute()  {
@@ -44,17 +44,17 @@ class SaleItem extends Model
         $total = $this->total;
         $discount = $this->total_discount_amount;
         $taxAmount = $this->total_tax_amount;
-        return numFormat($total - $discount + $taxAmount,3);
+        return numFormat(max(0, $total - $discount + $taxAmount), 2);
     }
 
     function getTotalDiscountAmountAttribute() {
         $sale = $this->sale;
-        return SaleHelper::singleDiscountAmount($this, clone $sale->saleItems, $sale->discount_type, $sale->discount_value, $sale->max_discount_amount);
+        return SaleHelper::singleDiscountAmount($this, clone $sale->saleItems, $sale->discount_type, $sale->discount_value, $sale->max_discount_amount, $sale->sales_threshold);
     }
 
     function getTotalTaxAmountAttribute() {
         $sale = $this->sale;
-        return SaleHelper::singleTaxAmount($this, clone $sale->saleItems, $sale->discount_type, $sale->discount_value, $sale->tax_percentage, $sale->max_discount_amount);
+        return SaleHelper::singleTaxAmount($this, clone $sale->saleItems, $sale->discount_type, $sale->discount_value, $sale->tax_percentage, $sale->max_discount_amount, $sale->sales_threshold);
     }
 
     function getRefundedTotalAttribute()  {
@@ -68,17 +68,17 @@ class SaleItem extends Model
         $total = $this->refunded_total;
         $discount = $this->refunded_total_discount_amount;
         $taxAmount = $this->refunded_total_tax_amount;
-        return numFormat($total - $discount + $taxAmount,3);
+        return numFormat(max(0, $total - $discount + $taxAmount), 2);
     }
 
     function getRefundedTotalDiscountAmountAttribute() {
         $sale = $this->sale;
-        return SaleHelper::singleDiscountAmount($this, clone $sale->salesItemsRefunded(), $sale->discount_type, $sale->discount_value, $sale->max_discount_amount);
+        return SaleHelper::singleDiscountAmount($this, clone $sale->salesItemsRefunded(), $sale->discount_type, $sale->discount_value, $sale->max_discount_amount, $sale->sales_threshold);
     }
 
     function getRefundedTotalTaxAmountAttribute() {
         $sale = $this->sale;
-        return SaleHelper::singleTaxAmount($this, clone $sale->salesItemsRefunded(), $sale->discount_type, $sale->discount_value, $sale->tax_percentage, $sale->max_discount_amount);
+        return SaleHelper::singleTaxAmount($this, clone $sale->salesItemsRefunded(), $sale->discount_type, $sale->discount_value, $sale->tax_percentage, $sale->max_discount_amount, $sale->sales_threshold);
     }
 
     function getNameAttribute(){
