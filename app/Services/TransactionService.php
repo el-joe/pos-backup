@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Enums\AccountTypeEnum;
 use App\Enums\TransactionTypeEnum;
+use App\Exceptions\TransactionBalanceException;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Branch;
 use App\Repositories\TransactionRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransactionService
 {
@@ -31,28 +34,75 @@ class TransactionService
     }
 
     function create($data) {
-        // create transaction
-        $transaction = $this->repo->create([
-            'date' => $data['date'] ?? now(),
-            'description' => $data['description'] ?? $data['note'] ?? '',
-            'type' => $data['type'] ?? null,
-            'reference_type' => $data['reference_type'] ?? null,
-            'reference_id' => $data['reference_id'] ?? null,
-            'branch_id' => $data['branch_id'] ?? null,
-            'note' => $data['note'] ?? '',
-            'amount' => $data['amount'] ?? 0,
-        ]);
+        $type = $data['type'] ?? null;
+        $referenceId = $data['reference_id'] ?? null;
+        $rawLines = $data['lines'] ?? [];
 
-        foreach ($data['lines'] as $line) {
-            if(($line['amount'] ?? 0) == 0) continue;
-            $transaction->lines()->create([
-                'account_id' => $line['account_id'],
-                'type' => $line['type'] ?? 'debit',
-                'amount' => $line['amount'] ?? 0,
+        if (empty($rawLines)) {
+            throw TransactionBalanceException::emptyLines($type, $referenceId);
+        }
+
+        foreach ($rawLines as $line) {
+            if (!is_array($line) || empty($line['account_id']) || !is_numeric($line['amount'] ?? null)) {
+                throw TransactionBalanceException::invalidLine($type, $referenceId);
+            }
+        }
+
+        // zero-amount lines carry no accounting effect and are dropped before balancing/persisting
+        $lines = array_values(array_filter($rawLines, fn($line) => (float) $line['amount'] != 0));
+
+        if (empty($lines)) {
+            throw TransactionBalanceException::emptyLines($type, $referenceId);
+        }
+
+        $debitTotal = 0.0;
+        $creditTotal = 0.0;
+
+        foreach ($lines as $line) {
+            $amount = (float) $line['amount'];
+            if (($line['type'] ?? 'debit') === 'credit') {
+                $creditTotal += $amount;
+            } else {
+                $debitTotal += $amount;
+            }
+        }
+
+        if (abs($debitTotal - $creditTotal) > 0.005) {
+            throw TransactionBalanceException::unbalanced($type, $referenceId, $debitTotal, $creditTotal);
+        }
+
+        $payloadAmount = $data['amount'] ?? null;
+        if ($payloadAmount !== null && abs((float) $payloadAmount - $debitTotal) > 0.005) {
+            Log::warning('TransactionService::create amount mismatch — using balanced debit total instead of caller-supplied amount', [
+                'type' => $type,
+                'reference_id' => $referenceId,
+                'payload_amount' => $payloadAmount,
+                'debit_total' => $debitTotal,
             ]);
         }
 
-        return $transaction;
+        return DB::transaction(function () use ($data, $lines, $debitTotal, $type, $referenceId) {
+            $transaction = $this->repo->create([
+                'date' => $data['date'] ?? now(),
+                'description' => $data['description'] ?? $data['note'] ?? '',
+                'type' => $type,
+                'reference_type' => $data['reference_type'] ?? null,
+                'reference_id' => $referenceId,
+                'branch_id' => $data['branch_id'] ?? null,
+                'note' => $data['note'] ?? '',
+                'amount' => $debitTotal,
+            ]);
+
+            foreach ($lines as $line) {
+                $transaction->lines()->create([
+                    'account_id' => $line['account_id'],
+                    'type' => $line['type'] ?? 'debit',
+                    'amount' => $line['amount'],
+                ]);
+            }
+
+            return $transaction;
+        });
     }
 
     function createOpenBalanceTransaction($data,$reverse = false) {

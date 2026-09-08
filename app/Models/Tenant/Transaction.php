@@ -31,4 +31,22 @@ class Transaction extends Model
         $line = $this->lines()->where('type',$type)->first();
         return $line ? $line->account : null;
     }
+
+    function isBalanced(): bool
+    {
+        $debit = (float) $this->lines->where('type', 'debit')->sum('amount');
+        $credit = (float) $this->lines->where('type', 'credit')->sum('amount');
+
+        return abs($debit - $credit) <= 0.005;
+    }
+
+    function scopeUnbalanced($query)
+    {
+        return $query->whereRaw("(
+            select coalesce(sum(case when tl.type = 'debit' then tl.amount else 0 end), 0)
+                 - coalesce(sum(case when tl.type = 'credit' then tl.amount else 0 end), 0)
+            from transaction_lines tl
+            where tl.transaction_id = transactions.id
+        ) not between -0.005 and 0.005");
+    }
 }
