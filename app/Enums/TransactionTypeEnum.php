@@ -24,6 +24,7 @@ enum TransactionTypeEnum : string
     case CLOSING_BALANCE = 'closing_balance';
     case CASH_DEPOSIT = 'cash_deposit';
     case CASH_WITHDRAWAL = 'cash_withdrawal';
+    case CASH_OVER_SHORT = 'cash_over_short';
     case FIXED_ASSETS = 'fixed_assets';
     case CHECK_COLLECTION = 'check_collection';
     case CHECK_CLEARING = 'check_clearing';
@@ -52,6 +53,7 @@ enum TransactionTypeEnum : string
             self::CLOSING_BALANCE => 'Closing Balance',
             self::CASH_DEPOSIT => 'Cash Deposit',
             self::CASH_WITHDRAWAL => 'Cash Withdrawal',
+            self::CASH_OVER_SHORT => 'Cash Over/Short',
             self::FIXED_ASSETS => 'Fixed Assets',
             self::CHECK_COLLECTION => 'Check Collection',
             self::CHECK_CLEARING => 'Check Clearing',

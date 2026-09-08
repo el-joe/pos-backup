@@ -95,6 +95,10 @@
                     <input type="number" class="form-control" wire:model="closing_balance_input">
                 </div>
                 <div class="form-group">
+                    <label>Discrepancy Reason</label>
+                    <textarea class="form-control" wire:model="discrepancy_reason" placeholder="Required if the counted amount differs from the calculated balance"></textarea>
+                </div>
+                <div class="form-group">
                     <label>Notes</label>
                     <textarea class="form-control" wire:model="closing_notes"></textarea>
                 </div>
@@ -120,4 +124,42 @@
 
         </div>
     </div>
+
+    @if(admin()->type === 'super_admin')
+        <div class="col-md-12">
+            <div class="white-box">
+                <h4 class="box-title">Pending Discrepancies</h4>
+                @if($pendingDiscrepancies->isEmpty())
+                    <p class="text-muted">No pending discrepancies.</p>
+                @else
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Register</th>
+                                <th>Branch</th>
+                                <th>Closed At</th>
+                                <th class="text-right">Discrepancy</th>
+                                <th>Reason</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pendingDiscrepancies as $register)
+                                <tr>
+                                    <td>#{{ $register->id }}</td>
+                                    <td>{{ $register->branch?->name }}</td>
+                                    <td>{{ $register->closed_at }}</td>
+                                    <td class="text-right">{{ number_format($register->discrepancy, 2) }}</td>
+                                    <td>{{ $register->discrepancy_reason }}</td>
+                                    <td>
+                                        <button wire:click="approveDiscrepancy({{ $register->id }})" class="btn btn-sm btn-success">Approve</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+        </div>
+    @endif
 </div>

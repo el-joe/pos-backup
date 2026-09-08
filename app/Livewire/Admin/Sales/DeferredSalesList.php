@@ -74,7 +74,7 @@ class DeferredSalesList extends Component
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
-        if($cashRegister){
+        if($cashRegister && $this->cashRegisterService->isCashAccount($this->payment['account_id'] ?? null)){
             $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $this->payment['amount']);
         }
 

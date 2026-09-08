@@ -478,11 +478,15 @@ class SellService
 
     function getCustomerAccount($customerId = null, $paymentAccountId = null) {
         if(!$paymentAccountId){
-            $user = User::find($customerId);
-            $getCustomerAccount = $user->accounts->first();
+            $getCustomerAccount = Account::where('model_type', User::class)
+                ->where('model_id', $customerId)
+                ->where('type', AccountTypeEnum::CUSTOMER->value)
+                ->orderBy('id')
+                ->first();
+
             if(!$getCustomerAccount){
                 // create default customer account
-                $getCustomerAccount = $this->accountService->createAccountForUser($user);
+                $getCustomerAccount = $this->accountService->createAccountForUser(User::find($customerId));
             }
         }else{
             $getCustomerAccount = Account::find($paymentAccountId);

@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\DB;
 
 class PurchaseService
 {
-    public function __construct(private PurchaseRepository $repo,private ExpenseCategoryService $expenseCategoryService, private StockService $stockService,private TransactionService $transactionService) {}
+    public function __construct(private PurchaseRepository $repo,private ExpenseCategoryService $expenseCategoryService, private StockService $stockService,private TransactionService $transactionService,private AccountService $accountService) {}
 
     function list($relations = [], $filter = [], $perPage = null, $orderByDesc = null)
     {
@@ -285,11 +285,7 @@ class PurchaseService
             $purchase->increment('paid_amount', $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0));
         }
 
-        if(!isset($data['payment_account'])){
-            $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
-        }else{
-            $getSupplierAccount = Account::find($data['payment_account']);
-        }
+        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null, $data['payment_account'] ?? null);
 
         $orderPaymentData = [];
         $orderPaymentData['account_id'] = $getSupplierAccount->id ?? null;
@@ -581,7 +577,15 @@ class PurchaseService
 
     function getSupplierAccount($supplierId = null,$paymentAccountId = null){
         if(!isset($paymentAccountId)){
-            $getSupplierAccount = User::find($supplierId)->accounts->first();
+            $getSupplierAccount = Account::where('model_type', User::class)
+                ->where('model_id', $supplierId)
+                ->where('type', AccountTypeEnum::SUPPLIER->value)
+                ->orderBy('id')
+                ->first();
+
+            if (!$getSupplierAccount) {
+                $getSupplierAccount = $this->accountService->createAccountForUser(User::find($supplierId));
+            }
         }else{
             $getSupplierAccount = Account::find($paymentAccountId);
         }
@@ -604,11 +608,7 @@ class PurchaseService
     }
 
     function createSupplierDebitLine($data,$type = 'full_paid', $reverse = false) {
-        if(!isset($data['payment_account'])){
-            $getSupplierAccount = User::find($data['supplier_id'])->accounts->first();
-        }else{
-            $getSupplierAccount = Account::find($data['payment_account']);
-        }
+        $getSupplierAccount = $this->getSupplierAccount($data['supplier_id'] ?? null, $data['payment_account'] ?? null);
 
         // get paid amount from data
         if($type == 'full_paid'){

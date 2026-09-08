@@ -110,6 +110,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">{{ __('general.pages.cash_register.discrepancy_reason') }}</label>
+                        <textarea class="form-control" wire:model="discrepancy_reason" rows="2" placeholder="{{ __('general.pages.cash_register.discrepancy_reason_placeholder') }}"></textarea>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">{{ __('general.pages.cash_register.notes') }}</label>
                         <textarea class="form-control" wire:model="closing_notes" rows="3"></textarea>
                     </div>
@@ -148,6 +153,58 @@
         <div class="col-12">
             <div class="alert alert-danger">
                 {{ __('general.messages.you_do_not_have_permission_to_access') }}
+            </div>
+        </div>
+    @endif
+
+    @if(admin()->type === 'super_admin')
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header border-bottom">
+                    <h5 class="card-title mb-0">{{ __('general.pages.cash_register.pending_discrepancies') }}</h5>
+                </div>
+                <div class="card-body">
+                    @if($pendingDiscrepancies->isEmpty())
+                        <p class="text-muted mb-0">{{ __('general.pages.cash_register.no_pending_discrepancies') }}</p>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{ __('general.pages.cash_register.select_branch') }}</th>
+                                        <th>{{ __('general.pages.cash_register.close_register') }}</th>
+                                        <th class="text-end">{{ __('general.pages.cash_register.discrepancy') }}</th>
+                                        <th>{{ __('general.pages.cash_register.discrepancy_reason') }}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($pendingDiscrepancies as $register)
+                                        <tr>
+                                            <td>#{{ $register->id }}</td>
+                                            <td>{{ $register->branch?->name }}</td>
+                                            <td>{{ dateTimeFormat($register->closed_at) }}</td>
+                                            <td class="text-end">{{ currencyFormat($register->discrepancy, true) }}</td>
+                                            <td>{{ $register->discrepancy_reason }}</td>
+                                            <td>
+                                                @if(adminCan('cash_register.approve_discrepancy'))
+                                                    <button wire:click="approveDiscrepancy({{ $register->id }})" class="btn btn-sm btn-success">{{ __('general.pages.cash_register.approve_discrepancy') }}</button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+                <div class="card-arrow">
+                    <div class="card-arrow-top-left"></div>
+                    <div class="card-arrow-top-right"></div>
+                    <div class="card-arrow-bottom-left"></div>
+                    <div class="card-arrow-bottom-right"></div>
+                </div>
             </div>
         </div>
     @endif

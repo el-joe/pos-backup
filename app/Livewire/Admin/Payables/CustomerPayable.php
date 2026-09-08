@@ -114,7 +114,7 @@ class CustomerPayable extends Component
             }
 
             $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-            if ($cashRegister && $applied > 0) {
+            if ($cashRegister && $applied > 0 && $this->cashRegisterService->isCashAccount($this->payment['account_id'] ?? null)) {
                 $this->cashRegisterService->increment($cashRegister->id, 'total_sales', $applied);
             }
         });

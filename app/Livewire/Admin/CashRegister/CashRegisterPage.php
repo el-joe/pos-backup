@@ -28,10 +28,15 @@ class CashRegisterPage extends Component
 
         $branches = $this->branchService->activeList();
 
+        $pendingDiscrepancies = admin()->type === 'super_admin'
+            ? CashRegister::pendingDiscrepancy()->with(['branch', 'admin'])->orderByDesc('closed_at')->get()
+            : collect();
+
         return layoutView('cash-register.cash-register-page', [
             'aggregates' => $this->aggregates,
             'currentRegister' => $this->currentRegister,
             'branches' => $branches,
+            'pendingDiscrepancies' => $pendingDiscrepancies,
         ])->title(__('general.titles.cash-register'));
     }
     public $aggregates = [];
@@ -42,6 +47,7 @@ class CashRegisterPage extends Component
     public $opening_balance_input;
     public $closing_balance_input;
     public $closing_notes;
+    public $discrepancy_reason;
     public $branchId;
 
     // Deposit / Withdrawal fields
@@ -135,11 +141,8 @@ class CashRegisterPage extends Component
             'opened_at' => now(),
         ]);
 
-        $this->transactionService->createOpenBalanceTransaction([
-            'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
-            'amount' => $this->opening_balance_input,
-            'date' => now(),
-        ]);
+        // Opening a register is an operational control event, not a ledger event — the float
+        // already sits in Branch Cash. Nothing is posted here (see TransactionService::createOpenBalanceTransaction).
 
         superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use($cashRegister){
             $admin->notifyCashRegisterOpened($cashRegister);
@@ -154,12 +157,6 @@ class CashRegisterPage extends Component
 
     public function closeRegister()
     {
-        if(!$this->validator([
-            'closing_balance_input' => $this->closing_balance_input,
-        ],[
-            'closing_balance_input' => 'required|numeric',
-        ])) return;
-
         $reg = $this->cashRegisterService->getOpenedCashRegister();
 
         if (! $reg) {
@@ -167,39 +164,58 @@ class CashRegisterPage extends Component
             return;
         }
 
+        $calculated = $reg->fresh()->calculated_closing_balance;
+        $adminValue = (float) $this->closing_balance_input;
+        $discrepancy = round($adminValue - $calculated, 2);
+        $hasDiscrepancy = abs($discrepancy) > 0.005;
+
+        if(!$this->validator([
+            'closing_balance_input' => $this->closing_balance_input,
+            'discrepancy_reason' => $this->discrepancy_reason,
+        ],[
+            'closing_balance_input' => 'required|numeric',
+            'discrepancy_reason' => $hasDiscrepancy ? 'required|string|max:1000' : 'nullable|string|max:1000',
+        ])) return;
+
         try{
             DB::beginTransaction();
 
-            $calculated = $reg->fresh()->calculated_closing_balance;
-            $adminValue = (float) $this->closing_balance_input;
-            $closingBalance = $adminValue;
-
-            if ($calculated != 0 && abs($adminValue - $calculated) / abs($calculated) > 0.01) {
-                Log::warning('Cash register closing balance discrepancy', [
-                    'cash_register_id' => $reg->id,
-                    'calculated_closing_balance' => $calculated,
-                    'admin_provided_closing_balance' => $adminValue,
-                ]);
-            }
-
             $reg->update([
-                'closing_balance' => $closingBalance,
+                'closing_balance' => $adminValue,
+                'expected_closing_balance' => $calculated,
+                'discrepancy' => $discrepancy,
+                'discrepancy_reason' => $hasDiscrepancy ? $this->discrepancy_reason : null,
                 'closed_at' => now(),
                 'status' => 'closed',
                 'notes' => $this->closing_notes,
             ]);
+
+            // A counting variance at close IS a ledger event — reconcile Branch Cash to the
+            // physically counted amount. Opening/closing the shift itself posts nothing.
+            if ($hasDiscrepancy) {
+                $this->transactionService->createCashOverShortTransaction([
+                    'branch_id' => $reg->branch_id,
+                    'amount' => $discrepancy,
+                    'date' => now(),
+                    'reference_type' => CashRegister::class,
+                    'reference_id' => $reg->id,
+                    'description' => __('general.messages.cash_register_variance', ['id' => $reg->id]),
+                ]);
+
+                Log::warning('Cash register closing balance discrepancy', [
+                    'cash_register_id' => $reg->id,
+                    'calculated_closing_balance' => $calculated,
+                    'admin_provided_closing_balance' => $adminValue,
+                    'discrepancy' => $discrepancy,
+                ]);
+            }
+
             DB::commit();
         }catch (\Exception $e){
             DB::rollBack();
             $this->alert('error', __('general.messages.error_closing_cash_register', ['message' => $e->getMessage()]));
             return;
         }
-
-        $this->transactionService->createOpenBalanceTransaction([
-            'branch_id' => admin()->branch_id ?? $this->branchId ?? null,
-            'amount' => $this->closing_balance_input,
-            'date' => now(),
-        ],true);
 
         superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use($reg){
             $admin->notifyCashRegisterClosed($reg->fresh());
@@ -209,8 +225,32 @@ class CashRegisterPage extends Component
 
         $this->closing_balance_input = null;
         $this->closing_notes = null;
+        $this->discrepancy_reason = null;
         $this->loadData();
         $this->alert('success', __('general.messages.cash_register_closed'));
+    }
+
+    public function approveDiscrepancy($registerId)
+    {
+        if (!adminCan('cash_register.approve_discrepancy')) {
+            $this->alert('error', __('general.messages.unauthorized'));
+            return;
+        }
+
+        $reg = CashRegister::pendingDiscrepancy()->find($registerId);
+
+        if (! $reg) {
+            $this->alert('error', __('general.messages.no_pending_discrepancy_found'));
+            return;
+        }
+
+        $reg->update([
+            'discrepancy_approved_by' => admin()->id,
+            'discrepancy_approved_at' => now(),
+        ]);
+
+        $this->alert('success', __('general.messages.discrepancy_approved_successfully'));
+        $this->loadData();
     }
 
     public function depositCash()

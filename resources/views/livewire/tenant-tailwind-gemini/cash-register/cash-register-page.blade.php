@@ -165,6 +165,10 @@ $highlightCards = [
                                         <input type="number" step="any" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model="closing_balance_input" x-on:focus="$wire.fillClosingBalance()">
                                     </div>
                                     <div>
+                                        <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.discrepancy_reason') }}</label>
+                                        <textarea rows="2" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model="discrepancy_reason" placeholder="{{ __('general.pages.cash_register.discrepancy_reason_placeholder') }}"></textarea>
+                                    </div>
+                                    <div>
                                         <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.notes') }}</label>
                                         <textarea rows="2" class="block w-full rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm text-slate-900 shadow-sm transition-all focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 dark:border-rose-500/30 dark:!bg-slate-900 dark:text-white dark:focus:border-rose-500" wire:model="closing_notes"></textarea>
                                     </div>
@@ -210,6 +214,45 @@ $highlightCards = [
                 </div>
             </x-tenant-tailwind-gemini.table-card>
         </div>
+
+        @if(admin()->type === 'super_admin')
+            <x-tenant-tailwind-gemini.table-card :title="__('general.pages.cash_register.pending_discrepancies')">
+                <div class="p-5">
+                    @if($pendingDiscrepancies->isEmpty())
+                        <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.no_pending_discrepancies') }}</p>
+                    @else
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-800">
+                                <thead class="bg-slate-50 dark:bg-slate-950/60">
+                                    <tr>
+                                        <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">#</th>
+                                        <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.select_branch') }}</th>
+                                        <th class="px-4 py-3 text-end text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.discrepancy') }}</th>
+                                        <th class="px-4 py-3 text-start text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ __('general.pages.cash_register.discrepancy_reason') }}</th>
+                                        <th class="px-4 py-3"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                    @foreach($pendingDiscrepancies as $register)
+                                        <tr>
+                                            <td class="px-4 py-3">#{{ $register->id }}</td>
+                                            <td class="px-4 py-3">{{ $register->branch?->name }}</td>
+                                            <td class="px-4 py-3 text-end">{{ currencyFormat($register->discrepancy, true) }}</td>
+                                            <td class="px-4 py-3">{{ $register->discrepancy_reason }}</td>
+                                            <td class="px-4 py-3 text-end">
+                                                @if(adminCan('cash_register.approve_discrepancy'))
+                                                    <button type="button" wire:click="approveDiscrepancy({{ $register->id }})" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700">{{ __('general.pages.cash_register.approve_discrepancy') }}</button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+            </x-tenant-tailwind-gemini.table-card>
+        @endif
     </div>
     @else
     <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-rose-600 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300">

@@ -219,7 +219,7 @@ class AddPurchase extends Component
         try{
             DB::beginTransaction();
             if($cashRegister){
-                if($paidAmountForRegister > 0){
+                if($paidAmountForRegister > 0 && $this->cashRegisterService->isCashAccount($this->data['payment_account'] ?? null)){
                     $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $paidAmountForRegister);
                 }
             }

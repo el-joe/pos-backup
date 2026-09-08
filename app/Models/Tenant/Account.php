@@ -72,6 +72,11 @@ class Account extends Model
             });
     }
 
+    /**
+     * Resolve (or create) a system control account. The identity of a control account
+     * is (type, branch_id) — the code is derived from that pair, never from $name, so
+     * repeated calls are idempotent regardless of which payment method / label is passed.
+     */
     static function default($name,$type,$branch_id = null,$paymentMethodSlug = 'cash') {
         $method = PaymentMethod::whereSlug($paymentMethodSlug)
             ->where(function ($q) use ($branch_id) {
@@ -79,15 +84,13 @@ class Account extends Model
             })
             ->first();
 
-        $codeFromName = strtolower(str_replace(' ','_',$name));
-
-        $code = self::generateCodeRecursive($codeFromName);
+        $typeValue = $type instanceof AccountTypeEnum ? $type->value : $type;
+        $code = $branch_id ? "{$typeValue}-branch-{$branch_id}" : $typeValue;
 
         $account = self::withTrashed()->firstOrCreate([
-            'code' => $codeFromName,
+            'code' => $code,
             'type' => $type,
             'branch_id' => $branch_id,
-            'payment_method_id' => $method?->id
         ],[
             'name' => $name,
             'code' => $code,
@@ -106,39 +109,19 @@ class Account extends Model
         return $account;
     }
 
+    /**
+     * @deprecated identical to default() now that control-account identity no longer
+     * depends on payment method — kept only so existing call sites keep working.
+     */
     static function defaultForPaymentMethodSlug($name, $type, $branch_id = null, string $paymentMethodSlug = 'cash') {
-        $method = PaymentMethod::whereSlug($paymentMethodSlug)
-            ->where(function ($q) use ($branch_id) {
-                $q->where('branch_id',$branch_id)->orWhereNull('branch_id');
-            })
-            ->first();
-
-        $codeFromName = strtolower(str_replace(' ','_',$name));
-        $code = self::generateCodeRecursive($codeFromName);
-
-        $account = self::withTrashed()->firstOrCreate([
-            'code' => $codeFromName,
-            'type' => $type,
-            'branch_id' => $branch_id,
-            'payment_method_id' => $method?->id,
-        ],[
-            'name' => $name,
-            'code' => $code,
-            'model_type' => Branch::class,
-            'model_id' => $branch_id,
-            'type' => $type,
-            'branch_id' => $branch_id,
-            'payment_method_id' => $method?->id,
-            'active' => 1,
-        ]);
-
-        if ($account->trashed()) {
-            $account->restore();
-        }
-
-        return $account;
+        return self::default($name, $type, $branch_id, $paymentMethodSlug);
     }
 
+    /**
+     * Code generation for user-created accounts (Accounts CRUD page) only.
+     * System control accounts must never go through this — their code is
+     * derived deterministically from (type, branch_id) in default().
+     */
     static function generateCodeRecursive($code) {
         $exists = self::where('code',$code)->exists();
         if($exists) {

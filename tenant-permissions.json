@@ -1,6 +1,6 @@
 {
 	"dashboard": ["show"],
-	"cash_register": ["show","create"],
+	"cash_register": ["show","create","approve_discrepancy"],
     "accounts": ["list", "create", "update", "delete"],
 	"pos": ["show", "create"],
 	"branches": ["list", "create", "update", "delete","switch"],

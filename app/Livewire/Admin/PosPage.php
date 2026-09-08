@@ -298,8 +298,9 @@ class PosPage extends Component
         // db transaction
         try {
             DB::beginTransaction();
-            if($cashRegister && ($dataToSave['paid_amount']??0) > 0){
-                $this->cashRegisterService->increment($cashRegister->id,'total_sales',$dataToSave['paid_amount']);
+            $cashPaidAmount = $this->cashRegisterService->cashAmountFromPayments($dataToSave['payments'] ?? []);
+            if($cashRegister && $cashPaidAmount > 0){
+                $this->cashRegisterService->increment($cashRegister->id,'total_sales',$cashPaidAmount);
             }
 
             $saleOrder = $this->sellService->save(null,$dataToSave);

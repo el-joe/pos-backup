@@ -80,7 +80,7 @@ class PurchasesList extends Component
 
         $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
 
-        if($cashRegister){
+        if($cashRegister && $this->cashRegisterService->isCashAccount($this->payment['account_id'] ?? null)){
             $this->cashRegisterService->increment($cashRegister->id, 'total_purchases', $this->payment['amount']);
         }
 

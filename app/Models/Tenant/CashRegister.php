@@ -3,14 +3,18 @@
 namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CashRegister extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'branch_id', 'admin_id', 'opening_balance', 'total_sales', 'total_sale_refunds',
         'total_purchases', 'total_purchase_refunds', 'total_expenses', 'total_expense_refunds',
-        'total_deposits', 'total_withdrawals', 'closing_balance', 'opened_at', 'closed_at',
-        'status', 'notes'
+        'total_deposits', 'total_withdrawals', 'closing_balance', 'expected_closing_balance',
+        'discrepancy', 'discrepancy_reason', 'discrepancy_approved_by', 'discrepancy_approved_at',
+        'opened_at', 'closed_at', 'status', 'notes'
     ];
 
     protected $casts = [
@@ -24,8 +28,11 @@ class CashRegister extends Model
         'total_deposits' => 'float',
         'total_withdrawals' => 'float',
         'closing_balance' => 'float',
+        'expected_closing_balance' => 'float',
+        'discrepancy' => 'float',
         'opened_at' => 'datetime',
         'closed_at' => 'datetime',
+        'discrepancy_approved_at' => 'datetime',
     ];
 
     function scopeFilter($query,$filters = []) {
@@ -48,6 +55,13 @@ class CashRegister extends Model
         });
     }
 
+    function scopePendingDiscrepancy($query) {
+        return $query->where('status', 'closed')
+            ->whereNull('discrepancy_approved_at')
+            ->whereNotNull('discrepancy')
+            ->whereRaw('ABS(discrepancy) > 0.005');
+    }
+
     public function branch()
     {
         return $this->belongsTo(Branch::class)->withTrashed();
@@ -56,6 +70,16 @@ class CashRegister extends Model
     public function admin()
     {
         return $this->belongsTo(Admin::class)->withTrashed();
+    }
+
+    public function discrepancyApprovedBy()
+    {
+        return $this->belongsTo(Admin::class, 'discrepancy_approved_by')->withTrashed();
+    }
+
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'reference');
     }
 
     public function getCalculatedClosingBalanceAttribute(): float

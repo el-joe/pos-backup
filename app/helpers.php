@@ -273,7 +273,7 @@ if (!function_exists('defaultPermissionsList')) {
     {
         return [
             "statistics" => ["show"],
-            "cash_register" => ["create"],
+            "cash_register" => ["create", "approve_discrepancy"],
             "pos" => ["create"],
             "branches" => ["list", "create", "update", "delete", 'export', "switch"],
             "products" => ["list", "show", "create", "update", "delete", 'export'],

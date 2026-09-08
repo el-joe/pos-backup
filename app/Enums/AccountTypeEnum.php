@@ -10,6 +10,7 @@ enum AccountTypeEnum : string
     case SUPPLIER = 'supplier';
     case CHECKS_UNDER_COLLECTION = 'checks_under_collection'; // current assets
     case ISSUED_CHECKS = 'issued_checks'; // current liabilities
+    case CASH_OVER_SHORT = 'cash_over_short'; // cash register variance at close
 
     // Expenses accounts
     case EXPENSE = 'expense';
@@ -60,6 +61,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::OWNER_ACCOUNT => 'Owner Account',
             AccountTypeEnum::CHECKS_UNDER_COLLECTION => 'Checks Under Collection',
             AccountTypeEnum::ISSUED_CHECKS => 'Issued Checks',
+            AccountTypeEnum::CASH_OVER_SHORT => 'Cash Over/Short',
             AccountTypeEnum::SALES => 'Sales',
             AccountTypeEnum::INVENTORY => 'Inventory',
             AccountTypeEnum::COGS => 'Cost of Goods Sold',
@@ -90,6 +92,7 @@ enum AccountTypeEnum : string
             self::SUPPLIER => 'ذمم الموردين',
             self::CHECKS_UNDER_COLLECTION => 'شيكات تحت التحصيل',
             self::ISSUED_CHECKS => 'شيكات صادرة',
+            self::CASH_OVER_SHORT => 'عجز/زيادة الخزينة',
 
             self::EXPENSE => 'مصروفات',
             self::FINANCE_EXPENSE => 'مصروفات تمويلية',
@@ -124,6 +127,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::SUPPLIER => 'warning',
             AccountTypeEnum::CHECKS_UNDER_COLLECTION => 'danger',
             AccountTypeEnum::ISSUED_CHECKS => 'danger',
+            AccountTypeEnum::CASH_OVER_SHORT => 'danger',
             AccountTypeEnum::EXPENSE => 'danger',
             AccountTypeEnum::FINANCE_EXPENSE => 'danger',
             AccountTypeEnum::MARKETING_EXPENSE => 'danger',

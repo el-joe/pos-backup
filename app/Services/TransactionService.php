@@ -105,6 +105,14 @@ class TransactionService
         });
     }
 
+    /**
+     * @deprecated Opening/closing a cash register shift is an operational control event, not a
+     * capital movement — the float already sits in Branch Cash, so counting it must not post to
+     * the ledger (see CashRegisterPage::openRegister/closeRegister). This method is no longer
+     * called from the shift open/close flow. It is kept only as the building block for a genuine
+     * owner capital injection/drawing action, which does not yet have a UI — do not wire it back
+     * into cash register open/close.
+     */
     function createOpenBalanceTransaction($data,$reverse = false) {
         $ownerAccount = Account::default('owner_account', AccountTypeEnum::OWNER_ACCOUNT->value);
         $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $data['branch_id']);
@@ -190,6 +198,56 @@ class TransactionService
         ]);
     }
 
+
+    /**
+     * Posts the cash variance found when closing a register. $data['amount'] is the signed
+     * discrepancy (admin-counted closing balance minus the calculated closing balance):
+     * negative = shortage (DR Cash Over/Short expense, CR Branch Cash),
+     * positive = overage (DR Branch Cash, CR Cash Over/Short).
+     * Callers must skip calling this when the discrepancy is ~0 — create() rejects empty lines.
+     */
+    function createCashOverShortTransaction($data) {
+        $cashOverShortAccount = Account::default('Cash Over/Short', AccountTypeEnum::CASH_OVER_SHORT->value, $data['branch_id'] ?? null);
+        $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $data['branch_id'] ?? null);
+
+        $discrepancy = (float) ($data['amount'] ?? 0);
+        $amount = abs($discrepancy);
+        $isShortage = $discrepancy < 0;
+
+        return $this->create([
+            'date' => $data['date'] ?? now(),
+            'description' => $data['description'] ?? ($isShortage ? 'Cash Register Shortage' : 'Cash Register Overage'),
+            'type' => TransactionTypeEnum::CASH_OVER_SHORT->value,
+            'branch_id' => $data['branch_id'] ?? null,
+            'note' => $data['note'] ?? '',
+            'amount' => $amount,
+            'reference_type' => $data['reference_type'] ?? null,
+            'reference_id' => $data['reference_id'] ?? null,
+            'lines' => $isShortage ? [
+                [
+                    'account_id' => $cashOverShortAccount->id,
+                    'type' => 'debit',
+                    'amount' => $amount,
+                ],
+                [
+                    'account_id' => $branchCashAccount->id,
+                    'type' => 'credit',
+                    'amount' => $amount,
+                ],
+            ] : [
+                [
+                    'account_id' => $branchCashAccount->id,
+                    'type' => 'debit',
+                    'amount' => $amount,
+                ],
+                [
+                    'account_id' => $cashOverShortAccount->id,
+                    'type' => 'credit',
+                    'amount' => $amount,
+                ],
+            ],
+        ]);
+    }
 
     function createInventoryShortageLine($data,$reverse = false) {
         $getInventoryShortageAccount = Account::default('inventory_shortage', AccountTypeEnum::INVENTORY_SHORTAGE->value,  $data['branch_id']);

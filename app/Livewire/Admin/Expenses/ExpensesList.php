@@ -129,11 +129,9 @@ class ExpensesList extends Component
 
         AuditLog::log($action, ['id' => $expense->id]);
 
-        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-
-        if($wasCreating && $cashRegister && (float)$expense->total_paid > 0){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_expenses', (float)$expense->total_paid);
-
+        // ExpenseService::payExpense() already increments total_expenses on the drawer for us —
+        // incrementing again here would double-count every expense paid on creation.
+        if($wasCreating && (float)$expense->total_paid > 0){
             $expenseForNotify = $expense->fresh(['branch','category']);
             superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($expenseForNotify){
                 $admin->notifyExpensePaid($expenseForNotify);
@@ -167,11 +165,7 @@ class ExpensesList extends Component
 
         AuditLog::log(AuditLogActionEnum::PAY_EXPENSE, ['id' => $id]);
 
-        $cashRegister = $this->cashRegisterService->getOpenedCashRegister();
-        if($cashRegister){
-            $this->cashRegisterService->increment($cashRegister->id, 'total_expenses', (float)$this->current->total);
-        }
-
+        // ExpenseService::payExpense() already increments total_expenses on the drawer for us.
         $expenseForNotify = $this->current->fresh(['branch','category']);
         superAdmins()->each(function(\App\Models\Tenant\Admin $admin) use ($expenseForNotify){
             $admin->notifyExpensePaid($expenseForNotify);
