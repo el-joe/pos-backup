@@ -48,6 +48,49 @@ class PurchaseService
         ]);
     }
 
+    /**
+     * Shared by save() and receiveDeferredInventory() so the two posting paths cannot drift.
+     * Splits each line's tax-free net cost from its share of the order-level discount (and,
+     * when the tenant capitalises purchase expenses, its share of the expenses total). The
+     * result's 'unit_cost_final' is what belongs in inventory/COGS — never sub_total, which is
+     * tax-inclusive and belongs nowhere near a stock valuation.
+     */
+    private function costPurchaseLines(array $orderProducts, string $discountType, float $discountValue, string $discountClassification, float $expensesTotal, bool $capitaliseExpenses): array
+    {
+        $lines = [];
+        $goodsTotal = 0.0;
+
+        foreach ($orderProducts as $item) {
+            $purchasePrice = (float)($item['purchase_price'] ?? 0);
+            $discountPct = (float)($item['discount_percentage'] ?? 0);
+            $qty = (float)($item['qty'] ?? 0);
+            $unitCostNet = $purchasePrice - ($purchasePrice * $discountPct / 100);
+            $lineGoodsValue = $unitCostNet * $qty;
+            $goodsTotal += $lineGoodsValue;
+
+            $lines[] = $item + [
+                'unit_cost_net' => $unitCostNet,
+                'line_goods_value' => $lineGoodsValue,
+            ];
+        }
+
+        // Discount base is goods only — expenses never inflate the discountable amount.
+        $orderDiscount = PurchaseHelper::calcDiscount($goodsTotal, $discountType, $discountValue);
+        $applyDiscountToCost = $discountClassification !== 'settlement';
+
+        foreach ($lines as &$line) {
+            $qty = (float)($line['qty'] ?? 0);
+            $share = $goodsTotal > 0 ? $line['line_goods_value'] / $goodsTotal : 0.0;
+            $lineDiscount = $applyDiscountToCost ? $orderDiscount * $share : 0.0;
+            $lineExpense = $capitaliseExpenses ? $expensesTotal * $share : 0.0;
+            $netAmount = $line['line_goods_value'] - $lineDiscount + $lineExpense;
+            $line['unit_cost_final'] = $qty > 0 ? $netAmount / $qty : 0.0;
+        }
+        unset($line);
+
+        return $lines;
+    }
+
 
     /**
      * Editing a posted purchase is intentionally NOT supported, for the same reason as
@@ -69,9 +112,12 @@ class PurchaseService
         $discountType = in_array(($data['discount_type'] ?? null), ['fixed', 'percentage'], true)
             ? $data['discount_type']
             : 'fixed';
+        $discountClassification = in_array(($data['discount_classification'] ?? null), ['trade', 'settlement'], true)
+            ? $data['discount_classification']
+            : 'trade';
 
         // fill purchase data
-        $status = PurchaseStatusEnum::from($data['payment_status'] ?? 'pending')->value;
+        $status = (PurchaseStatusEnum::tryFrom($data['payment_status'] ?? 'pending') ?? PurchaseStatusEnum::PENDING)->value;
         $purchase->fill([
             'supplier_id' => $data['supplier_id'],
             'branch_id' => $data['branch_id'],
@@ -79,6 +125,7 @@ class PurchaseService
             'order_date' => $data['order_date'],
             'discount_type' => $discountType,
             'discount_value' => $data['discount_value'] ?? 0,
+            'discount_classification' => $discountClassification,
             'tax_id' => $data['tax_id'] ?? null,
             'tax_percentage' => $data['tax_rate'] ?? $data['tax_percentage'] ?? 0,
             // 'paid_amount' => $status == 'full_paid' ? $data['grand_total'] : ($data['payment_amount'] ?? $data['paid_amount'] ?? 0),
@@ -87,15 +134,27 @@ class PurchaseService
             'is_deferred' => $isDeferred,
         ])->save();
 
+        $capitaliseExpenses = (bool) tenantSetting('capitalise_purchase_expenses', false);
+        $expensesTotal = array_sum(array_column($data['expenses'] ?? [], 'amount'));
+        $costedItems = $this->costPurchaseLines(
+            $data['orderProducts'],
+            $discountType,
+            (float)($data['discount_value'] ?? 0),
+            $discountClassification,
+            (float)$expensesTotal,
+            $capitaliseExpenses
+        );
+
         // fill purchase items data
         $purchase->purchaseItems()->delete();
-        foreach ($data['orderProducts'] as $item) {
+        foreach ($costedItems as $item) {
             $purchase->purchaseItems()->create([
                 'purchase_id' => $purchase->id,
                 'product_id' => $item['id'],
                 'unit_id' => $item['unit_id'],
                 'qty' => $item['qty'],
                 'purchase_price' => $item['purchase_price'],
+                'unit_cost_net' => $item['unit_cost_net'],
                 'discount_percentage' => $item['discount_percentage'],
                 'tax_percentage' => $item['tax_percentage'],
                 'x_margin' => $item['x_margin'],
@@ -105,6 +164,7 @@ class PurchaseService
 
         // fill expenses data
         $defaultExpenseCategory = $this->expenseCategoryService->getDefaultCategory('purchase');
+        $resolvedExpenses = [];
         foreach ($data['expenses']??[] as $item) {
             if($item['expense_category_id']??false){
                 $cat_id = $item['expense_category_id'];
@@ -129,15 +189,25 @@ class PurchaseService
                 'note' => $item['description'],
                 'expense_date' => $item['expense_date'],
             ]);
+
+            // The resolved category id (post-default fallback) is what must drive the GL
+            // expense line's account, so createExpenseLine() matches the persisted expense.
+            $resolvedExpenses[] = $item + ['expense_category_id' => $cat_id];
         }
 
         if(!$isDeferred){
-            // fill stock data
-            foreach ($data['orderProducts'] as $item) {
-                $this->stockService->addStock(productId: $item['id'],unitId: $item['unit_id'],qty: $item['qty'],sellPrice: $item['sell_price'],unitCost: $item['sub_total'],branchId: $data['branch_id']);
+            // fill stock data — at net-of-tax, discount/expense-adjusted cost, never sub_total
+            foreach ($costedItems as $item) {
+                $this->stockService->addStock(productId: $item['id'],unitId: $item['unit_id'],qty: $item['qty'],sellPrice: $item['sell_price'],unitCost: $item['unit_cost_final'],branchId: $data['branch_id']);
             }
 
             // Grouped by type = Purchase Invoice
+            $invoiceData = $data;
+            $invoiceData['orderProducts'] = $costedItems;
+            $invoiceData['expenses'] = $resolvedExpenses;
+            $invoiceData['capitalise_expenses'] = $capitaliseExpenses;
+            $invoiceData['discount_classification'] = $discountClassification;
+
             $transactionData = [
                 'description' => 'Purchase Payment for #'.$purchase->ref_no,
                 'type' => TransactionTypeEnum::PURCHASE_INVOICE->value,
@@ -146,7 +216,7 @@ class PurchaseService
                 'branch_id' => $purchase->branch_id,
                 'note' => $data['payment_note'] ?? '',
                 'amount' => $data['grand_total'] ?? 0,
-                'lines' => $this->purchaseInvoiceLines($data,'create')
+                'lines' => $this->purchaseInvoiceLines($invoiceData,'create')
             ];
 
             $this->transactionService->create($transactionData);
@@ -209,10 +279,25 @@ class PurchaseService
             ];
         })->values()->toArray();
 
-        $orderProductsTotal = array_sum(array_map(fn($p) => (float)$p['sub_total'] * (float)$p['qty'], $orderProducts));
+        $discountClassification = $purchase->discount_classification ?? 'trade';
+        $capitaliseExpenses = (bool) tenantSetting('capitalise_purchase_expenses', false);
         $expensesTotal = array_sum(array_column($expenses, 'amount'));
+
+        $costedItems = $this->costPurchaseLines(
+            $orderProducts,
+            $purchase->discount_type,
+            (float) $purchase->discount_value,
+            $discountClassification,
+            (float) $expensesTotal,
+            $capitaliseExpenses
+        );
+
+        // Discount base is goods only (sub_total is tax-inclusive and used only for the
+        // order-level tax/grand-total math below, never as the discount base — expenses never
+        // belong in a discountable amount either).
+        $orderProductsTotal = array_sum(array_map(fn($p) => (float)$p['sub_total'] * (float)$p['qty'], $orderProducts));
         $orderSubTotal = PurchaseHelper::calcSubtotal($orderProductsTotal, $expensesTotal);
-        $discountAmount = PurchaseHelper::calcDiscount($orderSubTotal, $purchase->discount_type, $purchase->discount_value);
+        $discountAmount = PurchaseHelper::calcDiscount($orderProductsTotal, $purchase->discount_type, $purchase->discount_value);
         $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($orderSubTotal, $discountAmount);
         $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchase->tax_percentage);
         $grandTotal = PurchaseHelper::calcGrandTotal($totalAfterDiscount, $taxAmount);
@@ -224,12 +309,14 @@ class PurchaseService
             'order_date' => $purchase->order_date,
             'discount_type' => $purchase->discount_type,
             'discount_value' => $purchase->discount_value,
+            'discount_classification' => $discountClassification,
             'tax_id' => $purchase->tax_id,
             'tax_percentage' => $purchase->tax_percentage,
             'tax_rate' => $purchase->tax_percentage,
             'payment_note' => 'Deferred inventory received for #'.$purchase->ref_no,
-            'orderProducts' => $orderProducts,
+            'orderProducts' => $costedItems,
             'expenses' => $expenses,
+            'capitalise_expenses' => $capitaliseExpenses,
             'sub_total' => $orderSubTotal,
             'discount_amount' => $discountAmount,
             'total_after_discount' => $totalAfterDiscount,
@@ -239,13 +326,13 @@ class PurchaseService
 
         DB::beginTransaction();
         try{
-            foreach ($orderProducts as $item) {
+            foreach ($costedItems as $item) {
                 $this->stockService->addStock(
                     productId: $item['id'],
                     unitId: $item['unit_id'],
                     qty: $item['qty'],
                     sellPrice: $item['sell_price'],
-                    unitCost: $item['sub_total'],
+                    unitCost: $item['unit_cost_final'],
                     branchId: $purchase->branch_id
                 );
             }
@@ -355,30 +442,32 @@ class PurchaseService
     function purchaseInvoiceLines($data,$event = 'create',$reverse = false) { // $reverse mean refund
         // -------------------------- Purchase entry --------------------------------
 
-        // Debit Inventory (for goods purchased)
+        // Debit Inventory (for goods purchased, already net of tax/trade discount)
         $inventoryLine = $this->createInventoryLine($data , $reverse);
 
-        // Debit Expense (for additional purchase-related expenses like shipping, handling, etc.)
-        $expenseLine = $this->createExpenseLine($data, $reverse);
+        // Debit Expense, one line per category (skipped entirely when expenses are capitalised)
+        $expenseLines = $this->createExpenseLine($data, $reverse);
 
-        // Debit VAT Receivable (input tax you can claim from tax authority)
+        // Debit VAT Receivable (input tax you can claim from tax authority) — the only place
+        // recoverable input tax is recognised; it must never also be capitalised into inventory.
         $vatReceivableLine = $this->createVatReceivableLine($data, $reverse);
 
-        // Credit Purchase Discount (reduces cost if supplier gave discount)
+        // Credit Purchase Discount income — only for a settlement (early-payment) discount.
+        // A trade discount was already deducted from inventory cost by costPurchaseLines() and
+        // must not also appear here, or it would be double counted.
         $purchaseDiscountLine = $this->createPurchaseDiscountLine($data, $reverse);
 
         // Credit Supplier (record liability to supplier for total amount owed)
         $supplierCreditLine = $this->createSupplierCreditLine($data, $reverse);
 
-
-        return [
+        return array_values(array_filter([
             // Purchase entry --------------------------------
             $inventoryLine,         // DR Inventory (record goods in stock)
-            $expenseLine,           // DR Expense (record additional expenses)
+            ...$expenseLines,       // DR Expense (record additional expenses, by category)
             $vatReceivableLine,     // DR VAT Receivable (input tax asset)
-            $purchaseDiscountLine,  // CR Purchase Discount (contra expense)
+            $purchaseDiscountLine,  // CR Purchase Discount (settlement discounts only)
             $supplierCreditLine,    // CR Supplier (accounts payable)
-        ];
+        ]));
     }
 
     function purchasePaymentLines($data,$event = 'create' ,$reverse = false) {
@@ -431,21 +520,24 @@ class PurchaseService
         if(!isset($data['orderProducts']) || !is_array($data['orderProducts'])) {
             return false;
         }
-        // get sub total from order products = product qty * purchase price
-        $subTotal = array_sum(array_map(function($item) {
-            return (float)$item['sub_total'] * (float)($item['qty']);
+        // Net-of-tax cost only — 'unit_cost_final' when the caller went through
+        // costPurchaseLines()/receiveDeferredInventory(), otherwise 'sub_total' (used by
+        // refunds and stock-taking, which already carry a tax-exclusive value there).
+        $inventoryValue = array_sum(array_map(function($item) {
+            $unitCost = (float)($item['unit_cost_final'] ?? $item['sub_total'] ?? 0);
+            return $unitCost * (float)($item['qty']);
         }, $data['orderProducts']));
 
         //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getInventoryAccount->id,
             'type' => $reverse ? 'credit' : 'debit',
-            'amount' => $subTotal,
+            'amount' => $inventoryValue,
         ];
     }
 
         function createCogsLine($data,$reverse = false) {
-            $getInventoryAccount = Account::default('COGS',AccountTypeEnum::INVENTORY->value,$data['branch_id']);
+            $getInventoryAccount = Account::default('COGS',AccountTypeEnum::COGS->value,$data['branch_id']);
 
             if(!isset($data['orderProducts']) || !is_array($data['orderProducts'])) {
                 return false;
@@ -478,86 +570,137 @@ class PurchaseService
         ];
     }
 
-    function deleteExpenseTransaction($id) {
-        // -------------------------- Purchase entry --------------------------------
+    /**
+     * Reverses one purchase expense: DR Supplier / CR its own Expense account (+ CR VAT
+     * Receivable if it carried its own tax), for the expense's own amount only. Expenses are
+     * never discounted (the order discount applies to goods only — PurchaseHelper::calcSubtotal()),
+     * so no discount proration belongs here; the previous implementation's use of
+     * PurchaseHelper::calcDiscount($expense->amount, ...) against a *fixed* order discount could
+     * subtract the whole discount from a single expense line and drive it negative.
+     */
+    function reversePurchaseExpense($id) {
+        return DB::transaction(function () use ($id) {
+            $expense = Expense::find($id);
+            if(!$expense){
+                return;
+            }
 
-        $expense = Expense::find($id);
-        $purchaseOrder = $expense?->model;
+            $purchaseOrder = $expense->model;
+            if(!$purchaseOrder){
+                $expense->delete();
+                return;
+            }
 
-        $discountAmount = PurchaseHelper::calcDiscount($expense->amount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
-        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($expense->amount, $discountAmount);
-        $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
-        $grandTotal = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
+            $amount = (float) $expense->amount;
+            $taxAmount = (float) ($expense->amount * ($expense->tax_percentage ?? 0) / 100);
+            $grandTotal = $amount + $taxAmount;
 
-        // reverse purchase invoice type transaction
-        $refundInvoiceData = [
-            'branch_id' => $purchaseOrder->branch_id,
-            'tax_amount' => $taxAmount,
-            'discount_amount' => $discountAmount,
-            'supplier_id' => $purchaseOrder->supplier_id,
-            'grand_total' => $grandTotal,
-            'expenses' => [
-                [
-                    'amount' => $expense->amount,
-                ]
-            ]
-        ];
+            $lines = $this->createExpenseLine([
+                'branch_id' => $purchaseOrder->branch_id,
+                'expenses' => [[
+                    'amount' => $amount,
+                    'expense_category_id' => $expense->expense_category_id,
+                ]],
+            ], true);
 
-        $transactionData = [
-            'description' => 'Purchase Refund Expense for #'.$purchaseOrder->ref_no,
-            'type' => TransactionTypeEnum::PURCHASE_INVOICE_REFUND->value,
-            'reference_type' => Purchase::class,
-            'reference_id' => $purchaseOrder->id,
-            'branch_id' => $purchaseOrder->branch_id,
-            'note' => 'Refunded for purchase Expense #'. $expense->id,
-            'amount' => $expense->amount ?? 0,
-            'lines' => $this->purchaseInvoiceLines($refundInvoiceData,'create',true)
-        ];
+            if($taxAmount > 0){
+                $lines[] = $this->createVatReceivableLine([
+                    'branch_id' => $purchaseOrder->branch_id,
+                    'tax_amount' => $taxAmount,
+                ], true);
+            }
 
-        $this->transactionService->create($transactionData);
-
-        // refund purchase payments
-        $purchaseDueAmount = $purchaseOrder->due_amount;
-        $totalRefunded = $grandTotal - $purchaseDueAmount;
-        if($totalRefunded > 0){
-            $refundPaymentData = [
-                'grand_total' => $totalRefunded,
-                'payment_note' => 'Refund Purchase Expense #'. $expense->id,
-                'payment_status' => 'refunded',
-                'payment_amount' => $totalRefunded,
+            $lines[] = $this->createSupplierCreditLine([
                 'branch_id' => $purchaseOrder->branch_id,
                 'supplier_id' => $purchaseOrder->supplier_id,
-                'payment_account' => $this->getOriginalPaymentAccountId($purchaseOrder->id),
+                'grand_total' => $grandTotal,
+            ], true);
+
+            $transactionData = [
+                'description' => 'Purchase Expense Reversal for #'.$purchaseOrder->ref_no,
+                'type' => TransactionTypeEnum::PURCHASE_INVOICE_REFUND->value,
+                'reference_type' => Purchase::class,
+                'reference_id' => $purchaseOrder->id,
+                'branch_id' => $purchaseOrder->branch_id,
+                'note' => 'Reversed purchase expense #'. $expense->id,
+                'amount' => $grandTotal,
+                'lines' => $lines,
             ];
 
-            $this->addPayment($purchaseOrder->id, $refundPaymentData , true);
-        }
+            $this->transactionService->create($transactionData);
 
-        $purchaseOrder->refresh();
+            $expense->delete();
 
-        $purchaseDue = $purchaseOrder->due_amount;
-        $total = $purchaseOrder->total_amount;
+            $purchaseOrder->refresh();
 
-        if($purchaseDue <= 0){
-            $purchaseOrder->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
-        }elseif($purchaseDue > 0 && $purchaseDue < $total){
-            $purchaseOrder->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
-        }elseif($purchaseDue == $total){
-            $purchaseOrder->update(['status' => PurchaseStatusEnum::PENDING->value]);
-        }
+            // Removing the expense shrinks total_amount; if that leaves the supplier
+            // overpaid, refund the excess (capped at what this reversal is worth).
+            $dueAfter = (float) $purchaseOrder->due_amount;
+            if($dueAfter < 0){
+                $refundAmount = min($grandTotal, abs($dueAfter));
+                if($refundAmount > 0){
+                    $this->addPayment($purchaseOrder->id, [
+                        'grand_total' => $refundAmount,
+                        'payment_note' => 'Refund for reversed purchase expense #'. $expense->id,
+                        'payment_status' => 'refunded',
+                        'payment_amount' => $refundAmount,
+                        'branch_id' => $purchaseOrder->branch_id,
+                        'supplier_id' => $purchaseOrder->supplier_id,
+                        'payment_account' => $this->getOriginalPaymentAccountId($purchaseOrder->id),
+                    ], true);
+                }
+            }
+
+            $purchaseOrder->refresh();
+
+            $purchaseDue = $purchaseOrder->due_amount;
+            $total = $purchaseOrder->total_amount;
+
+            if($purchaseDue <= 0){
+                $purchaseOrder->update(['status' => PurchaseStatusEnum::FULL_PAID->value]);
+            }elseif($purchaseDue > 0 && $purchaseDue < $total){
+                $purchaseOrder->update(['status' => PurchaseStatusEnum::PARTIAL_PAID->value]);
+            }else{
+                $purchaseOrder->update(['status' => PurchaseStatusEnum::PENDING->value]);
+            }
+        });
     }
 
+    /**
+     * Returns one line per expense category (via ExpenseAccountResolver), not a single lump
+     * Expense line — so freight can land on its own account instead of masquerading as a
+     * generic expense. Returns [] when the tenant capitalises purchase expenses into inventory
+     * cost (costPurchaseLines() already folded them in) so they are never posted twice.
+     */
     function createExpenseLine($data,$reverse = false) {
-        $getExpenseAccount = Account::default('Expense',AccountTypeEnum::EXPENSE->value,$data['branch_id']);
-        // get total expenses from data
-        $totalExpenses = array_sum(array_column($data['expenses'] ?? [],'amount'));
+        if($data['capitalise_expenses'] ?? false) {
+            return [];
+        }
 
-        //`transaction_id`, `account_id`, `type`, `amount`
-        return [
-            'account_id' => $getExpenseAccount->id,
-            'type' => $reverse ? 'credit' : 'debit',
-            'amount' => $totalExpenses ?? 0,
-        ];
+        $expenses = $data['expenses'] ?? [];
+        if(empty($expenses)) {
+            return [];
+        }
+
+        $totalsByCategory = [];
+        foreach ($expenses as $expense) {
+            $categoryId = $expense['expense_category_id'] ?? null;
+            $key = $categoryId ?? 'null';
+            $totalsByCategory[$key] ??= ['expense_category_id' => $categoryId, 'amount' => 0.0];
+            $totalsByCategory[$key]['amount'] += (float)($expense['amount'] ?? 0);
+        }
+
+        $lines = [];
+        foreach ($totalsByCategory as $group) {
+            $account = ExpenseAccountResolver::resolve((int)$data['branch_id'], $group['expense_category_id']);
+            $lines[] = [
+                'account_id' => $account->id,
+                'type' => $reverse ? 'credit' : 'debit',
+                'amount' => $group['amount'],
+            ];
+        }
+
+        return $lines;
     }
 
     function createVatReceivableLine($data,$reverse = false) {
@@ -575,7 +718,17 @@ class PurchaseService
         ];
     }
 
+    /**
+     * A 'trade' discount (the default — IAS 2 §11) was already deducted from inventory cost by
+     * costPurchaseLines(), so no separate GL line is needed here; posting one too would double
+     * count it. Only a 'settlement' (early-payment) discount is genuine finance income and gets
+     * its own credit line.
+     */
     function createPurchaseDiscountLine($data,$reverse = false) {
+        if(($data['discount_classification'] ?? 'trade') !== 'settlement') {
+            return null;
+        }
+
         $getPurchaseDiscountAccount = Account::default('Purchase Discount',AccountTypeEnum::PURCHASE_DISCOUNT->value,$data['branch_id']);
 
         // get discount amount from data
@@ -683,9 +836,11 @@ class PurchaseService
         if((float) $qty <= 0 || (float) $qty > $refundableQty + 0.0001){
             throw new \RuntimeException('Refund quantity exceeds the refundable quantity for this item.');
         }
-        $refundedQtyAmount = $purchaseItem->unit_amount_after_tax * $qty;
-        $discountAmount = PurchaseHelper::calcDiscount($refundedQtyAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
-        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($refundedQtyAmount, $discountAmount);
+        // Discount base is the net-of-tax goods amount, mirroring the original posting — tax
+        // is computed on top of the discounted net amount, never folded into the discount base.
+        $refundedGoodsAmount = $purchaseItem->unit_cost_after_discount * $qty;
+        $discountAmount = PurchaseHelper::calcDiscount($refundedGoodsAmount, $purchaseOrder->discount_type , $purchaseOrder->discount_value);
+        $totalAfterDiscount = PurchaseHelper::calcTotalAfterDiscount($refundedGoodsAmount, $discountAmount);
         $taxAmount = PurchaseHelper::calcTax($totalAfterDiscount, $purchaseOrder->tax_percentage ?? 0);
         // -----------------------------------
         $grandTotalFromRefundedQty = PurchaseHelper::calcGrandTotal($totalAfterDiscount,$taxAmount);
@@ -713,6 +868,7 @@ class PurchaseService
             ],
             'tax_amount' => $taxAmount,
             'discount_amount' => $discountAmount,
+            'discount_classification' => $purchaseOrder->discount_classification,
             'supplier_id' => $purchaseOrder->supplier_id,
             'grand_total' => $grandTotalFromRefundedQty
 

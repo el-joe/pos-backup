@@ -149,7 +149,7 @@ class PurchaseDetails extends Component
             $this->cashRegisterService->increment($cashRegister->id, 'total_purchase_refunds', $getTotalRefunded);
         }
 
-        $this->purchaseService->deleteExpenseTransaction($expense->id);
+        $this->purchaseService->reversePurchaseExpense($expense->id);
         $this->expenseService->delete($expense->id);
 
         AuditLog::log(AuditLogActionEnum::DELETE_EXPENSE_INTO_PURCHASE, ['id' => $expense->id, 'purchase_id' => $this->purchase->id]);

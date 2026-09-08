@@ -13,7 +13,7 @@ class Purchase extends Model
 {
     protected $fillable = [
         'supplier_id','branch_id','ref_no','order_date','paid_amount','status',
-        'discount_type' , 'discount_value' , 'sales_threshold' , 'max_discount_amount' , 'tax_id' , 'tax_percentage',
+        'discount_type' , 'discount_value' , 'discount_classification' , 'sales_threshold' , 'max_discount_amount' , 'tax_id' , 'tax_percentage',
         'is_deferred','inventory_received_at'
     ];
 

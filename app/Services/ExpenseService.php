@@ -2,12 +2,10 @@
 
 namespace App\Services;
 
-use App\Enums\AccountTypeEnum;
 use App\Enums\Tenant\ExpenseTypeEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\Expense;
-use App\Models\Tenant\ExpenseCategory;
 use App\Repositories\ExpenseRepository;
 
 class ExpenseService
@@ -145,18 +143,6 @@ class ExpenseService
 
     protected function resolveExpenseAccount(int $branchId, ?int $expenseCategoryId = null): Account
     {
-        $category = $expenseCategoryId
-            ? ExpenseCategory::withTrashed()->find($expenseCategoryId)
-            : null;
-
-        $accountType = $category?->key;
-
-        if (!$accountType instanceof AccountTypeEnum) {
-            $accountType = AccountTypeEnum::EXPENSE;
-        }
-
-        $accountName = $accountType->label();
-
-        return Account::default($accountName, $accountType->value, $branchId);
+        return ExpenseAccountResolver::resolve($branchId, $expenseCategoryId);
     }
 }

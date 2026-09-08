@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class PurchaseItem extends Model
 {
     protected $fillable = [
-        'purchase_id','product_id','unit_id','qty','purchase_price','discount_percentage','tax_percentage','x_margin','sell_price','refunded_qty','refunded_at',
+        'purchase_id','product_id','unit_id','qty','purchase_price','unit_cost_net','discount_percentage','tax_percentage','x_margin','sell_price','refunded_qty','refunded_at',
     ];
 
     protected $casts = [
         'purchase_price' => 'decimal:4',
+        'unit_cost_net'  => 'decimal:4',
         'sell_price'     => 'decimal:4',
         'qty'            => 'decimal:3',
     ];
