@@ -41,30 +41,54 @@ class LedgerBridgeService
 
         if ($transaction->lines()->doesntExist()) return null;
 
-        return DB::transaction(function () use ($transaction, $map) {
-            [$journalLines, $totalDebit, $totalCredit] = $this->mapLines($transaction, $map);
-
-            $type = $transaction->type instanceof \BackedEnum ? $transaction->type->value : $transaction->type;
-
-            $entry = JournalEntry::create([
-                'reference'          => $type . '#' . $transaction->id,
-                'referenceable_type' => Transaction::class,
-                'referenceable_id'   => $transaction->id,
-                'date'               => $transaction->date,
-                'description'        => $transaction->description,
-                'status'             => 'posted',
-                'total_debit'        => $totalDebit,
-                'total_credit'       => $totalCredit,
-                'posted_by'          => admin()?->id,
-                'posted_at'          => now(),
+        // Empty COA means the tenant was never seeded (or is mid-provisioning) — skip the
+        // journal projection rather than block the authoritative transaction/transaction_lines
+        // write. A populated COA missing a specific code is a real mapping bug and must still
+        // throw (or degrade per ledger.bridge_strict below), never be silently skipped here.
+        if (ChartOfAccount::query()->doesntExist()) {
+            Log::critical('LedgerBridge: chart_of_accounts is empty — skipping journal projection', [
+                'transaction_id' => $transaction->id,
             ]);
+            return null;
+        }
 
-            foreach ($journalLines as $jl) {
-                JournalEntryLine::create(array_merge($jl, ['journal_entry_id' => $entry->id]));
+        try {
+            return DB::transaction(function () use ($transaction, $map) {
+                [$journalLines, $totalDebit, $totalCredit] = $this->mapLines($transaction, $map);
+
+                $type = $transaction->type instanceof \BackedEnum ? $transaction->type->value : $transaction->type;
+
+                $entry = JournalEntry::create([
+                    'reference'          => $type . '#' . $transaction->id,
+                    'referenceable_type' => Transaction::class,
+                    'referenceable_id'   => $transaction->id,
+                    'date'               => $transaction->date,
+                    'description'        => $transaction->description,
+                    'status'             => 'posted',
+                    'total_debit'        => $totalDebit,
+                    'total_credit'       => $totalCredit,
+                    'posted_by'          => admin()?->id,
+                    'posted_at'          => now(),
+                ]);
+
+                foreach ($journalLines as $jl) {
+                    JournalEntryLine::create(array_merge($jl, ['journal_entry_id' => $entry->id]));
+                }
+
+                return $entry;
+            });
+        } catch (LedgerBridgeException $e) {
+            if (config('ledger.bridge_strict', true)) {
+                throw $e;
             }
 
-            return $entry;
-        });
+            Log::critical('LedgerBridge: mapping failure — degrading to no journal entry (ledger.bridge_strict is false)', [
+                'transaction_id' => $transaction->id,
+                'message'        => $e->getMessage(),
+            ]);
+
+            return null;
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Console\Commands\Tenant;
 use App\Enums\AccountTypeEnum;
 use App\Models\Tenant;
 use App\Models\Tenant\Account;
+use App\Models\Tenant\Contracting\ChartOfAccount;
 use App\Models\Tenant\FixedAsset;
 use App\Models\Tenant\Stock;
 use App\Models\Tenant\Transaction;
@@ -59,6 +60,8 @@ class FinancialHealthCheckCommand extends Command
 
     protected function checkTenant(): void
     {
+        $this->checkChartOfAccountsSeeded();
+        $this->checkAccountTypesResolveToCoa();
         $this->checkUnbalanced();
         $this->checkZeroLines();
         $this->checkOrphanLines();
@@ -67,6 +70,53 @@ class FinancialHealthCheckCommand extends Command
         $this->checkAssetAccountsCreditBalance();
         $this->checkMissingDepreciation();
         $this->checkOrphanReferences();
+    }
+
+    protected function checkChartOfAccountsSeeded(): void
+    {
+        $count = ChartOfAccount::query()->count();
+        $this->flag('Empty chart_of_accounts (journal projection disabled for this tenant)', $count === 0 ? 1 : 0);
+    }
+
+    /**
+     * Every accounts.type actually in use (referenced by a transaction_lines row, i.e. it
+     * matters to real postings) must resolve through tenant.account_coa_map to an active
+     * chart_of_accounts row. This is the check that would have caught prompt 19's gap
+     * before deploy — a missing/unmapped/inactive code here means the ledger bridge will
+     * either throw (bridge_strict) or silently skip the journal projection for that type.
+     */
+    protected function checkAccountTypesResolveToCoa(): void
+    {
+        if (ChartOfAccount::query()->doesntExist()) {
+            // already flagged by checkChartOfAccountsSeeded — avoid double-counting noise
+            return;
+        }
+
+        $map = config('tenant.account_coa_map', []);
+        $activeCodes = ChartOfAccount::where('is_active', 1)->pluck('code')->all();
+
+        $accountIdsInUse = TransactionLine::query()->distinct()->pluck('account_id');
+
+        $typesInUse = Account::whereIn('id', $accountIdsInUse)
+            ->get(['type'])
+            ->pluck('type')
+            ->map(fn ($t) => $t instanceof \BackedEnum ? $t->value : $t)
+            ->unique();
+
+        $offenders = [];
+        foreach ($typesInUse as $type) {
+            $code = $map[$type] ?? null;
+            if (!$code) {
+                $offenders[] = [$type, 'unmapped in account_coa_map'];
+            } elseif (!in_array($code, $activeCodes, true)) {
+                $offenders[] = [$type, "mapped to '{$code}' but no active chart_of_accounts row"];
+            }
+        }
+
+        $this->flag('Account types in use that do not resolve to an active COA row', count($offenders));
+        if (!empty($offenders)) {
+            $this->table(['Account Type', 'Issue'], $offenders);
+        }
     }
 
     protected function checkUnbalanced(): void
