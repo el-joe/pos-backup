@@ -45,7 +45,7 @@ $checkSubscriptionStatus = subscriptionFeatureEnabled($data['subscription_check'
     <button type="button" @click="open = !open" class="w-full rounded-lg py-2 text-start transition {{ $isActive ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700' }}" :class="(!sidebarOpen && isDesktop && {{ $isTopLevel ? 'true' : 'false' }}) ? 'flex items-center justify-center px-2' : 'flex items-center justify-between px-3'">
         <span class="flex items-center gap-3">
             <i class="{{ $data['icon'] }} w-6 flex-shrink-0 text-center"></i>
-            <span x-show="{{ $labelVisibility }}" x-cloak class="text-sm {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} font-medium transition-opacity">{{ __($data['translated_title']) }}</span>
+            <span x-show="{{ $labelVisibility }}" x-cloak class="text-sm {{ tenantSetting('default_language', 'en') == 'ar' ? 'text-right' : 'text-left' }} font-medium transition-opacity">{{ __($data['translated_title']) }}</span>
         </span>
         <i x-show="{{ $labelVisibility }}" x-cloak class="fa fa-chevron-down text-xs transition-transform" :class="open ? 'rotate-180' : ''"></i>
     </button>
