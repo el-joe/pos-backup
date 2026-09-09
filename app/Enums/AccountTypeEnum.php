@@ -46,6 +46,13 @@ enum AccountTypeEnum : string
     case PREPAID_ASSET = 'prepaid_asset'; // prepaid expenses recognized as a current asset until amortized ---- prompt 09
     case ACCRUED_EXPENSES = 'accrued_expenses'; // liability for expenses recognized before cash settlement ---- prompt 13
 
+    // Payroll accounts ---- new
+    case SALARIES_EXPENSE = 'salaries_expense'; // gross payroll cost
+    case EMPLOYER_CONTRIBUTIONS_EXPENSE = 'employer_contributions_expense'; // employer-side statutory contributions
+    case SALARIES_PAYABLE = 'salaries_payable'; // net pay owed to employees until paid out
+    case SOCIAL_INSURANCE_PAYABLE = 'social_insurance_payable'; // employee + employer social insurance owed to authority
+    case INCOME_TAX_PAYABLE = 'income_tax_payable'; // withheld income tax owed to authority
+
 
     function label(): string
     {
@@ -86,6 +93,11 @@ enum AccountTypeEnum : string
             self::ACCRUED_REVENUE => 'Accrued Revenue',
             self::PREPAID_ASSET => 'Prepaid Asset',
             self::ACCRUED_EXPENSES => 'Accrued Expenses',
+            self::SALARIES_EXPENSE => 'Salaries Expense',
+            self::EMPLOYER_CONTRIBUTIONS_EXPENSE => 'Employer Contributions Expense',
+            self::SALARIES_PAYABLE => 'Salaries Payable',
+            self::SOCIAL_INSURANCE_PAYABLE => 'Social Insurance Payable',
+            self::INCOME_TAX_PAYABLE => 'Income Tax Payable',
         };
     }
 
@@ -135,6 +147,11 @@ enum AccountTypeEnum : string
             self::ACCRUED_REVENUE => 'إيرادات مستحقة',
             self::PREPAID_ASSET => 'مصروفات مقدمة (أصل)',
             self::ACCRUED_EXPENSES => 'مصروفات مستحقة',
+            self::SALARIES_EXPENSE => 'مصروف الرواتب',
+            self::EMPLOYER_CONTRIBUTIONS_EXPENSE => 'مصروف مساهمات صاحب العمل',
+            self::SALARIES_PAYABLE => 'رواتب مستحقة الدفع',
+            self::SOCIAL_INSURANCE_PAYABLE => 'تأمينات اجتماعية مستحقة',
+            self::INCOME_TAX_PAYABLE => 'ضريبة دخل مستحقة',
         };
     }
 
@@ -177,6 +194,11 @@ enum AccountTypeEnum : string
             self::ACCRUED_REVENUE => 'secondary',
             self::PREPAID_ASSET => 'info',
             self::ACCRUED_EXPENSES => 'dark',
+            self::SALARIES_EXPENSE => 'danger',
+            self::EMPLOYER_CONTRIBUTIONS_EXPENSE => 'danger',
+            self::SALARIES_PAYABLE => 'dark',
+            self::SOCIAL_INSURANCE_PAYABLE => 'dark',
+            self::INCOME_TAX_PAYABLE => 'dark',
         };
     }
 

@@ -19,6 +19,9 @@ return [
     'issued_checks' => '2030',
     'unearned_revenue' => '2040',
     'accrued_expenses' => '2050',
+    'salaries_payable' => '2060',
+    'social_insurance_payable' => '2070',
+    'income_tax_payable' => '2080',
     'longterm_liability' => '2100',
 
     'owner_account' => '3010',
@@ -41,4 +44,6 @@ return [
     'depreciation_expense' => '6040',
     'purchase_price_variance' => '6050',
     'gain_loss_on_disposal' => '6060',
+    'salaries_expense' => '6080',
+    'employer_contributions_expense' => '6090',
 ];

@@ -18,6 +18,16 @@
                         @error('data.year')<small class="text-danger">{{ $message }}</small>@enderror
                     </div>
                     <div class="col-md-3">
+                        <label class="form-label">{{ __('general.pages.hrm.branch') }}</label>
+                        <select class="form-select" wire:model="data.branch_id">
+                            <option value="">{{ __('general.pages.hrm.none') }}</option>
+                            @foreach(\App\Models\Tenant\Branch::all() as $branch)
+                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('data.branch_id')<small class="text-danger">{{ $message }}</small>@enderror
+                    </div>
+                    <div class="col-md-3">
                         <label class="form-label">{{ __('general.pages.hrm.status') }}</label>
                         <select class="form-select" wire:model="data.status">
                             @foreach(App\Enums\PayrollRunStatusEnum::cases() as $status)

@@ -34,6 +34,9 @@ class ChartOfAccountsSeeder extends Seeder
             ['code' => '2030', 'name' => 'Issued Checks / شيكات مصدرة', 'type' => 'liability', 'parent_code' => '2000'],
             ['code' => '2040', 'name' => 'Unearned Revenue / إيرادات غير مكتسبة', 'type' => 'liability', 'parent_code' => '2000'],
             ['code' => '2050', 'name' => 'Accrued Expenses / مصروفات مستحقة', 'type' => 'liability', 'parent_code' => '2000'],
+            ['code' => '2060', 'name' => 'Salaries Payable / رواتب مستحقة الدفع', 'type' => 'liability', 'parent_code' => '2000'],
+            ['code' => '2070', 'name' => 'Social Insurance Payable / تأمينات اجتماعية مستحقة', 'type' => 'liability', 'parent_code' => '2000'],
+            ['code' => '2080', 'name' => 'Income Tax Payable / ضريبة دخل مستحقة', 'type' => 'liability', 'parent_code' => '2000'],
             ['code' => '2100', 'name' => 'Long-term Liabilities / مطلوبات طويلة الأجل', 'type' => 'liability', 'parent_code' => null],
 
             // Equity
@@ -57,6 +60,8 @@ class ChartOfAccountsSeeder extends Seeder
             ['code' => '6040', 'name' => 'Depreciation Expense / مصروف الإهلاك', 'type' => 'expense', 'parent_code' => '6000'],
             ['code' => '6050', 'name' => 'Purchase Price Variance / فروق سعر الشراء', 'type' => 'expense', 'parent_code' => '6000'],
             ['code' => '6060', 'name' => 'Gain/Loss on Disposal / أرباح وخسائر الاستبعاد', 'type' => 'expense', 'parent_code' => '6000'],
+            ['code' => '6080', 'name' => 'Salaries Expense / مصروف الرواتب', 'type' => 'expense', 'parent_code' => '6000'],
+            ['code' => '6090', 'name' => 'Employer Contributions Expense / مصروف مساهمات صاحب العمل', 'type' => 'expense', 'parent_code' => '6000'],
         ];
 
         $idsByCode = [];

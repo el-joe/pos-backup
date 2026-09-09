@@ -31,6 +31,8 @@ enum TransactionTypeEnum : string
     case CHECK_COLLECTION = 'check_collection';
     case CHECK_CLEARING = 'check_clearing';
     case CHECK_BOUNCE = 'check_bounce';
+    case PAYROLL = 'payroll';
+    case PAYROLL_PAYMENT = 'payroll_payment';
 
     public function label(): string
     {
@@ -62,6 +64,8 @@ enum TransactionTypeEnum : string
             self::CHECK_COLLECTION => 'Check Collection',
             self::CHECK_CLEARING => 'Check Clearing',
             self::CHECK_BOUNCE => 'Bounced Check',
+            self::PAYROLL => 'Payroll',
+            self::PAYROLL_PAYMENT => 'Payroll Payment',
         };
     }
 }

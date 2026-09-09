@@ -20,6 +20,7 @@ class PayrollRunModal extends Component
     public array $data = [
         'month' => null,
         'year' => null,
+        'branch_id' => null,
         'status' => PayrollRunStatusEnum::DRAFT->value,
         'total_payout' => 0,
     ];
@@ -37,6 +38,7 @@ class PayrollRunModal extends Component
             $this->data = [
                 'month' => $this->current->month,
                 'year' => $this->current->year,
+                'branch_id' => $this->current->branch_id,
                 'status' => $this->current->status?->value,
                 'total_payout' => $this->current->total_payout,
             ];
@@ -45,6 +47,7 @@ class PayrollRunModal extends Component
             $this->data = [
                 'month' => null,
                 'year' => null,
+                'branch_id' => admin()?->branch_id,
                 'status' => PayrollRunStatusEnum::DRAFT->value,
                 'total_payout' => 0,
             ];
@@ -64,6 +67,7 @@ class PayrollRunModal extends Component
         $this->validate([
             'data.month' => 'required|integer|min:1|max:12',
             'data.year' => 'required|integer|min:2000|max:2100',
+            'data.branch_id' => 'nullable|integer|exists:branches,id',
             'data.status' => ['required', Rule::in(array_map(static fn (PayrollRunStatusEnum $status) => $status->value, PayrollRunStatusEnum::cases()))],
             'data.total_payout' => 'required|numeric|min:0',
         ]);

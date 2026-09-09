@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class PayrollRun extends Model
 {
     protected $fillable = [
+        'branch_id',
         'month',
         'year',
         'status',
         'total_payout',
         'transaction_id',
+        'approved_transaction_id',
     ];
 
     protected $casts = [
@@ -23,6 +25,11 @@ class PayrollRun extends Model
     public function slips()
     {
         return $this->hasMany(PayrollSlip::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function scopeFilter($q, $filters = [])
