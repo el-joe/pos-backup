@@ -123,9 +123,24 @@
                             <button class="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" wire:click="bounce({{ $check->id }})">
                                 {{ __('general.pages.checks.bounce') }}
                             </button>
+                            @elseif($check->direction === 'received' && $check->status === 'collected')
+                            <button class="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" wire:click="bounce({{ $check->id }})">
+                                {{ __('general.pages.checks.bounce') }}
+                            </button>
                             @elseif($check->direction === 'issued' && $check->status === 'issued')
                             <button class="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" wire:click="clearIssued({{ $check->id }})">
                                 {{ __('general.pages.checks.clear') }}
+                            </button>
+                            <button class="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" wire:click="bounceIssued({{ $check->id }})">
+                                {{ __('general.pages.checks.bounce') }}
+                            </button>
+                            @elseif($check->direction === 'issued' && $check->status === 'cleared')
+                            <button class="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" wire:click="bounceIssued({{ $check->id }})">
+                                {{ __('general.pages.checks.bounce') }}
+                            </button>
+                            @elseif($check->status === 'bounced')
+                            <button class="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 dark:focus:ring-offset-slate-900" wire:click="represent({{ $check->id }})">
+                                {{ __('general.pages.checks.represent') }}
                             </button>
                             @else
                             <span class="text-slate-400 dark:text-slate-500">-</span>

@@ -101,8 +101,15 @@
                     @if($check->direction === 'received' && $check->status === 'under_collection')
                         <button class="btn btn-success btn-sm" wire:click="collect({{ $check->id }})">{{ __('general.pages.checks.collect') }}</button>
                         <button class="btn btn-danger btn-sm" wire:click="bounce({{ $check->id }})">{{ __('general.pages.checks.bounce') }}</button>
+                    @elseif($check->direction === 'received' && $check->status === 'collected')
+                        <button class="btn btn-danger btn-sm" wire:click="bounce({{ $check->id }})">{{ __('general.pages.checks.bounce') }}</button>
                     @elseif($check->direction === 'issued' && $check->status === 'issued')
                         <button class="btn btn-primary btn-sm" wire:click="clearIssued({{ $check->id }})">{{ __('general.pages.checks.clear') }}</button>
+                        <button class="btn btn-danger btn-sm" wire:click="bounceIssued({{ $check->id }})">{{ __('general.pages.checks.bounce') }}</button>
+                    @elseif($check->direction === 'issued' && $check->status === 'cleared')
+                        <button class="btn btn-danger btn-sm" wire:click="bounceIssued({{ $check->id }})">{{ __('general.pages.checks.bounce') }}</button>
+                    @elseif($check->status === 'bounced')
+                        <button class="btn btn-warning btn-sm" wire:click="represent({{ $check->id }})">{{ __('general.pages.checks.represent') }}</button>
                     @else
                         <span class="text-muted">-</span>
                     @endif

@@ -74,6 +74,7 @@ Route::prefix('api/v1')->middleware([
     Route::post('checks/{id}/collect', [ChecksApiController::class, 'collect'])->name('checks.collect')->middleware('throttle:60,1');
     Route::post('checks/{id}/clear', [ChecksApiController::class, 'clear'])->name('checks.clear')->middleware('throttle:60,1');
     Route::post('checks/{id}/bounce', [ChecksApiController::class, 'bounce'])->name('checks.bounce')->middleware('throttle:60,1');
+    Route::post('checks/{id}/represent', [ChecksApiController::class, 'represent'])->name('checks.represent')->middleware('throttle:60,1');
 
     Route::get('purchase-requests', [PurchaseRequestsApiController::class, 'index'])->name('purchase-requests.index');
     Route::get('purchase-requests/{id}', [PurchaseRequestsApiController::class, 'show'])->name('purchase-requests.show');

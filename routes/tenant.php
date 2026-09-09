@@ -36,6 +36,7 @@ use App\Livewire\Admin\Reports\{
     AuditReport,
     BranchProfitability,
     CashRegisterReport,
+    CheckAgingReport,
     Financial\BalanceSheetReport,
     Financial\CashFlowStatementReport,
     Financial\GeneralLedgerReport,
@@ -422,6 +423,7 @@ Route::middleware([
                 Route::get('cash-register-report', CashRegisterReport::class)->name('cash.register.report');
                 Route::get('branch-profitability', BranchProfitability::class)->name('branch.profitability');
                 Route::get('audit-report', AuditReport::class)->name('audit.report');
+                Route::get('check-aging-report', CheckAgingReport::class)->name('check.aging.report');
 
             });
             // Stock Adjustments

@@ -284,7 +284,7 @@ class SellService
         return $sale->refresh();
     }
 
-    function addPayment($sellId, $data , $reverse = false) {
+    function addPayment($sellId, $data , $reverse = false, array $meta = []) {
         $sell = $this->repo->find($sellId);
         if(!$sell) return;
 
@@ -312,10 +312,10 @@ class SellService
         $counterpartyAccount = $this->getCustomerAccount($data['customer_id'] ?? null);
 
         $transactionData = [
-            'description' => ($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number,
-            'type' => $reverse ? TransactionTypeEnum::SALE_PAYMENT_REFUND->value : TransactionTypeEnum::SALE_PAYMENT->value,
-            'reference_type' => Sale::class,
-            'reference_id' => $sell->id,
+            'description' => $meta['description'] ?? (($reverse ? 'Refund ' : '').'Sale Payment for #'.$sell->invoice_number),
+            'type' => $meta['type'] ?? ($reverse ? TransactionTypeEnum::SALE_PAYMENT_REFUND->value : TransactionTypeEnum::SALE_PAYMENT->value),
+            'reference_type' => $meta['reference_type'] ?? Sale::class,
+            'reference_id' => $meta['reference_id'] ?? $sell->id,
             'branch_id' => $sell->branch_id,
             'note' => $data['payment_note'] ?? '',
             'amount' => $amount,

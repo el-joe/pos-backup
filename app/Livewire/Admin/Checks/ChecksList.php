@@ -108,6 +108,21 @@ class ChecksList extends Component
         }
     }
 
+    public function represent(int $id): void
+    {
+        if (!adminCan('checks.bounce')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
+        try {
+            $this->checkService->represent($id);
+            $this->alert('success', __('general.messages.check_represented_successfully'));
+        } catch (\Throwable $e) {
+            $this->alert('error', $e->getMessage());
+        }
+    }
+
     public function render()
     {
         if (!adminCan('checks.list')) {

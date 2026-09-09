@@ -14,6 +14,7 @@ enum AccountTypeEnum : string
 
     // Expenses accounts
     case EXPENSE = 'expense';
+    case BANK_CHARGES = 'bank_charges'; // returned-check / bank fees
     case FINANCE_EXPENSE = 'finance_expense';
     case MARKETING_EXPENSE = 'marketing_expense';
     case OPERATING_EXPENSE = 'operating_expense';
@@ -60,6 +61,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::CUSTOMER => 'Customer', // customer transactions
             AccountTypeEnum::SUPPLIER => 'Supplier', // supplier transactions
             AccountTypeEnum::EXPENSE => 'Expense', // expense transactions
+            AccountTypeEnum::BANK_CHARGES => 'Bank Charges',
             AccountTypeEnum::FINANCE_EXPENSE => 'Finance Expense',
             AccountTypeEnum::MARKETING_EXPENSE => 'Marketing Expense',
             AccountTypeEnum::OPERATING_EXPENSE => 'Operating Expense',
@@ -119,6 +121,7 @@ enum AccountTypeEnum : string
             self::CASH_OVER_SHORT => 'عجز/زيادة الخزينة',
 
             self::EXPENSE => 'مصروفات',
+            self::BANK_CHARGES => 'رسوم بنكية',
             self::FINANCE_EXPENSE => 'مصروفات تمويلية',
             self::MARKETING_EXPENSE => 'مصروفات تسويقية',
             self::OPERATING_EXPENSE => 'مصروفات تشغيلية',
@@ -164,6 +167,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::ISSUED_CHECKS => 'danger',
             AccountTypeEnum::CASH_OVER_SHORT => 'danger',
             AccountTypeEnum::EXPENSE => 'danger',
+            AccountTypeEnum::BANK_CHARGES => 'danger',
             AccountTypeEnum::FINANCE_EXPENSE => 'danger',
             AccountTypeEnum::MARKETING_EXPENSE => 'danger',
             AccountTypeEnum::OPERATING_EXPENSE => 'danger',

@@ -7,6 +7,7 @@ enum CheckStatusEnum: string
     case UNDER_COLLECTION = 'under_collection';
     case COLLECTED = 'collected';
     case BOUNCED = 'bounced';
+    case REPRESENTED = 'represented';
 
     case ISSUED = 'issued';
     case CLEARED = 'cleared';
@@ -17,6 +18,7 @@ enum CheckStatusEnum: string
             self::UNDER_COLLECTION => 'Under Collection',
             self::COLLECTED => 'Collected',
             self::BOUNCED => 'Bounced',
+            self::REPRESENTED => 'Represented',
             self::ISSUED => 'Issued',
             self::CLEARED => 'Cleared',
         };

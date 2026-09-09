@@ -362,17 +362,17 @@ class PurchaseService
         return $purchase->refresh();
     }
 
-    function addPayment($purchaseId, $data , $reverse = false) {
+    function addPayment($purchaseId, $data , $reverse = false, array $meta = []) {
         $purchase = $this->repo->find($purchaseId);
         if(!$purchase) return;
 
         $paymentAccount = Account::assertPaymentCapable($data['payment_account'] ?? null);
 
         $transactionData = [
-            'description' => ($reverse ? 'Refund ' : '').'Purchase Payment for #'.$purchase->ref_no,
-            'type' => $reverse ? TransactionTypeEnum::PURCHASE_PAYMENT_REFUND->value : TransactionTypeEnum::PURCHASE_PAYMENT->value,
-            'reference_type' => Purchase::class,
-            'reference_id' => $purchase->id,
+            'description' => $meta['description'] ?? (($reverse ? 'Refund ' : '').'Purchase Payment for #'.$purchase->ref_no),
+            'type' => $meta['type'] ?? ($reverse ? TransactionTypeEnum::PURCHASE_PAYMENT_REFUND->value : TransactionTypeEnum::PURCHASE_PAYMENT->value),
+            'reference_type' => $meta['reference_type'] ?? Purchase::class,
+            'reference_id' => $meta['reference_id'] ?? $purchase->id,
             'branch_id' => $purchase->branch_id,
             'note' => $data['payment_note'] ?? '',
             'amount' => $data['payment_status'] == 'full_paid' ? ($data['grand_total'] ?? 0) : ($data['payment_amount'] ?? 0),

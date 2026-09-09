@@ -84,8 +84,15 @@
                     @if($check->direction === 'received' && $check->status === 'under_collection')
                         <button class="btn btn-success btn-sm" wire:click="collect({{ $check->id }})">Collect</button>
                         <button class="btn btn-danger btn-sm" wire:click="bounce({{ $check->id }})">Bounce</button>
+                    @elseif($check->direction === 'received' && $check->status === 'collected')
+                        <button class="btn btn-danger btn-sm" wire:click="bounce({{ $check->id }})">Bounce</button>
                     @elseif($check->direction === 'issued' && $check->status === 'issued')
                         <button class="btn btn-primary btn-sm" wire:click="clearIssued({{ $check->id }})">Clear</button>
+                        <button class="btn btn-danger btn-sm" wire:click="bounceIssued({{ $check->id }})">Bounce</button>
+                    @elseif($check->direction === 'issued' && $check->status === 'cleared')
+                        <button class="btn btn-danger btn-sm" wire:click="bounceIssued({{ $check->id }})">Bounce</button>
+                    @elseif($check->status === 'bounced')
+                        <button class="btn btn-warning btn-sm" wire:click="represent({{ $check->id }})">Represent</button>
                     @else
                         <span class="text-muted">-</span>
                     @endif

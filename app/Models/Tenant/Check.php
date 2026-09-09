@@ -21,6 +21,7 @@ class Check extends Model
         'customer_id',
         'supplier_id',
         'amount',
+        'bank_charge',
         'check_number',
         'bank_name',
         'check_date',
@@ -31,6 +32,8 @@ class Check extends Model
         'collected_at',
         'bounced_at',
         'cleared_at',
+        'represented_at',
+        'replaced_by_check_id',
     ];
 
     protected $casts = [
@@ -39,6 +42,7 @@ class Check extends Model
         'collected_at' => 'datetime',
         'bounced_at' => 'datetime',
         'cleared_at' => 'datetime',
+        'represented_at' => 'datetime',
     ];
 
     /**
@@ -53,6 +57,35 @@ class Check extends Model
         static::forceDeleting(function () {
             throw new \RuntimeException('Hard-deleting a Check is blocked (prompt 09 guard) — soft-delete instead, and reverse any GL entries referencing it first.');
         });
+
+        static::deleting(function (self $check) {
+            if ($check->isForceDeleting()) {
+                return;
+            }
+            if (!in_array($check->status, [\App\Enums\CheckStatusEnum::ISSUED->value, \App\Enums\CheckStatusEnum::UNDER_COLLECTION->value], true)) {
+                throw new \RuntimeException('Only a check still under collection/issued (no posted clearing entry) can be deleted.');
+            }
+        });
+
+        static::creating(function (self $check) {
+            if ((float)($check->amount ?? 0) <= 0) {
+                throw new \RuntimeException('Check amount must be greater than zero.');
+            }
+            if (!$check->check_number) {
+                throw new \RuntimeException('Check number is required.');
+            }
+            if (!$check->bank_name) {
+                throw new \RuntimeException('Bank name is required.');
+            }
+            if (!$check->due_date) {
+                throw new \RuntimeException('Due date is required.');
+            }
+        });
+    }
+
+    public function replacedByCheck()
+    {
+        return $this->belongsTo(self::class, 'replaced_by_check_id');
     }
 
     public function payable()

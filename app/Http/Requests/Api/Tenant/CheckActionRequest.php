@@ -16,6 +16,9 @@ class CheckActionRequest extends FormRequest
         return [
             'account_id' => 'nullable|integer|exists:accounts,id',
             'note' => 'nullable|string|max:255',
+            'bank_charge' => 'nullable|numeric|min:0.01',
+            'bank_charge_account_id' => 'nullable|integer|exists:accounts,id',
+            'replaced_by_check_id' => 'nullable|integer|exists:checks,id',
         ];
     }
 }

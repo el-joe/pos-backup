@@ -89,8 +89,21 @@ class ChecksApiController extends ApiController
 
         try {
             $check = $check->direction === \App\Enums\CheckDirectionEnum::ISSUED->value
-                ? $checkService->bounceIssued($id, $validated['note'] ?? null)
-                : $checkService->bounce($id, $validated['note'] ?? null);
+                ? $checkService->bounceIssued($id, $validated['note'] ?? null, $validated['bank_charge'] ?? null, $validated['bank_charge_account_id'] ?? null)
+                : $checkService->bounce($id, $validated['note'] ?? null, $validated['bank_charge'] ?? null, $validated['bank_charge_account_id'] ?? null);
+        } catch (\RuntimeException $e) {
+            return $this->error($e->getMessage(), 422);
+        }
+
+        return $this->success(new CheckResource($check));
+    }
+
+    public function represent(CheckActionRequest $request, int $id, CheckService $checkService)
+    {
+        $validated = $request->validated();
+
+        try {
+            $check = $checkService->represent($id, $validated['replaced_by_check_id'] ?? null, $validated['note'] ?? null);
         } catch (\RuntimeException $e) {
             return $this->error($e->getMessage(), 422);
         }
