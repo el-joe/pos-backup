@@ -14,7 +14,13 @@ class StockTaking extends Model
         'date',
         'note',
         'created_by',
+        'approved_by',
+        'approved_at',
         'deleted_at'
+    ];
+
+    protected $casts = [
+        'approved_at' => 'datetime',
     ];
 
     public function products()
@@ -30,6 +36,11 @@ class StockTaking extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by')->withTrashed();
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(Admin::class, 'approved_by')->withTrashed();
     }
 
     function scopeFilter($q,$filter = []) {

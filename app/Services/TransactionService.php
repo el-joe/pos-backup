@@ -256,17 +256,47 @@ class TransactionService
 
     function createInventoryShortageLine($data,$reverse = false) {
         $getInventoryShortageAccount = Account::default('inventory_shortage', AccountTypeEnum::INVENTORY_SHORTAGE->value,  $data['branch_id']);
-        // get sub total from order products = product qty * unit cost
-        $subTotal = array_sum(array_map(function($item) {
-            return $item['difference'] * (float)$item['unit_cost'];
-        }, $data['products']));
 
-        //`transaction_id`, `account_id`, `type`, `amount`
         return [
             'account_id' => $getInventoryShortageAccount->id,
             'type' => $reverse ? 'credit' : 'debit',
-            'amount' => $subTotal,
+            'amount' => $this->stockAdjustmentValue($data['products']),
         ];
+    }
+
+    function createInventoryGainLine($data,$reverse = false) {
+        $getInventoryGainAccount = Account::default('inventory_gain', AccountTypeEnum::INVENTORY_GAIN->value, $data['branch_id']);
+
+        return [
+            'account_id' => $getInventoryGainAccount->id,
+            'type' => $reverse ? 'debit' : 'credit',
+            'amount' => $this->stockAdjustmentValue($data['products']),
+        ];
+    }
+
+    /**
+     * The Inventory-account side of a stock-taking adjustment. $type is the debit/credit
+     * side for the non-reversed posting (credit for a shortage issue, debit for a gain
+     * receipt) — the caller flips it when reversing.
+     */
+    function createInventoryAdjustmentLine($data, $type) {
+        $getInventoryAccount = Account::default('Inventory', AccountTypeEnum::INVENTORY->value, $data['branch_id']);
+
+        return [
+            'account_id' => $getInventoryAccount->id,
+            'type' => $type,
+            'amount' => $this->stockAdjustmentValue($data['products']),
+        ];
+    }
+
+    /**
+     * Sum of |difference * unit_cost| across stock-taking product rows. Always positive —
+     * direction (debit/credit) is decided by the caller, not the sign of the count variance.
+     */
+    private function stockAdjustmentValue($products): float {
+        return abs(array_sum(array_map(function($item) {
+            return (float) $item['difference'] * (float) $item['unit_cost'];
+        }, $products)));
     }
 
 

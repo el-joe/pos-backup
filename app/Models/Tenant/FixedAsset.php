@@ -37,6 +37,7 @@ class FixedAsset extends Model
         'disposal_proceeds',
         'useful_life_months',
         'depreciation_rate',
+        'depreciation_basis',
         'depreciation_method',
         'depreciation_start_date',
         'status',

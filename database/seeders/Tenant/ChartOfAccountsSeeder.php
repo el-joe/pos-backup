@@ -48,6 +48,7 @@ class ChartOfAccountsSeeder extends Seeder
             ['code' => '4010', 'name' => 'Sales Revenue / إيرادات المبيعات', 'type' => 'revenue', 'parent_code' => '4000'],
             ['code' => '4020', 'name' => 'Sales Discount / خصم المبيعات', 'type' => 'revenue', 'parent_code' => '4000'],
             ['code' => '4030', 'name' => 'Sales Return / مرتجع المبيعات', 'type' => 'revenue', 'parent_code' => '4000'],
+            ['code' => '4040', 'name' => 'Inventory Gain / زيادة المخزون', 'type' => 'revenue', 'parent_code' => '4000'],
 
             // Expenses
             ['code' => '5000', 'name' => 'Cost of Goods Sold / تكلفة البضاعة المباعة', 'type' => 'expense', 'parent_code' => null],

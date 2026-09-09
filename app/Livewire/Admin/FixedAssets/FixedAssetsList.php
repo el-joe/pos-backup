@@ -25,6 +25,7 @@ class FixedAssetsList extends Component
 
     public $current;
     public array $payment = [];
+    public array $disposal = [];
 
     public bool $collapseFilters = false;
     public ?string $export = null;
@@ -81,6 +82,37 @@ class FixedAssetsList extends Component
 
         $this->alert('success', __('general.messages.payment_added_successfully'));
         $this->reset('payment');
+
+        $this->setCurrent($this->current->id);
+    }
+
+    public function disposeAsset(): void
+    {
+        if (!$this->current) {
+            return;
+        }
+
+        $this->validate([
+            'disposal.proceeds' => 'required|numeric|min:0',
+            'disposal.date' => 'nullable|date',
+            'disposal.receipt_account_id' => 'nullable|exists:accounts,id',
+        ]);
+
+        $this->current = $this->fixedAssetService->dispose(
+            $this->current->id,
+            (float) $this->disposal['proceeds'],
+            $this->disposal['receipt_account_id'] ?? null,
+            $this->disposal['date'] ?? now()
+        );
+
+        AuditLog::log(AuditLogActionEnum::from('fixed_asset_disposed'), [
+            'id' => $this->current->id,
+            'proceeds' => (float) $this->disposal['proceeds'],
+            'route' => route('admin.fixed-assets.details', $this->current->id),
+        ]);
+
+        $this->alert('success', __('general.pages.fixed_assets.asset_disposed'));
+        $this->reset('disposal');
 
         $this->setCurrent($this->current->id);
     }

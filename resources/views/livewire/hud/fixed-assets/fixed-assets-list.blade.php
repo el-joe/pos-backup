@@ -112,6 +112,9 @@
                         @if(($asset->due_amount ?? 0) > 0)
                             <button class="btn btn-sm btn-success ms-1" wire:click="setCurrent({{ $asset->id }})" data-bs-toggle="modal" data-bs-target="#paymentModal"><i class="fa fa-credit-card"></i></button>
                         @endif
+                        @if(!in_array($asset->status, ['disposed', 'sold']))
+                            <button class="btn btn-sm btn-danger ms-1" wire:click="setCurrent({{ $asset->id }})" data-bs-toggle="modal" data-bs-target="#disposeModal"><i class="fa fa-trash-alt"></i></button>
+                        @endif
                     @endadminCan
                 </td>
             </tr>
@@ -214,6 +217,42 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fa fa-times"></i> {{ __('general.pages.fixed_assets.close') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div wire:ignore.self class="modal fade" id="disposeModal" tabindex="-1" aria-labelledby="disposeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="disposeModalLabel">{{ __('general.pages.fixed_assets.dispose_asset') }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('general.pages.fixed_assets.disposal_proceeds') }}</label>
+                        <input type="number" class="form-control" wire:model="disposal.proceeds">
+                        @error('disposal.proceeds')
+                        <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('general.pages.fixed_assets.receipt_account') }}</label>
+                        <select class="form-select" wire:model="disposal.receipt_account_id">
+                            <option value="">{{ __('general.pages.fixed_assets.select_payment_account') }}</option>
+                            @foreach (collect($paymentAccounts ?? []) as $paymentAcc)
+                            <option value="{{ data_get($paymentAcc, 'id') }}">{{ data_get($paymentAcc, 'name') }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('general.pages.fixed_assets.disposal_date') }}</label>
+                        <input type="date" class="form-control" wire:model="disposal.date">
+                    </div>
+                    <button type="button" class="btn btn-danger w-100" wire:click="disposeAsset">
+                        <i class="fa fa-check"></i> {{ __('general.pages.fixed_assets.dispose_asset') }}
                     </button>
                 </div>
             </div>

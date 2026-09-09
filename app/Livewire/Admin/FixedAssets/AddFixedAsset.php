@@ -206,6 +206,7 @@ class AddFixedAsset extends Component
                 'salvage_value' => $this->data['salvage_value'] ?? 0,
                 'useful_life_months' => $this->data['useful_life_months'] ?? 0,
                 'depreciation_rate' => $this->data['depreciation_rate'] ?? null,
+                'depreciation_basis' => $hasLife ? 'useful_life' : ($hasRate ? 'rate' : null),
                 'depreciation_method' => $this->data['depreciation_method'] ?? FixedAsset::METHOD_STRAIGHT_LINE,
                 'depreciation_start_date' => $this->data['depreciation_start_date'] ?? null,
                 'status' => $this->data['status'] ?? FixedAsset::STATUS_ACTIVE,
@@ -213,9 +214,6 @@ class AddFixedAsset extends Component
             ]);
 
             if ($cost > 0) {
-                // Always record the asset invoice (debit fixed asset, credit payable)
-                $this->fixedAssetService->createPurchaseInvoice($asset, $cost, $this->data['note'] ?? '');
-
                 foreach ($payments as $payment) {
                     $this->fixedAssetService->addPayment($asset->id, [
                         'payment_note' => $this->data['note'] ?? null,

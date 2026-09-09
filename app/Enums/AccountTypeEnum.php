@@ -27,6 +27,7 @@ enum AccountTypeEnum : string
     case INVENTORY = 'inventory'; // inventory purchases
     case COGS = 'cogs'; // cost of goods sold
     case INVENTORY_SHORTAGE = 'inventory_shortage'; // inventory loss adjustments
+    case INVENTORY_GAIN = 'inventory_gain'; // inventory count overage adjustments
     case FIXED_ASSET = 'fixed_asset'; // fixed asset transactions && depreciation
     case ACCUMULATED_DEPRECIATION = 'accumulated_depreciation'; // contra-asset
     case DEPRECIATION_EXPENSE = 'depreciation_expense';
@@ -84,6 +85,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::INVENTORY => 'Inventory',
             AccountTypeEnum::COGS => 'Cost of Goods Sold',
             AccountTypeEnum::INVENTORY_SHORTAGE => 'Inventory Shortage',
+            AccountTypeEnum::INVENTORY_GAIN => 'Inventory Gain',
             AccountTypeEnum::VAT_PAYABLE => 'VAT Payable',
             AccountTypeEnum::VAT_RECEIVABLE => 'VAT Receivable',
             AccountTypeEnum::SALES_DISCOUNT => 'Sales Discount',
@@ -133,6 +135,7 @@ enum AccountTypeEnum : string
             self::INVENTORY => 'المخزون',
             self::COGS => 'تكلفة البضاعة المباعة',
             self::INVENTORY_SHORTAGE => 'عجز المخزون',
+            self::INVENTORY_GAIN => 'زيادة المخزون',
             self::FIXED_ASSET => 'الأصول الثابتة',
             self::ACCUMULATED_DEPRECIATION => 'مجمع الإهلاك',
             self::DEPRECIATION_EXPENSE => 'مصروف الإهلاك',
@@ -187,6 +190,7 @@ enum AccountTypeEnum : string
             AccountTypeEnum::INVENTORY => 'info',
             AccountTypeEnum::COGS => 'warning',
             AccountTypeEnum::INVENTORY_SHORTAGE => 'danger',
+            AccountTypeEnum::INVENTORY_GAIN => 'success',
             AccountTypeEnum::VAT_PAYABLE => 'secondary',
             AccountTypeEnum::VAT_RECEIVABLE => 'secondary',
             AccountTypeEnum::SALES_DISCOUNT => 'info',

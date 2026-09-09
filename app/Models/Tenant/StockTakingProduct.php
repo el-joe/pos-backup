@@ -12,6 +12,7 @@ class StockTakingProduct extends Model
         'current_qty',
         'actual_qty',
         'stock_id',
+        'unit_cost',
         'returned'
     ];
 

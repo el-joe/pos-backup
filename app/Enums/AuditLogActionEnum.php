@@ -107,6 +107,7 @@ enum AuditLogActionEnum : string
     case EXPORT_FIXED_ASSETS = 'export_fixed_assets';
     case DEPRECIATION_EXPENSE_CREATED = 'depreciation_expense_created';
     case FIXED_ASSET_LIFESPAN_EXTENSION = 'fixed_asset_lifespan_extension';
+    case FIXED_ASSET_DISPOSED = 'fixed_asset_disposed';
     case EXPORT_DEPRECIATION_EXPENSES = 'export_depreciation_expenses';
     case DEFERRED_SALE_INVENTORY_DELIVERED = 'deferred_sale_inventory_delivered';
     case DEFERRED_PURCHASE_INVENTORY_RECEIVED = 'deferred_purchase_inventory_received';

@@ -29,6 +29,7 @@ return [
     'sales' => '4010',
     'sales_discount' => '4020',
     'sales_return' => '4030',
+    'inventory_gain' => '4040',
 
     'cogs' => '5010',
     'purchase_discount' => '6010',

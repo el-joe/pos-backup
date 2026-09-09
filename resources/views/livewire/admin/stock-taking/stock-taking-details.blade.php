@@ -1,5 +1,13 @@
 <div class="white-box">
-    <h3 class="box-title">Stock Take Details #{{ $stockTake->id }}</h3>
+    <h3 class="box-title">
+        Stock Take Details #{{ $stockTake->id }}
+        @if($stockTake->approved_at)
+            <span class="label label-success">Approved</span>
+        @else
+            <span class="label label-warning">Pending Approval</span>
+            <button class="btn btn-sm btn-success pull-right" wire:click="approveAlert">Approve</button>
+        @endif
+    </h3>
     <ul class="nav customtab nav-tabs" role="tablist">
         <li role="presentation" class="@if($activeTab === 'details') active @endif">
             <a wire:click="$set('activeTab', 'details')" href="#details" aria-controls="details" role="tab" data-toggle="tab" aria-expanded="true">

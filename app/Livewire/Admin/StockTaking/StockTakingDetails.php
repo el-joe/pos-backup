@@ -52,6 +52,23 @@ class StockTakingDetails extends Component
         $this->popup('success', __('general.messages.stock_returned_successfully'));
     }
 
+    function approveAlert() {
+        $this->confirm('approve', 'warning', __('general.messages.are_you_sure'), __('general.messages.confirm_approve_stock_adjustment'), __('general.messages.do_it'));
+    }
+
+    function approve() {
+        if (!adminCan('stock_adjustments.approve')) {
+            $this->popup('error', __('general.messages.unauthorized'));
+            return;
+        }
+
+        $this->stockTakingService->approve($this->id, admin()->id);
+
+        $this->mount();
+
+        $this->popup('success', __('general.messages.stock_adjustment_approved_successfully'));
+    }
+
     public function render()
     {
         return layoutView('stock-taking.stock-taking-details');

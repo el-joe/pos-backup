@@ -139,6 +139,15 @@
                                 <i class="fa fa-credit-card"></i>
                             </button>
                             @endif
+                            @if(!in_array($asset->status, ['disposed', 'sold']))
+                            <button class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-rose-600 transition-colors hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
+                                wire:click="setCurrent({{ $asset->id }})"
+                                data-bs-toggle="modal"
+                                data-bs-target="#disposeModal"
+                                title="{{ __('general.pages.fixed_assets.dispose_asset') }}">
+                                <i class="fa fa-trash-alt"></i>
+                            </button>
+                            @endif
                             @endadminCan
                         </div>
                     </td>
@@ -261,6 +270,50 @@
                         class="inline-flex items-center gap-2 rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                         data-bs-dismiss="modal">
                         <i class="fa fa-times"></i> {{ __('general.pages.fixed_assets.close') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div wire:ignore.self class="modal fade" id="disposeModal" tabindex="-1" aria-labelledby="disposeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content overflow-hidden rounded-3xl border-0 shadow-2xl dark:!bg-slate-900">
+                <div class="border-b border-slate-200 bg-slate-50 px-6 py-5 dark:border-slate-800 dark:bg-slate-950/70">
+                    <div class="flex items-center justify-between gap-3">
+                        <h5 class="text-lg font-semibold text-slate-900 dark:text-white" id="disposeModalLabel">{{ __('general.pages.fixed_assets.dispose_asset') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+
+                <div class="modal-body space-y-5 bg-white px-6 py-6 dark:!bg-slate-900">
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.fixed_assets.disposal_proceeds') }}</label>
+                        <input type="number" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:!bg-slate-900 dark:text-white" wire:model="disposal.proceeds">
+                        @error('disposal.proceeds')
+                        <small class="text-rose-600 dark:text-rose-400">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.fixed_assets.receipt_account') }}</label>
+                        <select class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:!bg-slate-900 dark:text-white" wire:model="disposal.receipt_account_id">
+                            <option value="">{{ __('general.pages.fixed_assets.select_payment_account') }}</option>
+                            @foreach (collect($paymentAccounts ?? []) as $paymentAcc)
+                            <option value="{{ data_get($paymentAcc, 'id') }}">{{ data_get($paymentAcc, 'name') }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('general.pages.fixed_assets.disposal_date') }}</label>
+                        <input type="date" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:!bg-slate-900 dark:text-white" wire:model="disposal.date">
+                    </div>
+
+                    <button type="button"
+                        class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rose-700"
+                        wire:click="disposeAsset">
+                        <i class="fa fa-check"></i> {{ __('general.pages.fixed_assets.dispose_asset') }}
                     </button>
                 </div>
             </div>

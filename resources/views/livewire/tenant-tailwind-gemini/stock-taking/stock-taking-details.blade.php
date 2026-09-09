@@ -3,6 +3,12 @@
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:!bg-slate-900">
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.stock-taking.stock_take_details') }}</p>
             <p class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">#{{ $stockTake->id }}</p>
+            @if($stockTake->approved_at)
+                <span class="mt-2 inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700 dark:bg-green-900/40 dark:text-green-300">Approved</span>
+            @else
+                <span class="mt-2 inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">Pending Approval</span>
+                <button type="button" wire:click="approveAlert" class="mt-2 block w-full rounded-2xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">Approve</button>
+            @endif
         </div>
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:!bg-slate-900">
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ __('general.pages.stock-taking.branch') }}</p>

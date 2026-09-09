@@ -6,6 +6,7 @@ use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Expense;
 use App\Models\Tenant\StockTransfer;
 use App\Repositories\StockTransferRepository;
+use Illuminate\Support\Facades\DB;
 
 class StockTransferService
 {
@@ -44,43 +45,45 @@ class StockTransferService
             throw new \Exception("Invalid branch selected.");
         }
 
-        $expenseBranchId = $data['expense_paid_branch_id'] ?? $fromBranch->id;
+        return DB::transaction(function () use ($data, $fromBranch, $toBranch) {
+            $expenseBranchId = $data['expense_paid_branch_id'] ?? $fromBranch->id;
 
-        $stockTransfer = $this->repo->create([
-            'from_branch_id' => $fromBranch->id,
-            'to_branch_id' => $toBranch->id,
-            'transfer_date' => $data['transfer_date'],
-            'ref_no' => $data['ref_no'],
-            'status' => $data['status'],
-            'expense_paid_branch_id' => $expenseBranchId,
-            'created_by' => $data['created_by'] ?? null,
-        ]);
+            $stockTransfer = $this->repo->create([
+                'from_branch_id' => $fromBranch->id,
+                'to_branch_id' => $toBranch->id,
+                'transfer_date' => $data['transfer_date'],
+                'ref_no' => $data['ref_no'],
+                'status' => $data['status'],
+                'expense_paid_branch_id' => $expenseBranchId,
+                'created_by' => $data['created_by'] ?? null,
+            ]);
 
-        $items = $data['items'] ?? $data['products'] ?? [];
+            $items = $data['items'] ?? $data['products'] ?? [];
 
-        foreach ($items as $item) {
-            $this->saveItem($stockTransfer, $item);
-        }
+            foreach ($items as $item) {
+                $this->saveItem($stockTransfer, $item);
+            }
 
-        // i want sum of unit_cost*qty from items array
+            // i want sum of unit_cost*qty from items array
 
-        $items = array_map(function($item) {
-            return [
-                ...$item,
-                'purchase_price' => $item['unit_cost']
-            ];
-        }, $items);
+            $items = array_map(function($item) {
+                return [
+                    ...$item,
+                    'purchase_price' => $item['unit_cost']
+                ];
+            }, $items);
 
 
-        $this->makeTransactions($stockTransfer, $fromBranch, $toBranch, $items);
+            $this->makeTransactions($stockTransfer, $fromBranch, $toBranch, $items);
 
-        // Save Expenses if any
-        $this->saveExpenses([
-            ...$data,
-            'stock_transfer_id' => $stockTransfer->id
-        ], $expenseBranchId);
+            // Save Expenses if any
+            $this->saveExpenses([
+                ...$data,
+                'stock_transfer_id' => $stockTransfer->id
+            ], $expenseBranchId);
 
-        return $stockTransfer;
+            return $stockTransfer;
+        });
     }
 
 
