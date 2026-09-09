@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Schema;
  * Must run before the unique index on (code, branch_id) is added — dated earlier than
  * 2026_09_08_165538_add_unique_index_to_accounts — but is written to be order-independent
  * in case that index already exists (e.g. a dev environment migrated out of order).
+ *
+ * Also dated earlier than 2026_09_08_213610_add_counterparty_account_to_order_payments,
+ * whose column collapseDuplicates() repoints — on a fresh install migrations run in
+ * filename-timestamp order, so that column does not exist yet when this runs. Guarded
+ * with hasColumn() the same way the unique index above is guarded.
  */
 return new class extends Migration
 {
@@ -61,6 +66,8 @@ return new class extends Migration
      */
     private function collapseDuplicates(): void
     {
+        $hasCounterpartyAccountId = Schema::hasColumn('order_payments', 'counterparty_account_id');
+
         $groups = DB::table('accounts')
             ->whereNull('deleted_at')
             ->where('model_type', 'App\\Models\\Tenant\\Branch')
@@ -77,7 +84,9 @@ return new class extends Migration
             foreach ($losers as $loser) {
                 DB::table('transaction_lines')->where('account_id', $loser->id)->update(['account_id' => $survivor->id]);
                 DB::table('order_payments')->where('account_id', $loser->id)->update(['account_id' => $survivor->id]);
-                DB::table('order_payments')->where('counterparty_account_id', $loser->id)->update(['counterparty_account_id' => $survivor->id]);
+                if ($hasCounterpartyAccountId) {
+                    DB::table('order_payments')->where('counterparty_account_id', $loser->id)->update(['counterparty_account_id' => $survivor->id]);
+                }
                 DB::table('checks')->where('collected_account_id', $loser->id)->update(['collected_account_id' => $survivor->id]);
                 DB::table('checks')->where('cleared_account_id', $loser->id)->update(['cleared_account_id' => $survivor->id]);
 
