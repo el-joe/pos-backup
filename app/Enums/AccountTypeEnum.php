@@ -39,6 +39,13 @@ enum AccountTypeEnum : string
     case UNEARNED_REVENUE = 'unearned_revenue'; // advance payments from customers---- new
     case ACCRUED_REVENUE = 'accrued_revenue'; // revenue earned but not yet received---- new
 
+    // Payroll accounts ---- new
+    case SALARIES_EXPENSE = 'salaries_expense'; // gross payroll cost
+    case EMPLOYER_CONTRIBUTIONS_EXPENSE = 'employer_contributions_expense'; // employer-side statutory contributions
+    case SALARIES_PAYABLE = 'salaries_payable'; // net pay owed to employees until paid out
+    case SOCIAL_INSURANCE_PAYABLE = 'social_insurance_payable'; // employee + employer social insurance owed to authority
+    case INCOME_TAX_PAYABLE = 'income_tax_payable'; // withheld income tax owed to authority
+
 
     function label(): string
     {
@@ -72,6 +79,11 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_RETURN => 'Purchase Return',
             self::UNEARNED_REVENUE => 'Unearned Revenue',
             self::ACCRUED_REVENUE => 'Accrued Revenue',
+            self::SALARIES_EXPENSE => 'Salaries Expense',
+            self::EMPLOYER_CONTRIBUTIONS_EXPENSE => 'Employer Contributions Expense',
+            self::SALARIES_PAYABLE => 'Salaries Payable',
+            self::SOCIAL_INSURANCE_PAYABLE => 'Social Insurance Payable',
+            self::INCOME_TAX_PAYABLE => 'Income Tax Payable',
         };
     }
 
@@ -114,6 +126,11 @@ enum AccountTypeEnum : string
 
             self::UNEARNED_REVENUE => 'إيرادات مقدمة',
             self::ACCRUED_REVENUE => 'إيرادات مستحقة',
+            self::SALARIES_EXPENSE => 'مصروف الرواتب',
+            self::EMPLOYER_CONTRIBUTIONS_EXPENSE => 'مصروف مساهمات صاحب العمل',
+            self::SALARIES_PAYABLE => 'رواتب مستحقة الدفع',
+            self::SOCIAL_INSURANCE_PAYABLE => 'تأمينات اجتماعية مستحقة',
+            self::INCOME_TAX_PAYABLE => 'ضريبة دخل مستحقة',
         };
     }
 
@@ -149,6 +166,11 @@ enum AccountTypeEnum : string
             AccountTypeEnum::PURCHASE_RETURN => 'warning',
             self::UNEARNED_REVENUE => 'secondary',
             self::ACCRUED_REVENUE => 'secondary',
+            self::SALARIES_EXPENSE => 'danger',
+            self::EMPLOYER_CONTRIBUTIONS_EXPENSE => 'danger',
+            self::SALARIES_PAYABLE => 'dark',
+            self::SOCIAL_INSURANCE_PAYABLE => 'dark',
+            self::INCOME_TAX_PAYABLE => 'dark',
         };
     }
 

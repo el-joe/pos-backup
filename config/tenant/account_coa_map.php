@@ -13,6 +13,9 @@ return [
     'supplier' => '2010',
     'vat_payable' => '2020',
     'issued_checks' => '2030',
+    'salaries_payable' => '2040',
+    'social_insurance_payable' => '2050',
+    'income_tax_payable' => '2060',
     'longterm_liability' => '2100',
 
     'owner_account' => '3010',
@@ -30,4 +33,6 @@ return [
     'maintenance_and_depreciation_expense' => '6020',
     'inventory_expense' => '6020',
     'inventory_shortage' => '6030',
+    'salaries_expense' => '6040',
+    'employer_contributions_expense' => '6050',
 ];

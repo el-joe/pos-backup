@@ -20,6 +20,7 @@ class Employee extends Authenticatable
         'team_id',
         'designation_id',
         'manager_id',
+        'branch_id',
         'hire_date',
         'termination_date',
         'status',
@@ -47,6 +48,11 @@ class Employee extends Authenticatable
             return;
         }
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function department()

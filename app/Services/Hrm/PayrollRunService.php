@@ -5,6 +5,8 @@ namespace App\Services\Hrm;
 use App\Enums\AccountTypeEnum;
 use App\Enums\AuditLogActionEnum;
 use App\Enums\EmployeeStatusEnum;
+use App\Enums\PayrollRunStatusEnum;
+use App\Enums\PayrollSlipLineTypeEnum;
 use App\Enums\TransactionTypeEnum;
 use App\Models\Tenant\Account;
 use App\Models\Tenant\AuditLog;
@@ -49,6 +51,12 @@ class PayrollRunService
 
     public function delete($id): mixed
     {
+        $run = $this->repo->find($id);
+
+        if ($run && ($run->transaction_id || $run->approved_transaction_id)) {
+            throw new \RuntimeException('This payroll run has already been posted to the ledger. Reverse it before deleting.');
+        }
+
         $deleted = $this->repo->delete($id);
         if ($deleted) {
             AuditLog::log(AuditLogActionEnum::from('delete_record'), ['entity' => 'Payroll run', 'id' => $id]);
@@ -56,10 +64,67 @@ class PayrollRunService
         return $deleted;
     }
 
+    /**
+     * Reverses a posted (approved/paid) run's ledger entries and returns it to draft,
+     * so it can then be safely deleted. Mirrors the reversal convention used elsewhere
+     * in the codebase (e.g. Expense/PurchaseService "_refund" transaction types), by
+     * posting the mirror-image lines rather than mutating/deleting the original entries.
+     */
+    public function reverse(PayrollRun $run, ?int $branchId = null): void
+    {
+        DB::transaction(function () use ($run, $branchId) {
+            $branchId = $branchId ?? $run->branch_id;
+
+            if ($run->transaction_id) {
+                $this->reverseTransaction($run->transaction_id, TransactionTypeEnum::PAYROLL_PAYMENT, $run, $branchId, 'Reversal of Payroll Payment');
+            }
+
+            if ($run->approved_transaction_id) {
+                $this->reverseTransaction($run->approved_transaction_id, TransactionTypeEnum::PAYROLL, $run, $branchId, 'Reversal of Payroll Accrual');
+            }
+
+            $run->update([
+                'transaction_id' => null,
+                'approved_transaction_id' => null,
+                'status' => PayrollRunStatusEnum::DRAFT->value,
+            ]);
+
+            AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Payroll run reversed', 'id' => $run->id]);
+        });
+    }
+
+    private function reverseTransaction(int $transactionId, TransactionTypeEnum $type, PayrollRun $run, ?int $branchId, string $description): void
+    {
+        $original = app(TransactionService::class)->find($transactionId, ['lines']);
+        if (!$original) {
+            return;
+        }
+
+        $lines = $original->lines->map(fn($line) => [
+            'account_id' => $line->account_id,
+            'type' => $line->type === 'debit' ? 'credit' : 'debit',
+            'amount' => $line->amount,
+        ])->all();
+
+        app(TransactionService::class)->create([
+            'date' => now(),
+            'description' => $description . " #{$run->id}",
+            'type' => $type->value,
+            'reference_type' => PayrollRun::class,
+            'reference_id' => $run->id,
+            'branch_id' => $branchId,
+            'note' => "Reversal of payroll run #{$run->id}",
+            'amount' => $original->amount,
+            'lines' => $lines,
+        ]);
+    }
+
     public function generateSlips(PayrollRun $run): void
     {
         DB::transaction(function () use ($run) {
-            $employees = Employee::where('status', EmployeeStatusEnum::ACTIVE->value)->get();
+            $employees = Employee::where('status', EmployeeStatusEnum::ACTIVE->value)
+                ->when($run->branch_id, fn($q) => $q->where('branch_id', $run->branch_id))
+                ->get();
 
             $existingEmployeeIds = PayrollSlip::where('payroll_run_id', $run->id)->pluck('employee_id')->all();
 
@@ -94,39 +159,172 @@ class PayrollRunService
         });
     }
 
-    public function postToLedger(PayrollRun $run): void
+    /**
+     * Stage 1 — accrual. Posts the payroll cost/liabilities to the ledger:
+     *   DR Salaries Expense (gross)
+     *   DR Employer Contributions Expense (employer statutory cost)
+     *     CR Salaries Payable (net pay owed to employees)
+     *     CR Social Insurance Payable (employee + employer share)
+     *     CR Income Tax Payable (withheld)
+     *
+     * Requires the run to be in 'approved' status and not already posted, so it can never
+     * double-post. $branchId must be passed explicitly (defaults to the run's own branch)
+     * so this works from console/queue context where admin()/session state isn't available.
+     */
+    public function approve(PayrollRun $run, ?int $branchId = null): void
     {
-        DB::transaction(function () use ($run) {
-            if ($run->transaction_id) {
-                throw new \RuntimeException('Already posted');
+        DB::transaction(function () use ($run, $branchId) {
+            $run = $run->fresh();
+
+            if ($run->approved_transaction_id) {
+                throw new \RuntimeException('Payroll run already posted to the ledger.');
             }
 
-            $branchId = admin()?->branch_id ?? null;
+            if (($run->status?->value ?? $run->status) !== PayrollRunStatusEnum::APPROVED->value) {
+                throw new \RuntimeException('Only approved payroll runs can be posted to the ledger.');
+            }
+
+            $branchId = $branchId ?? $run->branch_id;
             if (!$branchId) {
-                throw new \RuntimeException('Unable to determine branch for posting payroll to ledger');
+                throw new \RuntimeException('Unable to determine branch for posting payroll to ledger.');
             }
 
-            $expenseAccount = Account::default('Expense', AccountTypeEnum::EXPENSE->value, $branchId);
-            $branchCashAccount = Account::default('Branch Cash', AccountTypeEnum::BRANCH_CASH->value, $branchId);
+            $slips = PayrollSlip::where('payroll_run_id', $run->id)->with('lines')->get();
+            if ($slips->isEmpty()) {
+                throw new \RuntimeException('No payroll slips generated for this run yet.');
+            }
+
+            $grossTotal = round((float) $slips->sum('gross_pay'), 2);
+            $netTotal = round((float) $slips->sum('net_pay'), 2);
+
+            $socialInsuranceEmployee = 0.0;
+            $socialInsuranceEmployer = 0.0;
+            $incomeTax = 0.0;
+
+            foreach ($slips as $slip) {
+                foreach ($slip->lines as $line) {
+                    $type = $line->type instanceof PayrollSlipLineTypeEnum ? $line->type : PayrollSlipLineTypeEnum::from($line->type);
+                    match ($type) {
+                        PayrollSlipLineTypeEnum::SOCIAL_INSURANCE_EMPLOYEE => $socialInsuranceEmployee += abs((float) $line->amount),
+                        PayrollSlipLineTypeEnum::SOCIAL_INSURANCE_EMPLOYER => $socialInsuranceEmployer += abs((float) $line->amount),
+                        PayrollSlipLineTypeEnum::INCOME_TAX => $incomeTax += abs((float) $line->amount),
+                        default => null,
+                    };
+                }
+            }
+
+            $employerContributions = round($socialInsuranceEmployer, 2);
+            $socialInsurancePayable = round($socialInsuranceEmployee + $socialInsuranceEmployer, 2);
+            $incomeTaxPayable = round($incomeTax, 2);
+
+            $salariesExpenseAccount = Account::default(AccountTypeEnum::SALARIES_EXPENSE->label(), AccountTypeEnum::SALARIES_EXPENSE->value, $branchId);
+            $employerContributionsAccount = Account::default(AccountTypeEnum::EMPLOYER_CONTRIBUTIONS_EXPENSE->label(), AccountTypeEnum::EMPLOYER_CONTRIBUTIONS_EXPENSE->value, $branchId);
+            $salariesPayableAccount = Account::default(AccountTypeEnum::SALARIES_PAYABLE->label(), AccountTypeEnum::SALARIES_PAYABLE->value, $branchId);
+            $socialInsurancePayableAccount = Account::default(AccountTypeEnum::SOCIAL_INSURANCE_PAYABLE->label(), AccountTypeEnum::SOCIAL_INSURANCE_PAYABLE->value, $branchId);
+            $incomeTaxPayableAccount = Account::default(AccountTypeEnum::INCOME_TAX_PAYABLE->label(), AccountTypeEnum::INCOME_TAX_PAYABLE->value, $branchId);
+
+            $lines = [
+                ['account_id' => $salariesExpenseAccount->id, 'type' => 'debit', 'amount' => $grossTotal],
+            ];
+
+            if ($employerContributions > 0) {
+                $lines[] = ['account_id' => $employerContributionsAccount->id, 'type' => 'debit', 'amount' => $employerContributions];
+            }
+
+            $lines[] = ['account_id' => $salariesPayableAccount->id, 'type' => 'credit', 'amount' => $netTotal];
+
+            if ($socialInsurancePayable > 0) {
+                $lines[] = ['account_id' => $socialInsurancePayableAccount->id, 'type' => 'credit', 'amount' => $socialInsurancePayable];
+            }
+
+            if ($incomeTaxPayable > 0) {
+                $lines[] = ['account_id' => $incomeTaxPayableAccount->id, 'type' => 'credit', 'amount' => $incomeTaxPayable];
+            }
+
+            $totalAmount = $grossTotal + $employerContributions;
 
             $transaction = app(TransactionService::class)->create([
                 'date' => now(),
-                'description' => "Payroll #{$run->month}/{$run->year}",
-                'type' => TransactionTypeEnum::EXPENSE->value,
+                'description' => "Payroll Accrual #{$run->month}/{$run->year}",
+                'type' => TransactionTypeEnum::PAYROLL->value,
                 'reference_type' => PayrollRun::class,
                 'reference_id' => $run->id,
                 'branch_id' => $branchId,
-                'note' => "Payroll run #{$run->id}",
-                'amount' => $run->total_payout,
+                'note' => "Payroll run #{$run->id} accrual",
+                'amount' => $totalAmount,
+                'lines' => $lines,
+            ]);
+
+            $run->update([
+                'approved_transaction_id' => $transaction->id,
+                'branch_id' => $branchId,
+                'total_payout' => $netTotal,
+            ]);
+
+            AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Payroll run accrual posted to ledger', 'id' => $run->id]);
+        });
+    }
+
+    /**
+     * Stage 2 — payment. Settles the previously accrued Salaries Payable against a
+     * payment-capable account (branch cash by default, or any Account with a payment
+     * method attached — same "payment_account" convention used by purchase/expense payments):
+     *   DR Salaries Payable
+     *     CR Payment Account (cash/bank/other)
+     *
+     * Only sets status='paid' here, and only once accrual (approve()) has been posted.
+     */
+    public function pay(PayrollRun $run, ?int $branchId = null, ?int $paymentAccountId = null): void
+    {
+        DB::transaction(function () use ($run, $branchId, $paymentAccountId) {
+            $run = $run->fresh();
+
+            if (!$run->approved_transaction_id) {
+                throw new \RuntimeException('Payroll run must be posted to the ledger (approved) before it can be paid.');
+            }
+
+            if ($run->transaction_id) {
+                throw new \RuntimeException('Payroll run already paid.');
+            }
+
+            $branchId = $branchId ?? $run->branch_id;
+            if (!$branchId) {
+                throw new \RuntimeException('Unable to determine branch for posting payroll payment to ledger.');
+            }
+
+            $salariesPayableAccount = Account::default(AccountTypeEnum::SALARIES_PAYABLE->label(), AccountTypeEnum::SALARIES_PAYABLE->value, $branchId);
+
+            $paymentAccount = $paymentAccountId
+                ? Account::find($paymentAccountId)
+                : Account::default(AccountTypeEnum::BRANCH_CASH->label(), AccountTypeEnum::BRANCH_CASH->value, $branchId);
+
+            if (!$paymentAccount) {
+                throw new \RuntimeException('Unable to resolve a payment account for payroll payment.');
+            }
+
+            $netTotal = round((float) $run->total_payout, 2);
+
+            $transaction = app(TransactionService::class)->create([
+                'date' => now(),
+                'description' => "Payroll Payment #{$run->month}/{$run->year}",
+                'type' => TransactionTypeEnum::PAYROLL_PAYMENT->value,
+                'reference_type' => PayrollRun::class,
+                'reference_id' => $run->id,
+                'branch_id' => $branchId,
+                'note' => "Payroll run #{$run->id} payment",
+                'amount' => $netTotal,
                 'lines' => [
-                    ['account_id' => $expenseAccount->id, 'type' => 'debit', 'amount' => $run->total_payout],
-                    ['account_id' => $branchCashAccount->id, 'type' => 'credit', 'amount' => $run->total_payout],
+                    ['account_id' => $salariesPayableAccount->id, 'type' => 'debit', 'amount' => $netTotal],
+                    ['account_id' => $paymentAccount->id, 'type' => 'credit', 'amount' => $netTotal],
                 ],
             ]);
 
-            $run->update(['transaction_id' => $transaction->id]);
+            $run->update([
+                'transaction_id' => $transaction->id,
+                'status' => PayrollRunStatusEnum::PAID->value,
+            ]);
 
-            AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Payroll run posted to ledger', 'id' => $run->id]);
+            AuditLog::log(AuditLogActionEnum::from('update_record'), ['entity' => 'Payroll run payment posted to ledger', 'id' => $run->id]);
         });
     }
 }

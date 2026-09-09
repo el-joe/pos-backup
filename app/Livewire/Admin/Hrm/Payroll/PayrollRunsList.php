@@ -90,10 +90,13 @@ class PayrollRunsList extends Component
 
         try {
             DB::transaction(function () {
+                $branchId = $this->current->branch_id ?? admin()?->branch_id;
                 $this->payrollRunService->update($this->current->id, [
                     'status' => PayrollRunStatusEnum::APPROVED->value,
                 ]);
-                $this->payrollRunService->generateSlips($this->current->fresh());
+                $run = $this->current->fresh();
+                $this->payrollRunService->generateSlips($run);
+                $this->payrollRunService->approve($run->fresh(), $branchId);
             });
             $this->popup('success', __('general.messages.hrm.payroll_run_approved'));
         } catch (\Throwable $e) {
@@ -121,10 +124,8 @@ class PayrollRunsList extends Component
 
         try {
             DB::transaction(function () {
-                $this->payrollRunService->postToLedger($this->current);
-                $this->payrollRunService->update($this->current->id, [
-                    'status' => PayrollRunStatusEnum::PAID->value,
-                ]);
+                $branchId = $this->current->branch_id ?? admin()?->branch_id;
+                $this->payrollRunService->pay($this->current, $branchId);
             });
         } catch (\Throwable $e) {
             $this->popup('error', $e->getMessage());
