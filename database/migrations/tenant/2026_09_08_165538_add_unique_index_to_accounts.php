@@ -7,11 +7,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private const INDEX_NAME = 'accounts_code_branch_id_unique';
+
     /**
      * Run the migrations.
+     *
+     * 2026_09_08_165000_migrate_system_account_codes already creates this same index
+     * (by the same name) at the end of its own up() — on a fresh install that migration
+     * runs first (earlier timestamp) and leaves the index in place, so this one is a
+     * no-op guarded by indexExists() rather than a hard failure.
      */
     public function up(): void
     {
+        if ($this->indexExists('accounts', self::INDEX_NAME)) {
+            return;
+        }
+
         $duplicates = DB::table('accounts')
             ->select('code', 'branch_id', DB::raw('COUNT(*) as duplicate_count'))
             ->groupBy('code', 'branch_id')
@@ -27,7 +38,7 @@ return new class extends Migration
         }
 
         Schema::table('accounts', function (Blueprint $table) {
-            $table->unique(['code', 'branch_id'], 'accounts_code_branch_id_unique');
+            $table->unique(['code', 'branch_id'], self::INDEX_NAME);
         });
     }
 
@@ -36,8 +47,15 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('accounts', function (Blueprint $table) {
-            $table->dropUnique('accounts_code_branch_id_unique');
-        });
+        if ($this->indexExists('accounts', self::INDEX_NAME)) {
+            Schema::table('accounts', function (Blueprint $table) {
+                $table->dropUnique(self::INDEX_NAME);
+            });
+        }
+    }
+
+    private function indexExists(string $table, string $indexName): bool
+    {
+        return collect(Schema::getIndexes($table))->contains('name', $indexName);
     }
 };
