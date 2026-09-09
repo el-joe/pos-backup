@@ -2283,6 +2283,7 @@ return [
         'cash_register_closed' => 'تم إغلاق سجل النقدية.',
         'discrepancy_reason_required' => 'يجب إدخال سبب عند عدم تطابق الرصيد المُعد فعليًا مع الرصيد المحسوب.',
         'cash_register_variance' => 'فرق إغلاق سجل النقدية رقم :id',
+        'cash_register_variance_too_large' => 'الفرق بين المبلغ المعدود والرصيد المتوقع :amount، وهو أكبر من :pct% من رصيد الافتتاح. يرجى التواصل مع مسؤول النظام بدلاً من إغلاق السجل — هذا الفرق كبير جدًا لتسجيله من هنا.',
         'discrepancy_approved_successfully' => 'تمت الموافقة على الفرق.',
         'no_pending_discrepancy_found' => 'لا يوجد فرق معلق لهذا السجل.',
         'cannot_delete_open_cash_register' => 'لا يمكن حذف سجل نقدية لا يزال مفتوحًا.',

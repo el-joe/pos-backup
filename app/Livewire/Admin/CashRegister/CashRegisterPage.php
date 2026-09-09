@@ -169,6 +169,16 @@ class CashRegisterPage extends Component
         $discrepancy = round($adminValue - $calculated, 2);
         $hasDiscrepancy = abs($discrepancy) > 0.005;
 
+        $maxVariancePct = (float) config('cash_register.max_variance_pct', 10);
+        $maxVarianceAmount = abs((float) $reg->opening_balance) * ($maxVariancePct / 100);
+        if ($hasDiscrepancy && $maxVarianceAmount > 0 && abs($discrepancy) > $maxVarianceAmount) {
+            $this->alert('error', __('general.messages.cash_register_variance_too_large', [
+                'amount' => number_format(abs($discrepancy), 2),
+                'pct' => rtrim(rtrim(number_format($maxVariancePct, 2), '0'), '.'),
+            ]));
+            return;
+        }
+
         if(!$this->validator([
             'closing_balance_input' => $this->closing_balance_input,
             'discrepancy_reason' => $this->discrepancy_reason,

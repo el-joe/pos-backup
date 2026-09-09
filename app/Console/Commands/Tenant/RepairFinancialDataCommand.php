@@ -13,8 +13,10 @@ use App\Models\Tenant\FixedAsset;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Sale;
 use App\Models\Tenant\Stock;
+use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Transaction;
 use App\Models\Tenant\TransactionLine;
+use App\Services\CashRegisterService;
 use App\Services\TransactionService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -24,12 +26,14 @@ use Illuminate\Support\Facades\File;
  * Prompt 09 — live data repair.
  *
  * ⚠️ Modifies live tenant financial data. Defaults to --dry-run=1 (nothing is written).
- * Exactly one --step (1-15) runs per invocation — see docs/financial-data-repair-log.md for
+ * Exactly one --step (1-17) runs per invocation — see docs/financial-data-repair-log.md for
  * the full defect list, the required mysqldump backup procedure, and sign-off checklist.
  *
  * Every write goes through TransactionService::create()/reverse() — never raw SQL against
  * transactions/transaction_lines, and rows in those two tables are never deleted, only
  * reversed. Steps 5, 9 and 13 are report-only by design (see class doc on each method).
+ * Step 16 posts nothing to the ledger — it only corrects cash_registers counters/closes
+ * stale open registers whose activity predates prompt 03's register check.
  */
 class RepairFinancialDataCommand extends Command
 {
@@ -46,7 +50,7 @@ class RepairFinancialDataCommand extends Command
         $step = $this->option('step');
 
         if ($step === null || $step === '') {
-            $this->error('You must pass --step=<1-15>. Exactly one step runs per invocation — see docs/financial-data-repair-log.md.');
+            $this->error('You must pass --step=<1-17>. Exactly one step runs per invocation — see docs/financial-data-repair-log.md.');
             return self::FAILURE;
         }
 
@@ -56,8 +60,8 @@ class RepairFinancialDataCommand extends Command
         }
 
         $step = (int) $step;
-        if ($step < 1 || $step > 15) {
-            $this->error('--step must be an integer between 1 and 15.');
+        if ($step < 1 || $step > 17) {
+            $this->error('--step must be an integer between 1 and 17.');
             return self::FAILURE;
         }
 
@@ -446,7 +450,18 @@ class RepairFinancialDataCommand extends Command
             }
 
             foreach ($stocks as $stock) {
-                $recomputed = round((float) $stock->qty * (float) $stock->unit_cost, 4);
+                // stocks.unit_cost was truncated to decimal(10,2) before the column was widened
+                // (see 2026_09_08_172252_add_total_value_to_stocks) — recomputing qty×unit_cost
+                // from that stored value just reproduces the same truncated total. The true cost
+                // basis lives in purchase_items (purchase_price is decimal(15,4)), so recompute
+                // the weighted-average unit cost from purchase history instead, net of discount
+                // and tax (tax is recovered separately — see step 17 / input-VAT reclassification).
+                $trueUnitCost = $this->weightedAverageUnitCostFromPurchases((int) $stock->product_id);
+
+                $recomputed = $trueUnitCost !== null
+                    ? round((float) $stock->qty * $trueUnitCost, 4)
+                    : round((float) $stock->qty * (float) $stock->unit_cost, 4);
+
                 if (abs($recomputed - (float) $stock->total_value) > 0.0001) {
                     $stock->update(['total_value' => $recomputed]);
                 }
@@ -480,6 +495,40 @@ class RepairFinancialDataCommand extends Command
                 $this->report('After state: stocks.total_value recomputed on weighted-average basis; posted inventory revaluation transaction #' . $transaction->id . ' for branch ' . $branchId . ', amount ' . number_format($amount, 2) . '.');
             }
         }
+    }
+
+    /**
+     * Weighted-average unit cost for a product from its purchase history, net of discount and
+     * tax, at full decimal(15,4) precision — used to close inventory sub-ledger variance that
+     * the stocks.unit_cost column's former decimal(10,2) precision baked in. Returns null when
+     * the product has no purchase_items rows (e.g. opening stock with no purchase history).
+     */
+    protected function weightedAverageUnitCostFromPurchases(int $productId): ?float
+    {
+        $items = \App\Models\Tenant\PurchaseItem::where('product_id', $productId)->get();
+
+        if ($items->isEmpty()) {
+            return null;
+        }
+
+        $totalQty = 0.0;
+        $totalCost = 0.0;
+
+        foreach ($items as $item) {
+            $qty = (float) $item->actual_qty;
+            if ($qty <= 0) {
+                continue;
+            }
+
+            $totalQty += $qty;
+            $totalCost += $qty * (float) $item->unit_cost_after_discount;
+        }
+
+        if ($totalQty <= 0) {
+            return null;
+        }
+
+        return round($totalCost / $totalQty, 4);
     }
 
     // ------------------------------------------------------------------
@@ -864,5 +913,222 @@ class RepairFinancialDataCommand extends Command
         $register->update(['total_sales' => $correctedTotalSales]);
         $this->info("Updated register #{$register->id} total_sales to {$correctedTotalSales}");
         $this->report('After state: CashRegister#' . $register->id . '.total_sales = ' . $correctedTotalSales . '.');
+    }
+
+    // ------------------------------------------------------------------
+    // Step 16 — reconcile and close stale open registers
+    // ------------------------------------------------------------------
+
+    protected function step16(TransactionService $ts): void
+    {
+        $reason = $this->reasonFor(16, 'reconcile and close stale open register — counters were not recorded for pre-register activity');
+        $cashRegisterService = app(CashRegisterService::class);
+
+        $registers = CashRegister::where('status', 'open')->whereNull('closed_at')->orderBy('id')->get();
+
+        if ($registers->isEmpty()) {
+            $this->line('No open cash registers found.');
+            $this->report('No open cash registers found.');
+            return;
+        }
+
+        foreach ($registers as $register) {
+            $branchCashBalance = $this->branchCashBalance($register->branch_id);
+
+            $before = [
+                $register->id, $register->branch_id, number_format((float) $register->opening_balance, 2),
+                number_format((float) $register->total_sales, 2), number_format((float) $register->total_purchases, 2),
+                number_format((float) $register->total_expenses, 2), number_format((float) $register->total_deposits, 2),
+                number_format((float) $register->total_withdrawals, 2),
+                number_format((float) $register->calculated_closing_balance, 2),
+                number_format($branchCashBalance, 2),
+                number_format($branchCashBalance - (float) $register->calculated_closing_balance, 2),
+            ];
+
+            $this->comment("Register #{$register->id} (branch {$register->branch_id}) — before state:");
+            $this->reportTable(
+                ['ID', 'Branch', 'Opening', 'Sales', 'Purchases', 'Expenses', 'Deposits', 'Withdrawals', 'Calculated Closing', 'Actual Branch Cash', 'Variance'],
+                [$before]
+            );
+
+            $window = OrderPayment::where('created_at', '>=', $register->opened_at)
+                ->where('created_at', '<=', now())
+                ->where('refunded', false)
+                ->get();
+
+            $recomputed = [
+                'total_sales' => 0.0,
+                'total_purchases' => 0.0,
+                'total_expenses' => 0.0,
+            ];
+
+            $payableTypeMap = [
+                \App\Models\Tenant\Sale::class => 'total_sales',
+                \App\Models\Tenant\Purchase::class => 'total_purchases',
+                \App\Models\Tenant\Expense::class => 'total_expenses',
+            ];
+
+            foreach ($window as $payment) {
+                $field = $payableTypeMap[$payment->payable_type] ?? null;
+                if (!$field || !$cashRegisterService->isCashAccount($payment->account_id)) {
+                    continue;
+                }
+
+                $payable = $payment->payable;
+                if (!$payable || (int) $payable->branch_id !== (int) $register->branch_id) {
+                    continue;
+                }
+
+                $recomputed[$field] += (float) $payment->amount;
+            }
+
+            $recomputed = array_map(fn ($v) => round($v, 2), $recomputed);
+
+            $expectedClosingBalance = round(
+                (float) $register->opening_balance
+                + $recomputed['total_sales']
+                + (float) $register->total_purchase_refunds
+                + (float) $register->total_expense_refunds
+                + (float) $register->total_deposits
+                - (float) $register->total_sale_refunds
+                - $recomputed['total_purchases']
+                - $recomputed['total_expenses']
+                - (float) $register->total_withdrawals,
+                2
+            );
+
+            $recomputedVariance = round($branchCashBalance - $expectedClosingBalance, 2);
+
+            $this->comment('Recomputed from order_payments (cash accounts only, ' . $register->opened_at . ' through now, branch ' . $register->branch_id . '):');
+            $this->reportTable(
+                ['Recomputed Sales', 'Recomputed Purchases', 'Recomputed Expenses', 'Recomputed Closing', 'Actual Branch Cash', 'Residual Variance'],
+                [[
+                    number_format($recomputed['total_sales'], 2),
+                    number_format($recomputed['total_purchases'], 2),
+                    number_format($recomputed['total_expenses'], 2),
+                    number_format($expectedClosingBalance, 2),
+                    number_format($branchCashBalance, 2),
+                    number_format($recomputedVariance, 2),
+                ]]
+            );
+
+            $this->line('Would update cash_registers counters to the recomputed values above, then close the register with closing_balance = expected_closing_balance and discrepancy = 0. Posts nothing to the ledger.');
+            $this->report('Would set total_sales/total_purchases/total_expenses to the recomputed values, then close the register: closing_balance = ' . number_format($expectedClosingBalance, 2) . ', expected_closing_balance = same, discrepancy = 0.00. No ledger posting — no real cash variance exists, the counters were simply never written for activity that predated the register opening.');
+
+            if ($this->dryRun) {
+                $this->report('DRY RUN: no writes performed.');
+                continue;
+            }
+
+            $register->update([
+                'total_sales' => $recomputed['total_sales'],
+                'total_purchases' => $recomputed['total_purchases'],
+                'total_expenses' => $recomputed['total_expenses'],
+                'closing_balance' => $expectedClosingBalance,
+                'expected_closing_balance' => $expectedClosingBalance,
+                'discrepancy' => 0,
+                'discrepancy_reason' => 'Reconciled by repair step 16 — counters were not recorded for pre-register activity',
+                'closed_at' => now(),
+                'status' => 'closed',
+            ]);
+
+            $this->info("Reconciled and closed register #{$register->id}, closing_balance = {$expectedClosingBalance}");
+            $this->report('After state: CashRegister#' . $register->id . ' closed, closing_balance = expected_closing_balance = ' . number_format($expectedClosingBalance, 2) . ', discrepancy = 0.00.');
+        }
+    }
+
+    protected function branchCashBalance(?int $branchId): float
+    {
+        $debit = (float) TransactionLine::whereHas('account', fn ($q) => $q->where('type', AccountTypeEnum::BRANCH_CASH->value)->where('branch_id', $branchId))
+            ->where('type', 'debit')->sum('amount');
+        $credit = (float) TransactionLine::whereHas('account', fn ($q) => $q->where('type', AccountTypeEnum::BRANCH_CASH->value)->where('branch_id', $branchId))
+            ->where('type', 'credit')->sum('amount');
+
+        return round($debit - $credit, 2);
+    }
+
+    // ------------------------------------------------------------------
+    // Step 17 — reclassify buried input VAT out of inventory onto VAT Receivable
+    // ------------------------------------------------------------------
+
+    protected function step17(TransactionService $ts): void
+    {
+        $reason = $this->reasonFor(17, 'reclassify historical input VAT out of Inventory onto VAT Receivable');
+
+        // Purchases 1 and 3 predate unit_cost_net (see 2026_09_08_220000_add_unit_cost_net_to_purchase_items_table)
+        // — their tax was posted straight into inventory cost instead of being split out as
+        // recoverable input VAT. New purchases already post correctly via unit_cost_net.
+        $purchaseIds = [1, 3];
+        $purchases = Purchase::with('purchaseItems')->whereIn('id', $purchaseIds)->get();
+
+        if ($purchases->isEmpty()) {
+            $this->line('Purchases 1/3 not found on this tenant.');
+            $this->report('Purchases 1/3 not found on this tenant.');
+            return;
+        }
+
+        $vatAccount = Account::default('Vat Receivable', AccountTypeEnum::VAT_RECEIVABLE->value);
+        $totalVat = 0.0;
+        $branchTotals = [];
+
+        foreach ($purchases as $purchase) {
+            $alreadyReclassified = Transaction::where('reference_type', Purchase::class)
+                ->where('reference_id', $purchase->id)
+                ->where('type', 'vat_reclassification')
+                ->exists();
+
+            $purchaseVat = 0.0;
+            $rows = [];
+            foreach ($purchase->purchaseItems as $item) {
+                $qty = (float) $item->actual_qty;
+                $netAfterDiscount = (float) $item->unit_cost_after_discount;
+                $taxPct = (float) ($item->tax_percentage ?? 0);
+                $itemVat = round($qty * $netAfterDiscount * ($taxPct / 100), 2);
+                $purchaseVat += $itemVat;
+
+                $rows[] = [$item->id, $item->product_id, $qty, number_format($netAfterDiscount, 4), $taxPct . '%', number_format($itemVat, 2)];
+            }
+            $purchaseVat = round($purchaseVat, 2);
+
+            $this->comment("Purchase #{$purchase->id} (branch {$purchase->branch_id}) — input VAT buried in inventory = " . number_format($purchaseVat, 2) . '; already reclassified = ' . ($alreadyReclassified ? 'yes' : 'no'));
+            $this->reportTable(['Purchase Item ID', 'Product ID', 'Qty', 'Net Unit Cost (after discount)', 'Tax %', 'Input VAT'], $rows);
+
+            if ($alreadyReclassified || $purchaseVat <= 0) {
+                continue;
+            }
+
+            $totalVat += $purchaseVat;
+            $branchTotals[$purchase->branch_id] = ($branchTotals[$purchase->branch_id] ?? 0) + $purchaseVat;
+
+            $this->line("Would post: DR VAT Receivable {$purchaseVat} / CR Inventory {$purchaseVat}, branch {$purchase->branch_id}, dated today.");
+            $this->report('Would post DR VAT Receivable / CR Inventory ' . number_format($purchaseVat, 2) . ' for purchase #' . $purchase->id . ', dated today — not backdated into the closed purchase period.');
+
+            if ($this->dryRun) {
+                $this->report('DRY RUN: no writes performed for purchase #' . $purchase->id);
+                continue;
+            }
+
+            $inventoryAccount = Account::default('Inventory', AccountTypeEnum::INVENTORY->value, $purchase->branch_id);
+
+            $transaction = $ts->create([
+                'date' => now(),
+                'description' => $reason . " (purchase #{$purchase->id})",
+                'type' => 'vat_reclassification',
+                'reference_type' => Purchase::class,
+                'reference_id' => $purchase->id,
+                'branch_id' => $purchase->branch_id,
+                'note' => $reason . '. Input VAT of ' . number_format($purchaseVat, 2) . ' was posted into inventory cost at purchase time; reclassified onto VAT Receivable for filing.',
+                'lines' => [
+                    ['account_id' => $vatAccount->id, 'type' => 'debit', 'amount' => $purchaseVat],
+                    ['account_id' => $inventoryAccount->id, 'type' => 'credit', 'amount' => $purchaseVat],
+                ],
+            ]);
+
+            $this->info("Posted VAT reclassification transaction #{$transaction->id} for purchase #{$purchase->id}, amount {$purchaseVat}");
+            $this->report('After state: posted transaction #' . $transaction->id . ' reclassifying ' . number_format($purchaseVat, 2) . ' of input VAT from Inventory to VAT Receivable for purchase #' . $purchase->id . '.');
+        }
+
+        $this->report('');
+        $this->report('Total input VAT to recover: ' . number_format($totalVat, 2) . '. By branch: ' . collect($branchTotals)->map(fn ($v, $k) => "branch {$k} = " . number_format($v, 2))->implode(', ') . '. Supporting detail is the per-item table above for the accountant to file.');
     }
 }

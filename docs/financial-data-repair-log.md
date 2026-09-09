@@ -5,7 +5,7 @@
 `app/Console/Commands/Tenant/RepairFinancialDataCommand.php`
 (`php artisan tenant:repair-financial-data {--tenant=} {--step=} {--dry-run=1} {--report-path=}`)
 
-Repairs the 15 defects verified in `mohaaseb_test.sql` (a specific tenant's live data), one
+Repairs the defects verified in `mohaaseb_test.sql` (a specific tenant's live data), one
 numbered step per invocation. `--dry-run=1` is the default and is safe: nothing is written,
 only printed and saved to a markdown report under `storage/app/repair-reports/` (or
 `--report-path`). Passing `--dry-run=0` is required to actually write, and only after the
@@ -75,6 +75,8 @@ step number, e.g. `"Repair step 1: reverse register open/close posted to equity"
 | 13 | Missing check records (FA-000003's two 5,000 payments) | Report only — reconstructing check numbers from a GL entry is guesswork | pending — report-only, no write path |
 | 14 | Deleted check with surviving GL (check #2, txn 43) | Reverse; added `Check` model `forceDeleting` guard that blocks hard-delete outright | pending — dry run only, awaiting accountant approval before write |
 | 15 | Drawer overstated by non-cash sale #6 (145,867.50 check payment) | Recompute `cash_registers.total_sales` cash-only via a direct guarded model update (no GL lines involved, so `TransactionService` is intentionally not used here) | pending — dry run only, awaiting accountant approval before write |
+| 16 | Stale open register (id 1) never counted pre-open cash activity → 371,687 phantom variance | Recompute counters from `order_payments` (cash accounts only) within `opened_at`–now, close the register with `discrepancy = 0`. Posts nothing to the ledger — there is no real cash variance, only uncounted counters | pending — dry run only, awaiting accountant approval before write |
+| 17 | Input VAT on purchases 1, 3 buried in inventory cost (116,875.00 total: 83,125.00 + 33,750.00) | Reclassify DR VAT Receivable / CR Inventory per purchase, dated today (not backdated into the closed purchase period) | pending — dry run only, awaiting accountant approval before write |
 
 ## Constraints (enforced in code)
 

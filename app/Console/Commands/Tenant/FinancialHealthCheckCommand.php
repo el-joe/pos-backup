@@ -5,11 +5,14 @@ namespace App\Console\Commands\Tenant;
 use App\Enums\AccountTypeEnum;
 use App\Models\Tenant;
 use App\Models\Tenant\Account;
+use App\Models\Tenant\CashRegister;
 use App\Models\Tenant\Contracting\ChartOfAccount;
 use App\Models\Tenant\FixedAsset;
+use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Stock;
 use App\Models\Tenant\Transaction;
 use App\Models\Tenant\TransactionLine;
+use App\Services\CashRegisterService;
 use Illuminate\Console\Command;
 
 /**
@@ -70,6 +73,7 @@ class FinancialHealthCheckCommand extends Command
         $this->checkAssetAccountsCreditBalance();
         $this->checkMissingDepreciation();
         $this->checkOrphanReferences();
+        $this->checkCashPaymentsWithoutOpenRegister();
     }
 
     protected function checkChartOfAccountsSeeded(): void
@@ -241,6 +245,48 @@ class FinancialHealthCheckCommand extends Command
         $this->flag('Assets past depreciation start with none posted', count($offenders));
         if (!empty($offenders)) {
             $this->table(['Asset ID', 'Code', 'Name', 'Depreciation Start', 'Expected Accumulated'], $offenders);
+        }
+    }
+
+    /**
+     * Sales/purchases/expenses can still be paid in cash while no register is open for the
+     * branch (nothing blocks it yet — see prompt 21) — the drawer counters just silently
+     * don't count that payment. This flags it read-only rather than blocking checkout, so a
+     * missing register shows up here instead of surfacing as an unexplained drawer variance
+     * at close time.
+     */
+    protected function checkCashPaymentsWithoutOpenRegister(): void
+    {
+        $cashRegisterService = app(CashRegisterService::class);
+
+        $registers = CashRegister::query()->get(['id', 'branch_id', 'opened_at', 'closed_at']);
+        $payments = OrderPayment::where('refunded', false)->with('payable')->get();
+
+        $offenders = [];
+        foreach ($payments as $payment) {
+            if (!$cashRegisterService->isCashAccount($payment->account_id)) {
+                continue;
+            }
+
+            $payable = $payment->payable;
+            if (!$payable || !isset($payable->branch_id)) {
+                continue;
+            }
+
+            $covered = $registers->contains(function (CashRegister $register) use ($payable, $payment) {
+                return (int) $register->branch_id === (int) $payable->branch_id
+                    && $register->opened_at <= $payment->created_at
+                    && ($register->closed_at === null || $register->closed_at >= $payment->created_at);
+            });
+
+            if (!$covered) {
+                $offenders[] = [$payment->id, class_basename($payment->payable_type), $payment->payable_id, $payable->branch_id, number_format((float) $payment->amount, 2), $payment->created_at];
+            }
+        }
+
+        $this->flag('Cash payments recorded with no open register covering them', count($offenders));
+        if (!empty($offenders)) {
+            $this->table(['Order Payment ID', 'Payable Type', 'Payable ID', 'Branch ID', 'Amount', 'Paid At'], $offenders);
         }
     }
 

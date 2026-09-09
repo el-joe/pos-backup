@@ -2309,6 +2309,7 @@ return [
         'cash_register_closed' => 'Cash register closed.',
         'discrepancy_reason_required' => 'A reason is required when the counted closing balance does not match the calculated balance.',
         'cash_register_variance' => 'Cash register #:id closing variance',
+        'cash_register_variance_too_large' => 'The counted amount differs from the expected balance by :amount, more than :pct% of the opening balance. Please contact an administrator instead of closing the register — this is too large to book from here.',
         'discrepancy_approved_successfully' => 'Discrepancy approved.',
         'no_pending_discrepancy_found' => 'No pending discrepancy found for this register.',
         'cannot_delete_open_cash_register' => 'Cannot delete a cash register that is still open.',
