@@ -29,7 +29,7 @@ return new class extends Migration
                     default => 'pending',
                 };
 
-                DB::table('sales')->whereKey($sale->id)->update(['status' => $status]);
+                DB::table('sales')->where('id', $sale->id)->update(['status' => $status]);
             }
         });
     }
