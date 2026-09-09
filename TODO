@@ -60,3 +60,5 @@ mo7aaseb.com
 hesabna.com
 
 pa db:seed --class=DocumentationSeeder
+
+tenant:financial-health-check
