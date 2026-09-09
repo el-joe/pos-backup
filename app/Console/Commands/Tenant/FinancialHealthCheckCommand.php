@@ -14,6 +14,7 @@ use App\Models\Tenant\Transaction;
 use App\Models\Tenant\TransactionLine;
 use App\Services\CashRegisterService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Read-only ledger health check, safe to schedule daily. Never writes anything.
@@ -69,11 +70,49 @@ class FinancialHealthCheckCommand extends Command
         $this->checkZeroLines();
         $this->checkOrphanLines();
         $this->checkDuplicateControlAccounts();
+        $this->checkDuplicateSubsidiaryAccounts();
         $this->checkInventoryVariance();
         $this->checkAssetAccountsCreditBalance();
+        $this->checkConflictingDepreciationBasis();
         $this->checkMissingDepreciation();
         $this->checkOrphanReferences();
         $this->checkCashPaymentsWithoutOpenRegister();
+        $this->checkTimezoneConsistency();
+    }
+
+    /**
+     * config('app.timezone') is what every Carbon/Eloquent datetime cast in this app
+     * assumes it's working in. MySQL's TIMESTAMP columns (opened_at, created_at, etc.)
+     * convert on read/write using the connection's session time_zone, which defaults to
+     * MySQL's SYSTEM zone unless 'timezone' is set on the connection in
+     * config/database.php. If those two disagree, every TIMESTAMP column round-trips
+     * through a silent offset — harmless for relative comparisons done entirely in PHP
+     * or entirely in SQL, but it corrupts anything that mixes the two (e.g. a period
+     * boundary computed in SQL and compared against a Carbon date in PHP), which is
+     * exactly the shape of the monthly depreciation period logic.
+     */
+    protected function checkTimezoneConsistency(): void
+    {
+        $appTimezone = config('app.timezone');
+
+        $row = DB::selectOne('select NOW() as db_now, UTC_TIMESTAMP() as db_utc_now, @@session.time_zone as session_tz');
+        $dbNow = \Illuminate\Support\Carbon::parse($row->db_now);
+        $dbUtcNow = \Illuminate\Support\Carbon::parse($row->db_utc_now);
+        $driftSeconds = $dbNow->diffInSeconds($dbUtcNow, false);
+
+        $isDrifted = $appTimezone !== 'UTC' ? false : abs($driftSeconds) > 60;
+        // app.timezone=UTC is what every Carbon cast in this app assumes; if MySQL's
+        // session clock disagrees with UTC by more than a minute, TIMESTAMP columns are
+        // silently shifted relative to what the app believes it wrote/read.
+
+        $this->flag('Timezone drift between app.timezone and MySQL session time_zone', $isDrifted ? 1 : 0);
+        if ($isDrifted) {
+            $this->table(
+                ['app.timezone', 'MySQL session.time_zone', 'MySQL NOW()', 'MySQL UTC_TIMESTAMP()', 'Drift (s)'],
+                [[$appTimezone, $row->session_tz, $row->db_now, $row->db_utc_now, $driftSeconds]]
+            );
+            $this->warn('Set the "timezone" key on the mysql connection in config/database.php to "+00:00" (or set MySQL\'s session time_zone) so TIMESTAMP columns stop round-tripping through a silent offset.');
+        }
     }
 
     protected function checkChartOfAccountsSeeded(): void
@@ -150,9 +189,19 @@ class FinancialHealthCheckCommand extends Command
         $this->flag('Orphan lines (account missing, incl. hard-deleted)', $orphanAccount);
     }
 
+    /**
+     * Control accounts are branch-owned (model_type = Branch) — exactly one per
+     * (type, branch_id) is the goal, so more than one is a real defect (e.g. the
+     * issued_checks duplication fixed by Blocker B). Subsidiary accounts (one per
+     * customer/supplier, model_type = User) are excluded here: grouping those by
+     * (type, branch_id) alone flags every tenant with more than one customer or
+     * supplier as "duplicate" — that's the goal state, not a defect. See
+     * checkDuplicateSubsidiaryAccounts() for the check that actually applies to them.
+     */
     protected function checkDuplicateControlAccounts(): void
     {
         $groups = Account::query()
+            ->where('model_type', \App\Models\Tenant\Branch::class)
             ->get()
             ->groupBy(function (Account $account) {
                 return implode('|', [
@@ -162,13 +211,44 @@ class FinancialHealthCheckCommand extends Command
             })
             ->filter(fn ($g) => $g->count() > 1);
 
-        $this->flag('Duplicate control-account groups (type, branch_id)', $groups->count());
+        $this->flag('Duplicate control-account groups (branch-owned)', $groups->count());
         if ($groups->isNotEmpty()) {
             $rows = [];
             foreach ($groups as $key => $group) {
                 $rows[] = [$key, $group->count(), $group->pluck('id')->implode(',')];
             }
             $this->table(['Type|Branch', 'Count', 'Account IDs'], $rows);
+        }
+    }
+
+    /**
+     * The real defect on the subsidiary side: more than one account for the same party
+     * (model_type = User) of the same type — e.g. a customer that ended up with two
+     * separate receivable accounts, splitting their statement across two ledgers. This
+     * is NOT caught by checkDuplicateControlAccounts() above, and must never be "fixed"
+     * by widening that check's grouping to include model_id — see the class doc warning
+     * on tenant:merge-duplicate-accounts about collapsing subsidiary ledgers.
+     */
+    protected function checkDuplicateSubsidiaryAccounts(): void
+    {
+        $groups = Account::query()
+            ->where('model_type', \App\Models\Tenant\User::class)
+            ->get()
+            ->groupBy(function (Account $account) {
+                return implode('|', [
+                    $account->model_id ?? 'null',
+                    $account->type?->value ?? $account->getRawOriginal('type'),
+                ]);
+            })
+            ->filter(fn ($g) => $g->count() > 1);
+
+        $this->flag('Duplicate subsidiary accounts (per party)', $groups->count());
+        if ($groups->isNotEmpty()) {
+            $rows = [];
+            foreach ($groups as $key => $group) {
+                $rows[] = [$key, $group->count(), $group->pluck('id')->implode(',')];
+            }
+            $this->table(['PartyID|Type', 'Count', 'Account IDs'], $rows);
         }
     }
 
@@ -227,13 +307,45 @@ class FinancialHealthCheckCommand extends Command
         }
     }
 
+    /**
+     * hasConflictingDepreciationBasis() (both useful_life_months and depreciation_rate set)
+     * is enforced by DepreciationService::assertValid() before anything is posted — but this
+     * command's "expected accumulated" figure below calls
+     * FixedAsset::calculateAccumulatedDepreciation() directly on the model, which does not
+     * consult depreciation_basis or call assertValid() at all. It silently falls back to the
+     * useful_life_months (straight-line) basis whenever that column is set, regardless of
+     * whether depreciation_rate is also set — so a contradictory asset like FA-000001 (36
+     * months AND a 10% rate) never surfaced as a problem here even though run-depreciation
+     * would refuse to post it. Flag the contradiction on its own, and exclude those assets
+     * from the "expected accumulated" estimate below since that number is meaningless (and
+     * silently one-sided) until an accountant picks a basis.
+     */
+    protected function checkConflictingDepreciationBasis(): void
+    {
+        $assets = FixedAsset::query()
+            ->whereNotNull('depreciation_start_date')
+            ->whereNotIn('status', [FixedAsset::STATUS_UNDER_CONSTRUCTION])
+            ->get()
+            ->filter(fn (FixedAsset $a) => $a->hasConflictingDepreciationBasis());
+
+        $this->flag('Assets with contradictory depreciation basis (both useful_life_months and rate set)', $assets->count());
+        if ($assets->isNotEmpty()) {
+            $this->table(
+                ['Asset ID', 'Code', 'Name', 'Useful Life (months)', 'Rate (%)', 'depreciation_basis'],
+                $assets->map(fn (FixedAsset $a) => [$a->id, $a->code, $a->name, $a->useful_life_months, $a->depreciation_rate, $a->depreciation_basis ?? '— unresolved —'])
+            );
+            $this->warn('Do not guess which basis was intended — ask the accountant, then set depreciation_basis explicitly. tenant:run-depreciation already refuses to post these.');
+        }
+    }
+
     protected function checkMissingDepreciation(): void
     {
         $assets = FixedAsset::query()
             ->whereNotNull('depreciation_start_date')
             ->where('depreciation_start_date', '<=', now())
             ->whereNotIn('status', [FixedAsset::STATUS_UNDER_CONSTRUCTION])
-            ->get();
+            ->get()
+            ->reject(fn (FixedAsset $a) => $a->hasConflictingDepreciationBasis());
 
         $offenders = [];
         foreach ($assets as $asset) {
@@ -254,6 +366,15 @@ class FinancialHealthCheckCommand extends Command
      * don't count that payment. This flags it read-only rather than blocking checkout, so a
      * missing register shows up here instead of surfacing as an unexplained drawer variance
      * at close time.
+     *
+     * Caveat this check cannot resolve on its own: order_payments.account_id currently
+     * stores the counterparty (customer/supplier) account for Sales/Purchases, not the
+     * tender account — see the prompt 11 defect (fixed going forward by
+     * counterparty_account_id, but the historical backfill onto the correct account_id
+     * hasn't run yet). Until that backfill runs, isCashAccount($payment->account_id) can
+     * only tell us whether the counterparty account happens to be flagged as cash, not
+     * whether the payment itself was cash — so a row below may not actually be a cash
+     * payment. Re-run this check after the backfill and treat it as provisional until then.
      */
     protected function checkCashPaymentsWithoutOpenRegister(): void
     {
@@ -273,20 +394,37 @@ class FinancialHealthCheckCommand extends Command
                 continue;
             }
 
-            $covered = $registers->contains(function (CashRegister $register) use ($payable, $payment) {
+            $coveringRegister = $registers->first(function (CashRegister $register) use ($payable, $payment) {
                 return (int) $register->branch_id === (int) $payable->branch_id
                     && $register->opened_at <= $payment->created_at
                     && ($register->closed_at === null || $register->closed_at >= $payment->created_at);
             });
 
-            if (!$covered) {
-                $offenders[] = [$payment->id, class_basename($payment->payable_type), $payment->payable_id, $payable->branch_id, number_format((float) $payment->amount, 2), $payment->created_at];
+            if (!$coveringRegister) {
+                // Nearest register for the same branch, purely to make the gap legible in the
+                // report — format both timestamps through the same Carbon path (no mixing raw
+                // DB strings with cast Carbon instances) so the comparison isn't misleading.
+                $nearestRegister = $registers
+                    ->where('branch_id', $payable->branch_id)
+                    ->sortBy(fn (CashRegister $r) => abs($r->opened_at->diffInSeconds($payment->created_at)))
+                    ->first();
+
+                $offenders[] = [
+                    $payment->id,
+                    class_basename($payment->payable_type),
+                    $payment->payable_id,
+                    $payable->branch_id,
+                    number_format((float) $payment->amount, 2),
+                    $payment->created_at->format('Y-m-d H:i:s'),
+                    $nearestRegister ? $nearestRegister->opened_at->format('Y-m-d H:i:s') : '— none open for this branch —',
+                ];
             }
         }
 
         $this->flag('Cash payments recorded with no open register covering them', count($offenders));
         if (!empty($offenders)) {
-            $this->table(['Order Payment ID', 'Payable Type', 'Payable ID', 'Branch ID', 'Amount', 'Paid At'], $offenders);
+            $this->table(['Order Payment ID', 'Payable Type', 'Payable ID', 'Branch ID', 'Amount', 'Paid At', 'Nearest Register opened_at'], $offenders);
+            $this->comment('Note: account_id on Sales/Purchases still stores the counterparty (prompt 11), so "cash" above is provisional — see class doc on this method.');
         }
     }
 

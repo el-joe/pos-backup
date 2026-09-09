@@ -33,6 +33,7 @@ enum TransactionTypeEnum : string
     case CHECK_BOUNCE = 'check_bounce';
     case PAYROLL = 'payroll';
     case PAYROLL_PAYMENT = 'payroll_payment';
+    case VAT_RECLASSIFICATION = 'vat_reclassification';
 
     public function label(): string
     {
@@ -66,6 +67,7 @@ enum TransactionTypeEnum : string
             self::CHECK_BOUNCE => 'Bounced Check',
             self::PAYROLL => 'Payroll',
             self::PAYROLL_PAYMENT => 'Payroll Payment',
+            self::VAT_RECLASSIFICATION => 'VAT Reclassification',
         };
     }
 }

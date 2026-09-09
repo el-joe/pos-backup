@@ -207,7 +207,8 @@ class FixedAsset extends Model
 
     public function calculateAccumulatedDepreciation(?Carbon $asOf = null): float
     {
-        $asOfDate = ($asOf ?? now())->copy()->startOfMonth();
+        $asOfRaw = ($asOf ?? now())->copy();
+        $asOfDate = $asOfRaw->copy()->startOfMonth();
 
         if ($this->is_under_construction) {
             return 0.0;
@@ -218,7 +219,15 @@ class FixedAsset extends Model
             return 0.0;
         }
 
-        $monthsElapsed = ($startDate->diffInMonths($asOfDate)) + 1;
+        // Depreciation for a month is posted at that month's end by the scheduled job, never
+        // accrued mid-month — so the month $asOf falls in only counts as elapsed if $asOf is
+        // literally that month's last calendar day (or later). Using diffInMonths(...)+1
+        // unconditionally would count the current, still-open month as a complete period.
+        $monthsElapsed = $startDate->diffInMonths($asOfDate);
+        if ($asOfRaw->isSameDay($asOfRaw->copy()->endOfMonth())) {
+            $monthsElapsed++;
+        }
+
         $lifeMonths = max(0, (int) ($this->useful_life_months ?? 0));
         if ($lifeMonths <= 0) {
             return 0.0;

@@ -12,6 +12,7 @@ use App\Models\Tenant\Expense;
 use App\Models\Tenant\FixedAsset;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Sale;
+use App\Models\Tenant\SaleItem;
 use App\Models\Tenant\Stock;
 use App\Models\Tenant\OrderPayment;
 use App\Models\Tenant\Transaction;
@@ -412,89 +413,191 @@ class RepairFinancialDataCommand extends Command
     // Step 7 — inventory GL vs sub-ledger variance
     // ------------------------------------------------------------------
 
+    /**
+     * A single dated revaluation entry for "GL - sub-ledger" is wrong when the two errors
+     * that make up the residual net to different signs. On this tenant the sub-ledger is
+     * OVERSTATED (25,000 units received at truncated 27.08 instead of true 27.075) while the
+     * GL is UNDERSTATED by a different amount (COGS on the units already sold was posted at
+     * the same truncated 27.08, over-crediting inventory / over-debiting COGS). Collapsing
+     * both into one entry would move the GL to match a sub-ledger that is itself wrong. So
+     * this recomputes true unit cost from purchase history and splits the correction in two:
+     *   - the portion still sitting in remaining stock is a sub-ledger-only fix (no GL entry
+     *     — the GL's inventory debit at receipt was correct; only stocks.total_value drifted).
+     *   - the portion already recognized in COGS via sale_items posted at the truncated cost
+     *     is a genuine GL misstatement, corrected with DR Inventory / CR Cogs (or reversed)
+     *     against the actual sale that carried the wrong cost.
+     */
     protected function step7(TransactionService $ts): void
     {
-        $reason = $this->reasonFor(7, 'post inventory revaluation entry for residual GL vs sub-ledger variance');
+        $reason = $this->reasonFor(7, 'split inventory truncation error into a sub-ledger-only correction and a genuine COGS/GL correction');
 
         $branchIds = Stock::query()->distinct()->pluck('branch_id');
+        $anyResidual = false;
 
         foreach ($branchIds as $branchId) {
             $stocks = Stock::where('branch_id', $branchId)->get();
 
-            $glDebit = (float) TransactionLine::whereHas('account', fn ($q) => $q->where('type', AccountTypeEnum::INVENTORY->value)->where('branch_id', $branchId))
-                ->where('type', 'debit')->sum('amount');
-            $glCredit = (float) TransactionLine::whereHas('account', fn ($q) => $q->where('type', AccountTypeEnum::INVENTORY->value)->where('branch_id', $branchId))
-                ->where('type', 'credit')->sum('amount');
-            $glBalance = $glDebit - $glCredit;
+            [$glBalanceBefore, $subLedgerBefore, $varianceBefore] = $this->inventoryGlVsSubLedger($branchId, $stocks);
 
-            $weightedAverageTotal = (float) $stocks->sum(fn (Stock $s) => (float) $s->qty * (float) $s->unit_cost);
-            $currentTotalValue = (float) $stocks->sum('total_value');
-            $variance = $glBalance - $weightedAverageTotal;
-
-            $this->comment("Branch {$branchId}: GL={$glBalance}, Σ(qty×unit_cost)={$weightedAverageTotal}, Σ(stocks.total_value)={$currentTotalValue}, variance(GL - qty×cost)=" . round($variance, 2));
+            $this->comment("Branch {$branchId} — before: GL={$glBalanceBefore}, Σ(stocks.total_value)={$subLedgerBefore}, variance(GL - sub-ledger)=" . round($varianceBefore, 2));
             $this->reportTable(
-                ['Branch ID', 'GL Balance', 'Sub-ledger (qty×unit_cost)', 'Current stocks.total_value', 'Variance'],
-                [[$branchId, number_format($glBalance, 2), number_format($weightedAverageTotal, 2), number_format($currentTotalValue, 2), number_format($variance, 2)]]
+                ['Branch ID', 'GL Balance', 'Sub-ledger (stocks.total_value)', 'Variance'],
+                [[$branchId, number_format($glBalanceBefore, 2), number_format($subLedgerBefore, 2), number_format($varianceBefore, 2)]]
             );
 
-            if (abs($variance) <= 0.005 && abs($currentTotalValue - $weightedAverageTotal) <= 0.005) {
+            if (abs($varianceBefore) <= 0.005) {
                 $this->line("Branch {$branchId}: no material variance — skipping.");
                 continue;
             }
 
-            $this->line("Would recompute stocks.total_value = qty × unit_cost per row (weighted-average basis, reusing ReconcileInventoryCommand's read-only formula), then post ONE dated inventory revaluation entry for the residual GL variance of " . number_format($variance, 2) . '.');
+            // Per-product split: recompute true unit cost from purchase_items (decimal(15,4)),
+            // diff it against the stored (truncated) unit_cost, and split that per-unit error
+            // between remaining stock (sub-ledger-only) and already-sold units (GL/COGS-only,
+            // traced to the actual sale via sale_items.unit_cost).
+            $productRows = [];
+            $plannedStockUpdates = []; // [Stock $stock, float $newTotalValue, float $trueUnitCost, float $subLedgerCorrection]
+            $plannedGlPostings = [];   // [int $productId, int $saleId, float $amount, float $trueUnitCost]
+
+            foreach ($stocks as $stock) {
+                $trueUnitCost = $this->weightedAverageUnitCostFromPurchases((int) $stock->product_id);
+                if ($trueUnitCost === null) {
+                    continue;
+                }
+
+                $storedUnitCost = (float) $stock->unit_cost;
+                $unitCostError = round($storedUnitCost - $trueUnitCost, 4);
+                if (abs($unitCostError) <= 0.0001) {
+                    continue;
+                }
+
+                $qtyRemaining = (float) $stock->qty;
+                $newTotalValue = round($qtyRemaining * $trueUnitCost, 4);
+                $subLedgerCorrection = round((float) $stock->total_value - $newTotalValue, 2);
+
+                $saleItems = SaleItem::where('product_id', $stock->product_id)
+                    ->whereHas('sale', fn ($q) => $q->where('branch_id', $branchId))
+                    ->with('sale')
+                    ->get();
+
+                $glCorrectionByProduct = 0.0;
+                foreach ($saleItems->groupBy('sale_id') as $saleId => $items) {
+                    $saleCorrection = 0.0;
+                    foreach ($items as $item) {
+                        $qty = (float) $item->actual_qty;
+                        if ($qty <= 0) {
+                            continue;
+                        }
+                        $saleCorrection += round(((float) $item->unit_cost - $trueUnitCost) * $qty, 2);
+                    }
+                    $saleCorrection = round($saleCorrection, 2);
+
+                    if (abs($saleCorrection) > 0.005) {
+                        $plannedGlPostings[] = [$stock->product_id, $saleId, $saleCorrection, $trueUnitCost];
+                        $glCorrectionByProduct += $saleCorrection;
+                    }
+                }
+                $glCorrectionByProduct = round($glCorrectionByProduct, 2);
+
+                $productRows[] = [
+                    $stock->product_id, $stock->id,
+                    number_format($storedUnitCost, 4), number_format($trueUnitCost, 4), number_format($unitCostError, 4),
+                    $qtyRemaining, number_format($subLedgerCorrection, 2), number_format($glCorrectionByProduct, 2),
+                ];
+
+                if (abs($subLedgerCorrection) > 0.005) {
+                    $plannedStockUpdates[] = [$stock, $newTotalValue, $trueUnitCost, $subLedgerCorrection];
+                }
+            }
+
+            $this->comment('Per-product split (sub-ledger-only vs GL/COGS-only):');
+            $this->reportTable(
+                ['Product ID', 'Stock ID', 'Stored Unit Cost', 'True Unit Cost', 'Unit Cost Error', 'Qty Remaining', 'Sub-ledger-only Correction', 'GL/COGS-only Correction'],
+                $productRows
+            );
+
+            $totalSubLedgerCorrection = round(array_sum(array_column($plannedStockUpdates, 3)), 2);
+            $totalGlCorrection = round(array_sum(array_column($plannedGlPostings, 2)), 2);
+            $this->line("Branch {$branchId}: sub-ledger-only corrections total " . number_format($totalSubLedgerCorrection, 2) . ' (no GL entry); GL/COGS-only corrections total ' . number_format($totalGlCorrection, 2) . ' (posted per sale via DR/CR Inventory vs Cogs).');
+            $this->report('Sub-ledger-only total: ' . number_format($totalSubLedgerCorrection, 2) . ' applied directly to stocks.total_value/unit_cost, no GL entry — the GL receipt entry was already correct. GL/COGS-only total: ' . number_format($totalGlCorrection, 2) . ', posted as one dated correction per (product, sale) pair, referenced to the sale, reason naming repair step 7.');
 
             if ($this->dryRun) {
                 $this->report('DRY RUN: no writes performed for branch ' . $branchId);
                 continue;
             }
 
-            foreach ($stocks as $stock) {
-                // stocks.unit_cost was truncated to decimal(10,2) before the column was widened
-                // (see 2026_09_08_172252_add_total_value_to_stocks) — recomputing qty×unit_cost
-                // from that stored value just reproduces the same truncated total. The true cost
-                // basis lives in purchase_items (purchase_price is decimal(15,4)), so recompute
-                // the weighted-average unit cost from purchase history instead, net of discount
-                // and tax (tax is recovered separately — see step 17 / input-VAT reclassification).
-                $trueUnitCost = $this->weightedAverageUnitCostFromPurchases((int) $stock->product_id);
-
-                $recomputed = $trueUnitCost !== null
-                    ? round((float) $stock->qty * $trueUnitCost, 4)
-                    : round((float) $stock->qty * (float) $stock->unit_cost, 4);
-
-                if (abs($recomputed - (float) $stock->total_value) > 0.0001) {
-                    $stock->update(['total_value' => $recomputed]);
-                }
+            foreach ($plannedStockUpdates as [$stock, $newTotalValue, $trueUnitCost, $subLedgerCorrection]) {
+                $stock->update(['total_value' => $newTotalValue, 'unit_cost' => round($trueUnitCost, 4)]);
+                $this->info("Stock #{$stock->id} (product {$stock->product_id}): total_value -> {$newTotalValue}, unit_cost -> " . round($trueUnitCost, 4) . " (sub-ledger-only correction {$subLedgerCorrection}, no GL entry)");
             }
 
-            if (abs($variance) > 0.005) {
+            foreach ($plannedGlPostings as [$productId, $saleId, $amount, $trueUnitCost]) {
                 $inventoryAccount = Account::default('Inventory', AccountTypeEnum::INVENTORY->value, $branchId);
-                $ownerAccount = Account::default('owner_account', AccountTypeEnum::OWNER_ACCOUNT->value);
+                $cogsAccount = Account::default('Cogs', AccountTypeEnum::COGS->value, $branchId);
 
-                $isOverstated = $variance > 0; // GL > sub-ledger => GL inventory must come DOWN
-                $amount = abs($variance);
+                // amount > 0 => COGS was posted at a stored cost higher than the true cost,
+                // over-crediting inventory / over-debiting COGS on that sale — bring inventory
+                // back up and COGS back down. amount < 0 reverses the same logic.
+                $isOverstated = $amount > 0;
+                $absAmount = abs($amount);
 
                 $transaction = $ts->create([
                     'date' => now(),
-                    'description' => $reason . " (branch {$branchId})",
-                    'type' => 'stock_adjustment',
-                    'reference_type' => \App\Models\Tenant\Branch::class,
-                    'reference_id' => $branchId,
+                    'description' => $reason . " (product #{$productId}, sale #{$saleId})",
+                    'type' => \App\Enums\TransactionTypeEnum::STOCK_ADJUSTMENT->value,
+                    'reference_type' => Sale::class,
+                    'reference_id' => $saleId,
                     'branch_id' => $branchId,
-                    'note' => $reason . '. GL was ' . number_format($glBalance, 2) . ', sub-ledger (Σ qty×weighted-average unit_cost) is ' . number_format($weightedAverageTotal, 2) . ', residual ' . number_format($amount, 2) . '.',
+                    'note' => $reason . '. Sale #' . $saleId . ' posted COGS for product #' . $productId . ' at the truncated unit cost; true unit cost is ' . number_format($trueUnitCost, 4) . '. Correction: ' . number_format($absAmount, 2) . '.',
                     'lines' => $isOverstated ? [
-                        ['account_id' => $ownerAccount->id, 'type' => 'debit', 'amount' => $amount],
-                        ['account_id' => $inventoryAccount->id, 'type' => 'credit', 'amount' => $amount],
+                        ['account_id' => $inventoryAccount->id, 'type' => 'debit', 'amount' => $absAmount],
+                        ['account_id' => $cogsAccount->id, 'type' => 'credit', 'amount' => $absAmount],
                     ] : [
-                        ['account_id' => $inventoryAccount->id, 'type' => 'debit', 'amount' => $amount],
-                        ['account_id' => $ownerAccount->id, 'type' => 'credit', 'amount' => $amount],
+                        ['account_id' => $cogsAccount->id, 'type' => 'debit', 'amount' => $absAmount],
+                        ['account_id' => $inventoryAccount->id, 'type' => 'credit', 'amount' => $absAmount],
                     ],
                 ]);
 
-                $this->info("Posted revaluation transaction #{$transaction->id} for branch {$branchId}, amount {$amount}");
-                $this->report('After state: stocks.total_value recomputed on weighted-average basis; posted inventory revaluation transaction #' . $transaction->id . ' for branch ' . $branchId . ', amount ' . number_format($amount, 2) . '.');
+                $this->info("Posted COGS correction transaction #{$transaction->id} for product #{$productId}, sale #{$saleId}, amount {$absAmount}");
+                $this->report('After state: posted transaction #' . $transaction->id . ' correcting COGS for product #' . $productId . ' on sale #' . $saleId . ', amount ' . number_format($absAmount, 2) . '.');
+            }
+
+            $freshStocks = Stock::where('branch_id', $branchId)->get();
+            [$glBalanceAfter, $subLedgerAfter, $varianceAfter] = $this->inventoryGlVsSubLedger($branchId, $freshStocks);
+
+            $this->reportTable(
+                ['Branch ID', 'GL Balance (after)', 'Sub-ledger (after)', 'Variance (after)'],
+                [[$branchId, number_format($glBalanceAfter, 2), number_format($subLedgerAfter, 2), number_format($varianceAfter, 2)]]
+            );
+
+            if (abs($varianceAfter) > 0.005) {
+                $anyResidual = true;
+                $this->error("Branch {$branchId}: residual variance of " . number_format($varianceAfter, 2) . ' remains after repair.');
+                $this->report('**RESIDUAL VARIANCE REMAINS: ' . number_format($varianceAfter, 2) . '** — do not consider this branch reconciled; investigate before re-running.');
+            } else {
+                $this->info("Branch {$branchId}: variance is zero after repair.");
+                $this->report('After state: GL and sub-ledger agree for branch ' . $branchId . ' — variance is zero.');
             }
         }
+
+        if (!$this->dryRun && $anyResidual) {
+            throw new \RuntimeException('Repair step 7: residual inventory GL vs sub-ledger variance remains after applying corrections — see report and investigate before re-running.');
+        }
+    }
+
+    /**
+     * @return array{0: float, 1: float, 2: float} [glBalance, subLedgerTotal, variance]
+     */
+    protected function inventoryGlVsSubLedger(int $branchId, \Illuminate\Support\Collection $stocks): array
+    {
+        $glDebit = (float) TransactionLine::whereHas('account', fn ($q) => $q->where('type', AccountTypeEnum::INVENTORY->value)->where('branch_id', $branchId))
+            ->where('type', 'debit')->sum('amount');
+        $glCredit = (float) TransactionLine::whereHas('account', fn ($q) => $q->where('type', AccountTypeEnum::INVENTORY->value)->where('branch_id', $branchId))
+            ->where('type', 'credit')->sum('amount');
+        $glBalance = round($glDebit - $glCredit, 2);
+
+        $subLedgerTotal = round((float) $stocks->sum('total_value'), 2);
+
+        return [$glBalance, $subLedgerTotal, round($glBalance - $subLedgerTotal, 2)];
     }
 
     /**
